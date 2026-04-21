@@ -144,20 +144,8 @@ for (const row of ydpRows.slice(1)) {
     }
   }
 
-  // TM 좌표 없으면 주소에서 동 추출해 fallback
-  if (lat === undefined) {
-    let base = null
-    for (const [dong, coord] of Object.entries(YDP_DONG_COORDS)) {
-      if (addr.includes(dong)) { base = coord; break }
-    }
-    if (!base) {
-      // 기본: 영등포구 중심
-      base = { lat: 37.5163, lng: 126.9069 }
-    }
-    lat = base.lat + (Math.random() - 0.5) * 0.02
-    lng = base.lng + (Math.random() - 0.5) * 0.02
-    coordFromDong++
-  }
+  // TM 좌표 없으면 스킵 (가짜 좌표 사용 안 함)
+  if (lat === undefined) { noCoord++; continue }
 
   const key = `${name}|${lat.toFixed(4)}`
   if (seen.has(key)) continue
@@ -174,8 +162,11 @@ for (const row of ydpRows.slice(1)) {
 console.log(`영등포 필터 결과: ${ydpRestaurants.length}개 (TM좌표: ${coordFromTM}, 동추정: ${coordFromDong})`)
 const ydpInserted = await batchInsert(ydpRestaurants, '영등포')
 
-// ===== 2. 경남 처리 =====
-console.log('\n=== 경남 처리 중 ===')
+// ===== 2. 경남 처리 (실제 좌표 없어서 스킵) =====
+console.log('\n=== 경남 스킵 (실제 좌표 없음) ===')
+const gnInserted = 0
+
+if (false) { // 실제 좌표 없으므로 비활성화
 const gnBuf = readFileSync('C:/Users/신경승/honbab-map/restaurant-data-gyeongnam.csv')
 const gnText = iconv.decode(gnBuf, 'euc-kr')
 const gnRows = parseCSV(gnText)
@@ -258,7 +249,8 @@ for (const row of gnRows.slice(1)) {
 }
 
 console.log(`경남 필터 결과: ${gnRestaurants.length}개`)
-const gnInserted = await batchInsert(gnRestaurants, '경남')
+await batchInsert(gnRestaurants, '경남')
+} // end if(false)
 
 // ===== 채팅방 생성 =====
 console.log('\n=== 채팅방 생성 중 ===')
