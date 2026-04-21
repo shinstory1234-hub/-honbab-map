@@ -69,6 +69,11 @@ export default function MapTab() {
     setSelectedRestaurant(prev => prev?.id === id ? { ...prev, honbab_level: newLevel } : prev)
   }, [])
 
+  const handlePriceUpdated = useCallback((id: string, newPrice: 1 | 2 | 3 | 4) => {
+    setRestaurants(prev => prev.map(r => r.id === id ? { ...r, price_range: newPrice } : r))
+    setSelectedRestaurant(prev => prev?.id === id ? { ...prev, price_range: newPrice } : prev)
+  }, [])
+
   const filtered = useMemo(() => {
     let list = restaurants
     if (searchQuery.trim()) {
@@ -246,6 +251,7 @@ export default function MapTab() {
           restaurant={selectedRestaurant}
           onClose={() => setSelectedRestaurant(null)}
           onLevelUpdated={handleLevelUpdated}
+          onPriceUpdated={handlePriceUpdated}
         />
       )}
     </div>

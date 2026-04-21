@@ -7,6 +7,7 @@ const iconv = require('iconv-lite')
 
 const SUPABASE_URL = 'https://wguqbwopszxayjnnueby.supabase.co'
 const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6IndndXFid29wc3p4YXlqbm51ZWJ5Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzY3NjM3ODUsImV4cCI6MjA5MjMzOTc4NX0.7jD5WjjlgdcMUB8zXv8UraPZcleG5k9Cmpl-FtcU-C0'
+const KAKAO_KEY = '6b2c13135baeeaddb3f9f222af85492d'
 const supabase = createClient(SUPABASE_URL, SUPABASE_KEY)
 
 // ===== CSV 파싱 =====
@@ -25,6 +26,16 @@ function parseCSV(text) {
     else { cell += '\n' }
   }
   return rows
+}
+
+// ===== 카카오 지오코딩 =====
+async function geocode(address) {
+  const url = `https://dapi.kakao.com/v2/local/search/address.json?query=${encodeURIComponent(address)}`
+  const res = await fetch(url, { headers: { Authorization: `KakaoAK ${KAKAO_KEY}` } })
+  const json = await res.json()
+  const doc = json.documents?.[0]
+  if (!doc) return null
+  return { lat: parseFloat(doc.y), lng: parseFloat(doc.x) }
 }
 
 // ===== 필터 기준 =====
@@ -52,23 +63,20 @@ const text = iconv.decode(buf, 'euc-kr')
 const rows = parseCSV(text)
 const data = rows.slice(1).filter(r => r.length > 11)
 
-const restaurants = []
+const candidates = []
 const seen = new Set()
 
 data.forEach(r => {
   const name = r[0]?.trim()
   const cat = r[1]?.trim() || ''
   const addr = (r[6] || r[7] || '').trim()
-  const lat = parseFloat(r[10])
-  const lng = parseFloat(r[11])
   const area = parseFloat(r[9]) || 0
   const standing = parseInt(r[24]) || 0
   const seating = parseInt(r[25]) || 0
 
   if (!name || EXCLUDE.has(cat)) return
-  if (!(lat > 33 && lat < 39 && lng > 124 && lng < 132)) return
   if (!addr) return
-  const key = `${name}|${lat.toFixed(4)}`
+  const key = `${name}|${addr}`
   if (seen.has(key)) return
   seen.add(key)
 
@@ -88,25 +96,43 @@ data.forEach(r => {
   if (cat === '카페') honbab_tags.push('1인석')
   if (seating === 0 && standing > 0) honbab_tags.push('1인 메뉴 있음')
 
-  restaurants.push({ name, address: addr, lat, lng, category: cat || '한식', honbab_level, price_range, honbab_tags })
+  candidates.push({ name, address: addr, category: cat || '한식', honbab_level, price_range, honbab_tags })
 })
 
-console.log(`총 ${restaurants.length}개 식당 삽입 시작...`)
+console.log(`총 ${candidates.length}개 후보, 카카오 지오코딩 시작...`)
 
-// ===== 배치 삽입 =====
-const BATCH = 100
-let inserted = 0, failed = 0
+// ===== 지오코딩 + 배치 삽입 =====
+const BATCH = 50
+let inserted = 0, failed = 0, skipped = 0
 
-for (let i = 0; i < restaurants.length; i += BATCH) {
-  const batch = restaurants.slice(i, i + BATCH)
-  const { error } = await supabase.from('restaurants').insert(batch)
+for (let i = 0; i < candidates.length; i += BATCH) {
+  const batch = candidates.slice(i, i + BATCH)
+
+  // 지오코딩 (병렬, 단 초당 10건 제한 고려)
+  const withCoords = await Promise.all(
+    batch.map(async (item) => {
+      const coords = await geocode(item.address)
+      if (!coords) return null
+      return { ...item, lat: coords.lat, lng: coords.lng }
+    })
+  )
+
+  const valid = withCoords.filter(Boolean)
+  skipped += batch.length - valid.length
+
+  if (valid.length === 0) continue
+
+  const { error } = await supabase.from('restaurants').insert(valid)
   if (error) {
     console.error(`배치 ${Math.floor(i/BATCH)+1} 실패:`, error.message)
-    failed += batch.length
+    failed += valid.length
   } else {
-    inserted += batch.length
-    process.stdout.write(`\r진행: ${inserted}/${restaurants.length}`)
+    inserted += valid.length
+    process.stdout.write(`\r진행: ${i + batch.length}/${candidates.length} (성공: ${inserted}, 주소없음: ${skipped})`)
   }
+
+  // 카카오 API 부하 방지 (50건당 0.5초)
+  await new Promise(r => setTimeout(r, 500))
 }
 
-console.log(`\n완료! 성공: ${inserted}, 실패: ${failed}`)
+console.log(`\n완료! 성공: ${inserted}, 실패: ${failed}, 주소변환실패: ${skipped}`)

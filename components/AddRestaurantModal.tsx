@@ -25,11 +25,23 @@ export default function AddRestaurantModal({ isOpen, onClose }: Props) {
   const handleSubmit = async () => {
     if (!form.name || !form.address) return
     setLoading(true)
+
+    // 카카오 지오코딩으로 실제 좌표 가져오기
+    let lat = 37.5665, lng = 126.9780
+    try {
+      const res = await fetch(
+        `https://dapi.kakao.com/v2/local/search/address.json?query=${encodeURIComponent(form.address)}`,
+        { headers: { Authorization: 'KakaoAK 6b2c13135baeeaddb3f9f222af85492d' } }
+      )
+      const json = await res.json()
+      const doc = json.documents?.[0]
+      if (doc) { lat = parseFloat(doc.y); lng = parseFloat(doc.x) }
+    } catch {}
+
     const { error } = await supabase.from('restaurants').insert({
       name: form.name, address: form.address,
       category: form.category || '기타',
-      lat: 37.5665 + (Math.random() - 0.5) * 0.02,
-      lng: 126.9780 + (Math.random() - 0.5) * 0.02,
+      lat, lng,
       honbab_level: form.honbab_level,
       price_range: form.price_range,
       honbab_tags: form.tags,

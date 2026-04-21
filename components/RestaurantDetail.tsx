@@ -11,22 +11,27 @@ const LEVEL_INFO: Record<number, { label: string; emoji: string; color: string; 
 }
 
 type VoteCounts = { 1: number; 2: number; 3: number }
+type PriceVoteCounts = { 1: number; 2: number; 3: number; 4: number }
 
 type Props = {
   restaurant: Restaurant | null
   onClose: () => void
   onLevelUpdated?: (id: string, newLevel: 1 | 2 | 3) => void
+  onPriceUpdated?: (id: string, newPrice: 1 | 2 | 3 | 4) => void
 }
 
-export default function RestaurantDetail({ restaurant, onClose, onLevelUpdated }: Props) {
+export default function RestaurantDetail({ restaurant, onClose, onLevelUpdated, onPriceUpdated }: Props) {
   const [votes, setVotes] = useState<VoteCounts>({ 1: 0, 2: 0, 3: 0 })
+  const [priceVotes, setPriceVotes] = useState<PriceVoteCounts>({ 1: 0, 2: 0, 3: 0, 4: 0 })
   const [voting, setVoting] = useState(false)
+  const [priceVoting, setPriceVoting] = useState(false)
   const [checkedIn, setCheckedIn] = useState(false)
 
   useEffect(() => {
     if (!restaurant) return
     setCheckedIn(false)
     fetchVotes(restaurant.id)
+    fetchPriceVotes(restaurant.id)
   }, [restaurant])
 
   const fetchVotes = async (id: string) => {
@@ -35,6 +40,15 @@ export default function RestaurantDetail({ restaurant, onClose, onLevelUpdated }
       const counts: VoteCounts = { 1: 0, 2: 0, 3: 0 }
       data.forEach(v => { counts[v.vote as 1 | 2 | 3]++ })
       setVotes(counts)
+    }
+  }
+
+  const fetchPriceVotes = async (id: string) => {
+    const { data } = await supabase.from('price_votes').select('vote').eq('restaurant_id', id)
+    if (data) {
+      const counts: PriceVoteCounts = { 1: 0, 2: 0, 3: 0, 4: 0 }
+      data.forEach(v => { counts[v.vote as 1 | 2 | 3 | 4]++ })
+      setPriceVotes(counts)
     }
   }
 
@@ -55,6 +69,23 @@ export default function RestaurantDetail({ restaurant, onClose, onLevelUpdated }
     setVoting(false)
   }
 
+  const handlePriceVote = async (vote: 1 | 2 | 3 | 4) => {
+    if (!restaurant || priceVoting) return
+    setPriceVoting(true)
+    await supabase.from('price_votes').insert({ restaurant_id: restaurant.id, vote })
+    const { data } = await supabase.from('price_votes').select('vote').eq('restaurant_id', restaurant.id)
+    if (data && data.length > 0) {
+      const counts: PriceVoteCounts = { 1: 0, 2: 0, 3: 0, 4: 0 }
+      data.forEach(v => { counts[v.vote as 1 | 2 | 3 | 4]++ })
+      setPriceVotes(counts)
+      const avg = data.reduce((s, v) => s + v.vote, 0) / data.length
+      const newPrice = Math.round(avg) as 1 | 2 | 3 | 4
+      await supabase.from('restaurants').update({ price_range: newPrice }).eq('id', restaurant.id)
+      onPriceUpdated?.(restaurant.id, newPrice)
+    }
+    setPriceVoting(false)
+  }
+
   const handleCheckin = async () => {
     if (!restaurant || checkedIn) return
     const nickname = getNickname()
@@ -67,6 +98,7 @@ export default function RestaurantDetail({ restaurant, onClose, onLevelUpdated }
 
   const level = LEVEL_INFO[restaurant.honbab_level]
   const totalVotes = votes[1] + votes[2] + votes[3]
+  const totalPriceVotes = priceVotes[1] + priceVotes[2] + priceVotes[3] + priceVotes[4]
   const score = calcHonbabScore(restaurant, totalVotes)
   const grade = getHonbabGrade(score)
 
@@ -117,7 +149,7 @@ export default function RestaurantDetail({ restaurant, onClose, onLevelUpdated }
             <div className="flex-1 flex items-center gap-2 px-3 py-2.5 rounded-xl bg-gray-50">
               <span className="text-lg">💰</span>
               <div>
-                <p className="text-xs text-gray-400">가격대</p>
+                <p className="text-xs text-gray-400">가격대 {totalPriceVotes > 0 ? `(${totalPriceVotes}명 투표)` : '(투표 없음)'}</p>
                 <p className="text-sm font-bold text-gray-700">{PRICE_LABELS[restaurant.price_range] || '미정'}</p>
               </div>
             </div>
@@ -143,8 +175,8 @@ export default function RestaurantDetail({ restaurant, onClose, onLevelUpdated }
             <span>{restaurant.address}</span>
           </div>
 
-          {/* 유저 투표 */}
-          <div className="bg-gray-50 rounded-2xl p-4 mb-4">
+          {/* 혼밥 투표 */}
+          <div className="bg-gray-50 rounded-2xl p-4 mb-3">
             <p className="text-sm font-bold text-gray-700 mb-1">이 식당 혼밥 어때요?</p>
             <p className="text-xs text-gray-400 mb-3">투표하면 난이도가 자동으로 업데이트돼요</p>
             <div className="flex gap-2">
@@ -167,6 +199,34 @@ export default function RestaurantDetail({ restaurant, onClose, onLevelUpdated }
             </div>
             {totalVotes > 0 && (
               <p className="text-xs text-gray-400 text-center mt-2">총 {totalVotes}명 참여</p>
+            )}
+          </div>
+
+          {/* 가격 투표 */}
+          <div className="bg-gray-50 rounded-2xl p-4 mb-4">
+            <p className="text-sm font-bold text-gray-700 mb-1">실제 가격대가 어때요?</p>
+            <p className="text-xs text-gray-400 mb-3">투표하면 가격대가 자동으로 업데이트돼요</p>
+            <div className="grid grid-cols-4 gap-1.5">
+              {([
+                { v: 1, label: '저렴', emoji: '💚', color: 'border-green-400 bg-green-50 text-green-600' },
+                { v: 2, label: '보통', emoji: '🟡', color: 'border-yellow-400 bg-yellow-50 text-yellow-600' },
+                { v: 3, label: '비쌈', emoji: '🟠', color: 'border-orange-400 bg-orange-50 text-orange-600' },
+                { v: 4, label: '고급', emoji: '💎', color: 'border-purple-400 bg-purple-50 text-purple-600' },
+              ] as const).map(({ v, label, emoji, color }) => (
+                <button
+                  key={v}
+                  onClick={() => handlePriceVote(v)}
+                  disabled={priceVoting}
+                  className={`flex flex-col items-center py-2.5 rounded-xl border-2 font-semibold text-xs transition-all disabled:opacity-60 ${color}`}
+                >
+                  <span className="text-base mb-0.5">{emoji}</span>
+                  <span>{label}</span>
+                  <span className="text-xs font-normal opacity-70 mt-0.5">{priceVotes[v]}명</span>
+                </button>
+              ))}
+            </div>
+            {totalPriceVotes > 0 && (
+              <p className="text-xs text-gray-400 text-center mt-2">총 {totalPriceVotes}명 참여</p>
             )}
           </div>
 
