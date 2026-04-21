@@ -20,6 +20,30 @@ const SORT_OPTIONS = [
 
 type SortBy = 'score' | 'level' | 'name'
 
+type KakaoPlace = {
+  id: string
+  place_name: string
+  category_name: string
+  road_address_name: string
+  address_name: string
+  x: string
+  y: string
+}
+
+function mapKakaoCategory(catName: string): { category: string; honbab_level: 1 | 2 | 3; price_range: 1 | 2 | 3 | 4 } {
+  const c = catName.toLowerCase()
+  if (c.includes('카페') || c.includes('커피') || c.includes('디저트') || c.includes('브런치')) return { category: '카페', honbab_level: 1, price_range: 1 }
+  if (c.includes('분식')) return { category: '분식', honbab_level: 1, price_range: 1 }
+  if (c.includes('패스트푸드')) return { category: '패스트푸드', honbab_level: 1, price_range: 1 }
+  if (c.includes('냉면')) return { category: '냉면집', honbab_level: 1, price_range: 1 }
+  if (c.includes('술집') || c.includes('호프') || c.includes('맥주') || c.includes('와인바') || c.includes('칵테일') || c.includes('포차')) return { category: '주점', honbab_level: 3, price_range: 2 }
+  if (c.includes('일식') || c.includes('라멘') || c.includes('초밥') || c.includes('우동') || c.includes('돈까스')) return { category: '일식', honbab_level: 2, price_range: 2 }
+  if (c.includes('중국') || c.includes('중식')) return { category: '중식', honbab_level: 2, price_range: 2 }
+  if (c.includes('양식') || c.includes('이탈리안') || c.includes('피자') || c.includes('파스타') || c.includes('스테이크')) return { category: '양식', honbab_level: 2, price_range: 3 }
+  if (c.includes('한식') || c.includes('국밥') || c.includes('설렁탕') || c.includes('해장국')) return { category: '한식', honbab_level: 2, price_range: 2 }
+  return { category: '기타', honbab_level: 2, price_range: 2 }
+}
+
 export default function MapTab() {
   const [restaurants, setRestaurants] = useState<Restaurant[]>([])
   const [voteCounts, setVoteCounts] = useState<Record<string, number>>({})
@@ -33,6 +57,10 @@ export default function MapTab() {
   const [locQuery, setLocQuery] = useState('')
   const [locSuggestions, setLocSuggestions] = useState<{ place_name: string; lat: number; lng: number }[]>([])
   const [centerTo, setCenterTo] = useState<{ lat: number; lng: number; level?: number } | null>(null)
+  const [kakaoResults, setKakaoResults] = useState<KakaoPlace[]>([])
+  const [kakaoLoading, setKakaoLoading] = useState(false)
+  const [addingIds, setAddingIds] = useState<Set<string>>(new Set())
+  const [addedIds, setAddedIds] = useState<Set<string>>(new Set())
   const boundsRef = useRef<MapBounds | null>(null)
   const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null)
   const locDebounceRef = useRef<ReturnType<typeof setTimeout> | null>(null)
@@ -102,6 +130,44 @@ export default function MapTab() {
     setRestaurants(prev => prev.map(r => r.id === id ? { ...r, price_range: newPrice } : r))
     setSelectedRestaurant(prev => prev?.id === id ? { ...prev, price_range: newPrice } : prev)
   }, [])
+
+  const searchKakaoRestaurants = useCallback(async () => {
+    if (!searchQuery.trim()) return
+    setKakaoLoading(true)
+    setKakaoResults([])
+    try {
+      const params = new URLSearchParams({ query: searchQuery, size: '10' })
+      if (boundsRef.current) {
+        params.set('x', String((boundsRef.current.sw_lng + boundsRef.current.ne_lng) / 2))
+        params.set('y', String((boundsRef.current.sw_lat + boundsRef.current.ne_lat) / 2))
+        params.set('radius', '3000')
+      }
+      const res = await fetch(`https://dapi.kakao.com/v2/local/search/keyword.json?${params}`, {
+        headers: { Authorization: 'KakaoAK 6b2c13135baeeaddb3f9f222af85492d' }
+      })
+      const json = await res.json()
+      setKakaoResults(json.documents || [])
+    } catch { setKakaoResults([]) }
+    setKakaoLoading(false)
+  }, [searchQuery])
+
+  const addFromKakao = useCallback(async (place: KakaoPlace) => {
+    if (addingIds.has(place.id) || addedIds.has(place.id)) return
+    setAddingIds(prev => new Set(prev).add(place.id))
+    const addr = place.road_address_name || place.address_name
+    const mapped = mapKakaoCategory(place.category_name)
+    const { data, error } = await supabase.from('restaurants').insert({
+      name: place.place_name, address: addr,
+      lat: parseFloat(place.y), lng: parseFloat(place.x),
+      ...mapped, honbab_tags: [],
+      up_votes: 0, down_votes: 0, price_good_votes: 0, price_bad_votes: 0, edit_count: 0,
+    }).select().single()
+    setAddingIds(prev => { const s = new Set(prev); s.delete(place.id); return s })
+    if (!error && data) {
+      setAddedIds(prev => new Set(prev).add(place.id))
+      setRestaurants(prev => [...prev, data as Restaurant])
+    }
+  }, [addingIds, addedIds])
 
   const filtered = useMemo(() => {
     let list = restaurants
@@ -208,6 +274,44 @@ export default function MapTab() {
               onClick={() => setSelectedRestaurant(r)}
             />
           ))}
+
+          {/* 카카오 장소 검색으로 추가 */}
+          {searchQuery.trim() && (
+            <div className="mt-1 border-t border-gray-100 pt-3">
+              {kakaoResults.length === 0 ? (
+                <button onClick={searchKakaoRestaurants} disabled={kakaoLoading}
+                  className="w-full py-2.5 text-xs text-blue-500 font-bold bg-blue-50 rounded-xl border border-blue-100 disabled:opacity-50 active:scale-95 transition-all">
+                  {kakaoLoading ? '카카오 검색 중...' : '🔍 카카오에서 더 찾기'}
+                </button>
+              ) : (
+                <>
+                  <p className="text-xs text-gray-400 font-semibold mb-2">카카오 검색 결과 — 추가하면 지도에 표시돼요</p>
+                  {kakaoResults.map(place => {
+                    const catLabel = place.category_name.split('>').pop()?.trim() || place.category_name
+                    const mapped = mapKakaoCategory(place.category_name)
+                    return (
+                      <div key={place.id} className="bg-blue-50 rounded-xl p-3 mb-2 flex items-start justify-between gap-2 border border-blue-100">
+                        <div className="flex-1 min-w-0">
+                          <p className="text-sm font-bold text-gray-800 truncate">{place.place_name}</p>
+                          <p className="text-xs text-blue-500 font-medium">{catLabel}</p>
+                          <p className="text-xs text-gray-400 truncate">{place.road_address_name || place.address_name}</p>
+                          <p className="text-xs mt-0.5">
+                            {mapped.honbab_level === 1 ? '🟢 혼밥 쉬움' : mapped.honbab_level === 3 ? '🔴 혼밥 어려움' : '🟡 혼밥 보통'}
+                          </p>
+                        </div>
+                        <button onClick={() => addFromKakao(place)}
+                          disabled={addingIds.has(place.id) || addedIds.has(place.id)}
+                          className={`shrink-0 px-3 py-1.5 rounded-lg text-xs font-bold transition-all active:scale-95 ${addedIds.has(place.id) ? 'bg-green-100 text-green-600' : 'bg-blue-500 text-white disabled:opacity-50'}`}>
+                          {addedIds.has(place.id) ? '✓ 추가됨' : addingIds.has(place.id) ? '...' : '+ 추가'}
+                        </button>
+                      </div>
+                    )
+                  })}
+                  <button onClick={() => setKakaoResults([])} className="w-full text-xs text-gray-400 py-1.5 hover:text-gray-600">접기 ▲</button>
+                </>
+              )}
+            </div>
+          )}
         </div>
       </div>
 
