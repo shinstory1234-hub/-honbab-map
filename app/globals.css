@@ -11,21 +11,33 @@
 body {
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
   background: #f5f5f5;
-  position: relative;
   overflow: hidden;
   height: 100dvh;
 }
 
-#kakao-map {
-  width: 100%;
-  height: 100dvh;
-}
+/* 스크롤바 스타일 */
+.scrollbar-thin::-webkit-scrollbar { width: 4px; }
+.scrollbar-thin::-webkit-scrollbar-track { background: transparent; }
+.scrollbar-thin::-webkit-scrollbar-thumb { background: #e5e7eb; border-radius: 2px; }
+.scrollbar-thin::-webkit-scrollbar-thumb:hover { background: #d1d5db; }
 
-.bottom-sheet {
-  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-}
-
-.marker-custom {
+/* 마커 클러스터 스타일 */
+.kakao-cluster {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(255, 107, 53, 0.92);
+  border: 2px solid white;
+  border-radius: 50%;
+  color: white;
+  font-weight: 700;
+  font-size: 13px;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.3);
   cursor: pointer;
-  user-select: none;
 }
+
+.bottom-sheet { transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1); }
+
+/* 탭 슬라이드 애니메이션 */
+.tab-panel { animation: fadeIn 0.15s ease-out; }
+@keyframes fadeIn { from { opacity: 0; transform: translateY(4px); } to { opacity: 1; transform: translateY(0); } }

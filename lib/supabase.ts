@@ -17,13 +17,39 @@ export type Restaurant = {
   category: string
   honbab_level: 1 | 2 | 3
   honbab_tags: string[]
+  price_range: 1 | 2 | 3 | 4
   created_at: string
 }
 
-export type HonbabReport = {
+export type Post = {
+  id: string
+  title: string
+  content: string
+  author: string
+  views: number
+  created_at: string
+  comment_count?: number
+}
+
+export type Comment = {
+  id: string
+  post_id: string
+  content: string
+  author: string
+  created_at: string
+}
+
+export type ChatRoom = {
   id: string
   restaurant_id: string
-  reported_level: 1 | 2 | 3
-  comment: string
+  participants_count: number
+  restaurant?: Restaurant
+}
+
+export type Message = {
+  id: string
+  room_id: string
+  content: string
+  author: string
   created_at: string
 }

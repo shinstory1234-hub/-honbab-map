@@ -5,160 +5,124 @@ import { Restaurant } from '@/lib/supabase'
 
 type Props = {
   restaurants: Restaurant[]
-  filterLevel: 0 | 1 | 2 | 3
+  selectedId?: string | null
   onMarkerClick: (restaurant: Restaurant) => void
-}
-
-const LEVEL_COLOR: Record<number, string> = {
-  1: '#22c55e',
-  2: '#eab308',
-  3: '#ef4444',
-}
-
-const LEVEL_EMOJI: Record<number, string> = {
-  1: '🟢',
-  2: '🟡',
-  3: '🔴',
 }
 
 declare global {
   interface Window {
-    kakao: typeof kakao
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    kakao: any
     __kakaoMapLoaded?: boolean
   }
 }
 
+const LEVEL_COLORS: Record<number, string> = { 1: '#22c55e', 2: '#eab308', 3: '#ef4444' }
+
+const CLUSTER_STYLES = [
+  { width: '40px', height: '40px', background: 'rgba(255,107,53,0.9)', borderRadius: '20px', color: '#fff', textAlign: 'center', lineHeight: '40px', fontSize: '13px', fontWeight: '700', border: '2px solid white', boxShadow: '0 2px 8px rgba(0,0,0,0.25)' },
+  { width: '50px', height: '50px', background: 'rgba(220,38,38,0.9)', borderRadius: '25px', color: '#fff', textAlign: 'center', lineHeight: '50px', fontSize: '15px', fontWeight: '700', border: '2px solid white', boxShadow: '0 2px 8px rgba(0,0,0,0.25)' },
+]
+
 function loadKakaoScript(): Promise<void> {
   return new Promise((resolve, reject) => {
     const apiKey = process.env.NEXT_PUBLIC_KAKAO_MAP_KEY
-    console.log('[KakaoMap] NEXT_PUBLIC_KAKAO_MAP_KEY:', apiKey)
-
-    if (!apiKey) {
-      console.error('[KakaoMap] API 키가 없습니다! .env.local 또는 Vercel 환경변수를 확인하세요.')
-      reject(new Error('Missing NEXT_PUBLIC_KAKAO_MAP_KEY'))
-      return
-    }
-
-    if (window.__kakaoMapLoaded) {
-      console.log('[KakaoMap] 스크립트 이미 로드됨')
-      resolve()
-      return
-    }
+    if (!apiKey) { reject(new Error('Missing NEXT_PUBLIC_KAKAO_MAP_KEY')); return }
+    if (window.__kakaoMapLoaded) { resolve(); return }
     const existing = document.getElementById('kakao-map-sdk')
     if (existing) {
-      existing.addEventListener('load', () => {
-        window.kakao.maps.load(() => {
-          window.__kakaoMapLoaded = true
-          resolve()
-        })
-      })
+      existing.addEventListener('load', () => { window.kakao.maps.load(() => { window.__kakaoMapLoaded = true; resolve() }) })
       return
     }
     const script = document.createElement('script')
     script.id = 'kakao-map-sdk'
-    script.src = `//dapi.kakao.com/v2/maps/sdk.js?appkey=${apiKey}&autoload=false`
-    console.log('[KakaoMap] 스크립트 로드 시작:', script.src)
-    script.onload = () => {
-      console.log('[KakaoMap] 스크립트 로드 완료')
-      window.kakao.maps.load(() => {
-        window.__kakaoMapLoaded = true
-        console.log('[KakaoMap] kakao.maps.load 완료')
-        resolve()
-      })
-    }
-    script.onerror = (e) => {
-      console.error('[KakaoMap] 스크립트 로드 실패:', e)
-      reject(new Error('Kakao script load failed'))
-    }
+    script.src = `//dapi.kakao.com/v2/maps/sdk.js?appkey=${apiKey}&autoload=false&libraries=clusterer`
+    script.onload = () => { window.kakao.maps.load(() => { window.__kakaoMapLoaded = true; resolve() }) }
+    script.onerror = reject
     document.head.appendChild(script)
   })
 }
 
-export default function KakaoMap({ restaurants, filterLevel, onMarkerClick }: Props) {
+function createMarkerImage(color: string) {
+  const svg = encodeURIComponent(`<svg xmlns="http://www.w3.org/2000/svg" width="28" height="36"><circle cx="14" cy="14" r="12" fill="${color}" stroke="white" stroke-width="2.5"/><polygon points="14,36 8,24 20,24" fill="${color}"/><circle cx="14" cy="14" r="5" fill="white" opacity="0.5"/></svg>`)
+  const size = new window.kakao.maps.Size(28, 36)
+  const option = { offset: new window.kakao.maps.Point(14, 36) }
+  return new window.kakao.maps.MarkerImage(`data:image/svg+xml;charset=utf-8,${svg}`, size, option)
+}
+
+export default function KakaoMap({ restaurants, selectedId, onMarkerClick }: Props) {
   const mapRef = useRef<HTMLDivElement>(null)
-  const mapInstanceRef = useRef<kakao.maps.Map | null>(null)
-  const overlaysRef = useRef<kakao.maps.CustomOverlay[]>([])
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const mapInstanceRef = useRef<any>(null)
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const clustererRef = useRef<any>(null)
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const markersRef = useRef<{ marker: any; restaurant: Restaurant }[]>([])
 
   useEffect(() => {
     loadKakaoScript().then(() => {
       if (!mapRef.current || mapInstanceRef.current) return
-
-      // 컨테이너 높이를 px로 명시 (dvh 미지원 대비)
       mapRef.current.style.height = window.innerHeight + 'px'
 
-      console.log('[KakaoMap] 컨테이너 크기:', {
-        offsetWidth: mapRef.current.offsetWidth,
-        offsetHeight: mapRef.current.offsetHeight,
-        clientWidth: mapRef.current.clientWidth,
-        clientHeight: mapRef.current.clientHeight,
-        styleHeight: mapRef.current.style.height,
-      })
-
-      const defaultCenter = new window.kakao.maps.LatLng(37.5665, 126.9780)
-      const map = new window.kakao.maps.Map(mapRef.current, {
-        center: defaultCenter,
-        level: 4,
-      })
+      const center = new window.kakao.maps.LatLng(37.5665, 126.9780)
+      const map = new window.kakao.maps.Map(mapRef.current, { center, level: 4 })
       mapInstanceRef.current = map
-      console.log('[KakaoMap] 지도 인스턴스 생성 완료')
-
-      // 지도 컨테이너 크기 재계산 (빈 화면 방지)
       map.relayout()
-      map.setCenter(defaultCenter)
+      map.setCenter(center)
+
+      const clusterer = new window.kakao.maps.MarkerClusterer({
+        map,
+        averageCenter: true,
+        minLevel: 5,
+        gridSize: 80,
+        styles: CLUSTER_STYLES,
+      })
+      clustererRef.current = clusterer
 
       if (navigator.geolocation) {
-        navigator.geolocation.getCurrentPosition((pos) => {
+        navigator.geolocation.getCurrentPosition(pos => {
           map.setCenter(new window.kakao.maps.LatLng(pos.coords.latitude, pos.coords.longitude))
         })
       }
 
-      // 브라우저 리사이즈 시 재계산
       const handleResize = () => {
         if (mapRef.current) mapRef.current.style.height = window.innerHeight + 'px'
         map.relayout()
       }
       window.addEventListener('resize', handleResize)
       return () => window.removeEventListener('resize', handleResize)
-    }).catch((e) => console.error('[KakaoMap] 초기화 실패:', e))
+    }).catch(e => console.error('[KakaoMap] init error:', e))
   }, [])
 
   useEffect(() => {
-    if (!mapInstanceRef.current) return
+    if (!mapInstanceRef.current || !clustererRef.current) return
+    clustererRef.current.clear()
+    markersRef.current = []
 
-    overlaysRef.current.forEach((o) => o.setMap(null))
-    overlaysRef.current = []
-
-    const filtered = filterLevel === 0
-      ? restaurants
-      : restaurants.filter((r) => r.honbab_level === filterLevel)
-
-    filtered.forEach((restaurant) => {
-      const color = LEVEL_COLOR[restaurant.honbab_level]
-      const emoji = LEVEL_EMOJI[restaurant.honbab_level]
-
-      const el = document.createElement('div')
-      el.style.cssText = 'display:flex;flex-direction:column;align-items:center;cursor:pointer;'
-      el.innerHTML = `
-        <div style="background:white;border:2.5px solid ${color};border-radius:20px;
-          padding:4px 10px;font-size:12px;font-weight:700;color:#1a1a1a;
-          white-space:nowrap;box-shadow:0 2px 8px rgba(0,0,0,0.18);
-          display:flex;align-items:center;gap:4px;">
-          <span>${emoji}</span><span>${restaurant.name}</span>
-        </div>
-        <div style="width:0;height:0;border-left:5px solid transparent;border-right:5px solid transparent;
-          border-top:7px solid ${color};margin-top:-1px;"></div>
-      `
-      el.addEventListener('click', () => onMarkerClick(restaurant))
-
-      const overlay = new window.kakao.maps.CustomOverlay({
+    const markers = restaurants.map(restaurant => {
+      const color = LEVEL_COLORS[restaurant.honbab_level] || '#888'
+      const image = createMarkerImage(color)
+      const marker = new window.kakao.maps.Marker({
         position: new window.kakao.maps.LatLng(restaurant.lat, restaurant.lng),
-        content: el,
-        map: mapInstanceRef.current!,
-        yAnchor: 1,
+        image,
+        title: restaurant.name,
       })
-      overlaysRef.current.push(overlay)
+      window.kakao.maps.event.addListener(marker, 'click', () => onMarkerClick(restaurant))
+      markersRef.current.push({ marker, restaurant })
+      return marker
     })
-  }, [restaurants, filterLevel, onMarkerClick])
 
-  return <div ref={mapRef} style={{ width: '100%', height: '100vh', minHeight: '100vh' }} />
+    clustererRef.current.addMarkers(markers)
+  }, [restaurants, onMarkerClick])
+
+  // 선택된 마커 강조
+  useEffect(() => {
+    if (!mapInstanceRef.current) return
+    markersRef.current.forEach(({ marker, restaurant }) => {
+      const color = selectedId === restaurant.id ? '#FF6B35' : LEVEL_COLORS[restaurant.honbab_level] || '#888'
+      marker.setImage(createMarkerImage(color))
+    })
+  }, [selectedId])
+
+  return <div ref={mapRef} style={{ width: '100%', height: '100%' }} />
 }
