@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect, useMemo, useCallback, useRef } from 'react'
+import { useState, useEffect, useMemo, useCallback, useRef, type KeyboardEvent } from 'react'
 import dynamic from 'next/dynamic'
 import { supabase, Restaurant } from '@/lib/supabase'
 import { calcHonbabScore, matchesCategory } from '@/lib/honbabScore'
@@ -30,8 +30,12 @@ export default function MapTab() {
   const [selectedRestaurant, setSelectedRestaurant] = useState<Restaurant | null>(null)
   const [mobileListOpen, setMobileListOpen] = useState(false)
   const [loading, setLoading] = useState(false)
+  const [locQuery, setLocQuery] = useState('')
+  const [locSuggestions, setLocSuggestions] = useState<{ place_name: string; lat: number; lng: number }[]>([])
+  const [centerTo, setCenterTo] = useState<{ lat: number; lng: number; level?: number } | null>(null)
   const boundsRef = useRef<MapBounds | null>(null)
   const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null)
+  const locDebounceRef = useRef<ReturnType<typeof setTimeout> | null>(null)
 
   const fetchByBounds = useCallback(async (bounds: MapBounds) => {
     setLoading(true)
@@ -69,6 +73,31 @@ export default function MapTab() {
     setSelectedRestaurant(prev => prev?.id === id ? { ...prev, honbab_level: newLevel } : prev)
   }, [])
 
+  const searchLocation = useCallback(async (query: string) => {
+    if (!query.trim()) { setLocSuggestions([]); return }
+    try {
+      const res = await fetch(
+        `https://dapi.kakao.com/v2/local/search/keyword.json?query=${encodeURIComponent(query)}&size=5`,
+        { headers: { Authorization: 'KakaoAK 6b2c13135baeeaddb3f9f222af85492d' } }
+      )
+      const json = await res.json()
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      setLocSuggestions(json.documents?.map((d: any) => ({ place_name: d.place_name, lat: parseFloat(d.y), lng: parseFloat(d.x) })) || [])
+    } catch { setLocSuggestions([]) }
+  }, [])
+
+  const handleLocInput = (val: string) => {
+    setLocQuery(val)
+    if (locDebounceRef.current) clearTimeout(locDebounceRef.current)
+    locDebounceRef.current = setTimeout(() => searchLocation(val), 300)
+  }
+
+  const selectLocation = (place: { place_name: string; lat: number; lng: number }) => {
+    setLocQuery(place.place_name)
+    setLocSuggestions([])
+    setCenterTo({ lat: place.lat, lng: place.lng, level: 4 })
+  }
+
   const handlePriceUpdated = useCallback((id: string, newPrice: 1 | 2 | 3 | 4) => {
     setRestaurants(prev => prev.map(r => r.id === id ? { ...r, price_range: newPrice } : r))
     setSelectedRestaurant(prev => prev?.id === id ? { ...prev, price_range: newPrice } : prev)
@@ -94,7 +123,29 @@ export default function MapTab() {
     <div className="flex h-full relative">
       {/* ===== 데스크탑 왼쪽 패널 ===== */}
       <div className="hidden md:flex flex-col w-96 bg-white border-r border-gray-100 overflow-hidden shrink-0">
-        {/* 검색 */}
+        {/* 위치 검색 */}
+        <div className="p-3 pb-0 relative">
+          <div className="flex items-center gap-2 bg-blue-50 border border-blue-200 rounded-xl px-3 py-2">
+            <span className="text-blue-400 text-sm shrink-0">📍</span>
+            <input value={locQuery} onChange={e => handleLocInput(e.target.value)}
+              onKeyDown={(e: KeyboardEvent<HTMLInputElement>) => { if (e.key === 'Escape') { setLocQuery(''); setLocSuggestions([]) } }}
+              placeholder="위치 검색 (예: 영등포역, 여의도, 부평)" className="flex-1 text-sm bg-transparent outline-none text-gray-700 placeholder-gray-400" />
+            {locQuery && <button onClick={() => { setLocQuery(''); setLocSuggestions([]) }} className="text-gray-400 hover:text-gray-600 text-xs">✕</button>}
+          </div>
+          {locSuggestions.length > 0 && (
+            <div className="absolute left-3 right-3 top-full mt-1 bg-white rounded-xl shadow-lg border border-gray-100 z-50 overflow-hidden">
+              {locSuggestions.map((s, i) => (
+                <button key={i} onClick={() => selectLocation(s)}
+                  className="w-full text-left px-4 py-2.5 text-sm text-gray-700 hover:bg-orange-50 hover:text-orange-600 flex items-center gap-2 border-b border-gray-50 last:border-0">
+                  <span className="text-gray-400 text-xs">📍</span>
+                  {s.place_name}
+                </button>
+              ))}
+            </div>
+          )}
+        </div>
+
+        {/* 식당 검색 */}
         <div className="p-3 border-b border-gray-100">
           <div className="flex items-center gap-2 bg-gray-100 rounded-xl px-3 py-2">
             <svg className="w-4 h-4 text-gray-400 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -167,6 +218,7 @@ export default function MapTab() {
           selectedId={selectedRestaurant?.id}
           onMarkerClick={setSelectedRestaurant}
           onBoundsChange={handleBoundsChange}
+          centerTo={centerTo}
         />
 
         {/* 모바일 상단 검색 */}

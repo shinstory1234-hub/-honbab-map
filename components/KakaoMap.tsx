@@ -10,6 +10,7 @@ type Props = {
   selectedId?: string | null
   onMarkerClick: (restaurant: Restaurant) => void
   onBoundsChange?: (bounds: MapBounds) => void
+  centerTo?: { lat: number; lng: number; level?: number } | null
 }
 
 declare global {
@@ -53,7 +54,7 @@ function createMarkerImage(color: string) {
   return new window.kakao.maps.MarkerImage(`data:image/svg+xml;charset=utf-8,${svg}`, size, option)
 }
 
-export default function KakaoMap({ restaurants, selectedId, onMarkerClick, onBoundsChange }: Props) {
+export default function KakaoMap({ restaurants, selectedId, onMarkerClick, onBoundsChange, centerTo }: Props) {
   const mapRef = useRef<HTMLDivElement>(null)
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const mapInstanceRef = useRef<any>(null)
@@ -132,6 +133,14 @@ export default function KakaoMap({ restaurants, selectedId, onMarkerClick, onBou
 
     clustererRef.current.addMarkers(markers)
   }, [restaurants, onMarkerClick])
+
+  // 외부에서 지도 이동
+  useEffect(() => {
+    if (!mapInstanceRef.current || !centerTo) return
+    const pos = new window.kakao.maps.LatLng(centerTo.lat, centerTo.lng)
+    mapInstanceRef.current.setCenter(pos)
+    if (centerTo.level) mapInstanceRef.current.setLevel(centerTo.level)
+  }, [centerTo])
 
   // 선택된 마커 강조
   useEffect(() => {

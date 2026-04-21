@@ -18,6 +18,19 @@ export type Restaurant = {
   honbab_level: 1 | 2 | 3
   honbab_tags: string[]
   price_range: 1 | 2 | 3 | 4
+  up_votes: number
+  down_votes: number
+  price_good_votes: number
+  price_bad_votes: number
+  edit_count: number
+  created_at: string
+}
+
+export type HonbabTip = {
+  id: string
+  restaurant_id: string
+  nickname: string
+  tip: string
   created_at: string
 }
 
