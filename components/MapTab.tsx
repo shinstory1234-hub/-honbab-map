@@ -31,7 +31,7 @@ export default function MapTab() {
 
   useEffect(() => {
     const fetchAll = async () => {
-      const { data: rests } = await supabase.from('restaurants').select('*')
+      const { data: rests } = await supabase.from('restaurants').select('*').range(0, 9999)
       if (rests) setRestaurants(rests as Restaurant[])
 
       const { data: votes } = await supabase.from('honbab_votes').select('restaurant_id')
