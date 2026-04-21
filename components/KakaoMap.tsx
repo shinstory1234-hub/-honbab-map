@@ -66,6 +66,9 @@ export default function KakaoMap({ restaurants, filterLevel, onMarkerClick }: Pr
     loadKakaoScript().then(() => {
       if (!mapRef.current || mapInstanceRef.current) return
 
+      // 컨테이너 높이를 px로 명시 (dvh 미지원 대비)
+      mapRef.current.style.height = window.innerHeight + 'px'
+
       const defaultCenter = new window.kakao.maps.LatLng(37.5665, 126.9780)
       const map = new window.kakao.maps.Map(mapRef.current, {
         center: defaultCenter,
@@ -73,11 +76,23 @@ export default function KakaoMap({ restaurants, filterLevel, onMarkerClick }: Pr
       })
       mapInstanceRef.current = map
 
+      // 지도 컨테이너 크기 재계산 (빈 화면 방지)
+      map.relayout()
+      map.setCenter(defaultCenter)
+
       if (navigator.geolocation) {
         navigator.geolocation.getCurrentPosition((pos) => {
           map.setCenter(new window.kakao.maps.LatLng(pos.coords.latitude, pos.coords.longitude))
         })
       }
+
+      // 브라우저 리사이즈 시 재계산
+      const handleResize = () => {
+        if (mapRef.current) mapRef.current.style.height = window.innerHeight + 'px'
+        map.relayout()
+      }
+      window.addEventListener('resize', handleResize)
+      return () => window.removeEventListener('resize', handleResize)
     })
   }, [])
 
@@ -119,5 +134,5 @@ export default function KakaoMap({ restaurants, filterLevel, onMarkerClick }: Pr
     })
   }, [restaurants, filterLevel, onMarkerClick])
 
-  return <div ref={mapRef} style={{ width: '100%', height: '100dvh' }} />
+  return <div ref={mapRef} style={{ width: '100%', height: '100vh', minHeight: '100vh' }} />
 }

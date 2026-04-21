@@ -6,6 +6,7 @@ declare namespace kakao {
       setCenter(latlng: LatLng): void
       getCenter(): LatLng
       setLevel(level: number): void
+      relayout(): void
     }
     class LatLng {
       constructor(lat: number, lng: number)
