@@ -1,12 +1,13 @@
 'use client'
 
-import { useState, useEffect, useMemo, useCallback } from 'react'
+import { useState, useEffect, useMemo, useCallback, useRef } from 'react'
 import dynamic from 'next/dynamic'
 import { supabase, Restaurant } from '@/lib/supabase'
 import { calcHonbabScore, matchesCategory } from '@/lib/honbabScore'
 import RestaurantCard from '@/components/RestaurantCard'
 import RestaurantDetail from '@/components/RestaurantDetail'
 import QuickRecommend from '@/components/QuickRecommend'
+import { type MapBounds } from '@/components/KakaoMap'
 
 const KakaoMap = dynamic(() => import('@/components/KakaoMap'), { ssr: false })
 
@@ -28,30 +29,39 @@ export default function MapTab() {
   const [searchQuery, setSearchQuery] = useState('')
   const [selectedRestaurant, setSelectedRestaurant] = useState<Restaurant | null>(null)
   const [mobileListOpen, setMobileListOpen] = useState(false)
+  const [loading, setLoading] = useState(false)
+  const boundsRef = useRef<MapBounds | null>(null)
+  const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null)
 
+  const fetchByBounds = useCallback(async (bounds: MapBounds) => {
+    setLoading(true)
+    const { data } = await supabase
+      .from('restaurants')
+      .select('*')
+      .gte('lat', bounds.sw_lat)
+      .lte('lat', bounds.ne_lat)
+      .gte('lng', bounds.sw_lng)
+      .lte('lng', bounds.ne_lng)
+      .limit(1000)
+    if (data) setRestaurants(data as Restaurant[])
+    setLoading(false)
+  }, [])
+
+  const handleBoundsChange = useCallback((bounds: MapBounds) => {
+    boundsRef.current = bounds
+    if (debounceRef.current) clearTimeout(debounceRef.current)
+    debounceRef.current = setTimeout(() => fetchByBounds(bounds), 400)
+  }, [fetchByBounds])
+
+  // 투표 수 로드 (한 번만)
   useEffect(() => {
-    const fetchAll = async () => {
-      // Supabase 기본 1000개 제한 → 페이지네이션으로 전체 조회
-      let all: Restaurant[] = []
-      let from = 0
-      const PAGE = 1000
-      while (true) {
-        const { data } = await supabase.from('restaurants').select('*').range(from, from + PAGE - 1)
-        if (!data || data.length === 0) break
-        all = [...all, ...(data as Restaurant[])]
-        if (data.length < PAGE) break
-        from += PAGE
-      }
-      setRestaurants(all)
-
-      const { data: votes } = await supabase.from('honbab_votes').select('restaurant_id')
+    supabase.from('honbab_votes').select('restaurant_id').then(({ data: votes }) => {
       if (votes) {
         const counts: Record<string, number> = {}
         votes.forEach((v: { restaurant_id: string }) => { counts[v.restaurant_id] = (counts[v.restaurant_id] || 0) + 1 })
         setVoteCounts(counts)
       }
-    }
-    fetchAll()
+    })
   }, [])
 
   const handleLevelUpdated = useCallback((id: string, newLevel: 1 | 2 | 3) => {
@@ -130,7 +140,9 @@ export default function MapTab() {
 
         {/* 식당 목록 */}
         <div className="flex-1 overflow-y-auto scrollbar-thin p-3 flex flex-col gap-2">
-          <p className="text-xs text-gray-400 font-semibold mb-1">{filtered.length}개의 식당</p>
+          <p className="text-xs text-gray-400 font-semibold mb-1">
+            {loading ? '로딩 중...' : `${filtered.length}개의 식당`}
+          </p>
           {filtered.map(r => (
             <RestaurantCard
               key={r.id}
@@ -149,6 +161,7 @@ export default function MapTab() {
           restaurants={filtered}
           selectedId={selectedRestaurant?.id}
           onMarkerClick={setSelectedRestaurant}
+          onBoundsChange={handleBoundsChange}
         />
 
         {/* 모바일 상단 검색 */}
@@ -176,6 +189,14 @@ export default function MapTab() {
             ))}
           </div>
         </div>
+
+        {/* 로딩 인디케이터 */}
+        {loading && (
+          <div className="absolute top-3 right-3 z-10 md:top-auto md:bottom-6 bg-white rounded-full shadow px-3 py-1.5 text-xs text-gray-500 font-semibold flex items-center gap-1.5">
+            <span className="w-2 h-2 bg-orange-400 rounded-full animate-pulse" />
+            로딩 중...
+          </div>
+        )}
 
         {/* 모바일 리스트 토글 버튼 */}
         <button

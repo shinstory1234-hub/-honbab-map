@@ -3,10 +3,13 @@
 import { useEffect, useRef } from 'react'
 import { Restaurant } from '@/lib/supabase'
 
+export type MapBounds = { sw_lat: number; sw_lng: number; ne_lat: number; ne_lng: number }
+
 type Props = {
   restaurants: Restaurant[]
   selectedId?: string | null
   onMarkerClick: (restaurant: Restaurant) => void
+  onBoundsChange?: (bounds: MapBounds) => void
 }
 
 declare global {
@@ -50,7 +53,7 @@ function createMarkerImage(color: string) {
   return new window.kakao.maps.MarkerImage(`data:image/svg+xml;charset=utf-8,${svg}`, size, option)
 }
 
-export default function KakaoMap({ restaurants, selectedId, onMarkerClick }: Props) {
+export default function KakaoMap({ restaurants, selectedId, onMarkerClick, onBoundsChange }: Props) {
   const mapRef = useRef<HTMLDivElement>(null)
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const mapInstanceRef = useRef<any>(null)
@@ -79,10 +82,25 @@ export default function KakaoMap({ restaurants, selectedId, onMarkerClick }: Pro
       })
       clustererRef.current = clusterer
 
+      // bounds 변경 시 콜백 (idle = 이동/줌 완료 후)
+      const emitBounds = () => {
+        if (!onBoundsChange) return
+        const bounds = map.getBounds()
+        const sw = bounds.getSouthWest()
+        const ne = bounds.getNorthEast()
+        onBoundsChange({ sw_lat: sw.getLat(), sw_lng: sw.getLng(), ne_lat: ne.getLat(), ne_lng: ne.getLng() })
+      }
+      window.kakao.maps.event.addListener(map, 'idle', emitBounds)
+
       if (navigator.geolocation) {
         navigator.geolocation.getCurrentPosition(pos => {
           map.setCenter(new window.kakao.maps.LatLng(pos.coords.latitude, pos.coords.longitude))
+        }, () => {
+          // 위치 거부 시 초기 bounds 즉시 emit
+          emitBounds()
         })
+      } else {
+        emitBounds()
       }
 
       const handleResize = () => {
