@@ -15,10 +15,10 @@ export function getHonbabGrade(score: number): { emoji: string; label: string; c
 }
 
 export const PRICE_LABELS: Record<number, string> = {
-  1: '1만원 이하',
-  2: '1.5만원 이하',
-  3: '2만원 이하',
-  4: '2만원 이상',
+  1: '₩ 저렴',
+  2: '₩₩ 보통',
+  3: '₩₩₩ 비쌈',
+  4: '₩₩₩₩ 고급',
 }
 
 export const CATEGORY_KEYWORDS: Record<string, string[]> = {

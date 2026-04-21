@@ -39,11 +39,54 @@ function makeTags(honbab_level, area) {
   return [...new Set(tags)]
 }
 
-// ===== EPSG:2097 → WGS84 근사 변환 =====
+// ===== EPSG:2097 → WGS84 정확한 역투영 (Korea Central Belt 2002) =====
 function tmToWgs84(x, y) {
-  const lat = 38 + (y - 500000) / 111111
-  const lng = 127 + (x - 200000) / (111111 * Math.cos(lat * Math.PI / 180))
-  return { lat, lng }
+  const a = 6378137.0
+  const f = 1 / 298.257223563
+  const e2 = 2 * f - f * f
+  const k0 = 1.0
+  const lon0 = 127 * Math.PI / 180
+  const lat0 = 38 * Math.PI / 180
+  const FE = 200000, FN = 500000
+
+  const e = Math.sqrt(e2), e4 = e2 * e2, e6 = e4 * e2
+
+  function M(phi) {
+    return a * ((1 - e2/4 - 3*e4/64 - 5*e6/256)*phi
+      - (3*e2/8 + 3*e4/32 + 45*e6/1024)*Math.sin(2*phi)
+      + (15*e4/256 + 45*e6/1024)*Math.sin(4*phi)
+      - (35*e6/3072)*Math.sin(6*phi))
+  }
+
+  const M0 = M(lat0)
+  const xp = x - FE
+  const yp = y - FN + M0
+
+  const e1 = (1 - Math.sqrt(1 - e2)) / (1 + Math.sqrt(1 - e2))
+  const mu = yp / (a * (1 - e2/4 - 3*e4/64 - 5*e6/256))
+  const phi1 = mu
+    + (3*e1/2 - 27*e1**3/32)*Math.sin(2*mu)
+    + (21*e1**2/16 - 55*e1**4/32)*Math.sin(4*mu)
+    + (151*e1**3/96)*Math.sin(6*mu)
+    + (1097*e1**4/512)*Math.sin(8*mu)
+
+  const N1 = a / Math.sqrt(1 - e2*Math.sin(phi1)**2)
+  const T1 = Math.tan(phi1)**2
+  const C1 = e2/(1-e2)*Math.cos(phi1)**2
+  const R1 = a*(1-e2) / (1 - e2*Math.sin(phi1)**2)**1.5
+  const D = xp / (N1 * k0)
+
+  const lat = phi1 - (N1*Math.tan(phi1)/R1)*(
+    D**2/2
+    - (5 + 3*T1 + 10*C1 - 4*C1**2 - 9*e2/(1-e2))*D**4/24
+    + (61 + 90*T1 + 298*C1 + 45*T1**2 - 252*e2/(1-e2) - 3*C1**2)*D**6/720
+  )
+  const lon = lon0 + (
+    D - (1 + 2*T1 + C1)*D**3/6
+    + (5 - 2*C1 + 28*T1 - 3*C1**2 + 8*e2/(1-e2) + 24*T1**2)*D**5/120
+  ) / Math.cos(phi1)
+
+  return { lat: lat * 180 / Math.PI, lng: lon * 180 / Math.PI }
 }
 
 function isValidKoreaCoord(lat, lng) {
