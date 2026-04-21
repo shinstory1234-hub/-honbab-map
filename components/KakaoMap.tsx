@@ -29,8 +29,18 @@ declare global {
 }
 
 function loadKakaoScript(): Promise<void> {
-  return new Promise((resolve) => {
+  return new Promise((resolve, reject) => {
+    const apiKey = process.env.NEXT_PUBLIC_KAKAO_MAP_KEY
+    console.log('[KakaoMap] NEXT_PUBLIC_KAKAO_MAP_KEY:', apiKey)
+
+    if (!apiKey) {
+      console.error('[KakaoMap] API 키가 없습니다! .env.local 또는 Vercel 환경변수를 확인하세요.')
+      reject(new Error('Missing NEXT_PUBLIC_KAKAO_MAP_KEY'))
+      return
+    }
+
     if (window.__kakaoMapLoaded) {
+      console.log('[KakaoMap] 스크립트 이미 로드됨')
       resolve()
       return
     }
@@ -46,12 +56,19 @@ function loadKakaoScript(): Promise<void> {
     }
     const script = document.createElement('script')
     script.id = 'kakao-map-sdk'
-    script.src = `//dapi.kakao.com/v2/maps/sdk.js?appkey=${process.env.NEXT_PUBLIC_KAKAO_MAP_KEY}&autoload=false`
+    script.src = `//dapi.kakao.com/v2/maps/sdk.js?appkey=${apiKey}&autoload=false`
+    console.log('[KakaoMap] 스크립트 로드 시작:', script.src)
     script.onload = () => {
+      console.log('[KakaoMap] 스크립트 로드 완료')
       window.kakao.maps.load(() => {
         window.__kakaoMapLoaded = true
+        console.log('[KakaoMap] kakao.maps.load 완료')
         resolve()
       })
+    }
+    script.onerror = (e) => {
+      console.error('[KakaoMap] 스크립트 로드 실패:', e)
+      reject(new Error('Kakao script load failed'))
     }
     document.head.appendChild(script)
   })
@@ -69,12 +86,21 @@ export default function KakaoMap({ restaurants, filterLevel, onMarkerClick }: Pr
       // 컨테이너 높이를 px로 명시 (dvh 미지원 대비)
       mapRef.current.style.height = window.innerHeight + 'px'
 
+      console.log('[KakaoMap] 컨테이너 크기:', {
+        offsetWidth: mapRef.current.offsetWidth,
+        offsetHeight: mapRef.current.offsetHeight,
+        clientWidth: mapRef.current.clientWidth,
+        clientHeight: mapRef.current.clientHeight,
+        styleHeight: mapRef.current.style.height,
+      })
+
       const defaultCenter = new window.kakao.maps.LatLng(37.5665, 126.9780)
       const map = new window.kakao.maps.Map(mapRef.current, {
         center: defaultCenter,
         level: 4,
       })
       mapInstanceRef.current = map
+      console.log('[KakaoMap] 지도 인스턴스 생성 완료')
 
       // 지도 컨테이너 크기 재계산 (빈 화면 방지)
       map.relayout()
@@ -93,7 +119,7 @@ export default function KakaoMap({ restaurants, filterLevel, onMarkerClick }: Pr
       }
       window.addEventListener('resize', handleResize)
       return () => window.removeEventListener('resize', handleResize)
-    })
+    }).catch((e) => console.error('[KakaoMap] 초기화 실패:', e))
   }, [])
 
   useEffect(() => {
