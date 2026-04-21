@@ -20,8 +20,10 @@ function PostDetailView({ post, onBack }: { post: Post; onBack: () => void }) {
   const [sending, setSending] = useState(false)
 
   useEffect(() => {
-    const views = post.views
-    supabase.from('posts').update({ views: (views ?? 0) + 1 }).eq('id', post.id)
+    // 조회수: DB에서 현재 값 읽어서 +1 (stale 클라이언트 값 사용 방지)
+    supabase.from('posts').select('views').eq('id', post.id).single().then(({ data }) => {
+      supabase.from('posts').update({ views: (data?.views ?? 0) + 1 }).eq('id', post.id)
+    })
     supabase.from('comments').select('*').eq('post_id', post.id).order('created_at').then(({ data }) => {
       if (data) setComments(data as Comment[])
     })

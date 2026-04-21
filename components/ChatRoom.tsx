@@ -15,6 +15,7 @@ function timeStr(dateStr: string) {
 
 export default function ChatRoomView({ room, onBack }: Props) {
   const [messages, setMessages] = useState<Message[]>([])
+  const [participants, setParticipants] = useState(0)
   const [content, setContent] = useState('')
   const [sending, setSending] = useState(false)
   const nickname = getNickname()
@@ -26,23 +27,31 @@ export default function ChatRoomView({ room, onBack }: Props) {
       if (data) setMessages(data as Message[])
     })
 
-    // 참여자 수 증가
+    // 참여자 수 증가 (fetch → +1 → set)
     supabase.from('chat_rooms').select('participants_count').eq('id', room.id).single().then(({ data }) => {
-      if (data) supabase.from('chat_rooms').update({ participants_count: data.participants_count + 1 }).eq('id', room.id)
+      const current = data?.participants_count ?? 0
+      const next = current + 1
+      supabase.from('chat_rooms').update({ participants_count: next }).eq('id', room.id)
+      setParticipants(next)
     })
 
-    // Realtime 구독
+    // Realtime: 다른 사람 메시지만 (내가 보낸 건 send()에서 즉시 추가)
     const channel = supabase.channel(`room:${room.id}`)
-      .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'messages', filter: `room_id=eq.${room.id}` }, payload => {
-        setMessages(prev => [...prev, payload.new as Message])
+      .on('postgres_changes', {
+        event: 'INSERT', schema: 'public', table: 'messages',
+        filter: `room_id=eq.${room.id}`
+      }, payload => {
+        const msg = payload.new as Message
+        // 내가 보낸 메시지는 이미 추가됐으므로 중복 방지
+        setMessages(prev => prev.some(m => m.id === msg.id) ? prev : [...prev, msg])
       })
       .subscribe()
 
     return () => {
       supabase.removeChannel(channel)
-      // 참여자 수 감소
       supabase.from('chat_rooms').select('participants_count').eq('id', room.id).single().then(({ data }) => {
-        if (data) supabase.from('chat_rooms').update({ participants_count: Math.max(0, data.participants_count - 1) }).eq('id', room.id)
+        const current = data?.participants_count ?? 1
+        supabase.from('chat_rooms').update({ participants_count: Math.max(0, current - 1) }).eq('id', room.id)
       })
     }
   }, [room.id])
@@ -54,8 +63,17 @@ export default function ChatRoomView({ room, onBack }: Props) {
   const send = async () => {
     if (!content.trim() || sending) return
     setSending(true)
-    await supabase.from('messages').insert({ room_id: room.id, content: content.trim(), author: nickname })
+    const text = content.trim()
     setContent('')
+    const { data, error } = await supabase
+      .from('messages')
+      .insert({ room_id: room.id, content: text, author: nickname })
+      .select()
+      .single()
+    if (data && !error) {
+      // 내 메시지 즉시 추가 (realtime 중복 방지는 id 체크로)
+      setMessages(prev => prev.some(m => m.id === data.id) ? prev : [...prev, data as Message])
+    }
     setSending(false)
   }
 
@@ -74,7 +92,7 @@ export default function ChatRoomView({ room, onBack }: Props) {
         </div>
         <div className="flex items-center gap-1 text-xs text-green-500 font-semibold bg-green-50 px-2 py-1 rounded-lg">
           <span className="w-1.5 h-1.5 bg-green-500 rounded-full animate-pulse" />
-          <span>{room.participants_count}명</span>
+          <span>{participants}명</span>
         </div>
       </div>
 
