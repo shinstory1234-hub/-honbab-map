@@ -1,5 +1,7 @@
 'use client'
 
+export const dynamic = 'force-dynamic'
+
 import { useEffect, useState, useCallback } from 'react'
 import dynamic from 'next/dynamic'
 import { supabase, Restaurant } from '@/lib/supabase'
