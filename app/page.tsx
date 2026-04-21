@@ -3,13 +3,13 @@
 export const dynamic = 'force-dynamic'
 
 import { useEffect, useState, useCallback } from 'react'
-import dynamic from 'next/dynamic'
+import dynamicImport from 'next/dynamic'
 import { supabase, Restaurant } from '@/lib/supabase'
 import BottomSheet from '@/components/BottomSheet'
 import ReportModal from '@/components/ReportModal'
 import AddRestaurantModal from '@/components/AddRestaurantModal'
 
-const KakaoMap = dynamic(() => import('@/components/KakaoMap'), { ssr: false })
+const KakaoMap = dynamicImport(() => import('@/components/KakaoMap'), { ssr: false })
 
 type FilterLevel = 0 | 1 | 2 | 3
 
