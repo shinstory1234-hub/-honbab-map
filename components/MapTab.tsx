@@ -31,8 +31,18 @@ export default function MapTab() {
 
   useEffect(() => {
     const fetchAll = async () => {
-      const { data: rests } = await supabase.from('restaurants').select('*').range(0, 9999)
-      if (rests) setRestaurants(rests as Restaurant[])
+      // Supabase 기본 1000개 제한 → 페이지네이션으로 전체 조회
+      let all: Restaurant[] = []
+      let from = 0
+      const PAGE = 1000
+      while (true) {
+        const { data } = await supabase.from('restaurants').select('*').range(from, from + PAGE - 1)
+        if (!data || data.length === 0) break
+        all = [...all, ...(data as Restaurant[])]
+        if (data.length < PAGE) break
+        from += PAGE
+      }
+      setRestaurants(all)
 
       const { data: votes } = await supabase.from('honbab_votes').select('restaurant_id')
       if (votes) {
