@@ -3,33 +3,24 @@
 import { useState } from 'react'
 import dynamicImport from 'next/dynamic'
 import Nav from '@/components/Nav'
-import BoardTab from '@/components/BoardTab'
-import ChatTab from '@/components/ChatTab'
 import AddRestaurantModal from '@/components/AddRestaurantModal'
 import MyPageModal from '@/components/MyPageModal'
 
 const MapTab = dynamicImport(() => import('@/components/MapTab'), { ssr: false })
 
-type Tab = 'map' | 'board' | 'chat'
-
 export default function HomePage() {
-  const [tab, setTab] = useState<Tab>('map')
   const [addModalOpen, setAddModalOpen] = useState(false)
   const [myPageOpen, setMyPageOpen] = useState(false)
 
   return (
     <div className="flex flex-col h-[100dvh] overflow-hidden bg-gray-50">
       <Nav
-        tab={tab}
-        onTabChange={setTab}
         onAddRestaurant={() => setAddModalOpen(true)}
         onMyPage={() => setMyPageOpen(true)}
       />
 
       <div className="flex-1 overflow-hidden">
-        {tab === 'map' && <MapTab />}
-        {tab === 'board' && <BoardTab />}
-        {tab === 'chat' && <ChatTab />}
+        <MapTab />
       </div>
 
       <AddRestaurantModal isOpen={addModalOpen} onClose={() => setAddModalOpen(false)} />
