@@ -125,10 +125,12 @@ export default function MapTab() {
 
   // 투표 수 로드 (한 번만)
   useEffect(() => {
-    supabase.from('honbab_votes').select('restaurant_id').then(({ data: votes }) => {
+    supabase.from('honbab_votes').select('restaurant_id, vote_type').then(({ data: votes }) => {
       if (votes) {
         const counts: Record<string, number> = {}
-        votes.forEach((v: { restaurant_id: string }) => { counts[v.restaurant_id] = (counts[v.restaurant_id] || 0) + 1 })
+        votes.forEach((v: { restaurant_id: string; vote_type: string }) => {
+          if (v.vote_type === 'up') counts[v.restaurant_id] = (counts[v.restaurant_id] || 0) + 1
+        })
         setVoteCounts(counts)
       }
     })

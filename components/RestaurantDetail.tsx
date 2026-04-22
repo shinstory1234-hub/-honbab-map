@@ -148,7 +148,7 @@ export default function RestaurantDetail({ restaurant, onClose, onLevelUpdated, 
   const upPct = totalVotes > 0 ? Math.round((upVotes / totalVotes) * 100) : 0
   const downPct = totalVotes > 0 ? 100 - upPct : 0
   const totalPriceVotes = priceVotes[1] + priceVotes[2] + priceVotes[3] + priceVotes[4]
-  const score = calcHonbabScore(restaurant, totalVotes)
+  const score = calcHonbabScore(restaurant, upVotes)
   const grade = getHonbabGrade(score)
 
   return (
