@@ -3,7 +3,7 @@
 import { useState, useEffect, useMemo, useCallback, useRef, type KeyboardEvent } from 'react'
 import dynamic from 'next/dynamic'
 import { supabase, Restaurant } from '@/lib/supabase'
-import { calcHonbabScore, matchesCategory } from '@/lib/honbabScore'
+import { calcHonbabScore, matchesCategory, HONBAB_EXCLUDED_KEYWORDS } from '@/lib/honbabScore'
 import RestaurantCard from '@/components/RestaurantCard'
 import RestaurantDetail from '@/components/RestaurantDetail'
 import QuickRecommend from '@/components/QuickRecommend'
@@ -11,7 +11,7 @@ import { type MapBounds } from '@/components/KakaoMap'
 
 const KakaoMap = dynamic(() => import('@/components/KakaoMap'), { ssr: false })
 
-const CATEGORIES = ['전체', '한식', '일식', '중식', '양식', '분식', '카페', '고기']
+const CATEGORIES = ['전체', '면류', '밥류', '분식', '카페']
 const SORT_OPTIONS = [
   { value: 'score', label: '혼밥지수순' },
   { value: 'level', label: '난이도순' },
@@ -30,17 +30,55 @@ type KakaoPlace = {
   y: string
 }
 
-function mapKakaoCategory(catName: string): { category: string; honbab_level: 1 | 2 | 3; price_range: 1 | 2 | 3 | 4 } {
+type CategoryResult = { category: string; honbab_level: 1 | 2 | 3; price_range: 1 | 2 | 3 | 4 }
+
+function mapKakaoCategory(catName: string): CategoryResult | null {
   const c = catName.toLowerCase()
-  if (c.includes('카페') || c.includes('커피') || c.includes('디저트') || c.includes('브런치')) return { category: '카페', honbab_level: 1, price_range: 1 }
-  if (c.includes('분식')) return { category: '분식', honbab_level: 1, price_range: 1 }
-  if (c.includes('패스트푸드')) return { category: '패스트푸드', honbab_level: 1, price_range: 1 }
-  if (c.includes('냉면')) return { category: '냉면집', honbab_level: 1, price_range: 1 }
-  if (c.includes('술집') || c.includes('호프') || c.includes('맥주') || c.includes('와인바') || c.includes('칵테일') || c.includes('포차')) return { category: '주점', honbab_level: 3, price_range: 2 }
-  if (c.includes('일식') || c.includes('라멘') || c.includes('초밥') || c.includes('우동') || c.includes('돈까스')) return { category: '일식', honbab_level: 2, price_range: 2 }
-  if (c.includes('중국') || c.includes('중식')) return { category: '중식', honbab_level: 2, price_range: 2 }
-  if (c.includes('양식') || c.includes('이탈리안') || c.includes('피자') || c.includes('파스타') || c.includes('스테이크')) return { category: '양식', honbab_level: 2, price_range: 3 }
-  if (c.includes('한식') || c.includes('국밥') || c.includes('설렁탕') || c.includes('해장국')) return { category: '한식', honbab_level: 2, price_range: 2 }
+
+  // 혼밥 불가 — 추가/표시 차단
+  if (HONBAB_EXCLUDED_KEYWORDS.some(k => c.includes(k))) return null
+
+  // 카페
+  if (c.includes('카페') || c.includes('커피') || c.includes('디저트') || c.includes('브런치'))
+    return { category: '카페', honbab_level: 1, price_range: 1 }
+
+  // 면류
+  if (c.includes('라멘') || c.includes('츠케멘') || c.includes('아부라소바') ||
+      c.includes('우동') || c.includes('소바') || c.includes('냉면') ||
+      c.includes('쌀국수') || c.includes('퍼') || c.includes('분짜') ||
+      c.includes('파스타') || c.includes('칼국수') || c.includes('수제비') || c.includes('막국수'))
+    return { category: '면류', honbab_level: 1, price_range: 2 }
+
+  // 분식
+  if (c.includes('분식') || c.includes('떡볶이') || c.includes('김밥'))
+    return { category: '분식', honbab_level: 1, price_range: 1 }
+
+  // 밥류 — 규동/돈부리/카레/덮밥/볶음밥/비빔밥/솥밥
+  if (c.includes('규동') || c.includes('돈부리') || c.includes('오야코') ||
+      c.includes('볶음밥') || c.includes('카레') || c.includes('덮밥') ||
+      c.includes('솥밥') || c.includes('비빔밥'))
+    return { category: '밥류', honbab_level: 1, price_range: 2 }
+
+  // 이자카야 (혼술 가능)
+  if (c.includes('이자카야') || c.includes('일본식주점'))
+    return { category: '밥류', honbab_level: 2, price_range: 2 }
+
+  // 1인 삼겹살 전문점 (카카오 카테고리명에 '1인' 포함 시)
+  if ((c.includes('삼겹살') || c.includes('구이')) && c.includes('1인'))
+    return { category: '밥류', honbab_level: 1, price_range: 2 }
+
+  // 일식 기타 (돈까스, 초밥 등)
+  if (c.includes('일식') || c.includes('초밥') || c.includes('돈까스'))
+    return { category: '밥류', honbab_level: 2, price_range: 2 }
+
+  // 한식 (국밥/해장국 계열)
+  if (c.includes('국밥') || c.includes('설렁탕') || c.includes('해장국') || c.includes('순댓국'))
+    return { category: '밥류', honbab_level: 1, price_range: 1 }
+
+  // 중식 면류 (짜장/짬뽕)
+  if (c.includes('짜장') || c.includes('짬뽕') || c.includes('중화'))
+    return { category: '면류', honbab_level: 2, price_range: 2 }
+
   return { category: '기타', honbab_level: 2, price_range: 2 }
 }
 
@@ -153,9 +191,10 @@ export default function MapTab() {
 
   const addFromKakao = useCallback(async (place: KakaoPlace) => {
     if (addingIds.has(place.id) || addedIds.has(place.id)) return
+    const mapped = mapKakaoCategory(place.category_name)
+    if (!mapped) return // 혼밥 불가 카테고리
     setAddingIds(prev => new Set(prev).add(place.id))
     const addr = place.road_address_name || place.address_name
-    const mapped = mapKakaoCategory(place.category_name)
     const { data, error } = await supabase.from('restaurants').insert({
       name: place.place_name, address: addr,
       lat: parseFloat(place.y), lng: parseFloat(place.x),
@@ -289,21 +328,24 @@ export default function MapTab() {
                   {kakaoResults.map(place => {
                     const catLabel = place.category_name.split('>').pop()?.trim() || place.category_name
                     const mapped = mapKakaoCategory(place.category_name)
+                    const excluded = mapped === null
                     return (
-                      <div key={place.id} className="bg-blue-50 rounded-xl p-3 mb-2 flex items-start justify-between gap-2 border border-blue-100">
+                      <div key={place.id} className={`rounded-xl p-3 mb-2 flex items-start justify-between gap-2 border ${excluded ? 'bg-gray-50 border-gray-200 opacity-60' : 'bg-blue-50 border-blue-100'}`}>
                         <div className="flex-1 min-w-0">
                           <p className="text-sm font-bold text-gray-800 truncate">{place.place_name}</p>
-                          <p className="text-xs text-blue-500 font-medium">{catLabel}</p>
+                          <p className={`text-xs font-medium ${excluded ? 'text-gray-400' : 'text-blue-500'}`}>{catLabel}</p>
                           <p className="text-xs text-gray-400 truncate">{place.road_address_name || place.address_name}</p>
                           <p className="text-xs mt-0.5">
-                            {mapped.honbab_level === 1 ? '🟢 혼밥 쉬움' : mapped.honbab_level === 3 ? '🔴 혼밥 어려움' : '🟡 혼밥 보통'}
+                            {excluded ? '⛔ 혼밥 불가 카테고리' : mapped.honbab_level === 1 ? '🟢 혼밥 쉬움' : mapped.honbab_level === 3 ? '🔴 혼밥 어려움' : '🟡 혼밥 보통'}
                           </p>
                         </div>
-                        <button onClick={() => addFromKakao(place)}
-                          disabled={addingIds.has(place.id) || addedIds.has(place.id)}
-                          className={`shrink-0 px-3 py-1.5 rounded-lg text-xs font-bold transition-all active:scale-95 ${addedIds.has(place.id) ? 'bg-green-100 text-green-600' : 'bg-blue-500 text-white disabled:opacity-50'}`}>
-                          {addedIds.has(place.id) ? '✓ 추가됨' : addingIds.has(place.id) ? '...' : '+ 추가'}
-                        </button>
+                        {!excluded && (
+                          <button onClick={() => addFromKakao(place)}
+                            disabled={addingIds.has(place.id) || addedIds.has(place.id)}
+                            className={`shrink-0 px-3 py-1.5 rounded-lg text-xs font-bold transition-all active:scale-95 ${addedIds.has(place.id) ? 'bg-green-100 text-green-600' : 'bg-blue-500 text-white disabled:opacity-50'}`}>
+                            {addedIds.has(place.id) ? '✓ 추가됨' : addingIds.has(place.id) ? '...' : '+ 추가'}
+                          </button>
+                        )}
                       </div>
                     )
                   })}

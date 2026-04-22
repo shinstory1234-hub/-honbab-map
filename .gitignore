@@ -37,3 +37,6 @@ next-env.d.ts
 
 .vercel
 *.csv
+
+# 카카오 수집 파이프라인 산출물
+/data/
