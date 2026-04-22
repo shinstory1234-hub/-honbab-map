@@ -1,11 +1,29 @@
 import { Restaurant } from './supabase'
 
-export function calcHonbabScore(restaurant: Restaurant, voteCount = 0): number {
+export function calcHonbabScore(restaurant: Restaurant, upVotes = 0, downVotes = 0): number {
   const levelScore = restaurant.honbab_level === 1 ? 40 : restaurant.honbab_level === 2 ? 20 : 0
   const priceScore = restaurant.price_range === 1 ? 30 : restaurant.price_range === 2 ? 20 : restaurant.price_range === 3 ? 10 : 0
   const tagScore = Math.min((restaurant.honbab_tags?.length ?? 0) * 5, 20)
-  const voteScore = Math.min(voteCount * 2, 10)
+  const voteScore = Math.max(-10, Math.min(10, (upVotes - downVotes) * 2))
   return levelScore + priceScore + tagScore + voteScore
+}
+
+// 중복 투표 방지 — localStorage 기반
+const VOTE_KEY = 'honbab_voted'
+export function getMyVote(restaurantId: string): 'up' | 'down' | null {
+  if (typeof window === 'undefined') return null
+  try {
+    const map = JSON.parse(localStorage.getItem(VOTE_KEY) || '{}')
+    return map[restaurantId] ?? null
+  } catch { return null }
+}
+export function saveMyVote(restaurantId: string, type: 'up' | 'down') {
+  if (typeof window === 'undefined') return
+  try {
+    const map = JSON.parse(localStorage.getItem(VOTE_KEY) || '{}')
+    map[restaurantId] = type
+    localStorage.setItem(VOTE_KEY, JSON.stringify(map))
+  } catch {}
 }
 
 export function getHonbabGrade(score: number): { emoji: string; label: string; color: string; bg: string } {
