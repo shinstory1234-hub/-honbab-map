@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react'
 import { supabase, Restaurant, HonbabTip } from '@/lib/supabase'
-import { calcHonbabScore, getHonbabGrade, PRICE_LABELS, getNickname, addCheckin } from '@/lib/honbabScore'
+import { calcHonbabScore, getHonbabGrade, PRICE_LABELS, getNickname, addCheckin, getMyVote, saveMyVote } from '@/lib/honbabScore'
 
 const LEVEL_INFO = {
   1: { label: '쉬움', emoji: '🟢', color: 'text-green-600', bg: 'bg-green-50' },
@@ -25,6 +25,7 @@ export default function RestaurantDetail({ restaurant, onClose, onLevelUpdated, 
   const [priceVotes, setPriceVotes] = useState<PriceVoteCounts>({ 1: 0, 2: 0, 3: 0, 4: 0 })
   const [tips, setTips] = useState<HonbabTip[]>([])
   const [tipInput, setTipInput] = useState('')
+  const [myVote, setMyVote] = useState<'up' | 'down' | null>(null)
   const [voting, setVoting] = useState(false)
   const [priceVoting, setPriceVoting] = useState(false)
   const [submittingTip, setSubmittingTip] = useState(false)
@@ -41,6 +42,7 @@ export default function RestaurantDetail({ restaurant, onClose, onLevelUpdated, 
     setClosedReported(false)
     setTipInput('')
     setEditValue('')
+    setMyVote(getMyVote(restaurant.id))
     fetchVotes(restaurant.id)
     fetchPriceVotes(restaurant.id)
     fetchTips(restaurant.id)
@@ -69,9 +71,11 @@ export default function RestaurantDetail({ restaurant, onClose, onLevelUpdated, 
   }
 
   const handleVote = async (type: 'up' | 'down') => {
-    if (!restaurant || voting) return
+    if (!restaurant || voting || myVote !== null) return
     setVoting(true)
     await supabase.from('honbab_votes').insert({ restaurant_id: restaurant.id, vote_type: type })
+    saveMyVote(restaurant.id, type)
+    setMyVote(type)
     const newUp = type === 'up' ? upVotes + 1 : upVotes
     const newDown = type === 'down' ? downVotes + 1 : downVotes
     setUpVotes(newUp)
@@ -148,7 +152,7 @@ export default function RestaurantDetail({ restaurant, onClose, onLevelUpdated, 
   const upPct = totalVotes > 0 ? Math.round((upVotes / totalVotes) * 100) : 0
   const downPct = totalVotes > 0 ? 100 - upPct : 0
   const totalPriceVotes = priceVotes[1] + priceVotes[2] + priceVotes[3] + priceVotes[4]
-  const score = calcHonbabScore(restaurant, upVotes)
+  const score = calcHonbabScore(restaurant, upVotes, downVotes)
   const grade = getHonbabGrade(score)
 
   return (
@@ -237,16 +241,17 @@ export default function RestaurantDetail({ restaurant, onClose, onLevelUpdated, 
               </div>
             )}
             <div className="flex gap-2">
-              <button onClick={() => handleVote('up')} disabled={voting}
-                className="flex-1 py-2.5 rounded-xl border-2 border-green-400 bg-green-50 text-green-600 font-bold text-sm disabled:opacity-60 active:scale-95 transition-all">
-                👍 혼밥 하기 좋아요
+              <button onClick={() => handleVote('up')} disabled={voting || myVote !== null}
+                className={`flex-1 py-2.5 rounded-xl border-2 font-bold text-sm disabled:opacity-60 active:scale-95 transition-all ${myVote === 'up' ? 'border-green-500 bg-green-400 text-white' : 'border-green-400 bg-green-50 text-green-600'}`}>
+                👍 {myVote === 'up' ? '투표 완료' : '혼밥 하기 좋아요'}
               </button>
-              <button onClick={() => handleVote('down')} disabled={voting}
-                className="flex-1 py-2.5 rounded-xl border-2 border-red-400 bg-red-50 text-red-500 font-bold text-sm disabled:opacity-60 active:scale-95 transition-all">
-                👎 혼밥 힘들어요
+              <button onClick={() => handleVote('down')} disabled={voting || myVote !== null}
+                className={`flex-1 py-2.5 rounded-xl border-2 font-bold text-sm disabled:opacity-60 active:scale-95 transition-all ${myVote === 'down' ? 'border-red-500 bg-red-400 text-white' : 'border-red-400 bg-red-50 text-red-500'}`}>
+                👎 {myVote === 'down' ? '투표 완료' : '혼밥 힘들어요'}
               </button>
             </div>
-            {totalVotes > 0 && <p className="text-xs text-gray-400 text-center mt-2">총 {totalVotes}명 참여</p>}
+            {myVote && <p className="text-xs text-gray-400 text-center mt-2">이미 투표하셨습니다</p>}
+            {!myVote && totalVotes > 0 && <p className="text-xs text-gray-400 text-center mt-2">총 {totalVotes}명 참여</p>}
           </div>
 
           {/* 가격 투표 */}
