@@ -38,6 +38,7 @@ if (!KAKAO_KEY) {
 const RADIUS      = 500   // 검색 반경 (m) — 500m (밀집 지역 누락 방지)
 const LAT_STEP    = 0.004 // 격자 간격 위도 (~444m, 반경과 겹치도록)
 const LNG_STEP    = 0.005 // 격자 간격 경도 (~443m @서울 위도)
+const CATEGORY_CODES = ['FD6', 'CE7'] // FD6: 음식점, CE7: 카페
 const MAX_PAGE    = 3     // 카카오 API 최대 페이지
 const PAGE_SIZE   = 15    // 카테고리 검색 최대 size (1~15), 3페이지 × 15 = 45개/격자
 const DELAY_MS    = 150   // 요청 간 딜레이 (ms)
@@ -59,16 +60,18 @@ const REGIONS = [
   { name: '광양',   lat: [34.878, 35.130], lng: [127.528, 127.798] },
 ]
 
-// ===== 격자 생성 =====
+// ===== 격자 생성 (카테고리 코드 × 지역) =====
 function buildGrid(regions) {
   const grid = []
-  for (const region of regions) {
-    const [latMin, latMax] = region.lat
-    const [lngMin, lngMax] = region.lng
+  for (const cat of CATEGORY_CODES) {
+    for (const region of regions) {
+      const [latMin, latMax] = region.lat
+      const [lngMin, lngMax] = region.lng
 
-    for (let lat = latMin; lat <= latMax + 1e-9; lat = +(lat + LAT_STEP).toFixed(7)) {
-      for (let lng = lngMin; lng <= lngMax + 1e-9; lng = +(lng + LNG_STEP).toFixed(7)) {
-        grid.push({ lat: +lat.toFixed(6), lng: +lng.toFixed(6), region: region.name })
+      for (let lat = latMin; lat <= latMax + 1e-9; lat = +(lat + LAT_STEP).toFixed(7)) {
+        for (let lng = lngMin; lng <= lngMax + 1e-9; lng = +(lng + LNG_STEP).toFixed(7)) {
+          grid.push({ lat: +lat.toFixed(6), lng: +lng.toFixed(6), region: region.name, cat })
+        }
       }
     }
   }
@@ -91,9 +94,9 @@ function saveCheckpoint(completed) {
 }
 
 // ===== 카카오 API =====
-async function fetchPage(lat, lng, page) {
+async function fetchPage(lat, lng, page, cat) {
   const params = new URLSearchParams({
-    category_group_code: 'FD6',
+    category_group_code: cat,
     x: String(lng),
     y: String(lat),
     radius: String(RADIUS),
@@ -131,7 +134,7 @@ async function main() {
 
   const grid      = buildGrid(REGIONS)
   const completed = loadCheckpoint()
-  const remaining = grid.filter((c) => !completed.has(`${c.lat},${c.lng}`))
+  const remaining = grid.filter((c) => !completed.has(`${c.cat},${c.lat},${c.lng}`))
   const total     = remaining.length
 
   console.log(`격자 총 ${grid.length.toLocaleString()}개 | 완료: ${completed.size.toLocaleString()}개 | 남은: ${total.toLocaleString()}개`)
@@ -147,11 +150,11 @@ async function main() {
   let errorCnt  = 0
 
   for (const cell of remaining) {
-    const key = `${cell.lat},${cell.lng}`
+    const key = `${cell.cat},${cell.lat},${cell.lng}`
 
     for (let page = 1; page <= MAX_PAGE; page++) {
       try {
-        const json   = await fetchPage(cell.lat, cell.lng, page)
+        const json   = await fetchPage(cell.lat, cell.lng, page, cell.cat)
         const places = json.documents ?? []
 
         for (const place of places) {
@@ -188,7 +191,7 @@ async function main() {
 
     if (cellsDone % SAVE_EVERY === 0) saveCheckpoint(completed)
 
-    printProgress({ region: cell.region, cellsDone, total, inserted, dup, lat: cell.lat, lng: cell.lng })
+    printProgress({ region: `${cell.cat}/${cell.region}`, cellsDone, total, inserted, dup, lat: cell.lat, lng: cell.lng })
 
     await sleep(DELAY_MS)
   }
