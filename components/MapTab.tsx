@@ -127,6 +127,21 @@ export default function MapTab() {
   const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null)
   const locDebounceRef = useRef<ReturnType<typeof setTimeout> | null>(null)
 
+  // 초기 내 위치 설정
+  useEffect(() => {
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(
+        (pos) => {
+          setCenterTo({ lat: pos.coords.latitude, lng: pos.coords.longitude, level: 4 })
+        },
+        (err) => {
+          console.error('Geolocation error:', err)
+          // 위치 권한 거부 시 기본 위치 (서울시청 등)로 설정 가능
+        }
+      )
+    }
+  }, [])
+
   const fetchByBounds = useCallback(async (bounds: MapBounds) => {
     setLoading(true)
     const { data } = await supabase
