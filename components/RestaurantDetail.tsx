@@ -2,7 +2,60 @@
 
 import { useState, useEffect } from 'react'
 import { supabase, Restaurant, HonbabTip } from '@/lib/supabase'
-import { calcHonbabScore, getHonbabGrade, PRICE_LABELS, getNickname, addCheckin, getMyVote, saveMyVote } from '@/lib/honbabScore'
+
+export const PRICE_LABELS: Record<number, string> = {
+  1: '만원 이하',
+  2: '1~2만원',
+  3: '2~3만원',
+  4: '3만원 이상',
+}
+
+export function calcHonbabScore(restaurant: Restaurant, upVotes = 0, downVotes = 0): number {
+  const levelScore = restaurant.honbab_level === 1 ? 40 : restaurant.honbab_level === 2 ? 20 : 0
+  const priceScore = restaurant.price_range === 1 ? 30 : restaurant.price_range === 2 ? 20 : restaurant.price_range === 3 ? 10 : 0
+  const tagScore = Math.min((restaurant.honbab_tags?.length ?? 0) * 5, 20)
+  const voteScore = Math.max(-10, Math.min(10, (upVotes - downVotes) * 2))
+  return levelScore + priceScore + tagScore + voteScore
+}
+
+export function getHonbabGrade(score: number) {
+  if (score >= 80) return { label: '혼밥 성지', emoji: '🏆', color: 'text-orange-600', bg: 'bg-orange-50' }
+  if (score >= 60) return { label: '추천', emoji: '⭐', color: 'text-blue-600', bg: 'bg-blue-50' }
+  if (score >= 40) return { label: '평범', emoji: '👌', color: 'text-gray-600', bg: 'bg-gray-50' }
+  return { label: '도전', emoji: '😅', color: 'text-red-500', bg: 'bg-red-50' }
+}
+
+export const getNickname = () => {
+  if (typeof window === 'undefined') return '익명'
+  let nick = localStorage.getItem('honbab_nickname')
+  if (!nick) {
+    nick = '익명_' + Math.random().toString(36).substring(2, 7)
+    localStorage.setItem('honbab_nickname', nick)
+  }
+  return nick
+}
+
+export const addCheckin = (id: string) => {
+  if (typeof window === 'undefined') return
+  const checkins = JSON.parse(localStorage.getItem('honbab_checkins') || '[]')
+  if (!checkins.includes(id)) {
+    checkins.push(id)
+    localStorage.setItem('honbab_checkins', JSON.stringify(checkins))
+  }
+}
+
+export const getMyVote = (id: string) => {
+  if (typeof window === 'undefined') return null
+  const votes = JSON.parse(localStorage.getItem('honbab_votes') || '{}')
+  return votes[id] || null
+}
+
+export const saveMyVote = (id: string, type: 'up' | 'down') => {
+  if (typeof window === 'undefined') return
+  const votes = JSON.parse(localStorage.getItem('honbab_votes') || '{}')
+  votes[id] = type
+  localStorage.setItem('honbab_votes', JSON.stringify(votes))
+}
 
 const LEVEL_INFO = {
   1: { label: '쉬움', emoji: '🟢', color: 'text-green-600', bg: 'bg-green-50' },
@@ -140,7 +193,7 @@ export default function RestaurantDetail({ restaurant, onClose, onLevelUpdated, 
 
   const handleCheckin = async () => {
     if (!restaurant || checkedIn) return
-    addCheckin(restaurant.id, restaurant.name)
+    addCheckin(restaurant.id)
     await supabase.from('checkins').insert({ restaurant_id: restaurant.id, nickname: getNickname() })
     setCheckedIn(true)
   }

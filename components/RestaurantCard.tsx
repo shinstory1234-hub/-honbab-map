@@ -1,7 +1,28 @@
 'use client'
 
 import { Restaurant } from '@/lib/supabase'
-import { calcHonbabScore, getHonbabGrade, PRICE_LABELS } from '@/lib/honbabScore'
+
+export const PRICE_LABELS: Record<number, string> = {
+  1: '만원 이하',
+  2: '1~2만원',
+  3: '2~3만원',
+  4: '3만원 이상',
+}
+
+export function calcHonbabScore(restaurant: Restaurant, upVotes = 0, downVotes = 0): number {
+  const levelScore = restaurant.honbab_level === 1 ? 40 : restaurant.honbab_level === 2 ? 20 : 0
+  const priceScore = restaurant.price_range === 1 ? 30 : restaurant.price_range === 2 ? 20 : restaurant.price_range === 3 ? 10 : 0
+  const tagScore = Math.min((restaurant.honbab_tags?.length ?? 0) * 5, 20)
+  const voteScore = Math.max(-10, Math.min(10, (upVotes - downVotes) * 2))
+  return levelScore + priceScore + tagScore + voteScore
+}
+
+export function getHonbabGrade(score: number) {
+  if (score >= 80) return { label: '혼밥 성지', emoji: '🏆', color: 'text-orange-600', bg: 'bg-orange-50' }
+  if (score >= 60) return { label: '추천', emoji: '⭐', color: 'text-blue-600', bg: 'bg-blue-50' }
+  if (score >= 40) return { label: '평범', emoji: '👌', color: 'text-gray-600', bg: 'bg-gray-50' }
+  return { label: '도전', emoji: '😅', color: 'text-red-500', bg: 'bg-red-50' }
+}
 
 const LEVEL_INFO: Record<number, { label: string; emoji: string; color: string; bg: string }> = {
   1: { label: '쉬움', emoji: '🟢', color: 'text-green-600', bg: 'bg-green-50' },

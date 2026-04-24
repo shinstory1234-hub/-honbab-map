@@ -1,155 +1,151 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 'use client'
 
 import { useEffect, useRef } from 'react'
 import { Restaurant } from '@/lib/supabase'
 
-export type MapBounds = { sw_lat: number; sw_lng: number; ne_lat: number; ne_lng: number }
+export interface MapBounds {
+  sw_lat: number
+  sw_lng: number
+  ne_lat: number
+  ne_lng: number
+}
 
-type Props = {
+interface MapProps {
   restaurants: Restaurant[]
-  selectedId?: string | null
+  selectedId?: string
   onMarkerClick: (restaurant: Restaurant) => void
   onBoundsChange?: (bounds: MapBounds) => void
   centerTo?: { lat: number; lng: number; level?: number } | null
 }
 
-declare global {
-  interface Window {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    kakao: any
-    __kakaoMapLoaded?: boolean
-  }
+const LEVEL_COLORS: Record<number, string> = {
+  1: '#22c55e', 
+  2: '#eab308', 
+  3: '#ef4444', 
 }
 
-const LEVEL_COLORS: Record<number, string> = { 1: '#22c55e', 2: '#eab308', 3: '#ef4444' }
+const getMarkerEmoji = (category: string) => {
+  if (!category) return '🍽️';
+  const c = category.toLowerCase();
+  if (c.includes('카페') || c.includes('커피')) return '☕';
+  if (c.includes('초밥') || c.includes('스시')) return '🍣';
+  if (c.includes('라멘') || c.includes('라면') || c.includes('면')) return '🍜';
+  if (c.includes('돈카츠') || c.includes('돈까스')) return '🍱';
+  if (c.includes('피자')) return '🍕';
+  if (c.includes('버거') || c.includes('햄버거')) return '🍔';
+  if (c.includes('치킨')) return '🍗';
+  if (c.includes('국밥') || c.includes('해장')) return '🥣';
+  if (c.includes('분식') || c.includes('떡볶이')) return '🥢';
+  if (c.includes('카레')) return '🍛';
+  if (c.includes('샐러드') || c.includes('샌드위치')) return '🥗';
+  if (c.includes('술') || c.includes('이자카야') || c.includes('포차')) return '🍺';
+  return '🍽️';
+}
 
-const CLUSTER_STYLES = [
-  { width: '40px', height: '40px', background: 'rgba(255,107,53,0.9)', borderRadius: '20px', color: '#fff', textAlign: 'center', lineHeight: '40px', fontSize: '13px', fontWeight: '700', border: '2px solid white', boxShadow: '0 2px 8px rgba(0,0,0,0.25)' },
-  { width: '50px', height: '50px', background: 'rgba(220,38,38,0.9)', borderRadius: '25px', color: '#fff', textAlign: 'center', lineHeight: '50px', fontSize: '15px', fontWeight: '700', border: '2px solid white', boxShadow: '0 2px 8px rgba(0,0,0,0.25)' },
-]
-
-function loadKakaoScript(): Promise<void> {
-  return new Promise((resolve, reject) => {
-    const apiKey = process.env.NEXT_PUBLIC_KAKAO_MAP_KEY
-    if (!apiKey) { reject(new Error('Missing NEXT_PUBLIC_KAKAO_MAP_KEY')); return }
-    if (window.__kakaoMapLoaded) { resolve(); return }
-    const existing = document.getElementById('kakao-map-sdk')
-    if (existing) {
-      existing.addEventListener('load', () => { window.kakao.maps.load(() => { window.__kakaoMapLoaded = true; resolve() }) })
-      return
+function loadScript(): Promise<void> {
+  return new Promise((resolve) => {
+    const win = window as any;
+    if (win.kakao && win.kakao.maps) {
+      resolve(); return;
     }
-    const script = document.createElement('script')
-    script.id = 'kakao-map-sdk'
-    script.src = `//dapi.kakao.com/v2/maps/sdk.js?appkey=${apiKey}&autoload=false&libraries=clusterer`
-    script.onload = () => { window.kakao.maps.load(() => { window.__kakaoMapLoaded = true; resolve() }) }
-    script.onerror = reject
-    document.head.appendChild(script)
+    const s = document.createElement('script')
+    s.src = `//dapi.kakao.com/v2/maps/sdk.js?appkey=${process.env.NEXT_PUBLIC_KAKAO_MAP_KEY}&autoload=false&libraries=clusterer`
+    s.onload = () => win.kakao.maps.load(() => resolve());
+    document.head.appendChild(s)
   })
 }
 
-function createMarkerImage(color: string) {
-  const svg = encodeURIComponent(`<svg xmlns="http://www.w3.org/2000/svg" width="28" height="36"><circle cx="14" cy="14" r="12" fill="${color}" stroke="white" stroke-width="2.5"/><polygon points="14,36 8,24 20,24" fill="${color}"/><circle cx="14" cy="14" r="5" fill="white" opacity="0.5"/></svg>`)
-  const size = new window.kakao.maps.Size(28, 36)
-  const option = { offset: new window.kakao.maps.Point(14, 36) }
-  return new window.kakao.maps.MarkerImage(`data:image/svg+xml;charset=utf-8,${svg}`, size, option)
-}
-
-export default function KakaoMap({ restaurants, selectedId, onMarkerClick, onBoundsChange, centerTo }: Props) {
+export default function KakaoMap({ restaurants, selectedId, onMarkerClick, onBoundsChange, centerTo }: MapProps) {
   const mapRef = useRef<HTMLDivElement>(null)
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const mapInstanceRef = useRef<any>(null)
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const clustererRef = useRef<any>(null)
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const markersRef = useRef<{ marker: any; restaurant: Restaurant }[]>([])
+  const mapInst = useRef<any>(null)
+  const ovs = useRef<any[]>([])
 
   useEffect(() => {
-    loadKakaoScript().then(() => {
-      if (!mapRef.current || mapInstanceRef.current) return
-      mapRef.current.style.height = window.innerHeight + 'px'
-
-      const center = new window.kakao.maps.LatLng(37.5665, 126.9780)
-      const map = new window.kakao.maps.Map(mapRef.current, { center, level: 4 })
-      mapInstanceRef.current = map
-      map.relayout()
-      map.setCenter(center)
-
-      const clusterer = new window.kakao.maps.MarkerClusterer({
-        map,
-        averageCenter: true,
-        minLevel: 5,
-        gridSize: 80,
-        styles: CLUSTER_STYLES,
+    loadScript().then(() => {
+      if (!mapRef.current || mapInst.current) return
+      const k = (window as any).kakao
+      const isPC = window.innerWidth > 768;
+      
+      const m = new k.maps.Map(mapRef.current, { 
+        center: new k.maps.LatLng(37.5665, 126.9780), 
+        level: isPC ? 3 : 4 
       })
-      clustererRef.current = clusterer
+      mapInst.current = m
 
-      // bounds 변경 시 콜백 (idle = 이동/줌 완료 후)
-      const emitBounds = () => {
-        if (!onBoundsChange) return
-        const bounds = map.getBounds()
-        const sw = bounds.getSouthWest()
-        const ne = bounds.getNorthEast()
-        onBoundsChange({ sw_lat: sw.getLat(), sw_lng: sw.getLng(), ne_lat: ne.getLat(), ne_lng: ne.getLng() })
+      const emit = () => {
+        if (onBoundsChange) {
+          const b = m.getBounds()
+          const sw = b.getSouthWest()
+          const ne = b.getNorthEast()
+          onBoundsChange({
+            sw_lat: sw.getLat(),
+            sw_lng: sw.getLng(),
+            ne_lat: ne.getLat(),
+            ne_lng: ne.getLng()
+          })
+        }
       }
-      window.kakao.maps.event.addListener(map, 'idle', emitBounds)
-
-      if (navigator.geolocation) {
-        navigator.geolocation.getCurrentPosition(pos => {
-          map.setCenter(new window.kakao.maps.LatLng(pos.coords.latitude, pos.coords.longitude))
-        }, () => {
-          // 위치 거부 시 초기 bounds 즉시 emit
-          emitBounds()
-        })
-      } else {
-        emitBounds()
-      }
-
-      const handleResize = () => {
-        if (mapRef.current) mapRef.current.style.height = window.innerHeight + 'px'
-        map.relayout()
-      }
-      window.addEventListener('resize', handleResize)
-      return () => window.removeEventListener('resize', handleResize)
-    }).catch(e => console.error('[KakaoMap] init error:', e))
-  }, [])
-
-  useEffect(() => {
-    if (!mapInstanceRef.current || !clustererRef.current) return
-    clustererRef.current.clear()
-    markersRef.current = []
-
-    const markers = restaurants.map(restaurant => {
-      const color = LEVEL_COLORS[restaurant.honbab_level] || '#888'
-      const image = createMarkerImage(color)
-      const marker = new window.kakao.maps.Marker({
-        position: new window.kakao.maps.LatLng(restaurant.lat, restaurant.lng),
-        image,
-        title: restaurant.name,
-      })
-      window.kakao.maps.event.addListener(marker, 'click', () => onMarkerClick(restaurant))
-      markersRef.current.push({ marker, restaurant })
-      return marker
+      k.maps.event.addListener(m, 'idle', emit)
+      emit()
     })
+  }, [onBoundsChange])
 
-    clustererRef.current.addMarkers(markers)
-  }, [restaurants, onMarkerClick])
-
-  // 외부에서 지도 이동
+  // 중심 이동 처리
   useEffect(() => {
-    if (!mapInstanceRef.current || !centerTo) return
-    const pos = new window.kakao.maps.LatLng(centerTo.lat, centerTo.lng)
-    mapInstanceRef.current.setCenter(pos)
-    if (centerTo.level) mapInstanceRef.current.setLevel(centerTo.level)
+    if (mapInst.current && centerTo) {
+      const k = (window as any).kakao
+      const moveLatLon = new k.maps.LatLng(centerTo.lat, centerTo.lng)
+      if (centerTo.level) {
+        mapInst.current.setLevel(centerTo.level)
+      }
+      mapInst.current.panTo(moveLatLon)
+    }
   }, [centerTo])
 
-  // 선택된 마커 강조
   useEffect(() => {
-    if (!mapInstanceRef.current) return
-    markersRef.current.forEach(({ marker, restaurant }) => {
-      const color = selectedId === restaurant.id ? '#FF6B35' : LEVEL_COLORS[restaurant.honbab_level] || '#888'
-      marker.setImage(createMarkerImage(color))
+    const m = mapInst.current
+    if (!m) return
+    ovs.current.forEach(o => o.setMap(null))
+    ovs.current = []
+    const k = (window as any).kakao
+
+    restaurants.forEach((r) => {
+      const emoji = getMarkerEmoji(r.category)
+      const bgColor = LEVEL_COLORS[r.honbab_level] || '#22c55e'
+      const isSelected = r.id === selectedId
+      
+      const el = document.createElement('div')
+      el.style.cssText = `
+        width: ${isSelected ? '44px' : '36px'};
+        height: ${isSelected ? '44px' : '36px'};
+        background-color: ${bgColor};
+        border: ${isSelected ? '3px solid #FF6B35' : '2px solid white'};
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: ${isSelected ? '24px' : '20px'};
+        cursor: pointer;
+        box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+        transition: all 0.1s ease-in-out;
+        z-index: ${isSelected ? '10' : '1'};
+      `
+      el.innerHTML = `<span>${emoji}</span>`
+      
+      el.onclick = () => onMarkerClick(r)
+      el.onmouseenter = () => { if (!isSelected) el.style.transform = 'scale(1.15)' }
+      el.onmouseleave = () => { if (!isSelected) el.style.transform = 'scale(1)' }
+
+      const o = new k.maps.CustomOverlay({ 
+        position: new k.maps.LatLng(r.lat, r.lng), 
+        content: el, 
+        yAnchor: 0.5 
+      })
+      o.setMap(m); 
+      ovs.current.push(o)
     })
-  }, [selectedId])
+  }, [restaurants, selectedId, onMarkerClick])
 
   return <div ref={mapRef} style={{ width: '100%', height: '100%' }} />
 }
