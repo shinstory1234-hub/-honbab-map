@@ -11,11 +11,21 @@ export const PRICE_LABELS: Record<number, string> = {
 }
 
 export function calcHonbabScore(restaurant: Restaurant, upVotes = 0, downVotes = 0): number {
-  const levelScore = restaurant.honbab_level === 1 ? 40 : restaurant.honbab_level === 2 ? 20 : 0
-  const priceScore = restaurant.price_range === 1 ? 30 : restaurant.price_range === 2 ? 20 : restaurant.price_range === 3 ? 10 : 0
-  const tagScore = Math.min((restaurant.honbab_tags?.length ?? 0) * 5, 20)
+  const c = restaurant.category.toLowerCase()
+  let baseScore = 60
+
+  if (['라멘', '소바', '우동', '돈까스', '초밥', '국밥', '해장국', '설렁탕', '순댓국', '김밥', '쌀국수', '카페', '커피', '도시락', '샌드위치', '패스트푸드', '비빔밥', '솥밥', '베이커리', '빵', '브런치', '디저트'].some(k => c.includes(k))) {
+    baseScore = 90
+  } else if (['분식', '떡볶이', '마라탕', '아시아음식', '이자카야', '일본식주점', '한식'].some(k => c.includes(k))) {
+    baseScore = 70
+  } else if (['짜장', '짬뽕', '중화요리', '중식', '파스타', '양식', '피자', '치킨'].some(k => c.includes(k))) {
+    baseScore = 50
+  } else if (['삼겹살', '구이'].some(k => c.includes(k))) {
+    baseScore = 20
+  }
+
   const voteScore = Math.max(-10, Math.min(10, (upVotes - downVotes) * 2))
-  return levelScore + priceScore + tagScore + voteScore
+  return Math.max(0, Math.min(100, baseScore + voteScore))
 }
 
 export function getHonbabGrade(score: number) {

@@ -17,11 +17,22 @@ export const HONBAB_EXCLUDED_KEYWORDS = [
 ]
 
 export function calcHonbabScore(restaurant: Restaurant, upVotes = 0, downVotes = 0): number {
-  const levelScore = restaurant.honbab_level === 1 ? 40 : restaurant.honbab_level === 2 ? 20 : 0
-  const priceScore = restaurant.price_range === 1 ? 30 : restaurant.price_range === 2 ? 20 : restaurant.price_range === 3 ? 10 : 0
-  const tagScore = Math.min((restaurant.honbab_tags?.length ?? 0) * 5, 20)
+  const c = restaurant.category.toLowerCase()
+  let baseScore = 60 // 기본값
+
+  if (['라멘', '소바', '우동', '돈까스', '초밥', '국밥', '해장국', '설렁탕', '순댓국', '김밥', '쌀국수', '카페', '커피', '도시락', '샌드위치', '패스트푸드', '비빔밥', '솥밥', '베이커리', '빵', '브런치', '디저트'].some(k => c.includes(k))) {
+    baseScore = 90
+  } else if (['분식', '떡볶이', '마라탕', '아시아음식', '이자카야', '일본식주점', '한식'].some(k => c.includes(k))) {
+    baseScore = 70
+  } else if (['짜장', '짬뽕', '중화요리', '중식', '파스타', '양식', '피자', '치킨'].some(k => c.includes(k))) {
+    baseScore = 50
+  } else if (['삼겹살', '구이'].some(k => c.includes(k))) {
+    baseScore = 20
+  }
+
+  // 투표에 따른 보정 (최대 +/- 10점)
   const voteScore = Math.max(-10, Math.min(10, (upVotes - downVotes) * 2))
-  return levelScore + priceScore + tagScore + voteScore
+  return Math.max(0, Math.min(100, baseScore + voteScore))
 }
 
 export function matchesCategory(restaurant: Restaurant, category: string): boolean {
@@ -62,48 +73,33 @@ function mapKakaoCategory(catName: string): CategoryResult | null {
   // 혼밥 불가 — 추가/표시 차단
   if (HONBAB_EXCLUDED_KEYWORDS.some(k => c.includes(k))) return null
 
-  // 카페
-  if (c.includes('카페') || c.includes('커피') || c.includes('디저트') || c.includes('브런치'))
-    return { category: '카페', honbab_level: 1, price_range: 1 }
+  let level: 1 | 2 | 3 = 2 // 기본 보통
 
-  // 면류
-  if (c.includes('라멘') || c.includes('츠케멘') || c.includes('아부라소바') ||
-      c.includes('우동') || c.includes('소바') || c.includes('냉면') ||
-      c.includes('쌀국수') || c.includes('퍼') || c.includes('분짜') ||
-      c.includes('파스타') || c.includes('칼국수') || c.includes('수제비') || c.includes('막국수'))
-    return { category: '면류', honbab_level: 1, price_range: 2 }
+  // 90점 그룹 (Level 1 - 쉬움)
+  if (['라멘', '소바', '우동', '돈까스', '초밥', '국밥', '해장국', '설렁탕', '순댓국', '김밥', '쌀국수', '카페', '커피', '도시락', '샌드위치', '패스트푸드', '비빔밥', '솥밥', '베이커리', '빵', '브런치', '디저트'].some(k => c.includes(k))) {
+    level = 1
+  } 
+  // 70점 그룹 (Level 1 또는 2)
+  else if (['분식', '떡볶이', '마라탕', '아시아음식', '이자카야', '일본식주점', '한식'].some(k => c.includes(k))) {
+    level = 1
+  }
+  // 50점 그룹 (Level 2 - 보통)
+  else if (['짜장', '짬뽕', '중화요리', '중식', '파스타', '양식', '피자', '치킨'].some(k => c.includes(k))) {
+    level = 2
+  }
+  // 20점 그룹 (Level 3 - 어려움)
+  else if (['삼겹살', '구이'].some(k => c.includes(k))) {
+    level = 3
+  }
 
-  // 분식
-  if (c.includes('분식') || c.includes('떡볶이') || c.includes('김밥'))
-    return { category: '분식', honbab_level: 1, price_range: 1 }
+  // 카테고리 단순화 (UI 필터용)
+  let simpleCat = '기타'
+  if (c.includes('카페') || c.includes('커피') || c.includes('디저트')) simpleCat = '카페'
+  else if (c.includes('면') || c.includes('라멘') || c.includes('국수')) simpleCat = '면류'
+  else if (c.includes('분식') || c.includes('떡볶이')) simpleCat = '분식'
+  else if (c.includes('밥') || c.includes('국밥') || c.includes('한식')) simpleCat = '밥류'
 
-  // 밥류 — 규동/돈부리/카레/덮밥/볶음밥/비빔밥/솥밥
-  if (c.includes('규동') || c.includes('돈부리') || c.includes('오야코') ||
-      c.includes('볶음밥') || c.includes('카레') || c.includes('덮밥') ||
-      c.includes('솥밥') || c.includes('비빔밥'))
-    return { category: '밥류', honbab_level: 1, price_range: 2 }
-
-  // 이자카야 (혼술 가능)
-  if (c.includes('이자카야') || c.includes('일본식주점'))
-    return { category: '밥류', honbab_level: 2, price_range: 2 }
-
-  // 1인 삼겹살 전문점 (카카오 카테고리명에 '1인' 포함 시)
-  if ((c.includes('삼겹살') || c.includes('구이')) && c.includes('1인'))
-    return { category: '밥류', honbab_level: 1, price_range: 2 }
-
-  // 일식 기타 (돈까스, 초밥 등)
-  if (c.includes('일식') || c.includes('초밥') || c.includes('돈까스'))
-    return { category: '밥류', honbab_level: 2, price_range: 2 }
-
-  // 한식 (국밥/해장국 계열)
-  if (c.includes('국밥') || c.includes('설렁탕') || c.includes('해장국') || c.includes('순댓국'))
-    return { category: '밥류', honbab_level: 1, price_range: 1 }
-
-  // 중식 면류 (짜장/짬뽕)
-  if (c.includes('짜장') || c.includes('짬뽕') || c.includes('중화'))
-    return { category: '면류', honbab_level: 2, price_range: 2 }
-
-  return { category: '기타', honbab_level: 2, price_range: 2 }
+  return { category: simpleCat, honbab_level: level, price_range: 2 }
 }
 
 export default function MapTab() {
