@@ -188,11 +188,21 @@ async function main() {
 
   const supabase = createClient(SUPABASE_URL, SUPABASE_KEY)
 
-  // 기존 데이터 전체 삭제
+  // 기존 데이터 배치 삭제
   console.log('\n기존 Supabase restaurants 데이터 삭제 중...')
-  const { error: delErr } = await supabase.from('restaurants').delete().not('id', 'is', null)
-  if (delErr) { console.error('삭제 실패:', delErr.message); process.exit(1) }
-  console.log('삭제 완료.')
+  let deletedTotal = 0
+  while (true) {
+    const { data: ids, error: selErr } = await supabase
+      .from('restaurants').select('id').limit(1000)
+    if (selErr) { console.error('조회 실패:', selErr.message); process.exit(1) }
+    if (!ids || ids.length === 0) break
+    const { error: delErr } = await supabase
+      .from('restaurants').delete().in('id', ids.map(r => r.id))
+    if (delErr) { console.error('삭제 실패:', delErr.message); process.exit(1) }
+    deletedTotal += ids.length
+    process.stdout.write(`\r  삭제 중: ${deletedTotal.toLocaleString()}개`)
+  }
+  console.log(`\n삭제 완료. (${deletedTotal.toLocaleString()}개)`)
 
   // 배치 삽입
   console.log(`배치 삽입 시작 (${BATCH}개씩, 총 ${valid.length.toLocaleString()}개)...`)

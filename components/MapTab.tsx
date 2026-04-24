@@ -3,8 +3,32 @@
 import { useState, useEffect, useMemo, useCallback, useRef, type KeyboardEvent } from 'react'
 import dynamic from 'next/dynamic'
 import { supabase, Restaurant } from '@/lib/supabase'
-import { calcHonbabScore, matchesCategory, HONBAB_EXCLUDED_KEYWORDS } from '@/lib/honbabScore'
 import RestaurantCard from '@/components/RestaurantCard'
+
+export const CATEGORY_KEYWORDS: Record<string, string[]> = {
+  '면류': ['라멘', '츠케멘', '아부라소바', '우동', '소바', '냉소바', '냉면', '중화냉면', '쌀국수', '퍼', '분짜', '파스타', '칼국수', '수제비', '막국수', '면'],
+  '밥류': ['규동', '돈부리', '오야코동', '볶음밥', '카레', '덮밥', '솥밥', '비빔밥', '김밥', '삼겹살', '이자카야'],
+  '분식': ['분식', '떡볶이', '순대', '튀김'],
+  '카페': ['카페', '커피', '디저트', '브런치'],
+}
+
+export const HONBAB_EXCLUDED_KEYWORDS = [
+  '뷔페', '횟집', '회집', '보쌈', '족발', '해물탕', '아구찜', '찜닭', '코스요리',
+]
+
+export function calcHonbabScore(restaurant: Restaurant, upVotes = 0, downVotes = 0): number {
+  const levelScore = restaurant.honbab_level === 1 ? 40 : restaurant.honbab_level === 2 ? 20 : 0
+  const priceScore = restaurant.price_range === 1 ? 30 : restaurant.price_range === 2 ? 20 : restaurant.price_range === 3 ? 10 : 0
+  const tagScore = Math.min((restaurant.honbab_tags?.length ?? 0) * 5, 20)
+  const voteScore = Math.max(-10, Math.min(10, (upVotes - downVotes) * 2))
+  return levelScore + priceScore + tagScore + voteScore
+}
+
+export function matchesCategory(restaurant: Restaurant, category: string): boolean {
+  if (category === '전체') return true
+  const keywords = CATEGORY_KEYWORDS[category] || [category]
+  return keywords.some(k => restaurant.category.toLowerCase().includes(k.toLowerCase()))
+}
 import RestaurantDetail from '@/components/RestaurantDetail'
 import QuickRecommend from '@/components/QuickRecommend'
 import { type MapBounds } from '@/components/KakaoMap'
