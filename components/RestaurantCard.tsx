@@ -13,8 +13,10 @@ export function calcHonbabScore(restaurant: Restaurant, upVotes = 0, downVotes =
   const c = restaurant.category.toLowerCase()
   let baseScore = 60
 
-  if (['라멘', '소바', '우동', '돈까스', '초밥', '국밥', '해장국', '설렁탕', '순댓국', '김밥', '쌀국수', '카페', '커피', '도시락', '샌드위치', '패스트푸드', '비빔밥', '솥밥', '베이커리', '빵', '브런치', '디저트'].some(k => c.includes(k))) {
+  if (['라멘', '소바', '우동', '돈까스', '초밥', '국밥', '해장국', '설렁탕', '순댓국', '김밥', '쌀국수', '도시락', '샌드위치', '패스트푸드', '비빔밥', '솥밥'].some(k => c.includes(k))) {
     baseScore = 90
+  } else if (['카페', '커피', '베이커리', '빵', '브런치', '디저트'].some(k => c.includes(k))) {
+    baseScore = 80
   } else if (['분식', '떡볶이', '마라탕', '아시아음식', '이자카야', '일본식주점', '한식'].some(k => c.includes(k))) {
     baseScore = 70
   } else if (['짜장', '짬뽕', '중화요리', '중식', '파스타', '양식', '피자', '치킨'].some(k => c.includes(k))) {
@@ -52,6 +54,13 @@ export default function RestaurantCard({ restaurant, voteCount = 0, selected, on
   const grade = getHonbabGrade(score)
   const level = LEVEL_INFO[restaurant.honbab_level]
 
+  const getPriceLabel = (r: Restaurant) => {
+    if (r.price_range === 1) return '가성비'
+    if (r.price_range === 3) return '프리미엄'
+    if (r.price_range === 4) return '고급'
+    return '표준'
+  }
+
   return (
     <button
       onClick={onClick}
@@ -79,7 +88,7 @@ export default function RestaurantCard({ restaurant, voteCount = 0, selected, on
           {level.emoji} {level.label}
         </span>
         <span className="text-xs px-2 py-0.5 rounded-full bg-gray-100 text-gray-500">
-          {PRICE_LABELS[restaurant.price_range] || '가격 미정'}
+          {getPriceLabel(restaurant)}
         </span>
       </div>
 

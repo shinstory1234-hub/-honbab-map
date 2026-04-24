@@ -14,8 +14,10 @@ export function calcHonbabScore(restaurant: Restaurant, upVotes = 0, downVotes =
   const c = restaurant.category.toLowerCase()
   let baseScore = 60
 
-  if (['라멘', '소바', '우동', '돈까스', '초밥', '국밥', '해장국', '설렁탕', '순댓국', '김밥', '쌀국수', '카페', '커피', '도시락', '샌드위치', '패스트푸드', '비빔밥', '솥밥', '베이커리', '빵', '브런치', '디저트'].some(k => c.includes(k))) {
+  if (['라멘', '소바', '우동', '돈까스', '초밥', '국밥', '해장국', '설렁탕', '순댓국', '김밥', '쌀국수', '도시락', '샌드위치', '패스트푸드', '비빔밥', '솥밥'].some(k => c.includes(k))) {
     baseScore = 90
+  } else if (['카페', '커피', '베이커리', '빵', '브런치', '디저트'].some(k => c.includes(k))) {
+    baseScore = 80
   } else if (['분식', '떡볶이', '마라탕', '아시아음식', '이자카야', '일본식주점', '한식'].some(k => c.includes(k))) {
     baseScore = 70
   } else if (['짜장', '짬뽕', '중화요리', '중식', '파스타', '양식', '피자', '치킨'].some(k => c.includes(k))) {
@@ -63,6 +65,13 @@ type State = 'idle' | 'loading' | 'results' | 'empty' | 'error'
 export default function QuickRecommend({ restaurants, voteCounts, onSelect }: Props) {
   const [state, setState] = useState<State>('idle')
   const [results, setResults] = useState<Restaurant[]>([])
+
+  const getPriceLabel = (r: Restaurant) => {
+    if (r.price_range === 1) return '가성비'
+    if (r.price_range === 3) return '프리미엄'
+    if (r.price_range === 4) return '고급'
+    return '표준'
+  }
 
   const handleRecommend = () => {
     setState('loading')
@@ -144,7 +153,7 @@ export default function QuickRecommend({ restaurants, voteCounts, onSelect }: Pr
               <span className="text-xl">{grade.emoji}</span>
               <div className="flex-1 min-w-0">
                 <p className="font-bold text-gray-900 text-sm truncate">{r.name}</p>
-                <p className="text-xs text-gray-400">{level.emoji} {level.label} · {PRICE_LABELS[r.price_range]}</p>
+                <p className="text-xs text-gray-400">{level.emoji} {level.label} · {getPriceLabel(r)}</p>
               </div>
               <span className={`text-sm font-black ${grade.color}`}>{score}점</span>
             </button>
@@ -154,3 +163,4 @@ export default function QuickRecommend({ restaurants, voteCounts, onSelect }: Pr
     </div>
   )
 }
+

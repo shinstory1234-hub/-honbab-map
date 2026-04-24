@@ -14,8 +14,10 @@ export function calcHonbabScore(restaurant: Restaurant, upVotes = 0, downVotes =
   const c = restaurant.category.toLowerCase()
   let baseScore = 60
 
-  if (['라멘', '소바', '우동', '돈까스', '초밥', '국밥', '해장국', '설렁탕', '순댓국', '김밥', '쌀국수', '카페', '커피', '도시락', '샌드위치', '패스트푸드', '비빔밥', '솥밥', '베이커리', '빵', '브런치', '디저트'].some(k => c.includes(k))) {
+  if (['라멘', '소바', '우동', '돈까스', '초밥', '국밥', '해장국', '설렁탕', '순댓국', '김밥', '쌀국수', '도시락', '샌드위치', '패스트푸드', '비빔밥', '솥밥'].some(k => c.includes(k))) {
     baseScore = 90
+  } else if (['카페', '커피', '베이커리', '빵', '브런치', '디저트'].some(k => c.includes(k))) {
+    baseScore = 80
   } else if (['분식', '떡볶이', '마라탕', '아시아음식', '이자카야', '일본식주점', '한식'].some(k => c.includes(k))) {
     baseScore = 70
   } else if (['짜장', '짬뽕', '중화요리', '중식', '파스타', '양식', '피자', '치킨'].some(k => c.includes(k))) {
@@ -67,6 +69,19 @@ export const saveMyVote = (id: string, type: 'up' | 'down') => {
   localStorage.setItem('honbab_votes', JSON.stringify(votes))
 }
 
+export const getMyPriceVote = (id: string) => {
+  if (typeof window === 'undefined') return null
+  const votes = JSON.parse(localStorage.getItem('honbab_price_votes') || '{}')
+  return votes[id] || null
+}
+
+export const saveMyPriceVote = (id: string, vote: number) => {
+  if (typeof window === 'undefined') return
+  const votes = JSON.parse(localStorage.getItem('honbab_price_votes') || '{}')
+  votes[id] = vote
+  localStorage.setItem('honbab_price_votes', JSON.stringify(votes))
+}
+
 const LEVEL_INFO = {
   1: { label: '쉬움', emoji: '🟢', color: 'text-green-600', bg: 'bg-green-50' },
   2: { label: '보통', emoji: '🟡', color: 'text-yellow-600', bg: 'bg-yellow-50' },
@@ -89,6 +104,7 @@ export default function RestaurantDetail({ restaurant, onClose, onLevelUpdated, 
   const [tips, setTips] = useState<HonbabTip[]>([])
   const [tipInput, setTipInput] = useState('')
   const [myVote, setMyVote] = useState<'up' | 'down' | null>(null)
+  const [myPriceVote, setMyPriceVote] = useState<number | null>(null)
   const [voting, setVoting] = useState(false)
   const [priceVoting, setPriceVoting] = useState(false)
   const [submittingTip, setSubmittingTip] = useState(false)
@@ -106,6 +122,7 @@ export default function RestaurantDetail({ restaurant, onClose, onLevelUpdated, 
     setTipInput('')
     setEditValue('')
     setMyVote(getMyVote(restaurant.id))
+    setMyPriceVote(getMyPriceVote(restaurant.id))
     fetchVotes(restaurant.id)
     fetchPriceVotes(restaurant.id)
     fetchTips(restaurant.id)
@@ -158,9 +175,11 @@ export default function RestaurantDetail({ restaurant, onClose, onLevelUpdated, 
   }
 
   const handlePriceVote = async (vote: 1 | 2 | 3 | 4) => {
-    if (!restaurant || priceVoting) return
+    if (!restaurant || priceVoting || myPriceVote !== null) return
     setPriceVoting(true)
     await supabase.from('price_votes').insert({ restaurant_id: restaurant.id, vote })
+    saveMyPriceVote(restaurant.id, vote)
+    setMyPriceVote(vote)
     const newCounts = { ...priceVotes, [vote]: priceVotes[vote] + 1 }
     setPriceVotes(newCounts)
     const total = newCounts[1] + newCounts[2] + newCounts[3] + newCounts[4]
@@ -218,6 +237,14 @@ export default function RestaurantDetail({ restaurant, onClose, onLevelUpdated, 
   const score = calcHonbabScore(restaurant, upVotes, downVotes)
   const grade = getHonbabGrade(score)
 
+  const getPriceLabel = (r: Restaurant) => {
+    if (r.price_range === 1) return '만원 이하 가성비'
+    if (r.price_range === 2) return '표준 가격대'
+    if (r.price_range === 3) return '2~3만원 프리미엄'
+    if (r.price_range === 4) return '특별한 날의 가격'
+    return '가격 정보 없음'
+  }
+
   return (
     <>
       <div className="fixed inset-0 z-40 bg-black/30 md:hidden" onClick={onClose} />
@@ -265,7 +292,7 @@ export default function RestaurantDetail({ restaurant, onClose, onLevelUpdated, 
               <span className="text-lg">💰</span>
               <div>
                 <p className="text-xs text-gray-400">가격대 {totalPriceVotes > 0 ? `(${totalPriceVotes}명)` : ''}</p>
-                <p className="text-sm font-bold text-gray-700">{PRICE_LABELS[restaurant.price_range] || '미정'}</p>
+                <p className="text-sm font-bold text-gray-700">{getPriceLabel(restaurant)}</p>
               </div>
             </div>
           </div>
@@ -327,15 +354,16 @@ export default function RestaurantDetail({ restaurant, onClose, onLevelUpdated, 
                 { v: 3, label: '비쌈', emoji: '🟠', color: 'border-orange-400 bg-orange-50 text-orange-600' },
                 { v: 4, label: '고급', emoji: '💎', color: 'border-purple-400 bg-purple-50 text-purple-600' },
               ] as const).map(({ v, label, emoji, color }) => (
-                <button key={v} onClick={() => handlePriceVote(v)} disabled={priceVoting}
-                  className={`flex flex-col items-center py-2.5 rounded-xl border-2 font-semibold text-xs disabled:opacity-60 active:scale-95 transition-all ${color}`}>
+                <button key={v} onClick={() => handlePriceVote(v)} disabled={priceVoting || myPriceVote !== null}
+                  className={`flex flex-col items-center py-2.5 rounded-xl border-2 font-semibold text-xs disabled:opacity-60 active:scale-95 transition-all ${myPriceVote === v ? 'ring-2 ring-orange-400 border-orange-400' : color}`}>
                   <span className="text-base mb-0.5">{emoji}</span>
                   <span>{label}</span>
                   <span className="opacity-70 mt-0.5">{priceVotes[v]}명</span>
                 </button>
               ))}
             </div>
-            {totalPriceVotes > 0 && <p className="text-xs text-gray-400 text-center mt-2">총 {totalPriceVotes}명 참여</p>}
+            {myPriceVote && <p className="text-xs text-orange-500 text-center mt-2 font-bold">이미 투표에 참여하셨습니다</p>}
+            {!myPriceVote && totalPriceVotes > 0 && <p className="text-xs text-gray-400 text-center mt-2">총 {totalPriceVotes}명 참여</p>}
           </div>
 
           {/* 혼밥 꿀팁 */}
@@ -407,3 +435,4 @@ export default function RestaurantDetail({ restaurant, onClose, onLevelUpdated, 
     </>
   )
 }
+

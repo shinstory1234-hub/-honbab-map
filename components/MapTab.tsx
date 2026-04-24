@@ -18,10 +18,12 @@ export const HONBAB_EXCLUDED_KEYWORDS = [
 
 export function calcHonbabScore(restaurant: Restaurant, upVotes = 0, downVotes = 0): number {
   const c = restaurant.category.toLowerCase()
-  let baseScore = 60 // 기본값
+  let baseScore = 60 
 
-  if (['라멘', '소바', '우동', '돈까스', '초밥', '국밥', '해장국', '설렁탕', '순댓국', '김밥', '쌀국수', '카페', '커피', '도시락', '샌드위치', '패스트푸드', '비빔밥', '솥밥', '베이커리', '빵', '브런치', '디저트'].some(k => c.includes(k))) {
+  if (['라멘', '소바', '우동', '돈까스', '초밥', '국밥', '해장국', '설렁탕', '순댓국', '김밥', '쌀국수', '도시락', '샌드위치', '패스트푸드', '비빔밥', '솥밥'].some(k => c.includes(k))) {
     baseScore = 90
+  } else if (['카페', '커피', '베이커리', '빵', '브런치', '디저트'].some(k => c.includes(k))) {
+    baseScore = 80
   } else if (['분식', '떡볶이', '마라탕', '아시아음식', '이자카야', '일본식주점', '한식'].some(k => c.includes(k))) {
     baseScore = 70
   } else if (['짜장', '짬뽕', '중화요리', '중식', '파스타', '양식', '피자', '치킨'].some(k => c.includes(k))) {
@@ -30,7 +32,6 @@ export function calcHonbabScore(restaurant: Restaurant, upVotes = 0, downVotes =
     baseScore = 20
   }
 
-  // 투표에 따른 보정 (최대 +/- 10점)
   const voteScore = Math.max(-10, Math.min(10, (upVotes - downVotes) * 2))
   return Math.max(0, Math.min(100, baseScore + voteScore))
 }
@@ -70,29 +71,20 @@ type CategoryResult = { category: string; honbab_level: 1 | 2 | 3; price_range: 
 function mapKakaoCategory(catName: string): CategoryResult | null {
   const c = catName.toLowerCase()
 
-  // 혼밥 불가 — 추가/표시 차단
   if (HONBAB_EXCLUDED_KEYWORDS.some(k => c.includes(k))) return null
 
-  let level: 1 | 2 | 3 = 2 // 기본 보통
+  let level: 1 | 2 | 3 = 2 
 
-  // 90점 그룹 (Level 1 - 쉬움)
-  if (['라멘', '소바', '우동', '돈까스', '초밥', '국밥', '해장국', '설렁탕', '순댓국', '김밥', '쌀국수', '카페', '커피', '도시락', '샌드위치', '패스트푸드', '비빔밥', '솥밥', '베이커리', '빵', '브런치', '디저트'].some(k => c.includes(k))) {
+  if (['라멘', '소바', '우동', '돈까스', '초밥', '국밥', '해장국', '설렁탕', '순댓국', '김밥', '쌀국수', '도시락', '샌드위치', '패스트푸드', '비빔밥', '솥밥', '카페', '커피', '베이커리', '빵', '브런치', '디저트'].some(k => c.includes(k))) {
     level = 1
-  } 
-  // 70점 그룹 (Level 1 또는 2)
-  else if (['분식', '떡볶이', '마라탕', '아시아음식', '이자카야', '일본식주점', '한식'].some(k => c.includes(k))) {
-    level = 1
-  }
-  // 50점 그룹 (Level 2 - 보통)
-  else if (['짜장', '짬뽕', '중화요리', '중식', '파스타', '양식', '피자', '치킨'].some(k => c.includes(k))) {
+  } else if (['분식', '떡볶이', '마라탕', '아시아음식', '이자카야', '일본식주점', '한식'].some(k => c.includes(k))) {
     level = 2
-  }
-  // 20점 그룹 (Level 3 - 어려움)
-  else if (['삼겹살', '구이'].some(k => c.includes(k))) {
+  } else if (['짜장', '짬뽕', '중화요리', '중식', '파스타', '양식', '피자', '치킨'].some(k => c.includes(k))) {
+    level = 2
+  } else if (['삼겹살', '구이'].some(k => c.includes(k))) {
     level = 3
   }
 
-  // 카테고리 단순화 (UI 필터용)
   let simpleCat = '기타'
   if (c.includes('카페') || c.includes('커피') || c.includes('디저트')) simpleCat = '카페'
   else if (c.includes('면') || c.includes('라멘') || c.includes('국수')) simpleCat = '면류'
