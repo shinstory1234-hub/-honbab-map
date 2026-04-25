@@ -17,6 +17,7 @@ interface MapProps {
   onMarkerClick: (restaurant: Restaurant) => void
   onBoundsChange?: (bounds: MapBounds) => void
   centerTo?: { lat: number; lng: number; level?: number } | null
+  userLocation?: { lat: number; lng: number } | null
 }
 
 const LEVEL_COLORS: Record<number, string> = {
@@ -56,14 +57,13 @@ function loadScript(): Promise<void> {
   })
 }
 
-export default function KakaoMap({ restaurants, selectedId, onMarkerClick, onBoundsChange, centerTo }: MapProps) {
+export default function KakaoMap({ restaurants, selectedId, onMarkerClick, onBoundsChange, centerTo, userLocation }: MapProps) {
   const mapRef = useRef<HTMLDivElement>(null)
   const mapInst = useRef<any>(null)
   const ovs = useRef<any[]>([])
   const locMarker = useRef<any>(null)
   const onBoundsChangeRef = useRef(onBoundsChange)
 
-  // 최신 callback 유지를 위해 ref 업데이트
   useEffect(() => {
     onBoundsChangeRef.current = onBoundsChange
   }, [onBoundsChange])
@@ -93,11 +93,35 @@ export default function KakaoMap({ restaurants, selectedId, onMarkerClick, onBou
         }
       }
       k.maps.event.addListener(m, 'idle', emit)
-      
-      // 초기 영역 방출
-      setTimeout(emit, 500)
     })
   }, [])
+
+  // 내 위치 마커 전용 효과
+  useEffect(() => {
+    const m = mapInst.current
+    const k = (window as any).kakao
+    if (!m || !k || !userLocation) return
+
+    if (locMarker.current) locMarker.current.setMap(null)
+
+    const el = document.createElement('div')
+    el.style.cssText = `
+      width: 20px;
+      height: 20px;
+      background-color: #3b82f6;
+      border: 3px solid white;
+      border-radius: 50%;
+      box-shadow: 0 0 12px rgba(59, 130, 246, 0.6);
+      z-index: 100;
+    `
+    const o = new k.maps.CustomOverlay({
+      position: new k.maps.LatLng(userLocation.lat, userLocation.lng),
+      content: el,
+      zIndex: 100
+    })
+    o.setMap(m)
+    locMarker.current = o
+  }, [userLocation])
 
   // 중심 이동 처리
   useEffect(() => {
@@ -107,8 +131,8 @@ export default function KakaoMap({ restaurants, selectedId, onMarkerClick, onBou
       const moveLatLon = new k.maps.LatLng(centerTo.lat, centerTo.lng)
       
       m.relayout()
-      m.setLevel(centerTo.level || 3)
       m.setCenter(moveLatLon)
+      m.setLevel(centerTo.level || 3)
     }
   }, [centerTo])
 
@@ -118,22 +142,25 @@ export default function KakaoMap({ restaurants, selectedId, onMarkerClick, onBou
       const { latitude, longitude } = pos.coords
       const k = (window as any).kakao
       const m = mapInst.current
-      if (!m) return
+      if (!m || !k) return
 
       const moveLatLon = new k.maps.LatLng(latitude, longitude)
       
-      // 현재 위치 마커 표시
-      if (locMarker.current) locMarker.current.setMap(null)
-      
+      m.relayout()
+      m.setLevel(3)
+      m.panTo(moveLatLon)
+
+      // 내 위치 마커 업데이트 (필요시)
       const el = document.createElement('div')
       el.style.cssText = `
-        width: 18px;
-        height: 18px;
+        width: 20px;
+        height: 20px;
         background-color: #3b82f6;
         border: 3px solid white;
         border-radius: 50%;
-        box-shadow: 0 0 10px rgba(59, 130, 246, 0.5);
+        box-shadow: 0 0 12px rgba(59, 130, 246, 0.6);
       `
+      if (locMarker.current) locMarker.current.setMap(null)
       const o = new k.maps.CustomOverlay({
         position: moveLatLon,
         content: el,
@@ -141,10 +168,6 @@ export default function KakaoMap({ restaurants, selectedId, onMarkerClick, onBou
       })
       o.setMap(m)
       locMarker.current = o
-
-      m.relayout()
-      m.setLevel(3)
-      m.panTo(moveLatLon)
     })
   }
 
