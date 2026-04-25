@@ -38,6 +38,7 @@ const calcHonbabScore = (r: Restaurant, upVotes = 0, downVotes = 0): number => {
 
   if (r.category.includes('제과') || r.category.includes('베이커리') || r.category.includes('빵') || r.category.includes('디저트')) baseScore = 80
   else if (r.category.includes('한식')) baseScore = 70
+  else if (r.category.includes('중식') || r.category.includes('짜장') || r.category.includes('짬뽕')) baseScore = 60
 
   const voteScore = Math.max(-10, Math.min(10, (upVotes - downVotes) * 2))
   return Math.max(0, Math.min(100, baseScore + voteScore))
