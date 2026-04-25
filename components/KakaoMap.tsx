@@ -14,6 +14,7 @@ export interface MapBounds {
 interface MapProps {
   restaurants: Restaurant[]
   selectedId?: string
+  voteCounts?: Record<string, number>
   onMarkerClick: (restaurant: Restaurant) => void
   onBoundsChange?: (bounds: MapBounds) => void
   centerTo?: { lat: number; lng: number; level?: number } | null
@@ -24,6 +25,22 @@ const LEVEL_COLORS: Record<number, string> = {
   1: '#22c55e', 
   2: '#eab308', 
   3: '#ef4444', 
+}
+
+const calcHonbabScore = (r: Restaurant, upVotes = 0, downVotes = 0): number => {
+  const isHard = r.category.includes('육류') || r.category.includes('고기') || r.category.includes('게') || r.category.includes('대게') || r.category.includes('치킨') || r.category.includes('구이') || r.category.includes('오리')
+  const lv = isHard ? 3 : Number(r.honbab_level)
+  let baseScore = 60
+
+  if (lv === 1) baseScore = 80
+  else if (lv === 2) baseScore = 60
+  else if (lv === 3) baseScore = 40
+
+  if (r.category.includes('제과') || r.category.includes('베이커리')) baseScore = 80
+  else if (r.category.includes('한식')) baseScore = 70
+
+  const voteScore = Math.max(-10, Math.min(10, (upVotes - downVotes) * 2))
+  return Math.max(0, Math.min(100, baseScore + voteScore))
 }
 
 const getMarkerEmoji = (category: string) => {
@@ -209,6 +226,7 @@ export default function KakaoMap({ restaurants, selectedId, onMarkerClick, onBou
       const emoji = getMarkerEmoji(r.category)
       const bgColor = LEVEL_COLORS[r.honbab_level as 1 | 2 | 3] || '#22c55e'
       const isSelected = r.id === selectedId
+      const score = calcHonbabScore(r, voteCounts?.[r.id] || 0, 0)
       
       const container = document.createElement('div')
       container.style.cssText = `
@@ -234,24 +252,25 @@ export default function KakaoMap({ restaurants, selectedId, onMarkerClick, onBou
         z-index: 2;
       `
       el.innerHTML = `<span>${emoji}</span>`
-      
-      const label = document.createElement('div')
-      label.style.cssText = `
-        background-color: white;
-        padding: 2px 6px;
-        border-radius: 4px;
-        font-size: 11px;
-        font-weight: bold;
-        margin-top: 4px;
-        border: 1px solid #eee;
-        white-space: nowrap;
-        color: #333;
-      `
-      label.innerText = r.name
-
       container.appendChild(el)
-      container.appendChild(label)
       
+      if (score >= 90 || isSelected) {
+        const label = document.createElement('div')
+        label.style.cssText = `
+          background-color: white;
+          padding: 2px 6px;
+          border-radius: 4px;
+          font-size: 11px;
+          font-weight: bold;
+          margin-top: 4px;
+          border: 1px solid #eee;
+          white-space: nowrap;
+          color: #333;
+        `
+        label.innerText = r.name
+        container.appendChild(label)
+      }
+
       container.onclick = (e) => {
         e.stopPropagation()
         onMarkerClick(r)
@@ -267,7 +286,7 @@ export default function KakaoMap({ restaurants, selectedId, onMarkerClick, onBou
       o.setMap(m); 
       ovs.current.push(o)
     })
-  }, [restaurants, selectedId, onMarkerClick])
+  }, [restaurants, selectedId, voteCounts, onMarkerClick])
 
   return (
     <div className="relative w-full h-full">

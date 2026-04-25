@@ -10,24 +10,27 @@ export const PRICE_LABELS: Record<number, string> = {
 }
 
 export function calcHonbabScore(restaurant: Restaurant, upVotes = 0, downVotes = 0): number {
-  const lv = Number(restaurant.honbab_level)
-  let baseScore = 60 
+  const isHard = restaurant.category.includes('육류') || restaurant.category.includes('고기') || restaurant.category.includes('게') || restaurant.category.includes('대게') || restaurant.category.includes('치킨') || restaurant.category.includes('구이') || restaurant.category.includes('오리')
+  const lv = isHard ? 3 : Number(restaurant.honbab_level)
+  let baseScore = 60
 
   if (lv === 1) baseScore = 80
   else if (lv === 2) baseScore = 60
   else if (lv === 3) baseScore = 40
+
+  if (restaurant.category.includes('제과') || restaurant.category.includes('베이커리')) baseScore = 80
+  else if (restaurant.category.includes('한식')) baseScore = 70
 
   const voteScore = Math.max(-10, Math.min(10, (upVotes - downVotes) * 2))
   return Math.max(0, Math.min(100, baseScore + voteScore))
 }
 
 export function getHonbabGrade(score: number) {
-  if (score >= 80) return { label: '혼밥 성지', emoji: '🏆', color: 'text-orange-600', bg: 'bg-orange-50' }
-  if (score >= 60) return { label: '추천', emoji: '⭐', color: 'text-blue-600', bg: 'bg-blue-50' }
-  if (score >= 40) return { label: '평범', emoji: '👌', color: 'text-gray-600', bg: 'bg-gray-50' }
+  if (score >= 90) return { label: '혼밥 성지', emoji: '🏆', color: 'text-green-600', bg: 'bg-green-50' }
+  if (score >= 80) return { label: '추천', emoji: '⭐', color: 'text-blue-600', bg: 'bg-blue-50' }
+  if (score >= 60) return { label: '보통', emoji: '👌', color: 'text-yellow-600', bg: 'bg-yellow-50' }
   return { label: '도전', emoji: '😅', color: 'text-red-500', bg: 'bg-red-50' }
 }
-
 const LEVEL_INFO: Record<number, { label: string; emoji: string; color: string; bg: string }> = {
   1: { label: '쉬움', emoji: '🟢', color: 'text-green-600', bg: 'bg-green-50' },
   2: { label: '보통', emoji: '🟡', color: 'text-yellow-600', bg: 'bg-yellow-50' },

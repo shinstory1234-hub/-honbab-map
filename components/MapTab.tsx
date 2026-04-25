@@ -263,6 +263,7 @@ export default function MapTab() {
             onBoundsChange={handleBoundsChange}
             centerTo={centerTo}
             userLocation={userLocation}
+            voteCounts={voteCounts}
           />
 
           {/* 모바일 하단 추천 플로팅 버튼 */}
