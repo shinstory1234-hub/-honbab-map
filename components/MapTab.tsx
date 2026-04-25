@@ -59,7 +59,7 @@ export default function MapTab() {
       .lte('lat', bounds.ne_lat)
       .gte('lng', bounds.sw_lng)
       .lte('lng', bounds.ne_lng)
-      .limit(1000)
+      .limit(200)
     if (data) setRestaurants(data as Restaurant[])
     setLoading(false)
   }, [])
@@ -67,7 +67,7 @@ export default function MapTab() {
   const handleBoundsChange = useCallback((bounds: MapBounds) => {
     boundsRef.current = bounds
     if (debounceRef.current) clearTimeout(debounceRef.current)
-    debounceRef.current = setTimeout(() => fetchByBounds(bounds), 400)
+    debounceRef.current = setTimeout(() => fetchByBounds(bounds), 600)
   }, [fetchByBounds])
 
   useEffect(() => {
