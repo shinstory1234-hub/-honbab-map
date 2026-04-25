@@ -66,6 +66,7 @@ export default function MapTab() {
     const { data } = await supabase
       .from('restaurants')
       .select('*')
+      .eq('is_approved', true)
       .gte('lat', bounds.sw_lat)
       .lte('lat', bounds.ne_lat)
       .gte('lng', bounds.sw_lng)

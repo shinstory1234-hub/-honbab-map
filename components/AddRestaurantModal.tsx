@@ -45,9 +45,34 @@ export default function AddRestaurantModal({ isOpen, onClose }: Props) {
       honbab_level: form.honbab_level,
       price_range: form.price_range,
       honbab_tags: form.tags,
+      is_approved: false, // 기본적으로 승인 대기 상태
     })
-    setLoading(false)
+
     if (!error) {
+      // 디스코드 알림 전송
+      try {
+        await fetch('https://discord.com/api/webhooks/1497616813897285763/2iOBpXLQD_0cmavLFwr7jAXjx0-M1r2XoQtE8-mUu4dtv_8etYZ6hEXyTWoeRAaRQ9u-', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            embeds: [{
+              title: '🔔 새로운 혼밥 식당 제보!',
+              color: 0xFF6B35,
+              fields: [
+                { name: '식당명', value: form.name, inline: true },
+                { name: '카테고리', value: form.category || '기타', inline: true },
+                { name: '주소', value: form.address },
+                { name: '난이도', value: form.honbab_level === 1 ? '🟢 쉬움' : form.honbab_level === 2 ? '🟡 보통' : '🔴 어려움', inline: true },
+                { name: '태그', value: form.tags.join(', ') || '없음' }
+              ],
+              timestamp: new Date().toISOString()
+            }]
+          })
+        })
+      } catch (err) {
+        console.error('디스코드 알림 실패:', err)
+      }
+
       setSuccess(true)
       setTimeout(() => {
         setSuccess(false)
@@ -55,6 +80,7 @@ export default function AddRestaurantModal({ isOpen, onClose }: Props) {
         onClose()
       }, 1200)
     }
+    setLoading(false)
   }
 
   if (!isOpen) return null
