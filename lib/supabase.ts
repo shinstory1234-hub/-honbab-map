@@ -15,7 +15,7 @@ export type Restaurant = {
   lat: number
   lng: number
   category: string
-  honbab_level: 1 | 2 | 3
+  honbab_level: number
   honbab_tags: string[]
   price_range: 1 | 2 | 3 | 4
   up_votes: number
