@@ -11,7 +11,7 @@ export const PRICE_LABELS: Record<number, string> = {
 }
 
 export function calcHonbabScore(restaurant: Restaurant, upVotes = 0, downVotes = 0): number {
-  const lv = Number(restaurant.honbab_level)
+  const lv = restaurant.honbab_level as number
   let baseScore = 60 
 
   if (lv === 1) baseScore = 80
@@ -221,7 +221,7 @@ export default function RestaurantDetail({ restaurant, onClose, onLevelUpdated, 
 
   if (!restaurant) return null
 
-  const level = LEVEL_INFO[Number(restaurant.honbab_level) as 1 | 2 | 3] || LEVEL_INFO[2]
+  const level = LEVEL_INFO[restaurant.honbab_level as 1 | 2 | 3] || LEVEL_INFO[2]
   const totalVotes = upVotes + downVotes
   const upPct = totalVotes > 0 ? Math.round((upVotes / totalVotes) * 100) : 0
   const downPct = totalVotes > 0 ? 100 - upPct : 0

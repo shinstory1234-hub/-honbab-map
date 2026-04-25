@@ -44,7 +44,7 @@ type Props = {
 export default function RestaurantCard({ restaurant, voteCount = 0, selected, onClick }: Props) {
   const score = calcHonbabScore(restaurant, voteCount)
   const grade = getHonbabGrade(score)
-  const level = LEVEL_INFO[Number(restaurant.honbab_level) as 1 | 2 | 3] || LEVEL_INFO[2]
+  const level = LEVEL_INFO[restaurant.honbab_level as 1 | 2 | 3] || LEVEL_INFO[2]
 
   const getPriceLabel = (r: Restaurant) => {
     if (r.price_range === 1) return '가성비'

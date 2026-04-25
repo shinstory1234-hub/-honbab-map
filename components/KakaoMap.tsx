@@ -125,7 +125,7 @@ export default function KakaoMap({ restaurants, selectedId, onMarkerClick, onBou
 
     restaurants.forEach((r) => {
       const emoji = getMarkerEmoji(r.category)
-      const bgColor = LEVEL_COLORS[String(r.honbab_level)] || '#22c55e'
+      const bgColor = LEVEL_COLORS[r.honbab_level as 1 | 2 | 3] || '#22c55e'
       const isSelected = r.id === selectedId
       
       const el = document.createElement('div')

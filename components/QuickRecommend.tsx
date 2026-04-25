@@ -11,7 +11,7 @@ export const PRICE_LABELS: Record<number, string> = {
 }
 
 export function calcHonbabScore(restaurant: Restaurant, upVotes = 0, downVotes = 0): number {
-  const lv = Number(restaurant.honbab_level)
+  const lv = restaurant.honbab_level as number
   let baseScore = 60 
 
   if (lv === 1) baseScore = 80
