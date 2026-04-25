@@ -140,7 +140,14 @@ export default function MapTab() {
       .gte('lng', bounds.sw_lng)
       .lte('lng', bounds.ne_lng)
       .limit(1000)
-    if (data) setRestaurants(data as Restaurant[])
+    if (data) {
+      // ID 기준으로 중복 제거하여 상태 업데이트
+      setRestaurants(prev => {
+        const combined = [...prev, ...(data as Restaurant[])]
+        const unique = Array.from(new Map(combined.map(r => [r.id, r])).values())
+        return unique
+      })
+    }
     setLoading(false)
   }, [])
 
@@ -233,12 +240,20 @@ export default function MapTab() {
     setAddingIds(prev => { const s = new Set(prev); s.delete(place.id); return s })
     if (!error && data) {
       setAddedIds(prev => new Set(prev).add(place.id))
-      setRestaurants(prev => [...prev, data as Restaurant])
+      setRestaurants(prev => {
+        const combined = [...prev, data as Restaurant]
+        const unique = Array.from(new Map(combined.map(r => [r.id, r])).values())
+        return unique
+      })
     }
   }, [addingIds, addedIds])
 
   const filtered = useMemo(() => {
-    let list = restaurants
+    // 1차적으로 전체 목록에서 ID 기준 중복 제거
+    const uniqueMap = new Map()
+    restaurants.forEach(r => uniqueMap.set(r.id, r))
+    let list = Array.from(uniqueMap.values())
+
     if (searchQuery.trim()) {
       const q = searchQuery.toLowerCase()
       list = list.filter(r => r.name.toLowerCase().includes(q) || r.address.toLowerCase().includes(q) || r.category.toLowerCase().includes(q))
