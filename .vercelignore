@@ -1,0 +1,6 @@
+*.csv
+*.sqlite
+data/
+.next/
+node_modules/
+.vercel/

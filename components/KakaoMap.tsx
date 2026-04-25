@@ -60,6 +60,12 @@ export default function KakaoMap({ restaurants, selectedId, onMarkerClick, onBou
   const mapRef = useRef<HTMLDivElement>(null)
   const mapInst = useRef<any>(null)
   const ovs = useRef<any[]>([])
+  const onBoundsChangeRef = useRef(onBoundsChange)
+
+  // 최신 callback 유지를 위해 ref 업데이트
+  useEffect(() => {
+    onBoundsChangeRef.current = onBoundsChange
+  }, [onBoundsChange])
 
   useEffect(() => {
     loadScript().then(() => {
@@ -74,11 +80,11 @@ export default function KakaoMap({ restaurants, selectedId, onMarkerClick, onBou
       mapInst.current = m
 
       const emit = () => {
-        if (onBoundsChange) {
+        if (onBoundsChangeRef.current) {
           const b = m.getBounds()
           const sw = b.getSouthWest()
           const ne = b.getNorthEast()
-          onBoundsChange({
+          onBoundsChangeRef.current({
             sw_lat: sw.getLat(),
             sw_lng: sw.getLng(),
             ne_lat: ne.getLat(),
@@ -89,7 +95,7 @@ export default function KakaoMap({ restaurants, selectedId, onMarkerClick, onBou
       k.maps.event.addListener(m, 'idle', emit)
       emit()
     })
-  }, [onBoundsChange])
+  }, []) // 빈 배열로 유지하여 초기 1회만 리스너 등록
 
   // 중심 이동 처리
   useEffect(() => {
@@ -100,21 +106,21 @@ export default function KakaoMap({ restaurants, selectedId, onMarkerClick, onBou
         mapInst.current.setLevel(centerTo.level)
       }
       mapInst.current.panTo(moveLatLon)
-
-      // 이동 후 영역 변경 알림
-      if (onBoundsChange) {
-        const b = mapInst.current.getBounds()
-        const sw = b.getSouthWest()
-        const ne = b.getNorthEast()
-        onBoundsChange({
-          sw_lat: sw.getLat(),
-          sw_lng: sw.getLng(),
-          ne_lat: ne.getLat(),
-          ne_lng: ne.getLng()
-        })
-      }
+      // idle 이벤트가 panTo 완료 후 호출되므로 여기서 따로 호출하지 않아도 됨
     }
-  }, [centerTo, onBoundsChange])
+  }, [centerTo])
+
+  const handleGeolocation = () => {
+    if (!navigator.geolocation) return
+    navigator.geolocation.getCurrentPosition((pos) => {
+      const { latitude, longitude } = pos.coords
+      const k = (window as any).kakao
+      const moveLatLon = new k.maps.LatLng(latitude, longitude)
+      if (mapInst.current) {
+        mapInst.current.panTo(moveLatLon)
+      }
+    })
+  }
 
   useEffect(() => {
     const m = mapInst.current
@@ -160,5 +166,16 @@ export default function KakaoMap({ restaurants, selectedId, onMarkerClick, onBou
     })
   }, [restaurants, selectedId, onMarkerClick])
 
-  return <div ref={mapRef} style={{ width: '100%', height: '100%' }} />
+  return (
+    <div className="relative w-full h-full">
+      <div ref={mapRef} style={{ width: '100%', height: '100%' }} />
+      <button 
+        onClick={handleGeolocation}
+        className="absolute bottom-6 right-6 z-10 w-12 h-12 bg-white rounded-full shadow-lg border border-gray-100 flex items-center justify-center text-xl hover:bg-gray-50 active:scale-95 transition-all"
+        title="현재 위치로 이동"
+      >
+        📍
+      </button>
+    </div>
+  )
 }
