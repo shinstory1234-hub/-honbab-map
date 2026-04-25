@@ -19,13 +19,10 @@ interface MapProps {
   centerTo?: { lat: number; lng: number; level?: number } | null
 }
 
-const LEVEL_COLORS: Record<number | string, string> = {
+const LEVEL_COLORS: Record<number, string> = {
   1: '#22c55e', 
   2: '#eab308', 
   3: '#ef4444', 
-  '1': '#22c55e', 
-  '2': '#eab308', 
-  '3': '#ef4444', 
 }
 
 const getMarkerEmoji = (category: string) => {
