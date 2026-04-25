@@ -129,11 +129,23 @@ export default function KakaoMap({ restaurants, selectedId, onMarkerClick, onBou
     if (mapInst.current && centerTo) {
       const k = (window as any).kakao
       const m = mapInst.current
-      const moveLatLon = new k.maps.LatLng(centerTo.lat, centerTo.lng)
+      const lat = centerTo.lat
+      const lng = centerTo.lng
+      const moveLatLon = new k.maps.LatLng(lat, lng)
       
       m.setCenter(moveLatLon)
       m.relayout()
-      m.setCenter(moveLatLon)
+      
+      // 사이드바 오프셋 보정
+      const projection = m.getProjection()
+      const point = projection.pointFromCoords(moveLatLon)
+      const isMobile = window.innerWidth <= 768
+      const sidebarWidth = isMobile ? 0 : 384
+      const offsetX = sidebarWidth / 2
+      const adjustedPoint = new k.maps.Point(point.x - offsetX, point.y)
+      const adjustedLatLng = projection.coordsFromPoint(adjustedPoint)
+      
+      m.setCenter(adjustedLatLng)
       m.setLevel(4)
     }
   }, [centerTo])
@@ -141,15 +153,25 @@ export default function KakaoMap({ restaurants, selectedId, onMarkerClick, onBou
   const handleGeolocation = () => {
     if (!navigator.geolocation) return
     navigator.geolocation.getCurrentPosition((pos) => {
-      const { latitude, longitude } = pos.coords
+      const { latitude: lat, longitude: lng } = pos.coords
       const k = (window as any).kakao
       const m = mapInst.current
       if (!m || !k) return
 
-      const moveLatLon = new k.maps.LatLng(latitude, longitude)
+      const moveLatLon = new k.maps.LatLng(lat, lng)
       m.setCenter(moveLatLon)
       m.relayout()
-      m.setCenter(moveLatLon)
+
+      // 사이드바 오프셋 보정
+      const projection = m.getProjection()
+      const point = projection.pointFromCoords(moveLatLon)
+      const isMobile = window.innerWidth <= 768
+      const sidebarWidth = isMobile ? 0 : 384
+      const offsetX = sidebarWidth / 2
+      const adjustedPoint = new k.maps.Point(point.x - offsetX, point.y)
+      const adjustedLatLng = projection.coordsFromPoint(adjustedPoint)
+
+      m.setCenter(adjustedLatLng)
       m.setLevel(4)
 
       // 내 위치 마커 업데이트
