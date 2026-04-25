@@ -20,7 +20,7 @@ const SORT_OPTIONS = [
 const calcHonbabScore = (r: Restaurant, upVotes: number) => {
   // 고기/게 등 난이도 높은 카테고리 보정
   const isHard = r.category.includes('육류') || r.category.includes('고기') || r.category.includes('게') || r.category.includes('대게') || r.category.includes('치킨') || r.category.includes('구이') || r.category.includes('오리')
-  const level = isHard ? 3 : r.honbab_level
+  const level = (isHard ? 3 : r.honbab_level) as 1 | 2 | 3
   
   let score = level === 1 ? 80 : level === 2 ? 60 : 40
   score += upVotes * 2
