@@ -143,15 +143,14 @@ export default function MapTab() {
     if (filterCategory !== '전체') list = list.filter(r => matchesCategory(r, filterCategory))
     if (filterLevel !== 0) list = list.filter(r => r.honbab_level === filterLevel)
 
-    // 중복 제거 강화: ID 기준
     const seen = new Set<string>()
-    const uniqueList = list.filter(r => {
-      if (!r.id || seen.has(r.id)) return false
+    list = list.filter(r => {
+      if (seen.has(r.id)) return false
       seen.add(r.id)
       return true
     })
 
-    return uniqueList.sort((a, b) => {
+    return list.sort((a, b) => {
       if (sortBy === 'score') return calcHonbabScore(b, voteCounts[b.id] || 0) - calcHonbabScore(a, voteCounts[a.id] || 0)
       if (sortBy === 'level') return a.honbab_level - b.honbab_level
       return a.name.localeCompare(b.name)
