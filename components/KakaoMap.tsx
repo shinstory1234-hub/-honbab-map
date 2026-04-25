@@ -117,7 +117,8 @@ export default function KakaoMap({ restaurants, selectedId, onMarkerClick, onBou
     const o = new k.maps.CustomOverlay({
       position: new k.maps.LatLng(userLocation.lat, userLocation.lng),
       content: el,
-      zIndex: 100
+      zIndex: 100,
+      yAnchor: 0.5
     })
     o.setMap(m)
     locMarker.current = o
@@ -133,7 +134,7 @@ export default function KakaoMap({ restaurants, selectedId, onMarkerClick, onBou
       m.setCenter(moveLatLon)
       m.relayout()
       m.setCenter(moveLatLon)
-      m.setLevel(centerTo.level || 3)
+      m.setLevel(4)
     }
   }, [centerTo])
 
@@ -146,11 +147,10 @@ export default function KakaoMap({ restaurants, selectedId, onMarkerClick, onBou
       if (!m || !k) return
 
       const moveLatLon = new k.maps.LatLng(latitude, longitude)
-      
       m.setCenter(moveLatLon)
       m.relayout()
       m.setCenter(moveLatLon)
-      m.setLevel(3)
+      m.setLevel(4)
 
       // 내 위치 마커 업데이트
       const el = document.createElement('div')
@@ -161,13 +161,16 @@ export default function KakaoMap({ restaurants, selectedId, onMarkerClick, onBou
         border: 3px solid white;
         border-radius: 50%;
         box-shadow: 0 0 12px rgba(59, 130, 246, 0.6);
+        z-index: 100;
       `
       if (locMarker.current) locMarker.current.setMap(null)
       const o = new k.maps.CustomOverlay({
         position: moveLatLon,
         content: el,
-        zIndex: 100
+        zIndex: 100,
+        yAnchor: 0.5
       })
+
       o.setMap(m)
       locMarker.current = o
     })
