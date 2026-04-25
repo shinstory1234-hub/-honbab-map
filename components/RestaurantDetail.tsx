@@ -153,7 +153,7 @@ export default function RestaurantDetail({ restaurant, onClose, onLevelUpdated, 
     setUpVotes(newUp)
     setDownVotes(newDown)
     const total = newUp + newDown
-    let newLevel: 1 | 2 | 3 = restaurant.honbab_level
+    let newLevel: 1 | 2 | 3 = restaurant.honbab_level as 1 | 2 | 3
     if (total >= 10) {
       if (newDown / total >= 0.7) newLevel = 3
       else if (newUp / total >= 0.7) newLevel = 1
