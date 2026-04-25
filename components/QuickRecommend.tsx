@@ -23,9 +23,9 @@ export function calcHonbabScore(restaurant: Restaurant, upVotes = 0, downVotes =
 }
 
 export function getHonbabGrade(score: number) {
-  if (score >= 80) return { label: '혼밥 성지', emoji: '🏆', color: 'text-orange-600', bg: 'bg-orange-50' }
-  if (score >= 60) return { label: '추천', emoji: '⭐', color: 'text-blue-600', bg: 'bg-blue-50' }
-  if (score >= 40) return { label: '평범', emoji: '👌', color: 'text-gray-600', bg: 'bg-gray-50' }
+  if (score >= 90) return { label: '혼밥 성지', emoji: '🏆', color: 'text-green-600', bg: 'bg-green-50' }
+  if (score >= 80) return { label: '추천', emoji: '⭐', color: 'text-blue-600', bg: 'bg-blue-50' }
+  if (score >= 60) return { label: '보통', emoji: '👌', color: 'text-yellow-600', bg: 'bg-yellow-50' }
   return { label: '도전', emoji: '😅', color: 'text-red-500', bg: 'bg-red-50' }
 }
 

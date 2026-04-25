@@ -170,6 +170,7 @@ export default function MapTab() {
 
   return (
     <div className="flex h-full relative">
+      {/* 데스크탑 사이드바 (변경 없음) */}
       <div className="hidden md:flex flex-col w-96 bg-white border-r border-gray-100 overflow-hidden shrink-0">
         <div className="p-3 pb-0 relative">
           <div className="flex items-center gap-2 bg-blue-50 border border-blue-200 rounded-xl px-3 py-2">
@@ -239,14 +240,36 @@ export default function MapTab() {
         </div>
       </div>
 
-      <div className="flex-1 relative overflow-hidden">
-        <KakaoMap
-          restaurants={filtered}
-          onMarkerClick={setSelectedRestaurant}
-          onBoundsChange={handleBoundsChange}
-          centerTo={centerTo}
-          userLocation={userLocation}
-        />
+      {/* 메인 영역 (지도 + 모바일 UI 추가) */}
+      <div className="flex-1 relative overflow-hidden flex flex-col">
+        {/* 모바일 상단 필터 바 */}
+        <div className="md:hidden bg-white/80 backdrop-blur-md border-b border-gray-100 px-3 py-2 flex flex-col gap-2 shrink-0 z-20">
+          <div className="flex items-center gap-2 overflow-x-auto pb-1 scrollbar-none no-scrollbar">
+            {CATEGORIES.map(cat => (
+              <button key={cat} onClick={() => setFilterCategory(cat)}
+                className={`shrink-0 px-3 py-1.5 rounded-full text-xs font-bold transition-all shadow-sm ${
+                  filterCategory === cat ? 'bg-[#FF6B35] text-white' : 'bg-white text-gray-600 border border-gray-100'
+                }`}>
+                {cat}
+              </button>
+            ))}
+          </div>
+        </div>
+
+        <div className="flex-1 relative">
+          <KakaoMap
+            restaurants={filtered}
+            onMarkerClick={setSelectedRestaurant}
+            onBoundsChange={handleBoundsChange}
+            centerTo={centerTo}
+            userLocation={userLocation}
+          />
+
+          {/* 모바일 하단 추천 플로팅 버튼 */}
+          <div className="md:hidden absolute bottom-24 left-1/2 -translate-x-1/2 w-[calc(100%-2.5rem)] max-w-sm z-20">
+            <QuickRecommend restaurants={filtered} voteCounts={voteCounts} onSelect={setSelectedRestaurant} />
+          </div>
+        </div>
       </div>
 
       {selectedRestaurant && (
