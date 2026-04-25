@@ -70,7 +70,7 @@ export default function MapTab() {
       .lte('lat', bounds.ne_lat)
       .gte('lng', bounds.sw_lng)
       .lte('lng', bounds.ne_lng)
-      .limit(1000)
+      .limit(3000)
     if (data) setRestaurants(data as Restaurant[])
     setLoading(false)
   }, [])
