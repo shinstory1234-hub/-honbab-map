@@ -36,7 +36,7 @@ const calcHonbabScore = (r: Restaurant, upVotes = 0, downVotes = 0): number => {
   else if (lv === 2) baseScore = 60
   else if (lv === 3) baseScore = 40
 
-  if (r.category.includes('제과') || r.category.includes('베이커리')) baseScore = 80
+  if (r.category.includes('제과') || r.category.includes('베이커리') || r.category.includes('빵') || r.category.includes('디저트')) baseScore = 80
   else if (r.category.includes('한식')) baseScore = 70
 
   const voteScore = Math.max(-10, Math.min(10, (upVotes - downVotes) * 2))
@@ -44,21 +44,27 @@ const calcHonbabScore = (r: Restaurant, upVotes = 0, downVotes = 0): number => {
 }
 
 const getMarkerEmoji = (category: string) => {
-  if (!category) return '🍽️';
-  const c = category.toLowerCase();
-  if (c.includes('카페') || c.includes('커피')) return '☕';
-  if (c.includes('초밥') || c.includes('스시')) return '🍣';
-  if (c.includes('라멘') || c.includes('라면') || c.includes('면')) return '🍜';
-  if (c.includes('돈카츠') || c.includes('돈까스')) return '🍱';
-  if (c.includes('피자')) return '🍕';
-  if (c.includes('버거') || c.includes('햄버거')) return '🍔';
-  if (c.includes('치킨')) return '🍗';
-  if (c.includes('국밥') || c.includes('해장')) return '🥣';
-  if (c.includes('분식') || c.includes('떡볶이')) return '🥢';
-  if (c.includes('카레')) return '🍛';
-  if (c.includes('샐러드') || c.includes('샌드위치')) return '🥗';
-  if (c.includes('술') || c.includes('이자카야') || c.includes('포차')) return '🍺';
-  return '🍽️';
+  if (!category) return '🍽️'
+  const c = category
+  if (c.includes('카페') || c.includes('커피')) return '☕'
+  if (c.includes('초밥') || c.includes('스시')) return '🍣'
+  if (c.includes('라멘') || c.includes('라면')) return '🍜'
+  if (c.includes('돈카츠') || c.includes('돈까스')) return '🍱'
+  if (c.includes('피자')) return '🍕'
+  if (c.includes('버거') || c.includes('햄버거')) return '🍔'
+  if (c.includes('치킨')) return '🍗'
+  if (c.includes('국밥') || c.includes('해장')) return '🥣'
+  if (c.includes('분식') || c.includes('떡볶이')) return '🥢'
+  if (c.includes('카레')) return '🍛'
+  if (c.includes('샐러드') || c.includes('샌드위치')) return '🥗'
+  if (c.includes('이자카야') || c.includes('포차')) return '🍺'
+  if (c.includes('빵') || c.includes('베이커리') || c.includes('디저트')) return '🥐'
+  if (c.includes('쌀국수')) return '🍜'
+  if (c.includes('삼겹살') || c.includes('구이')) return '🥩'
+  if (c.includes('한식')) return '🍚'
+  if (c.includes('중식') || c.includes('짜장') || c.includes('짬뽕')) return '🥡'
+  if (c.includes('양식') || c.includes('파스타')) return '🍝'
+  return '🍽️'
 }
 
 function loadScript(): Promise<void> {
@@ -74,7 +80,7 @@ function loadScript(): Promise<void> {
   })
 }
 
-export default function KakaoMap({ restaurants, selectedId, onMarkerClick, onBoundsChange, centerTo, userLocation }: MapProps) {
+export default function KakaoMap({ restaurants, selectedId, voteCounts, onMarkerClick, onBoundsChange, centerTo, userLocation }: MapProps) {
   const mapRef = useRef<HTMLDivElement>(null)
   const mapInst = useRef<any>(null)
   const ovs = useRef<any[]>([])
@@ -84,6 +90,21 @@ export default function KakaoMap({ restaurants, selectedId, onMarkerClick, onBou
   useEffect(() => {
     onBoundsChangeRef.current = onBoundsChange
   }, [onBoundsChange])
+
+  const emit = () => {
+    const m = mapInst.current
+    if (m && onBoundsChangeRef.current) {
+      const b = m.getBounds()
+      const sw = b.getSouthWest()
+      const ne = b.getNorthEast()
+      onBoundsChangeRef.current({
+        sw_lat: sw.getLat(),
+        sw_lng: sw.getLng(),
+        ne_lat: ne.getLat(),
+        ne_lng: ne.getLng()
+      })
+    }
+  }
 
   useEffect(() => {
     loadScript().then(() => {
@@ -95,25 +116,10 @@ export default function KakaoMap({ restaurants, selectedId, onMarkerClick, onBou
         level: 3 
       })
       mapInst.current = m
-
-      const emit = () => {
-        if (onBoundsChangeRef.current) {
-          const b = m.getBounds()
-          const sw = b.getSouthWest()
-          const ne = b.getNorthEast()
-          onBoundsChangeRef.current({
-            sw_lat: sw.getLat(),
-            sw_lng: sw.getLng(),
-            ne_lat: ne.getLat(),
-            ne_lng: ne.getLng()
-          })
-        }
-      }
       k.maps.event.addListener(m, 'idle', emit)
     })
   }, [])
 
-  // 내 위치 마커 전용 효과
   useEffect(() => {
     const m = mapInst.current
     const k = (window as any).kakao
@@ -141,7 +147,6 @@ export default function KakaoMap({ restaurants, selectedId, onMarkerClick, onBou
     locMarker.current = o
   }, [userLocation])
 
-  // 중심 이동 처리
   useEffect(() => {
     if (mapInst.current && centerTo) {
       const k = (window as any).kakao
@@ -164,20 +169,6 @@ export default function KakaoMap({ restaurants, selectedId, onMarkerClick, onBou
       const m = mapInst.current
       if (!m || !k) return
 
-      const emit = () => {
-        if (onBoundsChangeRef.current) {
-          const b = m.getBounds()
-          const sw = b.getSouthWest()
-          const ne = b.getNorthEast()
-          onBoundsChangeRef.current({
-            sw_lat: sw.getLat(),
-            sw_lng: sw.getLng(),
-            ne_lat: ne.getLat(),
-            ne_lng: ne.getLng()
-          })
-        }
-      }
-
       const lat = pos.coords.latitude
       const lng = pos.coords.longitude
       m.setCenter(new k.maps.LatLng(lat, lng))
@@ -187,7 +178,6 @@ export default function KakaoMap({ restaurants, selectedId, onMarkerClick, onBou
         emit()
       }, 500)
 
-      // 내 위치 마커 업데이트
       const el = document.createElement('div')
       el.style.cssText = `
         width: 20px;
@@ -205,7 +195,6 @@ export default function KakaoMap({ restaurants, selectedId, onMarkerClick, onBou
         zIndex: 100,
         yAnchor: 0.5
       })
-
       o.setMap(m)
       locMarker.current = o
     })
@@ -277,7 +266,7 @@ export default function KakaoMap({ restaurants, selectedId, onMarkerClick, onBou
       const o = new k.maps.CustomOverlay({ 
         position: new k.maps.LatLng(r.lat, r.lng), 
         content: container, 
-        yAnchor: 0.8 // 중심점 조정
+        yAnchor: 0.8
       })
       o.setMap(m); 
       ovs.current.push(o)

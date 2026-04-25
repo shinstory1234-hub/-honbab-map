@@ -1,286 +1,182 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 'use client'
 
-import { useState, useEffect, useMemo, useCallback, useRef, type KeyboardEvent } from 'react'
-import dynamic from 'next/dynamic'
-import { supabase, Restaurant } from '@/lib/supabase'
-import RestaurantCard from '@/components/RestaurantCard'
-import RestaurantDetail from '@/components/RestaurantDetail'
-import QuickRecommend from '@/components/QuickRecommend'
-import { type MapBounds } from '@/components/KakaoMap'
+import { useEffect, useRef } from 'react'
+import { Restaurant } from '@/lib/supabase'
 
-const KakaoMap = dynamic(() => import('@/components/KakaoMap'), { ssr: false })
-
-const CATEGORIES = ['전체', '면류', '밥류', '분식', '카페']
-const SORT_OPTIONS = [
-  { value: 'score', label: '혼밥지수순' },
-  { value: 'level', label: '쉬움순' },
-  { value: 'name', label: '이름순' },
-] as const
-
-const calcHonbabScore = (r: Restaurant, upVotes: number) => {
-  // 고기/게 등 난이도 높은 카테고리 보정
-  const isHard = r.category.includes('육류') || r.category.includes('고기') || r.category.includes('게') || r.category.includes('대게') || r.category.includes('치킨') || r.category.includes('구이') || r.category.includes('오리')
-  const level = (isHard ? 3 : r.honbab_level) as 1 | 2 | 3
-  
-  let score = level === 1 ? 80 : level === 2 ? 60 : 40
-  score += upVotes * 2
-  return Math.min(score, 100)
+export interface MapBounds {
+  sw_lat: number
+  sw_lng: number
+  ne_lat: number
+  ne_lng: number
 }
 
-const matchesCategory = (r: Restaurant, filterCat: string) => {
-  if (filterCat === '전체') return true
-  if (filterCat === '면류') return r.category.includes('라멘') || r.category.includes('우동') || r.category.includes('소바') || r.category.includes('쌀국수') || r.category.includes('냉면')
-  if (filterCat === '밥류') return r.category.includes('국밥') || r.category.includes('비빔밥') || r.category.includes('솥밥') || r.category.includes('덮밥') || r.category.includes('한식')
-  if (filterCat === '분식') return r.category.includes('분식') || r.category.includes('떡볶이') || r.category.includes('김밥')
-  if (filterCat === '카페') return r.category.includes('카페') || r.category.includes('커피') || r.category.includes('디저트') || r.category.includes('베이커리')
-  return r.category.includes(filterCat)
+interface MapProps {
+  restaurants: Restaurant[]
+  selectedId?: string
+  onMarkerClick: (restaurant: Restaurant) => void
+  onBoundsChange?: (bounds: MapBounds) => void
+  centerTo?: { lat: number; lng: number; level?: number } | null
 }
 
-type SortBy = 'score' | 'level' | 'name'
+const LEVEL_COLORS: Record<number, string> = {
+  1: '#22c55e',
+  2: '#eab308',
+  3: '#ef4444',
+}
 
-export default function MapTab() {
-  const [restaurants, setRestaurants] = useState<Restaurant[]>([])
-  const [voteCounts, setVoteCounts] = useState<Record<string, number>>({})
-  const [filterLevel, setFilterLevel] = useState<0 | 1 | 2 | 3>(0)
-  const [filterCategory, setFilterCategory] = useState('전체')
-  const [sortBy, setSortBy] = useState<SortBy>('score')
-  const [searchQuery, setSearchQuery] = useState('')
-  const [selectedRestaurant, setSelectedRestaurant] = useState<Restaurant | null>(null)
-  const [loading, setLoading] = useState(false)
-  const [locQuery, setLocQuery] = useState('')
-  const [locSuggestions, setLocSuggestions] = useState<{ place_name: string; lat: number; lng: number }[]>([])
-  const [centerTo, setCenterTo] = useState<{ lat: number; lng: number; level?: number } | null>(null)
-  const [userLocation, setUserLocation] = useState<{ lat: number; lng: number } | null>(null)
-  const boundsRef = useRef<MapBounds | null>(null)
-  const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null)
-  const locDebounceRef = useRef<ReturnType<typeof setTimeout> | null>(null)
+const getMarkerEmoji = (category: string) => {
+  if (!category) return '🍽️'
+  const c = category
+  if (c.includes('카페') || c.includes('커피')) return '☕'
+  if (c.includes('초밥') || c.includes('스시')) return '🍣'
+  if (c.includes('라멘') || c.includes('라면')) return '🍜'
+  if (c.includes('돈카츠') || c.includes('돈까스')) return '🍱'
+  if (c.includes('피자')) return '🍕'
+  if (c.includes('버거') || c.includes('햄버거')) return '🍔'
+  if (c.includes('치킨')) return '🍗'
+  if (c.includes('국밥') || c.includes('해장')) return '🥣'
+  if (c.includes('분식') || c.includes('떡볶이')) return '🥢'
+  if (c.includes('카레')) return '🍛'
+  if (c.includes('샐러드') || c.includes('샌드위치')) return '🥗'
+  if (c.includes('이자카야') || c.includes('포차')) return '🍺'
+  if (c.includes('빵') || c.includes('베이커리') || c.includes('디저트')) return '🥐'
+  if (c.includes('쌀국수')) return '🍜'
+  if (c.includes('삼겹살') || c.includes('구이')) return '🥩'
+  if (c.includes('한식')) return '🍚'
+  if (c.includes('중식') || c.includes('짜장') || c.includes('짬뽕')) return '🥡'
+  if (c.includes('양식') || c.includes('파스타')) return '🍝'
+  return '🍽️'
+}
 
-  const fetchByBounds = useCallback(async (bounds: MapBounds) => {
-    setLoading(true)
-    const { data } = await supabase
-      .from('restaurants')
-      .select('*')
-      .gte('lat', bounds.sw_lat)
-      .lte('lat', bounds.ne_lat)
-      .gte('lng', bounds.sw_lng)
-      .lte('lng', bounds.ne_lng)
-      .limit(200)
-    if (data) setRestaurants(data as Restaurant[])
-    setLoading(false)
-  }, [])
+function loadScript(): Promise<void> {
+  return new Promise((resolve) => {
+    const win = window as any
+    if (win.kakao && win.kakao.maps) { resolve(); return }
+    const s = document.createElement('script')
+    s.src = `//dapi.kakao.com/v2/maps/sdk.js?appkey=${process.env.NEXT_PUBLIC_KAKAO_MAP_KEY}&autoload=false&libraries=clusterer`
+    s.onload = () => win.kakao.maps.load(() => resolve())
+    document.head.appendChild(s)
+  })
+}
 
-  const handleBoundsChange = useCallback((bounds: MapBounds) => {
-    boundsRef.current = bounds
-    if (debounceRef.current) clearTimeout(debounceRef.current)
-    debounceRef.current = setTimeout(() => fetchByBounds(bounds), 600)
-  }, [fetchByBounds])
+function getBounds(m: any): MapBounds {
+  const b = m.getBounds()
+  return {
+    sw_lat: b.getSouthWest().getLat(),
+    sw_lng: b.getSouthWest().getLng(),
+    ne_lat: b.getNorthEast().getLat(),
+    ne_lng: b.getNorthEast().getLng(),
+  }
+}
+
+export default function KakaoMap({ restaurants, selectedId, onMarkerClick, onBoundsChange, centerTo }: MapProps) {
+  const mapRef = useRef<HTMLDivElement>(null)
+  const mapInst = useRef<any>(null)
+  const ovs = useRef<any[]>([])
+  const onBoundsChangeRef = useRef(onBoundsChange)
+  onBoundsChangeRef.current = onBoundsChange
 
   useEffect(() => {
-    supabase.from('honbab_votes').select('restaurant_id, vote_type').then(({ data: votes }) => {
-      if (votes) {
-        const counts: Record<string, number> = {}
-        votes.forEach((v: { restaurant_id: string; vote_type: string }) => {
-          if (v.vote_type === 'up') counts[v.restaurant_id] = (counts[v.restaurant_id] || 0) + 1
-        })
-        setVoteCounts(counts)
+    loadScript().then(() => {
+      if (!mapRef.current || mapInst.current) return
+      const k = (window as any).kakao
+
+      const m = new k.maps.Map(mapRef.current, {
+        center: new k.maps.LatLng(37.5665, 126.9780),
+        level: 4
+      })
+      mapInst.current = m
+
+      const emit = () => {
+        if (onBoundsChangeRef.current) {
+          onBoundsChangeRef.current(getBounds(m))
+        }
+      }
+
+      k.maps.event.addListener(m, 'idle', emit)
+
+      // 현재 위치로 이동
+      if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(
+          (pos) => {
+            const lat = pos.coords.latitude
+            const lng = pos.coords.longitude
+            m.setCenter(new k.maps.LatLng(lat, lng))
+            m.setLevel(4)
+
+            // 현재 위치 파란 마커
+            const myEl = document.createElement('div')
+            myEl.style.cssText = 'width:16px;height:16px;background:#3B82F6;border:3px solid white;border-radius:50%;box-shadow:0 2px 8px rgba(0,0,0,0.4);'
+            new k.maps.CustomOverlay({
+              position: new k.maps.LatLng(lat, lng),
+              content: myEl,
+              yAnchor: 0.5
+            }).setMap(m)
+
+            // 이동 완료 후 bounds 업데이트
+            setTimeout(emit, 300)
+          },
+          () => {
+            // 위치 거부 시 서울 중심
+            emit()
+          },
+          { timeout: 10000, maximumAge: 60000 }
+        )
+      } else {
+        emit()
       }
     })
   }, [])
 
-  const handleLevelUpdated = useCallback((id: string, newLevel: 1 | 2 | 3) => {
-    setRestaurants(prev => prev.map(r => r.id === id ? { ...r, honbab_level: newLevel } : r))
-    setSelectedRestaurant(prev => prev?.id === id ? { ...prev, honbab_level: newLevel } : prev)
-  }, [])
-
-  const handlePriceUpdated = useCallback((id: string, newPrice: 1 | 2 | 3 | 4) => {
-    setRestaurants(prev => prev.map(r => r.id === id ? { ...r, price_range: newPrice } : r))
-    setSelectedRestaurant(prev => prev?.id === id ? { ...prev, price_range: newPrice } : prev)
-  }, [])
-
-  const searchLocation = useCallback(async (query: string) => {
-    if (!query.trim()) { setLocSuggestions([]); return }
-    try {
-      const res = await fetch(
-        `https://dapi.kakao.com/v2/local/search/keyword.json?query=${encodeURIComponent(query)}&size=5`,
-        { headers: { Authorization: 'KakaoAK 6b2c13135baeeaddb3f9f222af85492d' } }
-      )
-      const json = await res.json()
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      setLocSuggestions(json.documents?.map((d: any) => ({ place_name: d.place_name, lat: parseFloat(d.y), lng: parseFloat(d.x) })) || [])
-    } catch { setLocSuggestions([]) }
-  }, [])
-
-  const handleLocInput = (val: string) => {
-    setLocQuery(val)
-    if (locDebounceRef.current) clearTimeout(locDebounceRef.current)
-    locDebounceRef.current = setTimeout(() => searchLocation(val), 300)
-  }
-
-  const selectLocation = (place: { place_name: string; lat: number; lng: number }) => {
-    setLocQuery(place.place_name)
-    setLocSuggestions([])
-    setCenterTo({ lat: place.lat, lng: place.lng, level: 3 })
-  }
-
-  // 초기 로드 시 내 위치로 자동 이동 및 마커 저장
+  // centerTo 변경 시 지도 이동
   useEffect(() => {
-    if (navigator.geolocation) {
-      navigator.geolocation.getCurrentPosition(
-        (pos) => {
-          const lat = pos.coords.latitude
-          const lng = pos.coords.longitude
-          setUserLocation({ lat, lng })
-          setCenterTo({ lat, lng, level: 3 })
-        },
-        (err) => console.error('초기 위치 획득 실패:', err),
-        { enableHighAccuracy: true, timeout: 7000, maximumAge: 0 }
-      )
-    }
-  }, [])
+    if (!centerTo || !mapInst.current) return
+    const k = (window as any).kakao
+    mapInst.current.setCenter(new k.maps.LatLng(centerTo.lat, centerTo.lng))
+    if (centerTo.level) mapInst.current.setLevel(centerTo.level)
+  }, [centerTo])
 
-  const filtered = useMemo(() => {
-    let list = restaurants.map(r => {
-      // 고기/게 등 난이도 높은 카테고리 강제 보정
-      const isHard = r.category.includes('육류') || r.category.includes('고기') || r.category.includes('게') || r.category.includes('대게') || r.category.includes('치킨') || r.category.includes('구이') || r.category.includes('오리')
-      return isHard ? { ...r, honbab_level: 3 } : r
+  // 마커 렌더링
+  useEffect(() => {
+    const m = mapInst.current
+    if (!m) return
+    ovs.current.forEach(o => o.setMap(null))
+    ovs.current = []
+    const k = (window as any).kakao
+
+    restaurants.forEach((r) => {
+      const emoji = getMarkerEmoji(r.category)
+      const bgColor = LEVEL_COLORS[r.honbab_level] || '#22c55e'
+      const isSelected = r.id === selectedId
+
+      const el = document.createElement('div')
+      el.style.cssText = `
+        width:${isSelected ? '44px' : '36px'};
+        height:${isSelected ? '44px' : '36px'};
+        background-color:${bgColor};
+        border:${isSelected ? '3px solid #FF6B35' : '2px solid white'};
+        border-radius:50%;
+        display:flex;align-items:center;justify-content:center;
+        font-size:${isSelected ? '24px' : '20px'};
+        cursor:pointer;
+        box-shadow:0 4px 10px rgba(0,0,0,0.3);
+        transition:all 0.1s ease-in-out;
+      `
+      el.innerHTML = `<span>${emoji}</span>`
+      el.onclick = () => onMarkerClick(r)
+      el.onmouseenter = () => { if (!isSelected) el.style.transform = 'scale(1.15)' }
+      el.onmouseleave = () => { if (!isSelected) el.style.transform = 'scale(1)' }
+
+      const o = new k.maps.CustomOverlay({
+        position: new k.maps.LatLng(r.lat, r.lng),
+        content: el,
+        yAnchor: 0.5
+      })
+      o.setMap(m)
+      ovs.current.push(o)
     })
-    
-    if (searchQuery.trim()) {
-      const q = searchQuery.toLowerCase()
-      list = list.filter(r => r.name.toLowerCase().includes(q) || r.address.toLowerCase().includes(q) || r.category.toLowerCase().includes(q))
-    }
-    if (filterCategory !== '전체') list = list.filter(r => matchesCategory(r, filterCategory))
-    if (filterLevel !== 0) list = list.filter(r => r.honbab_level === filterLevel)
+  }, [restaurants, selectedId, onMarkerClick])
 
-    // 이름 + 좌표 조합으로 중복 원천 차단
-    const seen = new Set<string>()
-    list = list.filter(r => {
-      const key = `${r.name}_${r.lat.toFixed(5)}_${r.lng.toFixed(5)}`
-      if (seen.has(key)) return false
-      seen.add(key)
-      return true
-    })
-
-    return list.sort((a, b) => {
-      if (sortBy === 'score') return calcHonbabScore(b, voteCounts[b.id] || 0) - calcHonbabScore(a, voteCounts[a.id] || 0)
-      if (sortBy === 'level') return a.honbab_level - b.honbab_level
-      return a.name.localeCompare(b.name)
-    })
-  }, [restaurants, searchQuery, filterCategory, filterLevel, sortBy, voteCounts])
-
-  return (
-    <div className="flex h-full relative">
-      {/* 데스크탑 사이드바 (변경 없음) */}
-      <div className="hidden md:flex flex-col w-96 bg-white border-r border-gray-100 overflow-hidden shrink-0">
-        <div className="p-3 pb-0 relative">
-          <div className="flex items-center gap-2 bg-blue-50 border border-blue-200 rounded-xl px-3 py-2">
-            <span className="text-blue-400 text-sm shrink-0">📍</span>
-            <input value={locQuery} onChange={e => handleLocInput(e.target.value)}
-              onKeyDown={(e: KeyboardEvent<HTMLInputElement>) => { if (e.key === 'Escape') { setLocQuery(''); setLocSuggestions([]) } }}
-              placeholder="위치 검색 (예: 영등포역, 여의도, 부평)"
-              className="flex-1 text-sm bg-transparent outline-none text-gray-700 placeholder-gray-400" />
-          </div>
-          {locSuggestions.length > 0 && (
-            <div className="absolute left-3 right-3 top-full mt-1 bg-white rounded-xl shadow-lg border border-gray-100 z-50 overflow-hidden">
-              {locSuggestions.map((s, i) => (
-                <button key={i} onClick={() => selectLocation(s)}
-                  className="w-full text-left px-4 py-2.5 text-sm text-gray-700 hover:bg-orange-50 hover:text-orange-600 flex items-center gap-2 border-b border-gray-50 last:border-0">
-                  {s.place_name}
-                </button>
-              ))}
-            </div>
-          )}
-        </div>
-
-        <div className="p-3 border-b border-gray-100">
-          <div className="flex items-center gap-2 bg-gray-100 rounded-xl px-3 py-2">
-            <input value={searchQuery} onChange={e => setSearchQuery(e.target.value)}
-              placeholder="식당명, 주소, 음식 종류" className="flex-1 text-sm bg-transparent outline-none text-gray-700 placeholder-gray-400" />
-          </div>
-        </div>
-
-        <div className="px-3 pt-3">
-          <QuickRecommend restaurants={filtered} voteCounts={voteCounts} onSelect={setSelectedRestaurant} />
-        </div>
-
-        <div className="px-3 pt-3">
-          <div className="flex gap-1.5 overflow-x-auto pb-1 scrollbar-thin">
-            {CATEGORIES.map(cat => (
-              <button key={cat} onClick={() => setFilterCategory(cat)}
-                className={`shrink-0 px-3 py-1 rounded-full text-xs font-semibold transition-all ${
-                  filterCategory === cat ? 'bg-[#FF6B35] text-white' : 'bg-gray-100 text-gray-600'
-                }`}>
-                {cat}
-              </button>
-            ))}
-          </div>
-        </div>
-
-        <div className="px-3 pt-2 pb-2 flex items-center justify-between border-b border-gray-100">
-          <div className="flex gap-1">
-            {([0, 1, 2, 3] as const).map(lv => (
-              <button key={lv} onClick={() => setFilterLevel(lv)}
-                className={`px-2 py-1 rounded-lg text-xs font-semibold ${filterLevel === lv ? 'bg-gray-800 text-white' : 'bg-gray-100 text-gray-500'}`}>
-                {lv === 0 ? '전체' : lv === 1 ? '🟢' : lv === 2 ? '🟡' : '🔴'}
-              </button>
-            ))}
-          </div>
-          <select value={sortBy} onChange={e => setSortBy(e.target.value as SortBy)}
-            className="text-xs text-gray-600 bg-gray-100 rounded-lg px-2 py-1 outline-none">
-            {SORT_OPTIONS.map(o => <option key={o.value} value={o.value}>{o.label}</option>)}
-          </select>
-        </div>
-
-        <div className="flex-1 overflow-y-auto scrollbar-thin p-3 flex flex-col gap-2">
-          {loading && <p className="text-center text-sm text-gray-400 py-4">불러오는 중...</p>}
-          {!loading && filtered.length === 0 && <p className="text-center text-sm text-gray-400 py-4">주변 식당이 없어요</p>}
-          {filtered.map(r => (
-            <RestaurantCard key={r.id} restaurant={r} voteCount={voteCounts[r.id] || 0} selected={selectedRestaurant?.id === r.id} onClick={() => setSelectedRestaurant(r)} />
-          ))}
-        </div>
-      </div>
-
-      {/* 메인 영역 (지도 + 모바일 UI 추가) */}
-      <div className="flex-1 relative overflow-hidden flex flex-col">
-        {/* 모바일 상단 필터 바 */}
-        <div className="md:hidden bg-white/80 backdrop-blur-md border-b border-gray-100 px-3 py-2 flex flex-col gap-2 shrink-0 z-20">
-          <div className="flex items-center gap-2 overflow-x-auto pb-1 scrollbar-none no-scrollbar">
-            {CATEGORIES.map(cat => (
-              <button key={cat} onClick={() => setFilterCategory(cat)}
-                className={`shrink-0 px-3 py-1.5 rounded-full text-xs font-bold transition-all shadow-sm ${
-                  filterCategory === cat ? 'bg-[#FF6B35] text-white' : 'bg-white text-gray-600 border border-gray-100'
-                }`}>
-                {cat}
-              </button>
-            ))}
-          </div>
-        </div>
-
-        <div className="flex-1 relative">
-          <KakaoMap
-            restaurants={filtered}
-            onMarkerClick={setSelectedRestaurant}
-            onBoundsChange={handleBoundsChange}
-            centerTo={centerTo}
-            userLocation={userLocation}
-            voteCounts={voteCounts}
-          />
-
-          {/* 모바일 하단 추천 플로팅 버튼 */}
-          <div className="md:hidden absolute bottom-24 left-1/2 -translate-x-1/2 w-[calc(100%-2.5rem)] max-w-sm z-20">
-            <QuickRecommend restaurants={filtered} voteCounts={voteCounts} onSelect={setSelectedRestaurant} />
-          </div>
-        </div>
-      </div>
-
-      {selectedRestaurant && (
-        <RestaurantDetail
-          restaurant={selectedRestaurant}
-          onClose={() => setSelectedRestaurant(null)}
-          onLevelUpdated={handleLevelUpdated}
-          onPriceUpdated={handlePriceUpdated}
-        />
-      )}
-    </div>
-  )
+  return <div ref={mapRef} style={{ width: '100%', height: '100%' }} />
 }
