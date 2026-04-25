@@ -17,20 +17,12 @@ export const HONBAB_EXCLUDED_KEYWORDS = [
 ]
 
 export function calcHonbabScore(restaurant: Restaurant, upVotes = 0, downVotes = 0): number {
-  const c = restaurant.category.toLowerCase()
+  const lv = Number(restaurant.honbab_level)
   let baseScore = 60 
 
-  if (['라멘', '소바', '우동', '돈까스', '초밥', '국밥', '해장국', '설렁탕', '순댓국', '김밥', '쌀국수', '도시락', '샌드위치', '패스트푸드', '비빔밥', '솥밥'].some(k => c.includes(k))) {
-    baseScore = 90
-  } else if (['카페', '커피', '베이커리', '빵', '브런치', '디저트'].some(k => c.includes(k))) {
-    baseScore = 80
-  } else if (['분식', '떡볶이', '마라탕', '아시아음식', '이자카야', '일본식주점', '한식'].some(k => c.includes(k))) {
-    baseScore = 70
-  } else if (['짜장', '짬뽕', '중화요리', '중식', '파스타', '양식', '피자', '치킨'].some(k => c.includes(k))) {
-    baseScore = 50
-  } else if (['삼겹살', '구이'].some(k => c.includes(k))) {
-    baseScore = 20
-  }
+  if (lv === 1) baseScore = 80
+  else if (lv === 2) baseScore = 60
+  else if (lv === 3) baseScore = 40
 
   const voteScore = Math.max(-10, Math.min(10, (upVotes - downVotes) * 2))
   return Math.max(0, Math.min(100, baseScore + voteScore))
@@ -144,8 +136,11 @@ export default function MapTab() {
       // ID 기준으로 중복 제거하여 상태 업데이트
       setRestaurants(prev => {
         const combined = [...prev, ...(data as Restaurant[])]
-        const unique = Array.from(new Map(combined.map(r => [r.id, r])).values())
-        return unique
+        const uniqueMap = new Map<string, Restaurant>()
+        combined.forEach(r => {
+          if (r && r.id) uniqueMap.set(r.id, r)
+        })
+        return Array.from(uniqueMap.values())
       })
     }
     setLoading(false)
@@ -242,16 +237,21 @@ export default function MapTab() {
       setAddedIds(prev => new Set(prev).add(place.id))
       setRestaurants(prev => {
         const combined = [...prev, data as Restaurant]
-        const unique = Array.from(new Map(combined.map(r => [r.id, r])).values())
-        return unique
+        const uniqueMap = new Map<string, Restaurant>()
+        combined.forEach(r => {
+          if (r && r.id) uniqueMap.set(r.id, r)
+        })
+        return Array.from(uniqueMap.values())
       })
     }
   }, [addingIds, addedIds])
 
   const filtered = useMemo(() => {
-    // 1차적으로 전체 목록에서 ID 기준 중복 제거
-    const uniqueMap = new Map()
-    restaurants.forEach(r => uniqueMap.set(r.id, r))
+    // ID 기준으로 중복 제거하여 리스트 생성
+    const uniqueMap = new Map<string, Restaurant>()
+    restaurants.forEach(r => {
+      if (r && r.id) uniqueMap.set(r.id, r)
+    })
     let list = Array.from(uniqueMap.values())
 
     if (searchQuery.trim()) {
@@ -330,10 +330,10 @@ export default function MapTab() {
           <div className="flex gap-1">
             {([0, 1, 2, 3] as const).map(lv => (
               <button key={lv} onClick={() => setFilterLevel(lv)}
-                className={`px-2 py-1 rounded-lg text-xs font-semibold transition-all ${
+                className={`px-2 py-1 rounded-lg text-xs font-semibold transition-all flex items-center gap-1 ${
                   filterLevel === lv ? 'bg-gray-800 text-white' : 'bg-gray-100 text-gray-500 hover:bg-gray-200'
                 }`}>
-                {lv === 0 ? '전체' : lv === 1 ? '🟢' : lv === 2 ? '🟡' : '🔴'}
+                <span>{lv === 0 ? '전체' : lv === 1 ? '🟢 쉬움' : lv === 2 ? '🟡 보통' : '🔴 어려움'}</span>
               </button>
             ))}
           </div>

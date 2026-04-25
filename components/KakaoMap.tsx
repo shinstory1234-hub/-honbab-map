@@ -19,10 +19,13 @@ interface MapProps {
   centerTo?: { lat: number; lng: number; level?: number } | null
 }
 
-const LEVEL_COLORS: Record<number, string> = {
+const LEVEL_COLORS: Record<number | string, string> = {
   1: '#22c55e', 
   2: '#eab308', 
   3: '#ef4444', 
+  '1': '#22c55e', 
+  '2': '#eab308', 
+  '3': '#ef4444', 
 }
 
 const getMarkerEmoji = (category: string) => {
@@ -100,8 +103,21 @@ export default function KakaoMap({ restaurants, selectedId, onMarkerClick, onBou
         mapInst.current.setLevel(centerTo.level)
       }
       mapInst.current.panTo(moveLatLon)
+
+      // 이동 후 영역 변경 알림
+      if (onBoundsChange) {
+        const b = mapInst.current.getBounds()
+        const sw = b.getSouthWest()
+        const ne = b.getNorthEast()
+        onBoundsChange({
+          sw_lat: sw.getLat(),
+          sw_lng: sw.getLng(),
+          ne_lat: ne.getLat(),
+          ne_lng: ne.getLng()
+        })
+      }
     }
-  }, [centerTo])
+  }, [centerTo, onBoundsChange])
 
   useEffect(() => {
     const m = mapInst.current
@@ -112,7 +128,7 @@ export default function KakaoMap({ restaurants, selectedId, onMarkerClick, onBou
 
     restaurants.forEach((r) => {
       const emoji = getMarkerEmoji(r.category)
-      const bgColor = LEVEL_COLORS[r.honbab_level] || '#22c55e'
+      const bgColor = LEVEL_COLORS[String(r.honbab_level)] || '#22c55e'
       const isSelected = r.id === selectedId
       
       const el = document.createElement('div')

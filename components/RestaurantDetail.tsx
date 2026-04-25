@@ -11,20 +11,12 @@ export const PRICE_LABELS: Record<number, string> = {
 }
 
 export function calcHonbabScore(restaurant: Restaurant, upVotes = 0, downVotes = 0): number {
-  const c = restaurant.category.toLowerCase()
-  let baseScore = 60
+  const lv = Number(restaurant.honbab_level)
+  let baseScore = 60 
 
-  if (['라멘', '소바', '우동', '돈까스', '초밥', '국밥', '해장국', '설렁탕', '순댓국', '김밥', '쌀국수', '도시락', '샌드위치', '패스트푸드', '비빔밥', '솥밥'].some(k => c.includes(k))) {
-    baseScore = 90
-  } else if (['카페', '커피', '베이커리', '빵', '브런치', '디저트'].some(k => c.includes(k))) {
-    baseScore = 80
-  } else if (['분식', '떡볶이', '마라탕', '아시아음식', '이자카야', '일본식주점', '한식'].some(k => c.includes(k))) {
-    baseScore = 70
-  } else if (['짜장', '짬뽕', '중화요리', '중식', '파스타', '양식', '피자', '치킨'].some(k => c.includes(k))) {
-    baseScore = 50
-  } else if (['삼겹살', '구이'].some(k => c.includes(k))) {
-    baseScore = 20
-  }
+  if (lv === 1) baseScore = 80
+  else if (lv === 2) baseScore = 60
+  else if (lv === 3) baseScore = 40
 
   const voteScore = Math.max(-10, Math.min(10, (upVotes - downVotes) * 2))
   return Math.max(0, Math.min(100, baseScore + voteScore))
@@ -229,7 +221,7 @@ export default function RestaurantDetail({ restaurant, onClose, onLevelUpdated, 
 
   if (!restaurant) return null
 
-  const level = LEVEL_INFO[restaurant.honbab_level]
+  const level = LEVEL_INFO[Number(restaurant.honbab_level) as 1 | 2 | 3] || LEVEL_INFO[2]
   const totalVotes = upVotes + downVotes
   const upPct = totalVotes > 0 ? Math.round((upVotes / totalVotes) * 100) : 0
   const downPct = totalVotes > 0 ? 100 - upPct : 0
