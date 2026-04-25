@@ -18,7 +18,11 @@ const SORT_OPTIONS = [
 ] as const
 
 const calcHonbabScore = (r: Restaurant, upVotes: number) => {
-  let score = r.honbab_level === 1 ? 80 : r.honbab_level === 2 ? 60 : 40
+  // 고기/게 등 난이도 높은 카테고리 보정
+  const isHard = r.category.includes('육류') || r.category.includes('고기') || r.category.includes('게') || r.category.includes('대게') || r.category.includes('치킨') || r.category.includes('구이')
+  const level = isHard ? 3 : r.honbab_level
+  
+  let score = level === 1 ? 80 : level === 2 ? 60 : 40
   score += upVotes * 2
   return Math.min(score, 100)
 }
@@ -135,7 +139,11 @@ export default function MapTab() {
   }, [])
 
   const filtered = useMemo(() => {
-    let list = [...restaurants]
+    let list = restaurants.map(r => {
+      // 고기/게 등 난이도 높은 카테고리 강제 보정
+      const isHard = r.category.includes('육류') || r.category.includes('고기') || r.category.includes('게') || r.category.includes('대게') || r.category.includes('치킨') || r.category.includes('구이') || r.category.includes('오리')
+      return isHard ? { ...r, honbab_level: 3 } : r
+    })
     
     if (searchQuery.trim()) {
       const q = searchQuery.toLowerCase()
@@ -144,7 +152,7 @@ export default function MapTab() {
     if (filterCategory !== '전체') list = list.filter(r => matchesCategory(r, filterCategory))
     if (filterLevel !== 0) list = list.filter(r => r.honbab_level === filterLevel)
 
-    // 이름 + 좌표 조합으로 중복 원천 차단 (ID가 달라도 같은 식당이면 제거)
+    // 이름 + 좌표 조합으로 중복 원천 차단
     const seen = new Set<string>()
     list = list.filter(r => {
       const key = `${r.name}_${r.lat.toFixed(5)}_${r.lng.toFixed(5)}`

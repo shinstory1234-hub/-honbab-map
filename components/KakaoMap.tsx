@@ -185,6 +185,15 @@ export default function KakaoMap({ restaurants, selectedId, onMarkerClick, onBou
       const bgColor = LEVEL_COLORS[r.honbab_level as 1 | 2 | 3] || '#22c55e'
       const isSelected = r.id === selectedId
       
+      const container = document.createElement('div')
+      container.style.cssText = `
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        cursor: pointer;
+        filter: drop-shadow(0 2px 4px rgba(0,0,0,0.2));
+      `
+
       const el = document.createElement('div')
       el.style.cssText = `
         width: ${isSelected ? '44px' : '36px'};
@@ -196,21 +205,39 @@ export default function KakaoMap({ restaurants, selectedId, onMarkerClick, onBou
         align-items: center;
         justify-content: center;
         font-size: ${isSelected ? '24px' : '20px'};
-        cursor: pointer;
-        box-shadow: 0 4px 10px rgba(0,0,0,0.3);
         transition: all 0.1s ease-in-out;
-        z-index: ${isSelected ? '10' : '1'};
+        z-index: 2;
       `
       el.innerHTML = `<span>${emoji}</span>`
       
-      el.onclick = () => onMarkerClick(r)
-      el.onmouseenter = () => { if (!isSelected) el.style.transform = 'scale(1.15)' }
-      el.onmouseleave = () => { if (!isSelected) el.style.transform = 'scale(1)' }
+      const label = document.createElement('div')
+      label.style.cssText = `
+        background-color: white;
+        padding: 2px 6px;
+        border-radius: 4px;
+        font-size: 11px;
+        font-weight: bold;
+        margin-top: 4px;
+        border: 1px solid #eee;
+        white-space: nowrap;
+        color: #333;
+      `
+      label.innerText = r.name
+
+      container.appendChild(el)
+      container.appendChild(label)
+      
+      container.onclick = (e) => {
+        e.stopPropagation()
+        onMarkerClick(r)
+      }
+      container.onmouseenter = () => { if (!isSelected) el.style.transform = 'scale(1.15)' }
+      container.onmouseleave = () => { if (!isSelected) el.style.transform = 'scale(1)' }
 
       const o = new k.maps.CustomOverlay({ 
         position: new k.maps.LatLng(r.lat, r.lng), 
-        content: el, 
-        yAnchor: 0.5 
+        content: container, 
+        yAnchor: 0.8 // 중심점 조정
       })
       o.setMap(m); 
       ovs.current.push(o)
