@@ -116,7 +116,24 @@ export default function KakaoMap({ restaurants, selectedId, voteCounts, onMarker
         level: 3 
       })
       mapInst.current = m
+      
+      // 초기 영역 데이터 즉시 요청
+      const initialEmit = () => {
+        if (onBoundsChangeRef.current) {
+          const b = m.getBounds()
+          onBoundsChangeRef.current({
+            sw_lat: b.getSouthWest().getLat(),
+            sw_lng: b.getSouthWest().getLng(),
+            ne_lat: b.getNorthEast().getLat(),
+            ne_lng: b.getNorthEast().getLng()
+          })
+        }
+      }
+
       k.maps.event.addListener(m, 'idle', emit)
+      
+      // 지도가 그려진 직후 데이터 로드 보장
+      setTimeout(initialEmit, 100)
     })
   }, [])
 
