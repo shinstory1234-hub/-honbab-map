@@ -117,8 +117,25 @@ export default function MapTab() {
     setCenterTo({ lat: place.lat, lng: place.lng, level: 4 })
   }
 
+  // 초기 로드 시 내 위치로 자동 이동
+  useEffect(() => {
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(
+        (pos) => {
+          setCenterTo({
+            lat: pos.coords.latitude,
+            lng: pos.coords.longitude,
+            level: 4
+          })
+        },
+        (err) => console.error('초기 위치 획득 실패:', err)
+      )
+    }
+  }, [])
+
   const filtered = useMemo(() => {
-    let list = restaurants
+    let list = [...restaurants]
+    
     if (searchQuery.trim()) {
       const q = searchQuery.toLowerCase()
       list = list.filter(r => r.name.toLowerCase().includes(q) || r.address.toLowerCase().includes(q) || r.category.toLowerCase().includes(q))
@@ -126,11 +143,15 @@ export default function MapTab() {
     if (filterCategory !== '전체') list = list.filter(r => matchesCategory(r, filterCategory))
     if (filterLevel !== 0) list = list.filter(r => r.honbab_level === filterLevel)
 
-    // 중복 제거
+    // 중복 제거 강화: ID 기준
     const seen = new Set<string>()
-    list = list.filter(r => { if (seen.has(r.id)) return false; seen.add(r.id); return true })
+    const uniqueList = list.filter(r => {
+      if (!r.id || seen.has(r.id)) return false
+      seen.add(r.id)
+      return true
+    })
 
-    return [...list].sort((a, b) => {
+    return uniqueList.sort((a, b) => {
       if (sortBy === 'score') return calcHonbabScore(b, voteCounts[b.id] || 0) - calcHonbabScore(a, voteCounts[a.id] || 0)
       if (sortBy === 'level') return a.honbab_level - b.honbab_level
       return a.name.localeCompare(b.name)
