@@ -130,6 +130,7 @@ export default function KakaoMap({ restaurants, selectedId, onMarkerClick, onBou
       const m = mapInst.current
       const moveLatLon = new k.maps.LatLng(centerTo.lat, centerTo.lng)
       
+      m.setCenter(moveLatLon)
       m.relayout()
       m.setCenter(moveLatLon)
       m.setLevel(centerTo.level || 3)
@@ -146,11 +147,12 @@ export default function KakaoMap({ restaurants, selectedId, onMarkerClick, onBou
 
       const moveLatLon = new k.maps.LatLng(latitude, longitude)
       
+      m.setCenter(moveLatLon)
       m.relayout()
+      m.setCenter(moveLatLon)
       m.setLevel(3)
-      m.panTo(moveLatLon)
 
-      // 내 위치 마커 업데이트 (필요시)
+      // 내 위치 마커 업데이트
       const el = document.createElement('div')
       el.style.cssText = `
         width: 20px;
