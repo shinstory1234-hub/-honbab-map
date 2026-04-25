@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 import { supabase, Restaurant, HonbabTip } from '@/lib/supabase'
 
 export const PRICE_LABELS: Record<number, string> = {
@@ -106,6 +106,28 @@ export default function RestaurantDetail({ restaurant, onClose, onLevelUpdated, 
   const [editValue, setEditValue] = useState('')
   const [closedReported, setClosedReported] = useState(false)
 
+  const fetchVotes = useCallback(async (id: string) => {
+    const { data } = await supabase.from('honbab_votes').select('vote_type').eq('restaurant_id', id)
+    if (data) {
+      setUpVotes(data.filter(v => v.vote_type === 'up').length)
+      setDownVotes(data.filter(v => v.vote_type === 'down').length)
+    }
+  }, [])
+
+  const fetchPriceVotes = useCallback(async (id: string) => {
+    const { data } = await supabase.from('price_votes').select('vote').eq('restaurant_id', id)
+    if (data) {
+      const counts: PriceVoteCounts = { 1: 0, 2: 0, 3: 0, 4: 0 }
+      data.forEach(v => { counts[v.vote as 1 | 2 | 3 | 4]++ })
+      setPriceVotes(counts)
+    }
+  }, [])
+
+  const fetchTips = useCallback(async (id: string) => {
+    const { data } = await supabase.from('honbab_tips').select('*').eq('restaurant_id', id).order('created_at', { ascending: false }).limit(5)
+    if (data) setTips(data as HonbabTip[])
+  }, [])
+
   useEffect(() => {
     if (!restaurant) return
     setCheckedIn(false)
@@ -118,29 +140,7 @@ export default function RestaurantDetail({ restaurant, onClose, onLevelUpdated, 
     fetchVotes(restaurant.id)
     fetchPriceVotes(restaurant.id)
     fetchTips(restaurant.id)
-  }, [restaurant?.id])
-
-  const fetchVotes = async (id: string) => {
-    const { data } = await supabase.from('honbab_votes').select('vote_type').eq('restaurant_id', id)
-    if (data) {
-      setUpVotes(data.filter(v => v.vote_type === 'up').length)
-      setDownVotes(data.filter(v => v.vote_type === 'down').length)
-    }
-  }
-
-  const fetchPriceVotes = async (id: string) => {
-    const { data } = await supabase.from('price_votes').select('vote').eq('restaurant_id', id)
-    if (data) {
-      const counts: PriceVoteCounts = { 1: 0, 2: 0, 3: 0, 4: 0 }
-      data.forEach(v => { counts[v.vote as 1 | 2 | 3 | 4]++ })
-      setPriceVotes(counts)
-    }
-  }
-
-  const fetchTips = async (id: string) => {
-    const { data } = await supabase.from('honbab_tips').select('*').eq('restaurant_id', id).order('created_at', { ascending: false }).limit(5)
-    if (data) setTips(data as HonbabTip[])
-  }
+  }, [restaurant, fetchVotes, fetchPriceVotes, fetchTips])
 
   const handleVote = async (type: 'up' | 'down') => {
     if (!restaurant || voting || myVote !== null) return
