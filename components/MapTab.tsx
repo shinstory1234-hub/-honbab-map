@@ -19,7 +19,7 @@ const SORT_OPTIONS = [
 
 const calcHonbabScore = (r: Restaurant, upVotes: number) => {
   // 고기/게 등 난이도 높은 카테고리 보정
-  const isHard = r.category.includes('육류') || r.category.includes('고기') || r.category.includes('게') || r.category.includes('대게') || r.category.includes('치킨') || r.category.includes('구이')
+  const isHard = r.category.includes('육류') || r.category.includes('고기') || r.category.includes('게') || r.category.includes('대게') || r.category.includes('치킨') || r.category.includes('구이') || r.category.includes('오리')
   const level = isHard ? 3 : r.honbab_level
   
   let score = level === 1 ? 80 : level === 2 ? 60 : 40
@@ -246,98 +246,6 @@ export default function MapTab() {
           onBoundsChange={handleBoundsChange}
           centerTo={centerTo}
           userLocation={userLocation}
-        />
-      </div>
-
-      {selectedRestaurant && (
-        <RestaurantDetail
-          restaurant={selectedRestaurant}
-          onClose={() => setSelectedRestaurant(null)}
-          onLevelUpdated={handleLevelUpdated}
-          onPriceUpdated={handlePriceUpdated}
-        />
-      )}
-    </div>
-  )
-}
-
-  return (
-    <div className="flex h-full relative">
-      <div className="hidden md:flex flex-col w-96 bg-white border-r border-gray-100 overflow-hidden shrink-0">
-        <div className="p-3 pb-0 relative">
-          <div className="flex items-center gap-2 bg-blue-50 border border-blue-200 rounded-xl px-3 py-2">
-            <span className="text-blue-400 text-sm shrink-0">📍</span>
-            <input value={locQuery} onChange={e => handleLocInput(e.target.value)}
-              onKeyDown={(e: KeyboardEvent<HTMLInputElement>) => { if (e.key === 'Escape') { setLocQuery(''); setLocSuggestions([]) } }}
-              placeholder="위치 검색 (예: 영등포역, 여의도, 부평)"
-              className="flex-1 text-sm bg-transparent outline-none text-gray-700 placeholder-gray-400" />
-          </div>
-          {locSuggestions.length > 0 && (
-            <div className="absolute left-3 right-3 top-full mt-1 bg-white rounded-xl shadow-lg border border-gray-100 z-50 overflow-hidden">
-              {locSuggestions.map((s, i) => (
-                <button key={i} onClick={() => selectLocation(s)}
-                  className="w-full text-left px-4 py-2.5 text-sm text-gray-700 hover:bg-orange-50 hover:text-orange-600 flex items-center gap-2 border-b border-gray-50 last:border-0">
-                  {s.place_name}
-                </button>
-              ))}
-            </div>
-          )}
-        </div>
-
-        <div className="p-3 border-b border-gray-100">
-          <div className="flex items-center gap-2 bg-gray-100 rounded-xl px-3 py-2">
-            <input value={searchQuery} onChange={e => setSearchQuery(e.target.value)}
-              placeholder="식당명, 주소, 음식 종류" className="flex-1 text-sm bg-transparent outline-none text-gray-700 placeholder-gray-400" />
-          </div>
-        </div>
-
-        <div className="px-3 pt-3">
-          <QuickRecommend restaurants={filtered} voteCounts={voteCounts} onSelect={setSelectedRestaurant} />
-        </div>
-
-        <div className="px-3 pt-3">
-          <div className="flex gap-1.5 overflow-x-auto pb-1 scrollbar-thin">
-            {CATEGORIES.map(cat => (
-              <button key={cat} onClick={() => setFilterCategory(cat)}
-                className={`shrink-0 px-3 py-1 rounded-full text-xs font-semibold transition-all ${
-                  filterCategory === cat ? 'bg-[#FF6B35] text-white' : 'bg-gray-100 text-gray-600'
-                }`}>
-                {cat}
-              </button>
-            ))}
-          </div>
-        </div>
-
-        <div className="px-3 pt-2 pb-2 flex items-center justify-between border-b border-gray-100">
-          <div className="flex gap-1">
-            {([0, 1, 2, 3] as const).map(lv => (
-              <button key={lv} onClick={() => setFilterLevel(lv)}
-                className={`px-2 py-1 rounded-lg text-xs font-semibold ${filterLevel === lv ? 'bg-gray-800 text-white' : 'bg-gray-100 text-gray-500'}`}>
-                {lv === 0 ? '전체' : lv === 1 ? '🟢' : lv === 2 ? '🟡' : '🔴'}
-              </button>
-            ))}
-          </div>
-          <select value={sortBy} onChange={e => setSortBy(e.target.value as SortBy)}
-            className="text-xs text-gray-600 bg-gray-100 rounded-lg px-2 py-1 outline-none">
-            {SORT_OPTIONS.map(o => <option key={o.value} value={o.value}>{o.label}</option>)}
-          </select>
-        </div>
-
-        <div className="flex-1 overflow-y-auto scrollbar-thin p-3 flex flex-col gap-2">
-          {loading && <p className="text-center text-sm text-gray-400 py-4">불러오는 중...</p>}
-          {!loading && filtered.length === 0 && <p className="text-center text-sm text-gray-400 py-4">주변 식당이 없어요</p>}
-          {filtered.map(r => (
-            <RestaurantCard key={r.id} restaurant={r} voteCount={voteCounts[r.id] || 0} selected={selectedRestaurant?.id === r.id} onClick={() => setSelectedRestaurant(r)} />
-          ))}
-        </div>
-      </div>
-
-      <div className="flex-1 relative overflow-hidden">
-        <KakaoMap
-          restaurants={filtered}
-          onMarkerClick={setSelectedRestaurant}
-          onBoundsChange={handleBoundsChange}
-          centerTo={centerTo}
         />
       </div>
 
