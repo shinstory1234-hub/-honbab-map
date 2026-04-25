@@ -60,6 +60,7 @@ export default function KakaoMap({ restaurants, selectedId, onMarkerClick, onBou
   const mapRef = useRef<HTMLDivElement>(null)
   const mapInst = useRef<any>(null)
   const ovs = useRef<any[]>([])
+  const locMarker = useRef<any>(null)
   const onBoundsChangeRef = useRef(onBoundsChange)
 
   // 최신 callback 유지를 위해 ref 업데이트
@@ -71,11 +72,10 @@ export default function KakaoMap({ restaurants, selectedId, onMarkerClick, onBou
     loadScript().then(() => {
       if (!mapRef.current || mapInst.current) return
       const k = (window as any).kakao
-      const isPC = window.innerWidth > 768;
       
       const m = new k.maps.Map(mapRef.current, { 
         center: new k.maps.LatLng(37.5665, 126.9780), 
-        level: isPC ? 3 : 4 
+        level: 3 
       })
       mapInst.current = m
 
@@ -93,20 +93,22 @@ export default function KakaoMap({ restaurants, selectedId, onMarkerClick, onBou
         }
       }
       k.maps.event.addListener(m, 'idle', emit)
-      emit()
+      
+      // 초기 영역 방출
+      setTimeout(emit, 500)
     })
-  }, []) // 빈 배열로 유지하여 초기 1회만 리스너 등록
+  }, [])
 
   // 중심 이동 처리
   useEffect(() => {
     if (mapInst.current && centerTo) {
       const k = (window as any).kakao
+      const m = mapInst.current
       const moveLatLon = new k.maps.LatLng(centerTo.lat, centerTo.lng)
-      if (centerTo.level) {
-        mapInst.current.setLevel(centerTo.level)
-      }
-      mapInst.current.panTo(moveLatLon)
-      // idle 이벤트가 panTo 완료 후 호출되므로 여기서 따로 호출하지 않아도 됨
+      
+      m.relayout()
+      m.setLevel(centerTo.level || 3)
+      m.setCenter(moveLatLon)
     }
   }, [centerTo])
 
@@ -115,10 +117,34 @@ export default function KakaoMap({ restaurants, selectedId, onMarkerClick, onBou
     navigator.geolocation.getCurrentPosition((pos) => {
       const { latitude, longitude } = pos.coords
       const k = (window as any).kakao
+      const m = mapInst.current
+      if (!m) return
+
       const moveLatLon = new k.maps.LatLng(latitude, longitude)
-      if (mapInst.current) {
-        mapInst.current.panTo(moveLatLon)
-      }
+      
+      // 현재 위치 마커 표시
+      if (locMarker.current) locMarker.current.setMap(null)
+      
+      const el = document.createElement('div')
+      el.style.cssText = `
+        width: 18px;
+        height: 18px;
+        background-color: #3b82f6;
+        border: 3px solid white;
+        border-radius: 50%;
+        box-shadow: 0 0 10px rgba(59, 130, 246, 0.5);
+      `
+      const o = new k.maps.CustomOverlay({
+        position: moveLatLon,
+        content: el,
+        zIndex: 100
+      })
+      o.setMap(m)
+      locMarker.current = o
+
+      m.relayout()
+      m.setLevel(3)
+      m.panTo(moveLatLon)
     })
   }
 

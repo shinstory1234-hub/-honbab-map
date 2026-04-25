@@ -125,10 +125,11 @@ export default function MapTab() {
           setCenterTo({
             lat: pos.coords.latitude,
             lng: pos.coords.longitude,
-            level: 4
+            level: 3 // 레벨 3으로 고정
           })
         },
-        (err) => console.error('초기 위치 획득 실패:', err)
+        (err) => console.error('초기 위치 획득 실패:', err),
+        { enableHighAccuracy: true, timeout: 5000, maximumAge: 0 }
       )
     }
   }, [])
