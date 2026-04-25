@@ -114,12 +114,15 @@ export default function KakaoMap({ restaurants, selectedId, voteCounts, onMarker
       
       const m = new k.maps.Map(mapRef.current, { 
         center: new k.maps.LatLng(37.5665, 126.9780), 
-        level: 3 
+        level: 4 
       })
       mapInst.current = m
       
-      // 초기 영역 데이터 즉시 요청
+      // 즉시 레이아웃 재계산 (화면 꽉 채우기)
+      m.relayout()
+      
       const initialEmit = () => {
+        m.relayout()
         if (onBoundsChangeRef.current) {
           const b = m.getBounds()
           onBoundsChangeRef.current({
@@ -133,8 +136,8 @@ export default function KakaoMap({ restaurants, selectedId, voteCounts, onMarker
 
       k.maps.event.addListener(m, 'idle', emit)
       
-      // 지도가 그려진 직후 데이터 로드 보장
-      setTimeout(initialEmit, 100)
+      setTimeout(initialEmit, 200)
+      setTimeout(initialEmit, 1000) // 혹시 모를 로딩 딜레이 대비
     })
   }, [])
 

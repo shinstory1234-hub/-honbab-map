@@ -245,7 +245,9 @@ export default function MapTab() {
         </div>
       </div>
 
-      <div className="flex-1 relative overflow-hidden flex flex-col">
+      {/* 메인 영역 (지도 + 모바일 UI 추가) */}
+      <div className="flex-1 relative overflow-hidden flex flex-col h-full min-h-0">
+        {/* 모바일 상단 필터 바 */}
         <div className="md:hidden bg-white/80 backdrop-blur-md border-b border-gray-100 px-3 py-2 flex flex-col gap-2 shrink-0 z-20">
           <div className="flex items-center gap-2 overflow-x-auto pb-1 scrollbar-none no-scrollbar">
             {CATEGORIES.map(cat => (
@@ -259,7 +261,7 @@ export default function MapTab() {
           </div>
         </div>
 
-        <div className="flex-1 relative">
+        <div className="flex-1 relative w-full h-full min-h-[300px]">
           <KakaoMap
             restaurants={filtered}
             onMarkerClick={setSelectedRestaurant}
