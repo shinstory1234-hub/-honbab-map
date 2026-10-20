@@ -15,7 +15,8 @@
 }
 *{box-sizing:border-box;margin:0;padding:0}
 html,body{height:100%}
-body{font-family:Pretendard,-apple-system,sans-serif;background:var(--bg);color:var(--fg);display:flex;flex-direction:column}
+body{font-family:Pretendard,-apple-system,sans-serif;background:var(--bg);color:var(--fg);display:flex;flex-direction:column;height:100vh;height:100dvh;overflow:hidden}
+.handle{display:none}
 header{padding:14px 18px;border-bottom:1px solid var(--line);background:var(--panel);display:flex;flex-wrap:wrap;gap:10px 18px;align-items:center}
 header h1{font-size:17px;font-weight:700;letter-spacing:-.2px}
 header .sub{font-size:12px;color:var(--muted)}
@@ -48,10 +49,23 @@ aside{width:380px;background:var(--panel);border-left:1px solid var(--line);disp
 #keymsg{display:none;position:absolute;inset:0;align-items:center;justify-content:center;background:var(--bg);z-index:5;text-align:center;font-size:14px;line-height:1.7;padding:20px}
 .mapwrap{flex:1;position:relative;display:flex}
 @media (max-width:800px){
-  main{flex-direction:column}
-  aside{width:100%;height:45vh;border-left:none;border-top:1px solid var(--line)}
-  .mapwrap{min-height:55vh}
-  .chips{margin-left:0}
+  header{padding:10px 12px 8px;gap:6px;flex-wrap:nowrap;flex-direction:column;align-items:stretch}
+  header h1{font-size:15px}
+  header .sub{font-size:11px}
+  .chips{margin-left:0;flex-wrap:nowrap;overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none;padding-bottom:2px}
+  .chips::-webkit-scrollbar{display:none}
+  .chip{flex:none;padding:6px 10px}
+  main{flex-direction:column;min-height:0}
+  .mapwrap{flex:1;min-height:0}
+  aside{width:100%;height:36dvh;flex:none;border-left:none;border-top:1px solid var(--line);border-radius:14px 14px 0 0;box-shadow:0 -4px 14px rgba(0,0,0,.08);transition:height .2s}
+  body.sheet-open aside{height:74dvh}
+  #map{min-height:0}
+  .handle{display:flex;flex-direction:column;align-items:center;gap:5px;width:100%;border:none;background:none;padding:8px 0 2px;font:inherit;font-size:12px;color:var(--muted);flex:none}
+  .handle::before{content:"";width:36px;height:4px;border-radius:2px;background:#d6d3cc}
+  .search{padding:6px 12px 8px}
+  .search input{font-size:16px}
+  .note{display:none}
+  .item{padding:11px 14px}
 }
 </style>
 </head>
@@ -66,6 +80,7 @@ aside{width:380px;background:var(--panel);border-left:1px solid var(--line);disp
 <main>
   <div class="mapwrap"><div id="map"></div><div id="keymsg"></div></div>
   <aside>
+    <button class="handle" id="handle" aria-label="목록 펼치기">목록 펼치기</button>
     <div class="search"><input id="q" placeholder="단지·동네 검색"></div>
     <div id="list"></div>
     <div class="note">평당가 비교는 같은 단지 안의 평형끼리 비교한 값. "동네 신축 대비"는 같은 동 신축(없으면 같은 동 대단지로 추정) 평당가 대비 비율. 마커 위치가 어긋나면 해당 단지를 카카오 장소검색으로 찾은 결과라서 그래.</div>
@@ -212,7 +227,10 @@ function select(i,pan){
   state.sel=i; renderList();
   overlays.forEach(o=>o.el.classList.toggle('on',o.i===i));
   const d=D[i];
-  if(pan && map && d._pos){ map.setLevel(Math.min(map.getLevel(),6)); map.panTo(d._pos); }
+  if(pan && map && d._pos){
+    if(mobile()) setSheet(false);
+    map.setLevel(Math.min(map.getLevel(),6)); map.panTo(d._pos);
+  }
   const it=document.getElementById('it'+i); if(it) it.scrollIntoView({block:'nearest',behavior:'smooth'});
 }
 function renderMap(){
@@ -221,6 +239,14 @@ function renderMap(){
 }
 function render(){ renderChips(); renderList(); renderMap(); }
 $('#q').addEventListener('input',e=>{state.q=e.target.value.trim(); render();});
+const mobile=()=>window.matchMedia('(max-width:800px)').matches;
+function setSheet(open){
+  document.body.classList.toggle('sheet-open',open);
+  $('#handle').textContent=open?'목록 접기':'목록 펼치기';
+  setTimeout(()=>{ if(map){ const c=map.getCenter(); map.relayout(); map.setCenter(c);} },230);
+}
+$('#handle').addEventListener('click',()=>setSheet(!document.body.classList.contains('sheet-open')));
+window.addEventListener('resize',()=>{ if(map) map.relayout(); });
 render();
 
 function addOverlay(i){
@@ -228,7 +254,7 @@ function addOverlay(i){
   const el=document.createElement('div'); el.className='ov'; el.style.borderColor=c; el.style.color=c;
   el.innerHTML='<span></span><small></small>';
   el.firstChild.textContent=d.price; el.lastChild.textContent=d.n.replace(/\s*\(.*\)/,'').slice(0,10);
-  el.onclick=()=>select(i,false);
+  el.onclick=()=>{ select(i,false); };
   const ov=new kakao.maps.CustomOverlay({position:d._pos, content:el, yAnchor:0, zIndex:3});
   const dot=new kakao.maps.Circle({center:d._pos,radius:60,strokeWeight:2,strokeColor:c,strokeOpacity:1,fillColor:c,fillOpacity:.6});
   dot.setMap(visible(d)?map:null);
