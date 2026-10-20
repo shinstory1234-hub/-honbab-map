@@ -2,70 +2,106 @@
 <html lang="ko">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>6억 이하 특이점 단지 지도</title>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css">
 <style>
 :root{
-  --bg:#f6f5f2;--panel:#fff;--fg:#17171a;--muted:#6b6b73;--line:#e6e4df;
-  --c1:#e2553b; /* 소형할인 */
-  --c2:#2f6fde; /* 천지개벽 */
-  --c3:#1f9d6b; /* 하방경직 */
-  --c4:#8a4fd8; /* 정비대기열 */
+  --bg:#f6f5f2;--panel:#fff;--fg:#17171a;--muted:#6b6b73;--line:#ebe9e4;--soft:#f7f6f3;
+  --c1:#e2553b;--c2:#2f6fde;--c3:#1f9d6b;--c4:#8a4fd8;
 }
-*{box-sizing:border-box;margin:0;padding:0}
-html,body{height:100%}
-body{font-family:Pretendard,-apple-system,sans-serif;background:var(--bg);color:var(--fg);display:flex;flex-direction:column;height:100vh;height:100dvh;overflow:hidden}
-.handle{display:none}
-header{padding:14px 18px;border-bottom:1px solid var(--line);background:var(--panel);display:flex;flex-wrap:wrap;gap:10px 18px;align-items:center}
-header h1{font-size:17px;font-weight:700;letter-spacing:-.2px}
-header .sub{font-size:12px;color:var(--muted)}
-.chips{display:flex;gap:6px;flex-wrap:wrap;margin-left:auto}
-.chip{border:1px solid var(--line);background:#fff;border-radius:999px;padding:6px 11px;font-size:12.5px;cursor:pointer;display:flex;align-items:center;gap:6px;font-family:inherit;color:var(--fg)}
-.chip i{width:9px;height:9px;border-radius:50%;display:inline-block}
-.chip[aria-pressed=false]{opacity:.38}
-main{flex:1;display:flex;min-height:0}
-#map{flex:1;min-height:300px}
-aside{width:380px;background:var(--panel);border-left:1px solid var(--line);display:flex;flex-direction:column;min-height:0}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+html,body{height:100%;overflow-x:hidden;max-width:100%}
+body{font-family:Pretendard,-apple-system,sans-serif;background:var(--bg);color:var(--fg);height:100vh;height:100dvh;overflow:hidden;display:flex;flex-direction:column}
+button{font:inherit;color:inherit;background:none;border:none;cursor:pointer}
+
+header{padding:14px 18px;border-bottom:1px solid var(--line);background:var(--panel);display:flex;flex-wrap:wrap;gap:10px 18px;align-items:center;z-index:5}
+header h1{font-size:17px;font-weight:700;letter-spacing:-.3px}
+header .sub{font-size:12px;color:var(--muted);margin-top:2px}
+.chips{display:flex;gap:6px;margin-left:auto}
+.chip{border:1px solid var(--line);background:#fff;border-radius:999px;padding:6px 11px;font-size:12.5px;display:flex;align-items:center;gap:6px;white-space:nowrap;transition:opacity .15s}
+.chip i{width:9px;height:9px;border-radius:50%}
+.chip[aria-pressed=false]{opacity:.35}
+
+main{flex:1;display:flex;min-height:0;position:relative}
+.mapwrap{flex:1;position:relative}
+#map{position:absolute;inset:0}
+#keymsg{display:none;position:absolute;inset:0;align-items:center;justify-content:center;text-align:center;font-size:14px;line-height:1.7;padding:24px;color:var(--muted);z-index:2;background:var(--bg)}
+
+/* 사이드/시트 */
+aside{width:400px;background:var(--panel);border-left:1px solid var(--line);display:flex;flex-direction:column;min-height:0;z-index:6}
+.sheet-head{flex:none}
+.grab{display:none}
 .search{padding:10px 12px;border-bottom:1px solid var(--line)}
-.search input{width:100%;border:1px solid var(--line);border-radius:8px;padding:8px 10px;font:inherit;font-size:13px}
-#list{overflow:auto;flex:1}
-.item{padding:12px 14px;border-bottom:1px solid var(--line);cursor:pointer}
-.item:hover,.item.on{background:#faf8f4}
-.item .top{display:flex;align-items:baseline;gap:8px}
-.item .nm{font-weight:650;font-size:14px}
-.item .pr{margin-left:auto;font-weight:700;font-size:14px;font-variant-numeric:tabular-nums;white-space:nowrap}
-.item .meta{font-size:12px;color:var(--muted);margin-top:3px}
-.tag{font-size:10.5px;font-weight:600;color:#fff;border-radius:4px;padding:2px 6px;white-space:nowrap}
-.detail{display:none;margin-top:8px;font-size:12.5px;line-height:1.55}
-.item.on .detail{display:block}
-.detail b{font-weight:650}
-.detail .risk{color:#9a3b2a;margin-top:4px}
-.detail .reg{margin-top:4px;color:var(--muted)}
-.ov{background:#fff;border:2px solid;border-radius:8px;padding:3px 7px;font-size:11.5px;font-weight:700;white-space:nowrap;box-shadow:0 2px 6px rgba(0,0,0,.15);transform:translateY(-34px);cursor:pointer;font-family:Pretendard,sans-serif}
-.ov small{font-weight:500;color:#555;margin-left:4px}
-.ov.on{z-index:10;transform:translateY(-34px) scale(1.08)}
-.note{padding:10px 14px;font-size:11px;color:var(--muted);border-top:1px solid var(--line)}
-#keymsg{display:none;position:absolute;inset:0;align-items:center;justify-content:center;background:var(--bg);z-index:5;text-align:center;font-size:14px;line-height:1.7;padding:20px}
-.mapwrap{flex:1;position:relative;display:flex}
+.search input{width:100%;border:1px solid var(--line);border-radius:10px;padding:9px 11px;font:inherit;font-size:14px;background:var(--soft)}
+.search input:focus{outline:2px solid #cfcac0;background:#fff}
+.body{flex:1;overflow:auto;-webkit-overflow-scrolling:touch;overscroll-behavior:contain}
+
+/* 목록 */
+.item{padding:13px 16px;border-bottom:1px solid var(--line);cursor:pointer;display:flex;gap:10px;align-items:flex-start}
+.item:active{background:var(--soft)}
+.item .dot{width:8px;height:8px;border-radius:50%;margin-top:7px;flex:none}
+.item .main{flex:1;min-width:0}
+.item .top{display:flex;gap:8px;align-items:baseline}
+.item .nm{font-weight:650;font-size:15px;letter-spacing:-.2px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.item .pr{margin-left:auto;font-weight:750;font-size:15px;white-space:nowrap;font-variant-numeric:tabular-nums}
+.item .meta{font-size:12.5px;color:var(--muted);margin-top:3px}
+.item .hook{font-size:13px;margin-top:5px;color:#33333a;line-height:1.45}
+
+/* 상세 카드 */
+.detail{padding:6px 16px 28px}
+.back{display:flex;align-items:center;gap:4px;font-size:13px;color:var(--muted);padding:8px 0}
+.d-title{font-size:20px;font-weight:750;letter-spacing:-.4px;margin-top:2px}
+.d-area{font-size:13px;color:var(--muted);margin-top:3px}
+.tags{display:flex;gap:5px;flex-wrap:wrap;margin-top:8px}
+.tag{font-size:11px;font-weight:650;color:#fff;border-radius:5px;padding:3px 7px}
+.kpis{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:14px}
+.kpi{background:var(--soft);border-radius:10px;padding:9px 10px}
+.kpi .v{font-size:16px;font-weight:750;font-variant-numeric:tabular-nums;letter-spacing:-.3px}
+.kpi .l{font-size:11px;color:var(--muted);margin-top:2px}
+.sec{margin-top:18px}
+.sec h3{font-size:13px;font-weight:700;margin-bottom:8px;display:flex;align-items:center;gap:6px}
+.sec h3 i{width:4px;height:14px;border-radius:2px;display:inline-block}
+.pts{list-style:none;display:flex;flex-direction:column;gap:8px}
+.pts li{font-size:14px;line-height:1.55;padding-left:22px;position:relative}
+.pts li b{font-weight:700}
+.pts li::before{position:absolute;left:0;top:0;font-weight:700}
+.pts.good li::before{content:"✓";color:var(--c3)}
+.pts.bad li::before{content:"!";color:#c0432c;left:5px}
+.pts.bad li{color:#5a3a33}
+.reg{font-size:13px;background:var(--soft);border-radius:10px;padding:10px 12px;line-height:1.5}
+.deal{font-size:12.5px;color:var(--muted);margin-top:10px}
+
+/* 지도 라벨 */
+.ov{background:#fff;border:2px solid;border-radius:9px;padding:3px 8px;font-size:12px;font-weight:750;white-space:nowrap;box-shadow:0 2px 8px rgba(0,0,0,.18);transform:translate(-50%,-130%);cursor:pointer;font-family:Pretendard,sans-serif;position:relative}
+.ov::after{content:"";position:absolute;left:50%;bottom:-7px;margin-left:-6px;border:6px solid transparent;border-top-color:inherit;border-bottom:0}
+.ov small{font-weight:550;color:#555;margin-left:4px}
+.ov.on{transform:translate(-50%,-130%) scale(1.12);z-index:10}
+.ov.mini small{display:none}
+.note{padding:10px 16px;font-size:11px;color:var(--muted);border-top:1px solid var(--line)}
+
+/* ===== 모바일: 드래그 바텀시트 ===== */
 @media (max-width:800px){
-  header{padding:10px 12px 8px;gap:6px;flex-wrap:nowrap;flex-direction:column;align-items:stretch}
-  header h1{font-size:15px}
+  header{padding:10px 12px 9px;flex-direction:column;align-items:stretch;gap:7px}
+  header h1{font-size:15.5px}
   header .sub{font-size:11px}
-  .chips{margin-left:0;flex-wrap:nowrap;overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none;padding-bottom:2px}
+  header>*{min-width:0;max-width:100%}
+  .chips{margin-left:0;overflow-x:auto;width:100%;scrollbar-width:none;-webkit-overflow-scrolling:touch}
   .chips::-webkit-scrollbar{display:none}
-  .chip{flex:none;padding:6px 10px}
-  main{flex-direction:column;min-height:0}
-  .mapwrap{flex:1;min-height:0}
-  aside{width:100%;height:36dvh;flex:none;border-left:none;border-top:1px solid var(--line);border-radius:14px 14px 0 0;box-shadow:0 -4px 14px rgba(0,0,0,.08);transition:height .2s}
-  body.sheet-open aside{height:74dvh}
-  #map{min-height:0}
-  .handle{display:flex;flex-direction:column;align-items:center;gap:5px;width:100%;border:none;background:none;padding:8px 0 2px;font:inherit;font-size:12px;color:var(--muted);flex:none}
-  .handle::before{content:"";width:36px;height:4px;border-radius:2px;background:#d6d3cc}
-  .search{padding:6px 12px 8px}
+  aside{
+    position:fixed;left:0;right:0;bottom:0;width:100%;
+    height:calc(100dvh - 70px);
+    border:none;border-radius:16px 16px 0 0;box-shadow:0 -6px 24px rgba(0,0,0,.14);
+    transform:translateY(var(--y,60dvh));will-change:transform;
+  }
+  aside.anim{transition:transform .32s cubic-bezier(.2,.8,.2,1)}
+  .sheet-head{touch-action:none;cursor:grab}
+  .grab{display:flex;justify-content:center;padding:9px 0 3px}
+  .grab span{width:40px;height:5px;border-radius:3px;background:#d4d0c8}
+  .search{border-bottom:1px solid var(--line);padding:6px 12px 10px}
   .search input{font-size:16px}
   .note{display:none}
-  .item{padding:11px 14px}
+  .body{padding-bottom:env(safe-area-inset-bottom)}
 }
 </style>
 </head>
@@ -79,218 +115,386 @@ aside{width:380px;background:var(--panel);border-left:1px solid var(--line);disp
 </header>
 <main>
   <div class="mapwrap"><div id="map"></div><div id="keymsg"></div></div>
-  <aside>
-    <button class="handle" id="handle" aria-label="목록 펼치기">목록 펼치기</button>
-    <div class="search"><input id="q" placeholder="단지·동네 검색"></div>
-    <div id="list"></div>
-    <div class="note">평당가 비교는 같은 단지 안의 평형끼리 비교한 값. "동네 신축 대비"는 같은 동 신축(없으면 같은 동 대단지로 추정) 평당가 대비 비율. 마커 위치가 어긋나면 해당 단지를 카카오 장소검색으로 찾은 결과라서 그래.</div>
+  <aside id="sheet">
+    <div class="sheet-head" id="head">
+      <div class="grab"><span></span></div>
+      <div class="search"><input id="q" placeholder="단지·동네 검색" autocomplete="off"></div>
+    </div>
+    <div class="body" id="body"></div>
+    <div class="note">평당가 비교는 같은 단지 안 평형끼리. "동네 신축 대비"는 같은 동 신축(없으면 같은 동 대단지로 추정) 평당가 대비 비율.</div>
   </aside>
 </main>
 
 <script>
-/* ============ 설정 ============ */
-// 카카오 JavaScript 키. 비워두면 ?key=xxxx 로 넘긴 값을 씀.
-// 카카오 개발자콘솔 > 앱 > 플랫폼 > Web 에 이 파일이 열릴 도메인(예: https://xxx.vercel.app, http://localhost:3000)을 등록해야 지도가 뜸.
 const KAKAO_JS_KEY = '106bb734e8600621686fade2de7f8afb';
 
-/* ============ 데이터 ============ */
 const CATS = {
-  '소형할인': {color:'var(--c1)', hex:'#e2553b', desc:'신축인데 같은 단지 큰 평형보다 평당가가 싼 소형'},
-  '천지개벽': {color:'var(--c2)', hex:'#2f6fde', desc:'동네가 통째로 바뀌는 곳'},
-  '하방경직': {color:'var(--c3)', hex:'#1f9d6b', desc:'재건축 안 돼도 동네 신축 대비 싸서 차익 여지'},
-  '정비대기열': {color:'var(--c4)', hex:'#8a4fd8', desc:'선도지구·정비구역 대기열 진입/직후'}
+  '소형할인': {hex:'#e2553b', desc:'신축인데 같은 단지 큰 평형보다 평당가가 싼 소형'},
+  '천지개벽': {hex:'#2f6fde', desc:'동네가 통째로 바뀌는 곳'},
+  '하방경직': {hex:'#1f9d6b', desc:'재건축 안 돼도 동네 신축 대비 싸서 차익 여지'},
+  '정비대기열': {hex:'#8a4fd8', desc:'선도지구·정비구역 대기열 진입/직후'}
 };
 
-// lat/lng 없으면 q 로 카카오 장소검색
+/* k: 핵심지표 3개 [값,라벨], hook: 목록 한줄, pts: 투자 포인트, risks: 리스크 */
 const D = [
-  // ---- 소형할인 (+천지개벽) ----
-  {n:'주안파크자이더플래티넘', cat:['소형할인','천지개벽'], area:'인천 미추홀 주안동', spec:'16평 · 4년차 · 2,054세대', price:'2.42억', deal:'실거래 2.53억(10.8)',
-   why:'16평 평당 1,512만 → 24평(1,850)보다 −18%, 33평보다 −14%. 전세 1.95억(81%) → 갭 0.47억. 주안·학익 재개발 신축 + 시티오씨엘 1.3만 가구, 수인분당 학익역(2028말 목표). 미추홀 2027 입주 0',
-   risk:'소형은 동·향 불리한 경우 많음. 역까지 거리 확인', reg:'비규제 (LTV 70%, 갭 가능)', lat:37.447342, lng:126.6714651},
-  {n:'힐스테이트푸르지오주안', cat:['소형할인','천지개벽'], area:'인천 미추홀 주안동', spec:'19평 3.20억 / 22평 3.56억 · 4년차 · 2,958세대', price:'3.2억~', deal:'19평 실거래 3.18억(10.6)',
-   why:'22평 평당 1,617만 → 24평(2,033)보다 −20%, 34평보다 −17%. 22평 전세 2.6억(73%), 갭 0.95억',
-   risk:'—', reg:'비규제', lat:37.452735, lng:126.6765084},
-  {n:'e편한세상부평그랑힐스', cat:['소형할인','천지개벽'], area:'인천 부평 청천동', spec:'18평 · 4년차 · 5,050세대', price:'3.04억', deal:'실거래 2.95억(8.19)',
-   why:'18평 평당 1,690만 → 25·33평(2,063~2,070)보다 −18%. 전세 2.32억(76%), 갭 0.72억. 부평 재개발 2만 세대+, GTX-B 부평(2031 목표), 부평 2027 입주 0',
-   risk:'—', reg:'비규제', lat:37.5137563, lng:126.7016428},
-  {n:'수원센트럴아이파크자이', cat:['소형할인','천지개벽'], area:'수원 팔달 인계동', spec:'17평 · 4년차 · 3,432세대', price:'4.01억', deal:'실거래 3.8억(2026.2)',
-   why:'17평 평당 2,357만 → 25평(3,159)보다 −25%, 33평보다 −20%. 전세 2.98억(74%). 매교·인계 재개발 1만 세대+, 수원역 GTX-C',
-   risk:'—', reg:'토허 (실거주 2년, LTV 40%·생애최초 70%, 갭 불가)', lat:37.2735947, lng:127.0230789},
-  {n:'힐스테이트푸르지오수원', cat:['소형할인','천지개벽'], area:'수원 팔달 매교동', spec:'17평 4.49억 / 19평 4.81억 · 5년차 · 2,586세대', price:'4.49억~', deal:'',
-   why:'17평 평당 2,638만 → 26평(3,268)보다 −19%. 전세 2.78억(62%)',
-   risk:'수인분당 급행이 매교역 무정차', reg:'토허', lat:37.2666828, lng:127.013833},
-  {n:'아르테자이', cat:['소형할인','천지개벽'], area:'안양 만안 안양동', spec:'16평 · 5년차 · 1,021세대', price:'4.20억', deal:'실거래 4.4억(9.30)',
-   why:'16평 평당 2,622만 → 24평(3,371)보다 −22%. 전세 2.8억(67%). 안양동 재개발 신축촌 + 월판선 안양역(2029.11 목표) + 수암천 복원',
-   risk:'—', reg:'비규제 (안양 동안만 규제, 만안은 아님)', lat:37.4198593, lng:126.9125897},
-  {n:'안양씨엘포레자이', cat:['소형할인'], area:'안양 만안 안양동', spec:'17평 · 19평 4.63억 · 6년차 · 1,394세대', price:'3.48억~', deal:'17평 실거래 3.48억(9.28)',
-   why:'19평 평당 2,439만 → 24평(2,968)보다 −18%. 19평 전세 3.13억(67%)',
-   risk:'역에서 거리 있음', reg:'비규제', lat:37.3864288, lng:126.9227344},
-  {n:'의정부역센트럴자이&위브캐슬', cat:['소형할인','천지개벽'], area:'의정부 의정부동', spec:'20평 · 5년차 · 2,473세대', price:'4.86억', deal:'',
-   why:'20평 평당 2,431만 → 24평(2,771)보다 −12%. 전세 3.1억(64%). GTX-C 의정부역, 링크시티 입주',
-   risk:'층간소음 민원 후기 있음. GTX-C 착공일 미정', reg:'비규제', lat:37.7313966, lng:127.0516099},
-  {n:'광명아크포레자이위브', cat:['소형할인'], area:'광명 광명동', spec:'14평 · 7년차 · 2,104세대', price:'5.89억', deal:'실거래 5.75억(8.21)',
-   why:'광명 신축 중 6억 이하 유일권. 14평 평당 4,209만 → 23평(4,818)보다 −13%. 광명뉴타운 1.6만 세대',
-   risk:'역에서 멂. 전세 3.0억(51%)', reg:'토허', lat:37.4702382, lng:126.853513},
+  {n:'주안파크자이더플래티넘', cat:['소형할인','천지개벽'], area:'인천 미추홀 주안동', spec:'16평 · 4년차 · 2,054세대', price:'2.42억',
+   k:[['2.42억','16평 시세'],['−18%','24평 대비 평당가'],['0.47억','갭(전세 81%)']],
+   hook:'신축 16평이 2억대, 갭 4,700만',
+   pts:['<b>소형 역프리미엄</b>: 16평 평당 1,512만으로 같은 단지 24평(1,850만)보다 18% 쌈. 정상이면 소형이 평당 더 비싸야 함',
+        '<b>갭 0.47억</b>: 전세 1.95억(전세가율 81%) — 비규제라 전세 끼고 매수 가능',
+        '<b>동네 변화</b>: 주안·학익 재개발 신축 연쇄 + 시티오씨엘 1.3만 가구, 수인분당 학익역(2028말 목표)·뮤지엄파크(2028)',
+        '<b>공급 공백</b>: 미추홀 2027 입주 0'],
+   risks:['소형은 저층·비선호 동 비중 높음 → 동·향 확인','역까지 도보 거리 있음(후기 기준)'],
+   reg:'비규제 · LTV 70% · 갭 가능', deal:'최근 실거래 2.53억(2026.10.8)', lat:37.447342, lng:126.6714651},
+  {n:'힐스테이트푸르지오주안', cat:['소형할인','천지개벽'], area:'인천 미추홀 주안동', spec:'19평 3.20억 / 22평 3.56억 · 4년차 · 2,958세대', price:'3.2억~',
+   k:[['3.56억','22평 시세'],['−20%','24평 대비 평당가'],['0.95억','22평 갭(73%)']],
+   hook:'22평이 24평보다 평당 20% 쌈',
+   pts:['<b>소형 역프리미엄</b>: 22평 평당 1,617만 vs 24평 2,033만(−20%), 34평 대비 −17%',
+        '<b>대단지 브랜드</b>: 2,958세대 힐스테이트·푸르지오',
+        '<b>동네 변화</b>: 주안 재개발 신축촌 + 미추홀 2027 입주 0'],
+   risks:['19·22평은 수요층이 1~2인 위주 → 매도 시 수요 폭 좁음'],
+   reg:'비규제 · 갭 가능', deal:'19평 실거래 3.18억(2026.10.6)', lat:37.452735, lng:126.6765084},
+  {n:'e편한세상부평그랑힐스', cat:['소형할인','천지개벽'], area:'인천 부평 청천동', spec:'18평 · 4년차 · 5,050세대', price:'3.04억',
+   k:[['3.04억','18평 시세'],['−18%','국평 대비 평당가'],['0.72억','갭(전세 76%)']],
+   hook:'5천 세대 신축 18평 3억',
+   pts:['<b>소형 역프리미엄</b>: 18평 평당 1,690만 vs 25·33평 2,063~2,070만(−18%)',
+        '<b>갭 0.72억</b>: 전세 2.32억(76%)',
+        '<b>동네 변화</b>: 부평 십정·청천·산곡 재개발 신축 2만 세대+, GTX-B 부평역(2031 목표)',
+        '<b>공급 공백</b>: 부평 2027 입주 0'],
+   risks:['GTX-B는 2031 목표로 장기','단지 내 경사(산 끼고 있음)'],
+   reg:'비규제 · 갭 가능', deal:'최근 실거래 2.95억(2026.8.19)', lat:37.5137563, lng:126.7016428},
+  {n:'수원센트럴아이파크자이', cat:['소형할인','천지개벽'], area:'수원 팔달 인계동', spec:'17평 · 4년차 · 3,432세대', price:'4.01억',
+   k:[['4.01억','17평 시세'],['−25%','25평 대비 평당가'],['74%','전세가율']],
+   hook:'같은 단지 25평보다 평당 25% 쌈',
+   pts:['<b>소형 역프리미엄 최대폭</b>: 17평 평당 2,357만 vs 25평 3,159만(−25%), 33평 대비 −20%',
+        '<b>하방 지지</b>: 전세 2.98억으로 전세가율 74% — 매매가 대비 전세가 높아 하락 방어',
+        '<b>동네 변화</b>: 매교·인계 재개발 신축 1만 세대+, 수원역 GTX-C'],
+   risks:['토허 → 2년 실거주 필수, 갭 불가','GTX-C 착공일 미정'],
+   reg:'규제지역·토허 · 실거주 2년 · LTV 40%(생애최초 70%)', deal:'최근 실거래 3.8억(2026.2)', lat:37.2735947, lng:127.0230789},
+  {n:'힐스테이트푸르지오수원', cat:['소형할인','천지개벽'], area:'수원 팔달 매교동', spec:'17평 4.49억 / 19평 4.81억 · 5년차 · 2,586세대', price:'4.49억~',
+   k:[['4.49억','17평 시세'],['−19%','26평 대비 평당가'],['62%','전세가율']],
+   hook:'매교역 신축 17평 4억대',
+   pts:['<b>소형 역프리미엄</b>: 17평 평당 2,638만 vs 26평 3,268만(−19%)',
+        '<b>역세권</b>: 수인분당 매교역',
+        '<b>동네 변화</b>: 매교·인계 재개발 신축촌'],
+   risks:['수인분당 급행은 매교역 무정차','토허 → 실거주 2년'],
+   reg:'규제지역·토허', deal:'', lat:37.2666828, lng:127.013833},
+  {n:'아르테자이', cat:['소형할인','천지개벽'], area:'안양 만안 안양동', spec:'16평 · 5년차 · 1,021세대', price:'4.20억',
+   k:[['4.20억','16평 시세'],['−22%','24평 대비 평당가'],['1.39억','갭(전세 67%)']],
+   hook:'안양 신축 16평 4억, 비규제',
+   pts:['<b>소형 역프리미엄</b>: 16평 평당 2,622만 vs 24평 3,371만(−22%)',
+        '<b>규제 틈새</b>: 안양이지만 만안구라 비규제 → LTV 70%, 갭 가능',
+        '<b>동네 변화</b>: 안양동 재개발 신축촌(안양역센트럴아이파크수자인 2029.4 입주) + 월판선 안양역(2029.11 목표) + 수암천 복원(966억)',
+        '<b>입지</b>: 안양예술공원·삼성산 숲세권'],
+   risks:['단지 진입로 복잡하다는 후기','월판선은 2029년 말'],
+   reg:'비규제 · 갭 가능', deal:'16평 실거래 4.4억(2026.9.30)', lat:37.4198593, lng:126.9125897},
+  {n:'안양씨엘포레자이', cat:['소형할인'], area:'안양 만안 안양동', spec:'17평 · 19평 4.63억 · 6년차 · 1,394세대', price:'3.48억~',
+   k:[['3.48억','17평 실거래'],['−18%','19평 vs 24평'],['67%','19평 전세가율']],
+   hook:'신축 17평 3억대 실거래',
+   pts:['<b>소형 역프리미엄</b>: 19평 평당 2,439만 vs 24평 2,968만(−18%)',
+        '<b>진입가</b>: 17평 3.48억 실거래(2026.9.28)',
+        '<b>규제 틈새</b>: 만안구 비규제'],
+   risks:['역에서 거리 있음, 편의시설 부족 후기'],
+   reg:'비규제 · 갭 가능', deal:'17평 실거래 3.48억(2026.9.28)', lat:37.3864288, lng:126.9227344},
+  {n:'의정부역센트럴자이&위브캐슬', cat:['소형할인','천지개벽'], area:'의정부 의정부동', spec:'20평 · 5년차 · 2,473세대', price:'4.86억',
+   k:[['4.86억','20평 시세'],['−12%','24평 대비 평당가'],['64%','전세가율']],
+   hook:'GTX-C 의정부역 신축 20평',
+   pts:['<b>소형 할인</b>: 20평 평당 2,431만 vs 24평 2,771만(−12%)',
+        '<b>교통</b>: 의정부역 1호선 + GTX-C 예정',
+        '<b>동네 변화</b>: 의정부역 링크시티 입주(34평 8.4억 실거래)'],
+   risks:['층간소음·하자 후기','GTX-C 착공일 미정'],
+   reg:'비규제 · 갭 가능', deal:'', lat:37.7313966, lng:127.0516099},
+  {n:'광명아크포레자이위브', cat:['소형할인'], area:'광명 광명동', spec:'14평 · 7년차 · 2,104세대', price:'5.89억',
+   k:[['5.89억','14평 시세'],['−13%','23평 대비 평당가'],['51%','전세가율']],
+   hook:'광명뉴타운 신축 6억 이하 유일권',
+   pts:['<b>희소성</b>: 광명 신축 중 6억 이하로 살 수 있는 거의 유일한 평형',
+        '<b>소형 할인</b>: 14평 평당 4,209만 vs 23평 4,818만(−13%)',
+        '<b>동네 변화</b>: 광명뉴타운 1.6만 세대 완성 단계'],
+   risks:['역에서 멂','전세가율 51%로 하방 지지 약함','토허 → 실거주'],
+   reg:'규제지역·토허', deal:'14평 실거래 5.75억(2026.8.21)', lat:37.4702382, lng:126.853513},
 
-  // ---- 천지개벽 / 하방경직 (서울·성남) ----
-  {n:'월계주공2단지', cat:['천지개벽','하방경직'], area:'서울 노원 월계동', spec:'17평 · 35년차 · 2,002세대', price:'4.39억', deal:'실거래 4.39억(9.23)',
-   why:'서울원(광운대역세권) 바로 옆: 4.5조 원, 주거 3,032가구 + 아이파크몰 + HDC 본사, 2028.7 준공 목표. GTX-C 광운대역(착공 미정). 재건축 추진',
-   risk:'재건축은 조합설립인가 전에 사야 조합원 지위 유지', reg:'서울 토허·투기과열', lat:37.6281255, lng:127.0527822},
-  {n:'중계주공2단지', cat:['하방경직'], area:'서울 노원 중계동', spec:'17평 · 35년차 · 1,800세대', price:'4.27억', deal:'',
-   why:'동네 신축 평당가의 48%. 은행사거리 학원가 도보 10분. 동북선 2027 개통',
-   risk:'—', reg:'서울 토허', lat:37.6576921, lng:127.0787349},
-  {n:'창동주공17단지', cat:['하방경직','정비대기열'], area:'서울 도봉 창동', spec:'15평 · 38년차 · 1,980세대', price:'4.0억', deal:'실거래 3.95억(10.3)',
-   why:'동네 신축의 53%. 정비구역 지정 진행 중. 창동 신경제중심지',
-   risk:'마커는 단지 상가 위치', reg:'서울 토허', lat:37.6457209, lng:127.0531266},
-  {n:'정릉대우', cat:['하방경직'], area:'서울 성북 정릉동', spec:'18평 · 26년차 · 791세대', price:'3.57억', deal:'',
-   why:'동네 신축의 40%. 광화문 25분대(역 기준 추정)', risk:'역 접근성 약함', reg:'서울 토허', lat:37.6177592, lng:127.0034128},
-  {n:'도봉 신창', cat:['하방경직'], area:'서울 도봉 창동', spec:'25평 · 29년차 · 609세대', price:'4.45억', deal:'',
-   why:'동네 신축의 35%. 창동 생활권', risk:'—', reg:'서울 토허', lat:37.6407406, lng:127.0418442},
-  {n:'관악 건영1·2차', cat:['하방경직'], area:'서울 관악 신림동', spec:'1차 17평 4.45억 / 2차 24평 4.38억', price:'4.38억~', deal:'',
-   why:'동네 신축의 31~45%. 신림선, 신림 재개발', risk:'위치는 검색 결과 기준(확인 필요)', reg:'서울 토허', q:'신림 건영아파트 관악구'},
-  {n:'성남 태평선경', cat:['하방경직'], area:'성남 수정 태평동', spec:'13평 · 36년차 · 312세대', price:'2.85억', deal:'',
-   why:'동네 신축의 34%. 성남 구도심 재개발 신축 13~15억대', risk:'소규모', reg:'토허', lat:37.446719, lng:127.1416514},
-  {n:'성남 선경논골', cat:['하방경직'], area:'성남 수정 단대동', spec:'14평 · 36년차 · 426세대', price:'2.48억', deal:'',
-   why:'동네 신축의 33%', risk:'소규모', reg:'토허', lat:37.4617868, lng:127.1571774},
+  {n:'월계주공2단지', cat:['천지개벽','하방경직'], area:'서울 노원 월계동', spec:'17평 · 35년차 · 2,002세대', price:'4.39억',
+   k:[['4.39억','17평 실거래'],['3,032','서울원 주거'],['2028.7','서울원 준공']],
+   hook:'서울원(광운대역세권) 바로 옆 재건축',
+   pts:['<b>천지개벽</b>: 서울원 4.5조 원 복합개발 — 주거 3,032가구 + 아이파크몰 + HDC 본사 이전, 2028.7 준공 목표',
+        '<b>재건축 옵션</b>: 2,002세대 대단지, 재건축 추진 중',
+        '<b>교통</b>: 1호선 광운대역 + GTX-C 정차 예정'],
+   risks:['재건축은 조합설립인가 전에 사야 조합원 지위 유지','GTX-C 착공일 미정'],
+   reg:'서울 토허·투기과열 · 실거주 2년', deal:'실거래 4.39억(2026.9.23)', lat:37.6281255, lng:127.0527822},
+  {n:'중계주공2단지', cat:['하방경직'], area:'서울 노원 중계동', spec:'17평 · 35년차 · 1,800세대', price:'4.27억',
+   k:[['4.27억','17평 시세'],['48%','동네 신축 대비'],['2027','동북선 개통']],
+   hook:'은행사거리 학원가, 동네 신축 절반 가격',
+   pts:['<b>하방 경직</b>: 평당가가 동네 신축의 48% — 재건축 안 돼도 실거주 수요로 버팀',
+        '<b>학군</b>: 은행사거리 학원가 도보 10분',
+        '<b>교통 호재</b>: 동북선 2027 개통(은행사거리)'],
+   risks:['재건축 일정은 미정(장기)'],
+   reg:'서울 토허 · 실거주 2년', deal:'', lat:37.6576921, lng:127.0787349},
+  {n:'창동주공17단지', cat:['하방경직','정비대기열'], area:'서울 도봉 창동', spec:'15평 · 38년차 · 1,980세대', price:'4.0억',
+   k:[['3.95억','15평 실거래'],['53%','동네 신축 대비'],['1,980','세대']],
+   hook:'서울 재건축 4억 진입',
+   pts:['<b>정비 진행</b>: 정비구역 지정 절차 진행 중',
+        '<b>하방 경직</b>: 동네 신축 평당가의 53%',
+        '<b>동네 변화</b>: 창동 신경제중심지, 서울아레나, GTX-C 창동역'],
+   risks:['15평 → 분담금 부담 큼','지도 위치는 단지 상가'],
+   reg:'서울 토허 · 실거주 2년', deal:'실거래 3.95억(2026.10.3)', lat:37.6457209, lng:127.0531266},
+  {n:'정릉대우', cat:['하방경직'], area:'서울 성북 정릉동', spec:'18평 · 26년차 · 791세대', price:'3.57억',
+   k:[['3.57억','18평 시세'],['40%','동네 신축 대비'],['25분','광화문(추정)']],
+   hook:'광화문 25분대 서울 3억대',
+   pts:['<b>하방 경직</b>: 동네 신축 평당가의 40%','<b>직주근접</b>: 광화문 25분대(역 기준 추정)'],
+   risks:['역 접근성 약함(버스 의존)'], reg:'서울 토허', deal:'', lat:37.6177592, lng:127.0034128},
+  {n:'도봉 신창', cat:['하방경직'], area:'서울 도봉 창동', spec:'25평 · 29년차 · 609세대', price:'4.45억',
+   k:[['4.45억','25평 시세'],['35%','동네 신축 대비'],['609','세대']],
+   hook:'창동 25평 4억대',
+   pts:['<b>하방 경직</b>: 동네 신축 평당가의 35%로 비교군 중 가장 큰 격차','<b>입지</b>: 창동 신경제중심지 생활권'],
+   risks:['중소형 단지'], reg:'서울 토허', deal:'', lat:37.6407406, lng:127.0418442},
+  {n:'관악 건영1·2차', cat:['하방경직'], area:'서울 관악 신림동', spec:'1차 17평 4.45억 / 2차 24평 4.38억', price:'4.38억~',
+   k:[['4.38억','2차 24평'],['31~45%','동네 신축 대비'],['신림선','교통']],
+   hook:'신림 재개발 옆 24평 4억대',
+   pts:['<b>하방 경직</b>: 동네 신축의 31~45%','<b>동네 변화</b>: 신림 재개발, 신림선'],
+   risks:['지도 위치는 검색 결과 기준(확인 필요)'], reg:'서울 토허', deal:'', q:'신림 건영아파트 관악구'},
+  {n:'성남 태평선경', cat:['하방경직'], area:'성남 수정 태평동', spec:'13평 · 36년차 · 312세대', price:'2.85억',
+   k:[['2.85억','13평 시세'],['34%','동네 신축 대비'],['13~15억','주변 신축']],
+   hook:'주변 신축 13억대 동네의 2억대',
+   pts:['<b>하방 경직</b>: 동네 신축 평당가의 34%','<b>동네 변화</b>: 성남 구도심(신흥·태평) 재개발 신축 13~15억대'],
+   risks:['소규모 단지','토허 → 실거주'], reg:'규제지역·토허', deal:'', lat:37.446719, lng:127.1416514},
+  {n:'성남 선경논골', cat:['하방경직'], area:'성남 수정 단대동', spec:'14평 · 36년차 · 426세대', price:'2.48억',
+   k:[['2.48억','14평 시세'],['33%','동네 신축 대비'],['426','세대']],
+   hook:'성남 구도심 2억대',
+   pts:['<b>하방 경직</b>: 동네 신축 평당가의 33%'], risks:['소규모','토허'], reg:'규제지역·토허', deal:'', lat:37.4617868, lng:127.1571774},
 
-  // ---- 정비대기열 ----
-  {n:'은하수·샛별5·6단지 (평촌 A-4)', cat:['정비대기열'], area:'안양 동안 비산동', spec:'11평 3.07억 / 14평 5.39억 · 3,227세대', price:'3.07억~', deal:'14평 실거래 5.0~5.6억',
-   why:'평촌 2라운드 6개 구역 중 하나. 안양시가 2027년부터 신규 주민제안 안 받음 → 6개 구역이 사실상 평촌 재건축 대기열 전부. 현 용적률 191%(6개 중 최저)',
-   risk:'올해 지정 물량 4,866호 vs 신청 14,102호. 순서 경합', reg:'토허·투기과열', q:'은하수아파트 비산동 안양'},
-  {n:'샛별한양1단지 (평촌 A-2)', cat:['정비대기열'], area:'안양 동안 비산동', spec:'14평 5.0억 / 17평 6.1억 · 1,262세대', price:'5.0억~', deal:'17평 실거래 5.73~6.35억',
-   why:'A-2 = 샛별한양1·2·3 (2,744호). 용적률 204%', risk:'주차 0.41대', reg:'토허', q:'샛별한양1단지 안양'},
-  {n:'한가람한양 (평촌 A-5)', cat:['정비대기열'], area:'안양 동안 관양동', spec:'16평 · 952세대', price:'5.65억', deal:'실거래 4.9~6.3억',
-   why:'A-5 = 한가람 한양·삼성·두산 (2,096호). 인덕원 GTX-C·인동선·월판선', risk:'—', reg:'토허', q:'한가람한양아파트 관양동'},
-  {n:'초원7단지부영 (평촌 A-13)', cat:['정비대기열'], area:'안양 동안 평촌동', spec:'15평 · 1,743세대', price:'5.41억', deal:'실거래 4.45~6.0억',
-   why:'리모델링 → 재건축 전환, 2라운드 6개 구역 중 하나', risk:'주차 0.41대', reg:'토허', q:'초원7단지부영아파트'},
-  {n:'관악성원 (평촌 A-1)', cat:['정비대기열'], area:'안양 동안 비산동', spec:'15평 4.29억 / 17평 5.43억 · 790세대', price:'4.29억~', deal:'',
-   why:'A-1 = 관악타운·부영·성원 (3,386호)', risk:'주차 0.29대', reg:'토허', q:'관악성원아파트 비산동'},
-  {n:'중동 은하마을주공1단지', cat:['정비대기열'], area:'부천 원미 중동', spec:'16~17평 · 795세대', price:'4.1~4.3억', deal:'',
-   why:'은하마을 특별정비구역 지정(2026.6.15) + 한국토지신탁 사업시행자 지정(8월). 2,387 → 약 3,400가구. 7호선 부천시청역, GTX-B 부천종합운동장', risk:'—', reg:'비규제', q:'은하마을주공1단지 부천'},
-  {n:'산본주공11단지', cat:['정비대기열'], area:'군포 산본동', spec:'15평 · 1,400세대', price:'4.0억', deal:'실거래 4.3억(10.16)',
-   why:'산본 11구역 특별정비구역 + LH 사업시행약정(2026.8). 3,892가구 계획, 하반기 시공자 선정. 군포 2027 입주 0', risk:'15평 → 분담금 부담', reg:'비규제', q:'산본주공11단지'},
-  {n:'일산 강촌동아 (16구역)', cat:['정비대기열'], area:'고양 일산동구 마두동', spec:'31평 · 720세대', price:'5.57억', deal:'실거래 5.75억(10.18)',
-   why:'강촌1·2+백마1·2 통합 2,906 → 4,864가구, 입안제안 수용(2026.7.13). 전세 4.34억(78%) → 갭 약 1.2억', risk:'일산 기준용적률 300%(최저)', reg:'비규제', q:'강촌동아아파트 마두동'},
-  {n:'구월 B1 관교동 성지', cat:['정비대기열','천지개벽'], area:'인천 미추홀 관교동', spec:'31평 · 420세대', price:'3.85억', deal:'실거래 4.24억(10.17)',
-   why:'인천 노후계획도시 선도지구(2026.8.25) 구월 B1(2,756호). 인천시청역 GTX-B 생활권. 같은 구역 쌍용 31평 3.58억 · 동부 30평 3.72억', risk:'인천 신축가 대비 분담금 부담 → 대지지분 큰 평형 유리', reg:'비규제', q:'관교동 성지아파트'},
-  {n:'연수 A7 무지개마을', cat:['정비대기열'], area:'인천 연수 동춘동', spec:'32평 · 1,068세대', price:'4.17억', deal:'실거래 4.4억(10.17)',
-   why:'인천 선도지구 연수·선학 A7(4,748호: 현대1차·연수풍림2차·무지개마을·한양2차)', risk:'—', reg:'비규제', q:'무지개마을아파트 동춘동 연수구'},
-  {n:'창동주공4단지', cat:['정비대기열'], area:'서울 도봉 창동', spec:'17평 · 1,710세대', price:'4.8억', deal:'',
-   why:'추진위 승인(2026.9), 조합설립 전 → 지금 사도 조합원 지위 OK', risk:'—', reg:'서울 토허', q:'창동주공4단지'},
-  {n:'안양 종합운동장 동측 재개발', cat:['천지개벽','정비대기열'], area:'안양 동안 비산동', spec:'빌라·주택 지분 (2024 기사 3.5~5.7억)', price:'지분', deal:'',
-   why:'사업시행인가(2026.5), 삼성물산 래미안 하이스티지 1,850세대, 착공 2028.4 예정. 월판선 안양운동장역(2029)', risk:'관리처분인가 전까지만 조합원 지위로 매수 가능. 현재 시세는 매물 확인 필요', reg:'재개발 빌라는 10·15 토허 실거주 미적용', q:'안양종합운동장'}
+  {n:'은하수·샛별5·6단지 (평촌 A-4)', cat:['정비대기열'], area:'안양 동안 비산동', spec:'11평 3.07억 / 14평 5.39억 · 3,227세대', price:'3.07억~',
+   k:[['191%','현 용적률(최저)'],['3,227','구역 호수'],['4,866','올해 지정 물량']],
+   hook:'평촌 재건축 대기열, 용적률 최저',
+   pts:['<b>닫힌 대기열</b>: 안양시가 2027년부터 신규 주민제안 안 받음 → 2라운드 6개 구역이 평촌 재건축 대기열 전부. 탈락해도 다음 해로 자동 이월',
+        '<b>사업성</b>: 현 용적률 191%로 6개 구역 중 최저',
+        '<b>진입가</b>: 11평 3.07억부터'],
+   risks:['올해 4,866호에 14,102호 신청 → 순서 경합','토허·투기과열 → 조합설립 이후 매수 시 조합원 지위 X'],
+   reg:'규제지역·토허·투기과열', deal:'14평 실거래 5.0~5.6억', q:'은하수아파트 비산동 안양'},
+  {n:'샛별한양1단지 (평촌 A-2)', cat:['정비대기열'], area:'안양 동안 비산동', spec:'14평 5.0억 / 17평 6.1억 · 1,262세대', price:'5.0억~',
+   k:[['204%','현 용적률'],['2,744','A-2 호수'],['3,680','계획 세대']],
+   hook:'샛별한양1·2·3 통합, 범계 생활권',
+   pts:['<b>닫힌 대기열</b>: 평촌 2라운드 6개 구역 중 하나','<b>통합 재건축</b>: 샛별한양1·2·3 2,744 → 3,680세대','<b>입지</b>: 범계역·평촌 학원가'],
+   risks:['주차 세대당 0.41대','17평은 6억 초과'], reg:'규제지역·토허', deal:'17평 실거래 5.73~6.35억', q:'샛별한양1단지 안양'},
+  {n:'한가람한양 (평촌 A-5)', cat:['정비대기열'], area:'안양 동안 관양동', spec:'16평 · 952세대', price:'5.65억',
+   k:[['5.65억','16평 시세'],['2,096','A-5 호수'],['3개','인덕원 노선']],
+   hook:'인덕원 GTX-C·인동선·월판선',
+   pts:['<b>닫힌 대기열</b>: 평촌 2라운드 6개 구역 중 하나(한양·삼성·두산 통합)','<b>교통</b>: 인덕원역 GTX-C·인동선(2029)·월판선(2029말) 3중'],
+   risks:['실거래 4.9~6.3억으로 편차 큼'], reg:'규제지역·토허', deal:'실거래 4.9~6.3억', q:'한가람한양아파트 관양동'},
+  {n:'초원7단지부영 (평촌 A-13)', cat:['정비대기열'], area:'안양 동안 평촌동', spec:'15평 · 1,743세대', price:'5.41억',
+   k:[['5.41억','15평 시세'],['212%','현 용적률'],['1,743','호수']],
+   hook:'리모델링→재건축 전환, 평촌역',
+   pts:['<b>닫힌 대기열</b>: 2라운드 6개 구역 중 하나','<b>단일 단지</b>: 1,743세대 단독이라 의사결정 단순'],
+   risks:['주차 0.41대','실거래 편차 4.45~6.0억'], reg:'규제지역·토허', deal:'실거래 4.45~6.0억', q:'초원7단지부영아파트'},
+  {n:'관악성원 (평촌 A-1)', cat:['정비대기열'], area:'안양 동안 비산동', spec:'15평 4.29억 / 17평 5.43억 · 790세대', price:'4.29억~',
+   k:[['4.29억','15평 시세'],['3,386','A-1 호수'],['207%','현 용적률']],
+   hook:'평촌 대기열 중 가장 싼 진입',
+   pts:['<b>닫힌 대기열</b>: 2라운드 6개 구역 중 하나(관악타운·부영·성원)','<b>진입가</b>: 15평 4.29억'],
+   risks:['주차 0.29대(6개 중 최악)'], reg:'규제지역·토허', deal:'', q:'관악성원아파트 비산동'},
+  {n:'중동 은하마을주공1단지', cat:['정비대기열'], area:'부천 원미 중동', spec:'16~17평 · 795세대', price:'4.1~4.3억',
+   k:[['4.1억','16평 시세'],['완료','사업시행자 지정'],['3,400','계획 세대']],
+   hook:'특별정비구역+시행자 지정 끝, 비규제',
+   pts:['<b>진도</b>: 특별정비구역 지정(2026.6.15) + 한국토지신탁 사업시행자 지정(2026.8)','<b>규모</b>: 은하마을 2,387 → 약 3,400가구','<b>교통</b>: 7호선 부천시청역 + GTX-B 부천종합운동장역','<b>규제 없음</b>: 갭 가능'],
+   risks:['16평 → 분담금 부담'], reg:'비규제 · 갭 가능', deal:'', q:'은하마을주공1단지 부천'},
+  {n:'산본주공11단지', cat:['정비대기열'], area:'군포 산본동', spec:'15평 · 1,400세대', price:'4.0억',
+   k:[['4.3억','15평 실거래'],['3,892','계획 세대'],['0','군포 27 입주']],
+   hook:'LH 시행약정, 하반기 시공자 선정',
+   pts:['<b>진도</b>: 특별정비구역(2025.12) + LH 사업시행약정(2026.8), 하반기 시공자 선정','<b>공급 공백</b>: 군포 2027 입주 0','<b>규제 없음</b>'],
+   risks:['15평 → 분담금 부담'], reg:'비규제 · 갭 가능', deal:'실거래 4.3억(2026.10.16)', q:'산본주공11단지'},
+  {n:'일산 강촌동아 (16구역)', cat:['정비대기열'], area:'고양 일산동구 마두동', spec:'31평 · 720세대', price:'5.57억',
+   k:[['1.2억','갭(전세 78%)'],['4,864','계획 세대'],['31평','대지지분 큰 평형']],
+   hook:'전세가율 78%, 갭 1.2억 재건축',
+   pts:['<b>갭 투자 적합</b>: 전세 4.34억(78%) → 갭 약 1.2억, 비규제','<b>진도</b>: 강촌1·2+백마1·2 통합 입안제안 수용(2026.7.13), 2,906 → 4,864가구','<b>평형</b>: 31평이라 대지지분 여유'],
+   risks:['일산 기준용적률 300%로 1기 신도시 중 최저(350% 검토 중)'], reg:'비규제 · 갭 가능', deal:'실거래 5.75억(2026.10.18)', q:'강촌동아아파트 마두동'},
+  {n:'구월 B1 관교동 성지', cat:['정비대기열','천지개벽'], area:'인천 미추홀 관교동', spec:'31평 · 420세대', price:'3.85억',
+   k:[['3.85억','31평 시세'],['2,756','B1 호수'],['8.25','선도지구 선정']],
+   hook:'인천 선도지구 + GTX-B 인천시청',
+   pts:['<b>선도지구</b>: 인천 노후계획도시 선도지구 구월 B1 선정(2026.8.25), 권리산정기준일 고시','<b>교통</b>: 인천시청역 GTX-B(2031 목표)','<b>대지지분</b>: 30평대 3억대 — 같은 구역 쌍용 31평 3.58억, 동부 30평 3.72억','<b>공급 공백</b>: 남동·미추홀 2027 입주 0'],
+   risks:['인천 신축 시세 대비 분담금 비중 큼 → 대지지분 큰 평형 위주로'], reg:'비규제 · 갭 가능', deal:'실거래 4.24억(2026.10.17)', q:'관교동 성지아파트'},
+  {n:'연수 A7 무지개마을', cat:['정비대기열'], area:'인천 연수 동춘동', spec:'32평 · 1,068세대', price:'4.17억',
+   k:[['4.17억','32평 시세'],['4,748','A7 호수'],['8.25','선도지구 선정']],
+   hook:'인천 선도지구 최대 구역',
+   pts:['<b>선도지구</b>: 연수·선학 A7(현대1차·연수풍림2차·무지개마을·한양2차) 4,748호','<b>평형</b>: 32평 4억대'],
+   risks:['사업성은 인천 신축가에 좌우'], reg:'비규제 · 갭 가능', deal:'실거래 4.4억(2026.10.17)', q:'무지개마을아파트 동춘동 연수구'},
+  {n:'창동주공4단지', cat:['정비대기열'], area:'서울 도봉 창동', spec:'17평 · 1,710세대', price:'4.8억',
+   k:[['4.8억','17평 시세'],['2026.9','추진위 승인'],['1,710','세대']],
+   hook:'조합설립 전, 지금 매수해도 조합원',
+   pts:['<b>진도</b>: 추진위 승인(2026.9)','<b>매수 타이밍</b>: 조합설립 전이라 지금 사도 조합원 지위 유지'],
+   risks:['17평 → 분담금'], reg:'서울 토허 · 실거주 2년', deal:'', q:'창동주공4단지'},
+  {n:'안양 종합운동장 동측 재개발', cat:['천지개벽','정비대기열'], area:'안양 동안 비산동', spec:'빌라·주택 지분', price:'지분',
+   k:[['1,850','계획 세대'],['2028.4','착공 예정'],['2029','월판선']],
+   hook:'래미안 하이스티지, 관리처분 전',
+   pts:['<b>진도</b>: 사업시행인가(2026.5), 삼성물산 래미안 하이스티지 1,850세대, 착공 2028.4 예정','<b>교통</b>: 월판선 안양운동장역(2029)','<b>규제 틈새</b>: 재개발 빌라는 10·15 토허 실거주 미적용'],
+   risks:['관리처분인가 전까지만 조합원 지위로 매수 가능','현재 지분 시세는 매물 확인 필요(2024 기사 3.5~5.7억)'], reg:'재개발 빌라 · 토허 실거주 미적용', deal:'', q:'안양종합운동장'}
 ];
 
-/* ============ 앱 ============ */
-const state = {on:new Set(Object.keys(CATS)), q:'', sel:null};
-const $ = s => document.querySelector(s);
-const key = KAKAO_JS_KEY || new URLSearchParams(location.search).get('key');
-if(!key){
-  const m=$('#keymsg'); m.style.display='flex';
-  m.innerHTML='카카오 JavaScript 키가 필요해.<br>파일 상단 <b>KAKAO_JS_KEY</b>에 넣거나 주소 뒤에 <b>?key=키</b>를 붙여줘.<br><span style="color:#888;font-size:12px">카카오 개발자콘솔에 이 페이지 도메인 등록도 필요</span>';
-}
+/* ===== 상태/유틸 ===== */
+const state={on:new Set(Object.keys(CATS)),q:'',sel:null};
+const $=s=>document.querySelector(s);
+const mobile=()=>matchMedia('(max-width:800px)').matches;
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const rich=s=>esc(s).replace(/&lt;b&gt;/g,'<b>').replace(/&lt;\/b&gt;/g,'</b>');
+const visible=d=>d.cat.some(c=>state.on.has(c))&&(!state.q||(d.n+d.area+d.hook).includes(state.q));
 
+/* ===== 칩 ===== */
 function renderChips(){
-  const host=$('#chips'); host.innerHTML='';
+  const h=$('#chips');h.innerHTML='';
   Object.entries(CATS).forEach(([k,v])=>{
-    const b=document.createElement('button'); b.className='chip'; b.title=v.desc;
-    b.setAttribute('aria-pressed', state.on.has(k));
+    const b=document.createElement('button');b.className='chip';b.title=v.desc;b.setAttribute('aria-pressed',state.on.has(k));
     b.innerHTML=`<i style="background:${v.hex}"></i>${k} <span style="color:#999">${D.filter(d=>d.cat.includes(k)).length}</span>`;
-    b.onclick=()=>{ state.on.has(k)?state.on.delete(k):state.on.add(k); render(); };
-    host.append(b);
+    b.onclick=()=>{state.on.has(k)?state.on.delete(k):state.on.add(k);state.sel=null;render();};
+    h.append(b);
   });
 }
-const visible = d => d.cat.some(c=>state.on.has(c)) && (!state.q || (d.n+d.area).includes(state.q));
 
-let map, overlays=[];
-function renderList(){
-  const host=$('#list'); host.innerHTML='';
+/* ===== 목록 / 상세 ===== */
+function renderBody(){
+  const b=$('#body');
+  if(state.sel!==null){
+    const d=D[state.sel];
+    b.innerHTML=`<div class="detail">
+      <button class="back" id="back">‹ 목록</button>
+      <div class="d-title">${esc(d.n)}</div>
+      <div class="d-area">${esc(d.area)} · ${esc(d.spec)}</div>
+      <div class="tags">${d.cat.map(c=>`<span class="tag" style="background:${CATS[c].hex}">${c}</span>`).join('')}</div>
+      <div class="kpis">${d.k.map(([v,l])=>`<div class="kpi"><div class="v">${esc(v)}</div><div class="l">${esc(l)}</div></div>`).join('')}</div>
+      <div class="sec"><h3><i style="background:var(--c3)"></i>투자 포인트</h3><ul class="pts good">${d.pts.map(p=>`<li>${rich(p)}</li>`).join('')}</ul></div>
+      <div class="sec"><h3><i style="background:#c0432c"></i>리스크·확인할 것</h3><ul class="pts bad">${d.risks.map(p=>`<li>${esc(p)}</li>`).join('')}</ul></div>
+      <div class="sec"><h3><i style="background:#999"></i>규제·대출</h3><div class="reg">${esc(d.reg)}</div>${d.deal?`<div class="deal">${esc(d.deal)}</div>`:''}</div>
+    </div>`;
+    $('#back').onclick=()=>{state.sel=null;render();};
+    b.scrollTop=0;return;
+  }
+  b.innerHTML='';
   D.forEach((d,i)=>{
-    if(!visible(d)) return;
-    const el=document.createElement('div'); el.className='item'+(state.sel===i?' on':''); el.id='it'+i;
-    const tags=d.cat.map(c=>`<span class="tag" style="background:${CATS[c].hex}">${c}</span>`).join(' ');
-    el.innerHTML=`<div class="top"><span class="nm"></span><span class="pr"></span></div>
-      <div class="meta"></div><div style="margin-top:5px;display:flex;gap:4px;flex-wrap:wrap">${tags}</div>
-      <div class="detail"><div class="why"></div><div class="deal" style="margin-top:4px"></div><div class="risk"></div><div class="reg"></div></div>`;
-    el.querySelector('.nm').textContent=d.n;
-    el.querySelector('.pr').textContent=d.price;
-    el.querySelector('.meta').textContent=`${d.area} · ${d.spec}`;
-    el.querySelector('.why').textContent=d.why;
-    el.querySelector('.deal').textContent=d.deal||'';
-    el.querySelector('.risk').textContent=d.risk&&d.risk!=='—'?'⚠ '+d.risk:'';
-    el.querySelector('.reg').textContent='규제: '+d.reg;
+    if(!visible(d))return;
+    const el=document.createElement('div');el.className='item';
+    el.innerHTML=`<span class="dot" style="background:${CATS[d.cat[0]].hex}"></span><div class="main">
+      <div class="top"><span class="nm">${esc(d.n)}</span><span class="pr">${esc(d.price)}</span></div>
+      <div class="meta">${esc(d.area)} · ${esc(d.spec)}</div><div class="hook">${esc(d.hook)}</div></div>`;
     el.onclick=()=>select(i,true);
-    host.append(el);
+    b.append(el);
   });
 }
-function select(i,pan){
-  state.sel=i; renderList();
-  overlays.forEach(o=>o.el.classList.toggle('on',o.i===i));
-  const d=D[i];
-  if(pan && map && d._pos){
-    if(mobile()) setSheet(false);
-    map.setLevel(Math.min(map.getLevel(),6)); map.panTo(d._pos);
-  }
-  const it=document.getElementById('it'+i); if(it) it.scrollIntoView({block:'nearest',behavior:'smooth'});
-}
+
+/* ===== 지도 ===== */
+let map,overlays=[];
 function renderMap(){
-  if(!map) return;
-  overlays.forEach(o=>{const v=visible(D[o.i])?map:null; o.ov.setMap(v); o.dot.setMap(v);});
+  overlays.forEach(o=>{const v=visible(D[o.i])?map:null;o.ov.setMap(v);o.el.classList.toggle('on',o.i===state.sel);});
 }
-function render(){ renderChips(); renderList(); renderMap(); }
-$('#q').addEventListener('input',e=>{state.q=e.target.value.trim(); render();});
-const mobile=()=>window.matchMedia('(max-width:800px)').matches;
-function setSheet(open){
-  document.body.classList.toggle('sheet-open',open);
-  $('#handle').textContent=open?'목록 접기':'목록 펼치기';
-  setTimeout(()=>{ if(map){ const c=map.getCenter(); map.relayout(); map.setCenter(c);} },230);
+function render(){renderChips();renderBody();if(map)renderMap();}
+$('#q').addEventListener('input',e=>{state.q=e.target.value.trim();state.sel=null;render();});
+
+function select(i,pan){
+  state.sel=i;render();
+  const d=D[i];
+  if(mobile()) snapTo('half');
+  if(map&&d._pos){
+    if(map.getLevel()>6) map.setLevel(6);
+    // 모바일: 시트에 가리지 않게 화면 위쪽으로 오프셋
+    if(mobile()){
+      const proj=map.getProjection(),pt=proj.containerPointFromCoords(d._pos);
+      const h=$('#map').clientHeight, target=new kakao.maps.Point(pt.x, pt.y + h*0.22);
+      map.panTo(proj.coordsFromContainerPoint(target));
+    } else map.panTo(d._pos);
+  }
 }
-$('#handle').addEventListener('click',()=>setSheet(!document.body.classList.contains('sheet-open')));
-window.addEventListener('resize',()=>{ if(map) map.relayout(); });
-render();
 
 function addOverlay(i){
-  const d=D[i]; const c=CATS[d.cat[0]].hex;
-  const el=document.createElement('div'); el.className='ov'; el.style.borderColor=c; el.style.color=c;
-  el.innerHTML='<span></span><small></small>';
-  el.firstChild.textContent=d.price; el.lastChild.textContent=d.n.replace(/\s*\(.*\)/,'').slice(0,10);
-  el.onclick=()=>{ select(i,false); };
-  const ov=new kakao.maps.CustomOverlay({position:d._pos, content:el, yAnchor:0, zIndex:3});
-  const dot=new kakao.maps.Circle({center:d._pos,radius:60,strokeWeight:2,strokeColor:c,strokeOpacity:1,fillColor:c,fillOpacity:.6});
-  dot.setMap(visible(d)?map:null);
-  overlays.push({i,ov,el,dot});
-  ov.setMap(visible(d)?map:null);
+  const d=D[i],c=CATS[d.cat[0]].hex;
+  const el=document.createElement('div');el.className='ov';el.style.borderColor=c;el.style.color=c;
+  el.innerHTML=`<span>${esc(d.price)}</span><small>${esc(d.n.replace(/\s*\(.*\)/,'').slice(0,9))}</small>`;
+  el.addEventListener('click',e=>{e.stopPropagation();select(i,false);});
+  const ov=new kakao.maps.CustomOverlay({position:d._pos,content:el,yAnchor:0,xAnchor:0,zIndex:3,clickable:true});
+  overlays.push({i,ov,el});ov.setMap(visible(d)?map:null);
 }
 
-if(key){
+/* ===== 바텀시트 드래그 (모바일) ===== */
+const sheet=$('#sheet');
+let snaps={},cur='peek',y=0;
+function calcSnaps(){
+  sheet.style.height=(innerHeight-document.querySelector('header').offsetHeight-6)+'px';
+  const H=sheet.offsetHeight;
+  snaps={full:0, half:Math.round(H*0.45), peek:H-150};
+}
+function setY(v,anim){
+  y=Math.max(0,Math.min(snaps.peek,v));
+  sheet.classList.toggle('anim',!!anim);
+  sheet.style.setProperty('--y',y+'px');
+}
+function snapTo(name){ if(!mobile())return; calcSnaps(); cur=name; setY(snaps[name],true); }
+(function initSheet(){
+  if(!mobile())return;
+  calcSnaps(); setY(snaps.peek,false);
+  let startY=0,startPos=0,lastY=0,lastT=0,vel=0,dragging=false,fromBody=false;
+  const body=$('#body');
+  const down=(e,fb)=>{
+    const t=e.touches?e.touches[0]:e;
+    dragging=true;fromBody=fb;startY=lastY=t.clientY;startPos=y;lastT=performance.now();vel=0;
+    sheet.classList.remove('anim');
+  };
+  const move=e=>{
+    if(!dragging)return;
+    const t=e.touches?e.touches[0]:e, dy=t.clientY-startY;
+    // 목록 스크롤 중이면: 맨 위에서 아래로 끌 때만 시트를 내림
+    if(fromBody){
+      if(y<=0 && (body.scrollTop>0 || dy<0)){ startY=t.clientY; return; }
+      if(e.cancelable) e.preventDefault();
+    }
+    const now=performance.now(); vel=(t.clientY-lastY)/Math.max(1,now-lastT); lastY=t.clientY; lastT=now;
+    setY(startPos+dy,false);
+  };
+  const up=()=>{
+    if(!dragging)return; dragging=false;
+    const order=['full','half','peek'];
+    let target;
+    if(Math.abs(vel)>0.45){ // 빠르게 튕기면 방향대로 한 단계
+      const idx=order.indexOf(nearest());
+      target=order[Math.max(0,Math.min(2, idx+(vel>0?1:-1)))];
+      if(vel>0&&y>snaps.half) target='peek';
+      if(vel<0&&y<snaps.half) target='full';
+    } else target=nearest();
+    snapTo(target);
+  };
+  const nearest=()=>Object.entries(snaps).sort((a,b)=>Math.abs(a[1]-y)-Math.abs(b[1]-y))[0][0];
+  const head=$('#head');
+  head.addEventListener('touchstart',e=>down(e,false),{passive:true});
+  body.addEventListener('touchstart',e=>{ if(y>0||body.scrollTop<=0) down(e,true); },{passive:true});
+  body.addEventListener('touchmove',e=>{ if(dragging && (y>0 || fromBody)) move(e); },{passive:false});
+  head.addEventListener('touchmove',move,{passive:false});
+  window.addEventListener('touchend',up);
+  // 시트가 덜 올라와 있을 땐 목록 자체 스크롤 막고 시트를 올림
+  body.addEventListener('scroll',()=>{ if(y>0) body.scrollTop=0; });
+  $('#q').addEventListener('focus',()=>snapTo('full'));
+  head.addEventListener('click',e=>{ if(e.target.tagName!=='INPUT' && Math.abs(lastY-startY)<4) snapTo(cur==='peek'?'half':cur==='half'?'full':'peek'); });
+  addEventListener('resize',()=>{calcSnaps();setY(snaps[cur],false);});
+})();
+
+render();
+
+/* ===== 카카오 로드 ===== */
+(function(){
   const s=document.createElement('script');
-  s.src=`https://dapi.kakao.com/v2/maps/sdk.js?appkey=${encodeURIComponent(key)}&libraries=services&autoload=false`;
-  s.onerror=()=>{const m=$('#keymsg');m.style.display='flex';m.textContent='카카오 SDK 로드 실패. 키 또는 도메인 등록을 확인해줘.';};
+  s.src=`https://dapi.kakao.com/v2/maps/sdk.js?appkey=${KAKAO_JS_KEY}&libraries=services&autoload=false`;
+  s.onerror=()=>{const m=$('#keymsg');m.style.display='flex';m.innerHTML='지도를 불러오지 못했어.<br><span style="font-size:12px">카카오 개발자콘솔 &gt; 플랫폼 &gt; Web에 이 주소가 등록돼 있는지 확인</span>';};
   s.onload=()=>kakao.maps.load(init);
   document.head.append(s);
-}
-
+})();
 function init(){
-  map=new kakao.maps.Map($('#map'),{center:new kakao.maps.LatLng(37.52,126.95),level:9});
-  map.addControl(new kakao.maps.ZoomControl(), kakao.maps.ControlPosition.RIGHT);
-  const places=new kakao.maps.services.Places();
-  const bounds=new kakao.maps.LatLngBounds();
-  let pending=0;
-  const done=()=>{ if(--pending===0 && !bounds.isEmpty()) map.setBounds(bounds); };
+  map=new kakao.maps.Map($('#map'),{center:new kakao.maps.LatLng(37.5,126.95),level:9});
+  map.addControl(new kakao.maps.ZoomControl(),kakao.maps.ControlPosition.RIGHT);
+  kakao.maps.event.addListener(map,'click',()=>{ if(mobile()) snapTo('peek'); });
+  const places=new kakao.maps.services.Places(),bounds=new kakao.maps.LatLngBounds();
+  let pending=D.length;
+  const done=()=>{ if(--pending===0&&!bounds.isEmpty()) map.setBounds(bounds,40,40,mobile()?160:40,40); };
   D.forEach((d,i)=>{
-    pending++;
-    if(d.lat){ d._pos=new kakao.maps.LatLng(d.lat,d.lng); bounds.extend(d._pos); addOverlay(i); done(); return; }
-    places.keywordSearch(d.q||d.n,(res,status)=>{
-      if(status===kakao.maps.services.Status.OK){
-        d._pos=new kakao.maps.LatLng(+res[0].y,+res[0].x); bounds.extend(d._pos); addOverlay(i);
-      } else console.warn('위치 못 찾음:',d.n);
+    if(d.lat){d._pos=new kakao.maps.LatLng(d.lat,d.lng);bounds.extend(d._pos);addOverlay(i);done();return;}
+    places.keywordSearch(d.q||d.n,(res,st)=>{
+      if(st===kakao.maps.services.Status.OK){d._pos=new kakao.maps.LatLng(+res[0].y,+res[0].x);bounds.extend(d._pos);addOverlay(i);}
       done();
     });
   });
-  // 확대 수준에 따라 라벨 숨김(멀리선 점만)
-  kakao.maps.event.addListener(map,'zoom_changed',()=>{
-    const far=map.getLevel()>9; overlays.forEach(o=>o.el.style.display=far?'none':'');
-  });
+  const lab=()=>{const far=map.getLevel()>8;overlays.forEach(o=>o.el.classList.toggle('mini',far));};
+  kakao.maps.event.addListener(map,'zoom_changed',lab);
 }
 </script>
 </body>
