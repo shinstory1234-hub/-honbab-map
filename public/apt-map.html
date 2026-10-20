@@ -85,6 +85,13 @@ aside{width:420px;background:var(--panel);border-left:1px solid var(--line);disp
 .chk{list-style:none;display:flex;flex-direction:column;gap:7px}
 .chk li{font-size:13.5px;line-height:1.5;padding-left:20px;position:relative;color:#4a3530}
 .chk li::before{content:"!";position:absolute;left:4px;top:0;font-weight:800;color:var(--bad)}
+.ceil{display:flex;justify-content:space-between;gap:10px;margin-top:10px;border:1px dashed #cfcac0;border-radius:12px;padding:10px 12px}
+.ceil .l{font-size:11.5px;color:var(--muted)}
+.ceil .v{font-size:16px;font-weight:800;margin-top:2px}
+.ceil .r{text-align:right}
+.pin.auto{background:#fff;color:var(--c);border:2px solid var(--c);padding:2px 7px 3px}
+.pin.auto::after{border-top-color:var(--c)}
+.cnt{padding:8px 16px;font-size:12px;color:var(--muted);background:var(--soft);border-bottom:1px solid var(--line)}
 .fine{font-size:11.5px;color:var(--muted);margin-top:18px;line-height:1.55}
 
 .pin{background:var(--c);color:#fff;border-radius:9px;padding:4px 8px 5px;min-width:54px;text-align:center;box-shadow:0 3px 10px rgba(0,0,0,.22);transform:translate(-50%,-100%) translateY(-8px);cursor:pointer;font-family:Pretendard,sans-serif;position:relative;line-height:1.15}
@@ -148,7 +155,9 @@ aside{width:420px;background:var(--panel);border-left:1px solid var(--line);disp
 </main>
 
 <script src="apt-data.js"></script>
+<script src="apt-auto.js"></script>
 <script>
+D.push(...(window.AUTO||[]));
 const KAKAO_JS_KEY='106bb734e8600621686fade2de7f8afb';
 const $=s=>document.querySelector(s);
 const mobile=()=>matchMedia('(max-width:800px)').matches;
@@ -157,6 +166,12 @@ const eok=v=>{ if(v==null) return '—'; let e=Math.floor(v/10000), m=Math.round
   if(m>=10000){e++;m=0;} return e? (m? `${e}억 ${m.toLocaleString()}` : `${e}억`) : `${m.toLocaleString()}만`; };
 const short=v=>v==null?'—':(Math.round(v/1000)/10)+'억';
 
+function ceilOf(d){
+  if(d.ceil) return d.ceil;
+  const t=d.area.split(' '), k=t[t.length-2]+'|'+t[t.length-1];
+  return (window.BENCH&&BENCH[k])? BENCH[k]*34 : null;
+}
+function pyNum(d){const m=String(d.py).match(/\d+/);return m?+m[0]:null;}
 function money(d){
   if(d.reg==='villa'||d.p==null) return null;
   const P=d.p, cap=60000, r={};
@@ -186,6 +201,8 @@ const priceLabel=d=>d.p==null?d.py:`${d.py} ${short(d.p)}`;
 
 function renderList(){
   const b=$('#body');b.innerHTML='';
+  const nv=D.filter(visible).length, nc=D.filter(d=>visible(d)&&!d.auto).length;
+  const h=document.createElement('div');h.className='cnt';h.textContent=`${nv}개 단지 · 직접 분석 ${nc} + 기준 자동선별 ${nv-nc}`;b.append(h);
   D.forEach((d,i)=>{
     if(!visible(d))return;
     const el=document.createElement('div');el.className='item';
@@ -206,6 +223,11 @@ function renderDetail(i){
     <div class="d-name">${esc(d.n)}${d.tagline?` <span style="font-size:13px;color:var(--muted);font-weight:600">${esc(d.tagline)}</span>`:''}</div>
     <div class="d-area">${esc(d.area)}${d.year?` · ${d.year}년 입주`:''}${d.units?` · ${d.units.toLocaleString()}세대`:''}</div>
     <div class="hero"><div class="h">${esc(d.headline)}</div><div class="s">${esc(d.sub)}</div></div>`;
+  const ce=ceilOf(d), pn=pyNum(d);
+  if(ce&&d.p&&pn){
+    const mp=(d.auto&&d.cmp&&d.cmp.rows[0]&&d.cmp.rows[0][2])?d.cmp.rows[0][1]:d.p/pn;const ratio=Math.round(mp/(ce/34)*100);
+    html+=`<div class="ceil"><div><div class="l">입지 천장 · 이 동네 새 아파트 34평</div><div class="v">약 ${eok(Math.round(ce/100)*100)}</div></div><div class="r"><div class="l">평당가로 보면</div><div class="v">천장의 ${ratio}%</div></div></div>`;
+  }
   if(m){
     html+=`<div class="money"><div class="m"><div class="l">${esc(d.py)} 시세</div><div class="v">${eok(d.p)}</div></div>`;
     if(m.gap!=null) html+=`<div class="m hi"><div class="l">전세 끼면 필요한 돈</div><div class="v">${eok(m.gap)}</div><div class="x">${esc(m.gapNote)}</div></div>`;
@@ -222,6 +244,7 @@ function renderDetail(i){
       d.cmp.rows.map(r=>`<div class="bar${r[2]?' me':''}"><span>${esc(r[0])}</span><div class="t"><i style="width:${Math.round(r[1]/max*100)}%"></i></div><span class="v">${r[1].toLocaleString()}${pct?'%':''}</span></div>`).join('')+
       `</div>${d.cmp.note?`<div class="cmpnote">${esc(d.cmp.note)}</div>`:''}</div>`;
   }
+  if(!d.stage&&d.stage_text) html+=`<div class="sec">${H('재건축 어디까지 왔나')}<div class="stnote">${esc(d.stage_text)}</div></div>`;
   if(d.stage){
     html+=`<div class="sec">${H('재건축 어디까지 왔나')}<div class="steps">`+
       d.stage.steps.map((s,k)=>`<div class="${k<d.stage.at?'done':k===d.stage.at?'now':''}">${esc(s)}</div>`).join('')+
@@ -276,7 +299,7 @@ function select(i,fromList){
 
 function addPin(i){
   const d=D[i],c=CATS[d.cat[0]].hex;
-  const el=document.createElement('div');el.className='pin';el.style.setProperty('--c',c);
+  const el=document.createElement('div');el.className='pin'+(d.auto?' auto':'');el.style.setProperty('--c',c);
   el.innerHTML=`<b>${esc(d.p==null?'지분':short(d.p))}</b><small>${esc(d.s||d.n)}</small>`;
   el.addEventListener('click',e=>{e.stopPropagation();select(i,false);});
   const ov=new kakao.maps.CustomOverlay({position:d._pos,content:el,xAnchor:0,yAnchor:0,zIndex:3,clickable:true});
