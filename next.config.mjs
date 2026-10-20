@@ -3,7 +3,7 @@ const nextConfig = {
   async rewrites() {
     return {
       beforeFiles: [
-        { source: '/', has: [{ type: 'host', value: 'apt-6eok.vercel.app' }], destination: '/apt-map.html' },
+        { source: '/', has: [{ type: 'host', value: 'apt-6eok.vercel.app' }], destination: '/apt-frame.html' },
       ],
     }
   },
@@ -14,7 +14,7 @@ const nextConfig = {
         headers: [
           {
             key: 'Content-Security-Policy',
-            value: "script-src 'self' 'unsafe-eval' 'unsafe-inline' *.kakao.com *.kakaocdn.net *.daumcdn.net t1.daumcdn.net; frame-src 'self' *.kakao.com; img-src 'self' data: *.kakaocdn.net *.daumcdn.net;",
+            value: "script-src 'self' 'unsafe-eval' 'unsafe-inline' *.kakao.com *.kakaocdn.net *.daumcdn.net t1.daumcdn.net; frame-src 'self' *.kakao.com https://honbab-map.vercel.app; img-src 'self' data: *.kakaocdn.net *.daumcdn.net;",
           },
         ],
       },
