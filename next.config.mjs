@@ -1,9 +1,11 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   async rewrites() {
-    return [
-      { source: '/', has: [{ type: 'host', value: 'apt-6eok.vercel.app' }], destination: '/apt-map.html' },
-    ]
+    return {
+      beforeFiles: [
+        { source: '/', has: [{ type: 'host', value: 'apt-6eok.vercel.app' }], destination: '/apt-map.html' },
+      ],
+    }
   },
   async headers() {
     return [
