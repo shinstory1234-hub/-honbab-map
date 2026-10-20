@@ -6,20 +6,17 @@
 <title>6억 이하 특이점 단지 지도</title>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css">
 <style>
-:root{
-  --bg:#f6f5f2;--panel:#fff;--fg:#17171a;--muted:#6b6b73;--line:#ebe9e4;--soft:#f7f6f3;
-  --c1:#e2553b;--c2:#2f6fde;--c3:#1f9d6b;--c4:#8a4fd8;
-}
+:root{--bg:#f4f3ef;--panel:#fff;--fg:#141417;--muted:#6e6e76;--line:#ecebe6;--soft:#f6f5f2;--good:#16865c;--bad:#c2452d}
 *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
 html,body{height:100%;overflow-x:hidden;max-width:100%}
-body{font-family:Pretendard,-apple-system,sans-serif;background:var(--bg);color:var(--fg);height:100vh;height:100dvh;overflow:hidden;display:flex;flex-direction:column}
+body{font-family:Pretendard,-apple-system,sans-serif;background:var(--bg);color:var(--fg);height:100vh;height:100dvh;overflow:hidden;display:flex;flex-direction:column;letter-spacing:-.2px}
 button{font:inherit;color:inherit;background:none;border:none;cursor:pointer}
 
 header{padding:14px 18px;border-bottom:1px solid var(--line);background:var(--panel);display:flex;flex-wrap:wrap;gap:10px 18px;align-items:center;z-index:5}
-header h1{font-size:17px;font-weight:700;letter-spacing:-.3px}
+header h1{font-size:17px;font-weight:750}
 header .sub{font-size:12px;color:var(--muted);margin-top:2px}
 .chips{display:flex;gap:6px;margin-left:auto}
-.chip{border:1px solid var(--line);background:#fff;border-radius:999px;padding:6px 11px;font-size:12.5px;display:flex;align-items:center;gap:6px;white-space:nowrap;transition:opacity .15s}
+.chip{border:1px solid var(--line);background:#fff;border-radius:999px;padding:6px 11px;font-size:12.5px;display:flex;align-items:center;gap:6px;white-space:nowrap}
 .chip i{width:9px;height:9px;border-radius:50%}
 .chip[aria-pressed=false]{opacity:.35}
 
@@ -28,88 +25,114 @@ main{flex:1;display:flex;min-height:0;position:relative}
 #map{position:absolute;inset:0}
 #keymsg{display:none;position:absolute;inset:0;align-items:center;justify-content:center;text-align:center;font-size:14px;line-height:1.7;padding:24px;color:var(--muted);z-index:2;background:var(--bg)}
 
-/* 사이드/시트 */
-aside{width:400px;background:var(--panel);border-left:1px solid var(--line);display:flex;flex-direction:column;min-height:0;z-index:6}
+aside{width:420px;background:var(--panel);border-left:1px solid var(--line);display:flex;flex-direction:column;min-height:0;z-index:6}
 .sheet-head{flex:none}
 .grab{display:none}
 .search{padding:10px 12px;border-bottom:1px solid var(--line)}
 .search input{width:100%;border:1px solid var(--line);border-radius:10px;padding:9px 11px;font:inherit;font-size:14px;background:var(--soft)}
-.search input:focus{outline:2px solid #cfcac0;background:#fff}
 .body{flex:1;overflow:auto;-webkit-overflow-scrolling:touch;overscroll-behavior:contain}
 
-/* 목록 */
-.item{padding:13px 16px;border-bottom:1px solid var(--line);cursor:pointer;display:flex;gap:10px;align-items:flex-start}
+.item{padding:14px 16px;border-bottom:1px solid var(--line);cursor:pointer}
 .item:active{background:var(--soft)}
-.item .dot{width:8px;height:8px;border-radius:50%;margin-top:7px;flex:none}
-.item .main{flex:1;min-width:0}
-.item .top{display:flex;gap:8px;align-items:baseline}
-.item .nm{font-weight:650;font-size:15px;letter-spacing:-.2px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.item .pr{margin-left:auto;font-weight:750;font-size:15px;white-space:nowrap;font-variant-numeric:tabular-nums}
-.item .meta{font-size:12.5px;color:var(--muted);margin-top:3px}
-.item .hook{font-size:13px;margin-top:5px;color:#33333a;line-height:1.45}
+.item .row{display:flex;gap:8px;align-items:baseline}
+.item .nm{font-weight:700;font-size:15px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.item .tg{font-size:11px;color:var(--muted);white-space:nowrap}
+.item .pr{margin-left:auto;font-weight:800;font-size:15px;white-space:nowrap;font-variant-numeric:tabular-nums}
+.item .hl{font-size:13.5px;margin-top:4px;line-height:1.45;font-weight:600}
+.item .meta{font-size:12px;color:var(--muted);margin-top:5px;display:flex;gap:6px;flex-wrap:wrap;align-items:center}
+.pill{font-size:10.5px;font-weight:700;border-radius:5px;padding:2px 6px;color:#fff}
 
-/* 상세 카드 */
-.detail{padding:6px 16px 28px}
-.back{display:flex;align-items:center;gap:4px;font-size:13px;color:var(--muted);padding:8px 0}
-.d-title{font-size:20px;font-weight:750;letter-spacing:-.4px;margin-top:2px}
+.detail{padding:4px 18px 40px}
+.back{font-size:13px;color:var(--muted);padding:10px 0 6px}
+.d-tags{display:flex;gap:5px;flex-wrap:wrap}
+.d-name{font-size:21px;font-weight:800;margin-top:8px;letter-spacing:-.5px}
 .d-area{font-size:13px;color:var(--muted);margin-top:3px}
-.tags{display:flex;gap:5px;flex-wrap:wrap;margin-top:8px}
-.tag{font-size:11px;font-weight:650;color:#fff;border-radius:5px;padding:3px 7px}
-.kpis{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:14px}
-.kpi{background:var(--soft);border-radius:10px;padding:9px 10px}
-.kpi .v{font-size:16px;font-weight:750;font-variant-numeric:tabular-nums;letter-spacing:-.3px}
-.kpi .l{font-size:11px;color:var(--muted);margin-top:2px}
-.sec{margin-top:18px}
-.sec h3{font-size:13px;font-weight:700;margin-bottom:8px;display:flex;align-items:center;gap:6px}
-.sec h3 i{width:4px;height:14px;border-radius:2px;display:inline-block}
-.pts{list-style:none;display:flex;flex-direction:column;gap:8px}
-.pts li{font-size:14px;line-height:1.55;padding-left:22px;position:relative}
-.pts li b{font-weight:700}
-.pts li::before{position:absolute;left:0;top:0;font-weight:700}
-.pts.good li::before{content:"✓";color:var(--c3)}
-.pts.bad li::before{content:"!";color:#c0432c;left:5px}
-.pts.bad li{color:#5a3a33}
-.reg{font-size:13px;background:var(--soft);border-radius:10px;padding:10px 12px;line-height:1.5}
-.deal{font-size:12.5px;color:var(--muted);margin-top:10px}
+.hero{margin-top:14px;padding:16px;border-radius:14px;background:linear-gradient(135deg,#1c1c22,#2c2b33);color:#fff}
+.hero .h{font-size:18px;font-weight:800;line-height:1.38;letter-spacing:-.5px}
+.hero .s{font-size:13.5px;line-height:1.6;color:#d7d6dc;margin-top:8px}
+.money{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:12px}
+.m{background:var(--soft);border-radius:12px;padding:11px 12px}
+.m .l{font-size:11.5px;color:var(--muted)}
+.m .v{font-size:18px;font-weight:800;margin-top:3px;font-variant-numeric:tabular-nums}
+.m .x{font-size:11px;color:var(--muted);margin-top:2px;line-height:1.4}
+.m.hi{background:#fff4ec}
+.m.hi .v{color:#c2452d}
+.sec{margin-top:22px}
+.sec h3{font-size:14.5px;font-weight:800;margin-bottom:10px;display:flex;gap:7px;align-items:center}
+.sec h3 .n{width:20px;height:20px;border-radius:6px;background:#141417;color:#fff;font-size:11px;display:inline-flex;align-items:center;justify-content:center}
+.bars{display:flex;flex-direction:column;gap:7px}
+.bar{display:grid;grid-template-columns:118px 1fr 58px;gap:8px;align-items:center;font-size:12.5px}
+.bar .t{height:22px;background:var(--soft);border-radius:6px;overflow:hidden}
+.bar .t i{display:block;height:100%;border-radius:6px;background:#c9c6be}
+.bar.me .t i{background:var(--c)}
+.bar.me{font-weight:700}
+.bar .v{text-align:right;font-variant-numeric:tabular-nums}
+.cmpnote{font-size:12.5px;color:var(--muted);margin-top:8px;line-height:1.5}
+.steps{display:flex;gap:4px;margin-top:2px}
+.steps div{flex:1;text-align:center;font-size:10.5px;color:var(--muted);line-height:1.3}
+.steps div::before{content:"";display:block;height:6px;border-radius:3px;background:#e4e2dc;margin-bottom:6px}
+.steps .done::before{background:#8a4fd8}
+.steps .now{color:#141417;font-weight:700}
+.steps .now::before{background:linear-gradient(90deg,#8a4fd8 50%,#e4e2dc 50%)}
+.stnote{font-size:12.5px;margin-top:9px;background:#f4effc;color:#4b2c80;border-radius:8px;padding:8px 10px}
+.tl{list-style:none;position:relative}
+.tl::before{content:"";position:absolute;left:5px;top:8px;bottom:14px;width:2px;background:#e4e2dc}
+.tl li{position:relative;display:grid;grid-template-columns:22px 64px 1fr;padding-bottom:12px;font-size:13.5px;line-height:1.45}
+.tl li::before{content:"";width:8px;height:8px;margin-top:5px;border-radius:50%;background:#fff;border:2px solid var(--c,#2f6fde);position:relative;z-index:1}
+.tl b{font-size:12px;color:var(--muted);font-weight:700;padding-top:1px}
+.fit{display:flex;flex-wrap:wrap;gap:6px}
+.fit span{font-size:12.5px;background:#eef6f1;color:#185c3e;border-radius:999px;padding:6px 10px}
+.chk{list-style:none;display:flex;flex-direction:column;gap:7px}
+.chk li{font-size:13.5px;line-height:1.5;padding-left:20px;position:relative;color:#4a3530}
+.chk li::before{content:"!";position:absolute;left:4px;top:0;font-weight:800;color:var(--bad)}
+.fine{font-size:11.5px;color:var(--muted);margin-top:18px;line-height:1.55}
 
-/* 지도 라벨 */
-.ov{background:#fff;border:2px solid;border-radius:9px;padding:3px 8px;font-size:12px;font-weight:750;white-space:nowrap;box-shadow:0 2px 8px rgba(0,0,0,.18);transform:translate(-50%,-130%);cursor:pointer;font-family:Pretendard,sans-serif;position:relative}
-.ov::after{content:"";position:absolute;left:50%;bottom:-7px;margin-left:-6px;border:6px solid transparent;border-top-color:inherit;border-bottom:0}
-.ov small{font-weight:550;color:#555;margin-left:4px}
-.ov.on{transform:translate(-50%,-130%) scale(1.12);z-index:10}
-.ov.mini small{display:none}
-.note{padding:10px 16px;font-size:11px;color:var(--muted);border-top:1px solid var(--line)}
+.pin{background:var(--c);color:#fff;border-radius:9px;padding:4px 8px 5px;min-width:54px;text-align:center;box-shadow:0 3px 10px rgba(0,0,0,.22);transform:translate(-50%,-100%) translateY(-8px);cursor:pointer;font-family:Pretendard,sans-serif;position:relative;line-height:1.15}
+.pin::after{content:"";position:absolute;left:50%;bottom:-6px;margin-left:-6px;border:6px solid transparent;border-top-color:var(--c);border-bottom:0}
+.pin b{display:block;font-size:13px;font-weight:800;letter-spacing:-.3px}
+.pin small{display:block;font-size:10px;font-weight:600;opacity:.92;white-space:nowrap;max-width:84px;overflow:hidden;text-overflow:ellipsis}
+.pin.mini small{display:none}
+.pin.mini{padding:3px 7px;min-width:0}
+.pin.hide{display:none}
+.card{width:250px;background:#fff;border-radius:14px;box-shadow:0 8px 28px rgba(0,0,0,.22);transform:translate(-50%,calc(-100% - 14px));font-family:Pretendard,sans-serif;cursor:pointer;position:relative}
+.card::after{content:"";position:absolute;left:50%;bottom:-8px;margin-left:-8px;border:8px solid transparent;border-top-color:#141417;border-bottom:0}
+.card .top{padding:11px 13px 9px;border-top:4px solid;border-radius:14px 14px 0 0}
+.card .nm{font-size:14.5px;font-weight:800;padding-right:18px}
+.card .ar{font-size:11px;color:var(--muted);margin-top:1px}
+.card .hl{font-size:13px;font-weight:700;margin-top:7px;line-height:1.4}
+.card .nums{display:flex;border-top:1px solid var(--line)}
+.card .nums>div{flex:1;padding:8px 12px}
+.card .nums>div+div{border-left:1px solid var(--line)}
+.card .nums .l{font-size:10.5px;color:var(--muted)}
+.card .nums .v{font-size:14px;font-weight:800;margin-top:1px}
+.card .go{display:block;text-align:center;font-size:12.5px;font-weight:700;padding:9px;background:#141417;color:#fff;border-radius:0 0 14px 14px}
+.card .x{position:absolute;right:6px;top:8px;width:24px;height:24px;color:#999;font-size:16px}
 
-/* ===== 모바일: 드래그 바텀시트 ===== */
 @media (max-width:800px){
   header{padding:10px 12px 9px;flex-direction:column;align-items:stretch;gap:7px}
+  header>*{min-width:0;max-width:100%}
   header h1{font-size:15.5px}
   header .sub{font-size:11px}
-  header>*{min-width:0;max-width:100%}
-  .chips{margin-left:0;overflow-x:auto;width:100%;scrollbar-width:none;-webkit-overflow-scrolling:touch}
+  .chips{margin-left:0;overflow-x:auto;width:100%;scrollbar-width:none}
   .chips::-webkit-scrollbar{display:none}
-  aside{
-    position:fixed;left:0;right:0;bottom:0;width:100%;
-    height:calc(100dvh - 70px);
-    border:none;border-radius:16px 16px 0 0;box-shadow:0 -6px 24px rgba(0,0,0,.14);
-    transform:translateY(var(--y,60dvh));will-change:transform;
-  }
+  .chip{flex:none}
+  aside{position:fixed;left:0;right:0;bottom:0;width:100%;border:none;border-radius:16px 16px 0 0;box-shadow:0 -6px 24px rgba(0,0,0,.14);transform:translateY(var(--y,60dvh));will-change:transform}
   aside.anim{transition:transform .32s cubic-bezier(.2,.8,.2,1)}
-  .sheet-head{touch-action:none;cursor:grab}
+  .sheet-head{touch-action:none}
   .grab{display:flex;justify-content:center;padding:9px 0 3px}
   .grab span{width:40px;height:5px;border-radius:3px;background:#d4d0c8}
-  .search{border-bottom:1px solid var(--line);padding:6px 12px 10px}
+  .search{padding:6px 12px 10px}
   .search input{font-size:16px}
-  .note{display:none}
   .body{padding-bottom:env(safe-area-inset-bottom)}
+  .card{width:236px}
 }
 </style>
 </head>
 <body>
 <header>
   <div>
-    <h1>6억 이하 특이점 단지</h1>
-    <div class="sub">리치고 시세·국토부 실거래 기준 · 2026.10.20</div>
+    <h1>6억 이하, 남들이 아직 안 본 단지</h1>
+    <div class="sub">리치고 시세·국토부 실거래 · 2026.10.20 기준</div>
   </div>
   <div class="chips" id="chips"></div>
 </header>
@@ -121,380 +144,208 @@ aside{width:400px;background:var(--panel);border-left:1px solid var(--line);disp
       <div class="search"><input id="q" placeholder="단지·동네 검색" autocomplete="off"></div>
     </div>
     <div class="body" id="body"></div>
-    <div class="note">평당가 비교는 같은 단지 안 평형끼리. "동네 신축 대비"는 같은 동 신축(없으면 같은 동 대단지로 추정) 평당가 대비 비율.</div>
   </aside>
 </main>
 
+<script src="apt-data.js"></script>
 <script>
-const KAKAO_JS_KEY = '106bb734e8600621686fade2de7f8afb';
-
-const CATS = {
-  '소형할인': {hex:'#e2553b', desc:'신축인데 같은 단지 큰 평형보다 평당가가 싼 소형'},
-  '천지개벽': {hex:'#2f6fde', desc:'동네가 통째로 바뀌는 곳'},
-  '하방경직': {hex:'#1f9d6b', desc:'재건축 안 돼도 동네 신축 대비 싸서 차익 여지'},
-  '정비대기열': {hex:'#8a4fd8', desc:'선도지구·정비구역 대기열 진입/직후'}
-};
-
-/* k: 핵심지표 3개 [값,라벨], hook: 목록 한줄, pts: 투자 포인트, risks: 리스크 */
-const D = [
-  {n:'주안파크자이더플래티넘', cat:['소형할인','천지개벽'], area:'인천 미추홀 주안동', spec:'16평 · 4년차 · 2,054세대', price:'2.42억',
-   k:[['2.42억','16평 시세'],['−18%','24평 대비 평당가'],['0.47억','갭(전세 81%)']],
-   hook:'신축 16평이 2억대, 갭 4,700만',
-   pts:['<b>소형 역프리미엄</b>: 16평 평당 1,512만으로 같은 단지 24평(1,850만)보다 18% 쌈. 정상이면 소형이 평당 더 비싸야 함',
-        '<b>갭 0.47억</b>: 전세 1.95억(전세가율 81%) — 비규제라 전세 끼고 매수 가능',
-        '<b>동네 변화</b>: 주안·학익 재개발 신축 연쇄 + 시티오씨엘 1.3만 가구, 수인분당 학익역(2028말 목표)·뮤지엄파크(2028)',
-        '<b>공급 공백</b>: 미추홀 2027 입주 0'],
-   risks:['소형은 저층·비선호 동 비중 높음 → 동·향 확인','역까지 도보 거리 있음(후기 기준)'],
-   reg:'비규제 · LTV 70% · 갭 가능', deal:'최근 실거래 2.53억(2026.10.8)', lat:37.447342, lng:126.6714651},
-  {n:'힐스테이트푸르지오주안', cat:['소형할인','천지개벽'], area:'인천 미추홀 주안동', spec:'19평 3.20억 / 22평 3.56억 · 4년차 · 2,958세대', price:'3.2억~',
-   k:[['3.56억','22평 시세'],['−20%','24평 대비 평당가'],['0.95억','22평 갭(73%)']],
-   hook:'22평이 24평보다 평당 20% 쌈',
-   pts:['<b>소형 역프리미엄</b>: 22평 평당 1,617만 vs 24평 2,033만(−20%), 34평 대비 −17%',
-        '<b>대단지 브랜드</b>: 2,958세대 힐스테이트·푸르지오',
-        '<b>동네 변화</b>: 주안 재개발 신축촌 + 미추홀 2027 입주 0'],
-   risks:['19·22평은 수요층이 1~2인 위주 → 매도 시 수요 폭 좁음'],
-   reg:'비규제 · 갭 가능', deal:'19평 실거래 3.18억(2026.10.6)', lat:37.452735, lng:126.6765084},
-  {n:'e편한세상부평그랑힐스', cat:['소형할인','천지개벽'], area:'인천 부평 청천동', spec:'18평 · 4년차 · 5,050세대', price:'3.04억',
-   k:[['3.04억','18평 시세'],['−18%','국평 대비 평당가'],['0.72억','갭(전세 76%)']],
-   hook:'5천 세대 신축 18평 3억',
-   pts:['<b>소형 역프리미엄</b>: 18평 평당 1,690만 vs 25·33평 2,063~2,070만(−18%)',
-        '<b>갭 0.72억</b>: 전세 2.32억(76%)',
-        '<b>동네 변화</b>: 부평 십정·청천·산곡 재개발 신축 2만 세대+, GTX-B 부평역(2031 목표)',
-        '<b>공급 공백</b>: 부평 2027 입주 0'],
-   risks:['GTX-B는 2031 목표로 장기','단지 내 경사(산 끼고 있음)'],
-   reg:'비규제 · 갭 가능', deal:'최근 실거래 2.95억(2026.8.19)', lat:37.5137563, lng:126.7016428},
-  {n:'수원센트럴아이파크자이', cat:['소형할인','천지개벽'], area:'수원 팔달 인계동', spec:'17평 · 4년차 · 3,432세대', price:'4.01억',
-   k:[['4.01억','17평 시세'],['−25%','25평 대비 평당가'],['74%','전세가율']],
-   hook:'같은 단지 25평보다 평당 25% 쌈',
-   pts:['<b>소형 역프리미엄 최대폭</b>: 17평 평당 2,357만 vs 25평 3,159만(−25%), 33평 대비 −20%',
-        '<b>하방 지지</b>: 전세 2.98억으로 전세가율 74% — 매매가 대비 전세가 높아 하락 방어',
-        '<b>동네 변화</b>: 매교·인계 재개발 신축 1만 세대+, 수원역 GTX-C'],
-   risks:['토허 → 2년 실거주 필수, 갭 불가','GTX-C 착공일 미정'],
-   reg:'규제지역·토허 · 실거주 2년 · LTV 40%(생애최초 70%)', deal:'최근 실거래 3.8억(2026.2)', lat:37.2735947, lng:127.0230789},
-  {n:'힐스테이트푸르지오수원', cat:['소형할인','천지개벽'], area:'수원 팔달 매교동', spec:'17평 4.49억 / 19평 4.81억 · 5년차 · 2,586세대', price:'4.49억~',
-   k:[['4.49억','17평 시세'],['−19%','26평 대비 평당가'],['62%','전세가율']],
-   hook:'매교역 신축 17평 4억대',
-   pts:['<b>소형 역프리미엄</b>: 17평 평당 2,638만 vs 26평 3,268만(−19%)',
-        '<b>역세권</b>: 수인분당 매교역',
-        '<b>동네 변화</b>: 매교·인계 재개발 신축촌'],
-   risks:['수인분당 급행은 매교역 무정차','토허 → 실거주 2년'],
-   reg:'규제지역·토허', deal:'', lat:37.2666828, lng:127.013833},
-  {n:'아르테자이', cat:['소형할인','천지개벽'], area:'안양 만안 안양동', spec:'16평 · 5년차 · 1,021세대', price:'4.20억',
-   k:[['4.20억','16평 시세'],['−22%','24평 대비 평당가'],['1.39억','갭(전세 67%)']],
-   hook:'안양 신축 16평 4억, 비규제',
-   pts:['<b>소형 역프리미엄</b>: 16평 평당 2,622만 vs 24평 3,371만(−22%)',
-        '<b>규제 틈새</b>: 안양이지만 만안구라 비규제 → LTV 70%, 갭 가능',
-        '<b>동네 변화</b>: 안양동 재개발 신축촌(안양역센트럴아이파크수자인 2029.4 입주) + 월판선 안양역(2029.11 목표) + 수암천 복원(966억)',
-        '<b>입지</b>: 안양예술공원·삼성산 숲세권'],
-   risks:['단지 진입로 복잡하다는 후기','월판선은 2029년 말'],
-   reg:'비규제 · 갭 가능', deal:'16평 실거래 4.4억(2026.9.30)', lat:37.4198593, lng:126.9125897},
-  {n:'안양씨엘포레자이', cat:['소형할인'], area:'안양 만안 안양동', spec:'17평 · 19평 4.63억 · 6년차 · 1,394세대', price:'3.48억~',
-   k:[['3.48억','17평 실거래'],['−18%','19평 vs 24평'],['67%','19평 전세가율']],
-   hook:'신축 17평 3억대 실거래',
-   pts:['<b>소형 역프리미엄</b>: 19평 평당 2,439만 vs 24평 2,968만(−18%)',
-        '<b>진입가</b>: 17평 3.48억 실거래(2026.9.28)',
-        '<b>규제 틈새</b>: 만안구 비규제'],
-   risks:['역에서 거리 있음, 편의시설 부족 후기'],
-   reg:'비규제 · 갭 가능', deal:'17평 실거래 3.48억(2026.9.28)', lat:37.3864288, lng:126.9227344},
-  {n:'의정부역센트럴자이&위브캐슬', cat:['소형할인','천지개벽'], area:'의정부 의정부동', spec:'20평 · 5년차 · 2,473세대', price:'4.86억',
-   k:[['4.86억','20평 시세'],['−12%','24평 대비 평당가'],['64%','전세가율']],
-   hook:'GTX-C 의정부역 신축 20평',
-   pts:['<b>소형 할인</b>: 20평 평당 2,431만 vs 24평 2,771만(−12%)',
-        '<b>교통</b>: 의정부역 1호선 + GTX-C 예정',
-        '<b>동네 변화</b>: 의정부역 링크시티 입주(34평 8.4억 실거래)'],
-   risks:['층간소음·하자 후기','GTX-C 착공일 미정'],
-   reg:'비규제 · 갭 가능', deal:'', lat:37.7313966, lng:127.0516099},
-  {n:'광명아크포레자이위브', cat:['소형할인'], area:'광명 광명동', spec:'14평 · 7년차 · 2,104세대', price:'5.89억',
-   k:[['5.89억','14평 시세'],['−13%','23평 대비 평당가'],['51%','전세가율']],
-   hook:'광명뉴타운 신축 6억 이하 유일권',
-   pts:['<b>희소성</b>: 광명 신축 중 6억 이하로 살 수 있는 거의 유일한 평형',
-        '<b>소형 할인</b>: 14평 평당 4,209만 vs 23평 4,818만(−13%)',
-        '<b>동네 변화</b>: 광명뉴타운 1.6만 세대 완성 단계'],
-   risks:['역에서 멂','전세가율 51%로 하방 지지 약함','토허 → 실거주'],
-   reg:'규제지역·토허', deal:'14평 실거래 5.75억(2026.8.21)', lat:37.4702382, lng:126.853513},
-
-  {n:'월계주공2단지', cat:['천지개벽','하방경직'], area:'서울 노원 월계동', spec:'17평 · 35년차 · 2,002세대', price:'4.39억',
-   k:[['4.39억','17평 실거래'],['3,032','서울원 주거'],['2028.7','서울원 준공']],
-   hook:'서울원(광운대역세권) 바로 옆 재건축',
-   pts:['<b>천지개벽</b>: 서울원 4.5조 원 복합개발 — 주거 3,032가구 + 아이파크몰 + HDC 본사 이전, 2028.7 준공 목표',
-        '<b>재건축 옵션</b>: 2,002세대 대단지, 재건축 추진 중',
-        '<b>교통</b>: 1호선 광운대역 + GTX-C 정차 예정'],
-   risks:['재건축은 조합설립인가 전에 사야 조합원 지위 유지','GTX-C 착공일 미정'],
-   reg:'서울 토허·투기과열 · 실거주 2년', deal:'실거래 4.39억(2026.9.23)', lat:37.6281255, lng:127.0527822},
-  {n:'중계주공2단지', cat:['하방경직'], area:'서울 노원 중계동', spec:'17평 · 35년차 · 1,800세대', price:'4.27억',
-   k:[['4.27억','17평 시세'],['48%','동네 신축 대비'],['2027','동북선 개통']],
-   hook:'은행사거리 학원가, 동네 신축 절반 가격',
-   pts:['<b>하방 경직</b>: 평당가가 동네 신축의 48% — 재건축 안 돼도 실거주 수요로 버팀',
-        '<b>학군</b>: 은행사거리 학원가 도보 10분',
-        '<b>교통 호재</b>: 동북선 2027 개통(은행사거리)'],
-   risks:['재건축 일정은 미정(장기)'],
-   reg:'서울 토허 · 실거주 2년', deal:'', lat:37.6576921, lng:127.0787349},
-  {n:'창동주공17단지', cat:['하방경직','정비대기열'], area:'서울 도봉 창동', spec:'15평 · 38년차 · 1,980세대', price:'4.0억',
-   k:[['3.95억','15평 실거래'],['53%','동네 신축 대비'],['1,980','세대']],
-   hook:'서울 재건축 4억 진입',
-   pts:['<b>정비 진행</b>: 정비구역 지정 절차 진행 중',
-        '<b>하방 경직</b>: 동네 신축 평당가의 53%',
-        '<b>동네 변화</b>: 창동 신경제중심지, 서울아레나, GTX-C 창동역'],
-   risks:['15평 → 분담금 부담 큼','지도 위치는 단지 상가'],
-   reg:'서울 토허 · 실거주 2년', deal:'실거래 3.95억(2026.10.3)', lat:37.6457209, lng:127.0531266},
-  {n:'정릉대우', cat:['하방경직'], area:'서울 성북 정릉동', spec:'18평 · 26년차 · 791세대', price:'3.57억',
-   k:[['3.57억','18평 시세'],['40%','동네 신축 대비'],['25분','광화문(추정)']],
-   hook:'광화문 25분대 서울 3억대',
-   pts:['<b>하방 경직</b>: 동네 신축 평당가의 40%','<b>직주근접</b>: 광화문 25분대(역 기준 추정)'],
-   risks:['역 접근성 약함(버스 의존)'], reg:'서울 토허', deal:'', lat:37.6177592, lng:127.0034128},
-  {n:'도봉 신창', cat:['하방경직'], area:'서울 도봉 창동', spec:'25평 · 29년차 · 609세대', price:'4.45억',
-   k:[['4.45억','25평 시세'],['35%','동네 신축 대비'],['609','세대']],
-   hook:'창동 25평 4억대',
-   pts:['<b>하방 경직</b>: 동네 신축 평당가의 35%로 비교군 중 가장 큰 격차','<b>입지</b>: 창동 신경제중심지 생활권'],
-   risks:['중소형 단지'], reg:'서울 토허', deal:'', lat:37.6407406, lng:127.0418442},
-  {n:'관악 건영1·2차', cat:['하방경직'], area:'서울 관악 신림동', spec:'1차 17평 4.45억 / 2차 24평 4.38억', price:'4.38억~',
-   k:[['4.38억','2차 24평'],['31~45%','동네 신축 대비'],['신림선','교통']],
-   hook:'신림 재개발 옆 24평 4억대',
-   pts:['<b>하방 경직</b>: 동네 신축의 31~45%','<b>동네 변화</b>: 신림 재개발, 신림선'],
-   risks:['지도 위치는 검색 결과 기준(확인 필요)'], reg:'서울 토허', deal:'', q:'신림 건영아파트 관악구'},
-  {n:'성남 태평선경', cat:['하방경직'], area:'성남 수정 태평동', spec:'13평 · 36년차 · 312세대', price:'2.85억',
-   k:[['2.85억','13평 시세'],['34%','동네 신축 대비'],['13~15억','주변 신축']],
-   hook:'주변 신축 13억대 동네의 2억대',
-   pts:['<b>하방 경직</b>: 동네 신축 평당가의 34%','<b>동네 변화</b>: 성남 구도심(신흥·태평) 재개발 신축 13~15억대'],
-   risks:['소규모 단지','토허 → 실거주'], reg:'규제지역·토허', deal:'', lat:37.446719, lng:127.1416514},
-  {n:'성남 선경논골', cat:['하방경직'], area:'성남 수정 단대동', spec:'14평 · 36년차 · 426세대', price:'2.48억',
-   k:[['2.48억','14평 시세'],['33%','동네 신축 대비'],['426','세대']],
-   hook:'성남 구도심 2억대',
-   pts:['<b>하방 경직</b>: 동네 신축 평당가의 33%'], risks:['소규모','토허'], reg:'규제지역·토허', deal:'', lat:37.4617868, lng:127.1571774},
-
-  {n:'은하수·샛별5·6단지 (평촌 A-4)', cat:['정비대기열'], area:'안양 동안 비산동', spec:'11평 3.07억 / 14평 5.39억 · 3,227세대', price:'3.07억~',
-   k:[['191%','현 용적률(최저)'],['3,227','구역 호수'],['4,866','올해 지정 물량']],
-   hook:'평촌 재건축 대기열, 용적률 최저',
-   pts:['<b>닫힌 대기열</b>: 안양시가 2027년부터 신규 주민제안 안 받음 → 2라운드 6개 구역이 평촌 재건축 대기열 전부. 탈락해도 다음 해로 자동 이월',
-        '<b>사업성</b>: 현 용적률 191%로 6개 구역 중 최저',
-        '<b>진입가</b>: 11평 3.07억부터'],
-   risks:['올해 4,866호에 14,102호 신청 → 순서 경합','토허·투기과열 → 조합설립 이후 매수 시 조합원 지위 X'],
-   reg:'규제지역·토허·투기과열', deal:'14평 실거래 5.0~5.6억', q:'은하수아파트 비산동 안양'},
-  {n:'샛별한양1단지 (평촌 A-2)', cat:['정비대기열'], area:'안양 동안 비산동', spec:'14평 5.0억 / 17평 6.1억 · 1,262세대', price:'5.0억~',
-   k:[['204%','현 용적률'],['2,744','A-2 호수'],['3,680','계획 세대']],
-   hook:'샛별한양1·2·3 통합, 범계 생활권',
-   pts:['<b>닫힌 대기열</b>: 평촌 2라운드 6개 구역 중 하나','<b>통합 재건축</b>: 샛별한양1·2·3 2,744 → 3,680세대','<b>입지</b>: 범계역·평촌 학원가'],
-   risks:['주차 세대당 0.41대','17평은 6억 초과'], reg:'규제지역·토허', deal:'17평 실거래 5.73~6.35억', q:'샛별한양1단지 안양'},
-  {n:'한가람한양 (평촌 A-5)', cat:['정비대기열'], area:'안양 동안 관양동', spec:'16평 · 952세대', price:'5.65억',
-   k:[['5.65억','16평 시세'],['2,096','A-5 호수'],['3개','인덕원 노선']],
-   hook:'인덕원 GTX-C·인동선·월판선',
-   pts:['<b>닫힌 대기열</b>: 평촌 2라운드 6개 구역 중 하나(한양·삼성·두산 통합)','<b>교통</b>: 인덕원역 GTX-C·인동선(2029)·월판선(2029말) 3중'],
-   risks:['실거래 4.9~6.3억으로 편차 큼'], reg:'규제지역·토허', deal:'실거래 4.9~6.3억', q:'한가람한양아파트 관양동'},
-  {n:'초원7단지부영 (평촌 A-13)', cat:['정비대기열'], area:'안양 동안 평촌동', spec:'15평 · 1,743세대', price:'5.41억',
-   k:[['5.41억','15평 시세'],['212%','현 용적률'],['1,743','호수']],
-   hook:'리모델링→재건축 전환, 평촌역',
-   pts:['<b>닫힌 대기열</b>: 2라운드 6개 구역 중 하나','<b>단일 단지</b>: 1,743세대 단독이라 의사결정 단순'],
-   risks:['주차 0.41대','실거래 편차 4.45~6.0억'], reg:'규제지역·토허', deal:'실거래 4.45~6.0억', q:'초원7단지부영아파트'},
-  {n:'관악성원 (평촌 A-1)', cat:['정비대기열'], area:'안양 동안 비산동', spec:'15평 4.29억 / 17평 5.43억 · 790세대', price:'4.29억~',
-   k:[['4.29억','15평 시세'],['3,386','A-1 호수'],['207%','현 용적률']],
-   hook:'평촌 대기열 중 가장 싼 진입',
-   pts:['<b>닫힌 대기열</b>: 2라운드 6개 구역 중 하나(관악타운·부영·성원)','<b>진입가</b>: 15평 4.29억'],
-   risks:['주차 0.29대(6개 중 최악)'], reg:'규제지역·토허', deal:'', q:'관악성원아파트 비산동'},
-  {n:'중동 은하마을주공1단지', cat:['정비대기열'], area:'부천 원미 중동', spec:'16~17평 · 795세대', price:'4.1~4.3억',
-   k:[['4.1억','16평 시세'],['완료','사업시행자 지정'],['3,400','계획 세대']],
-   hook:'특별정비구역+시행자 지정 끝, 비규제',
-   pts:['<b>진도</b>: 특별정비구역 지정(2026.6.15) + 한국토지신탁 사업시행자 지정(2026.8)','<b>규모</b>: 은하마을 2,387 → 약 3,400가구','<b>교통</b>: 7호선 부천시청역 + GTX-B 부천종합운동장역','<b>규제 없음</b>: 갭 가능'],
-   risks:['16평 → 분담금 부담'], reg:'비규제 · 갭 가능', deal:'', q:'은하마을주공1단지 부천'},
-  {n:'산본주공11단지', cat:['정비대기열'], area:'군포 산본동', spec:'15평 · 1,400세대', price:'4.0억',
-   k:[['4.3억','15평 실거래'],['3,892','계획 세대'],['0','군포 27 입주']],
-   hook:'LH 시행약정, 하반기 시공자 선정',
-   pts:['<b>진도</b>: 특별정비구역(2025.12) + LH 사업시행약정(2026.8), 하반기 시공자 선정','<b>공급 공백</b>: 군포 2027 입주 0','<b>규제 없음</b>'],
-   risks:['15평 → 분담금 부담'], reg:'비규제 · 갭 가능', deal:'실거래 4.3억(2026.10.16)', q:'산본주공11단지'},
-  {n:'일산 강촌동아 (16구역)', cat:['정비대기열'], area:'고양 일산동구 마두동', spec:'31평 · 720세대', price:'5.57억',
-   k:[['1.2억','갭(전세 78%)'],['4,864','계획 세대'],['31평','대지지분 큰 평형']],
-   hook:'전세가율 78%, 갭 1.2억 재건축',
-   pts:['<b>갭 투자 적합</b>: 전세 4.34억(78%) → 갭 약 1.2억, 비규제','<b>진도</b>: 강촌1·2+백마1·2 통합 입안제안 수용(2026.7.13), 2,906 → 4,864가구','<b>평형</b>: 31평이라 대지지분 여유'],
-   risks:['일산 기준용적률 300%로 1기 신도시 중 최저(350% 검토 중)'], reg:'비규제 · 갭 가능', deal:'실거래 5.75억(2026.10.18)', q:'강촌동아아파트 마두동'},
-  {n:'구월 B1 관교동 성지', cat:['정비대기열','천지개벽'], area:'인천 미추홀 관교동', spec:'31평 · 420세대', price:'3.85억',
-   k:[['3.85억','31평 시세'],['2,756','B1 호수'],['8.25','선도지구 선정']],
-   hook:'인천 선도지구 + GTX-B 인천시청',
-   pts:['<b>선도지구</b>: 인천 노후계획도시 선도지구 구월 B1 선정(2026.8.25), 권리산정기준일 고시','<b>교통</b>: 인천시청역 GTX-B(2031 목표)','<b>대지지분</b>: 30평대 3억대 — 같은 구역 쌍용 31평 3.58억, 동부 30평 3.72억','<b>공급 공백</b>: 남동·미추홀 2027 입주 0'],
-   risks:['인천 신축 시세 대비 분담금 비중 큼 → 대지지분 큰 평형 위주로'], reg:'비규제 · 갭 가능', deal:'실거래 4.24억(2026.10.17)', q:'관교동 성지아파트'},
-  {n:'연수 A7 무지개마을', cat:['정비대기열'], area:'인천 연수 동춘동', spec:'32평 · 1,068세대', price:'4.17억',
-   k:[['4.17억','32평 시세'],['4,748','A7 호수'],['8.25','선도지구 선정']],
-   hook:'인천 선도지구 최대 구역',
-   pts:['<b>선도지구</b>: 연수·선학 A7(현대1차·연수풍림2차·무지개마을·한양2차) 4,748호','<b>평형</b>: 32평 4억대'],
-   risks:['사업성은 인천 신축가에 좌우'], reg:'비규제 · 갭 가능', deal:'실거래 4.4억(2026.10.17)', q:'무지개마을아파트 동춘동 연수구'},
-  {n:'창동주공4단지', cat:['정비대기열'], area:'서울 도봉 창동', spec:'17평 · 1,710세대', price:'4.8억',
-   k:[['4.8억','17평 시세'],['2026.9','추진위 승인'],['1,710','세대']],
-   hook:'조합설립 전, 지금 매수해도 조합원',
-   pts:['<b>진도</b>: 추진위 승인(2026.9)','<b>매수 타이밍</b>: 조합설립 전이라 지금 사도 조합원 지위 유지'],
-   risks:['17평 → 분담금'], reg:'서울 토허 · 실거주 2년', deal:'', q:'창동주공4단지'},
-  {n:'안양 종합운동장 동측 재개발', cat:['천지개벽','정비대기열'], area:'안양 동안 비산동', spec:'빌라·주택 지분', price:'지분',
-   k:[['1,850','계획 세대'],['2028.4','착공 예정'],['2029','월판선']],
-   hook:'래미안 하이스티지, 관리처분 전',
-   pts:['<b>진도</b>: 사업시행인가(2026.5), 삼성물산 래미안 하이스티지 1,850세대, 착공 2028.4 예정','<b>교통</b>: 월판선 안양운동장역(2029)','<b>규제 틈새</b>: 재개발 빌라는 10·15 토허 실거주 미적용'],
-   risks:['관리처분인가 전까지만 조합원 지위로 매수 가능','현재 지분 시세는 매물 확인 필요(2024 기사 3.5~5.7억)'], reg:'재개발 빌라 · 토허 실거주 미적용', deal:'', q:'안양종합운동장'}
-];
-
-/* ===== 상태/유틸 ===== */
-const state={on:new Set(Object.keys(CATS)),q:'',sel:null};
+const KAKAO_JS_KEY='106bb734e8600621686fade2de7f8afb';
 const $=s=>document.querySelector(s);
 const mobile=()=>matchMedia('(max-width:800px)').matches;
-const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
-const rich=s=>esc(s).replace(/&lt;b&gt;/g,'<b>').replace(/&lt;\/b&gt;/g,'</b>');
-const visible=d=>d.cat.some(c=>state.on.has(c))&&(!state.q||(d.n+d.area+d.hook).includes(state.q));
+const esc=s=>String(s??'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const eok=v=>{ if(v==null) return '—'; let e=Math.floor(v/10000), m=Math.round(v%10000/100)*100;
+  if(m>=10000){e++;m=0;} return e? (m? `${e}억 ${m.toLocaleString()}` : `${e}억`) : `${m.toLocaleString()}만`; };
+const short=v=>v==null?'—':(Math.round(v/1000)/10)+'억';
 
-/* ===== 칩 ===== */
+function money(d){
+  if(d.reg==='villa'||d.p==null) return null;
+  const P=d.p, cap=60000, r={};
+  if(d.reg==='free'){
+    r.loan=Math.min(P*.7,cap); r.cash=P-r.loan; r.loanNote='비규제 LTV 70%';
+    if(d.jeon){ r.gap=P-d.jeon; r.gapNote=`전세 ${eok(d.jeon)} 끼고 (전세가율 ${Math.round(d.jeon/P*100)}%)`; }
+  } else {
+    r.loan=Math.min(P*.4,cap); r.cash=P-r.loan; r.first=P-Math.min(P*.7,cap); r.loanNote='규제지역 LTV 40%';
+  }
+  return r;
+}
+
+const state={on:new Set(Object.keys(CATS)),q:'',sel:null};
+const visible=d=>d.cat.some(c=>state.on.has(c))&&(!state.q||(d.n+d.area+(d.tagline||'')+d.headline).includes(state.q));
+
 function renderChips(){
   const h=$('#chips');h.innerHTML='';
   Object.entries(CATS).forEach(([k,v])=>{
     const b=document.createElement('button');b.className='chip';b.title=v.desc;b.setAttribute('aria-pressed',state.on.has(k));
-    b.innerHTML=`<i style="background:${v.hex}"></i>${k} <span style="color:#999">${D.filter(d=>d.cat.includes(k)).length}</span>`;
-    b.onclick=()=>{state.on.has(k)?state.on.delete(k):state.on.add(k);state.sel=null;render();};
+    b.innerHTML=`<i style="background:${v.hex}"></i>${v.label} <span style="color:#999">${D.filter(d=>d.cat.includes(k)).length}</span>`;
+    b.onclick=()=>{state.on.has(k)?state.on.delete(k):state.on.add(k);close();render();};
     h.append(b);
   });
 }
+const pills=d=>d.cat.map(c=>`<span class="pill" style="background:${CATS[c].hex}">${CATS[c].label}</span>`).join('');
+const priceLabel=d=>d.p==null?d.py:`${d.py} ${short(d.p)}`;
 
-/* ===== 목록 / 상세 ===== */
-function renderBody(){
-  const b=$('#body');
-  if(state.sel!==null){
-    const d=D[state.sel];
-    b.innerHTML=`<div class="detail">
-      <button class="back" id="back">‹ 목록</button>
-      <div class="d-title">${esc(d.n)}</div>
-      <div class="d-area">${esc(d.area)} · ${esc(d.spec)}</div>
-      <div class="tags">${d.cat.map(c=>`<span class="tag" style="background:${CATS[c].hex}">${c}</span>`).join('')}</div>
-      <div class="kpis">${d.k.map(([v,l])=>`<div class="kpi"><div class="v">${esc(v)}</div><div class="l">${esc(l)}</div></div>`).join('')}</div>
-      <div class="sec"><h3><i style="background:var(--c3)"></i>투자 포인트</h3><ul class="pts good">${d.pts.map(p=>`<li>${rich(p)}</li>`).join('')}</ul></div>
-      <div class="sec"><h3><i style="background:#c0432c"></i>리스크·확인할 것</h3><ul class="pts bad">${d.risks.map(p=>`<li>${esc(p)}</li>`).join('')}</ul></div>
-      <div class="sec"><h3><i style="background:#999"></i>규제·대출</h3><div class="reg">${esc(d.reg)}</div>${d.deal?`<div class="deal">${esc(d.deal)}</div>`:''}</div>
-    </div>`;
-    $('#back').onclick=()=>{state.sel=null;render();};
-    b.scrollTop=0;return;
-  }
-  b.innerHTML='';
+function renderList(){
+  const b=$('#body');b.innerHTML='';
   D.forEach((d,i)=>{
     if(!visible(d))return;
     const el=document.createElement('div');el.className='item';
-    el.innerHTML=`<span class="dot" style="background:${CATS[d.cat[0]].hex}"></span><div class="main">
-      <div class="top"><span class="nm">${esc(d.n)}</span><span class="pr">${esc(d.price)}</span></div>
-      <div class="meta">${esc(d.area)} · ${esc(d.spec)}</div><div class="hook">${esc(d.hook)}</div></div>`;
+    el.innerHTML=`<div class="row"><span class="nm">${esc(d.n)}</span>${d.tagline?`<span class="tg">${esc(d.tagline)}</span>`:''}<span class="pr">${esc(priceLabel(d))}</span></div>
+      <div class="hl">${esc(d.headline)}</div>
+      <div class="meta">${pills(d)}<span>${esc(d.area)}</span></div>`;
     el.onclick=()=>select(i,true);
     b.append(el);
   });
 }
 
-/* ===== 지도 ===== */
-let map,overlays=[];
-function renderMap(){
-  overlays.forEach(o=>{const v=visible(D[o.i])?map:null;o.ov.setMap(v);o.el.classList.toggle('on',o.i===state.sel);});
+function renderDetail(i){
+  const d=D[i], c=CATS[d.cat[0]].hex, m=money(d);
+  let n=0; const H=t=>`<h3><span class="n">${++n}</span>${t}</h3>`;
+  let html=`<div class="detail" style="--c:${c}">
+    <button class="back" id="back">‹ 전체 목록</button>
+    <div class="d-tags">${pills(d)}</div>
+    <div class="d-name">${esc(d.n)}${d.tagline?` <span style="font-size:13px;color:var(--muted);font-weight:600">${esc(d.tagline)}</span>`:''}</div>
+    <div class="d-area">${esc(d.area)}${d.year?` · ${d.year}년 입주`:''}${d.units?` · ${d.units.toLocaleString()}세대`:''}</div>
+    <div class="hero"><div class="h">${esc(d.headline)}</div><div class="s">${esc(d.sub)}</div></div>`;
+  if(m){
+    html+=`<div class="money"><div class="m"><div class="l">${esc(d.py)} 시세</div><div class="v">${eok(d.p)}</div></div>`;
+    if(m.gap!=null) html+=`<div class="m hi"><div class="l">전세 끼면 필요한 돈</div><div class="v">${eok(m.gap)}</div><div class="x">${esc(m.gapNote)}</div></div>`;
+    else if(m.first!=null) html+=`<div class="m hi"><div class="l">생애최초 대출 시 필요한 돈</div><div class="v">${eok(m.first)}</div><div class="x">LTV 70% · 2년 실거주</div></div>`;
+    else html+=`<div class="m hi"><div class="l">대출 끼면 필요한 돈</div><div class="v">${eok(m.cash)}</div><div class="x">${esc(m.loanNote)}</div></div>`;
+    html+=`</div><div class="money" style="margin-top:8px">`;
+    if(m.first!=null) html+=`<div class="m"><div class="l">일반 대출 시</div><div class="v" style="font-size:15px">${eok(m.cash)}</div><div class="x">${esc(m.loanNote)}</div></div><div class="m"><div class="l">규제</div><div class="v" style="font-size:15px">토허·실거주</div><div class="x">전세 끼고 매수 불가</div></div>`;
+    else html+=`<div class="m"><div class="l">실거주 · 대출 끼면</div><div class="v" style="font-size:15px">${eok(m.cash)}</div><div class="x">${esc(m.loanNote)}</div></div><div class="m"><div class="l">규제</div><div class="v" style="font-size:15px">없음</div><div class="x">전세 끼고 매수 가능</div></div>`;
+    html+=`</div>`;
+  }
+  if(d.cmp){
+    const pct=d.cmp.unit==='%', max=Math.max(...d.cmp.rows.map(r=>r[1]));
+    html+=`<div class="sec">${H(pct?'왜 이 구역인가':'왜 싸게 사는 건가')}<div style="font-size:12px;color:var(--muted);margin:-4px 0 9px">${esc(d.cmp.title)}${pct?'':' · 평당 만원'}</div><div class="bars">`+
+      d.cmp.rows.map(r=>`<div class="bar${r[2]?' me':''}"><span>${esc(r[0])}</span><div class="t"><i style="width:${Math.round(r[1]/max*100)}%"></i></div><span class="v">${r[1].toLocaleString()}${pct?'%':''}</span></div>`).join('')+
+      `</div>${d.cmp.note?`<div class="cmpnote">${esc(d.cmp.note)}</div>`:''}</div>`;
+  }
+  if(d.stage){
+    html+=`<div class="sec">${H('재건축 어디까지 왔나')}<div class="steps">`+
+      d.stage.steps.map((s,k)=>`<div class="${k<d.stage.at?'done':k===d.stage.at?'now':''}">${esc(s)}</div>`).join('')+
+      `</div><div class="stnote">${esc(d.stage.note)}</div></div>`;
+  }
+  if(d.timeline&&d.timeline.length) html+=`<div class="sec">${H('앞으로 바뀌는 것')}<ul class="tl">`+d.timeline.map(t=>`<li><b>${esc(t[0])}</b> ${esc(t[1])}</li>`).join('')+`</ul></div>`;
+  html+=`<div class="sec">${H('이런 사람한테 맞아')}<div class="fit">${d.fit.map(f=>`<span>${esc(f)}</span>`).join('')}</div></div>`;
+  html+=`<div class="sec">${H('사기 전에 꼭 확인')}<ul class="chk">${d.check.map(f=>`<li>${esc(f)}</li>`).join('')}</ul></div>`;
+  if(d.deal) html+=`<div class="fine">${esc(d.deal)}</div>`;
+  html+=`<div class="fine">필요한 돈은 주담대 한도 6억과 LTV만 반영한 단순 계산이야. 실제 대출은 소득(DSR)에 따라 줄어들 수 있고, 시세는 리치고 추정치라 매물 호가와 다를 수 있어.</div></div>`;
+  const b=$('#body'); b.innerHTML=html; b.scrollTop=0;
+  $('#back').onclick=()=>{close();render();};
 }
-function render(){renderChips();renderBody();if(map)renderMap();}
-$('#q').addEventListener('input',e=>{state.q=e.target.value.trim();state.sel=null;render();});
 
-function select(i,pan){
-  state.sel=i;render();
+function render(){renderChips(); state.sel==null?renderList():renderDetail(state.sel); if(map) renderMap();}
+$('#q').addEventListener('input',e=>{state.q=e.target.value.trim();close();render();});
+
+let map,pins=[],cardOv=null;
+function renderMap(){ pins.forEach(o=>o.ov.setMap(visible(D[o.i])?map:null)); }
+function close(){ state.sel=null; if(cardOv){cardOv.setMap(null);cardOv=null;} pins.forEach(o=>o.el.classList.remove('hide')); }
+
+function showCard(i){
+  if(!map||!D[i]._pos) return;
+  if(cardOv) cardOv.setMap(null);
+  const d=D[i], c=CATS[d.cat[0]].hex, m=money(d);
+  const second = m ? (m.gap!=null?['전세 끼면',eok(m.gap)]:m.first!=null?['생애최초 대출 시',eok(m.first)]:['대출 끼면',eok(m.cash)]) : ['진행 단계',d.stage?d.stage.steps[d.stage.at]:'—'];
+  const el=document.createElement('div'); el.className='card';
+  el.innerHTML=`<button class="x" aria-label="닫기">×</button><div class="top" style="border-top-color:${c}"><div class="nm">${esc(d.n)}</div><div class="ar">${esc(d.area)}</div><div class="hl">${esc(d.headline)}</div></div>
+    <div class="nums"><div><div class="l">${esc(d.py)}</div><div class="v">${d.p==null?'지분':eok(d.p)}</div></div><div><div class="l">${esc(second[0])}</div><div class="v" style="color:#c2452d">${esc(second[1])}</div></div></div>
+    <span class="go">투자 포인트 자세히 ›</span>`;
+  el.querySelector('.x').addEventListener('click',e=>{e.stopPropagation();close();render();});
+  el.addEventListener('click',e=>{e.stopPropagation(); if(mobile()) snapTo('full');});
+  cardOv=new kakao.maps.CustomOverlay({position:d._pos,content:el,xAnchor:0,yAnchor:0,zIndex:20,clickable:true});
+  cardOv.setMap(map);
+  pins.forEach(o=>o.el.classList.toggle('hide',o.i===i));
+}
+
+function select(i,fromList){
+  state.sel=i; render();
   const d=D[i];
-  if(mobile()) snapTo('half');
+  if(mobile()) snapTo(fromList?'half':'peek');
+  showCard(i);
   if(map&&d._pos){
     if(map.getLevel()>6) map.setLevel(6);
-    // 모바일: 시트에 가리지 않게 화면 위쪽으로 오프셋
-    if(mobile()){
-      const proj=map.getProjection(),pt=proj.containerPointFromCoords(d._pos);
-      const h=$('#map').clientHeight, target=new kakao.maps.Point(pt.x, pt.y + h*0.22);
-      map.panTo(proj.coordsFromContainerPoint(target));
-    } else map.panTo(d._pos);
+    const proj=map.getProjection(), pt=proj.containerPointFromCoords(d._pos), h=$('#map').clientHeight;
+    // 카드가 화면 위쪽 절반에 오도록: 좌표를 화면 아래쪽(62%)에 배치
+    const want = mobile()? (fromList? h*0.42 : h*0.62) : h*0.62;
+    const center=proj.coordsFromContainerPoint(new kakao.maps.Point(pt.x, pt.y - want + h/2));
+    map.panTo(center);
   }
 }
 
-function addOverlay(i){
+function addPin(i){
   const d=D[i],c=CATS[d.cat[0]].hex;
-  const el=document.createElement('div');el.className='ov';el.style.borderColor=c;el.style.color=c;
-  el.innerHTML=`<span>${esc(d.price)}</span><small>${esc(d.n.replace(/\s*\(.*\)/,'').slice(0,9))}</small>`;
+  const el=document.createElement('div');el.className='pin';el.style.setProperty('--c',c);
+  el.innerHTML=`<b>${esc(d.p==null?'지분':short(d.p))}</b><small>${esc(d.s||d.n)}</small>`;
   el.addEventListener('click',e=>{e.stopPropagation();select(i,false);});
-  const ov=new kakao.maps.CustomOverlay({position:d._pos,content:el,yAnchor:0,xAnchor:0,zIndex:3,clickable:true});
-  overlays.push({i,ov,el});ov.setMap(visible(d)?map:null);
+  const ov=new kakao.maps.CustomOverlay({position:d._pos,content:el,xAnchor:0,yAnchor:0,zIndex:3,clickable:true});
+  pins.push({i,ov,el}); ov.setMap(visible(d)?map:null);
 }
 
-/* ===== 바텀시트 드래그 (모바일) ===== */
-const sheet=$('#sheet');
-let snaps={},cur='peek',y=0;
+/* 바텀시트 */
+const sheet=$('#sheet'); let snaps={},cur='peek',y=0;
 function calcSnaps(){
   sheet.style.height=(innerHeight-document.querySelector('header').offsetHeight-6)+'px';
-  const H=sheet.offsetHeight;
-  snaps={full:0, half:Math.round(H*0.45), peek:H-150};
+  const H=sheet.offsetHeight; snaps={full:0,half:Math.round(H*0.42),peek:H-150};
 }
-function setY(v,anim){
-  y=Math.max(0,Math.min(snaps.peek,v));
-  sheet.classList.toggle('anim',!!anim);
-  sheet.style.setProperty('--y',y+'px');
-}
+function setY(v,anim){ y=Math.max(0,Math.min(snaps.peek,v)); sheet.classList.toggle('anim',!!anim); sheet.style.setProperty('--y',y+'px'); }
 function snapTo(name){ if(!mobile())return; calcSnaps(); cur=name; setY(snaps[name],true); }
-(function initSheet(){
+(function(){
   if(!mobile())return;
   calcSnaps(); setY(snaps.peek,false);
-  let startY=0,startPos=0,lastY=0,lastT=0,vel=0,dragging=false,fromBody=false;
-  const body=$('#body');
-  const down=(e,fb)=>{
-    const t=e.touches?e.touches[0]:e;
-    dragging=true;fromBody=fb;startY=lastY=t.clientY;startPos=y;lastT=performance.now();vel=0;
-    sheet.classList.remove('anim');
-  };
+  let sy=0,sp=0,ly=0,lt=0,vel=0,drag=false,fromBody=false,moved=0;
+  const body=$('#body'), head=$('#head');
+  const down=(e,fb)=>{const t=e.touches[0];drag=true;fromBody=fb;sy=ly=t.clientY;sp=y;lt=performance.now();vel=0;moved=0;sheet.classList.remove('anim');};
   const move=e=>{
-    if(!dragging)return;
-    const t=e.touches?e.touches[0]:e, dy=t.clientY-startY;
-    // 목록 스크롤 중이면: 맨 위에서 아래로 끌 때만 시트를 내림
-    if(fromBody){
-      if(y<=0 && (body.scrollTop>0 || dy<0)){ startY=t.clientY; return; }
-      if(e.cancelable) e.preventDefault();
-    }
-    const now=performance.now(); vel=(t.clientY-lastY)/Math.max(1,now-lastT); lastY=t.clientY; lastT=now;
-    setY(startPos+dy,false);
+    if(!drag)return; const t=e.touches[0], dy=t.clientY-sy; moved=Math.max(moved,Math.abs(dy));
+    if(fromBody){ if(y<=0&&(body.scrollTop>0||dy<0)){sy=t.clientY;sp=y;return;} if(e.cancelable)e.preventDefault(); }
+    const now=performance.now(); vel=(t.clientY-ly)/Math.max(1,now-lt); ly=t.clientY; lt=now;
+    setY(sp+dy,false);
   };
   const up=()=>{
-    if(!dragging)return; dragging=false;
+    if(!drag)return; drag=false; if(moved<6) return;
     const order=['full','half','peek'];
-    let target;
-    if(Math.abs(vel)>0.45){ // 빠르게 튕기면 방향대로 한 단계
-      const idx=order.indexOf(nearest());
-      target=order[Math.max(0,Math.min(2, idx+(vel>0?1:-1)))];
-      if(vel>0&&y>snaps.half) target='peek';
-      if(vel<0&&y<snaps.half) target='full';
-    } else target=nearest();
-    snapTo(target);
+    const near=order.slice().sort((a,b)=>Math.abs(snaps[a]-y)-Math.abs(snaps[b]-y))[0];
+    let t=near;
+    if(Math.abs(vel)>0.4){ const k=order.indexOf(near); t=order[Math.max(0,Math.min(2,k+(vel>0?1:-1)))]; if(vel<0&&y<snaps.half)t='full'; if(vel>0&&y>snaps.half)t='peek'; }
+    snapTo(t);
   };
-  const nearest=()=>Object.entries(snaps).sort((a,b)=>Math.abs(a[1]-y)-Math.abs(b[1]-y))[0][0];
-  const head=$('#head');
   head.addEventListener('touchstart',e=>down(e,false),{passive:true});
-  body.addEventListener('touchstart',e=>{ if(y>0||body.scrollTop<=0) down(e,true); },{passive:true});
-  body.addEventListener('touchmove',e=>{ if(dragging && (y>0 || fromBody)) move(e); },{passive:false});
   head.addEventListener('touchmove',move,{passive:false});
-  window.addEventListener('touchend',up);
-  // 시트가 덜 올라와 있을 땐 목록 자체 스크롤 막고 시트를 올림
+  body.addEventListener('touchstart',e=>{ if(y>0||body.scrollTop<=0) down(e,true); },{passive:true});
+  body.addEventListener('touchmove',e=>{ if(drag) move(e); },{passive:false});
+  addEventListener('touchend',up); addEventListener('touchcancel',up);
   body.addEventListener('scroll',()=>{ if(y>0) body.scrollTop=0; });
+  head.addEventListener('click',e=>{ if(e.target.tagName!=='INPUT'&&moved<6) snapTo(cur==='full'?'peek':cur==='half'?'full':'half'); });
   $('#q').addEventListener('focus',()=>snapTo('full'));
-  head.addEventListener('click',e=>{ if(e.target.tagName!=='INPUT' && Math.abs(lastY-startY)<4) snapTo(cur==='peek'?'half':cur==='half'?'full':'peek'); });
   addEventListener('resize',()=>{calcSnaps();setY(snaps[cur],false);});
 })();
 
 render();
 
-/* ===== 카카오 로드 ===== */
 (function(){
   const s=document.createElement('script');
   s.src=`https://dapi.kakao.com/v2/maps/sdk.js?appkey=${KAKAO_JS_KEY}&libraries=services&autoload=false`;
-  s.onerror=()=>{const m=$('#keymsg');m.style.display='flex';m.innerHTML='지도를 불러오지 못했어.<br><span style="font-size:12px">카카오 개발자콘솔 &gt; 플랫폼 &gt; Web에 이 주소가 등록돼 있는지 확인</span>';};
+  s.onerror=()=>{const m=$('#keymsg');m.style.display='flex';m.textContent='지도를 불러오지 못했어. 잠시 후 새로고침해줘.';};
   s.onload=()=>kakao.maps.load(init);
   document.head.append(s);
 })();
 function init(){
   map=new kakao.maps.Map($('#map'),{center:new kakao.maps.LatLng(37.5,126.95),level:9});
   map.addControl(new kakao.maps.ZoomControl(),kakao.maps.ControlPosition.RIGHT);
-  kakao.maps.event.addListener(map,'click',()=>{ if(mobile()) snapTo('peek'); });
+  kakao.maps.event.addListener(map,'click',()=>{ if(state.sel!=null){close();render();} if(mobile()) snapTo('peek'); });
   const places=new kakao.maps.services.Places(),bounds=new kakao.maps.LatLngBounds();
   let pending=D.length;
-  const done=()=>{ if(--pending===0&&!bounds.isEmpty()) map.setBounds(bounds,40,40,mobile()?160:40,40); };
+  const done=()=>{ if(--pending===0&&!bounds.isEmpty()) map.setBounds(bounds,60,40,mobile()?170:40,40); };
   D.forEach((d,i)=>{
-    if(d.lat){d._pos=new kakao.maps.LatLng(d.lat,d.lng);bounds.extend(d._pos);addOverlay(i);done();return;}
+    if(d.lat){d._pos=new kakao.maps.LatLng(d.lat,d.lng);bounds.extend(d._pos);addPin(i);done();return;}
     places.keywordSearch(d.q||d.n,(res,st)=>{
-      if(st===kakao.maps.services.Status.OK){d._pos=new kakao.maps.LatLng(+res[0].y,+res[0].x);bounds.extend(d._pos);addOverlay(i);}
+      if(st===kakao.maps.services.Status.OK){d._pos=new kakao.maps.LatLng(+res[0].y,+res[0].x);bounds.extend(d._pos);addPin(i); if(state.sel===i) showCard(i);}
       done();
     });
   });
-  const lab=()=>{const far=map.getLevel()>8;overlays.forEach(o=>o.el.classList.toggle('mini',far));};
-  kakao.maps.event.addListener(map,'zoom_changed',lab);
+  kakao.maps.event.addListener(map,'zoom_changed',()=>{const far=map.getLevel()>8;pins.forEach(o=>o.el.classList.toggle('mini',far));});
 }
 </script>
 </body>
