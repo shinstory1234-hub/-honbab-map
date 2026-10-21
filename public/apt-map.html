@@ -70,6 +70,7 @@ aside{order:-1;width:408px;flex:none;border-right:1px solid var(--border);backgr
 .filters{display:flex;gap:6px;overflow-x:auto;padding:0 24px 14px;scrollbar-width:none;border-bottom:1px solid var(--text)}
 .filters::-webkit-scrollbar{display:none}
 .filters button{flex:none;min-height:36px;padding:6px 12px;font-size:12.5px;border:1px solid var(--border);border-radius:3px;color:var(--text-secondary);background:var(--bg);white-space:nowrap}
+.filters.pb{border-bottom:0;padding-bottom:8px}
 .filters button[aria-pressed=true]{background:var(--text);border-color:var(--text);color:var(--bg);font-weight:650}
 .count{display:flex;justify-content:space-between;padding:12px 24px;font-size:12px;color:var(--text-tertiary);border-bottom:1px solid var(--border-soft)}
 
@@ -224,6 +225,7 @@ aside{order:-1;width:408px;flex:none;border-right:1px solid var(--border);backgr
 
 <script src="apt-picks.js"></script>
 <script src="apt-auto3.js"></script>
+<script src="apt-gj.js"></script>
 <script>
 const KAKAO_JS_KEY='106bb734e8600621686fade2de7f8afb';
 const $=s=>document.querySelector(s);
@@ -237,7 +239,7 @@ const fmtM=m=>m==null?'':m>=1000?(m/1000).toFixed(1)+'km':Math.round(m)+'m';
 const ARROW='<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M7 17 17 7M8 7h9v9"/></svg>';
 const CHEV='<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="m6 9 6 6 6-6"/></svg>';
 
-/* ── 입지 점수(100) = 급지 25 · 직주근접 15 · 역세권 20 · 교통호재 10 · 신축/재건축 15 · 초품아 8 · 평지 7
+/* ── 입지 점수(100) = 급지 25 · 학군 10 · 직주근접 10 · 역세권 17 · 교통호재 10 · 신축/재건축 13 · 초품아 7 · 평지 8
       상승 여력 = 급지·입지·평형·연식이 비슷한 단지들의 평당가 회귀선 대비 얼마나 싼가
       종합 = 입지 점수 + 여력 보정(±7.5) ── */
 const FUT=[['인덕원역','월판선·인동선·GTX-C',2029],['안양역 1호선','월판선',2029],['안양 만안구청','월판선 만안역(신설)',2029],['시흥시청역','월판선',2029],['광명역 KTX','월판선·신안산선',2029],
@@ -248,7 +250,13 @@ const FUT=[['인덕원역','월판선·인동선·GTX-C',2029],['안양역 1호�
  ['화서역','신분당선',2029],['수원월드컵경기장','신분당선·인동선(신설)',2029],['아주대학교','인동선(신설)',2029],['광교호수공원','인동선 원천동역(신설)',2029],['동탄역','인동선',2029]];
 let FUTPOS=null;
 const hav=(a,b,c,d)=>{const R=6371000,r=Math.PI/180,x=(c-a)*r,y=(d-b)*r,s=Math.sin(x/2)**2+Math.cos(a*r)*Math.cos(c*r)*Math.sin(y/2)**2;return 2*R*Math.asin(Math.sqrt(s));};
-const gjS=b=>Math.max(0,Math.min(25,(b-1800)/3200*25));
+const gjS=b=>Math.max(0,Math.min(25,(b-2000)/3500*25));
+const acS=n=>n==null?null:n>=400?10:n>=250?8:n>=150?6:n>=80?4:n>=40?2:0;
+const guTok=d=>{const t=d.rate.gu.split(' ').pop();return t.endsWith('구')?t.slice(0,-1):t;};
+function gjOf(d){ const dong=d.area.split(' ').pop(), k=guTok(d)+'|'+dong;
+  if(window.GJ&&GJ[k]) return {v:GJ[k][0],src:`${dong} 대단지 ${GJ[k][1]}곳 시세로 추정한 신축 34평 표준 평당가`};
+  if(window.GJG&&GJG[guTok(d)]) return {v:GJG[guTok(d)],src:`${d.rate.gu} 평균(동 데이터 없음)`};
+  return {v:d.bench.ppp,src:esc(d.bench.name)}; }
 const GEO_V='g3'; let GEO={};
 try{GEO=JSON.parse(localStorage.getItem('apt6geo_'+GEO_V)||'{}')||{};}catch(e){GEO={};}
 const saveGeo=()=>{try{localStorage.setItem('apt6geo_'+GEO_V,JSON.stringify(GEO));}catch(e){}};
@@ -278,16 +286,16 @@ function score(d){
   const g=GEO[gkey(d)]||{};
   const tbv=d.tb!=null?[d.tb,d.tbj]:(TB[d.rate.gu.split(' ').pop()]||[50,'서울 업무지구']);
   d.tbm=tbv[0]; d.tbj=tbv[1]; d.g=g;
-  d.J=jobS(d.tbm); let r=rbScore(d); d.R=r[0]*.75; d.rl=r[1];
-  d.GJ=gjS(d.bench.ppp);
-  d.S=g.st==null?null:stS(g.st)*.8; d.E=g.sc==null?null:scS(g.sc)*8/15; d.F=g.dh==null?null:flS(g.dh)*7/15;
+  d.J=jobS(d.tbm)*10/15; let r=rbScore(d); d.R=r[0]*13/20; d.rl=r[1];
+  const gj=gjOf(d); d.gj=gj.v; d.gjsrc=gj.src; d.GJ=gjS(d.gj);
+  d.S=g.st==null?null:stS(g.st)*17/25; d.E=g.sc==null?null:scS(g.sc)*7/15; d.F=g.dh==null?null:flS(g.dh)*8/15; d.A=acS(g.ac);
   d.H=null; d.hz=null;
   const la=g.lat||d.lat, ln=g.lng||d.lng;
   if(FUTPOS&&la){ let best=null; FUTPOS.forEach((f,k)=>{ if(!f) return; const m=hav(la,ln,f[0],f[1]); if(!best||m<best.m) best={m,k}; });
     if(best){ d.hz={name:FUT[best.k][0].split(' ')[0],line:FUT[best.k][1],year:FUT[best.k][2],m:best.m}; d.H=best.m<=700?10:best.m<=1200?7:best.m<=2000?3:0; } }
-  d.pending=d.S==null||d.E==null;
-  d.micro=(d.S??10)+(d.E??4)+(d.F??4)+(d.H??0);
-  d.loc=Math.round(d.GJ+d.J+d.R+d.micro);
+  d.pending=d.S==null||d.E==null||d.A==null;
+  d.micro=(d.S??9)+(d.E??3)+(d.F??4)+(d.H??0);
+  d.loc=Math.round(d.GJ+(d.A??3)+d.J+d.R+d.micro);
   d.me=d.me||Math.round(d.p/d.py);
 }
 function solve(A,b){ const n=b.length, M=A.map((r,i)=>[...r,b[i]]);
@@ -298,7 +306,7 @@ function solve(A,b){ const n=b.length, M=A.map((r,i)=>[...r,b[i]]);
 function recompute(){
   D.forEach(score);
   /* ln(평당가) = β0 + β1·ln(급지) + β2·직주 + β3·생활입지(역·학교·평지·호재) + β4·ln(평형) + β5·연식 + β6·신축/재건축 */
-  const X=d=>[1,Math.log(d.bench.ppp),d.J,d.micro,Math.log(d.py),Math.min(45,2026-d.year),d.R];
+  const X=d=>[1,Math.log(d.gj),d.J,d.micro+(d.A??3),Math.log(d.py),Math.min(45,2026-d.year),d.R];
   const K=7, A=[...Array(K)].map(()=>Array(K).fill(0)), bv=Array(K).fill(0);
   D.forEach(d=>{ const x=X(d), y=Math.log(d.me); for(let i=0;i<K;i++){ bv[i]+=x[i]*y; for(let j=0;j<K;j++) A[i][j]+=x[i]*x[j]+(i===j?1e-6:0); } });
   const be=solve(A,bv);
@@ -321,31 +329,35 @@ function need(d){ const m=money(d);
 }
 
 const FILTERS=[['all','전체'],['top','핵심'],['mid','유망 이상'],['stn','역 1km'],['sch','초품아'],['man','직접 분석'],['free','비규제'],['재건축','재건축'],['반도체','반도체 수요'],['신혼','신혼 30평대'],['소형할인','소형 할인'],['천지개벽','천지개벽']];
-const state={f:'all',q:'',sel:null};
+const state={f:'all',pb:'all',q:'',sel:null};
+const PB=[['all','전체 가격'],['3','3억 이하',0,30000],['4','3~4억',30000,40000],['5','4~5억',40000,50000],['6','5~6억',50000,60001]];
 const visible=d=>{
   const f=state.f, ok=f==='all'||(f==='top'&&d.tier.k==='핵심')||(f==='mid'&&d.tier.k!=='관찰')||(f==='stn'&&d.g.st!=null&&d.g.st<=1000)||(f==='sch'&&d.g.sc!=null&&d.g.sc<=300)||(f==='man'&&!d.auto)||(f==='free'&&d.reg==='free')||d.tags.includes(f);
-  return ok&&(!state.q||(d.n+d.area+d.headline).includes(state.q));
+  const pb=PB.find(x=>x[0]===state.pb); const okp=state.pb==='all'||(d.p>pb[2]&&d.p<=pb[3])||(state.pb==='3'&&d.p<=30000);
+  return ok&&okp&&(!state.q||(d.n+d.area+d.headline).includes(state.q));
 };
 
 function renderList(){
   const b=$('#body'), list=ORDER.filter(visible), pend=D.filter(d=>d.pending).length;
   let h=`<section class="intro">
     <div class="eyebrow">6억 이하 · 오를 단지<i></i>${D.length}곳</div>
-    <h1>급지·입지 좋은 순, 같은 입지면 싼 순</h1>
-    <p>입지가 가격을 정한다는 전제로 급지·직주·역세권·교통호재·신축/재건축·초품아·평지로 입지 점수를 매기고, 입지가 비슷하면 더 싼 단지를 위로 올렸습니다. 하락 중인 지역은 뺐습니다.</p>
+    <h1>급지·학군·입지 좋은 순, 같은 입지면 싼 순</h1>
+    <p>입지가 가격을 정한다는 전제로 급지·학군·직주·역세권·교통호재·신축/재건축·초품아·평지로 입지 점수를 매기고, 입지가 비슷하면 더 싼 단지를 위로 올렸습니다. 하락 중인 지역은 뺐습니다.</p>
     ${pend?`<div class="inline-note tnum" style="margin-top:12px">역·초등학교·경사를 지도 데이터로 계산하는 중 · ${D.length-pend}/${D.length}<br><small>처음 한 번만 걸리고, 끝나면 순위가 확정됩니다.</small></div>`:''}
     <details class="method"><summary>점수 매기는 법 ${CHEV}</summary><dl>
-      <div><dt>급지<small>25점</small></dt><dd>그 동네 신축 평당가. 시장이 매긴 동네 값(학군·상권·브랜드 포함)이라 가장 크게 봄. 평당 5,000만 원 이상 만점, 1,800만 원 이하 0점.</dd></div>
-      <div><dt>직주근접<small>15점</small></dt><dd>강남·여의도·광화문·판교 중 가장 가까운 곳까지 대중교통 시간. 25분 이내 만점, 65분이면 0점.</dd></div>
-      <div><dt>역세권<small>20점</small></dt><dd>가장 가까운 지하철역까지 직선거리. 400m 만점, 1km 15점, 1.5km(버스 1~2정거장) 12점, 3km 넘으면 0점.</dd></div>
-      <div><dt>교통호재<small>10점</small></dt><dd>공사 중이거나 개통이 확정된 노선(월판선·인동선·GTX-B·C·신안산선·동북선·신분당 연장)의 역까지 700m 10점, 1.2km 7점, 2km 3점.</dd></div>
-      <div><dt>신축·재건축<small>15점</small></dt><dd>10년 이내 신축 또는 시공사 선정 재건축 만점. 정비구역·추진위 순으로 감점. 신축도 재건축도 아닌 20년대 구축이 가장 낮음.</dd></div>
-      <div><dt>초품아·평지<small>8·7점</small></dt><dd>초등학교 300m 이내 만점. 가장 가까운 역과 높이 차 5m 이내면 평지 만점, 30m 넘으면 언덕.</dd></div>
+      <div><dt>급지<small>25점</small></dt><dd>그 동네가 시장에서 받는 값. 수도권 대단지 920곳의 시세를 연식·평형·세대수로 보정해 동마다 "신축 34평이면 평당 얼마"를 추정(회귀 설명력 93%). 평당 5,500만 원 이상 만점, 2,000만 원 이하 0점.</dd></div>
+      <div><dt>학군<small>10점</small></dt><dd>반경 1km 안 학원 수(카카오맵). 400곳 이상 만점, 250곳 8점, 150곳 6점, 80곳 4점. 학원가가 곧 학군 수요라 학원 밀도로 봄.</dd></div>
+      <div><dt>직주근접<small>10점</small></dt><dd>강남·여의도·광화문·판교 중 가장 가까운 곳까지 대중교통. 25분 이내 만점, 65분 0점.</dd></div>
+      <div><dt>역세권<small>17점</small></dt><dd>가장 가까운 지하철역 직선거리. 400m 만점, 1.5km(버스 1~2정거장)까지 절반 이상 인정, 3km 넘으면 0점.</dd></div>
+      <div><dt>교통호재<small>10점</small></dt><dd>공사 중·개통 목표가 있는 노선(월판선·인동선·GTX-B·C·신안산선·동북선·신분당 연장) 역까지 700m 10점, 1.2km 7점, 2km 3점.</dd></div>
+      <div><dt>신축·재건축<small>13점</small></dt><dd>10년 이내 신축 또는 시공사 선정 재건축 만점. 정비구역·추진위 순. 신축도 재건축도 아닌 20년대 구축이 가장 낮음.</dd></div>
+      <div><dt>초품아·평지<small>7·8점</small></dt><dd>초등학교 300m 이내 만점. 가장 가까운 역과 높이 차 5m 이내면 평지 만점, 30m 넘으면 언덕.</dd></div>
       <div><dt>상승 여력<small>±7.5점</small></dt><dd>전체 단지로 "급지·직주·생활입지·평형·연식·재건축 단계 → 평당가" 선을 그어, 조건이 같은 단지들보다 얼마나 싼지 계산. 낡아서 싸거나 동네가 싸서 싼 건 여력으로 안 봄.</dd></div>
       <div><dt>종합<small>순위</small></dt><dd>입지 점수가 기본. 같은 입지라면 더 싼 단지가 위로 가도록 상승 여력으로 최대 ±7.5점 조정. 상위 15% 핵심, 다음 25% 유망.</dd></div>
       <div><dt>대상<small>범위</small></dt><dd>시세·최근 실거래 모두 6억 이하, 300세대 이상, 최근 15개월 하락 지역 제외. ${D.filter(d=>!d.auto).length}곳 직접 분석 + 나머지 자동 수집.</dd></div>
     </dl></details>
   </section>
+  <div class="filters pb" role="group" aria-label="가격대">${PB.map(([k,l])=>`<button data-pb="${k}" aria-pressed="${state.pb===k}">${l}</button>`).join('')}</div>
   <div class="filters" role="group" aria-label="필터">${FILTERS.map(([k,l])=>`<button data-f="${k}" aria-pressed="${state.f===k}">${l}</button>`).join('')}</div>
   <div class="count"><span>${list.length}곳 · 종합 점수순</span><span>시세 리치고 · 2026.10.20</span></div>`;
   list.forEach(d=>{
@@ -360,7 +372,8 @@ function renderList(){
   h+=`<section class="excluded"><h2>이번에 뺀 곳 <small>2025.6~2026.9 누적</small></h2><ul>${EXCLUDED.map(e=>`<li>${esc(e[0])}<b class="tnum">${esc(e[1])}</b><span>${esc(e[2])}</span></li>`).join('')}</ul></section>
   <p class="source">상승률: 한국부동산원·KB 주간 아파트 동향(10월 2주), 누적 하락은 한국부동산원(파이낸셜뉴스 2026.9.21 인용). 시세·실거래: 리치고(국토부 실거래). 점수는 투자 권유가 아니라 비교용 지표입니다.</p>`;
   b.innerHTML=h;
-  b.querySelectorAll('.filters button').forEach(x=>x.onclick=()=>{state.f=x.dataset.f;render();});
+  b.querySelectorAll('.filters button[data-f]').forEach(x=>x.onclick=()=>{state.f=x.dataset.f;render();});
+  b.querySelectorAll('.filters button[data-pb]').forEach(x=>x.onclick=()=>{state.pb=x.dataset.pb;render();});
   b.querySelectorAll('.row').forEach(x=>x.onclick=()=>select(+x.dataset.i,true));
 }
 
@@ -379,13 +392,14 @@ function renderDetail(i){
     <div><dt>상승 여력</dt><dd class="hl">${d.up>=0?'+':''}${Math.round(d.up*100)}<i>%</i></dd><small>같은 입지 적정 평당 ${d.fair.toLocaleString()}만</small></div>
   </dl>
   <section class="sec"><h3>입지 점수 <small>${d.loc} / 100${d.pending?' · 계산 중':''}</small></h3><div class="score tnum">
-    <div><span class="l">급지<small>동네 신축 평당 ${d.bench.ppp.toLocaleString()}만 · ${esc(d.bench.name)}</small></span><span class="v">${d.GJ.toFixed(0)}<i> / 25</i></span>${bar(d.GJ,25)}</div>
-    <div><span class="l">직주근접<small>${esc(d.tbj)}까지 대중교통 약 ${d.tbm}분</small></span><span class="v">${d.J.toFixed(0)}<i> / 15</i></span>${bar(d.J,15)}</div>
-    <div><span class="l">역세권<small>${d.g.stn?esc(d.g.stn)+' '+fmtM(d.g.st)+' · '+stL(d.g.st):d.S===0?'3km 안에 역 없음':'계산 중'}</small></span><span class="v">${d.S!=null?d.S.toFixed(0):'–'}<i> / 20</i></span>${bar(d.S||0,20)}</div>
+    <div><span class="l">급지<small>평당 ${d.gj.toLocaleString()}만 · ${d.gjsrc}</small></span><span class="v">${d.GJ.toFixed(0)}<i> / 25</i></span>${bar(d.GJ,25)}</div>
+    <div><span class="l">학군<small>${d.g.ac!=null?`반경 1km 학원 ${d.g.ac.toLocaleString()}곳`:'계산 중'}</small></span><span class="v">${d.A!=null?d.A:'–'}<i> / 10</i></span>${bar(d.A||0,10)}</div>
+    <div><span class="l">직주근접<small>${esc(d.tbj)}까지 대중교통 약 ${d.tbm}분</small></span><span class="v">${d.J.toFixed(0)}<i> / 10</i></span>${bar(d.J,10)}</div>
+    <div><span class="l">역세권<small>${d.g.stn?esc(d.g.stn)+' '+fmtM(d.g.st)+' · '+stL(d.g.st):d.S===0?'3km 안에 역 없음':'계산 중'}</small></span><span class="v">${d.S!=null?d.S.toFixed(0):'–'}<i> / 17</i></span>${bar(d.S||0,17)}</div>
     <div><span class="l">교통호재<small>${d.hz?`${esc(d.hz.name)} ${esc(d.hz.line)} (${d.hz.year}) · ${fmtM(d.hz.m)}`:'계산 중'}</small></span><span class="v">${d.H!=null?d.H:'–'}<i> / 10</i></span>${bar(d.H||0,10)}</div>
-    <div><span class="l">신축·재건축<small>${esc(d.rl)}</small></span><span class="v">${d.R.toFixed(0)}<i> / 15</i></span>${bar(d.R,15)}</div>
-    <div><span class="l">초품아<small>${d.g.scn?esc(d.g.scn)+' '+fmtM(d.g.sc):d.E===0?'900m 안에 초등학교 없음':'계산 중'}</small></span><span class="v">${d.E!=null?d.E.toFixed(0):'–'}<i> / 8</i></span>${bar(d.E||0,8)}</div>
-    <div><span class="l">평지<small>${d.g.dh!=null?`가장 가까운 역과 높이 차 ${Math.abs(Math.round(d.g.dh))}m${d.g.dh>0?' (단지가 높음)':''}`:d.pending?'계산 중':'높이 데이터 없음(중간값 적용)'}</small></span><span class="v">${d.F!=null?d.F.toFixed(0):'–'}<i> / 7</i></span>${bar(d.F||0,7)}</div>
+    <div><span class="l">신축·재건축<small>${esc(d.rl)}</small></span><span class="v">${d.R.toFixed(0)}<i> / 13</i></span>${bar(d.R,13)}</div>
+    <div><span class="l">초품아<small>${d.g.scn?esc(d.g.scn)+' '+fmtM(d.g.sc):d.E===0?'900m 안에 초등학교 없음':'계산 중'}</small></span><span class="v">${d.E!=null?d.E.toFixed(0):'–'}<i> / 7</i></span>${bar(d.E||0,7)}</div>
+    <div><span class="l">평지<small>${d.g.dh!=null?`가장 가까운 역과 높이 차 ${Math.abs(Math.round(d.g.dh))}m${d.g.dh>0?' (단지가 높음)':''}`:d.pending?'계산 중':'높이 데이터 없음(중간값 적용)'}</small></span><span class="v">${d.F!=null?d.F.toFixed(0):'–'}<i> / 8</i></span>${bar(d.F||0,8)}</div>
   </div></section>
   <section class="sec"><h3>상승 여력 <small>평당 만 원</small></h3><div class="cmp tnum">
     <div><span class="n">급지·입지·${d.py}평·${2026-d.year}년차가 같은 단지의 적정 평당가</span><span class="v">${d.fair.toLocaleString()}</span>${bar(d.fair,Math.max(d.me,d.fair))}</div>
@@ -517,19 +531,22 @@ function init(){
   });
   function analyze(){
     const ps=new kakao.maps.services.Places(), OK=kakao.maps.services.Status.OK, ZERO=kakao.maps.services.Status.ZERO_RESULT, DIST=kakao.maps.services.SortBy.DISTANCE;
-    const todo=D.filter(d=>d._pos&&!(GEO[gkey(d)]&&GEO[gkey(d)].sc!=null));
+    const todo=D.filter(d=>{const g=GEO[gkey(d)];return d._pos&&!(g&&g.sc!=null&&g.st!=null&&g.ac!=null);});
     let idx=0, active=0, tick=0;
-    const one=d=>new Promise(res=>{
+    const q=(fn)=>new Promise(r=>fn(r));
+    const one=async d=>{
       const g=GEO[gkey(d)]=Object.assign(GEO[gkey(d)]||{},{lat:d._pos.getLat(),lng:d._pos.getLng()});
-      ps.categorySearch('SW8',(r,st)=>{
-        if(st===OK&&r.length){g.st=+r[0].distance;g.stn=r[0].place_name.replace(/ \S+선$/,'');g.slat=+r[0].y;g.slng=+r[0].x;} else if(st===ZERO) g.st=99999;
-        ps.keywordSearch('초등학교',(r2,st2)=>{
-          const e=st2===OK?r2.filter(x=>/초등학교$/.test(x.place_name)):[];
-          if(e.length){g.sc=+e[0].distance;g.scn=e[0].place_name;} else if(st2===OK||st2===ZERO) g.sc=99999;
-          res();
-        },{location:d._pos,radius:1500,sort:DIST});
-      },{location:d._pos,radius:3000,sort:DIST});
-    });
+      if(g.st==null) await q(done=>ps.categorySearch('SW8',(r,st)=>{
+        if(st===OK&&r.length){g.st=+r[0].distance;g.stn=r[0].place_name.replace(/ \S+선$/,'');g.slat=+r[0].y;g.slng=+r[0].x;} else if(st===ZERO) g.st=99999; done();
+      },{location:d._pos,radius:3000,sort:DIST}));
+      if(g.sc==null) await q(done=>ps.keywordSearch('초등학교',(r2,st2)=>{
+        const e=st2===OK?r2.filter(x=>/초등학교$/.test(x.place_name)):[];
+        if(e.length){g.sc=+e[0].distance;g.scn=e[0].place_name;} else if(st2===OK||st2===ZERO) g.sc=99999; done();
+      },{location:d._pos,radius:1500,sort:DIST}));
+      if(g.ac==null) await q(done=>ps.categorySearch('AC5',(r3,st3,pg)=>{
+        if(st3===OK) g.ac=(pg&&pg.totalCount)||r3.length; else if(st3===ZERO) g.ac=0; done();
+      },{location:d._pos,radius:1000}));
+    };
     const finish=()=>{ saveGeo(); elevation(); };
     const pump=()=>{ while(active<6&&idx<todo.length){ const d=todo[idx++]; active++;
       one(d).then(()=>{ active--; if(++tick%20===0){ saveGeo(); recompute(); render(); }
