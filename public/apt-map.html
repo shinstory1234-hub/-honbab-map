@@ -239,6 +239,7 @@ aside{order:-1;width:408px;flex:none;border-right:1px solid var(--border);backgr
 <script src="apt-loc.js"></script>
 <script src="apt-cx.js"></script>
 <script src="apt-fard.js"></script>
+<script src="apt-hak.js"></script>
 <script src="apt-s4.js"></script>
 <script src="apt-geo.js"></script>
 <script>
@@ -311,6 +312,27 @@ const stS=m=>m==null?null:lerp([[400,25],[700,22],[1000,19],[1500,15],[2000,9],[
 const stL=m=>m<=700?'도보권':m<=1500?'마을버스·버스 1~2정거장':m<=3000?'버스 이동':'역 없음';
 const scS=m=>m==null?null:lerp([[300,15],[450,12],[600,8],[900,4],[1200,0]],m);
 const flS=h=>h==null?null:lerp([[5,15],[12,12],[20,8],[30,4],[40,0]],Math.abs(h));
+/* ── 7단계 학군 ──
+   학군 10점 = 학원가 접근값 H 의 로그 척도. H = max(이 단지 1km 안 교과학원(수학+영어) 수,
+        주변 학원 밀집지(1km 안 교과학원 250곳+) 교과학원 수 × 거리 감쇠[1km까지 1 → 3km에서 0])
+   15곳 0점 · 60곳 4.4점 · 150곳 7.3점 · 250곳 9.0점 · 350곳+ 10점.
+   전체 학원(AC5)보다 교과학원 수가 학군 수요를 더 잘 가름(역삼동 오피스가 같은 성인·자격증 학원 제외):
+   대치 542 > 목동 319 ≈ 중계 은행사거리 312 ≈ 평촌 학원가 302 > 일산 후곡 271 > 부천 상동 184 (지점 실측).
+   백테스트(시·구 평균 대비 초과상승, 같은 시·구 안 비교): 17→20 IC +.22(상하위 +7.0%p) · 20→23 −.15(−3.8%p) · 23→26 +.15(+4.0%p).
+   같은 동 안 헤도닉: ln(교과학원) 1단위당 평당가 +6.3%(t≈16).
+   중학교 진학 실적(특목고 진학률)은 공개 API에 없음 → SCHQ(학교명→점수 0~10)를 채우면 70:30으로 섞도록 자리만 마련. */
+const hakH=d=>{ const h=(window.HAK||{})[gkey(d)]; return h?h:null; };
+const hakS=H=>10*Math.max(0,Math.min(1,Math.log(Math.max(H,5)/15)/Math.log(350/15)));
+function hakA(d){ const h=hakH(d); if(!h) return null;
+  let a=hakS(h[1]); const q=(window.SCHQ||{})[h[3]];
+  if(q!=null) a=.7*a+.3*q;                       // 배정 중학교(가장 가까운 중학교) 진학 실적이 있으면 섞음
+  return a; }
+function hakL(d){ const h=hakH(d); if(!h) return null;
+  let s=`주변 1km 교과(수학·영어) 학원 ${h[0]}곳`;
+  if(h[2]&&h[1]>h[0]) s+=` · 가까운 학원 밀집지 생활권(환산 ${h[1]}곳)`;
+  if(h[1]>=250) s+=' · 주요 학원가';
+  if(h[3]) s+=` · 가까운 중학교 ${h[3]} ${h[4]}m`;
+  return s; }
 const TIERS=[{k:'핵심',c:'#0066ff'},{k:'유망',c:'#00a35c'},{k:'관찰',c:'#8a8f98'}];
 
 const D=PICKS.map(d=>({...d,opt:(window.OPT||{})[d.n]||null}));
@@ -324,7 +346,7 @@ function score(d){
   if(isJubok(d)){ d.R*=.6; d.rl+=' · 주상복합(전용률 낮고 선호 낮음 −40%)'; }
   d.U7=unS(d.units); const br=brS(d); d.B=br[0]; d.bl=br[1];
   const gj=gjOf(d); d.gj=gj.v; d.gjsrc=gj.src; d.GJ=gjS(d.gj);
-  d.E=g.sc==null?null:scS(g.sc)*6/15; d.F=g.dh==null?null:flS(g.dh)*5/15; d.A=acS(g.ac);
+  d.E=g.sc==null?null:scS(g.sc)*6/15; d.F=g.dh==null?null:flS(g.dh)*5/15; d.A=hakA(d)??acS(g.ac); d.Al=hakL(d);
   /* 교통 23점: 지금 역 vs 개통 예정 역 중 큰 쪽 */
   d.cur=null; d.fut=null;
   if(g.sts){ const by={}; g.sts.forEach(([n,m])=>{ const b=n.split(' ')[0]; (by[b]=by[b]||{b,m,ls:[]}); by[b].m=Math.min(by[b].m,m); const l=lineOf(n); if(l&&!by[b].ls.includes(l)) by[b].ls.push(l); });
@@ -581,7 +603,7 @@ function renderList(){
     ${pend?`<div class="inline-note tnum" style="margin-top:12px">역·초등학교·경사를 지도 데이터로 계산하는 중 · ${D.length-pend}/${D.length}<br><small>처음 한 번만 걸리고, 끝나면 순위가 확정됩니다.</small></div>`:''}
     <details class="method"><summary>점수 매기는 법 ${CHEV}</summary><dl>
       <div><dt>급지<small>25점</small></dt><dd>구·시 아파트 전체 평균 평당가(리치고, 구마다 70~350개 단지)에, 같은 구 안에서 그 동이 얼마나 비싼지를 곱한 값. 동 보정은 수도권 대단지 920곳을 연식·평형·세대수로 보정한 회귀(설명력 93%)에서 뽑음. 평당 3,000만 원 이상 만점, 700만 원 이하 0점.</dd></div>
-      <div><dt>학군<small>10점</small></dt><dd>반경 1km 안 학원 수(카카오맵). 400곳 이상 만점, 250곳 8점, 150곳 6점, 80곳 4점. 학원가가 곧 학군 수요라 학원 밀도로 봄.</dd></div>
+      <div><dt>학군<small>10점</small></dt><dd>주변 1km 교과(수학·영어) 학원 수, 또는 가까운 학원 밀집지(교과학원 250곳+, 1km까지 그대로·3km에서 0)까지의 접근값 중 큰 값. 15곳 0점 → 350곳 이상 10점(로그). 대치 542·목동 319·중계 312·평촌 302·일산 후곡 271·부천 상동 184곳(학원가 중심 실측). 학교별 진학 실적은 공개 데이터가 없어 아직 미반영.</dd></div>
       <div><dt>직주근접<small>9점</small></dt><dd>강남·여의도·광화문·판교 중 가장 가까운 곳까지 대중교통. 25분 이내 만점, 65분 0점.</dd></div>
       <div><dt>교통<small>23점</small></dt><dd>반경 3km 안 모든 역을 각각 (거리 점수 × 노선 등급 × 환승 가산)으로 매겨 가장 좋은 역 하나. 거리: 400m 만점, 1km 76%, 1.5km 60%, 3km 16%. 노선: S 2·9호선·신분당·GTX 100% / A 3·7호선 90%, 5호선·월판선·신안산선 85% / B 4·6·8호선·수인분당·공항철도 80% / C 1호선·경의중앙·서해·동북·인동·경전철급 70%. 환승역은 노선 하나당 +8%(최대 16%). 개통 예정 역도 같은 식으로 매기고 개통까지 1년당 5% 할인(최대 20%). 지금 역과 예정 역 중 큰 쪽만 반영해서, 이미 역세권인 단지가 호재 없다고 손해 보지 않음.</dd></div>
             <div><dt>상품성(연식)<small>12점</small></dt><dd>5년 이내 12점, 10년 10, 15년 7, 20년 4, 25년 2.4, 26~29년 1.2. 재건축 대상(30년+·정비 단계)은 단계와 상관없이 7.2점 — 재건축 단계의 가치는 상승 여력(실현률)에서 한 번만 셈.</dd></div>
@@ -666,7 +688,7 @@ function renderDetail(i){
   </dl>
   <section class="sec"><h3>입지 점수 <small>${d.loc.toFixed(1)} / 100${d.pending?' · 계산 중':''}</small></h3><div class="score tnum">
     <div><span class="l">급지<small>평당 ${d.gj.toLocaleString()}만 · ${d.gjsrc}</small></span><span class="v">${d.GJ.toFixed(1)}<i> / 25</i></span>${bar(d.GJ,25)}</div>
-    <div><span class="l">학군<small>${d.g.ac!=null?`반경 1km 학원 ${d.g.ac.toLocaleString()}곳`:'계산 중'}</small></span><span class="v">${d.A!=null?d.A.toFixed(1):'–'}<i> / 10</i></span>${bar(d.A||0,10)}</div>
+    <div><span class="l">학군<small>${d.Al?esc(d.Al):d.g.ac!=null?`반경 1km 학원 ${d.g.ac.toLocaleString()}곳`:'계산 중'}</small></span><span class="v">${d.A!=null?d.A.toFixed(1):'–'}<i> / 10</i></span>${bar(d.A||0,10)}</div>
     <div><span class="l">직주근접<small>${esc(d.tbj)}까지 약 ${d.tbe}분 = 구 대표 ${d.tbm}분${d.acc?` + 역까지 ${Math.round(d.acc)}분`:''}${d.lnp?` + 하위 노선 환승 ${d.lnp}분`:''}</small></span><span class="v">${d.J.toFixed(1)}<i> / 9</i></span>${bar(d.J,9)}</div>
     <div><span class="l">교통<small>${transitTxt(d)}</small></span><span class="v">${d.T!=null?d.T.toFixed(1):'–'}<i> / 23</i></span>${bar(d.T||0,23)}</div>
     <div><span class="l">상품성(연식)<small>${esc(d.rl)}</small></span><span class="v">${d.R.toFixed(1)}<i> / 12</i></span>${bar(d.R,12)}</div>
