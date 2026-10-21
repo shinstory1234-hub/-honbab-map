@@ -223,6 +223,7 @@ aside{order:-1;width:408px;flex:none;border-right:1px solid var(--border);backgr
 </main>
 
 <script src="apt-picks.js"></script>
+<script src="apt-auto3.js"></script>
 <script>
 const KAKAO_JS_KEY='106bb734e8600621686fade2de7f8afb';
 const $=s=>document.querySelector(s);
@@ -239,13 +240,15 @@ const CHEV='<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="
 function calc(d){
   const age=2026-d.year, norm=age<=10?95:age>=30?75:65;
   const me=d.me||Math.round(d.p/d.py), vs=Math.round(me/d.bench.ppp*100);
-  const M=Math.min(30,d.rate.v/.8*30);
-  const G=Math.max(0,Math.min(25,(norm-vs)/30*25+12.5));
+  const tbv=d.tb!=null?[d.tb,d.tbj]:(TB[d.rate.gu.split(' ').pop()]||[50,'서울 업무지구']);
+  const M=Math.min(25,d.rate.v/.8*25);
+  const G=Math.max(0,Math.min(20,(norm-vs)/30*20+10));
+  const C=Math.round(d.c*.8);
+  const I=Math.max(0,Math.min(25,(70-tbv[0])/45*25));
   const L=d.units>=2000?10:d.units>=1000?8:d.units>=500?5:2;
-  const C=d.c;
-  return {me,vs,norm,M,G,C,L,score:Math.round((M+G+C+L)/90*100)};
+  return {me,vs,norm,M,G,C,I,L,tbm:tbv[0],tbj:tbv[1],score:Math.round(M+G+C+I+L)};
 }
-const TIER=s=>s>=70?{k:'핵심',c:'#0066ff'}:s>=58?{k:'유망',c:'#00a35c'}:{k:'관찰',c:'#8a8f98'};
+const TIER=s=>s>=70?{k:'핵심',c:'#0066ff'}:s>=60?{k:'유망',c:'#00a35c'}:{k:'관찰',c:'#8a8f98'};
 const D=PICKS.map(d=>({...d,...calc(d)})).sort((a,b)=>b.score-a.score);
 D.forEach((d,i)=>{d.rank=i+1;d.tier=TIER(d.score);});
 
@@ -261,10 +264,10 @@ function need(d){ const m=money(d);
   return {l:'대출 끼면 필요한 돈',v:m.cash,x:m.note};
 }
 
-const FILTERS=[['all','전체'],['top','핵심 70점+'],['free','비규제'],['재건축','재건축'],['반도체','반도체 수요'],['신혼','신혼 30평대'],['소형할인','소형 할인'],['천지개벽','천지개벽']];
+const FILTERS=[['all','전체'],['top','핵심 70점+'],['mid','유망 60점+'],['man','직접 분석'],['free','비규제'],['재건축','재건축'],['반도체','반도체 수요'],['신혼','신혼 30평대'],['소형할인','소형 할인'],['천지개벽','천지개벽']];
 const state={f:'all',q:'',sel:null};
 const visible=d=>{
-  const f=state.f, ok=f==='all'||(f==='top'&&d.score>=70)||(f==='free'&&d.reg==='free')||d.tags.includes(f);
+  const f=state.f, ok=f==='all'||(f==='top'&&d.score>=70)||(f==='mid'&&d.score>=60)||(f==='man'&&!d.auto)||(f==='free'&&d.reg==='free')||d.tags.includes(f);
   return ok&&(!state.q||(d.n+d.area+d.headline).includes(state.q));
 };
 
@@ -273,12 +276,14 @@ function renderList(){
   let h=`<section class="intro">
     <div class="eyebrow">6억 이하 · 오를 단지<i></i>${D.length}곳</div>
     <h1>6억 안에서, 지금 돈이 들어오는 동네의 덜 오른 단지</h1>
-    <p>동네가 오르고 있는지, 그 안에서 아직 덜 올랐는지, 날짜가 박힌 이벤트가 있는지로 골랐습니다. 하락 중인 지역과 입지 천장에 닿은 곳은 뺐습니다.</p>
+    <p>입지, 동네 상승세, 아직 덜 오른 가격, 날짜가 박힌 이벤트로 점수를 매겼습니다. 하락 중인 지역은 뺐습니다. ${D.filter(d=>!d.auto).length}곳은 직접 분석, 나머지는 같은 점수식으로 자동 선별했습니다.</p>
     <details class="method"><summary>점수 매기는 법 ${CHEV}</summary><dl>
-      <div><dt>동네 상승세<small>30점</small></dt><dd>그 구의 최근 주간 아파트값 상승률. 0.8% 이상이면 만점. 부동산원·KB 10월 2주 발표 기준.</dd></div>
-      <div><dt>가격 여유<small>25점</small></dt><dd>같은 동 신축 대비 평당가. 연식별로 정상 비율(신축 95%, 구축 65%, 30년+ 75%)보다 쌀수록 높음.</dd></div>
-      <div><dt>확정 이벤트<small>25점</small></dt><dd>시공사 선정·특별정비구역·정비구역 지정·개통일 확정 노선. 진행 단계가 늦을수록 높음.</dd></div>
-      <div><dt>단지 규모<small>10점</small></dt><dd>2,000세대 이상 만점. 대단지일수록 거래가 많아 사고팔기 쉬움.</dd></div>
+      <div><dt>입지<small>25점</small></dt><dd>가장 가까운 대형 업무지구(강남·여의도·광화문·판교·삼성 반도체)까지 대중교통 시간. 25분 이내 만점, 70분이면 0점.</dd></div>
+      <div><dt>동네 상승세<small>25점</small></dt><dd>그 구의 최근 주간 아파트값 상승률. 0.8% 이상이면 만점. 부동산원·KB 10월 2주 발표 기준.</dd></div>
+      <div><dt>가격 여유<small>20점</small></dt><dd>같은 생활권 신축 대비 평당가. 연식별 정상 비율(신축 95%, 구축 65%, 30년+ 75%)보다 쌀수록 높음.</dd></div>
+      <div><dt>확정 이벤트<small>20점</small></dt><dd>시공사 선정·특별정비구역·정비구역 지정·공사 중인 노선. 단계가 진전될수록 높음.</dd></div>
+      <div><dt>단지 규모<small>10점</small></dt><dd>2,000세대 이상 만점. 거래가 많아 사고팔기 쉬움.</dd></div>
+      <div><dt>대상<small>범위</small></dt><dd>시세·최근 실거래 모두 6억 이하, 300세대 이상. 직접 분석한 23곳 + 같은 점수식을 통과(50점+)한 단지 전부.</dd></div>
     </dl></details>
   </section>
   <div class="filters" role="group" aria-label="필터">${FILTERS.map(([k,l])=>`<button data-f="${k}" aria-pressed="${state.f===k}">${l}</button>`).join('')}</div>
@@ -286,7 +291,7 @@ function renderList(){
   list.forEach(d=>{
     h+=`<article class="row" data-i="${D.indexOf(d)}">
       <span class="rk tnum">${String(d.rank).padStart(2,'0')}</span>
-      <div style="min-width:0"><div class="kicker"><span class="chip" style="--chip:${d.tier.c}">${d.tier.k}</span><span>${esc(d.area)}</span></div>
+      <div style="min-width:0"><div class="kicker"><span class="chip" style="--chip:${d.tier.c}">${d.tier.k}</span><span>${esc(d.area)}</span>${d.auto?'<span>· 자동</span>':''}</div>
         <h3>${esc(d.n)}</h3><p>${esc(d.headline)}</p></div>
       <div class="px tnum"><strong>${short(d.p)}</strong><span>${d.py}평 · ${d.reg==='free'?'비규제':'토허'}</span><b>${d.score}점</b></div>
     </article>`;
@@ -304,7 +309,7 @@ function renderDetail(i){
   const bar=(v,max)=>`<div class="t"><b style="width:${Math.round(v/max*100)}%"></b></div>`;
   const src=RATE_SRC[d.rate.src];
   let h=`<div class="phead"><button id="back"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M15 18 9 12l6-6"/></svg>목록</button><span class="tnum">${d.rank}위 / ${D.length}</span></div>
-  <section class="identity"><div class="cat">${esc(tags)}</div><h2>${esc(d.n)}</h2>
+  <section class="identity"><div class="cat">${esc(tags)}${d.auto?' · 점수식 자동 선별':' · 직접 분석'}</div><h2>${esc(d.n)}</h2>
     <div class="meta tnum"><span>${esc(d.area)}</span><span>${d.year}년 입주</span><span>${d.units.toLocaleString()}세대</span></div></section>
   <div class="lede"><strong>${esc(d.headline)}</strong><p>${esc(d.sub)}</p></div>
   <dl class="kpis tnum">
@@ -314,11 +319,12 @@ function renderDetail(i){
     <div><dt>${/^같은 단지/.test(d.bench.name)?'같은 단지 큰 평형 대비':'동네 신축 대비'}</dt><dd>${d.vs}<i>%</i></dd><small>평당가 기준</small></div>
   </dl>
   <section class="sec"><h3>왜 오를까 <small>점수 구성</small></h3><div class="score tnum">
-    <div><span class="l">동네 상승세<small>${esc(d.rate.gu)} 주간 +${d.rate.v.toFixed(2)}% · ${esc(src)}</small></span><span class="v">${d.M.toFixed(0)}<i> / 30</i></span>${bar(d.M,30)}</div>
-    <div><span class="l">가격 여유<small>평당 ${d.me.toLocaleString()}만 원, 비교 대상의 ${d.vs}% (이 연식 정상치 ${d.norm}%)</small></span><span class="v">${d.G.toFixed(0)}<i> / 25</i></span>${bar(d.G,25)}</div>
-    <div><span class="l">확정 이벤트<small>${esc(d.c_label)}</small></span><span class="v">${d.C}<i> / 25</i></span>${bar(d.C,25)}</div>
+    <div><span class="l">입지<small>${esc(d.tbj)}까지 약 ${d.tbm}분</small></span><span class="v">${d.I.toFixed(0)}<i> / 25</i></span>${bar(d.I,25)}</div>
+    <div><span class="l">동네 상승세<small>${esc(d.rate.gu)} 주간 +${d.rate.v.toFixed(2)}% · ${esc(src)}</small></span><span class="v">${d.M.toFixed(0)}<i> / 25</i></span>${bar(d.M,25)}</div>
+    <div><span class="l">가격 여유<small>평당 ${d.me.toLocaleString()}만 원, 비교 대상의 ${d.vs}% (이 연식 정상치 ${d.norm}%)</small></span><span class="v">${d.G.toFixed(0)}<i> / 20</i></span>${bar(d.G,20)}</div>
+    <div><span class="l">확정 이벤트<small>${esc(d.c_label)}</small></span><span class="v">${d.C}<i> / 20</i></span>${bar(d.C,20)}</div>
     <div><span class="l">단지 규모<small>${d.units.toLocaleString()}세대</small></span><span class="v">${d.L}<i> / 10</i></span>${bar(d.L,10)}</div>
-    <div class="total"><span class="l">합계 (100점 환산)</span><span class="v">${d.score}점</span></div>
+    <div class="total"><span class="l">합계</span><span class="v">${d.score}점</span></div>
   </div></section>
   <section class="sec"><h3>가격 비교 <small>평당 만 원</small></h3><div class="cmp tnum">
     <div class="me"><span class="n">${esc(d.n)} ${d.py}평</span><span class="v">${d.me.toLocaleString()}</span>${bar(d.me,Math.max(d.me,d.bench.ppp))}</div>
