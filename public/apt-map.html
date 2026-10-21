@@ -341,7 +341,7 @@ function solve(A,b){ const n=b.length, M=A.map((r,i)=>[...r,b[i]]);
 }
 /* 수도권 대단지 920곳 회귀에서 나온 연식 할인(신축 0~5년 대비, ln) */
 /* 연식 할인: 신축 578곳만으로 맞춘 회귀(재건축 프리미엄이 섞이지 않게 25년차 이하만) */
-const AGEC=a=>a<=5?0:a<=10?-.056:a<=15?-.139:a<=20?-.27:a<=25?-.46:-.5;
+const AGEC=a=>a<=5?0:a<=10?-.056:a<=15?-.139:a<=20?-.27:a<=25?-.46:-.55;
 /* 같은 단지 안 평형별 평당가 실측(어바인·센텀·메가트리아·상계주공 등)으로 잡은 34평 대비 배율 */
 const SIZE=(py,age)=>age<=15?(py<20?.85:py<28?1.07:1):age>=30?(py<20?1.05:py<28?1:.95):1;
 const NEWTOWN=/동안|군포|원미|일산|분당|영통/;   // 1기 신도시·노후계획도시: 특별법 용적률 상향
@@ -352,7 +352,7 @@ const NEWTOWN=/동안|군포|원미|일산|분당|영통/;   // 1기 신도시·
    ④ 완공 시 가치 = 34평 × 동네 신축 평당가 × (1+판도 프리미엄) × (1+집값 상승률)^기간
    ⑤ 현재가치 = (④ − 분담금) ÷ (1+할인율)^기간 − 공사 기간 4년 못 사는 비용
    ⑥ 기대가치 = 성공확률 × ⑤ + (1−성공확률) × 지금 가격 × 0.9(무산 시 기대감 빠짐) */
-const RB={g:.03,e:.035,r:.05,ex:1.45,oh:1.22,sale:.9,fail:.9,rent:.045};
+const RB={lam:.12,cont:1.05,g:.03,e:.045,r:.05,ex:1.45,oh:1.22,sale:.9,fail:.9,rent:.045};
 const FARK={'하안주공3단지':163,'창동주공4단지':151,'한가람한양':208,'산본주공11단지':183,'샛별한양1단지':204,'우만주공4단지':189,'상계주공14단지':146,'창동주공17단지':191,'부평동아1단지':181,'관양동 공작부영':198,'원천주공':188,'원천1차삼성':179};
 const CKN={'관양동 공작부영':[1510,'실제 공사비 6,463억 ÷ 1,934세대, 평균 27평 환산 × 기타 1.22']};   // 단지 실측 사업비
 const ALT=/매탄|원천|권선|세류|곡반정|장지|평동|고색/;   // 수원 군공항 비행안전구역(고도제한) 추정 지역
@@ -374,29 +374,38 @@ function farNew(d){ const a=d.area, gu=d.rate.gu;
   if(/일산|덕양/.test(gu)) return [300,'일산 기준용적률',.25];
   return [280,'경기 3종 상향 적용',.2]; }
 /* 단계 → 완공까지 기간(년)·성공확률 */
+/* 단계 → 완공까지 기간(년)·기간 내 완공 확률. 서울·수도권 재건축 실제 소요(안전진단→준공 평균 15년+)와 중단·지연 사례 반영 */
 function stage(d){ const st=stOf(d), age=2026-d.year;
-  if(st>=85) return [6,.85,'시공사 선정·사업계획 승인'];
-  if(st>=80) return [7,.8,'정비구역 지정·조합 설립 중'];
-  if(st>=70) return [9,.7,'정비구역 지정 · 추진위 승인 전'];
-  if(st>=60) return [9,.65,'정비구역 지정 직전'];
-  if(st>=50) return [9,.6,'정비구역 지정 절차'];
-  if(st>=45) return [11,.5,'안전진단 통과'];
-  if(st>=40) return [11,.45,'추진위·주민제안'];
-  if(st>=35) return [14,.3,'정비 대상 지구(구역 미정, 추진 주체 없음)'];
-  return [15,.25,`${age}년차 · 사업 미착수`]; }
+  if(st>=85) return [7,.8,'시공사 선정·사업계획 승인 단계'];
+  if(st>=80) return [8,.7,'정비구역 지정·조합 설립 중'];
+  if(st>=70) return [10,.6,'정비구역 지정 · 추진위 승인 전'];
+  if(st>=60) return [10,.55,'정비구역 지정 직전'];
+  if(st>=50) return [10,.5,'정비구역 지정 절차'];
+  if(st>=45) return [12,.4,'안전진단 통과'];
+  if(st>=40) return [12,.35,'추진위·주민제안'];
+  if(st>=35) return [15,.2,'정비 대상 지구(구역 미정, 추진 주체 없음)'];
+  return [16,.15,`${age}년차 · 사업 미착수`]; }
+/* 같은 동네 안에서도 역·평지·브랜드·세대수 차이만큼 시세가 다른 건 정상 — 그만큼은 여력이 아님 */
+function microAdj(d,withBrand){ const T=d.T??15, F=d.F??2.5, parts=[];
+  const t=Math.max(-.12,Math.min(.12,.012*(T-15))); parts.push(['교통',t]);
+  const f=.01*(F-3); parts.push(['평지',f]);
+  if(withBrand){ const b=[-.04,-.02,0,.03][d.B]||0; parts.push(['브랜드',b]);
+    const u=d.units>=1000?0:-.1*Math.log(1000/d.units); parts.push(['세대수',u]); }
+  const k=Math.exp(parts.reduce((s,x)=>s+x[1],0)); return [k,parts]; }
 /* 완공 시세 기준: 주변 실제 신축 단지(이름 있는 실측)가 있으면 그것을 34평·신축 기준으로 환산, 없으면 동 회귀값 */
 function anchorOf(d,fw){ const b=d.bench||{}, n=b.name||'';
   if(!b.ppp||/평균|추정|보정/.test(n)) return [fw,`동네 신축 회귀 표준(34평·5년 이내) ${fw.toLocaleString()}만`];
   const py=+(n.match(/(\d+)평/)||[0,34])[1], ag=/신축/.test(n)?0:+(n.match(/(\d+)년차/)||[0,3])[1];
   const v=Math.round(b.ppp/SIZE(py,ag)/Math.exp(AGEC(ag)));
   return [v,`주변 실제 신축 ${esc(n.split('·')[0].trim())} 평당 ${b.ppp.toLocaleString()}만 → 34평·신축 환산 ${v.toLocaleString()}만`]; }
-function rbModel(d,fw0){ const [fw,fwl]=anchorOf(d,fw0);
+function rbModel(d,fw0){ const [fw1,fwl]=anchorOf(d,fw0), [mk,mp]=microAdj(d,false), fw=Math.round(fw1*mk);
   const P=d.p, rm=RMK.test(d.n), [T,p,sl]=stage(d), seoul=/^서울/.test(d.area);
   const W=seoul?880:800, ck=CKN[d.n], C=ck?ck[0]:W*RB.ex*RB.oh*(rm?.9:1);                 // 사업비/공급평 = 공사비×(지하·부대 1.45)×(설계·금융·이주비 1.22)
   const [fo,fol]=farOld(d); let fn,fnl,pub,A,tgt,unit,pi;
   if(rm){ fn=Math.round(fo*1.3); fnl='리모델링 증축'; pub=0; A=d.py*1.4; tgt=A; unit=fw*.85; pi=0; }
   else { [fn,fnl,pub]=farNew(d); A=d.py*(1+(fn/fo-1)*(1-pub))*.95; tgt=Math.max(34,d.py); unit=fw; pi=PANDO.test(d.area)?.1:0; }
-  const tb=Math.max(T-3,0), CT=C*Math.pow(1+RB.e,tb);                 // 착공 시점까지 공사비 상승
+  const signed=stOf(d)>=85, tb=Math.max(signed?T-3:T-2,0), cont=signed?1:RB.cont;
+  const CT=C*cont*Math.pow(1+RB.e,tb);                                  // 공사비 상승(물가연동) + 미계약이면 증액 예비 10%
   const Pg=unit*(1+pi)*Math.pow(1+RB.g,tb)*RB.sale;                    // 일반분양가(시세의 90%)
   const extra=rm?.136*A*(Pg-CT):(A-tgt)*(Pg-CT);                       // 리모델링은 늘어난 일반분양 13.6%분
   const bun=tgt*CT-extra;                                              // 분담금(완공 시점 명목)
@@ -405,8 +414,8 @@ function rbModel(d,fw0){ const [fw,fwl]=anchorOf(d,fw0);
   const PVs=(V-bun)/Math.pow(1+RB.r,T)-lost;
   let pp=p, small='';
   if(d.units<1000&&!/동안|군포|원미|일산|분당/.test(d.rate.gu)&&!rm){ pp=p*.85; small=' · 1천 세대 미만 단독 추진 −15%'; }
-  const E=pp*PVs+(1-pp)*P*RB.fail;
-  return {fwl,ck,small,rm,T,p:pp,sl,W,C:Math.round(C),CT:Math.round(CT),fo,fol,fn,fnl,pub,A,tgt,unit,pi,Pg:Math.round(Pg),bun:Math.round(bun),V:Math.round(V),lost:Math.round(lost),PVs:Math.round(PVs),E:Math.round(E),gross:PVs/P-1};
+  const E0=pp*PVs+(1-pp)*P*RB.fail, sd=Math.sqrt(pp*(1-pp))*Math.abs(PVs-P*RB.fail), E=E0-RB.lam*sd;
+  return {E0:Math.round(E0),sd:Math.round(sd),mk,mp,signed,cont,tb,fwl,ck,small,rm,T,p:pp,sl,W,C:Math.round(C),CT:Math.round(CT),fo,fol,fn,fnl,pub,A,tgt,unit,pi,Pg:Math.round(Pg),bun:Math.round(bun),V:Math.round(V),lost:Math.round(lost),PVs:Math.round(PVs),E:Math.round(E),gross:PVs/P-1};
 }
 /* 임대 후 확정가 매수(장기전세·분양전환): 지금 보증금만 내고 Y년에 K원에 살 권리 */
 function optModel(d,fair){ const o=d.opt, n=o.Y-2026, P=d.py*fair;
@@ -417,13 +426,17 @@ function recompute(){
   D.forEach(score);
   D.forEach(d=>{
     const age=2026-d.year, J=G(), k=dkey(d), g=guTok(d);
-    const fw=J.FW[k]||J.FWG[g]||d.bench.ppp; d.fw=fw;                       // 이 동네 신축 34평 표준 평당가
+    let fw=J.FW[k]; d.fwsrc='동 회귀';                                        // 이 동네 신축 34평 표준 평당가
+    if(!fw){ const [a]=anchorOf(d,0); if(a){ fw=a; d.fwsrc='주변 실제 신축 환산'; } else { fw=J.FWG[g]||d.bench.ppp; d.fwsrc='구 평균(동 데이터 없음)'; } }
+    d.fw=fw;
     d.rb=age>=30||stOf(d)>=35;
     if(d.opt){
-      d.fair=Math.round(fw*Math.exp(AGEC(age))*SIZE(d.py,age)); d.om=optModel(d,d.fair);
+      const [mk,mp]=microAdj(d,true); d.mk=mk; d.mp=mp;
+      d.fair=Math.round(fw*Math.exp(AGEC(age))*SIZE(d.py,age)*mk); d.om=optModel(d,d.fair);
       d.up=d.om.P/d.om.cost-1; d.upSrc='opt';
     } else if(!d.rb){
-      d.fair=Math.round(fw*Math.exp(AGEC(age))*SIZE(d.py,age));            // 같은 동네·같은 연식·같은 평형이면 받을 값
+      const [mk,mp]=microAdj(d,true); d.mk=mk; d.mp=mp;
+      d.fair=Math.round(fw*Math.exp(AGEC(age))*SIZE(d.py,age)*mk);         // 같은 동네·연식·평형 + 이 단지 입지(역·평지·브랜드·세대수)면 받을 값
       d.up=d.fair/d.me-1; d.upSrc='now';
     } else {
       d.m=rbModel(d,fw); d.up=d.m.E/d.p-1; d.upSrc='rb'; d.gross=d.m.gross;
@@ -513,15 +526,16 @@ function rbHTML(d){ const m=d.m, P=d.p;
   } else {
     h.push(lrow('+','재건축 후 내 몫 면적',`${d.py}평 × [1 + (용적률 ${m.fo}%→${m.fn}% = ${(m.fn/m.fo).toFixed(2)}배 − 1) × (1 − 공공기여·임대 ${Math.round(m.pub*100)}%)] × 0.95(커뮤니티 등)<br>기존 용적률 ${esc(m.fol)} · 새 용적률 ${esc(m.fnl)}`,`${m.A.toFixed(1)}평`));
   }
-  h.push(lrow('−','사업비',m.ck?`${esc(m.ck[1])} = 공급평당 ${m.C.toLocaleString()}만<br>착공까지 ${Math.max(m.T-3,0)}년 × 연 ${(RB.e*100).toFixed(1)}% 상승 → ${m.CT.toLocaleString()}만`:`공사비 연면적 평당 ${m.W}만 × 지하·부대 1.45 × 설계·금융·이주비 1.22${m.rm?' × 리모델링 0.9':''} = 공급평당 ${m.C.toLocaleString()}만<br>착공까지 ${Math.max(m.T-3,0)}년 × 연 ${(RB.e*100).toFixed(1)}% 상승 → ${m.CT.toLocaleString()}만`,`평당 ${m.CT.toLocaleString()}만`));
+  h.push(lrow('−','사업비',m.ck?`${esc(m.ck[1])} = 공급평당 ${m.C.toLocaleString()}만<br>${m.signed?'':'공사비 증액 예비 +5%(시공 계약 전) · '}${m.tb}년 × 연 ${(RB.e*100).toFixed(1)}% 상승(물가연동) → ${m.CT.toLocaleString()}만`:`공사비 연면적 평당 ${m.W}만 × 지하·부대 1.45 × 설계·금융·이주비 1.22${m.rm?' × 리모델링 0.9':''} = 공급평당 ${m.C.toLocaleString()}만<br>${m.signed?'':'공사비 증액 예비 +5%(시공 계약 전) · '}${m.tb}년 × 연 ${(RB.e*100).toFixed(1)}% 상승(물가연동) → ${m.CT.toLocaleString()}만`,`평당 ${m.CT.toLocaleString()}만`));
   h.push(lrow('−','분담금',m.rm?`${m.A.toFixed(1)}평 × ${m.CT.toLocaleString()}만 − 늘어난 일반분양(13.6%) 수익`
     :`목표 ${m.tgt}평 × 사업비 ${m.CT.toLocaleString()}만 ${m.A<m.tgt?'+':'−'} ${Math.abs(m.tgt-m.A).toFixed(1)}평 × (일반분양가 ${m.Pg.toLocaleString()}만 − 사업비)<br>${m.A<m.tgt?'모자란 면적을 일반분양가로 삼':'남는 면적을 일반분양으로 팔아 차감'} · 일반분양가 = 시세의 90%`,ek(m.bun)));
   h.push(lrow('+','완공 시 시세',`${m.tgt.toFixed(m.rm?1:0)}평 × 평당 ${Math.round(m.unit).toLocaleString()}만${m.rm?'(리모델링 15% 할인)':''}${m.pi?` × 판도 프리미엄 +${m.pi*100}%(주변 단지 일제 재건축)`:''} × 집값 연 ${RB.g*100}% × ${m.T}년`,eok(m.V)));
-  h.push(lrow('','완공 시세 기준',m.fwl,''));
+  h.push(lrow('','완공 시세 기준',m.fwl+(Math.abs(m.mk-1)>.005?`<br>× 단지 입지 보정 ${m.mk.toFixed(2)} (${m.mp.map(x=>x[0]+' '+(x[1]>=0?'+':'')+(x[1]*100).toFixed(1)+'%').join(', ')})`:''),''));
   h.push(lrow('−','시간 할인',`(완공 시세 − 분담금) ${ek(m.V-m.bun)}을 연 ${RB.r*100}%(대출금리·기회비용)로 ${m.T}년 할인`,ek((m.V-m.bun)/Math.pow(1+RB.r,m.T))));
   h.push(lrow('−','공사 중 못 사는 비용',`이주 4년 × 전세 ${eok(d.jeon||P*.4)} × ${(RB.rent*100).toFixed(1)}%`,ek(-m.lost)));
   h.push(lrow('','성공하면 지금 가치',`지금 가격 대비 ${pc(m.gross)}`,eok(m.PVs)));
-  h.push(lrow('−','실현 가능성',`${esc(m.sl)} → 성공 ${Math.round(m.p*100)}%${esc(m.small)}, 무산되면 기대감 빠져 지금 가격의 90%<br>${Math.round(m.p*100)}% × ${eok(m.PVs)} + ${Math.round((1-m.p)*100)}% × ${eok(P*RB.fail)}`,eok(m.E)));
+  h.push(lrow('−','실현 가능성',`${esc(m.sl)} → 성공 ${Math.round(m.p*100)}%${esc(m.small)}, 무산되면 기대감 빠져 지금 가격의 90%<br>${Math.round(m.p*100)}% × ${eok(m.PVs)} + ${Math.round((1-m.p)*100)}% × ${eok(P*RB.fail)}`,eok(m.E0)));
+  h.push(lrow('−','불확실성 차감',`성공·무산 결과 차이의 표준편차 ${eok(m.sd)} × ${RB.lam} — 확실한 신축과 같은 잣대로 비교하려고`,ek(-RB.lam*m.sd)));
   h.push(lrow('=','기대가치 vs 지금 가격','',pc(d.up),'tot'));
   return `<div class="ldg tnum">${h.join('')}</div><p class="note">가정: 집값 연 ${RB.g*100}%, 공사비 연 ${(RB.e*100).toFixed(1)}%, 할인율 ${RB.r*100}%, 착공~완공 3년·이주 4년. 기존 용적률이 '추정'이면 실측으로 바꿀 때 결과가 크게 달라짐. 34평 기준이라 소형 조합원이 25평을 받는 경우보다 분담금이 크게 잡힘.</p>`; }
 function optHTML(d){ const o=d.opt, m=d.om;
@@ -529,7 +543,7 @@ function optHTML(d){ const o=d.opt, m=d.om;
     lrow('','지금 내는 돈',`${esc(o.kind)} 보증금 (${esc(o.src)})`,eok(o.dep)),
     lrow('−',`${o.Y}년 매수 확정가`,`${m.n}년 뒤 ${eok(o.K)}에 매수 · 보증금은 매수대금에 충당`,eok(o.K)),
     lrow('','지금 돈으로 환산한 실제 매수가',`보증금 + (확정가 − 보증금) ÷ 1.05^${m.n}`,eok(m.cost)),
-    lrow('+','이 동네 같은 연식·평형 적정가',`신축 평당 ${d.fw.toLocaleString()}만 × 연식 ${Math.exp(AGEC(2026-d.year)).toFixed(2)} × 평형 ${SIZE(d.py,2026-d.year).toFixed(2)} × ${d.py}평`,eok(m.P)),
+    lrow('+','이 동네 같은 연식·평형 적정가',`신축 평당 ${d.fw.toLocaleString()}만 × 연식 ${Math.exp(AGEC(2026-d.year)).toFixed(2)} × 평형 ${SIZE(d.py,2026-d.year).toFixed(2)} × 입지 보정 ${d.mk.toFixed(2)} × ${d.py}평`,eok(m.P)),
     lrow('+',`${o.Y}년 예상 시세`,`연 ${RB.g*100}% 상승 · 확정가보다 ${ek(m.gainY)} 높음`,eok(m.VY)),
     lrow('=','적정가 vs 실제 매수가','',pc(d.up),'tot')].join('')}</div><p class="note">${esc(o.note)}</p>`; }
 function renderDetail(i){
@@ -561,7 +575,7 @@ function renderDetail(i){
   ${d.upSrc==='now'?`<div class="cmp tnum">
     <div class="me"><span class="n">이 단지 현재 (${d.py}평 ${eok(d.p)})</span><span class="v">${d.me.toLocaleString()}</span>${bar(d.me,Math.max(d.me,d.fair))}</div>
     <div><span class="n">이 동네에서 ${2026-d.year}년차·${d.py}평이 받을 값</span><span class="v">${d.fair.toLocaleString()}</span>${bar(d.fair,Math.max(d.me,d.fair))}</div>
-  </div><p class="note">계산: 동네 신축 표준 평당 ${d.fw.toLocaleString()}만 × 연식 보정 ${Math.exp(AGEC(2026-d.year)).toFixed(2)} × 평형 보정 ${SIZE(d.py,2026-d.year).toFixed(2)} = ${d.fair.toLocaleString()}만. 현재가가 이보다 ${d.up>=0?Math.round(d.up*100)+'% 싸다':Math.round(-d.up*100)+'% 비싸다'}.</p>`
+  </div><p class="note">계산: 동네 신축 표준 평당 ${d.fw.toLocaleString()}만(${d.fwsrc}) × 연식 보정 ${Math.exp(AGEC(2026-d.year)).toFixed(2)} × 평형 보정 ${SIZE(d.py,2026-d.year).toFixed(2)} × 단지 입지 보정 ${d.mk.toFixed(2)}(${d.mp.map(x=>x[0]+' '+(x[1]>=0?'+':'')+(x[1]*100).toFixed(1)+'%').join(', ')}) = ${d.fair.toLocaleString()}만. 현재가가 이보다 ${d.up>=0?Math.round(d.up*100)+'% 싸다':Math.round(-d.up*100)+'% 비싸다'}.</p>`
   :d.upSrc==='opt'?optHTML(d):rbHTML(d)}
   </section>
   <section class="sec"><h3>가격 비교 <small>평당 만 원</small></h3><div class="cmp tnum">
