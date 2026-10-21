@@ -313,7 +313,8 @@ function score(d){
   const g=GEO[gkey(d)]||{};
   const tbv=d.tb!=null?[d.tb,d.tbj]:(TB[d.rate.gu.split(' ').pop()]||[50,'서울 업무지구']);
   d.tbm=tbv[0]; d.tbj=tbv[1]; d.g=g;
-  d.J=jobS(d.tbm)*9/15; let r=rbScore(d); d.R=r[0]*12/20; d.rl=r[1];
+  let r=rbScore(d); d.R=r[0]*12/20; d.rl=r[1]; d.g=g;
+  if(isJubok(d)){ d.R*=.6; d.rl+=' · 주상복합(전용률 낮고 선호 낮음 −40%)'; }
   d.U7=unS(d.units); const br=brS(d); d.B=br[0]; d.bl=br[1];
   const gj=gjOf(d); d.gj=gj.v; d.gjsrc=gj.src; d.GJ=gjS(d.gj);
   d.E=g.sc==null?null:scS(g.sc)*6/15; d.F=g.dh==null?null:flS(g.dh)*5/15; d.A=acS(g.ac);
@@ -330,6 +331,10 @@ function score(d){
     const gv=Math.max(...ls.map(l=>lineG(l).v),.7), x=Math.min(.16,.08*(ls.length-1)), disc=Math.max(.8,1-.05*(F[2]-2026));
     const v=23*stS(m)/25*Math.min(1,gv*(1+x))*disc; if(!d.fut||v>d.fut.v) d.fut={v,n:F[0].split(' ')[0],line:F[1],year:F[2],m,gv,disc}; });
   d.T=d.cur||d.fut?Math.max(d.cur?d.cur.v:0,d.fut?d.fut.v:0):null; d.Tsrc=d.fut&&(!d.cur||d.fut.v>d.cur.v)?'fut':'cur';
+  /* 직주근접: 구 대표 통근시간(역 기준) + 이 단지에서 역까지 접근(도보 80m/분, 버스면 최대 15분) + 하위 노선 환승 */
+  const sm=d.cur&&d.cur.m<99999?d.cur.m:null;
+  d.acc=sm==null?0:Math.min(15,Math.max(0,(sm-500)/80)); d.lnp=d.cur&&!d.cur.old&&d.cur.gv&&d.cur.gv<.8?3:0;
+  d.tbe=Math.round(d.tbm+d.acc+d.lnp); d.J=jobS(d.tbe)*9/15;
   d.pending=d.T==null||d.E==null||d.A==null;
   d.micro=(d.T??11)+(d.E??3)+(d.F??2.5);
   d.loc=Math.round((d.GJ+(d.A??3)+d.J+d.R+d.U7+d.B+d.micro)*10)/10;
@@ -387,11 +392,15 @@ function stage(d){ const st=stOf(d), age=2026-d.year;
   if(st>=35) return [15,.2,'정비 대상 지구(구역 미정, 추진 주체 없음)'];
   return [16,.15,`${age}년차 · 사업 미착수`]; }
 /* 같은 동네 안에서도 역·평지·브랜드·세대수 차이만큼 시세가 다른 건 정상 — 그만큼은 여력이 아님 */
+/* 주상복합: 전용률이 낮아(공급평 대비 실사용 65% 안팎, 아파트 78%) 공급평당 가격이 낮은 게 정상 + 선호도 할인 */
+const JUBOK=/롯데캐슬피렌체/;
+const isJubok=d=>JUBOK.test(d.n)||/주상복합/.test((d.g&&d.g.cat)||'');
 function microAdj(d,withBrand){ const T=d.T??15, F=d.F??2.5, parts=[];
   const t=Math.max(-.12,Math.min(.12,.012*(T-15))); parts.push(['교통',t]);
-  const f=.01*(F-3); parts.push(['평지',f]);
+  const f=.024*(F-4); parts.push(['평지',f]);              // 언덕 단지는 같은 동네에서 최대 −10%
   if(withBrand){ const b=[-.04,-.02,0,.03][d.B]||0; parts.push(['브랜드',b]);
     const u=d.units>=1000?0:-.1*Math.log(1000/d.units); parts.push(['세대수',u]); }
+  if(isJubok(d)) parts.push(['주상복합',Math.log(.82)]);
   const k=Math.exp(parts.reduce((s,x)=>s+x[1],0)); return [k,parts]; }
 /* 완공 시세 기준: 주변 실제 신축 단지(이름 있는 실측)가 있으면 그것을 34평·신축 기준으로 환산, 없으면 동 회귀값 */
 function anchorOf(d,fw){ const b=d.bench||{}, n=b.name||'';
@@ -427,15 +436,22 @@ function recompute(){
   D.forEach(score);
   D.forEach(d=>{
     const age=2026-d.year, J=G(), k=dkey(d), g=guTok(d);
-    /* 이 동네 신축 34평 표준 평당가: ① 동 신축 회귀 ② 동 전체 회귀를 신축 기준으로 환산 ③ 주변 실제 신축 ④ 구 평균×동 급지 비율 */
+    /* 이 동네 신축 34평 표준 평당가
+       ① 동 신축 회귀(25년차 이하 단지만 — 재건축 기대가 섞이지 않게)  ② 없으면 동 전체 회귀 환산  ③ 주변 실제 신축  ④ 구 평균 × 동 급지 비율
+       표본이 5곳 미만이면 바로 옆 실제 단지(연식 아는 비교 대상)를 신축 기준으로 환산해 표본수 : 2로 섞음 */
     const fnD=J.FN[k]&&J.FWG[g]&&J.FNG[g]?Math.round(J.FN[k]*J.FWG[g]/J.FNG[g]):null;
-    let fw=null; d.fwsrc='';
-    if(J.FW[k]&&fnD){ fw=Math.round((2*J.FW[k]+fnD)/3); d.fwsrc='동 신축 회귀 2 : 동 전체 회귀 1'; }
-    else if(J.FW[k]){ fw=J.FW[k]; d.fwsrc='동 신축 회귀'; }
-    else if(fnD){ fw=fnD; d.fwsrc='동 전체 회귀를 신축 기준 환산'; }
-    else { const [a]=anchorOf(d,0); if(a){ fw=a; d.fwsrc='주변 실제 신축 환산'; }
+    let fw=null, n2=0; d.fwsrc='';
+    if(J.FW[k]){ fw=J.FW[k]; n2=(J.FWN||{})[k]||1; d.fwsrc=`동 신축 회귀(25년차 이하 ${n2}곳)`; }
+    else if(fnD){ fw=fnD; d.fwsrc='동 전체 회귀 환산(재건축 기대 섞임)'; }
+    else { const [a]=anchorOf(d,0); if(a){ fw=a; n2=1; d.fwsrc='주변 실제 신축 환산'; }
       else if(J.FWG[g]&&J.GJ[k]&&J.GU[g]){ fw=Math.round(J.FWG[g]*J.GJ[k][0]/J.GU[g]); d.fwsrc='구 신축 평균 × 동 급지 비율'; }
       else { fw=Math.round((J.FWG[g]||d.bench.ppp)*.9); d.fwsrc='구 신축 평균의 90%(동 데이터 없음)'; } }
+    const b=d.bench||{}; d.blend=0;
+    if(!d.rb&&n2<5&&b.ppp&&!/평균|추정|보정/.test(b.name||'')&&/같은 단지|신축|년차/.test(b.name)){
+      const bpy=+((b.name.match(/(\d+)평/)||[0,34])[1]), ba=/같은 단지/.test(b.name)?age:/신축/.test(b.name)?0:+((b.name.match(/(\d+)년차/)||[0,-1])[1]);
+      if(ba>=0){ const bn=Math.round(b.ppp/SIZE(bpy,ba)/Math.exp(AGEC(ba)));
+        fw=Math.round((n2*fw+2*bn)/(n2+2)); d.blend=1; d.fwsrc+=` · 주변 실측 ${b.name.split('·')[0].trim()}(신축 환산 ${bn.toLocaleString()}만)과 ${n2}:2로 섞음`; } }
+    d.n2=n2;
     d.fw=fw;
     d.rb=age>=30||stOf(d)>=35;
     if(d.opt){
@@ -449,8 +465,15 @@ function recompute(){
     } else {
       d.m=rbModel(d,fw); d.up=d.m.E/d.p-1; d.upSrc='rb'; d.gross=d.m.gross;
     }
-    d.U=Math.max(0,Math.min(100,d.up/.5*100));                        // 여력 50% 이상이면 만점
-    d.score=Math.round((d.loc*.5+d.U*.5)*10)/10;
+    /* 데이터 신뢰도: 동 표본이 적거나 추정이 많을수록 여력을 0 쪽으로 줄임(불확실한 '싸 보임'으로 순위가 뒤집히지 않게) */
+    const ne=d.n2+(d.blend?1:0); let cf=ne>=5?1:ne>=3?.85:ne>=2?.75:ne>=1?.6:.5, cl=`신축 기준 표본 ${d.n2}곳${d.blend?' + 주변 실측 1곳':''}`;
+    if(d.rb&&d.m&&/추정/.test(d.m.fol)){ cf*=.85; cl+=' · 기존 용적률 추정'; }
+    if(d.rb&&d.m&&!/주변 실제/.test(d.m.fwl)){ cf*=.9; cl+=' · 완공가 회귀 기준'; }
+    if(/90%|급지 비율/.test(d.fwsrc||'')){ cf*=.8; cl+=' · 신축 기준가 대체값'; }
+    if(!d.rb&&d.units<1000){ cf*=.7; cl+=' · 1천 세대 미만이라 회귀 표본 밖(대단지 920곳으로만 추정)'; }
+    d.conf=cf; d.confl=cl; d.upR=d.up>0?d.up*cf:d.up;
+    d.U=Math.max(0,Math.min(100,d.upR/.5*100));                       // 신뢰도 반영 여력 50% 이상이면 만점
+    d.score=Math.round((d.loc*.6+d.U*.4)*10)/10;                        // 입지가 가격을 정한다 → 입지 60 : 여력 40
   });
   ORDER=D.slice().sort((x,y)=>y.score-x.score);
   const n=ORDER.length; ORDER.forEach((d,i)=>{ d.rank=i+1; d.tier=TIERS[i<n*.15?0:i<n*.4?1:2]; });
@@ -493,7 +516,7 @@ function renderList(){
       <div><dt>대단지·브랜드<small>7·3점</small></dt><dd>3,000세대 이상 7점, 2,000 6점, 1,500 5점, 1,000 4점, 700 3점, 500 2점. 브랜드는 1군(래미안·자이·힐스테이트·아이파크·푸르지오·더샵·e편한세상·롯데캐슬 등) 3점, 중견 2점, 옛 대형사 구축 1점. 재건축 단지는 새 브랜드가 붙으니 2점.</dd></div>
       <div><dt>초품아·평지<small>6·5점</small></dt><dd>초등학교 300m 이내 만점. 가장 가까운 역과 높이 차 5m 이내면 평지 만점, 30m 넘으면 언덕.</dd></div>
       <div><dt>상승 여력<small>종합의 50%</small></dt><dd>· 일반 단지: 이 동네 신축 시세 × 같은 연식 할인 × 같은 평형 보정 = 받을 값. 현재가가 이보다 얼마나 싼가.<br>· 재건축: 내 몫 면적(용적률 증가 − 공공기여) → 34평까지 모자란 만큼 일반분양가로 사고 사업비를 내는 분담금(−) → 완공 시 시세(집값 상승·주변 일제 재건축 판도 프리미엄 +) → 연 5% 시간 할인과 공사 중 거주 손실(−) → 단계별 성공확률, 무산 시 기대감 하락(−). 공사비는 착공까지 연 3.5% 상승(−).<br>· 리모델링: 증축 40%, 일반분양 13.6%, 신축 대비 15% 할인.<br>· 장기전세·확정가 매수권: 지금 보증금 + 미래 확정가를 지금 돈으로 환산한 값이 실제 매수가.<br>신축 시세·연식 할인은 수도권 대단지 중 25년차 이하 578곳 회귀(설명력 96%).</dd></div>
-      <div><dt>종합<small>순위</small></dt><dd>입지 점수 50% + 상승 여력 50%(여력 50% 이상이면 만점). 상위 15% 핵심, 다음 25% 유망.</dd></div>
+      <div><dt>종합<small>순위</small></dt><dd>입지 점수 60% + 상승 여력 40%(데이터 신뢰도를 곱한 여력, 50% 이상이면 만점). 동네 표본이 적거나 추정치가 많으면 여력을 줄여서, 불확실하게 '싸 보이는' 단지가 위로 튀지 않게 함. 주상복합은 전용률·선호도 차이로 적정가 18% 할인, 상품성 40% 감점. 상위 15% 핵심, 다음 25% 유망.</dd></div>
       <div><dt>대상<small>범위</small></dt><dd>시세·최근 실거래 모두 6억 이하, 300세대 이상, 최근 15개월 하락 지역 제외. ${D.filter(d=>!d.auto).length}곳 직접 분석 + 나머지 자동 수집.</dd></div>
     </dl></details>
   </section>
@@ -571,7 +594,7 @@ function renderDetail(i){
   <section class="sec"><h3>입지 점수 <small>${d.loc.toFixed(1)} / 100${d.pending?' · 계산 중':''}</small></h3><div class="score tnum">
     <div><span class="l">급지<small>평당 ${d.gj.toLocaleString()}만 · ${d.gjsrc}</small></span><span class="v">${d.GJ.toFixed(1)}<i> / 25</i></span>${bar(d.GJ,25)}</div>
     <div><span class="l">학군<small>${d.g.ac!=null?`반경 1km 학원 ${d.g.ac.toLocaleString()}곳`:'계산 중'}</small></span><span class="v">${d.A!=null?d.A.toFixed(1):'–'}<i> / 10</i></span>${bar(d.A||0,10)}</div>
-    <div><span class="l">직주근접<small>${esc(d.tbj)}까지 대중교통 약 ${d.tbm}분</small></span><span class="v">${d.J.toFixed(1)}<i> / 9</i></span>${bar(d.J,9)}</div>
+    <div><span class="l">직주근접<small>${esc(d.tbj)}까지 약 ${d.tbe}분 = 구 대표 ${d.tbm}분${d.acc?` + 역까지 ${Math.round(d.acc)}분`:''}${d.lnp?` + 하위 노선 환승 ${d.lnp}분`:''}</small></span><span class="v">${d.J.toFixed(1)}<i> / 9</i></span>${bar(d.J,9)}</div>
     <div><span class="l">교통<small>${transitTxt(d)}</small></span><span class="v">${d.T!=null?d.T.toFixed(1):'–'}<i> / 23</i></span>${bar(d.T||0,23)}</div>
     <div><span class="l">상품성(연식)<small>${esc(d.rl)}</small></span><span class="v">${d.R.toFixed(1)}<i> / 12</i></span>${bar(d.R,12)}</div>
     <div><span class="l">대단지<small>${d.units.toLocaleString()}세대</small></span><span class="v">${d.U7.toFixed(1)}<i> / 7</i></span>${bar(d.U7,7)}</div>
@@ -579,7 +602,7 @@ function renderDetail(i){
     <div><span class="l">평지<small>${d.g.dh!=null?`가장 가까운 역과 높이 차 ${Math.abs(Math.round(d.g.dh))}m${d.g.dh>0?' (단지가 높음)':''}`:d.pending?'계산 중':'높이 데이터 없음(중간값 적용)'}</small></span><span class="v">${d.F!=null?d.F.toFixed(1):'–'}<i> / 5</i></span>${bar(d.F||0,5)}</div>
     <div><span class="l">브랜드<small>${esc(d.bl)}</small></span><span class="v">${d.B.toFixed(1)}<i> / 3</i></span>${bar(d.B,3)}</div>
   </div></section>
-  <section class="sec"><h3>상승 여력 <small>${d.up>=0?'+':''}${Math.round(d.up*100)}%${d.upSrc==='now'?' · 평당 만 원':''}</small></h3>
+  <section class="sec"><h3>상승 여력 <small>${d.up>=0?'+':''}${Math.round(d.up*100)}% → 신뢰도 ${Math.round(d.conf*100)}% 반영 ${d.upR>=0?'+':''}${Math.round(d.upR*100)}%</small></h3><p class="note" style="margin:-4px 0 8px">신뢰도: ${esc(d.confl)}. 순위에는 신뢰도 반영값을 씀.</p>
   ${d.upSrc==='now'?`<div class="cmp tnum">
     <div class="me"><span class="n">이 단지 현재 (${d.py}평 ${eok(d.p)})</span><span class="v">${d.me.toLocaleString()}</span>${bar(d.me,Math.max(d.me,d.fair))}</div>
     <div><span class="n">이 동네에서 ${2026-d.year}년차·${d.py}평이 받을 값</span><span class="v">${d.fair.toLocaleString()}</span>${bar(d.fair,Math.max(d.me,d.fair))}</div>
@@ -641,7 +664,7 @@ function renderMap(){
     if(on!==o.on){ o.ov.setMap(on?map:null); o.on=on; }
     o.el.classList.toggle('sel',o.i===state.sel); o.el.classList.toggle('far',far);
   });
-  const c=$('#mapcount'); if(c){ const tot=D.filter(visible).length; c.textContent=shownN<tot?`지도에 ${shownN}곳 표시 · 확대하면 ${tot-shownN}곳 더`:`지도에 ${tot}곳 모두 표시`; }
+  const c=$('#mapcount'); if(c){ const inV=pins.filter(o=>{ if(!visible(D[o.i])) return false; const p=proj.containerPointFromCoords(D[o.i]._pos); return p.x>=0&&p.x<=W&&p.y>=0&&p.y<=H; }).length; c.textContent=shownN<inV?`이 화면 ${inV}곳 중 ${shownN}곳 표시 · 확대하면 더`:`이 화면 ${inV}곳`; }
 }
 function close(){ state.sel=null; }
 function select(i,fromList){
@@ -755,12 +778,13 @@ function init(){
   D.forEach((d,i)=>{
     const g=GEO[gkey(d)];
     if(d.lat){ place(d,i,d.lat,d.lng); done2(); return; }
-    if(g&&g.lat&&g.gv&&inMetro(g.lat,g.lng)){ place(d,i,g.lat,g.lng); done2(); return; }
+    if(g&&g.lat&&g.gv&&g.cat!=null&&inMetro(g.lat,g.lng)){ place(d,i,g.lat,g.lng); done2(); return; }
     if(g&&g.lat&&inMetro(g.lat,g.lng)) place(d,i,g.lat,g.lng);            // 일단 표시하고 재확인
     geoQ.push(fin=>locate(d,hit=>{
       if(hit){ const lat=+hit.y,lng=+hit.x, old=GEO[gkey(d)]||{};
         const moved=!old.lat||hav(old.lat,old.lng,lat,lng)>300;
-        GEO[gkey(d)]=moved?{lat,lng,gv:1}:Object.assign(old,{lat,lng,gv:1});   // 위치가 바뀌면 역·학교 분석 다시
+        const cat=hit.category_name||'';
+        GEO[gkey(d)]=moved?{lat,lng,gv:1,cat}:Object.assign(old,{lat,lng,gv:1,cat});   // 위치가 바뀌면 역·학교 분석 다시
         place(d,i,lat,lng); }
       else if(g&&!inMetro(g.lat||0,g.lng||0)){ delete GEO[gkey(d)]; const o=pins.find(o=>o.i===i); if(o){ o.ov.setMap(null); pins.splice(pins.indexOf(o),1);} d._pos=null; }
       done2(); fin(); }));
