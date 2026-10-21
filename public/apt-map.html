@@ -266,7 +266,7 @@ const FUT=[['인덕원역','월판선·인동선·GTX-C',2029],['안양역 1호�
 let FUTPOS=null;
 const hav=(a,b,c,d)=>{const R=6371000,r=Math.PI/180,x=(c-a)*r,y=(d-b)*r,s=Math.sin(x/2)**2+Math.cos(a*r)*Math.cos(c*r)*Math.sin(y/2)**2;return 2*R*Math.asin(Math.sqrt(s));};
 const gjS=b=>Math.max(0,Math.min(25,(b-700)/2300*25));
-const acS=n=>n==null?null:n>=400?10:n>=250?8:n>=150?6:n>=80?4:n>=40?2:0;
+const acS=n=>n==null?null:10*clamp01(Math.log(Math.max(n,1)/20)/Math.log(400/20));   // 학원 20곳 0점 → 400곳 10점, 로그 연속
 const guTok=d=>{const t=d.rate.gu.split(' ').pop();return t.endsWith('구')?t.slice(0,-1):t;};
 const G=()=>window.GJD||{GJ:{},GU:{},FN:{},FW:{},FNG:{},FWG:{}};
 const dkey=d=>guTok(d)+'|'+d.area.split(' ').pop();
@@ -278,32 +278,31 @@ const GEO_V='g3'; let GEO={};
 try{GEO=JSON.parse(localStorage.getItem('apt6geo_'+GEO_V)||'{}')||{};}catch(e){GEO={};}
 const saveGeo=()=>{try{localStorage.setItem('apt6geo_'+GEO_V,JSON.stringify(GEO));}catch(e){}};
 const gkey=d=>d.n+'|'+d.area;
+/* 구간 선형보간: 계단식 점수표를 연속 함수로(경계에서 점수가 툭 끊기지 않게) */
+const lerp=(pts,x)=>{ if(x<=pts[0][0]) return pts[0][1]; for(let i=1;i<pts.length;i++) if(x<=pts[i][0]){ const [x0,y0]=pts[i-1],[x1,y1]=pts[i]; return y0+(y1-y0)*(x-x0)/(x1-x0); } return pts[pts.length-1][1]; };
+const clamp01=x=>Math.max(0,Math.min(1,x));
+/* 재건축 경로 가중치: 정비 단계 진입이면 1, 아니면 27→33년차에 0→1로 서서히(30년에 계산 경로가 통째로 바뀌지 않게) */
+const rbW=d=>stOf(d)>=35?1:clamp01((2026-d.year-27)/6);
 const stOf=d=>d.st!=null?d.st:(MST[d.n]||0);
-function rbScore(d){ const age=2026-d.year, st=stOf(d);
-  if(age>=30||st>=35) return [12,`${age}년차 · 재건축 대상(단계 가치는 상승 여력에 반영)`];
-  if(age<=5) return [20,`신축 ${age}년차`];
-  if(age<=10) return [17,`${age}년차 신축급`];
-  if(age<=15) return [12,`${age}년차 준신축`];
-  if(age<=20) return [7,`${age}년차 구축`];
-  if(age<=25) return [4,`${age}년차 구축`];
-  return [2,`${age}년차 · 재건축까지 애매한 연식`];
+const RGEN=[[0,20],[5,20],[10,17],[15,12],[20,7],[25,4],[29,2]];
+function rbScore(d){ const age=2026-d.year, w=rbW(d), g=lerp(RGEN,age), v=(1-w)*g+w*12;
+  const l=w>=1?`${age}년차 · 재건축 대상(단계 가치는 상승 여력에 반영)`:w>0?`${age}년차 · 재건축 경로 ${Math.round(w*100)}% 반영`:age<=10?`${age}년차 신축급`:age<=15?`${age}년차 준신축`:`${age}년차 구축`;
+  return [v,l];
 }
-const unS=u=>u>=3000?7:u>=2000?6:u>=1500?5:u>=1000?4:u>=700?3:u>=500?2:u>=300?1:0;
+const unS=u=>7*clamp01(Math.log(u/300)/Math.log(3000/300));           // 300세대 0점 → 3,000세대 7점, 로그 연속
 const BR1=/래미안|자이|힐스테이트|아이파크|푸르지오|더샵|e편한|이편한|롯데캐슬|SK뷰|sk뷰|디에이치|아크로|써밋|르엘|센트럴아이파크/i;
 const BR2=/위브|센트레빌|포레나|꿈에그린|데시앙|호반|우미린|하늘채|스위첸|수자인|어울림|비발디|파크뷰|베르디움|리슈빌|휴먼시아|펜테리움|브라운스톤|에듀포레|스카이뷰|아이원|해링턴|트리지움|메가트리아|센텀|어바인|더샾|자연앤|꿈의숲|파밀리에|두산|유보라|스타힐스|풍경채|중흥|S클래스|예미지|스위트|우남|내안애|디에트르|노블랜드|굿모닝힐|한라|대방|모아엘가|엘가/;
 const BR0=/현대|삼성|대우|쌍용|한신|우성|롯데|대림|극동|벽산|한양|동아|럭키|LG|금호|GS|코오롱|한일|동부|선경|경남|삼익|청구|신동아|미성|건영|라이프/;
-function brS(d){ const t=d.n+' '+(d.q||''); const age=2026-d.year;
-  if(age>=30||stOf(d)>=35) return [2,'재건축 시 새 브랜드로 바뀜(중간값)'];
-  if(BR1.test(t)) return [3,'1군 브랜드'];
-  if(BR2.test(t)) return [2,'중견·인지도 있는 브랜드'];
-  if(BR0.test(t)) return [1,'옛 대형 건설사 구축'];
-  return [0,'브랜드 약함'];
+function brS(d){ const t=d.n+' '+(d.q||''), w=rbW(d);
+  const [b,l]=BR1.test(t)?[3,'1군 브랜드']:BR2.test(t)?[2,'중견·인지도 있는 브랜드']:BR0.test(t)?[1,'옛 대형 건설사 구축']:[0,'브랜드 약함'];
+  if(w>=1) return [2,'재건축 시 새 브랜드로 바뀜(중간값)'];
+  return [(1-w)*b+w*2, w>0?l+` · 재건축 경로 ${Math.round(w*100)}%`:l];
 }
 const jobS=t=>Math.max(0,Math.min(15,(65-t)/40*15));
-const stS=m=>m==null?null:m<=400?25:m<=700?22:m<=1000?19:m<=1500?15:m<=2000?9:m<=3000?4:0;
+const stS=m=>m==null?null:lerp([[400,25],[700,22],[1000,19],[1500,15],[2000,9],[3000,4],[4000,0]],m);
 const stL=m=>m<=700?'도보권':m<=1500?'마을버스·버스 1~2정거장':m<=3000?'버스 이동':'역 없음';
-const scS=m=>m==null?null:m<=300?15:m<=450?12:m<=600?8:m<=900?4:0;
-const flS=h=>h==null?null:(a=>a<=5?15:a<=12?12:a<=20?8:a<=30?4:0)(Math.abs(h));
+const scS=m=>m==null?null:lerp([[300,15],[450,12],[600,8],[900,4],[1200,0]],m);
+const flS=h=>h==null?null:lerp([[5,15],[12,12],[20,8],[30,4],[40,0]],Math.abs(h));
 const TIERS=[{k:'핵심',c:'#0066ff'},{k:'유망',c:'#00a35c'},{k:'관찰',c:'#8a8f98'}];
 
 const D=PICKS.map(d=>({...d,opt:(window.OPT||{})[d.n]||null}));
@@ -333,8 +332,8 @@ function score(d){
   d.T=d.cur||d.fut?Math.max(d.cur?d.cur.v:0,d.fut?d.fut.v:0):null; d.Tsrc=d.fut&&(!d.cur||d.fut.v>d.cur.v)?'fut':'cur';
   /* 직주근접: 구 대표 통근시간(역 기준) + 이 단지에서 역까지 접근(도보 80m/분, 버스면 최대 15분) + 하위 노선 환승 */
   const sm=d.cur&&d.cur.m<99999?d.cur.m:null;
-  d.acc=sm==null?0:Math.min(15,Math.max(0,(sm-500)/80)); d.lnp=d.cur&&!d.cur.old&&d.cur.gv&&d.cur.gv<.8?3:0;
-  d.tbe=Math.round(d.tbm+d.acc+d.lnp); d.J=jobS(d.tbe)*9/15;
+  d.acc=0; d.lnp=0;                                                   // 역까지 거리는 교통 점수에서만 셈(중복 제거)
+  d.tbe=d.tbm; d.J=jobS(d.tbe)*9/15;
   d.pending=d.T==null||d.E==null||d.A==null;
   d.micro=(d.T??11)+(d.E??3)+(d.F??2.5);
   d.loc=Math.round((d.GJ+(d.A??3)+d.J+d.R+d.U7+d.B+d.micro)*10)/10;
@@ -347,9 +346,10 @@ function solve(A,b){ const n=b.length, M=A.map((r,i)=>[...r,b[i]]);
 }
 /* 수도권 대단지 920곳 회귀에서 나온 연식 할인(신축 0~5년 대비, ln) */
 /* 연식 할인: 신축 578곳만으로 맞춘 회귀(재건축 프리미엄이 섞이지 않게 25년차 이하만) */
-const AGEC=a=>a<=5?0:a<=10?-.056:a<=15?-.139:a<=20?-.27:a<=25?-.46:-.55;
+const AGEC=a=>lerp([[2.5,0],[8,-.056],[13,-.139],[18,-.27],[23,-.46],[28,-.55]],a);   // 구간 중앙값을 잇는 연속 곡선
 /* 같은 단지 안 평형별 평당가 실측(어바인·센텀·메가트리아·상계주공 등)으로 잡은 34평 대비 배율 */
-const SIZE=(py,age)=>age<=15?(py<20?.85:py<28?1.07:1):age>=30?(py<20?1.05:py<28?1:.95):1;
+const SZY=[[14,.85],[19,.85],[23,1.07],[27,1.07],[34,1]], SZO=[[14,1.05],[19,1.05],[23,1],[27,1],[34,.95]];
+const SIZE=(py,age)=>{ const y=lerp(SZY,py), o=lerp(SZO,py); return age<=15?y:age<=22?y+(1-y)*(age-15)/7:age<=30?1+(o-1)*(age-22)/8:o; };
 const NEWTOWN=/동안|군포|원미|일산|분당|영통/;   // 1기 신도시·노후계획도시: 특별법 용적률 상향
 /* ── 재건축·리모델링 수익 모델 (모든 금액 만 원, 면적 공급평) ──
    ① 내가 받는 면적: 지금 평형 × [1 + (용적률 증가 배수 − 1) × (1 − 공공기여)] × 0.95
@@ -453,24 +453,25 @@ function recompute(){
         fw=Math.round((n2*fw+2*bn)/(n2+2)); d.blend=1; d.fwsrc+=` · 주변 실측 ${b.name.split('·')[0].trim()}(신축 환산 ${bn.toLocaleString()}만)과 ${n2}:2로 섞음`; } }
     d.n2=n2;
     d.fw=fw;
-    d.rb=age>=30||stOf(d)>=35;
+    d.rbw=rbW(d); d.rb=d.rbw>=.5;
     if(d.opt){
       const [mk,mp]=microAdj(d,true); d.mk=mk; d.mp=mp;
       d.fair=Math.round(fw*Math.exp(AGEC(age))*SIZE(d.py,age)*mk); d.om=optModel(d,d.fair);
       d.up=d.om.P/d.om.cost-1; d.upSrc='opt';
-    } else if(!d.rb){
-      const [mk,mp]=microAdj(d,true); d.mk=mk; d.mp=mp;
-      d.fair=Math.round(fw*Math.exp(AGEC(age))*SIZE(d.py,age)*mk);         // 같은 동네·연식·평형 + 이 단지 입지(역·평지·브랜드·세대수)면 받을 값
-      d.up=d.fair/d.me-1; d.upSrc='now';
     } else {
-      d.m=rbModel(d,fw); d.up=d.m.E/d.p-1; d.upSrc='rb'; d.gross=d.m.gross;
+      let ug=null, ur=null;
+      if(d.rbw<1){ const [mk,mp]=microAdj(d,true); d.mk=mk; d.mp=mp;
+        d.fair=Math.round(fw*Math.exp(AGEC(age))*SIZE(d.py,age)*mk);       // 같은 동네·연식·평형 + 이 단지 입지(역·평지·브랜드·세대수)면 받을 값
+        ug=d.fair/d.me-1; d.upGen=ug; }
+      if(d.rbw>0){ d.m=rbModel(d,fw); ur=d.m.E/d.p-1; d.gross=d.m.gross; d.upRb=ur; }
+      d.up=d.rbw<=0?ug:d.rbw>=1?ur:(1-d.rbw)*ug+d.rbw*ur;                  // 27~33년차는 두 계산을 연식에 따라 섞음
+      d.upSrc=d.rbw>=.5?'rb':'now';
     }
     /* 데이터 신뢰도: 동 표본이 적거나 추정이 많을수록 여력을 0 쪽으로 줄임(불확실한 '싸 보임'으로 순위가 뒤집히지 않게) */
-    const ne=d.n2+(d.blend?1:0); let cf=ne>=5?1:ne>=3?.85:ne>=2?.75:ne>=1?.6:.5, cl=`신축 기준 표본 ${d.n2}곳${d.blend?' + 주변 실측 1곳':''}`;
+    const ne=d.n2+(d.blend?1:0); let cf=lerp([[0,.5],[1,.6],[2,.75],[3,.85],[5,1]],ne), cl=`신축 기준 표본 ${d.n2}곳${d.blend?' + 주변 실측 1곳':''}`;
     if(d.rb&&d.m&&/추정/.test(d.m.fol)){ cf*=.85; cl+=' · 기존 용적률 추정'; }
     if(d.rb&&d.m&&!/주변 실제/.test(d.m.fwl)){ cf*=.9; cl+=' · 완공가 회귀 기준'; }
     if(/90%|급지 비율/.test(d.fwsrc||'')){ cf*=.8; cl+=' · 신축 기준가 대체값'; }
-    if(!d.rb&&d.units<1000){ cf*=.7; cl+=' · 1천 세대 미만이라 회귀 표본 밖(대단지 920곳으로만 추정)'; }
     d.conf=cf; d.confl=cl; d.upR=d.up>0?d.up*cf:d.up;
     d.U=Math.max(0,Math.min(100,d.upR/.5*100));                       // 신뢰도 반영 여력 50% 이상이면 만점
     d.score=Math.round((d.loc*.6+d.U*.4)*10)/10;                        // 입지가 가격을 정한다 → 입지 60 : 여력 40
@@ -602,7 +603,7 @@ function renderDetail(i){
     <div><span class="l">평지<small>${d.g.dh!=null?`가장 가까운 역과 높이 차 ${Math.abs(Math.round(d.g.dh))}m${d.g.dh>0?' (단지가 높음)':''}`:d.pending?'계산 중':'높이 데이터 없음(중간값 적용)'}</small></span><span class="v">${d.F!=null?d.F.toFixed(1):'–'}<i> / 5</i></span>${bar(d.F||0,5)}</div>
     <div><span class="l">브랜드<small>${esc(d.bl)}</small></span><span class="v">${d.B.toFixed(1)}<i> / 3</i></span>${bar(d.B,3)}</div>
   </div></section>
-  <section class="sec"><h3>상승 여력 <small>${d.up>=0?'+':''}${Math.round(d.up*100)}% → 신뢰도 ${Math.round(d.conf*100)}% 반영 ${d.upR>=0?'+':''}${Math.round(d.upR*100)}%</small></h3><p class="note" style="margin:-4px 0 8px">신뢰도: ${esc(d.confl)}. 순위에는 신뢰도 반영값을 씀.</p>
+  <section class="sec"><h3>상승 여력 <small>${d.up>=0?'+':''}${Math.round(d.up*100)}% → 신뢰도 ${Math.round(d.conf*100)}% 반영 ${d.upR>=0?'+':''}${Math.round(d.upR*100)}%</small></h3><p class="note" style="margin:-4px 0 8px">신뢰도: ${esc(d.confl)}. 순위에는 신뢰도 반영값을 씀.${d.rbw>0&&d.rbw<1?`<br>${2026-d.year}년차라 일반 계산 ${(d.upGen*100).toFixed(0)}%와 재건축 계산 ${(d.upRb*100).toFixed(0)}%를 ${Math.round((1-d.rbw)*100)} : ${Math.round(d.rbw*100)}로 섞음(27~33년차 구간).`:''}</p>
   ${d.upSrc==='now'?`<div class="cmp tnum">
     <div class="me"><span class="n">이 단지 현재 (${d.py}평 ${eok(d.p)})</span><span class="v">${d.me.toLocaleString()}</span>${bar(d.me,Math.max(d.me,d.fair))}</div>
     <div><span class="n">이 동네에서 ${2026-d.year}년차·${d.py}평이 받을 값</span><span class="v">${d.fair.toLocaleString()}</span>${bar(d.fair,Math.max(d.me,d.fair))}</div>
