@@ -217,7 +217,10 @@ aside{order:-1;width:408px;flex:none;border-right:1px solid var(--border);backgr
   .fine{margin-left:20px;margin-right:20px}
   .pfoot{padding:18px 20px calc(24px + env(safe-area-inset-bottom))}
 }
-#gu{width:100%;height:36px;border:1px solid var(--border,rgba(112,115,124,.28));border-radius:8px;padding:0 10px;font:inherit;font-size:13.5px;background:var(--bg,#fff);color:inherit}
+.fbar{display:grid;grid-template-columns:1fr 1fr;gap:6px;padding:0 24px 14px;border-bottom:1px solid var(--text)}
+.fbar select{width:100%;min-width:0;height:38px;border:1px solid var(--border);border-radius:4px;padding:0 8px;font:inherit;font-size:13px;background:var(--bg);color:var(--text)}
+.fbar select:first-child{grid-column:1/-1;font-weight:650}
+@media (max-width:767px){.fbar{padding:0 20px 12px}}
 </style>
 </head>
 <body>
@@ -288,11 +291,9 @@ function parts(d){
 function sel(lab,key,opts,cur){ return `<div class="filters" role="group" aria-label="${lab}">${opts.map(([k,l])=>`<button data-k="${key}" data-v="${k}" aria-pressed="${cur===k}">${l}</button>`).join('')}</div>`; }
 function renderList(){
   const b=$('#body'), list=ORDER.filter(visible), mode=MODES.find(x=>x[0]===state.m);
-  const gus=Object.entries(M.sgg).filter(([k,v])=>state.sido==='전체'||v.startsWith(state.sido==='경기'?'':state.sido)&&(state.sido!=='경기'||!/^서울|^인천/.test(v)));
   let h=`<section class="intro">
     <div class="eyebrow">6억 이하 실거래 단지<i></i>${D.length.toLocaleString()}곳</div>
-    <h1>지난 9년 실거래로 검증한 요소만 점수에 넣었습니다</h1>
-    <p>점수는 '같은 구 평균보다 앞으로 3년 더 오를 정도'의 추정치입니다. 2017→2020, 2020→2023, 2023→2026 세 구간에서 매번 통한 요소(거래 활발함·넓은 면적·연식)만 썼습니다. 급지·단지 프리미엄은 장세에 따라 방향이 뒤집혀서 기본 점수에서 뺐고, 시나리오로 따로 볼 수 있습니다.</p>
+    <h1>실거래로 검증한 요소만으로 매긴 순위</h1>
     <details class="method"><summary>검증 결과와 한계 ${CHEV}</summary><dl>
       <div><dt>데이터<small>범위</small></dt><dd>국토부 아파트 매매 실거래 — 서울·경기·인천 70개 시군구, 2017·2020·2023년 하반기와 2026년 4~9월. 단지·전용면적(5㎡ 단위)별 ㎡당 중앙값을 같은 단지끼리 비교. 대상은 2026년 거래 중앙값 6억 이하 평형이 있는 ${D.length.toLocaleString()}개 단지.</dd></div>
       <div><dt>검증된 점수<small>기본</small></dt><dd>요소: 6개월 거래 건수(많을수록 +), 전용면적(넓을수록 +), 연식(16~25년·26년+가 6~15년보다 +). 한 구간을 빼고 나머지 두 구간으로 계수를 정한 뒤 빠진 구간을 맞혀 본 결과(6억 이하): 상위 20%와 하위 20%의 3년 초과상승 차이 <b>2017→20 6.6%p · 2020→23 0.7%p · 2023→26 2.6%p</b>. 세 번 다 방향은 맞았지만 힘은 약함.</dd></div>
@@ -301,10 +302,13 @@ function renderList(){
       <div><dt>한계<small>주의</small></dt><dd>예측력은 약함(구간별 상관 0.06~0.20). 재건축 사업성, 호재, 공급 물량은 아직 반영 안 됨. 투자 권유가 아닌 비교 지표.</dd></div>
     </dl></details>
   </section>
-  ${sel('점수 기준','m',MODES,state.m)}
-  ${sel('시도','sido',SIDOS.map(s=>[s,s]),state.sido)}
-  <div class="filters"><select id="gu" aria-label="시군구"><option value="">시군구 전체</option>${gus.map(([k,v])=>`<option value="${k}"${state.gu===k?' selected':''}>${esc(v)}</option>`).join('')}</select></div>
-  ${sel('가격대','pb',PB,state.pb)}${sel('연식','age',AGES,state.age)}${sel('면적','sz',SIZES,state.sz)}
+  <div class="fbar">
+    <select id="fm" aria-label="점수 기준">${MODES.map(([k,l])=>`<option value="${k}"${state.m===k?' selected':''}>${l}</option>`).join('')}</select>
+    <select id="fr" aria-label="지역"><option value="">수도권 전체</option>${['서울','경기','인천'].map(sd=>`<optgroup label="${sd}"><option value="S:${sd}"${!state.gu&&state.sido===sd?' selected':''}>${sd} 전체</option>${Object.entries(M.sgg).filter(([k,v])=>(sd==='서울'?k.startsWith('11'):sd==='인천'?k.startsWith('28'):k.startsWith('41'))).map(([k,v])=>`<option value="G:${k}"${state.gu===k?' selected':''}>${esc(v)}</option>`).join('')}</optgroup>`).join('')}</select>
+    <select id="fp" aria-label="가격대">${PB.map(([k,l])=>`<option value="${k}"${state.pb===k?' selected':''}>${l}</option>`).join('')}</select>
+    <select id="fa" aria-label="연식">${AGES.map(([k,l])=>`<option value="${k}"${state.age===k?' selected':''}>${l}</option>`).join('')}</select>
+    <select id="fs" aria-label="면적">${SIZES.map(([k,l])=>`<option value="${k}"${state.sz===k?' selected':''}>${l}</option>`).join('')}</select>
+  </div>
   <div class="count"><span>${list.length.toLocaleString()}곳 · ${esc(mode[1])} 순</span><span>예상 3년 초과상승(같은 구 대비)</span></div>`;
   list.slice(0,state.show).forEach(d=>{ const t=tier(d);
     h+=`<article class="row" data-i="${d.i}">
@@ -317,8 +321,9 @@ function renderList(){
   if(!list.length) h+=`<p class="source">조건에 맞는 단지가 없습니다.</p>`;
   h+=`<p class="source">실거래: 국토교통부 아파트 매매 실거래가(공공데이터포털). 화성·인천 일부 구는 2026년 행정구역 개편 코드로 수집. 계약 해제 거래 제외.</p>`;
   b.innerHTML=h;
-  b.querySelectorAll('.filters button[data-k]').forEach(x=>x.onclick=()=>{ const k=x.dataset.k; state[k]=x.dataset.v; if(k==='sido') state.gu=''; if(k==='m') rank(); state.show=60; render(); fitList(); });
-  $('#gu').onchange=e=>{ state.gu=e.target.value; state.show=60; render(); fitList(); };
+  const on=(id,f)=>{ $(id).onchange=e=>{ f(e.target.value); state.show=60; render(); fitList(); }; };
+  on('#fm',v=>{ state.m=v; rank(); }); on('#fp',v=>state.pb=v); on('#fa',v=>state.age=v); on('#fs',v=>state.sz=v);
+  on('#fr',v=>{ state.sido='전체'; state.gu=''; if(v.startsWith('S:')) state.sido=v.slice(2); if(v.startsWith('G:')) state.gu=v.slice(2); });
   const mo=$('#more'); if(mo) mo.onclick=()=>{ state.show+=60; render(); };
   b.querySelectorAll('.row').forEach(x=>x.onclick=()=>select(+x.dataset.i));
 }
