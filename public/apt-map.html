@@ -191,6 +191,7 @@ aside{order:-1;width:408px;flex:none;border-right:1px solid var(--border);backgr
 .mk.sel b{color:#fff}.mk.sel small{color:rgba(255,255,255,.7)}
 .mk:hover{z-index:5}
 .mk.hide{display:none}
+.mapcount{position:absolute;z-index:3;left:12px;top:12px;background:rgba(255,255,255,.94);border:1px solid rgba(112,115,124,.22);border-radius:6px;padding:5px 9px;font-size:12px;font-weight:600;color:#46474c;pointer-events:none;box-shadow:0 1px 4px rgba(0,0,0,.06)}
 
 @media (max-width:767px){
   .masthead{flex-wrap:wrap;height:auto;gap:8px 12px;padding:12px 16px}
@@ -225,7 +226,7 @@ aside{order:-1;width:408px;flex:none;border-right:1px solid var(--border);backgr
   <label class="search"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg><input id="q" placeholder="단지명, 동네로 찾기" autocomplete="off"></label>
 </header>
 <main>
-  <div class="mapwrap"><div id="map"></div><div id="keymsg"></div></div>
+  <div class="mapwrap"><div id="mapcount" class="mapcount"></div><div id="map"></div><div id="keymsg"></div></div>
   <aside id="sheet">
     <div class="sheet-head" id="head"><div class="grab"><span></span></div></div>
     <div class="body" id="body"></div>
@@ -426,8 +427,15 @@ function recompute(){
   D.forEach(score);
   D.forEach(d=>{
     const age=2026-d.year, J=G(), k=dkey(d), g=guTok(d);
-    let fw=J.FW[k]; d.fwsrc='동 회귀';                                        // 이 동네 신축 34평 표준 평당가
-    if(!fw){ const [a]=anchorOf(d,0); if(a){ fw=a; d.fwsrc='주변 실제 신축 환산'; } else { fw=J.FWG[g]||d.bench.ppp; d.fwsrc='구 평균(동 데이터 없음)'; } }
+    /* 이 동네 신축 34평 표준 평당가: ① 동 신축 회귀 ② 동 전체 회귀를 신축 기준으로 환산 ③ 주변 실제 신축 ④ 구 평균×동 급지 비율 */
+    const fnD=J.FN[k]&&J.FWG[g]&&J.FNG[g]?Math.round(J.FN[k]*J.FWG[g]/J.FNG[g]):null;
+    let fw=null; d.fwsrc='';
+    if(J.FW[k]&&fnD){ fw=Math.round((2*J.FW[k]+fnD)/3); d.fwsrc='동 신축 회귀 2 : 동 전체 회귀 1'; }
+    else if(J.FW[k]){ fw=J.FW[k]; d.fwsrc='동 신축 회귀'; }
+    else if(fnD){ fw=fnD; d.fwsrc='동 전체 회귀를 신축 기준 환산'; }
+    else { const [a]=anchorOf(d,0); if(a){ fw=a; d.fwsrc='주변 실제 신축 환산'; }
+      else if(J.FWG[g]&&J.GJ[k]&&J.GU[g]){ fw=Math.round(J.FWG[g]*J.GJ[k][0]/J.GU[g]); d.fwsrc='구 신축 평균 × 동 급지 비율'; }
+      else { fw=Math.round((J.FWG[g]||d.bench.ppp)*.9); d.fwsrc='구 신축 평균의 90%(동 데이터 없음)'; } }
     d.fw=fw;
     d.rb=age>=30||stOf(d)>=35;
     if(d.opt){
@@ -600,10 +608,41 @@ function renderDetail(i){
 }
 
 function render(){ state.sel==null?renderList():renderDetail(state.sel); if(map) renderMap(); }
-$('#q').addEventListener('input',e=>{state.q=e.target.value.trim();close();render();});
+let qT=null;
+$('#q').addEventListener('input',e=>{state.q=e.target.value.trim();close();render(); clearTimeout(qT); qT=setTimeout(fitSearch,450);});
+$('#q').addEventListener('keydown',e=>{ if(e.key==='Enter'){ clearTimeout(qT); fitSearch(); e.target.blur(); if(mobile()) snapTo('half'); } });
+function fitSearch(){
+  if(!map||!state.q) return;
+  const hit=D.filter(d=>d._pos&&visible(d));
+  if(hit.length){ const b=new kakao.maps.LatLngBounds(); hit.forEach(d=>b.extend(d._pos));
+    if(hit.length===1){ map.setLevel(5); map.setCenter(hit[0]._pos); } else map.setBounds(b,60,40,mobile()?Math.round($('#map').clientHeight*.5):40,40); return; }
+  new kakao.maps.services.Places().keywordSearch(state.q,(r,st)=>{          // 단지가 없으면 지명으로 이동
+    if(st!==kakao.maps.services.Status.OK) return; const h=r.find(x=>inMetro(+x.y,+x.x)); if(!h) return;
+    map.setLevel(7); map.setCenter(new kakao.maps.LatLng(+h.y,+h.x)); });
+}
 
 let map,pins=[];
-function renderMap(){ pins.forEach(o=>{o.ov.setMap(visible(D[o.i])||o.i===state.sel?map:null);o.el.classList.toggle('sel',o.i===state.sel);}); }
+/* 핀 겹침 정리: 점수 높은 순으로 놓고, 화면에서 이미 놓인 핀과 겹치면 숨김. 확대하면 더 보임 */
+let shownN=0;
+function renderMap(){
+  if(!map) return;
+  const proj=map.getProjection(), W=$('#map').clientWidth, H=$('#map').clientHeight, placed=[];
+  const far=map.getLevel()>8, pw=far?78:116, ph=far?30:40;
+  const order=pins.slice().sort((a,b)=>(b.i===state.sel)-(a.i===state.sel)||D[b.i].score-D[a.i].score);
+  shownN=0;
+  order.forEach(o=>{ const d=D[o.i]; let on=false;
+    if(o.i===state.sel||visible(d)){
+      const p=proj.containerPointFromCoords(d._pos);
+      if(p.x>-pw&&p.x<W+pw&&p.y>-ph&&p.y<H+ph*2){
+        const r=[p.x-pw/2,p.y-ph-6,p.x+pw/2,p.y-6];
+        if(o.i===state.sel||!placed.some(q=>r[0]<q[2]&&r[2]>q[0]&&r[1]<q[3]&&r[3]>q[1])){ placed.push(r); on=true; shownN++; }
+      }
+    }
+    if(on!==o.on){ o.ov.setMap(on?map:null); o.on=on; }
+    o.el.classList.toggle('sel',o.i===state.sel); o.el.classList.toggle('far',far);
+  });
+  const c=$('#mapcount'); if(c){ const tot=D.filter(visible).length; c.textContent=shownN<tot?`지도에 ${shownN}곳 표시 · 확대하면 ${tot-shownN}곳 더`:`지도에 ${tot}곳 모두 표시`; }
+}
 function close(){ state.sel=null; }
 function select(i,fromList){
   state.sel=i; render();
@@ -624,7 +663,7 @@ function addPin(i){
   el.innerHTML=pinHTML(d);
   el.addEventListener('click',e=>{e.stopPropagation();select(i,false);});
   const ov=new kakao.maps.CustomOverlay({position:d._pos,content:el,xAnchor:0,yAnchor:0,zIndex:d.score,clickable:true});
-  pins.push({i,ov,el}); ov.setMap(visible(d)?map:null);
+  pins.push({i,ov,el,on:false});
 }
 
 /* ── 바텀시트 ── */
@@ -676,6 +715,9 @@ render();
   s.onload=()=>kakao.maps.load(init);
   document.head.append(s);
 })();
+const inMetro=(la,ln)=>la>36.85&&la<38.3&&ln>126.3&&ln<127.95;
+const NEWGU=/병점구|동탄구|효행구|만세구|서해구|검단구|영종구|제물포구/;   // 2026 신설 구: 지도 주소엔 아직 없을 수 있음
+function addrOK(d,a){ const t=d.area.split(' ').slice(0,-1).filter(x=>!NEWGU.test(x)).map(x=>x.replace(/(시|군)$/,'')); return t.every(x=>a.includes(x)); }
 function init(){
   map=new kakao.maps.Map($('#map'),{center:new kakao.maps.LatLng(37.45,127.0),level:9});
   map.addControl(new kakao.maps.ZoomControl(),kakao.maps.ControlPosition.RIGHT);
@@ -699,18 +741,31 @@ function init(){
       go(tries[0],tries.length); };
     setTimeout(step,1500);
   })();
+  /* 단지 위치: 수도권 범위 + 주소에 시·구가 맞는 결과만 채택(동명 단지가 대전·전남에 찍히던 문제) */
+  const geoQ=[]; let geoActive=0;
+  const pump=()=>{ while(geoActive<3&&geoQ.length){ const f=geoQ.shift(); geoActive++; f(()=>{ geoActive--; setTimeout(pump,60); }); } };
+  const locate=(d,cb)=>{ const tries=[d.q,`${d.area} ${d.n.replace(/^\S+동 /,'')}`,`${d.area.split(' ').slice(-2).join(' ')} ${d.n.replace(/^\S+동 /,'')} 아파트`]; let k=0;
+    const go=()=>{ if(k>=tries.length) return cb(null);
+      places.keywordSearch(tries[k++],(res,st)=>{
+        if(st===kakao.maps.services.Status.OK){ const ok=res.filter(r=>inMetro(+r.y,+r.x)&&addrOK(d,r.address_name||r.road_address_name||''));
+          const hit=ok.find(r=>/아파트|주거/.test(r.category_name))||ok[0]; if(hit) return cb(hit); }
+        setTimeout(go,120); },{rect:'126.3,36.85,127.95,38.3'}); };
+    go(); };
+  const place=(d,i,lat,lng)=>{ d._pos=new kakao.maps.LatLng(lat,lng); bounds.extend(d._pos); if(!pins.some(o=>o.i===i)) addPin(i); else { const o=pins.find(o=>o.i===i); o.ov.setPosition(d._pos); } };
   D.forEach((d,i)=>{
     const g=GEO[gkey(d)];
-    if(d.lat||(g&&g.lat)){d._pos=new kakao.maps.LatLng(d.lat||g.lat,d.lng||g.lng);bounds.extend(d._pos);addPin(i);done2();return;}
-    places.keywordSearch(d.q,(res,st)=>{
-      if(st===kakao.maps.services.Status.OK){
-        const hit=res.find(r=>/아파트|주거/.test(r.category_name))||res[0];
-        d._pos=new kakao.maps.LatLng(+hit.y,+hit.x);bounds.extend(d._pos);addPin(i);
-        GEO[gkey(d)]=Object.assign(GEO[gkey(d)]||{},{lat:+hit.y,lng:+hit.x});
-      }
-      done2();
-    });
+    if(d.lat){ place(d,i,d.lat,d.lng); done2(); return; }
+    if(g&&g.lat&&g.gv&&inMetro(g.lat,g.lng)){ place(d,i,g.lat,g.lng); done2(); return; }
+    if(g&&g.lat&&inMetro(g.lat,g.lng)) place(d,i,g.lat,g.lng);            // 일단 표시하고 재확인
+    geoQ.push(fin=>locate(d,hit=>{
+      if(hit){ const lat=+hit.y,lng=+hit.x, old=GEO[gkey(d)]||{};
+        const moved=!old.lat||hav(old.lat,old.lng,lat,lng)>300;
+        GEO[gkey(d)]=moved?{lat,lng,gv:1}:Object.assign(old,{lat,lng,gv:1});   // 위치가 바뀌면 역·학교 분석 다시
+        place(d,i,lat,lng); }
+      else if(g&&!inMetro(g.lat||0,g.lng||0)){ delete GEO[gkey(d)]; const o=pins.find(o=>o.i===i); if(o){ o.ov.setMap(null); pins.splice(pins.indexOf(o),1);} d._pos=null; }
+      done2(); fin(); }));
   });
+  pump();
   function analyze(){
     const ps=new kakao.maps.services.Places(), OK=kakao.maps.services.Status.OK, ZERO=kakao.maps.services.Status.ZERO_RESULT, DIST=kakao.maps.services.SortBy.DISTANCE;
     const todo=D.filter(d=>{const g=GEO[gkey(d)];return d._pos&&!(g&&g.sc!=null&&g.sts!=null&&g.ac!=null);});
@@ -748,7 +803,7 @@ function init(){
     }
     saveGeo(); recompute(); render();
   }
-  kakao.maps.event.addListener(map,'zoom_changed',()=>{const far=map.getLevel()>8;pins.forEach(o=>o.el.classList.toggle('far',far));});
+  kakao.maps.event.addListener(map,'idle',renderMap);
 }
 </script>
 </body>
