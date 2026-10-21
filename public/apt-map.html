@@ -240,7 +240,7 @@ const CHEV='<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="
 /* ── 입지 점수(100) = 직주근접 25 · 역세권 25 · 신축/재건축 20 · 초품아 15 · 평지 15
       상승 여력 = 입지·평형이 비슷한 단지들의 평당가 회귀선 대비 얼마나 싼가
       종합 = 입지 50% + 여력 50% ── */
-const GEO_V='g2'; let GEO={};
+const GEO_V='g3'; let GEO={};
 try{GEO=JSON.parse(localStorage.getItem('apt6geo_'+GEO_V)||'{}')||{};}catch(e){GEO={};}
 const saveGeo=()=>{try{localStorage.setItem('apt6geo_'+GEO_V,JSON.stringify(GEO));}catch(e){}};
 const gkey=d=>d.n+'|'+d.area;
@@ -257,7 +257,8 @@ function rbScore(d){ const age=2026-d.year, st=stOf(d);
   return [2,`${age}년차 · 신축도 재건축도 아님`];
 }
 const jobS=t=>Math.max(0,Math.min(25,(65-t)/40*25));
-const stS=m=>m==null?null:m<=300?25:m<=500?21:m<=700?16:m<=1000?10:m<=1500?4:0;
+const stS=m=>m==null?null:m<=400?25:m<=700?22:m<=1000?19:m<=1500?15:m<=2000?9:m<=3000?4:0;
+const stL=m=>m<=700?'도보권':m<=1500?'마을버스·버스 1~2정거장':m<=3000?'버스 이동':'역 없음';
 const scS=m=>m==null?null:m<=300?15:m<=450?12:m<=600?8:m<=900?4:0;
 const flS=h=>h==null?null:(a=>a<=5?15:a<=12?12:a<=20?8:a<=30?4:0)(Math.abs(h));
 const TIERS=[{k:'핵심',c:'#0066ff'},{k:'유망',c:'#00a35c'},{k:'관찰',c:'#8a8f98'}];
@@ -304,10 +305,10 @@ function need(d){ const m=money(d);
   return {l:'대출 끼면 필요한 돈',v:m.cash,x:m.note};
 }
 
-const FILTERS=[['all','전체'],['top','핵심'],['mid','유망 이상'],['stn','역 500m'],['sch','초품아'],['man','직접 분석'],['free','비규제'],['재건축','재건축'],['반도체','반도체 수요'],['신혼','신혼 30평대'],['소형할인','소형 할인'],['천지개벽','천지개벽']];
+const FILTERS=[['all','전체'],['top','핵심'],['mid','유망 이상'],['stn','역 1km'],['sch','초품아'],['man','직접 분석'],['free','비규제'],['재건축','재건축'],['반도체','반도체 수요'],['신혼','신혼 30평대'],['소형할인','소형 할인'],['천지개벽','천지개벽']];
 const state={f:'all',q:'',sel:null};
 const visible=d=>{
-  const f=state.f, ok=f==='all'||(f==='top'&&d.tier.k==='핵심')||(f==='mid'&&d.tier.k!=='관찰')||(f==='stn'&&d.g.st!=null&&d.g.st<=500)||(f==='sch'&&d.g.sc!=null&&d.g.sc<=300)||(f==='man'&&!d.auto)||(f==='free'&&d.reg==='free')||d.tags.includes(f);
+  const f=state.f, ok=f==='all'||(f==='top'&&d.tier.k==='핵심')||(f==='mid'&&d.tier.k!=='관찰')||(f==='stn'&&d.g.st!=null&&d.g.st<=1000)||(f==='sch'&&d.g.sc!=null&&d.g.sc<=300)||(f==='man'&&!d.auto)||(f==='free'&&d.reg==='free')||d.tags.includes(f);
   return ok&&(!state.q||(d.n+d.area+d.headline).includes(state.q));
 };
 
@@ -320,7 +321,7 @@ function renderList(){
     ${pend?`<div class="inline-note tnum" style="margin-top:12px">역·초등학교·경사를 지도 데이터로 계산하는 중 · ${D.length-pend}/${D.length}<br><small>처음 한 번만 걸리고, 끝나면 순위가 확정됩니다.</small></div>`:''}
     <details class="method"><summary>점수 매기는 법 ${CHEV}</summary><dl>
       <div><dt>직주근접<small>25점</small></dt><dd>강남·여의도·광화문·판교 중 가장 가까운 곳까지 대중교통 시간. 25분 이내 만점, 65분이면 0점.</dd></div>
-      <div><dt>역세권<small>25점</small></dt><dd>가장 가까운 지하철역까지 직선거리. 300m 이내 만점, 1.5km 넘으면 0점. 카카오맵 기준.</dd></div>
+      <div><dt>역세권<small>25점</small></dt><dd>가장 가까운 지하철역까지 직선거리. 400m 이내 25점, 1km 19점, 1.5km(버스 1~2정거장) 15점, 2km 9점, 3km 넘으면 0점. 카카오맵 기준.</dd></div>
       <div><dt>신축·재건축<small>20점</small></dt><dd>10년 이내 신축 또는 시공사 선정 단계 재건축이 만점. 정비구역·추진위 순으로 감점. 신축도 재건축도 아닌 20년대 구축이 가장 낮음.</dd></div>
       <div><dt>초품아<small>15점</small></dt><dd>가장 가까운 초등학교까지 300m 이내 만점, 900m 넘으면 0점.</dd></div>
       <div><dt>평지<small>15점</small></dt><dd>단지와 가장 가까운 역의 높이 차이. 5m 이내 만점, 30m 넘으면 언덕으로 보고 0점. 오픈 지형 데이터 기준.</dd></div>
@@ -363,7 +364,7 @@ function renderDetail(i){
   </dl>
   <section class="sec"><h3>입지 점수 <small>${d.loc} / 100${d.pending?' · 계산 중':''}</small></h3><div class="score tnum">
     <div><span class="l">직주근접<small>${esc(d.tbj)}까지 대중교통 약 ${d.tbm}분</small></span><span class="v">${d.J.toFixed(0)}<i> / 25</i></span>${bar(d.J,25)}</div>
-    <div><span class="l">역세권<small>${d.g.stn?esc(d.g.stn)+' '+fmtM(d.g.st)+' (직선)':d.S===0?'1.5km 안에 역 없음':'계산 중'}</small></span><span class="v">${d.S??'–'}<i> / 25</i></span>${bar(d.S||0,25)}</div>
+    <div><span class="l">역세권<small>${d.g.stn?esc(d.g.stn)+' '+fmtM(d.g.st)+' · '+stL(d.g.st):d.S===0?'3km 안에 역 없음':'계산 중'}</small></span><span class="v">${d.S??'–'}<i> / 25</i></span>${bar(d.S||0,25)}</div>
     <div><span class="l">신축·재건축<small>${esc(d.rl)}</small></span><span class="v">${d.R}<i> / 20</i></span>${bar(d.R,20)}</div>
     <div><span class="l">초품아<small>${d.g.scn?esc(d.g.scn)+' '+fmtM(d.g.sc):d.E===0?'900m 안에 초등학교 없음':'계산 중'}</small></span><span class="v">${d.E??'–'}<i> / 15</i></span>${bar(d.E||0,15)}</div>
     <div><span class="l">평지<small>${d.g.dh!=null?`가장 가까운 역과 높이 차 ${Math.abs(Math.round(d.g.dh))}m${d.g.dh>0?' (단지가 높음)':''}`:d.pending?'계산 중':'높이 데이터 없음(중간값 적용)'}</small></span><span class="v">${d.F??'–'}<i> / 15</i></span>${bar(d.F||0,15)}</div>
@@ -503,7 +504,7 @@ function init(){
           if(e.length){g.sc=+e[0].distance;g.scn=e[0].place_name;} else if(st2===OK||st2===ZERO) g.sc=99999;
           res();
         },{location:d._pos,radius:1500,sort:DIST});
-      },{location:d._pos,radius:2000,sort:DIST});
+      },{location:d._pos,radius:3000,sort:DIST});
     });
     const finish=()=>{ saveGeo(); elevation(); };
     const pump=()=>{ while(active<6&&idx<todo.length){ const d=todo[idx++]; active++;
