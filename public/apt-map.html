@@ -239,6 +239,7 @@ aside{order:-1;width:408px;flex:none;border-right:1px solid var(--border);backgr
 <script src="apt-loc.js"></script>
 <script src="apt-cx.js"></script>
 <script src="apt-fard.js"></script>
+<script src="apt-s4.js"></script>
 <script src="apt-geo.js"></script>
 <script>
 const KAKAO_JS_KEY='106bb734e8600621686fade2de7f8afb';
@@ -255,7 +256,7 @@ const CHEV='<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="
 
 /* ── 입지 점수(100) = 급지 25 · 교통 23 · 학군 10 · 직주근접 9 · 상품성 12 · 대단지 7 · 초품아 6 · 평지 5 · 브랜드 3
       교통 = 지금 있는 역과 개통 예정 역 중 가장 좋은 하나(거리 × 노선 등급 × 환승). 둘을 더하지 않음.
-      종합 = 입지 50% + 상승 여력 50% ── */
+      종합 = 유니버스 백분위(apt-s4.js) ── */
 /* 노선 등급: 동 사이 회귀(강남·시청·여의도·판교 거리와 시·구 통제)에서 업무지구 거리로 설명되지 않는 노선 차이는
    9호선(+18%)과 약한 경전철(우이신설 −13% 등)뿐 — 나머지 노선은 같은 등급. 업무지구 접근은 직주근접에서 따로 셈.
    GTX는 표본이 적어 추정 불가 → 업무지구 직결 노선이라 상위 등급 유지 */
@@ -529,7 +530,9 @@ function recompute(){
     } else {
       let ug=null, ur=null;
       if(d.rbw<1){ const [mk,mp]=microAdj(d,'gen'); d.mk=mk; d.mp=mp;
-        d.fair=Math.round(fw*Math.exp(AGEC(age))*SIZE(d.py,age)*mk);       // 같은 동네·연식·평형 + 이 단지 입지(역·평지·브랜드·세대수)면 받을 값
+        const fwG=s4BlendOwnLarge(d,fw);                                   // 같은 단지 큰 평형 실거래가 있으면 그 가격이 말하는 위치가치와 반반
+        if(fwG!==fw){ d.fwsrc+=` · 같은 단지 큰 평형 기준 ${d.s4own.toLocaleString()}만과 반반(기하평균)`; d.fw=fwG; }
+        d.fair=Math.round(fwG*Math.exp(AGEC(age))*SIZE(d.py,age)*mk);       // 같은 동네·연식·평형 + 이 단지 입지(역·평지·브랜드·세대수)면 받을 값
         ug=d.fair/d.me-1; d.upGen=ug; }
       if(d.rbw>0){ d.m=rbModel(d,d.kfwRb?d.kfwRb.fw:fw); ur=d.m.E/d.p-1; d.gross=d.m.gross; d.upRb=ur; }
       d.up=d.rbw<=0?ug:d.rbw>=1?ur:(1-d.rbw)*ug+d.rbw*ur;                  // 27~33년차는 두 계산을 연식에 따라 섞음
@@ -542,7 +545,7 @@ function recompute(){
     if(/90%|급지 비율/.test(d.fwsrc||'')){ cf*=.8; cl+=' · 신축 기준가 대체값'; }
     d.conf=cf; d.confl=cl; d.upR=d.up>0?d.up*cf:d.up;
     d.U=Math.max(0,Math.min(100,d.upR/.5*100));                       // 신뢰도 반영 여력 50% 이상이면 만점
-    d.score=Math.round((d.loc*.6+d.U*.4)*10)/10;                        // 입지가 가격을 정한다 → 입지 60 : 여력 40
+    s4Score(d);                                                          // 수도권 6억 이하 4,700여 단지 중 백분위(0~100). apt-s4.js
   });
   ORDER=D.slice().sort((x,y)=>y.score-x.score);
   const n=ORDER.length; ORDER.forEach((d,i)=>{ d.rank=i+1; d.tier=TIERS[i<n*.15?0:i<n*.4?1:2]; });
@@ -584,8 +587,8 @@ function renderList(){
             <div><dt>상품성(연식)<small>12점</small></dt><dd>5년 이내 12점, 10년 10, 15년 7, 20년 4, 25년 2.4, 26~29년 1.2. 재건축 대상(30년+·정비 단계)은 단계와 상관없이 7.2점 — 재건축 단계의 가치는 상승 여력(실현률)에서 한 번만 셈.</dd></div>
       <div><dt>대단지·브랜드<small>7·3점</small></dt><dd>3,000세대 이상 7점, 2,000 6점, 1,500 5점, 1,000 4점, 700 3점, 500 2점. 브랜드는 1군(래미안·자이·힐스테이트·아이파크·푸르지오·더샵·e편한세상·롯데캐슬 등) 3점, 중견 2점, 옛 대형사 구축 1점. 재건축 단지는 새 브랜드가 붙으니 2점.</dd></div>
       <div><dt>초품아·평지<small>6·5점</small></dt><dd>초등학교 300m 이내 만점. 가장 가까운 역과 높이 차 5m 이내면 평지 만점, 30m 넘으면 언덕.</dd></div>
-      <div><dt>상승 여력<small>종합의 50%</small></dt><dd>· 일반 단지: 이 동네 신축 시세 × 같은 연식 할인 × 같은 평형 보정 = 받을 값. 현재가가 이보다 얼마나 싼가.<br>· 재건축: 내 몫 면적(용적률 증가 − 공공기여) → 34평까지 모자란 만큼 일반분양가로 사고 사업비를 내는 분담금(−) → 완공 시 시세(집값 상승·주변 일제 재건축 판도 프리미엄 +) → 연 5% 시간 할인과 공사 중 거주 손실(−) → 단계별 성공확률, 무산 시 기대감 하락(−). 공사비는 착공까지 연 3.5% 상승(−).<br>· 리모델링: 증축 40%, 일반분양 13.6%, 신축 대비 15% 할인.<br>· 장기전세·확정가 매수권: 지금 보증금 + 미래 확정가를 지금 돈으로 환산한 값이 실제 매수가.<br>신축 시세·연식 할인은 수도권 대단지 중 25년차 이하 578곳 회귀(설명력 96%).</dd></div>
-      <div><dt>종합<small>순위</small></dt><dd>입지 점수 60% + 상승 여력 40%(데이터 신뢰도를 곱한 여력, 50% 이상이면 만점). 동네 표본이 적거나 추정치가 많으면 여력을 줄여서, 불확실하게 '싸 보이는' 단지가 위로 튀지 않게 함. 주상복합은 전용률·선호도 차이로 적정가 18% 할인, 상품성 40% 감점. 상위 15% 핵심, 다음 25% 유망.</dd></div>
+      <div><dt>상승 여력<small>종합의 20%</small></dt><dd>· 일반 단지: 이 동네 신축 시세 × 같은 연식 할인 × 같은 평형 보정 = 받을 값. 현재가가 이보다 얼마나 싼가.<br>· 재건축: 내 몫 면적(용적률 증가 − 공공기여) → 34평까지 모자란 만큼 일반분양가로 사고 사업비를 내는 분담금(−) → 완공 시 시세(집값 상승·주변 일제 재건축 판도 프리미엄 +) → 연 5% 시간 할인과 공사 중 거주 손실(−) → 단계별 성공확률, 무산 시 기대감 하락(−). 공사비는 착공까지 연 3.5% 상승(−).<br>· 리모델링: 증축 40%, 일반분양 13.6%, 신축 대비 15% 할인.<br>· 장기전세·확정가 매수권: 지금 보증금 + 미래 확정가를 지금 돈으로 환산한 값이 실제 매수가.<br>신축 시세·연식 할인은 수도권 대단지 중 25년차 이하 578곳 회귀(설명력 96%).</dd></div>
+      <div><dt>종합<small>순위</small></dt><dd>수도권 6억 이하 거래 단지 4,700여 곳(7,416개 평형) 안에서의 백분위(0~100). 구성: 80% × [입지 점수 백분위와 '상승 요인' 백분위의 평균] + 20% × 상승 여력 백분위. 상승 요인 = 세대수·학원·초품아·직주근접 — 2017→20·20→23·23→26 세 구간 실거래 백테스트에서 시·구 평균보다 더 오른 쪽으로 일관된 요소만. 여력은 데이터 신뢰도를 곱한 값. 동네 표본이 적거나 추정치가 많으면 여력을 줄여서, 불확실하게 '싸 보이는' 단지가 위로 튀지 않게 함. 주상복합은 전용률·선호도 차이로 적정가 18% 할인, 상품성 40% 감점. 상위 15% 핵심, 다음 25% 유망.</dd></div>
       <div><dt>대상<small>범위</small></dt><dd>시세·최근 실거래 모두 6억 이하, 300세대 이상, 최근 15개월 하락 지역 제외. ${D.filter(d=>!d.auto).length}곳 직접 분석 + 나머지 자동 수집.</dd></div>
     </dl></details>
   </section>
@@ -658,7 +661,7 @@ function renderDetail(i){
   <dl class="kpis tnum">
     ${d.opt?`<div><dt>지금 필요한 돈</dt><dd>${eokH(d.opt.dep)}</dd><small>${esc(d.opt.kind)} · ${d.opt.Y}년 ${eok(d.opt.K)} 매수권 · 시세 ${eok(d.p)}</small></div>`:`<div><dt>${d.py}평 시세</dt><dd>${eokH(d.p)}</dd><small>${d.reg==='free'?'비규제':'토허·실거주 2년'}</small></div>`}
     <div><dt>${esc(nd.l)}</dt><dd class="hl">${eokH(nd.v)}</dd><small>${esc(nd.x)}</small></div>
-    <div><dt>입지 점수</dt><dd class="hl">${d.loc.toFixed(1)}<i>/100</i></dd><small>종합 ${d.score.toFixed(1)}점 · ${d.tier.k} · ${d.rank}위</small></div>
+    <div><dt>입지 점수</dt><dd class="hl">${d.loc.toFixed(1)}<i>/100</i></dd><small>종합 ${d.score.toFixed(1)}점(백분위) · ${d.tier.k} · ${d.rank}위${d.s4?`<br>입지 ${d.s4.pLoc.toFixed(0)} · 상승요인 ${d.s4.ld.toFixed(0)}(세대수 ${d.s4.pU.toFixed(0)}·학원 ${d.s4.pA.toFixed(0)}·초품아 ${d.s4.pE.toFixed(0)}·직주 ${d.s4.pJ.toFixed(0)}) · 여력 ${d.s4.pUp.toFixed(0)}${d.s4.pUp>=80?' · 하락장 방어형':''}`:''}</small></div>
     <div><dt>상승 여력</dt><dd class="hl">${d.up>=0?'+':''}${Math.round(d.up*100)}<i>%</i></dd><small>${d.upSrc==='rb'?(d.m.rm?'리모델링':'재건축')+' 기대가치 기준':d.upSrc==='opt'?'확정가 매수권 기준':'같은 동네·연식 시세 기준'}</small></div>
   </dl>
   <section class="sec"><h3>입지 점수 <small>${d.loc.toFixed(1)} / 100${d.pending?' · 계산 중':''}</small></h3><div class="score tnum">
