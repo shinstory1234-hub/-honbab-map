@@ -688,7 +688,7 @@ function renderDetail(i){
   <dl class="kpis tnum">
     ${d.opt?`<div><dt>지금 필요한 돈</dt><dd>${eokH(d.opt.dep)}</dd><small>${esc(d.opt.kind)} · ${d.opt.Y}년 ${eok(d.opt.K)} 매수권 · 시세 ${eok(d.p)}</small></div>`:`<div><dt>${d.py}평 시세</dt><dd>${eokH(d.p)}</dd><small>${d.reg==='free'?'비규제':'토허·실거주 2년'}</small></div>`}
     <div><dt>${esc(nd.l)}</dt><dd class="hl">${eokH(nd.v)}</dd><small>${esc(nd.x)}</small></div>
-    <div><dt>입지 점수</dt><dd class="hl">${d.loc.toFixed(1)}<i>/100</i></dd><small>종합 ${s4RankTxt(d)} · ${d.tier.k} · ${d.rank}위${d.s4?`<br>입지 ${d.s4.pLoc.toFixed(0)} · 상승요인 ${d.s4.ld.toFixed(0)}(세대수 ${d.s4.pU.toFixed(0)}·학원 ${d.s4.pA.toFixed(0)}·초품아 ${d.s4.pE.toFixed(0)}·직주 ${d.s4.pJ.toFixed(0)}) · 여력 ${d.s4.pUp.toFixed(0)}${d.s4.pUp>=80?' · 하락장 방어형':''}`:''}</small></div>
+    <div><dt>입지 점수</dt><dd class="hl">${d.loc.toFixed(1)}<i>/100</i></dd><small>종합 ${s4RankTxt(d)} · ${d.tier.k}${d.s4?`<br>입지 ${d.s4.pLoc.toFixed(0)} · 상승요인 ${d.s4.ld.toFixed(0)}(세대수 ${d.s4.pU.toFixed(0)}·학원 ${d.s4.pA.toFixed(0)}·초품아 ${d.s4.pE.toFixed(0)}·직주 ${d.s4.pJ.toFixed(0)}) · 여력 ${d.s4.pUp.toFixed(0)}${d.s4.pUp>=80?' · 하락장 방어형':''}`:''}</small></div>
     <div><dt>상승 여력</dt><dd class="hl">${d.up>=0?'+':''}${Math.round(d.up*100)}<i>%</i></dd><small>${d.upSrc==='rb'?(d.m.rm?'리모델링':'재건축')+' 기대가치 기준':d.upSrc==='opt'?'확정가 매수권 기준':'같은 동네·연식 시세 기준'}</small></div>
   </dl>
   ${locPanel(d)}<section class="sec"><h3>상승 요인·상품 <small>입지 점수에는 미포함 · 예전 배점(참고)</small></h3><div class="score tnum">
