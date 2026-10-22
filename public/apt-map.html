@@ -240,6 +240,7 @@ aside{order:-1;width:408px;flex:none;border-right:1px solid var(--border);backgr
 <script src="apt-cx.js"></script>
 <script src="apt-fard.js"></script>
 <script src="apt-hak.js"></script>
+<script src="apt-univ.js"></script>
 <script src="apt-s4q.js"></script>
 <script src="apt-s4.js"></script>
 <script src="apt-geo.js"></script>
@@ -281,10 +282,11 @@ const dkey=d=>guTok(d)+'|'+d.area.split(' ').pop();
 function gjOf(d){ const k=dkey(d), g=guTok(d), dong=d.area.split(' ').pop(), J=G();
   if(J.GJ[k]) return {v:J.GJ[k][0],src:`${d.rate.gu} 평균 평당 ${J.GU[g].toLocaleString()}만에 ${dong} 동네 보정(대단지 ${J.GJ[k][1]}곳)`};
   if(J.GU[g]) return {v:J.GU[g],src:`${d.rate.gu} 평균 평당가(동 보정 데이터 없음)`};
-  return {v:Math.round(d.bench.ppp*.5),src:'구 평균 데이터 없음 · 동네 신축가의 절반으로 추정'}; }
+  return {v:Math.round(((d.bench&&d.bench.ppp)||0)*.5),src:'구 평균 데이터 없음 · 동네 신축가의 절반으로 추정'}; }
 const GEO_V='g3'; let GEO={};
 try{GEO=JSON.parse(localStorage.getItem('apt6geo_'+GEO_V)||'{}')||{};}catch(e){GEO={};}
 /* 입지 데이터(좌표·역·초등학교·학원·높이)는 서버에서 한 번 계산해 고정한 값을 우선 사용 — 방문자마다 순위가 달라지지 않게 */
+if(window.UGEO){ for(const [k,v] of Object.entries(UGEO)) GEO[k]=Object.assign({},v,{gv:1}); }
 if(window.GEOFIX){ for(const [k,v] of Object.entries(GEOFIX)) GEO[k]=k==='__fut2'?v:Object.assign({},v,{gv:1}); }
 const saveGeo=()=>{try{localStorage.setItem('apt6geo_'+GEO_V,JSON.stringify(GEO));}catch(e){}};
 const gkey=d=>d.n+'|'+d.area;
@@ -537,7 +539,7 @@ function recompute(){
     else if(fnD){ fw=fnD; d.fwsrc='동 전체 회귀 환산(재건축 기대 섞임)'; }
     else { const [a]=anchorOf(d,0); if(a){ fw=a; n2=1; d.fwsrc='주변 실제 신축 환산'; }
       else if(J.FWG[g]&&J.GJ[k]&&J.GU[g]){ fw=Math.round(J.FWG[g]*J.GJ[k][0]/J.GU[g]); d.fwsrc='구 신축 평균 × 동 급지 비율'; }
-      else { fw=Math.round((J.FWG[g]||d.bench.ppp)*.9); d.fwsrc='구 신축 평균의 90%(동 데이터 없음)'; } }
+      else { fw=Math.round((J.FWG[g]||(d.bench&&d.bench.ppp)||(d.me||1000))*.9); d.fwsrc='구 신축 평균의 90%(동 데이터 없음)'; } }
     const b=d.bench||{}; d.blend=0;
     if(!d.kfw&&!d.rb&&n2<5&&b.ppp&&!/평균|추정|보정/.test(b.name||'')&&/같은 단지|신축|년차/.test(b.name)){
       const bpy=+((b.name.match(/(\d+)평/)||[0,34])[1]), ba=/같은 단지/.test(b.name)?age:/신축/.test(b.name)?0:+((b.name.match(/(\d+)년차/)||[0,-1])[1]);
@@ -587,7 +589,7 @@ function need(d){ const m=money(d);
 }
 
 const FILTERS=[['all','전체'],['top','핵심'],['mid','유망 이상'],['stn','역 1km'],['sch','초품아'],['man','직접 분석'],['free','비규제'],['재건축','재건축'],['반도체','반도체 수요'],['신혼','신혼 30평대'],['소형할인','소형 할인'],['천지개벽','천지개벽']];
-const state={f:'all',pb:'all',q:'',sel:null};
+const state={f:'all',pb:'all',q:'',sel:null,lim:50};
 const PB=[['all','전체 가격'],['3','3억 이하',0,30000],['4','3~4억',30000,40000],['5','4~5억',40000,50000],['6','5~6억',50000,60001]];
 const visible=d=>{
   const f=state.f, ok=f==='all'||(f==='top'&&d.tier.k==='핵심')||(f==='mid'&&d.tier.k!=='관찰')||(f==='stn'&&d.g.st!=null&&d.g.st<=1000)||(f==='sch'&&d.g.sc!=null&&d.g.sc<=300)||(f==='man'&&!d.auto)||(f==='free'&&d.reg==='free')||d.tags.includes(f);
@@ -600,7 +602,7 @@ function renderList(){
   let h=`<section class="intro">
     <div class="eyebrow">6억 이하 · 오를 단지<i></i>${D.length}곳</div>
     <h1>급지·학군·입지 좋은 순, 같은 입지면 싼 순</h1>
-    <p>입지가 가격을 정한다는 전제로 급지·교통(지금+예정 역, 노선 등급)·학군·직주·상품성·대단지·초품아·평지·브랜드로 입지 점수를 매기고, 입지가 비슷하면 더 싼 단지를 위로 올렸습니다. 하락 중인 지역은 뺐습니다.</p>
+    <p>서울·경기·인천에서 최근 12개월 실거래 중위가 6억 이하 평형이 있는 300세대 이상 단지를 전부 같은 규칙으로 채점했습니다. 직접 분석한 단지와 자동 수집한 단지를 함께 보여주고, 지도는 멀리서 보면 상위권만, 확대하면 그 화면의 단지를 더 보여줍니다.</p>
     ${pend?`<div class="inline-note tnum" style="margin-top:12px">역·초등학교·경사를 지도 데이터로 계산하는 중 · ${D.length-pend}/${D.length}<br><small>처음 한 번만 걸리고, 끝나면 순위가 확정됩니다.</small></div>`:''}
     <details class="method"><summary>점수 매기는 법 ${CHEV}</summary><dl>
       <div><dt>급지<small>25점</small></dt><dd>구·시 아파트 전체 평균 평당가(리치고, 구마다 70~350개 단지)에, 같은 구 안에서 그 동이 얼마나 비싼지를 곱한 값. 동 보정은 수도권 대단지 920곳을 연식·평형·세대수로 보정한 회귀(설명력 93%)에서 뽑음. 평당 3,000만 원 이상 만점, 700만 원 이하 0점.</dd></div>
@@ -612,13 +614,13 @@ function renderList(){
       <div><dt>초품아·평지<small>6·5점</small></dt><dd>초등학교 300m 이내 만점. 가장 가까운 역과 높이 차 5m 이내면 평지 만점, 30m 넘으면 언덕.</dd></div>
       <div><dt>상승 여력<small>종합의 20%</small></dt><dd>· 일반 단지: 이 동네 신축 시세 × 같은 연식 할인 × 같은 평형 보정 = 받을 값. 현재가가 이보다 얼마나 싼가.<br>· 재건축: 내 몫 면적(용적률 증가 − 공공기여) → 34평까지 모자란 만큼 일반분양가로 사고 사업비를 내는 분담금(−) → 완공 시 시세(집값 상승·주변 일제 재건축 판도 프리미엄 +) → 연 5% 시간 할인과 공사 중 거주 손실(−) → 단계별 성공확률, 무산 시 기대감 하락(−). 공사비는 착공까지 연 3.5% 상승(−).<br>· 리모델링: 증축 40%, 일반분양 13.6%, 신축 대비 15% 할인.<br>· 장기전세·확정가 매수권: 지금 보증금 + 미래 확정가를 지금 돈으로 환산한 값이 실제 매수가.<br>신축 시세·연식 할인은 수도권 대단지 중 25년차 이하 578곳 회귀(설명력 96%).</dd></div>
       <div><dt>종합<small>순위</small></dt><dd>수도권 6억 이하 거래 단지 4,708곳(7,416개 평형) 안의 순위(상위 %). 구성: 80% × [세대수 백분위와 입지 점수 백분위의 평균] + 20% × 상승 여력 백분위. 세대수는 2017→20·20→23·23→26 실거래 백테스트에서 시·구 평균보다 더 오르는 쪽으로 가장 일관된 요소(재건축 단지를 빼도 유지). 학군·초품아·직주는 가격 수준은 설명하지만 초과상승은 일관되게 예측하지 못해 입지·적정가 쪽에만 반영. 여력 20%는 하락장 방어용으로 둔 <b>가정</b>(데이터상 상승장에선 예측력 없음). 전체 예측력은 약해서(상관 0.2 안팎) '반드시 오를 단지'보다 '덜 오를 단지를 피하는 순위'로 보는 게 정확함. 입지 점수는 순수 위치만 — 주변 시세(상품 차이를 뺀 주변 단지 평당가) × 역 도보 × 평지, 모두 같은 동 안 실거래 회귀 계수. 세대수·학군 등은 입지 점수에 넣지 않아 두 번 세지 않음.</dd></div>
-      <div><dt>대상<small>범위</small></dt><dd>시세·최근 실거래 모두 6억 이하, 300세대 이상, 최근 15개월 하락 지역 제외. ${D.filter(d=>!d.auto).length}곳 직접 분석 + 나머지 자동 수집.</dd></div>
+      <div><dt>대상<small>범위</small></dt><dd>서울·경기·인천에서 최근 12개월 실거래 중위가 6억 이하 평형이 있는 단지, 300세대 이상. 지역 단위로 빼지 않음 — 최근 하락 지역도 포함하고 상세 화면에 표시. ${D.filter(d=>!d.auto).length}곳 직접 분석, ${D.filter(d=>d.auto&&!d.u).length}곳 자동 선별, ${D.filter(d=>d.u).length.toLocaleString()}곳 전체 자동 수집. 자동 수집 단지의 시세·평형은 최근 12개월 국토부 실거래 중위.</dd></div>
     </dl></details>
   </section>
   <div class="filters pb" role="group" aria-label="가격대">${PB.map(([k,l])=>`<button data-pb="${k}" aria-pressed="${state.pb===k}">${l}</button>`).join('')}</div>
   <div class="filters" role="group" aria-label="필터">${FILTERS.map(([k,l])=>`<button data-f="${k}" aria-pressed="${state.f===k}">${l}</button>`).join('')}</div>
-  <div class="count"><span>${list.length}곳 · 종합 점수순</span><span>시세 리치고 · 2026.10.20</span></div>`;
-  list.forEach(d=>{
+  <div class="count"><span>${list.length}곳 · 종합 점수순</span><span>시세 리치고·국토부 실거래 · 2026.10</span></div>`;
+  list.slice(0,state.lim).forEach(d=>{
     h+=`<article class="row" data-i="${D.indexOf(d)}" data-s="1">
       <span class="rk tnum">${String(d.rank).padStart(2,'0')}</span>
       <div style="min-width:0"><div class="kicker"><span class="chip" style="--chip:${d.tier.c}">${d.tier.k}</span><span>${esc(d.area)}</span>${d.auto?'<span>· 자동</span>':''}</div>
@@ -626,12 +628,14 @@ function renderList(){
       <div class="px tnum"><strong>${short(cashOf(d))}</strong><span>${d.py}평 · ${d.opt?esc(d.opt.kind):d.reg==='free'?'비규제':'토허'}</span><b>${d.score.toFixed(1)}점</b></div>
     </article>`;
   });
+  if(list.length>state.lim) h+=`<button class="btn ghost more" id="more" style="display:block;margin:12px auto;width:calc(100% - 32px)">${Math.min(100,list.length-state.lim)}곳 더 보기 · 남은 ${(list.length-state.lim).toLocaleString()}곳</button>`;
   if(!list.length) h+=`<p class="source">조건에 맞는 단지가 없습니다.</p>`;
-  h+=`<section class="excluded"><h2>이번에 뺀 곳 <small>2025.6~2026.9 누적</small></h2><ul>${EXCLUDED.map(e=>`<li>${esc(e[0])}<b class="tnum">${esc(e[1])}</b><span>${esc(e[2])}</span></li>`).join('')}</ul></section>
+  h+=`<section class="excluded"><h2>최근 하락 지역 <small>2025.6~2026.9 누적 · 순위에는 포함</small></h2><ul>${EXCLUDED.map(e=>`<li>${esc(e[0])}<b class="tnum">${esc(e[1])}</b><span>${esc(e[2])}</span></li>`).join('')}</ul></section>
   <p class="source">상승률: 한국부동산원·KB 주간 아파트 동향(10월 2주), 누적 하락은 한국부동산원(파이낸셜뉴스 2026.9.21 인용). 시세·실거래: 리치고(국토부 실거래). 점수는 투자 권유가 아니라 비교용 지표입니다.</p>`;
   b.innerHTML=h;
-  b.querySelectorAll('.filters button[data-f]').forEach(x=>x.onclick=()=>{state.f=x.dataset.f;render();});
-  b.querySelectorAll('.filters button[data-pb]').forEach(x=>x.onclick=()=>{state.pb=x.dataset.pb;render();});
+  b.querySelectorAll('.filters button[data-f]').forEach(x=>x.onclick=()=>{state.f=x.dataset.f;state.lim=50;render();});
+  b.querySelectorAll('.filters button[data-pb]').forEach(x=>x.onclick=()=>{state.pb=x.dataset.pb;state.lim=50;render();});
+  const mb=b.querySelector('#more'); if(mb) mb.onclick=()=>{ const y=b.scrollTop; state.lim+=100; renderList(); b.scrollTop=y; };
   b.querySelectorAll('.row').forEach(x=>x.onclick=()=>select(+x.dataset.i,true));
 }
 
@@ -678,7 +682,7 @@ function renderDetail(i){
   const bar=(v,max)=>`<div class="t"><b style="width:${Math.round(v/max*100)}%"></b></div>`;
   const src=RATE_SRC[d.rate.src];
   let h=`<div class="phead"><button id="back"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M15 18 9 12l6-6"/></svg>목록</button><span class="tnum">${d.rank}위 / ${D.length}</span></div>
-  <section class="identity"><div class="cat">${esc(tags)}${d.auto?' · 점수식 자동 선별':' · 직접 분석'}</div><h2>${esc(d.n)}</h2>
+  <section class="identity"><div class="cat">${esc(tags)}${d.u?' · 전체 단지 자동 수집':d.auto?' · 점수식 자동 선별':' · 직접 분석'}</div><h2>${esc(d.n)}</h2>
     <div class="meta tnum"><span>${esc(d.area)}</span><span>${d.year}년 입주</span><span>${d.units.toLocaleString()}세대</span></div></section>
   <div class="lede"><strong>${esc(d.headline)}</strong><p>${esc(d.sub)}</p></div>
   <dl class="kpis tnum">
@@ -702,10 +706,10 @@ function renderDetail(i){
   </div><p class="note">계산: 주변 시세 기준 평당 ${d.fw.toLocaleString()}만(신축·1천 세대·역 5분 이내·무브랜드 기준 · ${d.fwsrc}) × 연식 보정 ${Math.exp(AGEC(2026-d.year)).toFixed(2)} × 평형 보정 ${SIZE(d.py,2026-d.year).toFixed(2)} × 단지 입지 보정 ${d.mk.toFixed(2)}(${d.mp.map(x=>x[0]+' '+(x[1]>=0?'+':'')+(x[1]*100).toFixed(1)+'%').join(', ')}) = ${d.fair.toLocaleString()}만. 현재가가 이보다 ${d.up>=0?Math.round(d.up*100)+'% 싸다':Math.round(-d.up*100)+'% 비싸다'}.</p>`
   :d.upSrc==='opt'?optHTML(d):rbHTML(d)}
   </section>
-  <section class="sec"><h3>가격 비교 <small>평당 만 원</small></h3><div class="cmp tnum">
+  ${d.bench&&d.bench.ppp?`<section class="sec"><h3>가격 비교 <small>평당 만 원</small></h3><div class="cmp tnum">
     <div class="me"><span class="n">${esc(d.n)} ${d.py}평</span><span class="v">${d.me.toLocaleString()}</span>${bar(d.me,Math.max(d.me,d.bench.ppp))}</div>
     <div><span class="n">${esc(d.bench.name)}</span><span class="v">${d.bench.ppp.toLocaleString()}</span>${bar(d.bench.ppp,Math.max(d.me,d.bench.ppp))}</div>
-  </div><p class="note">${d.deal?esc(d.deal):''}</p></section>`;
+  </div><p class="note">${d.deal?esc(d.deal):''}</p></section>`:`<section class="sec"><h3>6억 이하 평형 <small>최근 12개월 실거래 중위</small></h3><div class="cmp tnum">${(d.types||[{py:d.py,p:d.p,n:0}]).map(t=>`<div${t.py===d.py?' class="me"':''}><span class="n">${t.py}평${t.n?` · ${t.n}건`:''}</span><span class="v">${eok(t.p)}</span>${bar(t.p,60000)}</div>`).join('')}</div><p class="note">${d.deal?esc(d.deal):''}</p></section>`}`;
   if(d.stage){
     h+=`<section class="sec"><h3>재건축 단계</h3><ol class="stage">`+d.stage.steps.map((s,k)=>`<li class="${k<d.stage.at?'done':k===d.stage.at?'now':''}"><span class="tnum">${String(k+1).padStart(2,'0')}</span>${esc(s)}</li>`).join('')+`</ol><div class="inline-note">${esc(d.stage.note)}</div></section>`;
   }
@@ -717,7 +721,7 @@ function renderDetail(i){
     <div><dt>규제</dt><dd>${d.reg==='free'?'비규제 · 전세 끼고 매수 가능':'토지거래허가 · 실거주 2년'}</dd></div></dl></section>`;
   if(d.fit&&d.fit.length) h+=`<section class="sec"><h3>이런 사람에게</h3><div class="fit">${d.fit.map(f=>`<span>${esc(f)}</span>`).join('')}</div></section>`;
   if(d.check&&d.check.length) h+=`<section class="sec"><h3>사기 전에 확인</h3><ul class="checks">${d.check.map(f=>`<li>${esc(f)}</li>`).join('')}</ul></section>`;
-  h+=`<p class="fine">필요한 돈은 주담대 한도 6억과 LTV만 반영한 계산입니다. 실제 대출은 소득(DSR)에 따라 줄어듭니다. 시세는 리치고 추정치로 매물 호가와 다를 수 있습니다. 상승률 출처: ${esc(src)}.</p>
+  h+=`<p class="fine">필요한 돈은 주담대 한도 6억과 LTV만 반영한 계산입니다. 실제 대출은 소득(DSR)에 따라 줄어듭니다. ${d.u?'시세는 최근 12개월 국토부 실거래 중위로 매물 호가와 다를 수 있습니다.':'시세는 리치고 추정치로 매물 호가와 다를 수 있습니다.'} 상승률 출처: ${esc(src)}.</p>
   <div class="pfoot"><a class="btn" target="_blank" rel="noopener" href="https://map.kakao.com/link/search/${encodeURIComponent(d.q)}">카카오맵에서 보기 ${ARROW}</a><a class="btn ghost" target="_blank" rel="noopener" href="https://m.land.naver.com/search/result/${encodeURIComponent(d.q)}">매물</a></div>`;
   const b=$('#body'); b.innerHTML=h; b.scrollTop=0;
   $('#back').onclick=()=>{close();render();};
@@ -725,7 +729,7 @@ function renderDetail(i){
 
 function render(){ state.sel==null?renderList():renderDetail(state.sel); if(map) renderMap(); }
 let qT=null;
-$('#q').addEventListener('input',e=>{state.q=e.target.value.trim();close();render(); clearTimeout(qT); qT=setTimeout(fitSearch,450);});
+$('#q').addEventListener('input',e=>{state.q=e.target.value.trim();state.lim=50;close();render(); clearTimeout(qT); qT=setTimeout(fitSearch,450);});
 $('#q').addEventListener('keydown',e=>{ if(e.key==='Enter'){ clearTimeout(qT); fitSearch(); e.target.blur(); if(mobile()) snapTo('half'); } });
 function fitSearch(){
   if(!map||!state.q) return;
@@ -746,8 +750,11 @@ function renderMap(){
   const far=map.getLevel()>8, pw=far?78:116, ph=far?30:40;
   const order=pins.slice().sort((a,b)=>(b.i===state.sel)-(a.i===state.sel)||D[b.i].score-D[a.i].score);
   shownN=0;
+  let cand=0;
   order.forEach(o=>{ const d=D[o.i]; let on=false;
-    if(o.i===state.sel||visible(d)){
+    const vis=o.i===state.sel||visible(d);
+    if(vis&&o.i!==state.sel) cand++;
+    if(vis&&(o.i===state.sel||(!(far&&!state.q&&cand>300)&&shownN<400))){
       const p=proj.containerPointFromCoords(d._pos);
       if(p.x>-pw&&p.x<W+pw&&p.y>-ph&&p.y<H+ph*2){
         const r=[p.x-pw/2,p.y-ph-6,p.x+pw/2,p.y-6];
