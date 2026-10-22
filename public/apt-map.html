@@ -341,7 +341,19 @@ function hakL(d){ const h=hakH(d); if(!h) return null;
   return s; }
 const TIERS=[{k:'핵심',c:'#0066ff'},{k:'유망',c:'#00a35c'},{k:'관찰',c:'#8a8f98'}];
 
-const D=PICKS.map(d=>({...d,opt:(window.OPT||{})[d.n]||null}));
+/* 초소형(전용 40㎡ 미만 ≈ 공급 16평 미만) 비재건축 평형은 순위에서 제외:
+   실거래 백테스트에서 27년차 미만 초소형은 시·구 중위 대비 17→20 −30.9%, 20→23 −4.5%, 23→26 −18.5%(그 외 평형은 0 안팎)로 세 구간 모두 크게 뒤처짐.
+   (27년차 이상 재건축 대상 소형은 대지지분 가치라 해당 없음.) 같은 단지에 6억 이하 16평 이상 평형이 있으면 그 평형으로 바꿔 보여줌 */
+const TINY=16;
+const D=PICKS.map(d=>({...d,opt:(window.OPT||{})[d.n]||null})).filter(d=>{
+  const age=2026-d.year, fr=((window.FARD||{})[gkey(d)]||[])[0];
+  const old=(d.st||0)>=35||(age>=27&&(fr!=null?fr<=250:age>=30));   // 재건축 경로(대지지분 가치)일 때만 초소형 예외 — 용적률 250% 초과 고밀 단지는 해당 없음
+  if(old||d.opt||d.py>=TINY) return true;
+  const big=(d.types||[]).filter(t=>t.py>=TINY);
+  if(!big.length) return false;
+  const t=big.reduce((a,b)=>b.n>a.n?b:a); d.py=t.py; d.p=t.p; d.me=null;
+  d.headline=`${t.py}평 ${eok(t.p)} · 최근 12개월 실거래 중위 (초소형 평형은 순위에서 제외)`; d.deal=`최근 12개월 실거래 중위 ${eok(t.p)} (${t.n}건)`;
+  return true; });
 const cashOf=d=>d.opt?d.opt.dep:d.p;
 let ORDER=[];
 function score(d){
@@ -386,7 +398,7 @@ const HC={hh:.1151,jb:-.107,jbOld:-.177,jbArea:Math.log(.66/.76),b1:.1021,b2:.04
 const AGEC=a=>lerp([[0,0],[5,-.063],[10,-.217],[15,-.302],[20,-.302],[25,-.419],[29,-.442]],a);   // 신축 대비 ln 할인(25년차 이하 추정, 이후 평탄)
 const WALK=m=>lerp([[0,0],[5,0],[10,-.066],[15,-.13],[20,-.186],[30,-.215]],m);                // 역 도보 5분 이내 대비 ln 할인
 const walkMin=m=>m*1.25/80;                                                                     // 직선거리 × 우회 1.25 ÷ 분속 80m
-const SIZE=(py,age)=>Math.exp((HC.szY+HC.szO*clamp01((age-11)/10))*Math.log(py*2.512/60));     // 전용 60㎡ 대비 평당가 배율(구축일수록 소형 평당가가 높음)
+const SIZE=(py,age)=>Math.exp((HC.szY+HC.szO*clamp01((age-11)/10))*Math.log(Math.max(py,TINY)*2.512/60));   // 16평 미만은 16평으로(회귀 범위 밖 외삽 방지)     // 전용 60㎡ 대비 평당가 배율(구축일수록 소형 평당가가 높음)
 /* 주변 시세(위치 가치): 반경 ~600m 가우시안 커널로 주변 단지들의 '상품 차이를 뺀' 평당가를 평균. 이 단지 자신은 제외.
    동 경계와 무관하게 실제 거리로 비교하므로, 같은 동이라도 멀리 떨어진 호재 지역 시세가 섞이지 않음 */
 function nearCx(d){ const g=d.g||{}; if(!g.lat||!window.CXP) return null; const c=Math.cos(g.lat*Math.PI/180); let best=null,bm=1e9;
