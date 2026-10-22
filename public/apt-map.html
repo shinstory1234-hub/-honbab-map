@@ -799,7 +799,7 @@ function select(i,fromList){
     map.panTo(proj.coordsFromContainerPoint(new kakao.maps.Point(pt.x, pt.y-want+h/2)));
   }
 }
-function pinHTML(d){ return `<div><span class="sc">${d.top<10?d.top.toFixed(1):Math.round(d.top)}%</span><span><b>${short(cashOf(d))}</b><small>${esc(d.s)}</small></span></div>`; }
+function pinHTML(d){ return `<div><span class="sc">${d.rank.toLocaleString()}위</span><span><b>${short(cashOf(d))}</b><small>${esc(d.s)}</small></span></div>`; }
 function updatePins(){ pins.forEach(o=>{ const d=D[o.i]; o.el.style.setProperty('--chip',d.tier.c); o.el.innerHTML=pinHTML(d); o.ov.setZIndex(d.score); }); }
 function addPin(i){
   const d=D[i], el=document.createElement('div');
