@@ -246,6 +246,7 @@ aside{order:-1;width:408px;flex:none;border-right:1px solid var(--border);backgr
 <script src="apt-s4q.js"></script>
 <script src="apt-s4.js"></script>
 <script src="apt-band.js"></script>
+<script src="apt-plat.js"></script>
 <script src="apt-geo.js"></script>
 <script>
 const KAKAO_JS_KEY='106bb734e8600621686fade2de7f8afb';
@@ -510,30 +511,42 @@ function anchorOf(d,fw){ const b=d.bench||{}, n=b.name||'';
    재건축도 같은 잣대로 — 완공 시세·분담금(완공 시점 명목)을 집값 상승률 g로 나눠 지금 시세 수준으로 환산.
    (예전엔 성공 쪽만 할인율 r로 깎고 무산 쪽은 안 깎아, (1.03/1.05)^16 ≈ 0.73배만큼 성공 쪽이 불리했음)
    공사비가 집값보다 빨리 오르는 부분(e > g)과 공사 중 못 사는 비용은 그대로 손실로 남음. */
+
+/* ---- 대지지분(s11): window.PLAT[gkey] = [이 평형 대지지분㎡, 출처, 실측 용적률%] ---- */
+const landOf=d=>{ const v=(window.PLAT||{})[gkey(d)]; return v&&v[0]>0&&v[2]>0?v:null; };
+/* ---- 사업성 → 실현가능성(s11, 가정 · 횡단면 근거) ----
+   x = 같은 평형으로 1:1 재건축할 때 분담금 ÷ 그 평형 신축 분양가 = (사업비 − (받는면적/현재면적 − 1) × (분양가 − 사업비)) ÷ 분양가
+   30년+ 노후 892곳 중 x ≤ .3 은 22%(12/54)가 안전진단 통과 이상(st≥40), .3~.6 은 1%(2/201), .6 초과는 0.2%(1/637).
+   단계 확률 p에 f(x)를 곱함: x ≤ a 이면 1, b에서 fb, c 이후 fc(선형 보간). 단계가 진행될수록 덜 깎음(st≥50 √f, st≥80 f^¼):
+   진행 단지는 이미 사업성 검증을 일부 통과했기 때문(그래도 상계주공5 x≈1 은 시공 계약 해지로 2년 정체). */
+const FZ={"a":.3,"b":.6,"c":.9,"fb":.5,"fc":.25,"fv":.1};
+function feasOf(c,d,st){ const r=c.A/d.py; return feasX((c.CTn-(r-1)*(c.Pg-c.CTn))/c.Pg,st); }
+function feasX(x,st){ let f=x<=FZ.a?1:x<=FZ.b?1-(1-FZ.fb)*(x-FZ.a)/(FZ.b-FZ.a):x<=FZ.c?FZ.fb-(FZ.fb-FZ.fc)*(x-FZ.b)/(FZ.c-FZ.b):FZ.fc;
+  f=Math.pow(f,st>=80?.25:st>=50?.5:1); return {x,f}; }
 function rbModel(d,fw0){ const K=d.kfwRb||d.kfw; const [fw1,fwl]=K?[fw0,`주변 20년차 이하 실거래(반경 커널, 단지 ${K.nn}곳) 신축·1천 세대 기준 ${fw0.toLocaleString()}만`]:anchorOf(d,fw0), [mk,mp]=microAdj(d,'rb');
   const P=d.p, rm=isRemodel(d), [T,p,sl]=stage(d), seoul=/^서울/.test(d.area), st=stOf(d);
   const W=seoul?880:800, ck=CKN[d.n], C=ck?ck[0]:W*RB.ex*RB.oh*(rm?.9:1);
-  const [fo,fol]=farOld(d);
+  const Ld=landOf(d), [fo,fol]=Ld?[Ld[2],`${Ld[1]} 실측(대지 ÷ 용적률산정연면적)`]:farOld(d);
   const signed=st>=85, tb=Math.max(signed?T-3:T-2,0), cont=signed?1:RB.cont;
   const CT=C*cont*Math.pow(1+RB.e,tb);
   const lost=[0,1,2,3].reduce((s,t)=>s+((d.jeon||P*.4)*RB.rent)/Math.pow(1+RB.r,T-4+t),0);
   const calc=um=>{ const fw=Math.round(fw1*mk*um); let fn,fnl,pub,A,tgt,unit,pi;
     if(rm){ fn=Math.round(fo*1.3); fnl='리모델링 증축'; pub=0; A=d.py*1.4; tgt=A; unit=fw*.85; pi=0; }
-    else { [fn,fnl,pub]=farNew(d); A=d.py*(1+(fn/fo-1)*(1-pub))*.95; tgt=Math.max(34,d.py); unit=fw; pi=pandoPi(d); }
+    else { [fn,fnl,pub]=farNew(d); A=Ld?(Ld[0]/3.3058)*(fo+(fn-fo)*(1-pub))/100*.95:d.py*(1+(fn/fo-1)*(1-pub))*.95; tgt=Math.max(34,d.py); unit=fw; pi=pandoPi(d); }
     const Pg=unit*(1+pi)*Math.pow(1+RB.g,tb)*RB.sale;
     const extra=rm?.136*A*(Pg-CT):(A-tgt)*(Pg-CT);
     const bun=tgt*CT-extra;
     const V=tgt*unit*(1+pi)*Math.pow(1+RB.g,T);
     const PVs=(V-bun)/Math.pow(1+RB.g,T)-lost;                        // 지금 시세 수준으로 환산
-    return {fw,fn,fnl,pub,A,tgt,unit,pi,Pg,bun,V,PVs}; };
+    return {fw,fn,fnl,pub,A,tgt,unit,pi,Pg,bun,V,PVs,CTn:CT}; };
   const c=calc(1), cLo=calc(1-RB.sigU), cHi=calc(1+RB.sigU);
-  let pp=p, small='';
+  let pp=p, small=''; const fz=rm?{x:null,f:1}:feasOf(c,d,st); pp=p*fz.f;
   if(soloPenalty(d,rm)){ pp=p*.85; small=' · 1천 세대 미만이고 300m 안에 함께 추진할 노후 단지도 적음 −15%'; }
-  const ff=FAILF(st), FV=P*ff;
+  const ff=FAILF(st)-(FZ.fv||0)*(1-fz.f), FV=P*ff;
   const E0=pp*c.PVs+(1-pp)*FV, sd=Math.sqrt(pp*(1-pp))*Math.abs(c.PVs-FV);
   const sdU=pp*Math.abs(cHi.PVs-cLo.PVs)/2;                         // 신축 시세 추정이 ±15% 틀릴 때 기대가치가 흔들리는 폭(분담금 구조로 증폭됨)
   const E=E0-RB.lam*sd-RB.lamU*sdU;
-  return {E0:Math.round(E0),sd:Math.round(sd),sdU:Math.round(sdU),ff,FV:Math.round(FV),mk,mp,signed,cont,tb,fwl,ck,small,rm,T,p:pp,sl,W,C:Math.round(C),CT:Math.round(CT),fo,fol,fn:c.fn,fnl:c.fnl,pub:c.pub,A:c.A,tgt:c.tgt,unit:c.unit,pi:c.pi,Pg:Math.round(c.Pg),bun:Math.round(c.bun),V:Math.round(c.V),lost:Math.round(lost),PVs:Math.round(c.PVs),E:Math.round(E),gross:c.PVs/P-1};
+  return {Ld,fz,E0:Math.round(E0),sd:Math.round(sd),sdU:Math.round(sdU),ff,FV:Math.round(FV),mk,mp,signed,cont,tb,fwl,ck,small,rm,T,p:pp,sl,W,C:Math.round(C),CT:Math.round(CT),fo,fol,fn:c.fn,fnl:c.fnl,pub:c.pub,A:c.A,tgt:c.tgt,unit:c.unit,pi:c.pi,Pg:Math.round(c.Pg),bun:Math.round(c.bun),V:Math.round(c.V),lost:Math.round(lost),PVs:Math.round(c.PVs),E:Math.round(E),gross:c.PVs/P-1};
 }
 /* 임대 후 확정가 매수(장기전세·분양전환): 지금 보증금만 내고 Y년에 K원에 살 권리 */
 function optModel(d,fair){ const o=d.opt, n=o.Y-2026, P=d.py*fair;
@@ -587,7 +600,7 @@ function recompute(){
     d.U=Math.max(0,Math.min(100,d.upR/.5*100));                       // 신뢰도 반영 여력 50% 이상이면 만점
     locNew(d); s4Score(d);                                                          // 수도권 6억 이하 4,700여 단지 중 백분위(0~100). apt-s4.js
   });
-  ORDER=D.slice().sort((x,y)=>y.score-x.score);
+  ORDER=hillGuard(D.slice().sort((x,y)=>y.score-x.score));
   const n=ORDER.length; ORDER.forEach((d,i)=>{ d.rank=i+1; d.tier=TIERS[i<n*.15?0:i<n*.4?1:2]; }); if(window.s10Band) s10Band();
   updatePins();
 }
@@ -603,11 +616,11 @@ function need(d){ const m=money(d);
   return {l:'대출 끼면 필요한 돈',v:m.cash,x:m.note};
 }
 
-const FILTERS=[['all','전체'],['top','핵심'],['mid','유망 이상'],['stn','역 1km'],['sch','초품아'],['hak','학원가 1.5km'],['man','직접 분석'],['free','비규제'],['재건축','재건축'],['반도체','반도체 수요'],['신혼','신혼 30평대'],['소형할인','소형 할인'],['천지개벽','천지개벽']];
+const FILTERS=[['all','전체'],['top','핵심'],['mid','유망 이상'],['stn','역 1km'],['sch','초품아'],['hak','학원가 1.5km'],['flat','평지'],['man','직접 분석'],['free','비규제'],['재건축','재건축'],['반도체','반도체 수요'],['신혼','신혼 30평대'],['소형할인','소형 할인'],['천지개벽','천지개벽']];
 const state={f:'all',pb:'all',q:'',sel:null,lim:50};
 const PB=[['all','전체 가격'],['3','3억 이하',0,30000],['4','3~4억',30000,40000],['5','4~5억',40000,50000],['6','5~6억',50000,60001]];
 const visible=d=>{
-  const f=state.f, ok=f==='all'||(f==='top'&&d.tier.k==='핵심')||(f==='mid'&&d.tier.k!=='관찰')||(f==='stn'&&d.g.st!=null&&d.g.st<=1000)||(f==='sch'&&d.g.sc!=null&&d.g.sc<=300)||(f==='hak'&&hakIn(d))||(f==='man'&&!d.auto)||(f==='free'&&d.reg==='free')||d.tags.includes(f);
+  const f=state.f, ok=f==='all'||(f==='top'&&d.tier.k==='핵심')||(f==='mid'&&d.tier.k!=='관찰')||(f==='stn'&&d.g.st!=null&&d.g.st<=1000)||(f==='sch'&&d.g.sc!=null&&d.g.sc<=300)||(f==='hak'&&hakIn(d))||(f==='flat'&&isFlat(d))||(f==='man'&&!d.auto)||(f==='free'&&d.reg==='free')||d.tags.includes(f);
   const pb=PB.find(x=>x[0]===state.pb); const okp=state.pb==='all'||(cashOf(d)>pb[2]&&cashOf(d)<=pb[3])||(state.pb==='3'&&cashOf(d)<=30000);
   return ok&&okp&&(!state.q||(d.n+d.area+d.headline).includes(state.q));
 };
@@ -669,7 +682,7 @@ function rbHTML(d){ const m=d.m, P=d.p;
   if(m.rm){
     h.push(lrow('+','리모델링 후 면적',`기존 ${d.py}평 × 1.4(전용 최대 40% 증축)`,`${m.A.toFixed(1)}평`));
   } else {
-    h.push(lrow('+','재건축 후 내 몫 면적',`${d.py}평 × [1 + (용적률 ${m.fo}%→${m.fn}% = ${(m.fn/m.fo).toFixed(2)}배 − 1) × (1 − 공공기여·임대 ${Math.round(m.pub*100)}%)] × 0.95(커뮤니티 등)<br>기존 용적률 ${esc(m.fol)} · 새 용적률 ${esc(m.fnl)}`,`${m.A.toFixed(1)}평`));
+    h.push(lrow('+','재건축 후 내 몫 면적',m.Ld?`대지지분 약 ${(m.Ld[0]/3.3058).toFixed(1)}평(${m.Ld[0].toFixed(0)}㎡ · ${esc(m.Ld[1])} 대지면적을 평형 면적 비율로 나눔) × [기존 용적률 ${m.fo}% + (새 ${m.fn}% − ${m.fo}%) × (1 − 공공기여·임대 ${Math.round(m.pub*100)}%)] × 0.95<br>새 용적률 ${esc(m.fnl)}`:`${d.py}평 × [1 + (용적률 ${m.fo}%→${m.fn}% = ${(m.fn/m.fo).toFixed(2)}배 − 1) × (1 − 공공기여·임대 ${Math.round(m.pub*100)}%)] × 0.95(커뮤니티 등)<br>기존 용적률 ${esc(m.fol)} · 새 용적률 ${esc(m.fnl)}`,`${m.A.toFixed(1)}평`));
   }
   h.push(lrow('−','사업비',m.ck?`${esc(m.ck[1])} = 공급평당 ${m.C.toLocaleString()}만<br>${m.signed?'':'공사비 증액 예비 +5%(시공 계약 전) · '}${m.tb}년 × 연 ${(RB.e*100).toFixed(1)}% 상승(물가연동) → ${m.CT.toLocaleString()}만`:`공사비 연면적 평당 ${m.W}만 × 지하·부대 1.45 × 설계·금융·이주비 1.22${m.rm?' × 리모델링 0.9':''} = 공급평당 ${m.C.toLocaleString()}만<br>${m.signed?'':'공사비 증액 예비 +5%(시공 계약 전) · '}${m.tb}년 × 연 ${(RB.e*100).toFixed(1)}% 상승(물가연동) → ${m.CT.toLocaleString()}만`,`평당 ${m.CT.toLocaleString()}만`));
   h.push(lrow('−','분담금',m.rm?`${m.A.toFixed(1)}평 × ${m.CT.toLocaleString()}만 − 늘어난 일반분양(13.6%) 수익`
@@ -679,7 +692,7 @@ function rbHTML(d){ const m=d.m, P=d.p;
   h.push(lrow('−','지금 시세로 환산',`(완공 시세 − 분담금) ${ek(m.V-m.bun)}을 집값 상승률 연 ${RB.g*100}%로 ${m.T}년 되돌림 — 일반 단지와 같은 '지금 시세' 잣대`,ek((m.V-m.bun)/Math.pow(1+RB.g,m.T))));
   h.push(lrow('−','공사 중 못 사는 비용',`이주 4년 × 전세 ${eok(d.jeon||P*.4)} × ${(RB.rent*100).toFixed(1)}%`,ek(-m.lost)));
   h.push(lrow('','성공하면 지금 가치',`지금 가격 대비 ${pc(m.gross)}`,eok(m.PVs)));
-  h.push(lrow('−','실현 가능성',`${esc(m.sl)} → 성공 ${Math.round(m.p*100)}%${esc(m.small)}, 무산되면 쌓인 기대감이 빠져 지금 가격의 ${Math.round(m.ff*100)}%<br>${Math.round(m.p*100)}% × ${eok(m.PVs)} + ${Math.round((1-m.p)*100)}% × ${eok(m.FV)}`,eok(m.E0)));
+  h.push(lrow('−','실현 가능성',`${esc(m.sl)}${m.fz&&m.fz.x!=null?` · 사업성(같은 평형 1:1 분담금 ÷ 신축가 ${Math.round(m.fz.x*100)}%) ${m.fz.f<.995?'× '+m.fz.f.toFixed(2):'보정 없음'}`:''} → 성공 ${Math.round(m.p*100)}%${esc(m.small)}, 무산되면 쌓인 기대감이 빠져 지금 가격의 ${Math.round(m.ff*100)}%<br>${Math.round(m.p*100)}% × ${eok(m.PVs)} + ${Math.round((1-m.p)*100)}% × ${eok(m.FV)}`,eok(m.E0)));
   h.push(lrow('−','불확실성 차감',`성공·무산 결과 차이의 표준편차 ${eok(m.sd)} × ${RB.lam} — 확실한 신축과 같은 잣대로 비교하려고`,ek(-RB.lam*m.sd)));
   h.push(lrow('−','시세 추정 오차 차감',`완공 시세 추정이 ±${RB.sigU*100}% 틀리면 기대가치가 ±${eok(m.sdU)} 흔들림(분담금 구조로 증폭) × ${RB.lamU}`,ek(-RB.lamU*m.sdU)));
   h.push(lrow('=','기대가치 vs 지금 가격','',pc(d.up),'tot'));
@@ -692,12 +705,26 @@ function optHTML(d){ const o=d.opt, m=d.om;
     lrow('+','이 동네 같은 연식·평형 적정가',`신축 평당 ${d.fw.toLocaleString()}만 × 연식 ${Math.exp(AGEC(2026-d.year)).toFixed(2)} × 평형 ${SIZE(d.py,2026-d.year).toFixed(2)} × 입지 보정 ${d.mk.toFixed(2)} × ${d.py}평`,eok(m.P)),
     lrow('+',`${o.Y}년 예상 시세`,`연 ${RB.g*100}% 상승 · 확정가보다 ${ek(m.gainY)} 높음`,eok(m.VY)),
     lrow('=','적정가 vs 실제 매수가','',pc(d.up),'tot')].join('')}</div><p class="note">${esc(o.note)}</p>`; }
+/* 언덕: 순위 요인 검증은 탈락(하락장 반대) → 점수는 그대로, 배지·평지 필터·상위 50 비율 상한(기저율)만 */
+const HILL_BADGE=30;                       // 역보다 30m 이상 높으면 '언덕 단지' 배지
+const isHill=d=>!!(d.g&&d.g.dh!=null&&d.g.dh>=HILL_BADGE);
+const isFlat=d=>!!(d.g&&d.g.dh!=null&&d.g.dh<15);
+
+function hillGuard(S,top=50){                // S: 점수순 정렬된 배열. 반환: 표시 순서 배열
+  const known=S.filter(d=>d.g&&d.g.dh!=null), base=known.filter(isHill).length/Math.max(1,known.length);
+  const cap=Math.ceil(base*top), head=S.slice(0,top), hills=head.filter(isHill);
+  if(hills.length<=cap) return S;
+  const drop=new Set(hills.slice(cap));       // 순위 낮은 쪽부터 초과분
+  const kept=head.filter(d=>!drop.has(d)), rest=S.slice(top);
+  const fill=rest.filter(d=>!isHill(d)).slice(0,drop.size), fillSet=new Set(fill);
+  return [...kept,...fill,...drop,...rest.filter(d=>!fillSet.has(d))];
+}
 /* 학원가 생활권: 주변 1km 교과학원 250곳+ 밀집지에서 1.5km 안(점수에는 안 들어가고 배지·필터로만) */
 function hakIn(d){ const h=(window.HAK||{})[gkey(d)]; return !!(h&&h[1]>=250); }
 /* 점수 근거 자동 생성: 종합을 이루는 세 요소의 위치를 그대로 보여줌 */
 function whyLine(d){ if(!d.s4) return ''; const top=p=>{ const t=100-p; return t<1?'상위 1% 안':`상위 ${Math.max(1,Math.round(t))}%`; };
   const parts=[`세대수 ${top(d.s4.pU)}(${d.units.toLocaleString()}세대)`,`입지 ${top(d.s4.pLoc)}`,`여력 ${d.up>=0?'+':''}${Math.round(d.up*100)}%(가정)`];
-  if(hakIn(d)) parts.push('학원가 1.5km 안'); return parts.join(' · '); }
+  if(hakIn(d)) parts.push('학원가 1.5km 안'); if(isHill(d)) parts.push(`언덕 단지 · 역보다 ${Math.round(d.g.dh)}m 높음`); return parts.join(' · '); }
 function renderDetail(i){
   const d=D[i], m=money(d), nd=need(d), tags=d.tags.map(t=>TAGS[t].label).join(' · ');
   const bar=(v,max)=>`<div class="t"><b style="width:${Math.round(v/max*100)}%"></b></div>`;
