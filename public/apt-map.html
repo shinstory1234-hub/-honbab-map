@@ -243,6 +243,7 @@ aside{order:-1;width:408px;flex:none;border-right:1px solid var(--border);backgr
 <script src="apt-fard.js"></script>
 <script src="apt-hak.js"></script>
 <script src="apt-univ.js"></script>
+<script src="apt-cur.js"></script>
 <script src="apt-s4q.js"></script>
 <script src="apt-s4.js"></script>
 <script src="apt-band.js"></script>
@@ -346,14 +347,25 @@ const TIERS=[{k:'핵심',c:'#0066ff'},{k:'유망',c:'#00a35c'},{k:'관찰',c:'#8
    실거래 백테스트에서 27년차 미만 초소형은 시·구 중위 대비 17→20 −30.9%, 20→23 −4.5%, 23→26 −18.5%(그 외 평형은 0 안팎)로 세 구간 모두 크게 뒤처짐.
    (27년차 이상 재건축 대상 소형은 대지지분 가치라 해당 없음.) 같은 단지에 6억 이하 16평 이상 평형이 있으면 그 평형으로 바꿔 보여줌 */
 const TINY=16;
+/* 가격 기준 = 최근 시세: 최근 3개월(7.22~10.21) 실거래 5건 이상이면 그 중위, 적으면 12개월 실거래를 시·구 월별 시세지수로 오늘 기준 환산한 중위.
+   직접 고른 단지도 같은 기준으로 덮어씀 — 지금 시세가 6억을 넘는 평형은 빼고, 남는 평형이 없으면 단지를 뺌 */
+const curSrc=t=>t.n3>=5?`최근 3개월 실거래 ${t.n3}건 중위`:`최근 12개월 실거래 ${t.n}건을 시세 변동만큼 오늘 기준으로 환산한 중위`;
+const CUROUT=[];
 const D=PICKS.map(d=>({...d,opt:(window.OPT||{})[d.n]||null})).filter(d=>{
+  const cr=!d.u&&!d.opt&&(window.CUR||{})[d.n+'|'+d.area];
+  if(cr){ const ts=cr.map(([py,p,n,n3,last])=>({py,p,n,n3,last})), ok=ts.filter(t=>t.p<=60000);
+    if(!ok.length){ CUROUT.push([d.n,d.area,Math.min(...ts.map(t=>t.p))]); return false; }
+    const t=ok.reduce((a,b)=>Math.abs(b.py-d.py)<Math.abs(a.py-d.py)||(Math.abs(b.py-d.py)===Math.abs(a.py-d.py)&&b.n>a.n)?b:a);
+    d.p0=d.p; d.py=t.py; d.p=t.p; d.me=null; d.types=ok;
+    d.headline=`${t.py}평 ${eok(t.p)} · 최근 시세`; d.deal=`${curSrc(t)} ${eok(t.p)} (마지막 거래 ${t.last})`; }
+  else if(d.types) d.types.forEach(t=>{ if(t.n3==null) t.n3=0; });
   const age=2026-d.year, fr=((window.FARD||{})[gkey(d)]||[])[0];
   const old=(d.st||0)>=35||(age>=27&&(fr!=null?fr<=250:age>=30));   // 재건축 경로(대지지분 가치)일 때만 초소형 예외 — 용적률 250% 초과 고밀 단지는 해당 없음
   if(old||d.opt||d.py>=TINY) return true;
   const big=(d.types||[]).filter(t=>t.py>=TINY);
   if(!big.length) return false;
   const t=big.reduce((a,b)=>b.n>a.n?b:a); d.py=t.py; d.p=t.p; d.me=null;
-  d.headline=`${t.py}평 ${eok(t.p)} · 최근 12개월 실거래 중위 (초소형 평형은 순위에서 제외)`; d.deal=`최근 12개월 실거래 중위 ${eok(t.p)} (${t.n}건)`;
+  d.headline=`${t.py}평 ${eok(t.p)} · 최근 시세 (초소형 평형은 순위에서 제외)`; d.deal=`${curSrc(t)} ${eok(t.p)}`;
   return true; });
 const cashOf=d=>d.opt?d.opt.dep:d.p;
 let ORDER=[];
@@ -631,7 +643,7 @@ function renderList(){
   let h=`<section class="intro">
     <div class="eyebrow">6억 이하 · 오를 단지<i></i>${D.length}곳</div>
     <h1>급지·학군·입지 좋은 순, 같은 입지면 싼 순</h1>
-    <p>서울·경기·인천에서 최근 12개월 실거래 중위가 6억 이하 평형이 있는 300세대 이상 단지를 전부 같은 규칙으로 채점했습니다. 직접 분석한 단지와 자동 수집한 단지를 함께 보여주고, 지도는 멀리서 보면 상위권만, 확대하면 그 화면의 단지를 더 보여줍니다.</p>
+    <p>서울·경기·인천에서 최근 시세(최근 3개월 실거래 중위)가 6억 이하인 평형이 있는 300세대 이상 단지를 전부 같은 규칙으로 채점했습니다. 직접 분석한 단지와 자동 수집한 단지를 함께 보여주고, 지도는 멀리서 보면 상위권만, 확대하면 그 화면의 단지를 더 보여줍니다.</p>
     ${pend?`<div class="inline-note tnum" style="margin-top:12px">역·초등학교·경사를 지도 데이터로 계산하는 중 · ${D.length-pend}/${D.length}<br><small>처음 한 번만 걸리고, 끝나면 순위가 확정됩니다.</small></div>`:''}
     <details class="method"><summary>점수 매기는 법 ${CHEV}</summary><dl>
       <div><dt>급지<small>25점</small></dt><dd>구·시 아파트 전체 평균 평당가(리치고, 구마다 70~350개 단지)에, 같은 구 안에서 그 동이 얼마나 비싼지를 곱한 값. 동 보정은 수도권 대단지 920곳을 연식·평형·세대수로 보정한 회귀(설명력 93%)에서 뽑음. 평당 3,000만 원 이상 만점, 700만 원 이하 0점.</dd></div>
@@ -642,8 +654,8 @@ function renderList(){
       <div><dt>대단지·브랜드<small>7·3점</small></dt><dd>3,000세대 이상 7점, 2,000 6점, 1,500 5점, 1,000 4점, 700 3점, 500 2점. 브랜드는 1군(래미안·자이·힐스테이트·아이파크·푸르지오·더샵·e편한세상·롯데캐슬 등) 3점, 중견 2점, 옛 대형사 구축 1점. 재건축 단지는 새 브랜드가 붙으니 2점.</dd></div>
       <div><dt>초품아·평지<small>6·5점</small></dt><dd>초등학교 300m 이내 만점. 가장 가까운 역과 높이 차 5m 이내면 평지 만점, 30m 넘으면 언덕.</dd></div>
       <div><dt>상승 여력<small>종합의 20%</small></dt><dd>· 일반 단지: 이 동네 신축 시세 × 같은 연식 할인 × 같은 평형 보정 = 받을 값. 현재가가 이보다 얼마나 싼가.<br>· 재건축: 내 몫 면적(용적률 증가 − 공공기여) → 34평까지 모자란 만큼 일반분양가로 사고 사업비를 내는 분담금(−) → 완공 시 시세(집값 상승·주변 일제 재건축 판도 프리미엄 +) → 연 5% 시간 할인과 공사 중 거주 손실(−) → 단계별 성공확률, 무산 시 기대감 하락(−). 공사비는 착공까지 연 3.5% 상승(−).<br>· 리모델링: 증축 40%, 일반분양 13.6%, 신축 대비 15% 할인.<br>· 장기전세·확정가 매수권: 지금 보증금 + 미래 확정가를 지금 돈으로 환산한 값이 실제 매수가.<br>신축 시세·연식 할인은 수도권 대단지 중 25년차 이하 578곳 회귀(설명력 96%).</dd></div>
-      <div><dt>종합<small>순위</small></dt><dd>수도권 6억 이하 거래 단지 4,708곳(7,416개 평형) 안의 순위. 점수(0~100) = 세대수 백분위×0.4 + 입지 점수 백분위×0.4 + 상승 여력 백분위×0.2 — 세 백분위의 가중평균 그대로라 1위(약 95점)와 10위(약 91점), 100위(약 81점)의 실제 간격이 보임. 여력의 '적정가'는 26~33년차 연식 할인과 소형 평당 프리미엄을 같은 연식 실거래에 맞춰 보정(구축 소형이 체계적으로 싸 보이던 편향 제거). <b>세대수만 상승 요인으로 쓰는 이유</b>: 결과를 보기 전에 정한 규칙 — 2017→20·20→23·23→26 세 구간 모두 시·구 중위 대비 초과상승이 양(+)이거나, 두 구간이 양이면서 음인 구간의 손실이 양인 구간 평균의 절반 미만이고 재건축 단지를 빼도 유지될 것 — 을 통과한 유일한 요소. 학군·초품아·직주는 이 규칙을 통과하지 못해 순위에는 넣지 않고 적정가(가격 수준)와 배지·필터로만 반영. 이 비중으로 각 구간을 채점하면 상위−하위 20% 초과상승 차이는 17→20 +5.7%p, 20→23 −0.3%p, 23→26 +5.4%p. 입지는 순위 예측력이 거의 없지만(입지만 높은 소규모 단지가 위로 오는 걸 막으려면 세대수가 필요) 실거주 품질이라 세대수와 같은 비중으로 둔 판단. 세대수를 60%로 올리면 상승장 성과가 조금 더 좋지만 큰 단지 위주 순위가 됨. 여력 20%는 하락장 방어용으로 둔 <b>가정</b>. 비중 가정에 따라 순위가 흔들리므로 상세에 범위를 함께 표시. 예측력이 약해 '반드시 오를 단지'보다 '덜 오를 단지를 피하는 순위'로 보는 게 정확함. 입지 점수는 순수 위치만 — 주변 시세(상품 차이를 뺀 주변 단지 평당가) × 역 도보 × 평지, 모두 같은 동 안 실거래 회귀 계수.</dd></div>
-      <div><dt>대상<small>범위</small></dt><dd>서울·경기·인천에서 최근 12개월 실거래 중위가 6억 이하 평형이 있는 단지, 300세대 이상. 지역 단위로 빼지 않음 — 최근 하락 지역도 포함하고 상세 화면에 표시. ${D.filter(d=>!d.auto).length}곳 직접 분석, ${D.filter(d=>d.auto&&!d.u).length}곳 자동 선별, ${D.filter(d=>d.u).length.toLocaleString()}곳 전체 자동 수집. 자동 수집 단지의 시세·평형은 최근 12개월 국토부 실거래 중위.</dd></div>
+      <div><dt>종합<small>순위</small></dt><dd>수도권 6억 이하 거래 단지 4,610곳(7,184개 평형) 안의 순위. 점수(0~100) = 세대수 백분위×0.4 + 입지 점수 백분위×0.4 + 상승 여력 백분위×0.2 — 세 백분위의 가중평균 그대로라 1위(약 95점)와 10위(약 91점), 100위(약 81점)의 실제 간격이 보임. 여력의 '적정가'는 26~33년차 연식 할인과 소형 평당 프리미엄을 같은 연식 실거래에 맞춰 보정(구축 소형이 체계적으로 싸 보이던 편향 제거). <b>세대수만 상승 요인으로 쓰는 이유</b>: 결과를 보기 전에 정한 규칙 — 2017→20·20→23·23→26 세 구간 모두 시·구 중위 대비 초과상승이 양(+)이거나, 두 구간이 양이면서 음인 구간의 손실이 양인 구간 평균의 절반 미만이고 재건축 단지를 빼도 유지될 것 — 을 통과한 유일한 요소. 학군·초품아·직주는 이 규칙을 통과하지 못해 순위에는 넣지 않고 적정가(가격 수준)와 배지·필터로만 반영. 이 비중으로 각 구간을 채점하면 상위−하위 20% 초과상승 차이는 17→20 +5.7%p, 20→23 −0.3%p, 23→26 +5.4%p. 입지는 순위 예측력이 거의 없지만(입지만 높은 소규모 단지가 위로 오는 걸 막으려면 세대수가 필요) 실거주 품질이라 세대수와 같은 비중으로 둔 판단. 세대수를 60%로 올리면 상승장 성과가 조금 더 좋지만 큰 단지 위주 순위가 됨. 여력 20%는 하락장 방어용으로 둔 <b>가정</b>. 비중 가정에 따라 순위가 흔들리므로 상세에 범위를 함께 표시. 예측력이 약해 '반드시 오를 단지'보다 '덜 오를 단지를 피하는 순위'로 보는 게 정확함. 입지 점수는 순수 위치만 — 주변 시세(상품 차이를 뺀 주변 단지 평당가) × 역 도보 × 평지, 모두 같은 동 안 실거래 회귀 계수.</dd></div>
+      <div><dt>대상<small>범위</small></dt><dd>서울·경기·인천에서 최근 시세가 6억 이하인 평형이 있는 단지, 300세대 이상. 최근 시세 = 최근 3개월(7.22~10.21) 실거래 5건 이상이면 그 중위, 적으면 12개월 실거래를 시·구 월별 시세지수로 오늘 기준 환산한 중위(3개월 거래가 충분한 평형으로 검증하면 오차 중위 1.8%, 12개월 중위를 그대로 쓰면 3.0%·서울 6.1%). 지역 단위로 빼지 않음 — 최근 하락 지역도 포함하고 상세 화면에 표시. ${D.filter(d=>!d.auto).length}곳 직접 분석, ${D.filter(d=>d.auto&&!d.u).length}곳 자동 선별, ${D.filter(d=>d.u).length.toLocaleString()}곳 전체 자동 수집. 자동 수집 단지의 시세·평형은 최근 12개월 국토부 실거래 중위.</dd></div>
     </dl></details>
   </section>
   <div class="filters pb" role="group" aria-label="가격대">${PB.map(([k,l])=>`<button data-pb="${k}" aria-pressed="${state.pb===k}">${l}</button>`).join('')}</div>
@@ -737,7 +749,7 @@ function renderDetail(i){
   <dl class="kpis tnum">
     ${d.opt?`<div><dt>지금 필요한 돈</dt><dd>${eokH(d.opt.dep)}</dd><small>${esc(d.opt.kind)} · ${d.opt.Y}년 ${eok(d.opt.K)} 매수권 · 시세 ${eok(d.p)}</small></div>`:`<div><dt>${d.py}평 시세</dt><dd>${eokH(d.p)}</dd><small>${d.reg==='free'?'비규제':'토허·실거주 2년'}</small></div>`}
     <div><dt>${esc(nd.l)}</dt><dd class="hl">${eokH(nd.v)}</dd><small>${esc(nd.x)}</small></div>
-    <div><dt>입지 점수</dt><dd class="hl">${d.loc.toFixed(1)}<i>/100</i></dd><small>종합 ${s4RankTxt(d)}${d.band?`<br>${s10BandTxt(d)}`:''}${d.s4?`<br>종합 ${d.score.toFixed(1)}점 = 세대수 ${d.s4.pU.toFixed(0)}×0.4 + 입지 ${d.s4.pLoc.toFixed(0)}×0.4 + 여력 ${d.s4.pUp.toFixed(0)}×0.2 (각각 수도권 6억 이하 7,416개 평형 중 백분위)${d.s4.pUp>=80?' · 하락장 방어형':''}`:''}</small></div>
+    <div><dt>입지 점수</dt><dd class="hl">${d.loc.toFixed(1)}<i>/100</i></dd><small>종합 ${s4RankTxt(d)}${d.band?`<br>${s10BandTxt(d)}`:''}${d.s4?`<br>종합 ${d.score.toFixed(1)}점 = 세대수 ${d.s4.pU.toFixed(0)}×0.4 + 입지 ${d.s4.pLoc.toFixed(0)}×0.4 + 여력 ${d.s4.pUp.toFixed(0)}×0.2 (각각 수도권 6억 이하 7,184개 평형 중 백분위)${d.s4.pUp>=80?' · 하락장 방어형':''}`:''}</small></div>
     <div><dt>상승 여력</dt><dd class="hl">${d.up>=0?'+':''}${Math.round(d.up*100)}<i>%</i></dd><small>${d.upSrc==='rb'?(d.m.rm?'리모델링':'재건축')+' 기대가치 기준':d.upSrc==='opt'?'확정가 매수권 기준':'같은 동네·연식 시세 기준'}</small></div>
   </dl>
   ${locPanel(d)}<section class="sec"><h3>상승 요인·상품 <small>입지 점수에는 미포함 · 예전 배점(참고)</small></h3><div class="score tnum">
@@ -758,7 +770,7 @@ function renderDetail(i){
   ${d.bench&&d.bench.ppp?`<section class="sec"><h3>가격 비교 <small>평당 만 원</small></h3><div class="cmp tnum">
     <div class="me"><span class="n">${esc(d.n)} ${d.py}평</span><span class="v">${d.me.toLocaleString()}</span>${bar(d.me,Math.max(d.me,d.bench.ppp))}</div>
     <div><span class="n">${esc(d.bench.name)}</span><span class="v">${d.bench.ppp.toLocaleString()}</span>${bar(d.bench.ppp,Math.max(d.me,d.bench.ppp))}</div>
-  </div><p class="note">${d.deal?esc(d.deal):''}</p></section>`:`<section class="sec"><h3>6억 이하 평형 <small>최근 12개월 실거래 중위</small></h3><div class="cmp tnum">${(d.types||[{py:d.py,p:d.p,n:0}]).map(t=>`<div${t.py===d.py?' class="me"':''}><span class="n">${t.py}평${t.n?` · ${t.n}건`:''}</span><span class="v">${eok(t.p)}</span>${bar(t.p,60000)}</div>`).join('')}</div><p class="note">${d.deal?esc(d.deal):''}</p></section>`}`;
+  </div><p class="note">${d.deal?esc(d.deal):''}</p></section>`:`<section class="sec"><h3>6억 이하 평형 <small>최근 시세</small></h3><div class="cmp tnum">${(d.types||[{py:d.py,p:d.p,n:0}]).map(t=>`<div${t.py===d.py?' class="me"':''}><span class="n">${t.py}평${t.n?` · ${t.n3>=5?`3개월 ${t.n3}건`:`12개월 ${t.n}건 환산`}`:''}</span><span class="v">${eok(t.p)}</span>${bar(t.p,60000)}</div>`).join('')}</div><p class="note">${d.deal?esc(d.deal):''}</p></section>`}`;
   if(d.stage){
     h+=`<section class="sec"><h3>재건축 단계</h3><ol class="stage">`+d.stage.steps.map((s,k)=>`<li class="${k<d.stage.at?'done':k===d.stage.at?'now':''}"><span class="tnum">${String(k+1).padStart(2,'0')}</span>${esc(s)}</li>`).join('')+`</ol><div class="inline-note">${esc(d.stage.note)}</div></section>`;
   }
@@ -770,7 +782,7 @@ function renderDetail(i){
     <div><dt>규제</dt><dd>${d.reg==='free'?'비규제 · 전세 끼고 매수 가능':'토지거래허가 · 실거주 2년'}</dd></div></dl></section>`;
   if(d.fit&&d.fit.length) h+=`<section class="sec"><h3>이런 사람에게</h3><div class="fit">${d.fit.map(f=>`<span>${esc(f)}</span>`).join('')}</div></section>`;
   if(d.check&&d.check.length) h+=`<section class="sec"><h3>사기 전에 확인</h3><ul class="checks">${d.check.map(f=>`<li>${esc(f)}</li>`).join('')}</ul></section>`;
-  h+=`<p class="fine">필요한 돈은 주담대 한도 6억과 LTV만 반영한 계산입니다. 실제 대출은 소득(DSR)에 따라 줄어듭니다. ${d.u?'시세는 최근 12개월 국토부 실거래 중위로 매물 호가와 다를 수 있습니다.':'시세는 리치고 추정치로 매물 호가와 다를 수 있습니다.'} 상승률 출처: ${esc(src)}.</p>
+  h+=`<p class="fine">필요한 돈은 주담대 한도 6억과 LTV만 반영한 계산입니다. 실제 대출은 소득(DSR)에 따라 줄어듭니다. ${d.u||d.p0?'시세는 국토부 실거래 기준 최근 시세(3개월 중위 또는 시세지수 환산)로 매물 호가와 다를 수 있습니다.':'시세는 리치고 추정치로 매물 호가와 다를 수 있습니다.'} 상승률 출처: ${esc(src)}.</p>
   <div class="pfoot"><a class="btn" target="_blank" rel="noopener" href="https://map.kakao.com/link/search/${encodeURIComponent(d.q)}">카카오맵에서 보기 ${ARROW}</a><a class="btn ghost" target="_blank" rel="noopener" href="https://m.land.naver.com/search/result/${encodeURIComponent(d.q)}">매물</a></div>`;
   const b=$('#body'); b.innerHTML=h; b.scrollTop=0;
   $('#back').onclick=()=>{close();render();};

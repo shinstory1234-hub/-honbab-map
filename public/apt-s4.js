@@ -50,7 +50,7 @@ const s4RankTxt=d=>{ const n=(typeof D!=='undefined'&&D.length)||1, r=d.rank||d.
 function locPanel(d){ const L=d.locParts;
   if(!L) return `<section class="sec"><h3>입지 점수 <small>계산 중</small></h3></section>`;
   const pc=x=>(x>=0?'+':'')+(x*100).toFixed(1)+'%';
-  return `<section class="sec"><h3>입지 점수 <small>${d.loc.toFixed(1)} / 100 · 6억 이하 7,416개 평형 중 백분위</small></h3><div class="score tnum">
+  return `<section class="sec"><h3>입지 점수 <small>${d.loc.toFixed(1)} / 100 · 6억 이하 7,184개 평형 중 백분위</small></h3><div class="score tnum">
     <div><span class="l">주변 시세(위치 가치)<small>${d.kfw?`반경 ${Math.round(d.kfw.bw*2/100)/10}km 안 25년차 이하 단지 ${d.kfw.nn}곳의 상품 차이를 뺀 평당가(자기 단지 제외)`:esc((d.fwsrc||'').split(' · 같은 단지')[0])}</small></span><span class="v">${Math.round(L.base).toLocaleString()}<i>만/평</i></span></div>
     <div><span class="l">역 도보<small>${L.wm==null?'3km 안에 역 없음':`${esc((d.cur&&d.cur.n)||'')} 도보 약 ${Math.round(L.wm)}분`} · 같은 동 안 실거래 회귀</small></span><span class="v">${pc(L.wa)}</span></div>
     <div><span class="l">평지<small>${d.g&&d.g.dh!=null?`가장 가까운 역보다 ${Math.abs(Math.round(d.g.dh))}m ${d.g.dh>0?'높음':'낮음'}`:'높이 자료 없음(평균값)'} · 1m 높을 때마다 −0.3%</small></span><span class="v">${pc(L.fa)}</span></div>
