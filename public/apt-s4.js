@@ -32,7 +32,7 @@ function locNew(d){ const g=d.g||{};
   // 개통 예정: GTX = 신분당선급 +18%, 월판선 +9%(판단), 그 외 0 — 개통 전 할인 적용. '가정'으로 표시
   let lp=0, lpl='';
   if((g.sts||[]).some(([n,m])=>/신분당/.test(n)&&walkMin(m)<=15)){ lp=LINEP.S; lpl='신분당선'; }
-  if(typeof FUTPOS!=='undefined'&&FUTPOS&&g.lat) FUT.forEach((F,k)=>{ const f=FUTPOS[k]; if(!f) return; const pr=/GTX|신분당/.test(F[1])?LINEP.S:/월판/.test(F[1])?LINEP.WP:0; if(!pr) return;
+  if(typeof FUTPOS!=='undefined'&&FUTPOS&&g.lat) FUT.forEach((F,k)=>{ const f=FUTPOS[k]; if(!f) return; const pr=F[4]!=null?F[4]:/GTX|신분당/.test(F[1])?LINEP.S:/월판/.test(F[1])?LINEP.WP:0;   // 인동선은 역마다: 인덕원(GTX-C·4호선·월판선)·동탄(GTX-A·SRT) 환승 허브까지 2정거장 이내 +9%, 3~4정거장 +4%, 그 밖 0(판단) if(!pr) return;
     if(walkMin(hav(g.lat,g.lng,f[0],f[1]))>15) return; const v=pr*Math.max(.8,1-.05*(F[2]-2026)); if(v>lp){ lp=v; lpl=`${F[0].split(' ')[0]} ${F[1].replace(/\(.*?\)/g,'')}(${F[2]} 예정)`; } });
   d.locV=Math.log(base)+wa+fa+lp;
   d.locParts={base,wm,wa,wa0,fa,lp,lpl,wf,fut:wf!=null?d.fut:null,ppp:Math.round(Math.exp(d.locV))};
@@ -63,7 +63,7 @@ function locPanel(d){ const L=d.locParts;
   return `<section class="sec"><h3>입지 점수 <small>${d.loc.toFixed(1)} / 100 · 6억 이하 7,184개 평형 중 백분위</small></h3><div class="score tnum">
     <div><span class="l">주변 시세(위치 가치)<small>${d.kfw?`반경 ${Math.round(d.kfw.bw*2/100)/10}km 안 25년차 이하 단지 ${d.kfw.nn}곳의 상품 차이를 뺀 평당가(자기 단지 제외)`:esc((d.fwsrc||'').split(' · 같은 단지')[0])}</small></span><span class="v">${Math.round(L.base).toLocaleString()}<i>만/평</i></span></div>
     <div><span class="l">역 도보<small>${L.wm==null?'3km 안에 역 없음':`${esc((d.cur&&d.cur.n)||'')} 도보 약 ${Math.round(L.wm)}분`}${L.fut?` → <b>개통 예정 ${esc(L.fut.n)}역(${esc(L.fut.line)}, ${L.fut.year}년 목표) 도보 약 ${Math.round(L.wf)}분</b> 기준, 개통 전 ${Math.round((1-L.fut.disc)*100)}% 할인`:''} · 같은 동 안 실거래 회귀</small></span><span class="v">${pc(L.wa)}</span></div>
-    <div><span class="l">노선 프리미엄<small>${L.lp?`${esc(L.lpl)} 도보 15분 안 — 신분당선은 같은 동 안 실거래 회귀 +18%, GTX는 신분당선급·월판선 +9%로 가정(개통 전 할인)`:'도보 15분 안에 신분당선·GTX·월판선 없음 — 다른 노선끼리는 실거래상 차이가 오차 범위라 같게 봄'}</small></span><span class="v">${pc(L.lp||0)}</span></div>
+    <div><span class="l">노선 프리미엄<small>${L.lp?`${esc(L.lpl)} 도보 15분 안 — 신분당선은 같은 동 안 실거래 회귀 +18%, GTX는 신분당선급·월판선 +9%, 인동선은 인덕원·동탄 환승역까지 2정거장 이내 +9%·3~4정거장 +4%로 가정(개통 전 할인)`:'도보 15분 안에 신분당선·GTX·월판선 없음 — 다른 노선끼리는 실거래상 차이가 오차 범위라 같게 봄'}</small></span><span class="v">${pc(L.lp||0)}</span></div>
     <div><span class="l">평지<small>${d.g&&d.g.dh!=null?`가장 가까운 역보다 ${Math.abs(Math.round(d.g.dh))}m ${d.g.dh>0?'높음':'낮음'}`:'높이 자료 없음(평균값)'} · 1m 높을 때마다 −0.3%</small></span><span class="v">${pc(L.fa)}</span></div>
     <div><span class="l">입지 평당가<small>세대수·학군·초품아·직주·연식·브랜드는 입지 점수에 넣지 않음(상승 요인·적정가에서 따로 반영)</small></span><span class="v">${L.ppp.toLocaleString()}<i>만/평</i></span></div>
   </div></section>`; }
