@@ -24,9 +24,12 @@ const flatAdj=dh=>dh==null?FLATDEF:FLATB*Math.min(FLATCAP,Math.max(0,dh));
 /* 입지 평당가(ln, 만원/공급평). recompute()에서 d.kfw 계산 뒤 s4Score 전에 호출 */
 function locNew(d){ const g=d.g||{};
   const base=d.kfw?d.kfw.fw:(d.fwK??d.fw); if(!base){ d.locV=null; d.loc=d.locOld??0; return; }
-  const wm=d.cur&&d.cur.m<99999?walkMin(d.cur.m):null, wa=wm==null?WALK(40):WALK(Math.min(40,wm)), fa=flatAdj(g.dh);
+  const wm=d.cur&&d.cur.m<99999?walkMin(d.cur.m):null; let wa=wm==null?WALK(40):WALK(Math.min(40,wm)); const fa=flatAdj(g.dh);
+  // 개통 예정 역(공사 중·확정, OSM 좌표)이 지금 역보다 80m 이상 가까우면 그 역 도보 기준으로 — 개통까지 1년당 5% 할인(최대 20%). 여력의 적정가(microAdj)와 같은 규칙
+  const wa0=wa; let wf=null; if(d.fut&&(!d.cur||d.fut.m<d.cur.m-80)){ wf=walkMin(d.fut.m); const gain=(WALK(Math.min(40,wf))-wa)*d.fut.disc; if(gain>0) wa+=gain; else wf=null; }
   d.locV=Math.log(base)+wa+fa;
-  d.locParts={base,wm,wa,fa,ppp:Math.round(Math.exp(d.locV))};
+  d.locParts={base,wm,wa,wa0,fa,wf,fut:wf!=null?d.fut:null,ppp:Math.round(Math.exp(d.locV))};
+  d.loc0=wf!=null?Math.round(s4Pct(S4Q.LOC,d.locV-wa+wa0)*10)/10:null;            // 예정 역을 빼면 입지 백분위
   d.loc=Math.round(s4Pct(S4Q.LOC,d.locV)*10)/10; }
 /* 같은 단지 큰 평형: ln 기준가 = 0.25×커널 + 0.75×큰 평형이 말하는 위치가치 */
 const S4BLEND=(window.S4CFG&&S4CFG.blend!=null)?S4CFG.blend:.75;
@@ -52,7 +55,7 @@ function locPanel(d){ const L=d.locParts;
   const pc=x=>(x>=0?'+':'')+(x*100).toFixed(1)+'%';
   return `<section class="sec"><h3>입지 점수 <small>${d.loc.toFixed(1)} / 100 · 6억 이하 7,184개 평형 중 백분위</small></h3><div class="score tnum">
     <div><span class="l">주변 시세(위치 가치)<small>${d.kfw?`반경 ${Math.round(d.kfw.bw*2/100)/10}km 안 25년차 이하 단지 ${d.kfw.nn}곳의 상품 차이를 뺀 평당가(자기 단지 제외)`:esc((d.fwsrc||'').split(' · 같은 단지')[0])}</small></span><span class="v">${Math.round(L.base).toLocaleString()}<i>만/평</i></span></div>
-    <div><span class="l">역 도보<small>${L.wm==null?'3km 안에 역 없음':`${esc((d.cur&&d.cur.n)||'')} 도보 약 ${Math.round(L.wm)}분`} · 같은 동 안 실거래 회귀</small></span><span class="v">${pc(L.wa)}</span></div>
+    <div><span class="l">역 도보<small>${L.wm==null?'3km 안에 역 없음':`${esc((d.cur&&d.cur.n)||'')} 도보 약 ${Math.round(L.wm)}분`}${L.fut?` → <b>개통 예정 ${esc(L.fut.n)}역(${esc(L.fut.line)}, ${L.fut.year}년 목표) 도보 약 ${Math.round(L.wf)}분</b> 기준, 개통 전 ${Math.round((1-L.fut.disc)*100)}% 할인`:''} · 같은 동 안 실거래 회귀</small></span><span class="v">${pc(L.wa)}</span></div>
     <div><span class="l">평지<small>${d.g&&d.g.dh!=null?`가장 가까운 역보다 ${Math.abs(Math.round(d.g.dh))}m ${d.g.dh>0?'높음':'낮음'}`:'높이 자료 없음(평균값)'} · 1m 높을 때마다 −0.3%</small></span><span class="v">${pc(L.fa)}</span></div>
     <div><span class="l">입지 평당가<small>세대수·학군·초품아·직주·연식·브랜드는 입지 점수에 넣지 않음(상승 요인·적정가에서 따로 반영)</small></span><span class="v">${L.ppp.toLocaleString()}<i>만/평</i></span></div>
   </div></section>`; }
