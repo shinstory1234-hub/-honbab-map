@@ -538,7 +538,7 @@ const landOf=d=>{ const v=(window.PLAT||{})[gkey(d)]; return v&&v[0]>0&&v[2]>0?v
    진행 단지는 이미 사업성 검증을 일부 통과했기 때문(그래도 상계주공5 x≈1 은 시공 계약 해지로 2년 정체). */
 const FZ={"a":.3,"b":.6,"c":.9,"fb":.5,"fc":.25,"fv":.1};
 function feasOf(c,d,st){ const r=c.A/d.py; return feasX((c.CTn-(r-1)*(c.Pg-c.CTn))/c.Pg,st); }
-/* 사업성 곡선(2026.10 재추정): 30~39년차 892곳을 연식(30~34·35~39)으로 나눠, 분담금÷신축가 구간별로 정비 단계(안전진단 이상) 진입 비율을 ≤0.3 구간 대비로 환산.
+/* (이전 버전, 아래 2026.10.25 재보정으로 대체) 사업성 곡선(2026.10 재추정): 30~39년차 892곳을 연식(30~34·35~39)으로 나눠, 분담금÷신축가 구간별로 정비 단계(안전진단 이상) 진입 비율을 ≤0.3 구간 대비로 환산.
    30~34년: 40%·8%(.3~.45)·18%(.45~.6)·0.6%(.6~.9)·0%(.9+) / 35~39년: 33%·19%·8%·2%·0% → 상대 1 · 약 0.45 · 0.2 · 0.06 · 0.02 */
 /* 칸별 잔차 보정(2026.10): 연식×평형 칸마다 '적정가 ÷ 실제가'의 중위가 0이 되게(표본 n/(n+30)만큼 축소) — 위·아래 어느 방향이든 체계적 오차 제거.
    ln 잔차(%): 신축0~10년 소형 +2.3(18)·중형 −6.6(224)·대형 +3.6(297) / 11~20년 중형 −10.9(80)·대형 0.0 / 21~26년 ±0.4 / 27~33년 소형 +5.5(43)·중형 +1.5(400)·대형 −1.2(260) */
@@ -546,7 +546,11 @@ const CELL={'0|s':.009,'0|m':-.058,'0|l':.033,'1|m':-.079,'3|s':.032,'3|m':.014,
 /* 소형 전용 단지(모든 평형 전용 50㎡ 이하 — 오피스텔형): 적정가가 실제보다 중위 13.1% 높게 나옴(37곳, 일반 단지는 −1.6%) → 같은 축소 규칙(n/(n+30))으로 −7.2% 보정 */
 const SMALLADJ=.072;
 const cellAdj=d=>{ const a=2026-d.year, ab=a<=10?0:a<=20?1:a<=26?2:3, sz=d.py<=19?'s':d.py<=26?'m':'l'; return (CELL[ab+'|'+sz]||0)+(isSmallOnly(d)?SMALLADJ:0); };
-const FZT=[[.3,1],[.45,.45],[.6,.2],[.75,.06],[.9,.02],[1.2,.01]];
+/* 사업성 곡선 재보정(2026.10.25): 사이트 계산의 x(같은 평형 1:1 분담금 ÷ 신축가) 그대로, 30~39년차 841곳을 30~34·35~39년으로 나눠
+   안전진단 이상(st≥40) 진입률을 x ≤ .3 대비 상대비로 환산(Mantel-Haenszel, 0건 칸은 +0.5 보정). 점은 각 구간의 x 중위에 둠.
+   ≤.3: 8/48(x중위 .26) · .3~.45: 4/67 → 0.43(.38) · .45~.6: 2/90 → 0.26(.55) · .6~.75: 0/112 → ≤0.05(.67) · .75~.9: 0/98 · .9~1.2: 0/199 · 1.2+: 0/182
+   진입 0건 구간은 상한만 알 수 있어 0.05 → 0.04 → 0.02 → 0.01로 단조 감소하게 둠(가정). 이전 곡선(.45에서 0.45)보다 .3~.7 구간이 1.3~2.6배 엄격 */
+const FZT=[[.26,1],[.38,.43],[.55,.26],[.67,.05],[.81,.04],[1.06,.02],[1.42,.01]];
 function feasX(x,st){ let f=lerp(FZT,x);
   f=Math.pow(f,st>=80?.25:st>=50?.5:1); return {x,f}; }
 function rbModel(d,fw0){ const K=d.kfwRb||d.kfw; const [fw1,fwl]=K?[fw0,`주변 20년차 이하 실거래(반경 커널, 단지 ${K.nn}곳) 신축·1천 세대 기준 ${fw0.toLocaleString()}만`]:anchorOf(d,fw0), [mk,mp]=microAdj(d,'rb');
@@ -567,7 +571,7 @@ function rbModel(d,fw0){ const K=d.kfwRb||d.kfw; const [fw1,fwl]=K?[fw0,`주변 
     return {fw,fn,fnl,pub,A,tgt,unit,pi,Pg,bun,V,PVs,CTn:CT}; };
   const c=calc(1), cLo=calc(1-RB.sigU), cHi=calc(1+RB.sigU);
   let pp=p, small=''; const fz=rm?{x:null,f:1}:feasOf(c,d,st); pp=p*fz.f;
-  if(soloPenalty(d,rm)){ pp=p*.85; small=' · 1천 세대 미만이고 300m 안에 함께 추진할 노후 단지도 적음 −15%'; }
+  if(soloPenalty(d,rm)){ pp*=.85; small=' · 1천 세대 미만이고 300m 안에 함께 추진할 노후 단지도 적음 −15%'; }
   const ff=FAILF(st)-(FZ.fv||0)*(1-fz.f), FV=P*ff;
   const E0=pp*c.PVs+(1-pp)*FV, sd=Math.sqrt(pp*(1-pp))*Math.abs(c.PVs-FV);
   const sdU=pp*Math.abs(cHi.PVs-cLo.PVs)/2;                         // 신축 시세 추정이 ±15% 틀릴 때 기대가치가 흔들리는 폭(분담금 구조로 증폭됨)
@@ -760,7 +764,14 @@ function whyLine(d){ if(!d.s4) return ''; const top=p=>{ const t=100-p; return t
   const parts=[`세대수 ${top(d.s4.pU)}(${d.units.toLocaleString()}세대)`,`입지 ${top(d.s4.pLoc)}`,`여력 ${d.up>=0?'+':''}${Math.round(d.up*100)}%(가정)`];
   if(d.locParts&&d.locParts.lp) parts.push(`노선 +${Math.round(d.locParts.lp*100)}%(${d.locParts.lpl})`);
   if(d.locParts&&d.locParts.fut){ const f=d.locParts.fut; parts.push(`개통 예정 ${f.n}역(${f.line.replace('(신설)','')}, ${f.year}년 목표) 도보 ${Math.round(d.locParts.wf)}분 반영 — 빼면 입지 상위 ${Math.max(1,Math.round(100-d.loc0))}%`); }
-  if(hakIn(d)) parts.push('학원가 1.5km 안'); if(isHill(d)) parts.push(`언덕 단지 · 역보다 ${Math.round(d.g.dh)}m 높음`); return parts.join(' · '); }
+  if(hakIn(d)) parts.push('학원가 1.5km 안'); if(isHill(d)) parts.push(`언덕 단지 · 역보다 ${Math.round(d.g.dh)}m 높음`);
+  const pe=priceEv(d); if(pe&&pe.n<PRICE_THIN) parts.push(`가격 근거 적음(이 평형 최근 12개월 ${pe.n}건)`);
+  if(d.conf!=null&&d.conf<.6&&d.upSrc!=='opt') parts.push(`여력 비교 근거 약함(신뢰도 ${d.conf.toFixed(2)})`);
+  return parts.join(' · '); }
+/* 가격 근거(감사 2026.10.24 제안): 순위와 별개로, 시세를 정한 실거래가 몇 건인지. 5건 = 최근 3개월 중위를 쓰는 기준과 같은 값(그보다 적으면 12개월 지수 환산) */
+const PRICE_THIN=5;
+function priceEv(d){ const t=(d.types||[]).find(x=>x.py===d.py)||null; return t&&t.n!=null?{n:t.n,n3:t.n3||0,last:t.last||''}:null; }
+const priceEvTxt=d=>{ const e=priceEv(d); return e?`이 평형 실거래 최근 12개월 ${e.n}건 · 3개월 ${e.n3}건${e.last?` · 마지막 ${e.last}`:''}${e.n<PRICE_THIN?' — 가격 근거가 적어 시세 자체가 틀릴 수 있음':''}`:''; };
 function renderDetail(i){
   const d=D[i], m=money(d), nd=need(d), tags=d.tags.map(t=>TAGS[t].label).join(' · ');
   const bar=(v,max)=>`<div class="t"><b style="width:${Math.round(v/max*100)}%"></b></div>`;
@@ -770,7 +781,7 @@ function renderDetail(i){
     <div class="meta tnum"><span>${esc(d.area)}</span><span>${d.year}년 입주</span><span>${d.units.toLocaleString()}세대</span></div></section>
   <div class="lede"><strong>${esc(d.headline)}</strong><p>${esc(d.sub)}</p>${d.s4?`<p class="why"><b>순위 근거</b> ${esc(whyLine(d))}</p>`:''}${hasNew(d)?`<p class="why"><b>신설역 주의</b> 입지 점수에 개통 예정 역·노선을 넣어 순위가 올라간 단지예요${d.locParts.fut?` — ${esc(d.locParts.fut.n)}역(${esc(d.locParts.fut.line)}) 도보 약 ${Math.round(d.locParts.wf)}분`:''}${/예정/.test(d.locParts.lpl||'')?` · 노선 프리미엄 ${esc(d.locParts.lpl)} +${Math.round(d.locParts.lp*100)}%(가정)`:''}. 철도는 지연이 잦고 역 위치는 공사·계획 기준(OpenStreetMap)이에요. 개통 전까지 1년당 5%(최대 20%) 할인해서 반영했고, 예정 역을 빼면 입지 상위 ${Math.max(1,Math.round(100-d.loc0))}%예요. 지금 쓰는 역은 ${esc((d.cur&&d.cur.n)||'없음')}${d.cur&&d.cur.m<99999?` 도보 약 ${Math.round(walkMin(d.cur.m))}분`:''}.</p>`:''}</div>
   <dl class="kpis tnum">
-    ${d.opt?`<div><dt>지금 필요한 돈</dt><dd>${eokH(d.opt.dep)}</dd><small>${esc(d.opt.kind)} · ${d.opt.Y}년 ${eok(d.opt.K)} 매수권 · 시세 ${eok(d.p)}</small></div>`:`<div><dt>${d.py}평 시세</dt><dd>${eokH(d.p)}</dd><small>${d.reg==='free'?'비규제':'토허·실거주 2년'}</small></div>`}
+    ${d.opt?`<div><dt>지금 필요한 돈</dt><dd>${eokH(d.opt.dep)}</dd><small>${esc(d.opt.kind)} · ${d.opt.Y}년 ${eok(d.opt.K)} 매수권 · 시세 ${eok(d.p)}</small></div>`:`<div><dt>${d.py}평 시세</dt><dd>${eokH(d.p)}</dd><small>${d.reg==='free'?'비규제':'토허·실거주 2년'}${priceEv(d)?`<br>${esc(priceEvTxt(d))}`:''}</small></div>`}
     <div><dt>${esc(nd.l)}</dt><dd class="hl">${eokH(nd.v)}</dd><small>${esc(nd.x)}</small></div>
     <div><dt>입지 점수</dt><dd class="hl">${d.loc.toFixed(1)}<i>/100</i></dd><small>종합 ${s4RankTxt(d)}${d.band?`<br>${s10BandTxt(d)}`:''}${d.s4?`<br>종합 ${d.score.toFixed(1)}점 = 세대수 ${d.s4.pU.toFixed(0)}×0.4 + 입지 ${d.s4.pLoc.toFixed(0)}×0.4 + 여력 ${d.s4.pUp.toFixed(0)}×0.2 (각각 수도권 6억 이하 8,964개 평형 중 백분위)${d.s4.pUp>=80?' · 하락장 방어형':''}`:''}</small></div>
     <div><dt>상승 여력</dt><dd class="hl">${d.up>=0?'+':''}${Math.round(d.up*100)}<i>%</i></dd><small>${d.upSrc==='rb'?(d.m.rm?'리모델링':'재건축')+' 기대가치 기준':d.upSrc==='opt'?'확정가 매수권 기준':'같은 동네·연식 시세 기준'}</small></div>
