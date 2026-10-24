@@ -1,3 +1,4 @@
+const LINEP={S:.18,WP:.09};   // 신분당선(회귀) / 월판선(판단)
 /* 6억지도 apt-s4.js (8a: 입지 점수 회귀화 · 중복 제거 · 순위 표시 · 큰 평형 비율)
    분위수 S4Q·설정 S4CFG 는 apt-s4q.js(make_comp.py 생성)에서 읽음 — 이 파일보다 먼저 로드.
 
@@ -27,9 +28,15 @@ function locNew(d){ const g=d.g||{};
   const wm=d.cur&&d.cur.m<99999?walkMin(d.cur.m):null; let wa=wm==null?WALK(40):WALK(Math.min(40,wm)); const fa=flatAdj(g.dh);
   // 개통 예정 역(공사 중·확정, OSM 좌표)이 지금 역보다 80m 이상 가까우면 그 역 도보 기준으로 — 개통까지 1년당 5% 할인(최대 20%). 여력의 적정가(microAdj)와 같은 규칙
   const wa0=wa; let wf=null; if(d.fut&&(!d.cur||d.fut.m<d.cur.m-80)){ wf=walkMin(d.fut.m); const gain=(WALK(Math.min(40,wf))-wa)*d.fut.disc; if(gain>0) wa+=gain; else wf=null; }
-  d.locV=Math.log(base)+wa+fa;
-  d.locParts={base,wm,wa,wa0,fa,wf,fut:wf!=null?d.fut:null,ppp:Math.round(Math.exp(d.locV))};
-  d.loc0=wf!=null?Math.round(s4Pct(S4Q.LOC,d.locV-wa+wa0)*10)/10:null;            // 예정 역을 빼면 입지 백분위
+  // 노선 프리미엄(도보 15분 안): 같은 동 안 실거래 회귀에서 오차 대비 확실한 건 신분당선 +18%(±4.5%)뿐 — 나머지 노선 차이(0~7%, 오차 ±2~4%)는 구분 안 함(노선이 좋은 동네의 가치는 주변 시세에 이미 들어 있음).
+  // 개통 예정: GTX = 신분당선급 +18%, 월판선 +9%(판단), 그 외 0 — 개통 전 할인 적용. '가정'으로 표시
+  let lp=0, lpl='';
+  if((g.sts||[]).some(([n,m])=>/신분당/.test(n)&&walkMin(m)<=15)){ lp=LINEP.S; lpl='신분당선'; }
+  if(typeof FUTPOS!=='undefined'&&FUTPOS&&g.lat) FUT.forEach((F,k)=>{ const f=FUTPOS[k]; if(!f) return; const pr=/GTX|신분당/.test(F[1])?LINEP.S:/월판/.test(F[1])?LINEP.WP:0; if(!pr) return;
+    if(walkMin(hav(g.lat,g.lng,f[0],f[1]))>15) return; const v=pr*Math.max(.8,1-.05*(F[2]-2026)); if(v>lp){ lp=v; lpl=`${F[0].split(' ')[0]} ${F[1].replace(/\(.*?\)/g,'')}(${F[2]} 예정)`; } });
+  d.locV=Math.log(base)+wa+fa+lp;
+  d.locParts={base,wm,wa,wa0,fa,lp,lpl,wf,fut:wf!=null?d.fut:null,ppp:Math.round(Math.exp(d.locV))};
+  const futLp=/예정/.test(lpl)?lp:0; d.loc0=(wf!=null||futLp)?Math.round(s4Pct(S4Q.LOC,d.locV-wa+wa0-futLp)*10)/10:null;            // 예정 역을 빼면 입지 백분위
   d.loc=Math.round(s4Pct(S4Q.LOC,d.locV)*10)/10; }
 /* 같은 단지 큰 평형: ln 기준가 = 0.25×커널 + 0.75×큰 평형이 말하는 위치가치 */
 const S4BLEND=(window.S4CFG&&S4CFG.blend!=null)?S4CFG.blend:.75;
@@ -56,6 +63,7 @@ function locPanel(d){ const L=d.locParts;
   return `<section class="sec"><h3>입지 점수 <small>${d.loc.toFixed(1)} / 100 · 6억 이하 7,184개 평형 중 백분위</small></h3><div class="score tnum">
     <div><span class="l">주변 시세(위치 가치)<small>${d.kfw?`반경 ${Math.round(d.kfw.bw*2/100)/10}km 안 25년차 이하 단지 ${d.kfw.nn}곳의 상품 차이를 뺀 평당가(자기 단지 제외)`:esc((d.fwsrc||'').split(' · 같은 단지')[0])}</small></span><span class="v">${Math.round(L.base).toLocaleString()}<i>만/평</i></span></div>
     <div><span class="l">역 도보<small>${L.wm==null?'3km 안에 역 없음':`${esc((d.cur&&d.cur.n)||'')} 도보 약 ${Math.round(L.wm)}분`}${L.fut?` → <b>개통 예정 ${esc(L.fut.n)}역(${esc(L.fut.line)}, ${L.fut.year}년 목표) 도보 약 ${Math.round(L.wf)}분</b> 기준, 개통 전 ${Math.round((1-L.fut.disc)*100)}% 할인`:''} · 같은 동 안 실거래 회귀</small></span><span class="v">${pc(L.wa)}</span></div>
+    <div><span class="l">노선 프리미엄<small>${L.lp?`${esc(L.lpl)} 도보 15분 안 — 신분당선은 같은 동 안 실거래 회귀 +18%, GTX는 신분당선급·월판선 +9%로 가정(개통 전 할인)`:'도보 15분 안에 신분당선·GTX·월판선 없음 — 다른 노선끼리는 실거래상 차이가 오차 범위라 같게 봄'}</small></span><span class="v">${pc(L.lp||0)}</span></div>
     <div><span class="l">평지<small>${d.g&&d.g.dh!=null?`가장 가까운 역보다 ${Math.abs(Math.round(d.g.dh))}m ${d.g.dh>0?'높음':'낮음'}`:'높이 자료 없음(평균값)'} · 1m 높을 때마다 −0.3%</small></span><span class="v">${pc(L.fa)}</span></div>
     <div><span class="l">입지 평당가<small>세대수·학군·초품아·직주·연식·브랜드는 입지 점수에 넣지 않음(상승 요인·적정가에서 따로 반영)</small></span><span class="v">${L.ppp.toLocaleString()}<i>만/평</i></span></div>
   </div></section>`; }

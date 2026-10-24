@@ -646,7 +646,7 @@ const FILTERS=[['all','전체'],['top','핵심'],['mid','유망 이상'],['stn',
 const state={f:'all',pb:'all',q:'',sel:null,lim:50};
 const PB=[['all','전체 가격'],['3','3억 이하',0,30000],['4','3~4억',30000,40000],['5','4~5억',40000,50000],['6','5~6억',50000,60001]];
 const visible=d=>{
-  const f=state.f, ok=f==='all'||(f==='top'&&d.tier.k==='핵심')||(f==='mid'&&d.tier.k!=='관찰')||(f==='stn'&&d.g.st!=null&&d.g.st<=1000)||(f==='sch'&&d.g.sc!=null&&d.g.sc<=300)||(f==='hak'&&hakIn(d))||(f==='flat'&&isFlat(d))||(f==='newst'&&d.locParts&&d.locParts.fut)||(f==='job50'&&jobMin(d)!=null&&jobMin(d)<=50)||(f==='man'&&!d.auto)||(f==='free'&&d.reg==='free')||d.tags.includes(f);
+  const f=state.f, ok=f==='all'||(f==='top'&&d.tier.k==='핵심')||(f==='mid'&&d.tier.k!=='관찰')||(f==='stn'&&d.g.st!=null&&d.g.st<=1000)||(f==='sch'&&d.g.sc!=null&&d.g.sc<=300)||(f==='hak'&&hakIn(d))||(f==='flat'&&isFlat(d))||(f==='newst'&&hasNew(d))||(f==='job50'&&jobMin(d)!=null&&jobMin(d)<=50)||(f==='man'&&!d.auto)||(f==='free'&&d.reg==='free')||d.tags.includes(f);
   const pb=PB.find(x=>x[0]===state.pb); const okp=state.pb==='all'||(cashOf(d)>pb[2]&&cashOf(d)<=pb[3])||(state.pb==='3'&&cashOf(d)<=30000);
   return ok&&okp&&(!state.q||(d.n+d.area+d.headline).includes(state.q));
 };
@@ -748,8 +748,10 @@ function hillGuard(S,top=50){                // S: 점수순 정렬된 배열. �
 /* 학원가 생활권: 주변 1km 교과학원 250곳+ 밀집지에서 1.5km 안(점수에는 안 들어가고 배지·필터로만) */
 function hakIn(d){ const h=(window.HAK||{})[gkey(d)]; return !!(h&&h[1]>=250); }
 /* 점수 근거 자동 생성: 종합을 이루는 세 요소의 위치를 그대로 보여줌 */
+const hasNew=d=>!!(d.locParts&&(d.locParts.fut||/예정/.test(d.locParts.lpl||'')));
 function whyLine(d){ if(!d.s4) return ''; const top=p=>{ const t=100-p; return t<1?'상위 1% 안':`상위 ${Math.max(1,Math.round(t))}%`; };
   const parts=[`세대수 ${top(d.s4.pU)}(${d.units.toLocaleString()}세대)`,`입지 ${top(d.s4.pLoc)}`,`여력 ${d.up>=0?'+':''}${Math.round(d.up*100)}%(가정)`];
+  if(d.locParts&&d.locParts.lp) parts.push(`노선 +${Math.round(d.locParts.lp*100)}%(${d.locParts.lpl})`);
   if(d.locParts&&d.locParts.fut){ const f=d.locParts.fut; parts.push(`개통 예정 ${f.n}역(${f.line.replace('(신설)','')}, ${f.year}년 목표) 도보 ${Math.round(d.locParts.wf)}분 반영 — 빼면 입지 상위 ${Math.max(1,Math.round(100-d.loc0))}%`); }
   if(hakIn(d)) parts.push('학원가 1.5km 안'); if(isHill(d)) parts.push(`언덕 단지 · 역보다 ${Math.round(d.g.dh)}m 높음`); return parts.join(' · '); }
 function renderDetail(i){
@@ -759,7 +761,7 @@ function renderDetail(i){
   let h=`<div class="phead"><button id="back"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M15 18 9 12l6-6"/></svg>목록</button><span class="tnum">${d.rank}위 / ${D.length}</span></div>
   <section class="identity"><div class="cat">${esc(tags)}${d.u?' · 전체 단지 자동 수집':d.auto?' · 점수식 자동 선별':' · 직접 분석'}</div><h2>${esc(d.n)}</h2>
     <div class="meta tnum"><span>${esc(d.area)}</span><span>${d.year}년 입주</span><span>${d.units.toLocaleString()}세대</span></div></section>
-  <div class="lede"><strong>${esc(d.headline)}</strong><p>${esc(d.sub)}</p>${d.s4?`<p class="why"><b>순위 근거</b> ${esc(whyLine(d))}</p>`:''}${d.locParts&&d.locParts.fut?`<p class="why"><b>신설역 주의</b> 입지 점수에 개통 예정 ${esc(d.locParts.fut.n)}역(${esc(d.locParts.fut.line)})을 넣어 순위가 올라간 단지예요. ${d.locParts.fut.year}년 개통이 목표지만 철도는 지연이 잦고, 역 위치는 공사·계획 기준(OpenStreetMap)이에요. 개통 전까지 1년당 5%(최대 20%) 할인해서 반영했고, 빼면 입지 상위 ${Math.max(1,Math.round(100-d.loc0))}%예요. 지금 쓰는 역은 ${esc((d.cur&&d.cur.n)||'없음')}${d.cur&&d.cur.m<99999?` 도보 약 ${Math.round(walkMin(d.cur.m))}분`:''}.</p>`:''}</div>
+  <div class="lede"><strong>${esc(d.headline)}</strong><p>${esc(d.sub)}</p>${d.s4?`<p class="why"><b>순위 근거</b> ${esc(whyLine(d))}</p>`:''}${hasNew(d)?`<p class="why"><b>신설역 주의</b> 입지 점수에 개통 예정 역·노선을 넣어 순위가 올라간 단지예요${d.locParts.fut?` — ${esc(d.locParts.fut.n)}역(${esc(d.locParts.fut.line)}) 도보 약 ${Math.round(d.locParts.wf)}분`:''}${/예정/.test(d.locParts.lpl||'')?` · 노선 프리미엄 ${esc(d.locParts.lpl)} +${Math.round(d.locParts.lp*100)}%(가정)`:''}. 철도는 지연이 잦고 역 위치는 공사·계획 기준(OpenStreetMap)이에요. 개통 전까지 1년당 5%(최대 20%) 할인해서 반영했고, 예정 역을 빼면 입지 상위 ${Math.max(1,Math.round(100-d.loc0))}%예요. 지금 쓰는 역은 ${esc((d.cur&&d.cur.n)||'없음')}${d.cur&&d.cur.m<99999?` 도보 약 ${Math.round(walkMin(d.cur.m))}분`:''}.</p>`:''}</div>
   <dl class="kpis tnum">
     ${d.opt?`<div><dt>지금 필요한 돈</dt><dd>${eokH(d.opt.dep)}</dd><small>${esc(d.opt.kind)} · ${d.opt.Y}년 ${eok(d.opt.K)} 매수권 · 시세 ${eok(d.p)}</small></div>`:`<div><dt>${d.py}평 시세</dt><dd>${eokH(d.p)}</dd><small>${d.reg==='free'?'비규제':'토허·실거주 2년'}</small></div>`}
     <div><dt>${esc(nd.l)}</dt><dd class="hl">${eokH(nd.v)}</dd><small>${esc(nd.x)}</small></div>
