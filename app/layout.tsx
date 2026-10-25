@@ -1,15 +1,14 @@
 import type { Metadata } from 'next'
-import './globals.css'
 
 export const metadata: Metadata = {
-  title: '혼밥맵 - 혼자 밥 먹기 좋은 식당 찾기',
-  description: '혼밥하기 좋은 주변 식당을 찾아드려요',
+  title: '6억지도 - 6억 이하 특이점 단지 지도',
+  description: '서울·경기·인천 6억 이하 아파트 단지 순위 지도',
 }
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="ko" className="h-full">
-      <body className="h-full">{children}</body>
+    <html lang="ko">
+      <body>{children}</body>
     </html>
   )
 }
