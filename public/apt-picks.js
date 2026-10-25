@@ -6,6 +6,7 @@
 window.TAGS = {
   '반도체':   {label:'반도체 수요', color:'#0066ff'},
   '재건축':   {label:'재건축',     color:'#6541f2'},
+  '리모델링': {label:'리모델링',   color:'#6541f2'},
   '천지개벽': {label:'천지개벽',   color:'#00a35c'},
   '소형할인': {label:'소형 할인',  color:'#e5484d'},
   '신혼':     {label:'신혼 30평대', color:'#b26a00'}
