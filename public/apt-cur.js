@@ -8,5 +8,8 @@ Object.entries(window.EDITORIAL300).forEach(([key,value])=>{
   const d=window.PICKS.find(x=>x.n===n&&x.area===area);
   if(!d) return;
   Object.assign(d,value);
+  const stage=d.st!=null?d.st:((window.MST||{})[d.n]||0);
+  const rbw=stage>=35?1:Math.max(0,Math.min(1,(2026-d.year-27)/6));
+  if(!d.opt&&rbw>=.5) d.simple=0;
   delete window.CUR[key];
 });
