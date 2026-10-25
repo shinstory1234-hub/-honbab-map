@@ -254,6 +254,7 @@ aside{order:-1;width:408px;flex:none;border-right:1px solid var(--border);backgr
 <script src="apt-s4.js"></script>
 <script src="apt-band.js"></script>
 <script src="apt-plat.js"></script>
+<script src="apt-dem.js"></script>
 <script src="apt-geo.js"></script>
 <script>
 const KAKAO_JS_KEY='106bb734e8600621686fade2de7f8afb';
@@ -418,7 +419,7 @@ function score(d){
   if(isJubok(d)){ d.R*=.6; d.rl+=' · 주상복합(전용률 낮고 선호 낮음 −40%)'; }
   d.U7=unS(d.units); const br=brS(d); d.B=br[0]; d.bl=br[1];
   const gj=gjOf(d); d.gj=gj.v; d.gjsrc=gj.src; d.GJ=gjS(d.gj);
-  d.E=g.sc==null?null:scS(g.sc)*6/15; d.F=g.dh==null?null:flS(g.dh)*5/15; d.A=hakA(d)??acS(g.ac); d.Al=hakL(d);
+  d.E=g.sc==null?null:scS(g.sc)*6/15; d.F=hR(d)==null?null:flS(hR(d))*5/15; d.A=hakA(d)??acS(g.ac); d.Al=hakL(d);
   /* 교통 23점: 지금 역 vs 개통 예정 역 중 큰 쪽 */
   d.cur=null; d.fut=null;
   if(g.sts){ const by={}; g.sts.forEach(([n,m])=>{ const b=n.split(' ')[0]; (by[b]=by[b]||{b,m,ls:[]}); by[b].m=Math.min(by[b].m,m); const l=lineOf(n); if(l&&!by[b].ls.includes(l)) by[b].ls.push(l); });
@@ -466,8 +467,8 @@ function locFW(d,cut){ const g=d.g||{}; if(!g.lat||!window.LOCP) return null; co
     if(2026-p[4]<=cut) near.push([p,m]); }                // 일반 적정가는 25년차 이하, 재건축 완공가는 20년차 이하(교차검증)
   const sg=(self||d.cx||[])[self?7:5]||0;                 // 다른 시·구 단지는 가까워도 35%만 반영(행정 경계 = 생활권·학군 경계인 경우가 많음)
   const close=near.filter(([p,m])=>p!==self&&m<700&&(!sg||p[7]===sg)).length;
-  const run=bw=>{ let sw=0,sl=0,nn=0; for(const [p,m] of near){ if(p===self||m>bw*4) continue; const w=Math.exp(-.5*(m/bw)**2)*Math.sqrt(p[3])*(sg&&p[7]!==sg?.35:1); sw+=w; sl+=w*p[2]; if(m<bw*2&&(!sg||p[7]===sg)) nn++; }
-    return sw>1e-9?{fw:Math.round(Math.exp(sl/sw)*2.512),nn,bw,close}:null; };
+  const run=bw=>{ let sw=0,sl=0,s2=0,nn=0; for(const [p,m] of near){ if(p===self||m>bw*4) continue; const w=Math.exp(-.5*(m/bw)**2)*Math.sqrt(p[3])*(sg&&p[7]!==sg?.35:1); sw+=w; sl+=w*p[2]; s2+=w*p[2]*p[2]; if(m<bw*2&&(!sg||p[7]===sg)) nn++; }
+    return sw>1e-9?{fw:Math.round(Math.exp(sl/sw)*2.512),nn,bw,close,sd:Math.sqrt(Math.max(0,s2/sw-(sl/sw)**2))}:null; };   // sd: 이웃 위치가치(ln)의 가중 표준편차
   let r=run(400); if(!r||r.nn<5) r=run(667)||r; if(!r||r.nn<5) r=run(1000)||r; if(!r||r.nn<3) r=run(1333)||r; return r; }   // 기본 반경 400m: 5-fold 예측오차 최소
 /* ── 재건축·리모델링 수익 모델 (모든 금액 만 원, 면적 공급평) ──
    ① 내가 받는 면적: 지금 평형 × [1 + (용적률 증가 배수 − 1) × (1 − 공공기여)] × 0.95
@@ -556,7 +557,7 @@ function microAdj(d,mode){ const F=d.F??2.5, parts=[], rb=mode==='rb';
     parts.push([lab,w]); }
   else if(d.fut&&rb){ const wf=walkMin(d.fut.m); parts.push([`개통 예정역 도보 ${Math.round(wf)}분`,WALK(Math.min(40,wf))*d.fut.disc+WALK(40)*(1-d.fut.disc)]); }
   else if(d.fut) parts.push(['3km 안에 역 없음(개통 예정 역은 입지 점수에만 반영)',WALK(40)]);
-  const f=flatAdj(d.g&&d.g.dh); parts.push(['평지',f]);            // 같은 동 안 회귀: 역보다 1m 높을 때마다 −0.3%
+  const f=flatAdj(hR(d)); parts.push(['경사',f]);                 // 같은 동 안 회귀: 반경 500m 최저점보다 1m 높을 때마다 −0.25%(apt-s4.js)
   parts.push(['세대수',HC.hh*Math.log(Math.max(d.units,100)/1000)]);
   if(rb){ if(stOf(d)>=85) parts.push(['새 아파트 브랜드(시공사 선정 단계 · 1군 가정)',HC.b1]); }   // 시공사 선정 전엔 브랜드 중립
   else { const t=d.n+' '+(d.q||''); parts.push(['브랜드',BR1.test(t)?HC.b1:BR2.test(t)?HC.b2:0]); }
@@ -627,10 +628,6 @@ function optModel(d,fair){ const o=d.opt, n=o.Y-2026, P=d.py*fair;
   const cost=o.dep+(o.K-o.dep)/Math.pow(1+RB.r,n);                    // 지금 돈으로 환산한 실제 매수가
   const VY=P*Math.pow(1+RB.g,n);
   return {n,cost:Math.round(cost),VY:Math.round(VY),P:Math.round(P),gainY:Math.round(VY-o.K)}; }
-/* 같은 단지 다른 평형(최근 12개월 5건 이상)의 시세가 말하는 위치가치: 평당가 ÷ (연식 × 평형 × 단지 입지 보정), 거래 건수 가중 기하평균 */
-function sibOwn(d,mk,age){ const S=sibs(d).filter(x=>x!==d&&(priceEv(x)||{n:0}).n>=5); if(!S.length) return null;
-  let sw=0,sl=0; S.forEach(x=>{ const w=priceEv(x).n; sw+=w; sl+=w*Math.log(x.p/x.py/(Math.exp(AGEC(age))*SIZE(x.py,age)*mk)); });
-  return {v:Math.exp(sl/sw),l:S.map(x=>x.py).join('·')+'평'}; }
 let LFC={};
 function recompute(){
   LFC={}; D.forEach(score);
@@ -662,26 +659,37 @@ function recompute(){
     } else {
       let ug=null, ur=null;
       if(d.rbw<1){ const [mk,mp]=microAdj(d,'gen'); d.mk=mk; d.mp=mp;
-        let fwG=s4BlendOwnLarge(d,fw);                                   // 같은 단지 큰 평형 실거래가 있으면 그 가격이 말하는 위치가치와 반반
-        if(fwG===fw){ const so=sibOwn(d,mk,age); if(so){ fwG=Math.round(Math.exp((1-S4BLEND)*Math.log(fw)+S4BLEND*Math.log(so.v)));
-          d.fwsrc+=` · 같은 단지 ${so.l} 시세가 말하는 위치가치 ${Math.round(so.v).toLocaleString()}만을 ${Math.round(S4BLEND*100)}% 반영(같은 단지는 위치가 같음)`; d.fw=fwG; } }
-        if(fwG!==fw&&d.s4own&&!/같은 단지 [0-9·]+평 시세/.test(d.fwsrc)){ d.fwsrc+=` · 같은 단지 큰 평형 기준 ${d.s4own.toLocaleString()}만을 ${Math.round(S4BLEND*100)}% 반영(예측 오차 최소 비율)`; d.fw=fwG; }
+        const fwG=s4BlendOwnLarge(d,fw);                                   // 같은 단지 큰 평형 실거래가 있으면 그 가격이 말하는 위치가치와 반반
+        if(fwG!==fw){ d.fwsrc+=` · 같은 단지 큰 평형 기준 ${d.s4own.toLocaleString()}만을 ${Math.round(S4BLEND*100)}% 반영(예측 오차 최소 비율)`; d.fw=fwG; }
         d.fair=Math.round(fwG*Math.exp(AGEC(age))*SIZE(d.py,age)*mk);       // 같은 동네·연식·평형 + 이 단지 입지(역·평지·브랜드·세대수)면 받을 값
         { const c=cellAdj(d); if(c){ d.fair=Math.round(d.fair*Math.exp(-c)); d.cellAdj=c; } }
         ug=d.fair/d.me-1; d.upGen=ug; }
       if(d.rbw>0){ d.m=rbModel(d,d.kfwRb?d.kfwRb.fw:fw); ur=d.m.E/d.p-1; d.gross=d.m.gross; d.upRb=ur; }
-      d.up=d.rbw<=0?ug:d.rbw>=1?ur:(1-d.rbw)*ug+d.rbw*ur;                  // 27~33년차는 두 계산을 연식에 따라 섞음
-      d.upSrc=d.rbw>=.5?'rb':'now';
+      d.ugRaw=ug; d.urRaw=ur; d.upSrc=d.rbw>=.5?'rb':'now';
       const fz=d.m&&d.m.fz; d.dead=(!fz||d.m.rm||stOf(d)>=35)?0:clamp01((age-27)/3)*(1-fz.f);
+    }
+  });
+  /* 같은 단지 평형들은 위치가 같음 → 일반 계산의 '주변보다 싸다'는 단지 전체(평형별 12개월 거래 가중)로 한 번만 판단.
+     같은 단지 안 평형 간 평당가 차이는 복도식·동 위치 같은 구조 차이라 오를 여지로 보지 않음(예: 원천레이크파크 20평 +48% vs 24평 +18%).
+     재건축 계산은 평형마다 대지지분·분담금이 달라 평형별 그대로 */
+  const UGC={}; D.forEach(d=>{ if(d.ugRaw==null) return; const w=Math.max(1,(priceEv(d)||{n:1}).n), o=UGC[d.cxKey]||(UGC[d.cxKey]={w:0,l:0,n:0}); o.w+=w; o.l+=w*Math.log(1+d.ugRaw); o.n++; });
+  D.forEach(d=>{
+    if(d.upSrc!=='opt'){ const o=UGC[d.cxKey], ur=d.urRaw; let ug=d.ugRaw; d.upGenOwn=null;
+      if(ug!=null&&o&&o.n>1){ d.upGenOwn=ug; ug=Math.exp(o.l/o.w)-1; } d.upGen=ug;
+      d.up=d.rbw<=0?ug:d.rbw>=1?ur:(1-d.rbw)*ug+d.rbw*ur;                  // 27~33년차는 두 계산을 연식에 따라 섞음
       if(d.dead>0){ d.upPre=d.up; const ugD=ug==null?null:ug>0?ug*(1-d.dead):ug;
-        d.up=(ugD==null||d.rbw>=1?ur:(1-d.rbw)*ugD+d.rbw*ur)-DEAD.drag*d.dead; d.upGenD=ugD;
-        if(d.me>0) d.ownLoc=d.me/(Math.exp(AGEC(age))*SIZE(d.py,age)*microAdj(d,'gen')[0]); }
+        d.up=(ugD==null||d.rbw>=1?ur:(1-d.rbw)*ugD+d.rbw*ur)-DEAD.drag*d.dead; d.upGenD=ugD; }
     }
     /* 데이터 신뢰도: 동 표본이 적거나 추정이 많을수록 여력을 0 쪽으로 줄임(불확실한 '싸 보임'으로 순위가 뒤집히지 않게) */
     const ne=d.n2+(d.blend?1:0); let cf=d.kfw?lerp([[0,.4],[2,.55],[5,.75],[10,.9],[15,1]],d.kfw.close):lerp([[0,.5],[1,.6],[2,.75],[3,.85],[5,1]],ne), cl=d.kfw?`700m 안 비교 단지 ${d.kfw.close}곳(멀수록 위치가 달라 덜 믿음)`:`신축 기준 표본 ${d.n2}곳${d.blend?' + 주변 실측 1곳':''}`;
     if(d.rb&&d.m&&/추정/.test(d.m.fol)){ cf*=.85; cl+=' · 기존 용적률 추정'; }
     if(d.rb&&d.m&&!/주변 실제/.test(d.m.fwl)){ cf*=.9; cl+=' · 완공가 회귀 기준'; }
     if(/90%|급지 비율/.test(d.fwsrc||'')){ cf*=.8; cl+=' · 신축 기준가 대체값'; }
+    /* 주변 시세가 엇갈림(2026.10.25): 이웃끼리 위치가치가 크게 다르면(예: 원천동 — 길 건너 광교 신축 6~7천만 vs 구도심 신축 3천만) 그 평균은
+       이 단지의 위치가치로 믿기 어려움. 가중 표준편차 0.15(상위 25%)→0.35에서 q 0→1: 여력 신뢰도 최대 −60%, 입지에 자기 시세 q × 0.75(apt-s4.js).
+       sd 0.25 이상 구간은 일반 계산 여력 중위가 +4.6%로 다른 구간(−1~−2%)보다 튐 */
+    d.disp=d.kfw&&d.kfw.sd>.15?clamp01((d.kfw.sd-.15)/.2):0;
+    if(d.disp>0){ cf*=1-.6*d.disp; cl+=` · 주변 시세가 엇갈림(이웃 위치가치 편차 ${d.kfw.sd.toFixed(2)})`; }
     d.conf=cf; d.confl=cl; d.upR=d.up>0?d.up*cf:d.up;
     d.U=Math.max(0,Math.min(100,d.upR/.5*100));                       // 신뢰도 반영 여력 50% 이상이면 만점
     locNew(d); s4Score(d);                                                          // 수도권 6억 이하 4,700여 단지 중 백분위(0~100). apt-s4.js
@@ -839,12 +847,12 @@ function optHTML(d){ const o=d.opt, m=d.om;
     lrow('+',`${o.Y}년 예상 시세`,`연 ${RB.g*100}% 상승 · 확정가보다 ${ek(m.gainY)} 높음`,eok(m.VY)),
     lrow('=','적정가 vs 실제 매수가','',pc(d.up),'tot')].join('')}</div><p class="note">${esc(o.note)}</p>`; }
 /* 언덕: 순위 요인 검증은 탈락(하락장 반대) → 점수는 그대로, 배지·평지 필터·상위 50 비율 상한(기저율)만 */
-const HILL_BADGE=30;                       // 역보다 30m 이상 높으면 '언덕 단지' 배지
-const isHill=d=>!!(d.g&&d.g.dh!=null&&d.g.dh>=HILL_BADGE);
-const isFlat=d=>!!(d.g&&d.g.dh!=null&&d.g.dh<15);
+const HILL_BADGE=30;                       // 반경 500m 최저점보다 30m 이상 높으면 '언덕 단지' 배지(상위 약 10%)
+const isHill=d=>hR(d)!=null&&hR(d)>=HILL_BADGE;
+const isFlat=d=>hR(d)!=null&&hR(d)<10;
 
 function hillGuard(S,top=50){                // S: 점수순 정렬된 배열. 반환: 표시 순서 배열
-  const known=S.filter(d=>d.g&&d.g.dh!=null), base=known.filter(isHill).length/Math.max(1,known.length);
+  const known=S.filter(d=>hR(d)!=null), base=known.filter(isHill).length/Math.max(1,known.length);
   const cap=Math.ceil(base*top), head=S.slice(0,top), hills=head.filter(isHill);
   if(hills.length<=cap) return S;
   const drop=new Set(hills.slice(cap));       // 순위 낮은 쪽부터 초과분
@@ -862,7 +870,7 @@ function whyLine(d){ if(!d.s4) return ''; const top=p=>{ const t=100-p; return t
   if(d.locParts&&d.locParts.fut){ const f=d.locParts.fut; parts.push(`개통 예정 ${f.n}역(${f.line.replace('(신설)','')}, ${f.year}년 목표) 도보 ${Math.round(d.locParts.wf)}분 반영 — 빼면 입지 상위 ${Math.max(1,Math.round(100-d.loc0))}%`); }
   if(d.dead>=.5) parts.push(`재건축 어려움(사업성 낮음 · 여력·입지·종합 감점 −${d.s4.dp.toFixed(1)})`);
   if(d.unitsRaw) parts.push(`세대수 추정(마을 합계 ${d.unitsRaw.toLocaleString()}세대 ÷ ${d.unitsN}단지)`);
-  if(hakIn(d)) parts.push('학원가 1.5km 안'); if(isHill(d)) parts.push(`언덕 단지 · 역보다 ${Math.round(d.g.dh)}m 높음`);
+  if(hakIn(d)) parts.push('학원가 1.5km 안'); if(isHill(d)) parts.push(`언덕 단지 · 주변 최저점보다 ${hR(d)}m 높음`);
   const pe=priceEv(d); if(pe&&pe.n<PRICE_THIN) parts.push(`가격 근거 적음(이 평형 최근 12개월 ${pe.n}건)`);
   if(d.conf!=null&&d.conf<.6&&d.upSrc!=='opt') parts.push(`여력 비교 근거 약함(신뢰도 ${d.conf.toFixed(2)})`);
   return parts.join(' · '); }
@@ -903,7 +911,7 @@ function renderDetail(i){
   ${d.upSrc==='now'?`<div class="cmp tnum">
     <div class="me"><span class="n">이 단지 현재 (${d.py}평 ${eok(d.p)})</span><span class="v">${d.me.toLocaleString()}</span>${bar(d.me,Math.max(d.me,d.fair))}</div>
     <div><span class="n">이 동네에서 ${2026-d.year}년차·${d.py}평이 받을 값</span><span class="v">${d.fair.toLocaleString()}</span>${bar(d.fair,Math.max(d.me,d.fair))}</div>
-  </div><p class="note">계산: 주변 시세 기준 평당 ${d.fw.toLocaleString()}만(신축·1천 세대·역 5분 이내·무브랜드 기준 · ${d.fwsrc}) × 연식 보정 ${Math.exp(AGEC(2026-d.year)).toFixed(2)} × 평형 보정 ${SIZE(d.py,2026-d.year).toFixed(2)} × 단지 입지 보정 ${d.mk.toFixed(2)}(${d.mp.map(x=>x[0]+' '+(x[1]>=0?'+':'')+(x[1]*100).toFixed(1)+'%').join(', ')}) = ${d.fair.toLocaleString()}만. 현재가가 이보다 ${d.up>=0?Math.round(d.up*100)+'% 싸다':Math.round(-d.up*100)+'% 비싸다'}.</p>`
+  </div><p class="note">계산: 주변 시세 기준 평당 ${d.fw.toLocaleString()}만(신축·1천 세대·역 5분 이내·무브랜드 기준 · ${d.fwsrc}) × 연식 보정 ${Math.exp(AGEC(2026-d.year)).toFixed(2)} × 평형 보정 ${SIZE(d.py,2026-d.year).toFixed(2)} × 단지 입지 보정 ${d.mk.toFixed(2)}(${d.mp.map(x=>x[0]+' '+(x[1]>=0?'+':'')+(x[1]*100).toFixed(1)+'%').join(', ')}) = ${d.fair.toLocaleString()}만. 현재가가 이보다 ${(()=>{ const u=d.upGenOwn??d.up; return u>=0?Math.round(u*100)+'% 싸다':Math.round(-u*100)+'% 비싸다'; })()}.${d.upGenOwn!=null?` 같은 단지 평형들은 위치가 같아 '주변보다 싼 정도'는 단지 전체(평형별 거래 가중)로 판단 → ${d.upGen>=0?'+':''}${Math.round(d.upGen*100)}%를 씀.`:''}</p>`
   :d.upSrc==='opt'?optHTML(d):rbHTML(d)}
   </section>
   ${d.bench&&d.bench.ppp?`<section class="sec"><h3>가격 비교 <small>평당 만 원</small></h3><div class="cmp tnum">
