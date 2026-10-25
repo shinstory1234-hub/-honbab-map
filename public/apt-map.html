@@ -445,6 +445,11 @@ function locFW(d,cut){ const g=d.g||{}; if(!g.lat||!window.LOCP) return null; co
    ⑥ 기대가치 = 성공확률 × ⑤ + (1−성공확률) × 지금 가격 × 무산 계수(단계별 0.95~0.85) − 결과 편차·시세 추정 오차 차감 */
 const RB={lam:.12,cont:1.05,g:.03,e:.045,r:.05,ex:1.45,oh:1.22,sale:.9,rent:.045,sigU:.15,lamU:.5};   // sigU: 신축 시세 추정오차(5-fold 홀드아웃 RMSE 0.166 ≈ 0.15), lamU: 그 오차에 대한 차감 계수
 const FAILF=st=>st>=80?.85:st>=50?.88:st>=35?.92:.95;   // 무산 시 남는 가치(지금 가격 대비): 단계가 진행될수록 시세에 쌓인 재건축 기대가 커서 무산 때 더 많이 빠짐
+/* 재건축 막힌 구축(판단·가정, 2026.10.25): 27년차 이상 · 정비 단계 전(st<35) · 리모델링 아님인데 사업성(f, 위 FZT 곡선)이 낮으면
+   z = 연식(27→30년차 0→1) × (1 − f). z만큼 ① 일반 계산의 '같은 연식보다 싸 보임'(+쪽만)을 믿지 않음 — 같은 연식 평균 시세에는 재건축 기대가 섞여 있어
+   출구 없는 단지는 원래 그보다 싸게 거래됨  ② 재건축 없이 계속 낡는 몫 −15% × z  ③ 입지: 재건축 기대가 거의 없는 단지의 자기 시세가 그 자리의
+   위치 가치를 가장 잘 말해 주므로 z × 0.75(같은 단지 큰 평형 반영 비율과 같은 값)만큼 자기 시세가 말하는 위치가치를 섞음 */
+const DEAD={drag:.15};
 const CKN={'관양동 공작부영':[1510,'실제 공사비 6,463억 ÷ 1,934세대, 평균 27평 환산 × 기타 1.22']};   // 단지 실측 사업비
 /* ── 3단계: 이름·지역명 규칙 → 데이터 조건(건축물대장·좌표) ── */
 const FD=d=>(window.FARD||{})[gkey(d)]||null;   // [기존용적률, 출처, 노후계획택지, 1km 30년+비중, 300m 노후세대, 활주로거리m, 시군구]
@@ -627,6 +632,10 @@ function recompute(){
       if(d.rbw>0){ d.m=rbModel(d,d.kfwRb?d.kfwRb.fw:fw); ur=d.m.E/d.p-1; d.gross=d.m.gross; d.upRb=ur; }
       d.up=d.rbw<=0?ug:d.rbw>=1?ur:(1-d.rbw)*ug+d.rbw*ur;                  // 27~33년차는 두 계산을 연식에 따라 섞음
       d.upSrc=d.rbw>=.5?'rb':'now';
+      const fz=d.m&&d.m.fz; d.dead=(!fz||d.m.rm||stOf(d)>=35)?0:clamp01((age-27)/3)*(1-fz.f);
+      if(d.dead>0){ d.upPre=d.up; const ugD=ug==null?null:ug>0?ug*(1-d.dead):ug;
+        d.up=(ugD==null||d.rbw>=1?ur:(1-d.rbw)*ugD+d.rbw*ur)-DEAD.drag*d.dead; d.upGenD=ugD;
+        if(d.me>0) d.ownLoc=d.me/(Math.exp(AGEC(age))*SIZE(d.py,age)*microAdj(d,'gen')[0]); }
     }
     /* 데이터 신뢰도: 동 표본이 적거나 추정이 많을수록 여력을 0 쪽으로 줄임(불확실한 '싸 보임'으로 순위가 뒤집히지 않게) */
     const ne=d.n2+(d.blend?1:0); let cf=d.kfw?lerp([[0,.4],[2,.55],[5,.75],[10,.9],[15,1]],d.kfw.close):lerp([[0,.5],[1,.6],[2,.75],[3,.85],[5,1]],ne), cl=d.kfw?`700m 안 비교 단지 ${d.kfw.close}곳(멀수록 위치가 달라 덜 믿음)`:`신축 기준 표본 ${d.n2}곳${d.blend?' + 주변 실측 1곳':''}`;
@@ -663,6 +672,7 @@ const FEATURE_META={
   '신축':{label:'신축',color:'#00a35c'},
   '학군':{label:'학군',color:'#b26a00'},
   '재건축':{label:'재건축',color:'#6541f2'},
+  '재건축어려움':{label:'재건축 어려움',color:'#8b8d98'},
   '리모델링':{label:'리모델링',color:'#7856d8'},
   '천지개벽':{label:'천지개벽',color:'#e5484d'},
   '역세권':{label:'역세권',color:'#087ea4'},
@@ -678,6 +688,7 @@ function featureKeys(d){
   const out=[], add=(key,priority)=>out.push([key,priority]), tags=d.tags||[], stage=stOf(d);
   const remodel=isRemodel(d)||tags.includes('리모델링');
   if(remodel) add('리모델링',120);
+  if(d.dead>=.5) add('재건축어려움',118);
   else if(tags.includes('재건축')||stage>=35) add('재건축',115);
   if(tags.includes('천지개벽')||(stage>=70&&d.units>=1000)) add('천지개벽',tags.includes('천지개벽')?110:108);
   if(2026-d.year<=10) add('신축',105);
@@ -807,6 +818,7 @@ function whyLine(d){ if(!d.s4) return ''; const top=p=>{ const t=100-p; return t
   const parts=[`세대수 ${top(d.s4.pU)}(${d.units.toLocaleString()}세대)`,`입지 ${top(d.s4.pLoc)}`,`여력 ${d.up>=0?'+':''}${Math.round(d.up*100)}%(가정)`];
   if(d.locParts&&d.locParts.lp) parts.push(`노선 +${Math.round(d.locParts.lp*100)}%(${d.locParts.lpl})`);
   if(d.locParts&&d.locParts.fut){ const f=d.locParts.fut; parts.push(`개통 예정 ${f.n}역(${f.line.replace('(신설)','')}, ${f.year}년 목표) 도보 ${Math.round(d.locParts.wf)}분 반영 — 빼면 입지 상위 ${Math.max(1,Math.round(100-d.loc0))}%`); }
+  if(d.dead>=.5) parts.push(`재건축 어려움(사업성 낮음 · 여력·입지 낮춤)`);
   if(hakIn(d)) parts.push('학원가 1.5km 안'); if(isHill(d)) parts.push(`언덕 단지 · 역보다 ${Math.round(d.g.dh)}m 높음`);
   const pe=priceEv(d); if(pe&&pe.n<PRICE_THIN) parts.push(`가격 근거 적음(이 평형 최근 12개월 ${pe.n}건)`);
   if(d.conf!=null&&d.conf<.6&&d.upSrc!=='opt') parts.push(`여력 비교 근거 약함(신뢰도 ${d.conf.toFixed(2)})`);
@@ -844,7 +856,7 @@ function renderDetail(i){
     <div><span class="l">초품아<small>${d.g.scn?esc(d.g.scn)+' '+fmtM(d.g.sc):d.E===0?'900m 안에 초등학교 없음':'계산 중'}</small></span><span class="v">${d.E!=null?d.E.toFixed(1):'–'}<i> / 6</i></span>${bar(d.E||0,6)}</div>
     <div><span class="l">브랜드<small>${esc(d.bl)}</small></span><span class="v">${d.B.toFixed(1)}<i> / 3</i></span>${bar(d.B,3)}</div>
   </div></section>
-  <section class="sec"><h3>상승 여력 <small>${d.up>=0?'+':''}${Math.round(d.up*100)}% → 신뢰도 ${Math.round(d.conf*100)}% 반영 ${d.upR>=0?'+':''}${Math.round(d.upR*100)}%</small></h3><p class="note" style="margin:-4px 0 8px">신뢰도: ${esc(d.confl)}. 순위에는 신뢰도 반영값을 씀.${d.rbw>0&&d.rbw<1?`<br>${2026-d.year}년차라 일반 계산 ${(d.upGen*100).toFixed(0)}%와 재건축 계산 ${(d.upRb*100).toFixed(0)}%를 ${Math.round((1-d.rbw)*100)} : ${Math.round(d.rbw*100)}로 섞음(27~33년차 구간).`:''}</p>
+  <section class="sec"><h3>상승 여력 <small>${d.up>=0?'+':''}${Math.round(d.up*100)}% → 신뢰도 ${Math.round(d.conf*100)}% 반영 ${d.upR>=0?'+':''}${Math.round(d.upR*100)}%</small></h3><p class="note" style="margin:-4px 0 8px">신뢰도: ${esc(d.confl)}. 순위에는 신뢰도 반영값을 씀.${d.rbw>0&&d.rbw<1?`<br>${2026-d.year}년차라 일반 계산 ${(d.upGen*100).toFixed(0)}%와 재건축 계산 ${(d.upRb*100).toFixed(0)}%를 ${Math.round((1-d.rbw)*100)} : ${Math.round(d.rbw*100)}로 섞음(27~33년차 구간).`:''}${d.dead>0?`<br><b>재건축 막힌 구축 ${Math.round(d.dead*100)}%</b>: 사업성이 낮아(분담금 비율 ${d.m.fz.x.toFixed(2)} → 정비 단계 진입률이 사업성 좋은 단지의 ${Math.round(d.m.fz.f*100)}%) 같은 연식보다 싸 보이는 몫${d.upGen>0?`(${(d.upGen*100).toFixed(0)}% → ${(d.upGenD*100).toFixed(0)}%)`:''}을 덜 믿고, 재건축 없이 계속 낡는 몫 −${Math.round(DEAD.drag*d.dead*100)}%를 뺌(판단·가정). 섞기 전 ${d.upPre>=0?'+':''}${Math.round(d.upPre*100)}%.`:''}</p>
   ${d.upSrc==='now'?`<div class="cmp tnum">
     <div class="me"><span class="n">이 단지 현재 (${d.py}평 ${eok(d.p)})</span><span class="v">${d.me.toLocaleString()}</span>${bar(d.me,Math.max(d.me,d.fair))}</div>
     <div><span class="n">이 동네에서 ${2026-d.year}년차·${d.py}평이 받을 값</span><span class="v">${d.fair.toLocaleString()}</span>${bar(d.fair,Math.max(d.me,d.fair))}</div>
