@@ -109,6 +109,7 @@ aside{order:-1;width:408px;flex:none;border-right:1px solid var(--border);backgr
 .lede p.why{margin-top:8px;font-size:13px;color:var(--text-secondary)}
 .lede p.why b{font-weight:650;color:var(--text);margin-right:4px}
 .lede p{font-size:13.5px;line-height:1.8;color:var(--text-secondary);margin-top:8px;word-break:keep-all;white-space:pre-line}
+.detail-tech-hidden{display:none}
 .kpis{display:grid;grid-template-columns:1fr 1fr;margin:20px 24px 0;border-top:2px solid var(--text);border-bottom:1px solid var(--border)}
 .kpis>div{padding:13px 0 13px;min-width:0}
 .kpis>div:nth-child(2n){padding-left:16px;border-left:1px solid var(--border-soft)}
@@ -779,14 +780,14 @@ function renderDetail(i){
   let h=`<div class="phead"><button id="back"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M15 18 9 12l6-6"/></svg>목록</button><span class="tnum">${d.rank}위 / ${D.length}</span></div>
   <section class="identity"><div class="cat">${esc(tags)}${d.u?' · 전체 단지 자동 수집':d.auto?' · 점수식 자동 선별':' · 직접 분석'}</div><h2>${esc(d.n)}</h2>
     <div class="meta tnum"><span>${esc(d.area)}</span><span>${d.year}년 입주</span><span>${d.units.toLocaleString()}세대</span></div></section>
-  <div class="lede"><strong>${esc(d.headline)}</strong><p>${esc(d.sub)}</p>${d.s4?`<p class="why"><b>순위 근거</b> ${esc(whyLine(d))}</p>`:''}${hasNew(d)?`<p class="why"><b>신설역 주의</b> 입지 점수에 개통 예정 역·노선을 넣어 순위가 올라간 단지예요${d.locParts.fut?` — ${esc(d.locParts.fut.n)}역(${esc(d.locParts.fut.line)}) 도보 약 ${Math.round(d.locParts.wf)}분`:''}${/예정/.test(d.locParts.lpl||'')?` · 노선 프리미엄 ${esc(d.locParts.lpl)} +${Math.round(d.locParts.lp*100)}%(가정)`:''}. 철도는 지연이 잦고 역 위치는 공사·계획 기준(OpenStreetMap)이에요. 개통 전까지 1년당 5%(최대 20%) 할인해서 반영했고, 예정 역을 빼면 입지 상위 ${Math.max(1,Math.round(100-d.loc0))}%예요. 지금 쓰는 역은 ${esc((d.cur&&d.cur.n)||'없음')}${d.cur&&d.cur.m<99999?` 도보 약 ${Math.round(walkMin(d.cur.m))}분`:''}.</p>`:''}</div>
+  <div class="lede"><strong>${esc(d.headline)}</strong><p>${esc(d.sub)}</p>${!d.simple&&d.s4?`<p class="why"><b>순위 근거</b> ${esc(whyLine(d))}</p>`:''}${!d.simple&&hasNew(d)?`<p class="why"><b>신설역 주의</b> 입지 점수에 개통 예정 역·노선을 넣어 순위가 올라간 단지예요${d.locParts.fut?` — ${esc(d.locParts.fut.n)}역(${esc(d.locParts.fut.line)}) 도보 약 ${Math.round(d.locParts.wf)}분`:''}${/예정/.test(d.locParts.lpl||'')?` · 노선 프리미엄 ${esc(d.locParts.lpl)} +${Math.round(d.locParts.lp*100)}%(가정)`:''}. 철도는 지연이 잦고 역 위치는 공사·계획 기준(OpenStreetMap)이에요. 개통 전까지 1년당 5%(최대 20%) 할인해서 반영했고, 예정 역을 빼면 입지 상위 ${Math.max(1,Math.round(100-d.loc0))}%예요. 지금 쓰는 역은 ${esc((d.cur&&d.cur.n)||'없음')}${d.cur&&d.cur.m<99999?` 도보 약 ${Math.round(walkMin(d.cur.m))}분`:''}.</p>`:''}</div>
   <dl class="kpis tnum">
     ${d.opt?`<div><dt>지금 필요한 돈</dt><dd>${eokH(d.opt.dep)}</dd><small>${esc(d.opt.kind)} · ${d.opt.Y}년 ${eok(d.opt.K)} 매수권 · 시세 ${eok(d.p)}</small></div>`:`<div><dt>${d.py}평 시세</dt><dd>${eokH(d.p)}</dd><small>${d.reg==='free'?'비규제':'토허·실거주 2년'}${priceEv(d)?`<br>${esc(priceEvTxt(d))}`:''}</small></div>`}
     <div><dt>${esc(nd.l)}</dt><dd class="hl">${eokH(nd.v)}</dd><small>${esc(nd.x)}</small></div>
-    <div><dt>입지 점수</dt><dd class="hl">${d.loc.toFixed(1)}<i>/100</i></dd><small>종합 ${s4RankTxt(d)}${d.band?`<br>${s10BandTxt(d)}`:''}${d.s4?`<br>종합 ${d.score.toFixed(1)}점 = 세대수 ${d.s4.pU.toFixed(0)}×0.4 + 입지 ${d.s4.pLoc.toFixed(0)}×0.4 + 여력 ${d.s4.pUp.toFixed(0)}×0.2 (각각 수도권 6억 이하 8,964개 평형 중 백분위)${d.s4.pUp>=80?' · 하락장 방어형':''}`:''}</small></div>
-    <div><dt>상승 여력</dt><dd class="hl">${d.up>=0?'+':''}${Math.round(d.up*100)}<i>%</i></dd><small>${d.upSrc==='rb'?(d.m.rm?'리모델링':'재건축')+' 기대가치 기준':d.upSrc==='opt'?'확정가 매수권 기준':'같은 동네·연식 시세 기준'}</small></div>
+    <div><dt>입지 점수</dt><dd class="hl">${d.loc.toFixed(1)}<i>/100</i></dd><small>${d.simple?'6억 이하 후보 단지끼리 비교한 점수':`종합 ${s4RankTxt(d)}${d.band?`<br>${s10BandTxt(d)}`:''}${d.s4?`<br>종합 ${d.score.toFixed(1)}점 = 세대수 ${d.s4.pU.toFixed(0)}×0.4 + 입지 ${d.s4.pLoc.toFixed(0)}×0.4 + 여력 ${d.s4.pUp.toFixed(0)}×0.2 (각각 수도권 6억 이하 8,964개 평형 중 백분위)${d.s4.pUp>=80?' · 하락장 방어형':''}`:''}`}</small></div>
+    <div><dt>${d.simple?'주변 대비 가격 차이':'상승 여력'}</dt><dd class="hl">${d.up>=0?'+':''}${Math.round(d.up*100)}<i>%</i></dd><small>${d.simple?'주변 시세를 이용한 통계상 참고값 · 수익률 보장 아님':d.upSrc==='rb'?(d.m.rm?'리모델링':'재건축')+' 기대가치 기준':d.upSrc==='opt'?'확정가 매수권 기준':'같은 동네·연식 시세 기준'}</small></div>
   </dl>
-  ${locPanel(d)}${trnPanel(d)}<section class="sec"><h3>상승 요인·상품 <small>입지 점수에는 미포함 · 예전 배점(참고)</small></h3><div class="score tnum">
+  ${d.simple?trnPanel(d):''}<div class="${d.simple?'detail-tech-hidden':''}">${locPanel(d)}${d.simple?'':trnPanel(d)}<section class="sec"><h3>상승 요인·상품 <small>입지 점수에는 미포함 · 예전 배점(참고)</small></h3><div class="score tnum">
     <div><span class="l">학군<small>${d.Al?esc(d.Al):d.g.ac!=null?`반경 1km 학원 ${d.g.ac.toLocaleString()}곳`:'계산 중'}</small></span><span class="v">${d.A!=null?d.A.toFixed(1):'–'}<i> / 10</i></span>${bar(d.A||0,10)}</div>
     <div><span class="l">직주근접<small>${esc(d.tbj)}까지 약 ${d.tbe}분 = 구 대표 ${d.tbm}분${d.acc?` + 역까지 ${Math.round(d.acc)}분`:''}${d.lnp?` + 하위 노선 환승 ${d.lnp}분`:''}</small></span><span class="v">${d.J.toFixed(1)}<i> / 9</i></span>${bar(d.J,9)}</div>
     <div><span class="l">상품성(연식)<small>${esc(d.rl)}</small></span><span class="v">${d.R.toFixed(1)}<i> / 12</i></span>${bar(d.R,12)}</div>
@@ -804,7 +805,7 @@ function renderDetail(i){
   ${d.bench&&d.bench.ppp?`<section class="sec"><h3>가격 비교 <small>평당 만 원</small></h3><div class="cmp tnum">
     <div class="me"><span class="n">${esc(d.n)} ${d.py}평</span><span class="v">${d.me.toLocaleString()}</span>${bar(d.me,Math.max(d.me,d.bench.ppp))}</div>
     <div><span class="n">${esc(d.bench.name)}</span><span class="v">${d.bench.ppp.toLocaleString()}</span>${bar(d.bench.ppp,Math.max(d.me,d.bench.ppp))}</div>
-  </div><p class="note">${d.deal?esc(d.deal):''}</p></section>`:`<section class="sec"><h3>6억 이하 평형 <small>최근 시세</small></h3><div class="cmp tnum">${(d.types||[{py:d.py,p:d.p,n:0}]).map(t=>`<div${t.py===d.py?' class="me"':''}><span class="n">${t.py}평${t.n?` · ${t.n3>=5?`3개월 ${t.n3}건`:`12개월 ${t.n}건 환산`}`:''}</span><span class="v">${eok(t.p)}</span>${bar(t.p,60000)}</div>`).join('')}</div><p class="note">${d.deal?esc(d.deal):''}</p></section>`}`;
+  </div><p class="note">${d.deal?esc(d.deal):''}</p></section>`:`<section class="sec"><h3>6억 이하 평형 <small>최근 시세</small></h3><div class="cmp tnum">${(d.types||[{py:d.py,p:d.p,n:0}]).map(t=>`<div${t.py===d.py?' class="me"':''}><span class="n">${t.py}평${t.n?` · ${t.n3>=5?`3개월 ${t.n3}건`:`12개월 ${t.n}건 환산`}`:''}</span><span class="v">${eok(t.p)}</span>${bar(t.p,60000)}</div>`).join('')}</div><p class="note">${d.deal?esc(d.deal):''}</p></section>`}</div>`;
   if(d.stage){
     h+=`<section class="sec"><h3>재건축 단계</h3><ol class="stage">`+d.stage.steps.map((s,k)=>`<li class="${k<d.stage.at?'done':k===d.stage.at?'now':''}"><span class="tnum">${String(k+1).padStart(2,'0')}</span>${esc(s)}</li>`).join('')+`</ol><div class="inline-note">${esc(d.stage.note)}</div></section>`;
   }
