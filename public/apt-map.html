@@ -696,11 +696,11 @@ const cardFeatures=d=>featureKeys(d).slice(0,2);
 const hasFeature=(d,key)=>featureKeys(d).includes(key);
 const badgeHTML=d=>[{label:d.tier.k,color:d.tier.c},...cardFeatures(d).map(k=>FEATURE_META[k]&&{label:FEATURE_META[k].label,color:FEATURE_META[k].color}).filter(Boolean)]
   .map(x=>`<span class="chip" style="--chip:${x.color}">${esc(x.label)}</span>`).join('');
-const FILTERS=[['all','전체'],['top','핵심 30'],['mid','유망 이상 300'],['interest','관심 1,000'],['신축','신축'],['학군','학군'],['재건축','재건축'],['리모델링','리모델링'],['천지개벽','천지개벽'],['역세권','역세권'],['초품아','초품아'],['대단지','대단지'],['신설역','신설역'],['반도체','반도체'],['소형할인','소형 할인'],['flat','평지'],['job50','출근 50분'],['free','비규제']];
+const FILTERS=[['all','전체'],['top','핵심 1~30'],['mid','유망 31~300'],['interest','관심 301~1,000'],['explore','탐색 1,001+'],['신축','신축'],['학군','학군'],['재건축','재건축'],['리모델링','리모델링'],['천지개벽','천지개벽'],['역세권','역세권'],['초품아','초품아'],['대단지','대단지'],['신설역','신설역'],['반도체','반도체'],['소형할인','소형 할인'],['flat','평지'],['job50','출근 50분'],['free','비규제']];
 const state={f:'all',pb:'all',q:'',sel:null,lim:50};
 const PB=[['all','전체 가격'],['3','3억 이하',0,30000],['4','3~4억',30000,40000],['5','4~5억',40000,50000],['6','5~6억',50000,60001]];
 const visible=d=>{
-  const f=state.f, ok=f==='all'||(f==='top'&&d.rank<=30)||(f==='mid'&&d.rank<=300)||(f==='interest'&&d.rank<=1000)||(f==='flat'&&isFlat(d))||(f==='job50'&&jobMin(d)!=null&&jobMin(d)<=50)||(f==='free'&&d.reg==='free')||hasFeature(d,f);
+  const f=state.f, ok=f==='all'||(f==='top'&&d.rank<=30)||(f==='mid'&&d.rank>30&&d.rank<=300)||(f==='interest'&&d.rank>300&&d.rank<=1000)||(f==='explore'&&d.rank>1000)||(f==='flat'&&isFlat(d))||(f==='job50'&&jobMin(d)!=null&&jobMin(d)<=50)||(f==='free'&&d.reg==='free')||hasFeature(d,f);
   const pb=PB.find(x=>x[0]===state.pb); const okp=state.pb==='all'||(cashOf(d)>pb[2]&&cashOf(d)<=pb[3])||(state.pb==='3'&&cashOf(d)<=30000);
   return ok&&okp&&(!state.q||(d.n+d.area+d.headline).includes(state.q));
 };
@@ -710,7 +710,7 @@ function renderList(){
   let h=`<section class="intro">
     <div class="eyebrow">6억 이하 · 오를 단지<i></i>${D.length}곳</div>
     <h1>급지·학군·입지 좋은 순, 같은 입지면 싼 순</h1>
-    <p>서울·경기·인천에서 최근 시세(최근 3개월 실거래 중위)가 6억 이하인 평형이 있는 300세대 이상 단지를 전부 같은 규칙으로 채점했습니다. 등급은 핵심 30위·유망 300위·관심 1,000위까지로 나누고, 카드에는 신축·학군·재건축 등 대표 성격 2개를 함께 표시합니다.</p>
+    <p>서울·경기·인천에서 최근 시세(최근 3개월 실거래 중위)가 6억 이하인 평형이 있는 300세대 이상 단지를 전부 같은 규칙으로 채점했습니다. 등급은 핵심 1~30위·유망 31~300위·관심 301~1,000위·탐색 1,001위 이하로 나누고, 카드에는 신축·학군·재건축 등 대표 성격 2개를 함께 표시합니다.</p>
     ${pend?`<div class="inline-note tnum" style="margin-top:12px">역·초등학교·경사를 지도 데이터로 계산하는 중 · ${D.length-pend}/${D.length}<br><small>처음 한 번만 걸리고, 끝나면 순위가 확정됩니다.</small></div>`:''}
     <details class="method"><summary>점수 매기는 법 ${CHEV}</summary><dl>
       <div><dt>급지<small>25점</small></dt><dd>구·시 아파트 전체 평균 평당가(리치고, 구마다 70~350개 단지)에, 같은 구 안에서 그 동이 얼마나 비싼지를 곱한 값. 동 보정은 수도권 대단지 920곳을 연식·평형·세대수로 보정한 회귀(설명력 93%)에서 뽑음. 평당 3,000만 원 이상 만점, 700만 원 이하 0점.</dd></div>
