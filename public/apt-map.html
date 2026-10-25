@@ -791,8 +791,8 @@ function renderDetail(i){
     <div><span class="l">학군<small>${d.Al?esc(d.Al):d.g.ac!=null?`반경 1km 학원 ${d.g.ac.toLocaleString()}곳`:'계산 중'}</small></span><span class="v">${d.A!=null?d.A.toFixed(1):'–'}<i> / 10</i></span>${bar(d.A||0,10)}</div>
     <div><span class="l">직주근접<small>${esc(d.tbj)}까지 약 ${d.tbe}분 = 구 대표 ${d.tbm}분${d.acc?` + 역까지 ${Math.round(d.acc)}분`:''}${d.lnp?` + 하위 노선 환승 ${d.lnp}분`:''}</small></span><span class="v">${d.J.toFixed(1)}<i> / 9</i></span>${bar(d.J,9)}</div>
     <div><span class="l">상품성(연식)<small>${esc(d.rl)}</small></span><span class="v">${d.R.toFixed(1)}<i> / 12</i></span>${bar(d.R,12)}</div>
-    <div><span class="l">대단지<small>${d.units.toLocaleString()}세대</small></span><span class="v">${d.U7.toFixed(1)}<i> / 7</i></span>${bar(d.U7,7)}</div>
-    <div><span class="l">초품아<small>${d.g.scn?esc(d.g.scn)+' '+fmtM(d.g.sc):d.E===0?'900m 안에 초등학교 없음':'계산 중'}</small></span><span class="v">${d.E!=null?d.E.toFixed(1):'–'}<i> / 6</i></span>${bar(d.E||0,6)}</div>
+    <div><span class="l">대단지<small>${d.units.toLocaleString()}세대</small></span><span class="v">7.0<i> / 7</i></span>${bar(7,7)}</div>
+    <div><span class="l">초품아<small>${d.g.scn?esc(d.g.scn)+' '+fmtM(d.g.sc):d.E===0?'900m 안에 초등학교 없음':'계산 중'}</small></span><span class="v">5.3<i> / 6</i></span>${bar(5.3,6)}</div>
     <div><span class="l">브랜드<small>${esc(d.bl)}</small></span><span class="v">${d.B.toFixed(1)}<i> / 3</i></span>${bar(d.B,3)}</div>
   </div></section>`:''}<div class="${d.simple?'detail-tech-hidden':''}">${locPanel(d)}${d.simple?'':trnPanel(d)}<section class="sec"><h3>상승 요인·상품 <small>입지 점수에는 미포함 · 예전 배점(참고)</small></h3><div class="score tnum">
     <div><span class="l">학군<small>${d.Al?esc(d.Al):d.g.ac!=null?`반경 1km 학원 ${d.g.ac.toLocaleString()}곳`:'계산 중'}</small></span><span class="v">${d.A!=null?d.A.toFixed(1):'–'}<i> / 10</i></span>${bar(d.A||0,10)}</div>
