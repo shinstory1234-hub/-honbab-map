@@ -339,7 +339,12 @@ function hakL(d){ const h=hakH(d); if(!h) return null;
   if(h[1]>=250) s+=' · 주요 학원가';
   if(h[3]) s+=` · 가까운 중학교 ${h[3]} ${h[4]}m`;
   return s; }
-const TIERS=[{k:'핵심',c:'#0066ff'},{k:'유망',c:'#00a35c'},{k:'관찰',c:'#8a8f98'}];
+const TIERS=[
+  {k:'핵심',c:'#0066ff'},
+  {k:'유망',c:'#00a35c'},
+  {k:'관심',c:'#b26a00'},
+  {k:'탐색',c:'#8a8f98'}
+];
 
 /* 초소형(전용 37.5㎡ 미만 — 면적을 5㎡ 단위로 묶어 35㎡ 이하 묶음 ≈ 공급 16평 미만) 비재건축 평형은 순위에서 제외:
    단지 구성별: 소형만 있는 단지 17→20 −19.4%(신축 −48.0%), 20→23 +0.3%(−6.9%), 23→26 −24.0%(−19.2%) / 큰 평형과 섞인 단지 안 초소형 −16.7%, −4.0%, −6.3%(표본 59·39·32) — 둘 다 세 구간 열위라 유지. 신축 일반 단지 안 초소형은 표본 12개로 판단 불가.
@@ -633,7 +638,7 @@ function recompute(){
     locNew(d); s4Score(d);                                                          // 수도권 6억 이하 4,700여 단지 중 백분위(0~100). apt-s4.js
   });
   ORDER=hillGuard(D.slice().sort((x,y)=>y.score-x.score));
-  const n=ORDER.length; ORDER.forEach((d,i)=>{ d.rank=i+1; d.tier=TIERS[i<n*.15?0:i<n*.4?1:2]; }); if(window.s10Band) s10Band();
+  ORDER.forEach((d,i)=>{ d.rank=i+1; d.tier=TIERS[i<30?0:i<300?1:i<1000?2:3]; }); if(window.s10Band) s10Band();
   updatePins();
 }
 function money(d){
@@ -654,11 +659,48 @@ const jobMin=d=>{ const b=trnOf(d); return b?b[1][0]:d.tbe!=null?d.tbe+12:null; 
 function trnPanel(d){ const t=(window.TRN||{})[gkey(d)]; if(!t) return '';
   const row=(k,v)=>`<div><span class="l">${k}<small>${v[3]==='B'?`첫 구간 버스 ${esc(v[4])} · 출근 배차 ${v[6]?`약 ${v[5]}분(지역 평균으로 추정)`:`${Math.round(v[5])}분`} → 평균 대기 ${v[0]-v[1]}분 포함`:v[3]==='S'?'걸어서 역까지':'도보'} · 환승 ${v[2]}회</small></span><span class="v">${v[0]}<i>분</i></span></div>`;
   return `<section class="sec"><h3>출근 시간 <small>카카오 대중교통 경로 + 버스 대기 · 순위에는 미반영</small></h3><div class="score tnum">${['강남','광화문','여의도','판교'].filter(k=>t[k]).map(k=>row(k,t[k])).join('')}</div></section>`; }
-const FILTERS=[['all','전체'],['top','핵심'],['mid','유망 이상'],['stn','역 1km'],['sch','초품아'],['hak','학원가 1.5km'],['flat','평지'],['newst','신설역 반영'],['job50','출근 50분'],['man','직접 분석'],['free','비규제'],['재건축','재건축'],['반도체','반도체 수요'],['신혼','신혼 30평대'],['소형할인','소형 할인'],['천지개벽','천지개벽']];
+const FEATURE_META={
+  '신축':{label:'신축',color:'#00a35c'},
+  '학군':{label:'학군',color:'#b26a00'},
+  '재건축':{label:'재건축',color:'#6541f2'},
+  '리모델링':{label:'리모델링',color:'#7856d8'},
+  '천지개벽':{label:'천지개벽',color:'#e5484d'},
+  '역세권':{label:'역세권',color:'#087ea4'},
+  '초품아':{label:'초품아',color:'#16836b'},
+  '대단지':{label:'대단지',color:'#59636e'},
+  '신설역':{label:'신설역',color:'#c24184'},
+  '반도체':{label:'반도체',color:'#0066ff'},
+  '소형할인':{label:'소형 할인',color:'#d64045'},
+  '신혼':{label:'가족형',color:'#9a6700'},
+  '평지':{label:'평지',color:'#687076'}
+};
+function featureKeys(d){
+  const out=[], add=(key,priority)=>out.push([key,priority]), tags=d.tags||[], stage=stOf(d);
+  const remodel=isRemodel(d)||tags.includes('리모델링');
+  if(remodel) add('리모델링',120);
+  else if(tags.includes('재건축')||stage>=35) add('재건축',115);
+  if(tags.includes('천지개벽')||(stage>=70&&d.units>=1000)) add('천지개벽',tags.includes('천지개벽')?110:108);
+  if(2026-d.year<=10) add('신축',105);
+  if(d.A>=7) add('학군',100);
+  if(d.cur&&d.cur.n&&d.cur.m<=800) add('역세권',90);
+  if(d.g&&d.g.sc!=null&&d.g.sc<=300) add('초품아',85);
+  if(d.units>=1500) add('대단지',80);
+  if(hasNew(d)) add('신설역',75);
+  if(tags.includes('반도체')) add('반도체',70);
+  if(tags.includes('소형할인')) add('소형할인',65);
+  if(tags.includes('신혼')) add('신혼',60);
+  if(isFlat(d)) add('평지',55);
+  return out.sort((a,b)=>b[1]-a[1]).map(x=>x[0]);
+}
+const cardFeatures=d=>featureKeys(d).slice(0,2);
+const hasFeature=(d,key)=>featureKeys(d).includes(key);
+const badgeHTML=d=>[{label:d.tier.k,color:d.tier.c},...cardFeatures(d).map(k=>FEATURE_META[k]&&{label:FEATURE_META[k].label,color:FEATURE_META[k].color}).filter(Boolean)]
+  .map(x=>`<span class="chip" style="--chip:${x.color}">${esc(x.label)}</span>`).join('');
+const FILTERS=[['all','전체'],['top','핵심 30'],['mid','유망 이상 300'],['interest','관심 1,000'],['신축','신축'],['학군','학군'],['재건축','재건축'],['리모델링','리모델링'],['천지개벽','천지개벽'],['역세권','역세권'],['초품아','초품아'],['대단지','대단지'],['신설역','신설역'],['반도체','반도체'],['소형할인','소형 할인'],['flat','평지'],['job50','출근 50분'],['free','비규제']];
 const state={f:'all',pb:'all',q:'',sel:null,lim:50};
 const PB=[['all','전체 가격'],['3','3억 이하',0,30000],['4','3~4억',30000,40000],['5','4~5억',40000,50000],['6','5~6억',50000,60001]];
 const visible=d=>{
-  const f=state.f, ok=f==='all'||(f==='top'&&d.tier.k==='핵심')||(f==='mid'&&d.tier.k!=='관찰')||(f==='stn'&&d.g.st!=null&&d.g.st<=1000)||(f==='sch'&&d.g.sc!=null&&d.g.sc<=300)||(f==='hak'&&hakIn(d))||(f==='flat'&&isFlat(d))||(f==='newst'&&hasNew(d))||(f==='job50'&&jobMin(d)!=null&&jobMin(d)<=50)||(f==='man'&&!d.auto)||(f==='free'&&d.reg==='free')||d.tags.includes(f);
+  const f=state.f, ok=f==='all'||(f==='top'&&d.rank<=30)||(f==='mid'&&d.rank<=300)||(f==='interest'&&d.rank<=1000)||(f==='flat'&&isFlat(d))||(f==='job50'&&jobMin(d)!=null&&jobMin(d)<=50)||(f==='free'&&d.reg==='free')||hasFeature(d,f);
   const pb=PB.find(x=>x[0]===state.pb); const okp=state.pb==='all'||(cashOf(d)>pb[2]&&cashOf(d)<=pb[3])||(state.pb==='3'&&cashOf(d)<=30000);
   return ok&&okp&&(!state.q||(d.n+d.area+d.headline).includes(state.q));
 };
@@ -668,7 +710,7 @@ function renderList(){
   let h=`<section class="intro">
     <div class="eyebrow">6억 이하 · 오를 단지<i></i>${D.length}곳</div>
     <h1>급지·학군·입지 좋은 순, 같은 입지면 싼 순</h1>
-    <p>서울·경기·인천에서 최근 시세(최근 3개월 실거래 중위)가 6억 이하인 평형이 있는 300세대 이상 단지를 전부 같은 규칙으로 채점했습니다. 직접 분석한 단지와 자동 수집한 단지를 함께 보여주고, 지도는 멀리서 보면 상위권만, 확대하면 그 화면의 단지를 더 보여줍니다.</p>
+    <p>서울·경기·인천에서 최근 시세(최근 3개월 실거래 중위)가 6억 이하인 평형이 있는 300세대 이상 단지를 전부 같은 규칙으로 채점했습니다. 등급은 핵심 30위·유망 300위·관심 1,000위까지로 나누고, 카드에는 신축·학군·재건축 등 대표 성격 2개를 함께 표시합니다.</p>
     ${pend?`<div class="inline-note tnum" style="margin-top:12px">역·초등학교·경사를 지도 데이터로 계산하는 중 · ${D.length-pend}/${D.length}<br><small>처음 한 번만 걸리고, 끝나면 순위가 확정됩니다.</small></div>`:''}
     <details class="method"><summary>점수 매기는 법 ${CHEV}</summary><dl>
       <div><dt>급지<small>25점</small></dt><dd>구·시 아파트 전체 평균 평당가(리치고, 구마다 70~350개 단지)에, 같은 구 안에서 그 동이 얼마나 비싼지를 곱한 값. 동 보정은 수도권 대단지 920곳을 연식·평형·세대수로 보정한 회귀(설명력 93%)에서 뽑음. 평당 3,000만 원 이상 만점, 700만 원 이하 0점.</dd></div>
@@ -689,7 +731,7 @@ function renderList(){
   list.slice(0,state.lim).forEach(d=>{
     h+=`<article class="row" data-i="${D.indexOf(d)}" data-s="1">
       <span class="rk tnum">${String(d.rank).padStart(2,'0')}</span>
-      <div style="min-width:0"><div class="kicker"><span class="chip" style="--chip:${d.tier.c}">${d.tier.k}</span><span>${esc(d.area)}</span>${d.auto?'<span>· 자동</span>':''}</div>
+      <div style="min-width:0"><div class="kicker">${badgeHTML(d)}<span>${esc(d.area)}</span>${d.auto?'<span>· 자동</span>':''}</div>
         <h3>${esc(d.n)}</h3><p>입지 ${d.loc.toFixed(1)} · ${d.cur&&d.cur.n?esc(d.cur.n)+' '+fmtM(d.cur.m):'역 계산 중'} · 여력 ${d.up>=0?'+':''}${Math.round(d.up*100)}%</p></div>
       <div class="px tnum"><strong>${short(cashOf(d))}</strong><span>${d.py}평 · ${d.opt?esc(d.opt.kind):d.reg==='free'?'비규제':'토허'}</span><b>${d.score.toFixed(1)}점</b></div>
     </article>`;
@@ -774,7 +816,7 @@ const PRICE_THIN=5;
 function priceEv(d){ const t=(d.types||[]).find(x=>x.py===d.py)||null; return t&&t.n!=null?{n:t.n,n3:t.n3||0,last:t.last||''}:null; }
 const priceEvTxt=d=>{ const e=priceEv(d); return e?`이 평형 실거래 최근 12개월 ${e.n}건 · 3개월 ${e.n3}건${e.last?` · 마지막 ${e.last}`:''}${e.n<PRICE_THIN?' — 가격 근거가 적어 시세 자체가 틀릴 수 있음':''}`:''; };
 function renderDetail(i){
-  const d=D[i], m=money(d), nd=need(d), tags=d.tags.map(t=>TAGS[t].label).join(' · ');
+  const d=D[i], m=money(d), nd=need(d), tags=[d.tier.k,...cardFeatures(d).map(k=>FEATURE_META[k].label)].join(' · ');
   const bar=(v,max)=>`<div class="t"><b style="width:${Math.round(v/max*100)}%"></b></div>`;
   const src=RATE_SRC[d.rate.src];
   let h=`<div class="phead"><button id="back"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M15 18 9 12l6-6"/></svg>목록</button><span class="tnum">${d.rank}위 / ${D.length}</span></div>
