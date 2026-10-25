@@ -56,8 +56,9 @@ function s4Score(d){ const Q=S4Q, C=window.S4CFG||{factors:['U7','A','E','J'],lo
   const p={}; for(const f of ['U7','A','E','J']) p[f]=s4Pct(Q[f],v[f]);
   const fs=C.factors||[], ld=fs.length?fs.reduce((s,f)=>s+p[f],0)/fs.length:0;
   const pLoc=d.locV==null?s4Pct(Q.LOC,null):s4Pct(Q.LOC,d.locV), pUp=s4Pct(Q.UP,d.upR);
-  const lead=fs.length?(1-C.locMix)*ld+C.locMix*pLoc:pLoc, comp=(1-C.upW)*lead+C.upW*pUp;
-  d.s4={pU:p.U7,pA:p.A,pE:p.E,pJ:p.J,ld,pUp,pLoc,J};
+  const dp=(d.dead||0)*(typeof DEAD!=='undefined'&&DEAD.comp||0);                 // 재건축 막힌 구축 감점(apt-map.html DEAD)
+  const lead=fs.length?(1-C.locMix)*ld+C.locMix*pLoc:pLoc, comp=(1-C.upW)*lead+C.upW*pUp-dp;
+  d.s4={pU:p.U7,pA:p.A,pE:p.E,pJ:p.J,ld,pUp,pLoc,J,dp};
   const pc=s4Pct(Q.COMP,comp); d.score=comp; d.comp=comp;                     // 점수 = 세 백분위의 가중평균 그대로(백분위의 백분위는 상위권이 99점대로 뭉쳐 차이가 안 보였음)
   d.top=Math.max(.1,Math.round((100-pc)*10)/10);                                   // 상위 x%
   d.urank=Math.max(1,Math.round((100-pc)/100*((C.complexes)||4708))); }           // 약 N위/4,708단지
