@@ -1,29 +1,6 @@
-'use client'
-import { useState } from 'react'
-import dynamicImport from 'next/dynamic'
-import Nav from '@/components/Nav'
-import AddRestaurantModal from '@/components/AddRestaurantModal'
-// import MyPageModal from '@/components/MyPageModal'
+import { redirect } from 'next/navigation'
 
-const MapTab = dynamicImport(() => import('@/components/MapTab'), { ssr: false })
-
+// 혼밥맵 서비스 종료 — 루트는 6억지도로
 export default function HomePage() {
-  const [addModalOpen, setAddModalOpen] = useState(false)
-
-  return (
-    <div className="flex flex-col h-[100dvh] overflow-hidden bg-gray-50">
-      <Nav
-        onAddRestaurant={() => setAddModalOpen(true)}
-        onMyPage={() => {}}
-      />
-
-      <div className="flex-1 overflow-hidden">
-        {/* 혼밥방, 핫딜 탭 제거 후 지도 탭만 남김 */}
-        <MapTab />
-      </div>
-
-      <AddRestaurantModal isOpen={addModalOpen} onClose={() => setAddModalOpen(false)} />
-      {/* <MyPageModal isOpen={myPageOpen} onClose={() => setMyPageOpen(false)} /> */}
-    </div>
-  )
+  redirect('/apt-map.html')
 }
