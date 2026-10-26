@@ -80,11 +80,35 @@ function s4BlendOwnLarge(d,fw){ const b=d.bench||{}, n=b.name||''; if(!b.ppp||!/
   d.s4own=Math.round(own); return Math.round(Math.exp((1-S4BLEND)*Math.log(fw)+S4BLEND*Math.log(own))); }
 const OLDW=window.OLDW_OVERRIDE??10;   // 원천레이크파크 6→약 40위, 벽산5단지 43→약 90위(판단)
 /* 전고점: 2021-07~2022-06 상위 3건 평균(2건 이상, 현재 DB와 동일한 반올림 5㎡ 구간), 현재 거래수 n 가중 단지 비율.
-   2022-07 이후 입주 등 비교 거래가 없으면 가점 없음. W=10은 상위권 구성 시뮬레이션 뒤 제한한 판단값(예측력 실증 아님). */
+   비교 거래 없는 2023년 이후 신축은 주변 비교군 기반 추정 가점(최대 절반)을 별도로 계산. W=10은 상위권 구성 시뮬레이션 뒤 제한한 판단값(예측력 실증 아님). */
 const PEAKW=window.PEAKW_OVERRIDE??10;
+const s4PeakKey=d=>d.n+'|'+(d.area||'').trim().split(/\s+/).pop();
 function s4PeakRatio(d){
-  const dong=(d.area||'').trim().split(/\s+/).pop(), r=(window.PEAK||{})[d.n+'|'+dong];
+  const r=(window.PEAK||{})[s4PeakKey(d)];
   return typeof r==='number'&&Number.isFinite(r)&&r>=.95?r:null;
+}
+/* 비교 거래 없는 2023년 이후 신축만: 가까운 비슷한 준신축의 고점 회복률을 보수적으로 전이.
+   미돌파 비교군도 포함한다. 단지별 한 표, 상위 5곳. 1/2/3곳 이상 신뢰도 1/3·2/3·1,
+   직접 가점의 절반(최대 5점)에 신뢰도를 곱한다. 직접 가점과 중복 가산하지 않는다. */
+function s4PeerPeak(d){
+  const B=window.PEAK_PEER_BASE||{}, g=d.g||{};
+  if(d.year<2023||!Number.isFinite(d.year)||!g.lat||!g.lng||!(d.units>0)||!(d.py>0)||B[s4PeakKey(d)]||typeof SIB==='undefined') return null;
+  const candidates=[];
+  for(const group of Object.values(SIB)){
+    const x=group[0], e=B[s4PeakKey(x)], h=x.g||{};
+    if(!e||x.cxKey===d.cxKey||x.year>2022||x.year<d.year-8||e[1]!==x.year||!Number.isFinite(e[0])||e[0]<=0||!(e[2]>0)||!h.lat||!h.lng||!(x.units>0)||x.opt||stOf(x)>=35) continue;
+    const unitRatio=x.units/d.units; if(unitRatio<1/3||unitRatio>3) continue;
+    const m=hav(g.lat,g.lng,h.lat,h.lng); if(!Number.isFinite(m)||m>2500) continue;
+    const py=group.reduce((best,t)=>Math.abs(Math.log(t.py/d.py))<Math.abs(Math.log(best/d.py))?t.py:best,group[0].py);
+    const sizeRatio=py/d.py; if(sizeRatio<1/1.35||sizeRatio>1.35) continue;
+    const weight=Math.exp(-.5*(m/1000)**2-(d.year-x.year)/5-Math.abs(Math.log(unitRatio))-Math.abs(Math.log(sizeRatio)))*Math.min(1,e[2]/10);
+    if(weight>0)candidates.push({n:x.n,area:x.area,m,r:e[0],weight});
+  }
+  const peers=candidates.sort((a,b)=>b.weight-a.weight||a.n.localeCompare(b.n)).slice(0,5);
+  if(!peers.length)return null;
+  const sw=peers.reduce((s,p)=>s+p.weight,0), r=peers.reduce((s,p)=>s+p.r*p.weight,0)/sw;
+  const confidence=Math.min(1,peers.length/3), bonus=PEAKW*.5*confidence*clamp01((r-1)/.10);
+  return {r,confidence,bonus,peers};
 }
 /* 종합 */
 function s4Score(d){ const Q=S4Q, C=window.S4CFG||{factors:['U7','A','E','J'],locMix:.5,upW:.2};
@@ -97,9 +121,10 @@ function s4Score(d){ const Q=S4Q, C=window.S4CFG||{factors:['U7','A','E','J'],lo
   const age=2026-d.year, noIssue=stOf(d)<35&&!isRemodel(d)&&!(d.m&&d.m.rm), oldp=noIssue?OLDW*clamp01((age-15)/10)*(1-((d.m&&d.m.fz&&d.m.fz.f)||0)*clamp01((age-25)/5))*(1-(d.areaMv||0)):0;   // × (1 − 동네 정비 진행률)   // 25→30년차에 사업성(f) 좋은 단지는 재건축 기대가 유인이라 감점을 덜어 줌
   // 입지가 좋을수록 구축 감점을 덜어 줌(판단, 2026.10.26): 재건축이 어려워도 좋은 자리는 실거주 수요가 버팀 — 입지 백분위 80→100에서 감점 ×1→×0.5
   const dp=((d.dead||0)*(typeof DEAD!=='undefined'&&DEAD.comp||0)+oldp)*(1-.5*clamp01((pLoc-80)/20)); d.oldp=oldp;
-  const peakR=s4PeakRatio(d), peakBonus=peakR==null?0:PEAKW*clamp01((peakR-1)/.10);
+  const peakR=s4PeakRatio(d), peakPeer=peakR==null?s4PeerPeak(d):null;
+  const peakBonus=peakR==null?(peakPeer?peakPeer.bonus:0):PEAKW*clamp01((peakR-1)/.10);
   const lead=fs.length?(1-C.locMix)*ld+C.locMix*pLoc:pLoc, comp=(1-C.upW)*lead+C.upW*pUp-dp+peakBonus;
-  d.s4={pU:p.U7,pA:p.A,pE:p.E,pJ:p.J,ld,pUp,pLoc,J,dp,peakR,peakBonus};
+  d.s4={pU:p.U7,pA:p.A,pE:p.E,pJ:p.J,ld,pUp,pLoc,J,dp,peakR,peakBonus,peakPeer};
   const pc=s4Pct(Q.COMP,comp); d.score=comp; d.comp=comp;                     // 기본 백분위 가중평균 − 구축 감점 + 전고점 가점(최대 PEAKW점). 100점 초과 가능
   d.top=Math.max(.1,Math.round((100-pc)*10)/10);                                   // 상위 x%
   d.urank=Math.max(1,Math.round((100-pc)/100*((C.complexes)||4708))); }           // 약 N위/4,708단지
