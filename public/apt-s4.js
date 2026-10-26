@@ -71,13 +71,17 @@ function s4BlendOwnLarge(d,fw){ const b=d.bench||{}, n=b.name||''; if(!b.ppp||!/
   const bpy=+((n.match(/(\d+)평/)||[0,0])[1]); if(!(bpy>=d.py+5)) return fw;
   const age=2026-d.year, [mk]=microAdj(d,'gen'); const own=b.ppp/(Math.exp(AGEC(age))*SIZE(bpy,age)*mk);
   d.s4own=Math.round(own); return Math.round(Math.exp((1-S4BLEND)*Math.log(fw)+S4BLEND*Math.log(own))); }
+const OLDW=window.OLDW_OVERRIDE??10;   // 원천레이크파크 6→약 40위, 벽산5단지 43→약 90위(판단)
 /* 종합 */
 function s4Score(d){ const Q=S4Q, C=window.S4CFG||{factors:['U7','A','E','J'],locMix:.5,upW:.2};
   const J=s4J(d), v={U7:d.U7,A:d.A,E:d.E,J};
   const p={}; for(const f of ['U7','A','E','J']) p[f]=s4Pct(Q[f],v[f]);
   const fs=C.factors||[], ld=fs.length?fs.reduce((s,f)=>s+p[f],0)/fs.length:0;
   const pLoc=d.locV==null?s4Pct(Q.LOC,null):s4Pct(Q.LOC,d.locV), pUp=s4Pct(Q.UP,d.upR);
-  const dp=(d.dead||0)*(typeof DEAD!=='undefined'&&DEAD.comp||0);                 // 재건축 막힌 구축 감점(apt-map.html DEAD)
+  // 구축 감점: ① 재건축 막힌 구축 20 × z(apt-map.html DEAD) ② 정비 이슈 없는 구축(공식 단계 35 미만 · 리모델링 아님) — 사람들이 들어갈 유인이 적음(판단):
+  //   15년차 0 → 25년차 OLDW점, 그 뒤 유지. 두 감점은 더함(큰 쪽만 쓰면 다른 구축이 내려가며 막힌 구축이 상대적으로 올라감)
+  const age=2026-d.year, noIssue=stOf(d)<35&&!isRemodel(d)&&!(d.m&&d.m.rm), oldp=noIssue?OLDW*clamp01((age-15)/10):0;
+  const dp=(d.dead||0)*(typeof DEAD!=='undefined'&&DEAD.comp||0)+oldp; d.oldp=oldp;
   const lead=fs.length?(1-C.locMix)*ld+C.locMix*pLoc:pLoc, comp=(1-C.upW)*lead+C.upW*pUp-dp;
   d.s4={pU:p.U7,pA:p.A,pE:p.E,pJ:p.J,ld,pUp,pLoc,J,dp};
   const pc=s4Pct(Q.COMP,comp); d.score=comp; d.comp=comp;                     // 점수 = 세 백분위의 가중평균 그대로(백분위의 백분위는 상위권이 99점대로 뭉쳐 차이가 안 보였음)
