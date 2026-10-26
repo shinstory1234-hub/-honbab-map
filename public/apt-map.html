@@ -251,7 +251,7 @@ aside{order:-1;width:408px;flex:none;border-right:1px solid var(--border);backgr
     <div class="notice-list">
       <div class="notice-item"><h3>1. 주관적인 평가</h3><p>최대한 객관적으로 평가했지만 제작자의 주관이 반영되어 있습니다. 높은 점수가 미래 수익률을 보장하지 않습니다.</p></div>
       <div class="notice-item"><h3>2. 데이터 오류 가능성</h3><p>현재 1차 배포 버전으로, 일부 데이터가 부정확하거나 누락되었을 수 있습니다.</p></div>
-      <div class="notice-item"><h3>3. 재건축 단지 고평가 가능성</h3><p>재건축 사업성 평가에 중요한 대지지분 데이터를 일부 단지만 확보해, 나머지 단지는 주변 단지 자료로 추정해 반영했습니다. 이로 인해 일부 재건축 단지는 실제 사업성이나 투자 가치보다 높은 점수를 받았을 수 있으므로, 재건축 단지의 순위는 특히 주의해서 참고해 주세요.</p></div>
+      <div class="notice-item"><h3>3. 재건축 단지 고평가 가능성</h3><p>재건축 사업성 평가에 중요한 대지지분은 등기 자료를 확보하지 못해, 건축물대장의 용적률로 추정했습니다(일부 단지는 주변 단지 자료로 추정). 이로 인해 일부 재건축 단지는 실제 사업성이나 투자 가치보다 높은 점수를 받았을 수 있으므로, 재건축 단지의 순위는 특히 주의해서 참고해 주세요.</p></div>
       <div class="notice-item"><h3>4. 실거래가와 호가 차이</h3><p>최근 6억 원 이하 아파트 가격이 빠르게 상승하면서 실거래가와 현재 호가 사이에 차이가 발생하고 있습니다. 특히 <strong>실거래가는 낮지만 현재 호가가 크게 오른 단지는 모델이 실제보다 높은 점수를 부여했을 가능성이 있습니다.</strong></p></div>
     </div>
     <label class="notice-check"><input type="checkbox" id="noticeCheck"><span>위 유의사항을 모두 확인했으며, 본 지도의 평가 결과가 참고용임을 이해하고 동의합니다.</span></label>
@@ -636,7 +636,9 @@ function anchorOf(d,fw){ const b=d.bench||{}, n=b.name||'';
    공사비가 집값보다 빨리 오르는 부분(e > g)과 공사 중 못 사는 비용은 그대로 손실로 남음. */
 
 /* ---- 대지지분(s11): window.PLAT[gkey] = [이 평형 대지지분㎡, 출처, 실측 용적률%] ---- */
-const landOf=d=>{ const v=(window.PLAT||{})[gkey(d)]; if(!(v&&v[0]>0&&v[2]>0)) return null; return d.basePy&&d.py!==d.basePy?[v[0]*d.py/d.basePy,v[1],v[2]]:v; };   // PLAT은 대표 평형 기준 → 다른 평형은 공급면적 비례
+/* 대지지분(추정): 등기 대지권이 아니라 건축물대장 실측 용적률로 '이 평형 공급면적 ÷ 용적률'. PLAT[0]은 수집 당시 어떤 평형 기준인지 기록이 없어
+   (대표 평형이 바뀐 단지는 13~50% 부풀려짐 — 예: 하안 주공1 14평 10.3평 → 8.2평) 평형 면적에서 바로 계산하고 PLAT은 용적률·출처만 씀 */
+const landOf=d=>{ const v=(window.PLAT||{})[gkey(d)]; if(!(v&&v[0]>0&&v[2]>0)) return null; return [d.py*3.3058/(v[2]/100),v[1],v[2]]; };
 /* ---- 사업성 → 실현가능성(s11, 가정 · 횡단면 근거) ----
    x = 같은 평형으로 1:1 재건축할 때 분담금 ÷ 그 평형 신축 분양가 = (사업비 − (받는면적/현재면적 − 1) × (분양가 − 사업비)) ÷ 분양가
    30년+ 노후 892곳 중 x ≤ .3 은 22%(12/54)가 안전진단 통과 이상(st≥40), .3~.6 은 1%(2/201), .6 초과는 0.2%(1/637).
@@ -885,7 +887,7 @@ function rbHTML(d){ const m=d.m, P=d.p;
   if(m.rm){
     h.push(lrow('+','리모델링 후 면적',`기존 ${d.py}평 × 1.4(전용 최대 40% 증축)`,`${m.A.toFixed(1)}평`));
   } else {
-    h.push(lrow('+','재건축 후 내 몫 면적',m.Ld?`대지지분 약 ${(m.Ld[0]/3.3058).toFixed(1)}평(${m.Ld[0].toFixed(0)}㎡ · ${esc(m.Ld[1])} 대지면적을 평형 면적 비율로 나눔) × [기존 용적률 ${m.fo}% + (새 ${m.fn}% − ${m.fo}%) × (1 − 공공기여·임대 ${Math.round(m.pub*100)}%)] × 0.95<br>새 용적률 ${esc(m.fnl)}`:`${d.py}평 × [1 + (용적률 ${m.fo}%→${m.fn}% = ${(m.fn/m.fo).toFixed(2)}배 − 1) × (1 − 공공기여·임대 ${Math.round(m.pub*100)}%)] × 0.95(커뮤니티 등)<br>기존 용적률 ${esc(m.fol)} · 새 용적률 ${esc(m.fnl)}`,`${m.A.toFixed(1)}평`));
+    h.push(lrow('+','재건축 후 내 몫 면적',m.Ld?`대지지분 약 ${(m.Ld[0]/3.3058).toFixed(1)}평(${m.Ld[0].toFixed(0)}㎡ · ${d.py}평 ÷ ${esc(m.Ld[1])} 실측 용적률 ${m.Ld[2]}% · 등기 대지권이 아닌 추정) × [기존 용적률 ${m.fo}% + (새 ${m.fn}% − ${m.fo}%) × (1 − 공공기여·임대 ${Math.round(m.pub*100)}%)] × 0.95<br>새 용적률 ${esc(m.fnl)}`:`${d.py}평 × [1 + (용적률 ${m.fo}%→${m.fn}% = ${(m.fn/m.fo).toFixed(2)}배 − 1) × (1 − 공공기여·임대 ${Math.round(m.pub*100)}%)] × 0.95(커뮤니티 등)<br>기존 용적률 ${esc(m.fol)} · 새 용적률 ${esc(m.fnl)}`,`${m.A.toFixed(1)}평`));
   }
   h.push(lrow('−','사업비',m.ck?`${esc(m.ck[1])} = 공급평당 ${m.C.toLocaleString()}만<br>${m.signed?'':'공사비 증액 예비 +5%(시공 계약 전) · '}${m.tb}년 × 연 ${(RB.e*100).toFixed(1)}% 상승(물가연동) → ${m.CT.toLocaleString()}만`:`공사비 연면적 평당 ${m.W}만 × 지하·부대 1.45 × 설계·금융·이주비 1.22${m.rm?' × 리모델링 0.9':''} = 공급평당 ${m.C.toLocaleString()}만<br>${m.signed?'':'공사비 증액 예비 +5%(시공 계약 전) · '}${m.tb}년 × 연 ${(RB.e*100).toFixed(1)}% 상승(물가연동) → ${m.CT.toLocaleString()}만`,`평당 ${m.CT.toLocaleString()}만`));
   h.push(lrow('−','분담금',m.rm?`${m.A.toFixed(1)}평 × ${m.CT.toLocaleString()}만 − 늘어난 일반분양(13.6%) 수익`
