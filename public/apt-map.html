@@ -31,6 +31,24 @@ a{color:inherit;text-decoration:none}
 :focus-visible{outline:2px solid var(--primary);outline-offset:3px}
 .tnum{font-variant-numeric:tabular-nums}
 
+/* ── 이용 전 확인 ── */
+.notice-gate{position:fixed;inset:0;z-index:1000;display:flex;align-items:center;justify-content:center;padding:20px;background:rgba(10,12,16,.58);backdrop-filter:blur(5px)}
+.notice-gate[hidden]{display:none}
+.notice-card{width:min(560px,100%);max-height:calc(100dvh - 40px);overflow:auto;padding:28px;border-radius:10px;background:var(--bg);box-shadow:0 20px 60px rgba(0,0,0,.28)}
+.notice-card h2{font-size:22px;line-height:1.35;letter-spacing:-.045em}
+.notice-list{display:grid;gap:16px;margin-top:22px}
+.notice-item h3{font-size:15px;line-height:1.45}
+.notice-item p{margin-top:5px;font-size:13.5px;line-height:1.65;color:var(--text-secondary);word-break:keep-all}
+.notice-check{display:flex;align-items:flex-start;gap:10px;margin-top:22px;padding:15px;background:var(--bg-subtle);border:1px solid var(--border);border-radius:6px;font-size:13.5px;line-height:1.55;cursor:pointer}
+.notice-check input{appearance:auto;flex:none;width:18px;height:18px;margin-top:1px;accent-color:var(--primary)}
+.notice-error{min-height:20px;margin-top:8px;color:var(--up);font-size:12.5px}
+.notice-actions{display:grid;grid-template-columns:1fr 1.5fr;gap:8px;margin-top:4px}
+.notice-actions button{min-height:48px;border-radius:5px;font-size:14px;font-weight:700}
+.notice-actions .decline{border:1px solid var(--border);color:var(--text-secondary)}
+.notice-actions .agree{background:var(--primary);color:#fff}
+.notice-actions .agree:disabled{cursor:not-allowed;opacity:.35}
+@media(max-width:520px){.notice-gate{padding:0;align-items:flex-end}.notice-card{max-height:94dvh;padding:24px 20px calc(20px + env(safe-area-inset-bottom));border-radius:12px 12px 0 0}.notice-actions{grid-template-columns:1fr}.notice-actions .agree{order:-1}}
+
 /* ── masthead ── */
 .masthead{display:flex;align-items:center;gap:24px;height:72px;padding:0 28px;border-bottom:1px solid var(--text);flex:none;z-index:21;background:var(--bg)}
 .wordmark{display:inline-flex;align-items:baseline;font-size:31px;font-weight:950;line-height:1;letter-spacing:-.095em;white-space:nowrap}
@@ -226,6 +244,20 @@ aside{order:-1;width:408px;flex:none;border-right:1px solid var(--border);backgr
 </style>
 </head>
 <body>
+<div class="notice-gate" id="noticeGate" role="dialog" aria-modal="true" aria-labelledby="noticeTitle">
+  <section class="notice-card">
+    <h2 id="noticeTitle">⚠️ 지도 이용 전 확인해주세요</h2>
+    <div class="notice-list">
+      <div class="notice-item"><h3>1. 주관적인 평가</h3><p>최대한 객관적으로 평가했지만 제작자의 주관이 반영되어 있습니다. 높은 점수가 미래 수익률을 보장하지 않습니다.</p></div>
+      <div class="notice-item"><h3>2. 데이터 오류 가능성</h3><p>현재 1차 배포 버전으로, 일부 데이터가 부정확하거나 누락되었을 수 있습니다.</p></div>
+      <div class="notice-item"><h3>3. 재건축 단지 고평가 가능성</h3><p>재건축 사업성 평가에 중요한 대지지분 데이터를 확보하지 못해 평가에 반영하지 않았습니다. 이로 인해 일부 재건축 단지는 실제 사업성이나 투자 가치보다 높은 점수를 받았을 수 있으므로, 재건축 단지의 순위는 특히 주의해서 참고해 주세요.</p></div>
+      <div class="notice-item"><h3>4. 실거래가와 호가 차이</h3><p>최근 6억 원 이하 아파트 가격이 빠르게 상승하면서 실거래가와 현재 호가 사이에 차이가 발생하고 있습니다. 특히 <strong>실거래가는 낮지만 현재 호가가 크게 오른 단지는 모델이 실제보다 높은 점수를 부여했을 가능성이 있습니다.</strong></p></div>
+    </div>
+    <label class="notice-check"><input type="checkbox" id="noticeCheck"><span>위 유의사항을 모두 확인했으며, 본 지도의 평가 결과가 참고용임을 이해하고 동의합니다.</span></label>
+    <p class="notice-error" id="noticeError" aria-live="polite"></p>
+    <div class="notice-actions"><button type="button" class="decline" id="noticeDecline">동의하지 않음</button><button type="button" class="agree" id="noticeAgree" disabled>동의하고 지도 보기</button></div>
+  </section>
+</div>
 <header class="masthead">
   <a class="wordmark" id="home" href="apt-map.html" aria-label="6억지도 처음 화면으로">6억지도<i></i></a>
   <span class="caption" id="asof">서울·경기·인천</span>
@@ -258,6 +290,12 @@ aside{order:-1;width:408px;flex:none;border-right:1px solid var(--border);backgr
 <script src="apt-walk.js"></script>
 <script src="apt-geo.js"></script>
 <script>
+const NOTICE_KEY='apt6_notice_v1';
+const noticeGate=document.getElementById('noticeGate'), noticeCheck=document.getElementById('noticeCheck'), noticeAgree=document.getElementById('noticeAgree'), noticeError=document.getElementById('noticeError');
+try{if(localStorage.getItem(NOTICE_KEY)==='yes') noticeGate.hidden=true;}catch(e){}
+noticeCheck.addEventListener('change',()=>{noticeAgree.disabled=!noticeCheck.checked;noticeError.textContent='';});
+noticeAgree.addEventListener('click',()=>{if(!noticeCheck.checked)return;try{localStorage.setItem(NOTICE_KEY,'yes');}catch(e){}noticeGate.hidden=true;});
+document.getElementById('noticeDecline').addEventListener('click',()=>{noticeCheck.checked=false;noticeAgree.disabled=true;noticeError.textContent='동의해야 지도를 볼 수 있습니다.';noticeCheck.focus();});
 const KAKAO_JS_KEY='106bb734e8600621686fade2de7f8afb';
 const $=s=>document.querySelector(s);
 const mobile=()=>matchMedia('(max-width:767px)').matches;
@@ -363,6 +401,14 @@ const isSmallOnly=d=>!!(window.SMALLONLY&&SMALLONLY.has(d.area.split(' ').pop()+
 const farOf=d=>{ const a=((window.FARD||{})[gkey(d)]||[])[0]||0, c=nearCx(d.g&&d.g.lat?d:{...d,g:(typeof GEO!=='undefined'&&GEO[gkey(d)])||{}}), b=c?c[4]:0; return Math.max(a<2000?a:0,b<2000?b:0); };
 const isOfficeType=d=>{ const so=window.SMALLONLY&&SMALLONLY.has(d.area.split(' ').pop()+'|'+d.n), small=so||(d.types||[{py:d.py}]).every(t=>t.py<=20); return small&&farOf(d)>=350; };
 const CUROUT=[], SMALLOUT=[];
+/* 조합원 지위 양도 제한을 실거래 원천에서 판별할 수 없는 정비사업 단지.
+   국토부 실거래에는 매도인의 법정 예외 충족 여부가 없으므로, 싼 현금청산 위험 거래를 정상 입주권 가격으로 간주하지 않는다.
+   개별 매물의 지위 양도 가능 여부가 별도 확인되기 전에는 가격·상승여력·순위 계산에서 통째로 제외한다. */
+const RIGHTS_BLOCK=new Map([
+  ['하안주공3단지|광명시 하안동',{date:'2025.10.16',why:'신탁방식 사업시행자 지정 뒤 투기과열지구 지정 · 매도인별 법정 예외 확인 필요'}],
+  ['하안주공4단지|광명시 하안동',{date:'2025.10.16',why:'신탁방식 사업시행자 지정 뒤 투기과열지구 지정 · 매도인별 법정 예외 확인 필요'}]
+]);
+const RIGHTSOUT=[];
 /* 평형별 순위(2026.10.25): 한 단지에 6억 이하 평형이 여럿이면 평형마다 따로 채점·순위. 위치·세대수 등 단지 값은 같고
    가격·평당가·여력·재건축 분담금이 평형마다 달라짐. 대표 평형(원고 기준)이 먼저, 나머지는 평형 순. 임대 후 확정가(opt)는 계약 평형 하나만 */
 const TYPEOUT=[];
@@ -388,6 +434,8 @@ function fixUnits(A){ const g={}; A.forEach(d=>{ const k=d.area+'|'+d.units+'|'+
     const k=a.filter(d=>!drop.has(d)); if(k.length>1) k.forEach(d=>{ d.unitsRaw=d.units; d.unitsN=k.length; d.units=Math.round(d.units/k.length); }); });
   return A.filter(d=>!drop.has(d)); }
 const D=fixUnits(PICKS.map(d=>({...d,opt:(window.OPT||{})[d.n]||null})).filter(d=>{
+  const rr=RIGHTS_BLOCK.get(gkey(d));
+  if(rr){ RIGHTSOUT.push([d.n,d.area,rr.date,rr.why]); return false; }
   if(!d.opt&&isOfficeType(d)){ SMALLOUT.push([d.n,d.area]); return false; }   // 사이트 범위(정책): 고밀(용적률 350% 이상) 소형 전용 단지 = 오피스텔형은 가족 실거주 아파트 추천 대상에서 제외
   const cr=!d.u&&!d.opt&&(window.CUR||{})[d.n+'|'+d.area];
   if(cr){ const ts=cr.map(([py,p,n,n3,last])=>({py,p,n,n3,last})), ok=ts.filter(t=>t.p<=60000);
@@ -800,7 +848,7 @@ function renderList(){
   });
   if(list.length>state.lim) h+=`<button class="btn ghost more" id="more" style="display:block;margin:12px auto;width:calc(100% - 32px)">${Math.min(100,list.length-state.lim)}개 더 보기 · 남은 ${(list.length-state.lim).toLocaleString()}개</button>`;
   if(!list.length) h+=`<p class="source">조건에 맞는 단지가 없습니다.</p>`;
-  h+=`<section class="excluded"><h2>최근 하락 지역 <small>2025.6~2026.9 누적 · 순위에는 포함</small></h2><ul>${EXCLUDED.map(e=>`<li>${esc(e[0])}<b class="tnum">${esc(e[1])}</b><span>${esc(e[2])}</span></li>`).join('')}</ul></section>
+  h+=`${RIGHTSOUT.length?`<section class="excluded"><h2>권리 확인 전 순위 제외 <small>현금청산 위험 거래 오인 방지</small></h2><ul>${RIGHTSOUT.map(e=>`<li>${esc(e[0])} · ${esc(e[1])}<b class="tnum">기준 ${esc(e[2])}</b><span>${esc(e[3])} · 개별 매물의 조합원 지위 양도 가능 여부가 확인되면 다시 평가</span></li>`).join('')}</ul></section>`:''}<section class="excluded"><h2>최근 하락 지역 <small>2025.6~2026.9 누적 · 순위에는 포함</small></h2><ul>${EXCLUDED.map(e=>`<li>${esc(e[0])}<b class="tnum">${esc(e[1])}</b><span>${esc(e[2])}</span></li>`).join('')}</ul></section>
   <p class="source">상승률: 한국부동산원·KB 주간 아파트 동향(10월 2주), 누적 하락은 한국부동산원(파이낸셜뉴스 2026.9.21 인용). 시세·실거래: 리치고(국토부 실거래). 점수는 투자 권유가 아니라 비교용 지표입니다.</p>`;
   b.innerHTML=h;
   b.querySelectorAll('.filters button[data-f]').forEach(x=>x.onclick=()=>{state.f=x.dataset.f;state.lim=50;render();});
