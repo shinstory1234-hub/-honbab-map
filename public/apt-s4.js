@@ -23,12 +23,21 @@ function s4Pct(Q,x){ if(x==null||isNaN(x)) return 50; const n=Q.length-1;
 const S4CBD=[[37.4979,127.0276],[37.5663,126.9779],[37.5219,126.9245],[37.3948,127.1112]];
 function s4J(d){ const g=d.g||{}; if(!g.lat) return null; const km=Math.min(...S4CBD.map(([a,b])=>hav(g.lat,g.lng,a,b)))/1000;
   return jobS(15+1.3*km)*9/15; }
-/* 경사(회귀, 2026.10.25 재추정): R = 반경 500m 안 가장 낮은 곳보다 이 단지가 얼마나 높은가(m, apt-dem.js 지형 자료 — 모든 단지).
+/* 경사(회귀, 2026.10.25 재추정): 기본 R = 반경 500m 안 가장 낮은 곳보다 이 단지가 얼마나 높은가(m, apt-dem.js 지형 자료 — 모든 단지).
    같은 동 안끼리 '상품 차이를 뺀 평당가 ÷ 주변 시세'를 회귀: 25년차 이하 1,351곳 R 1m당 −0.25%(t −7.7, 상한 30/50/80m 모두 비슷).
+   보행 경로를 계산한 의심 단지는 apt-walk.js의 부담 z(낮은 도로→단지 대표점, 여러 방향 중 가장 쉬운 경로)를 0~80m 상당으로 환산한다.
+   저경사 대조군 평균은 10m 상당, 표준편차 1마다 10m를 더한다(더포레스트힐 z=2.47 → 34.7m). 도로 연결 신뢰도 B는 전부,
+   C는 65%만 기존 R과 섞고 D는 기존 R을 유지한다. 부담 지수(0~100)는 설명용이고, 순위는 포화되지 않는 z를 써서 심한 단지끼리도 구분한다.
    예전 기준 '역보다 높이'(dh, 1,563곳만 자료)는 R과 함께 넣으면 효과 없음(+0.03%, t 0.5) → R로 교체. 자료 없으면 중위 12.5m */
 const FLATB=-.0025, FLATCAP=80, FLATDEF=FLATB*12.5;
 const hR=d=>{ const v=(window.DEM||{})[d.cxKey||gkey(d)]; return v?v[0]:null; };
 const flatAdj=R=>R==null?FLATDEF:FLATB*Math.min(FLATCAP,Math.max(0,R));
+const hW=d=>(window.WALK_GRADE||{})[d.cxKey||gkey(d)]||null;
+const hSlopeR=d=>{ const R=hR(d), v=hW(d); if(!v) return R;
+  const z=+v[1]||0, w=v[2]===2?1:v[2]===1?.65:0; if(!w) return R;
+  const routeR=Math.max(0,Math.min(80,10+10*z)), base=R==null?12.5:R;
+  return routeR*w+base*(1-w); };
+const slopeAdj=d=>flatAdj(hSlopeR(d));
 /* 입지 평당가(ln, 만원/공급평). recompute()에서 d.kfw 계산 뒤 s4Score 전에 호출 */
 function locNew(d){ const g=d.g||{};
   let base=d.kfw?d.kfw.fw:(d.fwK??d.fw); if(!base){ d.locV=null; d.loc=d.locOld??0; return; }
@@ -38,7 +47,7 @@ function locNew(d){ const g=d.g||{};
   const own=cxOwnLoc(d), base0=base;
   let dw=own>0?Math.max(LOCOWN*(1-(d.rbw||0)*(1-(d.dead||0))),(d.dead||0)*S4BLEND,(d.disp||0)*S4BLEND):0;   // disp: 주변 시세가 엇갈림(apt-map.html)
   if(dw) base=Math.exp((1-dw)*Math.log(base)+dw*Math.log(own));
-  const wm=d.cur&&d.cur.m<99999?walkMin(d.cur.m):null; let wa=wm==null?WALK(40):WALK(Math.min(40,wm)); const fa=flatAdj(hR(d));
+  const wm=d.cur&&d.cur.m<99999?walkMin(d.cur.m):null; let wa=wm==null?WALK(40):WALK(Math.min(40,wm)); const fa=slopeAdj(d);
   // 개통 예정 역(공사 중·확정, OSM 좌표)이 지금 역보다 80m 이상 가까우면 그 역 도보 기준으로 — 개통까지 1년당 5% 할인(최대 20%). 여력의 적정가(microAdj)와 같은 규칙
   const wa0=wa; let wf=null; if(d.fut&&(!d.cur||d.fut.m<d.cur.m-80)){ wf=walkMin(d.fut.m); const gain=(WALK(Math.min(40,wf))-wa)*d.fut.disc; if(gain>0) wa+=gain; else wf=null; }
   // 노선 프리미엄(도보 15분 안): 같은 동 안 실거래 회귀에서 오차 대비 확실한 건 신분당선 +18%(±4.5%)뿐 — 나머지 노선 차이(0~7%, 오차 ±2~4%)는 구분 안 함(노선이 좋은 동네의 가치는 주변 시세에 이미 들어 있음).
@@ -84,6 +93,6 @@ function locPanel(d){ const L=d.locParts;
     <div><span class="l">이 단지 시세 반영<small>주변 ${Math.round(L.base0).toLocaleString()}만에 이 단지 시세가 말하는 위치가치 ${Math.round(L.own).toLocaleString()}만을 ${Math.round(L.dw*100)}% 섞음 — 상권·경사·생활권 차이는 단지 시세에 들어 있음${d.dead>=.5?' · 재건축 막힌 구축은 더 많이':d.disp>.3?' · 주변 시세가 엇갈려 더 많이':d.rbw>0?' · 재건축 기대가 낀 만큼 덜':''}</small></span><span class="v">${((L.base/L.base0-1)*100).toFixed(1)}<i>%</i></span></div>`:''}
     <div><span class="l">역 도보<small>${L.wm==null?'3km 안에 역 없음':`${esc((d.cur&&d.cur.n)||'')} 도보 약 ${Math.round(L.wm)}분`}${L.fut?` → <b>개통 예정 ${esc(L.fut.n)}역(${esc(L.fut.line)}, ${L.fut.year}년 목표) 도보 약 ${Math.round(L.wf)}분</b> 기준, 개통 전 ${Math.round((1-L.fut.disc)*100)}% 할인`:''} · 같은 동 안 실거래 회귀</small></span><span class="v">${pc(L.wa)}</span></div>
     <div><span class="l">노선 프리미엄<small>${L.lp?`${esc(L.lpl)} 도보 15분 안 — 신분당선은 같은 동 안 실거래 회귀 +18%, GTX는 운행 중 GTX-A 역 주변 실측 +13%(역마다 편차 큼), 월판선 +9%(가정), 인동선은 인덕원·동탄 환승역까지 2정거장 이내 +9%·3~4정거장 +4%로 가정(개통 전 할인)`:'도보 15분 안에 신분당선·GTX·월판선 없음 — 다른 노선끼리는 실거래상 차이가 오차 범위라 같게 봄'}</small></span><span class="v">${pc(L.lp||0)}</span></div>
-    <div><span class="l">경사<small>${hR(d)!=null?`반경 500m 안 가장 낮은 곳보다 ${hR(d)}m 높음${(window.DEM[d.cxKey]||[])[1]>=30?` · 단지 안 높이차 ${window.DEM[d.cxKey][1]}m`:''}`:'높이 자료 없음(중위값)'} · 1m 높을 때마다 −0.25%</small></span><span class="v">${pc(L.fa)}</span></div>
+    <div><span class="l">경사<small>${hR(d)!=null?`반경 500m 안 가장 낮은 곳보다 ${hR(d)}m 높음${(window.DEM[d.cxKey]||[])[1]>=30?` · 단지 안 높이차 ${window.DEM[d.cxKey][1]}m`:''}`:'높이 자료 없음(중위값)'}${hW(d)&&hW(d)[2]?` · 실제 보행 부담 ${Math.round(hW(d)[0])}/100 반영`:''} · 1m 상당마다 −0.25%</small></span><span class="v">${pc(L.fa)}</span></div>
     <div><span class="l">입지 평당가<small>세대수·학군·초품아·직주·연식·브랜드는 입지 점수에 넣지 않음(상승 요인·적정가에서 따로 반영)</small></span><span class="v">${L.ppp.toLocaleString()}<i>만/평</i></span></div>
   </div></section>`; }

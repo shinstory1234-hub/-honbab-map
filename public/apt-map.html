@@ -255,6 +255,7 @@ aside{order:-1;width:408px;flex:none;border-right:1px solid var(--border);backgr
 <script src="apt-band.js"></script>
 <script src="apt-plat.js"></script>
 <script src="apt-dem.js"></script>
+<script src="apt-walk.js"></script>
 <script src="apt-geo.js"></script>
 <script>
 const KAKAO_JS_KEY='106bb734e8600621686fade2de7f8afb';
@@ -557,7 +558,7 @@ function microAdj(d,mode){ const F=d.F??2.5, parts=[], rb=mode==='rb';
     parts.push([lab,w]); }
   else if(d.fut&&rb){ const wf=walkMin(d.fut.m); parts.push([`개통 예정역 도보 ${Math.round(wf)}분`,WALK(Math.min(40,wf))*d.fut.disc+WALK(40)*(1-d.fut.disc)]); }
   else if(d.fut) parts.push(['3km 안에 역 없음(개통 예정 역은 입지 점수에만 반영)',WALK(40)]);
-  const f=flatAdj(hR(d)); parts.push(['경사',f]);                 // 같은 동 안 회귀: 반경 500m 최저점보다 1m 높을 때마다 −0.25%(apt-s4.js)
+  const f=flatAdj(hR(d)); parts.push(['경사',f]);                 // 적정가·여력은 기존 지형 회귀 유지; 실제 보행 경로는 입지 점수·순위에만 반영
   parts.push(['세대수',HC.hh*Math.log(Math.max(d.units,100)/1000)]);
   if(rb){ if(stOf(d)>=85) parts.push(['새 아파트 브랜드(시공사 선정 단계 · 1군 가정)',HC.b1]); }   // 시공사 선정 전엔 브랜드 중립
   else { const t=d.n+' '+(d.q||''); parts.push(['브랜드',BR1.test(t)?HC.b1:BR2.test(t)?HC.b2:0]); }
