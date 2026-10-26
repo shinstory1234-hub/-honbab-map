@@ -624,6 +624,7 @@ function microAdj(d,mode){ const F=d.F??2.5, parts=[], rb=mode==='rb';
   parts.push(['세대수',HC.hh*Math.log(Math.max(d.units,100)/1000)]);
   if(rb){ if(stOf(d)>=85) parts.push(['새 아파트 브랜드(시공사 선정 단계 · 1군 가정)',HC.b1]); }   // 시공사 선정 전엔 브랜드 중립
   else { const t=d.n+' '+(d.q||''); parts.push(['브랜드',BR1.test(t)?HC.b1:BR2.test(t)?HC.b2:0]); }
+  if(!rb&&/엘에이치|LH|휴먼시아|주공|국민임대|공공/.test(d.n)) parts.push(['LH·공공 단지',-.042]);   // 같은 동 안 회귀(25년차 이하 307곳 중 81곳): 브랜드 보정 뒤에도 −4.2%(t −2.5) — 이만큼 싼 건 여력이 아님
   if(!rb&&isJubok(d)){ const a=2026-d.year; parts.push([`주상복합(${a}년차)`,HC.jb+HC.jbOld*clamp01((a-5)/15)]); parts.push(['주상복합 전용률(공급평 환산)',HC.jbArea]); }
   const k=Math.exp(parts.reduce((s,x)=>s+x[1],0)); return [k,parts]; }
 /* 완공 시세 기준: 주변 실제 신축 단지(이름 있는 실측)가 있으면 그것을 34평·신축 기준으로 환산, 없으면 동 회귀값 */
