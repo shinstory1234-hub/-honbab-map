@@ -111,11 +111,16 @@ function s4PeerPeak(d){
   return {r,confidence,bonus,peers};
 }
 /* 100점 배분: 기본 모델 90점(세대수36·입지36·여력18), 전고점 최대10점. */
-const s4EditorialFirst=d=>d.n==='평촌센텀퍼스트'&&d.area==='안양 동안구 호계동'&&d.py===14;
-const s4Total=(base,penalty,peak,editorial=false)=>editorial?100:100*clamp01((.9*(base-penalty)+Math.min(10,Math.max(0,peak)))/100);
-const s4EditorialOrder=rows=>[...rows.filter(s4EditorialFirst),...rows.filter(d=>!s4EditorialFirst(d))];
+// 운영자 지정 비교: 센텀퍼스트는 어바인퍼스트의 전고점 가점만 동일 적용한다.
+function s4PeakReference(d){
+  if(d.n!=='평촌센텀퍼스트'||d.area!=='안양 동안구 호계동')return null;
+  const B=window.PEAK_PEER_BASE||{};if(B[s4PeakKey(d)])return null;
+  const e=B['평촌어바인퍼스트|호계동'];if(!e||!Number.isFinite(e[0])||e[0]<=0)return null;
+  return {n:'평촌어바인퍼스트',r:e[0],bonus:PEAKW*clamp01((e[0]-1)/.10)};
+}
+const s4Total=(base,penalty,peak)=>100*clamp01((.9*(base-penalty)+Math.min(10,Math.max(0,peak)))/100);
 function s4ScoreDetail(d){ const s=d.s4; if(!s)return '';
-  return `${s.editorialFirst?'모델':'종합'} ${s.modelComp.toFixed(1)}점 = 세대수 ${s.pU.toFixed(0)}×0.36 + 입지 ${s.pLoc.toFixed(0)}×0.36 + 여력 ${s.pUp.toFixed(0)}×0.18${s.dp?` − 구축 감점 ${s.dp.toFixed(1)}`:''}${s.peakBonus?` + ${s.peakPeer?'주변 추정 가점':'전고점 가점'} ${s.peakBonus.toFixed(1)}`:''}${s.editorialFirst?` · 운영자 예외 조정 +${(100-s.modelComp).toFixed(1)}점 → 최종 100점·1위`:''}`;
+  return `종합 ${s.modelComp.toFixed(1)}점 = 세대수 ${s.pU.toFixed(0)}×0.36 + 입지 ${s.pLoc.toFixed(0)}×0.36 + 여력 ${s.pUp.toFixed(0)}×0.18${s.dp?` − 구축 감점 ${s.dp.toFixed(1)}`:''}${s.peakBonus?` + ${s.peakReference?'지정 비교 단지 가점':s.peakPeer?'주변 추정 가점':'전고점 가점'} ${s.peakBonus.toFixed(1)}`:''}`;
 }
 /* 종합 */
 function s4Score(d){ const Q=S4Q, C=window.S4CFG||{factors:['U7','A','E','J'],locMix:.5,upW:.2};
@@ -128,12 +133,12 @@ function s4Score(d){ const Q=S4Q, C=window.S4CFG||{factors:['U7','A','E','J'],lo
   const age=2026-d.year, noIssue=stOf(d)<35&&!isRemodel(d)&&!(d.m&&d.m.rm), oldp=noIssue?OLDW*clamp01((age-15)/10)*(1-((d.m&&d.m.fz&&d.m.fz.f)||0)*clamp01((age-25)/5))*(1-(d.areaMv||0)):0;   // × (1 − 동네 정비 진행률)   // 25→30년차에 사업성(f) 좋은 단지는 재건축 기대가 유인이라 감점을 덜어 줌
   // 입지가 좋을수록 구축 감점을 덜어 줌(판단, 2026.10.26): 재건축이 어려워도 좋은 자리는 실거주 수요가 버팀 — 입지 백분위 80→100에서 감점 ×1→×0.5
   const dp=((d.dead||0)*(typeof DEAD!=='undefined'&&DEAD.comp||0)+oldp)*(1-.5*clamp01((pLoc-80)/20)); d.oldp=.9*oldp;
-  const peakR=s4PeakRatio(d), peakPeer=peakR==null?s4PeerPeak(d):null;
-  const peakBonus=peakR==null?(peakPeer?peakPeer.bonus:0):PEAKW*clamp01((peakR-1)/.10);
+  const peakR=s4PeakRatio(d), peakReference=peakR==null?s4PeakReference(d):null, peakPeer=peakR==null&&!peakReference?s4PeerPeak(d):null;
+  const peakBonus=peakR==null?(peakReference?peakReference.bonus:peakPeer?peakPeer.bonus:0):PEAKW*clamp01((peakR-1)/.10);
   const lead=fs.length?(1-C.locMix)*ld+C.locMix*pLoc:pLoc, base=(1-C.upW)*lead+C.upW*pUp;
-  const editorialFirst=s4EditorialFirst(d), modelComp=s4Total(base,dp,peakBonus), comp=s4Total(base,dp,peakBonus,editorialFirst);
-  d.s4={pU:p.U7,pA:p.A,pE:p.E,pJ:p.J,ld,pUp,pLoc,J,dp:dp*.9,rawDp:dp,peakR,peakBonus,peakPeer,modelComp,editorialFirst};
-  const pc=s4Pct(Q.COMP,comp); d.score=comp; d.comp=comp;                     // 기본 모델90점 + 전고점10점, 0~100. 센텀퍼스트14평은 명시적 운영자 예외
+  const comp=s4Total(base,dp,peakBonus), modelComp=comp;
+  d.s4={pU:p.U7,pA:p.A,pE:p.E,pJ:p.J,ld,pUp,pLoc,J,dp:dp*.9,rawDp:dp,peakR,peakBonus,peakPeer,peakReference,modelComp};
+  const pc=s4Pct(Q.COMP,comp); d.score=comp; d.comp=comp;                     // 기본 모델90점 + 전고점10점, 0~100. 센텀퍼스트도 공통 산식으로 계산
   d.top=Math.max(.1,Math.round((100-pc)*10)/10);                                   // 상위 x%
   d.urank=Math.max(1,Math.round((100-pc)/100*((C.complexes)||4708))); }           // 약 N위/4,708단지
 const s4RankTxt=d=>{ const n=(typeof D!=='undefined'&&D.length)||1, r=d.rank||d.urank||0, t=Math.max(.1,r/n*100); return `이 화면 상위 ${t<1?t.toFixed(1):Math.max(1,Math.round(t))}% · ${r.toLocaleString()}위/${n.toLocaleString()}개 평형`; };
