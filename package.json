@@ -6,7 +6,9 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint ."
+    "lint": "eslint .",
+    "apt:far-rules": "node scripts/collect-far-rules.mjs",
+    "apt:far-zoning": "node scripts/collect-far-zoning.mjs"
   },
   "dependencies": {
     "next": "^16.4.3",

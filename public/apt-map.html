@@ -247,6 +247,7 @@ aside{order:-1;width:408px;flex:none;border-right:1px solid var(--border);backgr
 <script src="apt-fard.js"></script>
 <script src="apt-hak.js"></script>
 <script src="apt-univ.js"></script>
+<script src="apt-farplan.js"></script>
 <script src="apt-cur.js"></script>
 <script src="apt-trn.js"></script>
 <script src="apt-small.js"></script>
@@ -506,19 +507,29 @@ function farOld(d){ const f=FD(d);
   const jg=/주공|LH/.test(d.n), r=/^서울/.test(d.area)?'11':/^인천/.test(d.area)?'28':'41', t=FARFB[jg?'J':r];
   return [t.find(x=>d.year<=x[0])[1],'같은 시·도·시기·유형 단지들의 건축물대장 중앙값(추정)']; }
 
-/* 재건축 후 용적률: 법·기본계획 값(사람 입력이지만 법정 수치)을 시군구 코드로 적용. 1기 신도시 기준용적률은 노후계획택지 조건일 때만 */
+/* 재건축 후 용적률: ① 노후계획도시 기본계획 ② 토지이음 대표필지 용도지역×지자체 조례 ③ 조례 수집 실패 시 용도지역별 법정 상한 ④ 미확인 보수값.
+   FARPLAN[gkey] = [용도지역, 일반한도, 정비사업 적용한도, 지자체, PNU, 확인일, 판정, 토지이음출처, 전체용도지역, 규칙근거, 규칙출처, 인근표본단지, 대표필지원용도지역].
+   조례·법정 상한은 정비계획 결정값이 아니며 높이·경관·지구단위계획·공공기여 등으로 실제 허용치는 낮아질 수 있음. */
 const PLAN_FAR={'41135':[326,'분당 기본계획 기준용적률'],'41285':[300,'일산 기본계획 기준용적률'],'41287':[300,'일산 기본계획 기준용적률'],
   '41173':[330,'평촌 기본계획 기준용적률'],'41410':[330,'산본 기본계획 기준용적률'],'41192':[350,'중동 기본계획 기준용적률'],'41194':[350,'중동 기본계획 기준용적률']};
 /* 수원비행장 고도제한: 군사기지법 비행안전구역 표면(활주로에서 2,286m까지 45.72m, 그 밖은 1:20 경사로 높아짐)으로 허용 높이를 계산.
    허용 높이가 100m(약 33층) 미만이면 그만큼 용적률을 낮춤(하한 200%). 활주로 좌표·표면 규격은 근사 — 토지이음 비행안전구역 도면으로 확인 필요 */
 const airH=rw=>45.72+Math.max(0,rw-2286)/20;
 function farNew(d){ const f=FD(d), sg=f?f[6]:'', pl=isPlanned(d);
-  let base,lab,pub;
-  if(/^11/.test(sg)||(!sg&&/^서울/.test(d.area))){ base=300; lab='서울 3종 법적상한 300% 가정(용도지역·정비계획 미확인)'; pub=.3; }
-  else if(sg==='41210'){ base=300; lab='광명 3종 법적상한 300% 가정(용도지역·정비계획 미확인)'; pub=.3; }
-  else if(pl&&PLAN_FAR[sg]){ [base,lab]=PLAN_FAR[sg]; pub=.25; }
-  else if(pl){ base=300; lab='노후계획택지(기본계획 미확인 · 경기 3종 상한 280%의 약 1.07배 가정)'; pub=.25; }
-  else { base=280; lab='경기 3종 상한(조례) 280% 가정(용도지역·정비계획 미확인)'; pub=.2; }
+  const fp=(window.FARPLAN||{})[gkey(d)], zones=fp&&fp[8]||[], zone=fp&&fp[0], checked=fp&&fp[5], verdict=fp&&fp[6], basis=fp&&fp[9], donor=fp&&fp[11];
+  let base,lab,pub=.25;
+  if(pl&&PLAN_FAR[sg]){ [base,lab]=PLAN_FAR[sg]; lab+=` · 노후계획도시 기본계획(현재 용도지역 ${zone||'미확인'})`; }
+  else if(fp&&fp[2]){
+    base=fp[2];
+    const rule=basis==='national-ceiling'?'국토계획법 시행령 법정 상한(지자체 조례 미확인)':`${fp[3]} 도시계획조례 정비사업 한도`;
+    lab=`${zone} ${rule} ${base}% · 토지이음 ${verdict} ${fp[4]} (${checked})`;
+    if(donor) lab+=` · 표본 ${donor.split('|')[0]}`;
+    if(zones.length>1) lab+=` · ${zones.join('·')} 중 가장 낮은 한도`;
+  }
+  else {
+    const [old]=farOld(d); base=Math.max(200,Math.min(280,Math.round((old+40)/10)*10));
+    lab=`용도지역 자동조사 미완료 · 기존 ${old}%에 40%p를 더한 임시 보수값(법정·정비계획 수치 아님)`;
+  }
   const rw=f?f[5]:null;
   if(rw!=null&&rw<6900){ const h=airH(rw);
     if(h<100){ const v=Math.max(200,Math.round(base*h/100)); lab=`수원비행장 고도제한(활주로 ${Math.round(rw/100)/10}km · 허용 약 ${Math.round(h)}m)`; return [v,lab,.2]; } }
