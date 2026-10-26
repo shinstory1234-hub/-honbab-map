@@ -56,6 +56,9 @@ function locNew(d){ const g=d.g||{};
   if((g.sts||[]).some(([n,m])=>/신분당/.test(n)&&walkMin(m)<=15)){ lp=LINEP.S; lpl='신분당선'; }
   if(typeof FUTPOS!=='undefined'&&FUTPOS&&g.lat) FUT.forEach((F,k)=>{ const f=FUTPOS[k]; if(!f) return; const pr=F[4]!=null?F[4]:/GTX/.test(F[1])?LINEP.G:/신분당/.test(F[1])?LINEP.S:/월판/.test(F[1])?LINEP.WP:0;   // 인동선은 역마다: 인덕원(GTX-C·4호선·월판선)·동탄(GTX-A·SRT) 환승 허브까지 2정거장 이내 +9%, 3~4정거장 +4%, 그 밖 0(판단) if(!pr) return;
     if(walkMin(hav(g.lat,g.lng,f[0],f[1]))>15) return; const v=pr*Math.max(.8,1-.05*(F[2]-2026)); if(v>lp){ lp=v; lpl=`${F[0].split(' ')[0]} ${F[1].replace(/\(.*?\)/g,'')}(${F[2]} 예정)`; } });
+  // GTX 한 정거장 환승권(판단, 2026.10.26): 도보 10분 안 지하철역이 있고 GTX 역(운행·예정)이 2.5km 안이면 GTX 프리미엄의 절반(개통 전 할인 동일)
+  if(lp<LINEP.G/2&&wm!=null&&wm<=10&&typeof FUTPOS!=='undefined'&&FUTPOS&&g.lat) FUT.forEach((F,k)=>{ const f=FUTPOS[k]; if(!f||!/GTX/.test(F[1])) return;
+    const m=hav(g.lat,g.lng,f[0],f[1]); if(m>2500||walkMin(m)<=15) return; const v=LINEP.G/2*Math.max(.8,1-.05*(F[2]-2026)); if(v>lp){ lp=v; lpl=`${F[0].split(' ')[0]} GTX 한 정거장 환승권(${F[2]} 예정)`; } });
   d.locV=Math.log(base)+wa+fa+lp;
   d.locParts={base,base0,dw,own,wm,wa,wa0,fa,lp,lpl,wf,fut:wf!=null?d.fut:null,ppp:Math.round(Math.exp(d.locV))};
   const futLp=/예정/.test(lpl)?lp:0; d.loc0=(wf!=null||futLp)?Math.round(s4Pct(S4Q.LOC,d.locV-wa+wa0-futLp)*10)/10:null;            // 예정 역을 빼면 입지 백분위
