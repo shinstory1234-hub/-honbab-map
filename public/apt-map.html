@@ -338,6 +338,15 @@ try{GEO=JSON.parse(localStorage.getItem('apt6geo_'+GEO_V)||'{}')||{};}catch(e){G
 /* 입지 데이터(좌표·역·초등학교·학원·높이)는 서버에서 한 번 계산해 고정한 값을 우선 사용 — 방문자마다 순위가 달라지지 않게 */
 if(window.UGEO){ for(const [k,v] of Object.entries(UGEO)) GEO[k]=Object.assign({},v,{gv:1}); }
 if(window.GEOFIX){ for(const [k,v] of Object.entries(GEOFIX)) GEO[k]=k==='__fut2'?v:Object.assign({},v,{gv:1}); }
+/* 좌표 보충(2026.10.26): 카카오·서버 지오코딩이 계속 실패해 '계산 중'으로 남던 단지. 같은 자리 단지·DB(bt_geo) 조사값으로 채움 */
+const GEOADD={
+  '매화주공14단지2차|군포시 산본동':{lat:37.37479,lng:126.93611,st:687,stn:'금정역',sts:[['금정역 1호선',687],['금정역 4호선',687],['명학역 1호선',1074]],sc:210,ac:74},   // 같은 블록 '매화'(산본동 1055) 값
+  '은하수샛별5,6단지|안양 동안구 비산동':{lat:37.395,lng:126.9524,st:600,stn:'범계역',sts:[['범계역 4호선',600],['평촌역 4호선',1015],['명학역 1호선',1885]],sc:215,ac:216},   // 같은 블록 샛별한양6(1109) 값
+  '삼산타운2단지두산위브|인천 부평구 삼산동':{lat:37.51535,lng:126.73709,st:1052,stn:'굴포천역',sts:[['굴포천역 7호선',1052]],sc:243,ac:202,dh:-2},   // DB bt_geo '삼산타운2단지' 서버 조사값
+  '중앙하이츠빌2단지|서울 성북구 정릉동':{sc:410,ac:356}   // 초등학교·학원만 비어 있어 566m 옆 정릉우성 값
+};
+for(const [k,v] of Object.entries(GEOADD)) GEO[k]=Object.assign({cat:'부동산 > 주거시설 > 아파트'},GEO[k]||{},v,{gv:1});
+const GEOOUT=new Set(['시흥동 현대982|서울 금천구 시흥동']);   // 정확한 위치 확인 불가(지번 982 실거래·지오코딩 없음) — 순위 제외
 const saveGeo=()=>{try{localStorage.setItem('apt6geo_'+GEO_V,JSON.stringify(GEO));}catch(e){}};
 const gkey=d=>d.n+'|'+d.area;
 /* 구간 선형보간: 계단식 점수표를 연속 함수로(경계에서 점수가 툭 끊기지 않게) */
@@ -447,6 +456,7 @@ function fixUnits(A){ const g={}; A.forEach(d=>{ const k=d.area+'|'+d.units+'|'+
     const k=a.filter(d=>!drop.has(d)); if(k.length>1) k.forEach(d=>{ d.unitsRaw=d.units; d.unitsN=k.length; d.units=Math.round(d.units/k.length); }); });
   return A.filter(d=>!drop.has(d)); }
 const D=fixUnits(PICKS.map(d=>({...d,opt:(window.OPT||{})[d.n]||null})).filter(d=>{
+  if(GEOOUT.has(gkey(d))) return false;
   const rr=RIGHTS_BLOCK.get(gkey(d));
   if(rr){ RIGHTSOUT.push([d.n,d.area,rr.date,rr.why]); return false; }
   if(!d.opt&&isOfficeType(d)){ SMALLOUT.push([d.n,d.area]); return false; }   // 사이트 범위(정책): 고밀(용적률 350% 이상) 소형 전용 단지 = 오피스텔형은 가족 실거주 아파트 추천 대상에서 제외
@@ -1012,6 +1022,7 @@ function renderDetail(i){
   if(m.gap!=null) h+=`<div class="em"><dt>전세 끼고 매수<small>전세 ${eok(d.jeon)} · 전세가율 ${Math.round(d.jeon/d.p*100)}%</small></dt><dd>${eok(m.gap)}</dd></div>`;
   if(m.first!=null) h+=`<div class="em"><dt>생애최초 주담대<small>LTV 70% · 실거주 2년</small></dt><dd>${eok(m.first)}</dd></div>`;
   h+=`<div><dt>${m.first!=null?'일반 주담대':'대출 끼고 실거주'}<small>${esc(m.note)}</small></dt><dd>${eok(m.cash)}</dd></div>
+    <div class="em" style="grid-column:1/-1"><dt>⚠️ 대출 금액은 참고용</dt><dd style="font-size:13px;font-weight:600;line-height:1.55;white-space:normal;text-align:left">실제 대출 한도는 소득(DSR)·신용·보유 주택 수·지역 규제·금리에 따라 크게 달라집니다. 이 계산만 믿고 자금을 준비하지 마시고, 반드시 은행 상담으로 실제 한도를 확인하세요.</dd></div>
     <div><dt>규제</dt><dd>${d.reg==='free'?'비규제 · 전세 끼고 매수 가능':'토지거래허가 · 실거주 2년'}</dd></div></dl></section>`;
   const S=sibs(d);
   if(S.length>1) h+=`<section class="sec"><h3>이 단지 6억 이하 평형 <small>평형마다 따로 채점한 순위</small></h3><div class="cmp tnum">${S.map(x=>`<div${x===d?' class="me"':''} data-sib="${D.indexOf(x)}" style="cursor:pointer"><span class="n">${x.py}평 · ${x.rank.toLocaleString()}위 · ${x.score.toFixed(1)}점 · 여력 ${x.up>=0?'+':''}${Math.round(x.up*100)}%</span><span class="v">${eok(x.p)}</span>${bar(x.p,60000)}</div>`).join('')}</div>${d.alt&&d.sub?`<p class="note">위 단지 소개 원고는 ${d.basePy}평 기준입니다.</p>`:''}</section>`;
