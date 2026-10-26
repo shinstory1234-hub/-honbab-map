@@ -79,6 +79,13 @@ function s4BlendOwnLarge(d,fw){ const b=d.bench||{}, n=b.name||''; if(!b.ppp||!/
   const age=2026-d.year, [mk]=microAdj(d,'gen'); const own=b.ppp/(Math.exp(AGEC(age))*SIZE(bpy,age)*mk);
   d.s4own=Math.round(own); return Math.round(Math.exp((1-S4BLEND)*Math.log(fw)+S4BLEND*Math.log(own))); }
 const OLDW=window.OLDW_OVERRIDE??10;   // 원천레이크파크 6→약 40위, 벽산5단지 43→약 90위(판단)
+/* 전고점: 2021-07~2022-06 상위 3건 평균(2건 이상, 현재 DB와 동일한 반올림 5㎡ 구간), 현재 거래수 n 가중 단지 비율.
+   2022-07 이후 입주 등 비교 거래가 없으면 가점 없음. W=10은 상위권 구성 시뮬레이션 뒤 제한한 판단값(예측력 실증 아님). */
+const PEAKW=window.PEAKW_OVERRIDE??10;
+function s4PeakRatio(d){
+  const dong=(d.area||'').trim().split(/\s+/).pop(), r=(window.PEAK||{})[d.n+'|'+dong];
+  return typeof r==='number'&&Number.isFinite(r)&&r>=.95?r:null;
+}
 /* 종합 */
 function s4Score(d){ const Q=S4Q, C=window.S4CFG||{factors:['U7','A','E','J'],locMix:.5,upW:.2};
   const J=s4J(d), v={U7:d.U7,A:d.A,E:d.E,J};
@@ -90,9 +97,10 @@ function s4Score(d){ const Q=S4Q, C=window.S4CFG||{factors:['U7','A','E','J'],lo
   const age=2026-d.year, noIssue=stOf(d)<35&&!isRemodel(d)&&!(d.m&&d.m.rm), oldp=noIssue?OLDW*clamp01((age-15)/10)*(1-((d.m&&d.m.fz&&d.m.fz.f)||0)*clamp01((age-25)/5))*(1-(d.areaMv||0)):0;   // × (1 − 동네 정비 진행률)   // 25→30년차에 사업성(f) 좋은 단지는 재건축 기대가 유인이라 감점을 덜어 줌
   // 입지가 좋을수록 구축 감점을 덜어 줌(판단, 2026.10.26): 재건축이 어려워도 좋은 자리는 실거주 수요가 버팀 — 입지 백분위 80→100에서 감점 ×1→×0.5
   const dp=((d.dead||0)*(typeof DEAD!=='undefined'&&DEAD.comp||0)+oldp)*(1-.5*clamp01((pLoc-80)/20)); d.oldp=oldp;
-  const lead=fs.length?(1-C.locMix)*ld+C.locMix*pLoc:pLoc, comp=(1-C.upW)*lead+C.upW*pUp-dp;
-  d.s4={pU:p.U7,pA:p.A,pE:p.E,pJ:p.J,ld,pUp,pLoc,J,dp};
-  const pc=s4Pct(Q.COMP,comp); d.score=comp; d.comp=comp;                     // 점수 = 세 백분위의 가중평균 그대로(백분위의 백분위는 상위권이 99점대로 뭉쳐 차이가 안 보였음)
+  const peakR=s4PeakRatio(d), peakBonus=peakR==null?0:PEAKW*clamp01((peakR-1)/.10);
+  const lead=fs.length?(1-C.locMix)*ld+C.locMix*pLoc:pLoc, comp=(1-C.upW)*lead+C.upW*pUp-dp+peakBonus;
+  d.s4={pU:p.U7,pA:p.A,pE:p.E,pJ:p.J,ld,pUp,pLoc,J,dp,peakR,peakBonus};
+  const pc=s4Pct(Q.COMP,comp); d.score=comp; d.comp=comp;                     // 기본 백분위 가중평균 − 구축 감점 + 전고점 가점(최대 PEAKW점). 100점 초과 가능
   d.top=Math.max(.1,Math.round((100-pc)*10)/10);                                   // 상위 x%
   d.urank=Math.max(1,Math.round((100-pc)/100*((C.complexes)||4708))); }           // 약 N위/4,708단지
 const s4RankTxt=d=>{ const n=(typeof D!=='undefined'&&D.length)||1, r=d.rank||d.urank||0, t=Math.max(.1,r/n*100); return `이 화면 상위 ${t<1?t.toFixed(1):Math.max(1,Math.round(t))}% · ${r.toLocaleString()}위/${n.toLocaleString()}개 평형`; };
