@@ -25,30 +25,33 @@ for(const page of pages){
   const id=JSON.stringify([b.sgg,b.name,b.dong,b.ab]);bandIds.add(id);
   const row=JSON.stringify([b.sgg,b.name,b.dong,b.by,b.ab,b.n,b.cur,b.peak]);
   if(seen.has(row))throw new Error('Duplicate current-row evidence');seen.add(row);
-  const key=JSON.stringify([b.sgg,b.name,b.dong]);const c=complexes.get(key)||{sgg:b.sgg,name:b.name,dong:b.dong,weight:0,weighted:0,bands:0};
+  const key=JSON.stringify([b.sgg,b.name,b.dong]);const c=complexes.get(key)||{sgg:b.sgg,name:b.name,dong:b.dong,weight:0,weighted:0,bands:0,years:new Set()};
+  if(Number.isInteger(b.by))c.years.add(b.by);
   c.weight+=Number(b.n);c.weighted+=b.r*Number(b.n);c.bands++;complexes.set(key,c);bandCount++;
  }
  offset=next;
 }
 if(offset!==total)throw new Error('Evidence does not cover all current bands');
 const byKey=new Map();for(const c of complexes.values()){const key=c.name+'|'+c.dong;const items=byKey.get(key)||[];items.push(c);byKey.set(key,items);}
-const output={},collisions=[];
+const output={},peerBase={},collisions=[];
 for(const [key,items] of [...byKey].sort(([a],[b])=>a.localeCompare(b,'ko'))){
  // name|dong cannot distinguish same-named complexes in different districts.
  if(items.length!==1){collisions.push(key);continue;}
  const c=items[0],r=c.weighted/c.weight;if(r>=.95)output[key]=+r.toFixed(6);
+ if(c.years.size===1&&[...c.years][0]>=2015)peerBase[key]=[+r.toFixed(6),[...c.years][0],c.weight];
 }
 // Editorial display names are connected only through audited, explicit aliases.
 const aliasFile=path.join(root,'scripts/apt-peak-aliases.json');
 const aliases=fs.existsSync(aliasFile)?JSON.parse(fs.readFileSync(aliasFile,'utf8')):{};
 let appliedAliases=0;
 for(const [display,source] of Object.entries(aliases)){
+ if(peerBase[source])peerBase[display]=peerBase[source];
  if(output[source]==null)continue;
  if(output[display]!=null&&output[display]!==output[source])throw new Error('Conflicting display alias');
  output[display]=output[source];appliedAliases++;
 }
 const digest=createHash('sha256').update(raw).digest('hex');
-const meta={period:['2021-07-01','2022-06-30'],method:'top 3 uncanceled amounts per round(area/5)*5 band, at least 2; cur/mean weighted by bt_aggcur.n',tasks:924,trades:status.rows,currentRows:total,eligibleCurrentRows:bandCount,eligibleBands:bandIds.size,eligibleComplexes:complexes.size,exportedComplexes:Object.keys(output).length-appliedAliases,exportedKeys:Object.keys(output).length,omittedAmbiguousKeys:collisions,appliedAliases,evidenceSha256:digest};
-fs.writeFileSync(path.join(root,'public/apt-peak.js'),'/* 2021-07~2022-06 전고점 대비 현재 시세. 생성: scripts/build-apt-peak.mjs; 근거: docs/apt-peak.md */\nwindow.PEAK='+JSON.stringify(output)+';\n');
+const meta={period:['2021-07-01','2022-06-30'],method:'top 3 uncanceled amounts per round(area/5)*5 band, at least 2; cur/mean weighted by bt_aggcur.n',tasks:924,trades:status.rows,currentRows:total,eligibleCurrentRows:bandCount,eligibleBands:bandIds.size,eligibleComplexes:complexes.size,exportedComplexes:Object.keys(output).length-appliedAliases,exportedKeys:Object.keys(output).length,omittedAmbiguousKeys:collisions,appliedAliases,peerEvidenceKeys:Object.keys(peerBase).length,evidenceSha256:digest};
+fs.writeFileSync(path.join(root,'public/apt-peak.js'),'/* 2021-07~2022-06 전고점 대비 현재 시세. 생성: scripts/build-apt-peak.mjs; 근거: docs/apt-peak.md */\nwindow.PEAK='+JSON.stringify(output)+';\nwindow.PEAK_PEER_BASE='+JSON.stringify(peerBase)+';\n');
 fs.writeFileSync(path.join(root,'scripts/apt-peak-metadata.json'),JSON.stringify(meta,null,2)+'\n');
 console.log(JSON.stringify(meta,null,2));
