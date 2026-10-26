@@ -854,10 +854,15 @@ const badgeHTML=d=>[{label:d.tier.k,color:d.tier.c},...cardFeatures(d).map(k=>FE
 const FILTERS=[['all','전체'],['top','핵심 1~30'],['mid','유망 31~300'],['interest','관심 301~1,000'],['explore','탐색 1,001+'],['신축','신축'],['학군','학군'],['재건축','재건축'],['리모델링','리모델링'],['천지개벽','천지개벽'],['역세권','역세권'],['초품아','초품아'],['대단지','대단지'],['신설역','신설역'],['반도체','반도체'],['소형할인','소형 할인'],['flat','평지'],['job50','출근 50분'],['free','비규제']];
 const state={f:'all',pb:'all',q:'',sel:null,lim:50};
 const PB=[['all','전체 가격'],['3','3억 이하',0,30000],['4','3~4억',30000,40000],['5','4~5억',40000,50000],['6','5~6억',50000,60001]];
+/* 검색용 신도시·생활권 이름(법정동 이름에 안 들어 있어 '운정'·'동탄' 등으로 검색이 안 되던 문제) */
+const TOWN=[[/^파주/,/동패동|목동동|와동동|야당동|다율동|당하동|상지석동/,'운정'],[/^화성/,/청계동|영천동|오산동|산척동|목동|송동|여울동|장지동|방교동|신동|중동|능동|반송동|석우동/,'동탄'],
+  [/^수원|^용인/,/이의동|하동|원천동|상현동/,'광교'],[/^하남|^성남/,/학암동|창곡동/,'위례'],[/^김포/,/장기동|운양동|구래동|마산동|양촌읍/,'한강신도시'],[/^양주/,/옥정동|회천/,'옥정'],
+  [/^하남/,/망월동|선동|풍산동/,'미사'],[/^남양주/,/다산동/,'다산'],[/^인천/,/청라동/,'청라'],[/^인천/,/송도동/,'송도'],[/^고양/,/삼송동|동산동|원흥동|지축동|향동동|덕은동/,'삼송·원흥·지축·향동']];
+const townOf=d=>{ const dong=d.area.split(' ').pop(); return TOWN.filter(([r,dr])=>r.test(d.area)&&dr.test(dong)).map(t=>t[2]).join(' '); };
 const visible=d=>{
   const f=state.f, ok=f==='all'||(f==='top'&&d.rank<=30)||(f==='mid'&&d.rank>30&&d.rank<=300)||(f==='interest'&&d.rank>300&&d.rank<=1000)||(f==='explore'&&d.rank>1000)||(f==='flat'&&isFlat(d))||(f==='job50'&&jobMin(d)!=null&&jobMin(d)<=50)||(f==='free'&&d.reg==='free')||hasFeature(d,f);
   const pb=PB.find(x=>x[0]===state.pb); const okp=state.pb==='all'||(cashOf(d)>pb[2]&&cashOf(d)<=pb[3])||(state.pb==='3'&&cashOf(d)<=30000);
-  return ok&&okp&&(!state.q||(d.n+d.area+d.headline).includes(state.q));
+  return ok&&okp&&(!state.q||(d.n+d.area+d.headline+townOf(d)).includes(state.q));
 };
 
 function renderList(){

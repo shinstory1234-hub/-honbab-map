@@ -59,6 +59,10 @@ function locNew(d){ const g=d.g||{};
   // GTX 한 정거장 환승권(판단, 2026.10.26): 도보 10분 안 지하철역이 있고 GTX 역(운행·예정)이 2.5km 안이면 GTX 프리미엄의 절반(개통 전 할인 동일)
   if(lp<LINEP.G/2&&wm!=null&&wm<=10&&typeof FUTPOS!=='undefined'&&FUTPOS&&g.lat) FUT.forEach((F,k)=>{ const f=FUTPOS[k]; if(!f||!/GTX/.test(F[1])) return;
     const m=hav(g.lat,g.lng,f[0],f[1]); if(m>2500||walkMin(m)<=15) return; const v=LINEP.G/2*Math.max(.8,1-.05*(F[2]-2026)); if(v>lp){ lp=v; lpl=`${F[0].split(' ')[0]} GTX 한 정거장 환승권(${F[2]} 예정)`; } });
+  // GTX 버스·연계 접근권(판단, 2026.10.26): 도보 15분(1.2km) 밖이어도 4km까지는 버스 등으로 이용 — 프리미엄 절반에서 거리에 따라 0으로
+  if(typeof FUTPOS!=='undefined'&&FUTPOS&&g.lat) FUT.forEach((F,k)=>{ const f=FUTPOS[k]; if(!f||!/GTX/.test(F[1])) return;
+    const m=hav(g.lat,g.lng,f[0],f[1]); if(walkMin(m)<=15||m>4000) return; const v=LINEP.G/2*clamp01((4000-m)/(4000-1200))*Math.max(.8,1-.05*(F[2]-2026));
+    if(v>lp){ lp=v; lpl=`${F[0].split(' ')[0]} GTX 버스·연계 접근(${(m/1000).toFixed(1)}km · ${F[2]} 예정)`; } });
   d.locV=Math.log(base)+wa+fa+lp;
   d.locParts={base,base0,dw,own,wm,wa,wa0,fa,lp,lpl,wf,fut:wf!=null?d.fut:null,ppp:Math.round(Math.exp(d.locV))};
   const futLp=/예정/.test(lpl)?lp:0; d.loc0=(wf!=null||futLp)?Math.round(s4Pct(S4Q.LOC,d.locV-wa+wa0-futLp)*10)/10:null;            // 예정 역을 빼면 입지 백분위
@@ -84,7 +88,8 @@ function s4Score(d){ const Q=S4Q, C=window.S4CFG||{factors:['U7','A','E','J'],lo
   // 구축 감점: ① 재건축 막힌 구축 20 × z(apt-map.html DEAD) ② 정비 이슈 없는 구축(공식 단계 35 미만 · 리모델링 아님) — 사람들이 들어갈 유인이 적음(판단):
   //   15년차 0 → 25년차 OLDW점, 그 뒤 유지. 두 감점은 더함(큰 쪽만 쓰면 다른 구축이 내려가며 막힌 구축이 상대적으로 올라감)
   const age=2026-d.year, noIssue=stOf(d)<35&&!isRemodel(d)&&!(d.m&&d.m.rm), oldp=noIssue?OLDW*clamp01((age-15)/10)*(1-((d.m&&d.m.fz&&d.m.fz.f)||0)*clamp01((age-25)/5))*(1-(d.areaMv||0)):0;   // × (1 − 동네 정비 진행률)   // 25→30년차에 사업성(f) 좋은 단지는 재건축 기대가 유인이라 감점을 덜어 줌
-  const dp=(d.dead||0)*(typeof DEAD!=='undefined'&&DEAD.comp||0)+oldp; d.oldp=oldp;
+  // 입지가 좋을수록 구축 감점을 덜어 줌(판단, 2026.10.26): 재건축이 어려워도 좋은 자리는 실거주 수요가 버팀 — 입지 백분위 80→100에서 감점 ×1→×0.5
+  const dp=((d.dead||0)*(typeof DEAD!=='undefined'&&DEAD.comp||0)+oldp)*(1-.5*clamp01((pLoc-80)/20)); d.oldp=oldp;
   const lead=fs.length?(1-C.locMix)*ld+C.locMix*pLoc:pLoc, comp=(1-C.upW)*lead+C.upW*pUp-dp;
   d.s4={pU:p.U7,pA:p.A,pE:p.E,pJ:p.J,ld,pUp,pLoc,J,dp};
   const pc=s4Pct(Q.COMP,comp); d.score=comp; d.comp=comp;                     // 점수 = 세 백분위의 가중평균 그대로(백분위의 백분위는 상위권이 99점대로 뭉쳐 차이가 안 보였음)
