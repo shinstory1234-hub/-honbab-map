@@ -47,6 +47,7 @@ a{color:inherit;text-decoration:none}
 .notice-actions .decline{border:1px solid var(--border);color:var(--text-secondary)}
 .notice-actions .agree{background:var(--primary);color:#fff}
 .notice-actions .agree:disabled{cursor:not-allowed;opacity:.35}
+.linkbtn{color:var(--primary-soft-fg);text-decoration:underline;font-size:inherit;padding:0}
 @media(max-width:520px){.notice-gate{padding:0;align-items:flex-end}.notice-card{max-height:94dvh;padding:24px 20px calc(20px + env(safe-area-inset-bottom));border-radius:12px 12px 0 0}.notice-actions{grid-template-columns:1fr}.notice-actions .agree{order:-1}}
 
 /* ── masthead ── */
@@ -250,7 +251,7 @@ aside{order:-1;width:408px;flex:none;border-right:1px solid var(--border);backgr
     <div class="notice-list">
       <div class="notice-item"><h3>1. 주관적인 평가</h3><p>최대한 객관적으로 평가했지만 제작자의 주관이 반영되어 있습니다. 높은 점수가 미래 수익률을 보장하지 않습니다.</p></div>
       <div class="notice-item"><h3>2. 데이터 오류 가능성</h3><p>현재 1차 배포 버전으로, 일부 데이터가 부정확하거나 누락되었을 수 있습니다.</p></div>
-      <div class="notice-item"><h3>3. 재건축 단지 고평가 가능성</h3><p>재건축 사업성 평가에 중요한 대지지분 데이터를 확보하지 못해 평가에 반영하지 않았습니다. 이로 인해 일부 재건축 단지는 실제 사업성이나 투자 가치보다 높은 점수를 받았을 수 있으므로, 재건축 단지의 순위는 특히 주의해서 참고해 주세요.</p></div>
+      <div class="notice-item"><h3>3. 재건축 단지 고평가 가능성</h3><p>재건축 사업성 평가에 중요한 대지지분 데이터를 일부 단지만 확보해, 나머지 단지는 주변 단지 자료로 추정해 반영했습니다. 이로 인해 일부 재건축 단지는 실제 사업성이나 투자 가치보다 높은 점수를 받았을 수 있으므로, 재건축 단지의 순위는 특히 주의해서 참고해 주세요.</p></div>
       <div class="notice-item"><h3>4. 실거래가와 호가 차이</h3><p>최근 6억 원 이하 아파트 가격이 빠르게 상승하면서 실거래가와 현재 호가 사이에 차이가 발생하고 있습니다. 특히 <strong>실거래가는 낮지만 현재 호가가 크게 오른 단지는 모델이 실제보다 높은 점수를 부여했을 가능성이 있습니다.</strong></p></div>
     </div>
     <label class="notice-check"><input type="checkbox" id="noticeCheck"><span>위 유의사항을 모두 확인했으며, 본 지도의 평가 결과가 참고용임을 이해하고 동의합니다.</span></label>
@@ -860,10 +861,11 @@ function renderList(){
   if(list.length>state.lim) h+=`<button class="btn ghost more" id="more" style="display:block;margin:12px auto;width:calc(100% - 32px)">${Math.min(100,list.length-state.lim)}개 더 보기 · 남은 ${(list.length-state.lim).toLocaleString()}개</button>`;
   if(!list.length) h+=`<p class="source">조건에 맞는 단지가 없습니다.</p>`;
   h+=`${RIGHTSOUT.length?`<section class="excluded"><h2>권리 확인 전 순위 제외 <small>현금청산 위험 거래 오인 방지</small></h2><ul>${RIGHTSOUT.map(e=>`<li>${esc(e[0])} · ${esc(e[1])}<b class="tnum">기준 ${esc(e[2])}</b><span>${esc(e[3])} · 개별 매물의 조합원 지위 양도 가능 여부가 확인되면 다시 평가</span></li>`).join('')}</ul></section>`:''}<section class="excluded"><h2>최근 하락 지역 <small>2025.6~2026.9 누적 · 순위에는 포함</small></h2><ul>${EXCLUDED.map(e=>`<li>${esc(e[0])}<b class="tnum">${esc(e[1])}</b><span>${esc(e[2])}</span></li>`).join('')}</ul></section>
-  <p class="source">상승률: 한국부동산원·KB 주간 아파트 동향(10월 2주), 누적 하락은 한국부동산원(파이낸셜뉴스 2026.9.21 인용). 시세·실거래: 리치고(국토부 실거래). 점수는 투자 권유가 아니라 비교용 지표입니다.</p>`;
+  <p class="source">상승률: 한국부동산원·KB 주간 아파트 동향(10월 2주), 누적 하락은 한국부동산원(파이낸셜뉴스 2026.9.21 인용). 시세·실거래: 리치고(국토부 실거래). 점수는 투자 권유가 아니라 비교용 지표입니다. <button type="button" class="linkbtn" id="noticeOpen">이용 유의사항</button></p>`;
   b.innerHTML=h;
   b.querySelectorAll('.filters button[data-f]').forEach(x=>x.onclick=()=>{state.f=x.dataset.f;state.lim=50;render();});
   b.querySelectorAll('.filters button[data-pb]').forEach(x=>x.onclick=()=>{state.pb=x.dataset.pb;state.lim=50;render();});
+  const no=b.querySelector('#noticeOpen'); if(no) no.onclick=()=>{ noticeCheck.checked=false; noticeAgree.disabled=true; noticeError.textContent=''; noticeGate.hidden=false; noticeCheck.focus(); };
   const mb=b.querySelector('#more'); if(mb) mb.onclick=()=>{ const y=b.scrollTop; state.lim+=100; renderList(); b.scrollTop=y; };
   b.querySelectorAll('.row').forEach(x=>x.onclick=()=>select(+x.dataset.i,true));
 }
