@@ -1,0 +1,18 @@
+{
+  "period": [
+    "2021-07-01",
+    "2022-06-30"
+  ],
+  "method": "top 3 uncanceled amounts per round(area/5)*5 band, at least 2; cur/mean weighted by bt_aggcur.n",
+  "tasks": 924,
+  "trades": 121560,
+  "currentRows": 27293,
+  "eligibleCurrentRows": 13977,
+  "eligibleBands": 13968,
+  "eligibleComplexes": 8228,
+  "exportedComplexes": 3458,
+  "exportedKeys": 3459,
+  "omittedAmbiguousKeys": [],
+  "appliedAliases": 1,
+  "evidenceSha256": "1dd7f1dd05275dee7c7e4a4c0b736112370834ba9ae29f62ddd891c8d75d7bff"
+}

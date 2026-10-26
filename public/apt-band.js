@@ -4,7 +4,7 @@
 window.S10PLAUS=[[.25,.2],[.5,.1],[.5,.2],[.5,.3],[.75,.2]];   // 채택 설정(세대수 40%·입지 40%·여력 20%) 주변
 function s10Band(){ const n=D.length, M=D.map(()=>[]);
   for(const [lm,uw] of S10PLAUS){
-    const sc=D.map((d,i)=>{ const s=d.s4; if(!s) return -1; return (1-uw)*((1-lm)*s.pU+lm*s.pLoc)+uw*s.pUp-(s.dp||0); });
+    const sc=D.map((d,i)=>{ const s=d.s4; if(!s) return -1; return (1-uw)*((1-lm)*s.pU+lm*s.pLoc)+uw*s.pUp-(s.dp||0)+(s.peakBonus||0); });
     const o=sc.map((v,i)=>i).sort((a,b)=>sc[b]-sc[a]); o.forEach((i,r)=>M[i].push(r+1)); }
   D.forEach((d,i)=>{ const v=M[i].slice().sort((a,b)=>a-b), med=v[Math.floor(v.length/2)];
     d.band=[med,v[0],v[v.length-1]];
