@@ -853,8 +853,9 @@ const hasFeature=(d,key)=>featureKeys(d).includes(key);
 const badgeHTML=d=>[{label:d.tier.k,color:d.tier.c},...cardFeatures(d).map(k=>FEATURE_META[k]&&{label:FEATURE_META[k].label,color:FEATURE_META[k].color}).filter(Boolean)]
   .map(x=>`<span class="chip" style="--chip:${x.color}">${esc(x.label)}</span>`).join('');
 const FILTERS=[['all','전체'],['top','핵심 1~30'],['mid','유망 31~300'],['interest','관심 301~1,000'],['explore','탐색 1,001+'],['신축','신축'],['학군','학군'],['재건축','재건축'],['리모델링','리모델링'],['천지개벽','천지개벽'],['역세권','역세권'],['초품아','초품아'],['대단지','대단지'],['신설역','신설역'],['반도체','반도체'],['소형할인','소형 할인'],['flat','평지'],['job50','출근 50분'],['free','비규제']];
-const state={f:'all',pb:'all',q:'',sel:null,lim:50};
+const state={f:'all',pb:'all',size:'all',q:'',sel:null,lim:50};
 const PB=[['all','전체 가격'],['3','3억 이하',0,30000],['4','3~4억',30000,40000],['5','4~5억',40000,50000],['6','5~6억',50000,60001]];
+const SIZES=[['all','전체 평형'],['10','10평대',10,20],['20','20평대',20,30],['30','30평 이상',30,Infinity]];
 /* 검색용 신도시·생활권 이름(법정동 이름에 안 들어 있어 '운정'·'동탄' 등으로 검색이 안 되던 문제) */
 const TOWN=[[/^파주/,/동패동|목동동|와동동|야당동|다율동|당하동|상지석동/,'운정'],[/^화성/,/청계동|영천동|오산동|산척동|목동|송동|여울동|장지동|방교동|신동|중동|능동|반송동|석우동/,'동탄'],
   [/^수원|^용인/,/이의동|하동|원천동|상현동/,'광교'],[/^하남|^성남/,/학암동|창곡동/,'위례'],[/^김포/,/장기동|운양동|구래동|마산동|양촌읍/,'한강신도시'],[/^양주/,/옥정동|회천/,'옥정'],
@@ -863,7 +864,8 @@ const townOf=d=>{ const dong=d.area.split(' ').pop(); return TOWN.filter(([r,dr]
 const visible=d=>{
   const f=state.f, ok=f==='all'||(f==='top'&&d.rank<=30)||(f==='mid'&&d.rank>30&&d.rank<=300)||(f==='interest'&&d.rank>300&&d.rank<=1000)||(f==='explore'&&d.rank>1000)||(f==='flat'&&isFlat(d))||(f==='job50'&&jobMin(d)!=null&&jobMin(d)<=50)||(f==='free'&&d.reg==='free')||hasFeature(d,f);
   const pb=PB.find(x=>x[0]===state.pb); const okp=state.pb==='all'||(cashOf(d)>pb[2]&&cashOf(d)<=pb[3])||(state.pb==='3'&&cashOf(d)<=30000);
-  return ok&&okp&&(!state.q||(d.n+d.area+d.headline+townOf(d)).includes(state.q));
+  const size=SIZES.find(x=>x[0]===state.size), oks=state.size==='all'||(d.py>=size[2]&&d.py<size[3]);
+  return ok&&okp&&oks&&(!state.q||(d.n+d.area+d.headline+townOf(d)).includes(state.q));
 };
 
 function renderList(){
@@ -887,6 +889,7 @@ function renderList(){
     </dl></details>
   </section>
   <div class="filters pb" role="group" aria-label="가격대">${PB.map(([k,l])=>`<button data-pb="${k}" aria-pressed="${state.pb===k}">${l}</button>`).join('')}</div>
+  <div class="filters pb" role="group" aria-label="평형(공급면적 기준)">${SIZES.map(([k,l])=>`<button data-size="${k}" aria-pressed="${state.size===k}">${l}</button>`).join('')}</div>
   <div class="filters" role="group" aria-label="필터">${FILTERS.map(([k,l])=>`<button data-f="${k}" aria-pressed="${state.f===k}">${l}</button>`).join('')}</div>
   <div class="count"><span>${list.length.toLocaleString()}개 평형 · 종합 점수순</span><span>시세 리치고·국토부 실거래 · 2026.10</span></div>`;
   list.slice(0,state.lim).forEach(d=>{
@@ -904,6 +907,7 @@ function renderList(){
   b.innerHTML=h;
   b.querySelectorAll('.filters button[data-f]').forEach(x=>x.onclick=()=>{state.f=x.dataset.f;state.lim=50;render();});
   b.querySelectorAll('.filters button[data-pb]').forEach(x=>x.onclick=()=>{state.pb=x.dataset.pb;state.lim=50;render();});
+  b.querySelectorAll('.filters button[data-size]').forEach(x=>x.onclick=()=>{state.size=x.dataset.size;state.lim=50;render();});
   const no=b.querySelector('#noticeOpen'); if(no) no.onclick=()=>{ noticeCheck.checked=false; noticeAgree.disabled=true; noticeError.textContent=''; noticeGate.hidden=false; noticeCheck.focus(); };
   const mb=b.querySelector('#more'); if(mb) mb.onclick=()=>{ const y=b.scrollTop; state.lim+=100; renderList(); b.scrollTop=y; };
   b.querySelectorAll('.row').forEach(x=>x.onclick=()=>select(+x.dataset.i,true));
@@ -1090,7 +1094,7 @@ const fromHash=()=>{ const h=decodeURIComponent(location.hash.slice(1)); if(!h) 
 function backToList(){ if(history.state&&history.state.apt) history.back(); else { close(); render(); history.replaceState(null,'',location.pathname+location.search); } }
 let homeB=null;
 function goHome(){                                                     // 로고: 필터·검색·선택을 모두 지우고 처음 화면(전체 목록·수도권 전체 지도)으로
-  Object.assign(state,{f:'all',pb:'all',q:'',sel:null,lim:50}); $('#q').value='';
+  Object.assign(state,{f:'all',pb:'all',size:'all',q:'',sel:null,lim:50}); $('#q').value='';
   history.replaceState(null,'',location.pathname+location.search);
   render(); $('#body').scrollTop=0;
   if(map&&homeB) map.setBounds(homeB,60,40,mobile()?150:40,40);
