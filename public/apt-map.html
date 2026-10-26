@@ -345,7 +345,9 @@ const lerp=(pts,x)=>{ if(x<=pts[0][0]) return pts[0][1]; for(let i=1;i<pts.lengt
 const clamp01=x=>Math.max(0,Math.min(1,x));
 /* 재건축 경로 가중치: 정비 단계 진입이면 1, 아니면 27→33년차에 0→1로 서서히(30년에 계산 경로가 통째로 바뀌지 않게) */
 const rbW=d=>stOf(d)>=35?1:clamp01((2026-d.year-27)/6);
-const stOf=d=>d.st!=null?d.st:(MST[d.n]||0);
+/* 정비 단계 정정(확인된 것만, 원본 단계 자료보다 우선): 상계주공2단지 — 2022.12 정밀안전진단 D등급 통과, 신탁방식·추진준비위(2026.9) */
+const STFIX={'상계주공2단지|서울 노원구 상계동':45};
+const stOf=d=>STFIX[d.n+'|'+d.area]??(d.st!=null?d.st:(MST[d.n]||0));
 const RGEN=[[0,20],[5,20],[10,17],[15,12],[20,7],[25,4],[29,2]];
 function rbScore(d){ const age=2026-d.year, w=rbW(d), g=lerp(RGEN,age), v=(1-w)*g+w*12;
   const l=w>=1?`${age}년차 · 재건축 대상(단계 가치는 상승 여력에 반영)`:w>0?`${age}년차 · 재건축 경로 ${Math.round(w*100)}% 반영`:age<=10?`${age}년차 신축급`:age<=15?`${age}년차 준신축`:`${age}년차 구축`;
@@ -695,8 +697,16 @@ function optModel(d,fair){ const o=d.opt, n=o.Y-2026, P=d.py*fair;
   const VY=P*Math.pow(1+RB.g,n);
   return {n,cost:Math.round(cost),VY:Math.round(VY),P:Math.round(P),gainY:Math.round(VY-o.K)}; }
 let LFC={};
+/* 동네 정비 진행률(천지개벽, 2026.10.26): 반경 1km 안 30년+ 단지 세대 중 공식 정비 단계(st≥35) 세대 비율. 동네 전체가 움직이면
+   개별 단지 단계가 늦어도 '정비 이슈 없는 구축' 감점을 그 비율만큼 덜어 줌(apt-s4.js) */
+function areaMove(){ const C=Object.values(SIB).map(a=>a[0]).filter(d=>d.g&&d.g.lat&&2026-d.year>=30), mv={};
+  for(const d of C){ let all=0,on=0; const c=Math.cos(d.g.lat*Math.PI/180);
+    for(const x of C){ const dy=(x.g.lat-d.g.lat)*111000; if(Math.abs(dy)>1000) continue; if(Math.hypot(dy,(x.g.lng-d.g.lng)*111000*c)>1000) continue;
+      all+=x.units; if(stOf(x)>=35) on+=x.units; }
+    mv[d.cxKey]=all?on/all:0; }
+  D.forEach(d=>{ d.areaMv=mv[d.cxKey]||0; }); }
 function recompute(){
-  LFC={}; D.forEach(score);
+  LFC={}; D.forEach(score); areaMove();
   D.forEach(d=>{
     const age=2026-d.year, J=G(), k=dkey(d), g=guTok(d);
     /* 이 동네 신축 34평 표준 평당가
@@ -733,6 +743,7 @@ function recompute(){
       if(d.rbw>0){ d.m=rbModel(d,d.kfwRb?d.kfwRb.fw:fw); ur=d.m.E/d.p-1; d.gross=d.m.gross; d.upRb=ur; }
       d.ugRaw=ug; d.urRaw=ur; d.upSrc=d.rbw>=.5?'rb':'now';
       const fz=d.m&&d.m.fz; d.dead=(!fz||d.m.rm||stOf(d)>=35)?0:clamp01((age-27)/3)*(1-fz.f);
+      if(d.dead>0&&/추정/.test(d.m.fol)) d.dead*=.5;   // 기존 용적률이 추정치면 사업성 차이가 노이즈(분담금 비율 0.28 vs 0.31에 사업성 92% vs 75%) — 막힘 판정 절반
     }
   });
   /* 같은 단지 평형들은 위치가 같음 → 일반 계산의 '주변보다 싸다'는 단지 전체(평형별 12개월 거래 가중)로 한 번만 판단.
