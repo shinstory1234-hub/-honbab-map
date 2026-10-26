@@ -398,7 +398,7 @@ const TIERS=[
 const TINY=13;   // 2026.10.24: 전용 약 32.5㎡ 미만(5㎡ 묶음 30㎡ 이하)만 제외로 완화 — 판단(37㎡대 신축 소형까지 빼는 건 과하다고 봄)
 /* 가격 기준 = 최근 시세: 최근 3개월(7.22~10.21) 실거래 5건 이상이면 그 중위, 적으면 12개월 실거래를 시·구 월별 시세지수로 오늘 기준 환산한 중위.
    직접 고른 단지도 같은 기준으로 덮어씀 — 지금 시세가 6억을 넘는 평형은 빼고, 남는 평형이 없으면 단지를 뺌 */
-const curSrc=t=>t.n3>=5?`최근 3개월 실거래 ${t.n3}건 중위`:`최근 12개월 실거래 ${t.n}건을 시세 변동만큼 오늘 기준으로 환산한 중위`;
+const curSrc=t=>t.n3>=5?`최근 3개월 실거래 ${t.n3}건 중위`:t.n3>0?`최근 3개월 ${t.n3}건 중위와 12개월 ${t.n}건 환산 중위를 ${t.n3}:2로 섞음`:`최근 12개월 실거래 ${t.n}건을 시세 변동만큼 오늘 기준으로 환산한 중위`;   // 2026.10.26: 3개월 거래가 1~4건이면 버리지 않고 건수만큼 반영(급등 단지 과소평가 방지)
 const isSmallOnly=d=>!!(window.SMALLONLY&&SMALLONLY.has(d.area.split(' ').pop()+'|'+d.n));
 const farOf=d=>{ const a=((window.FARD||{})[gkey(d)]||[])[0]||0, c=nearCx(d.g&&d.g.lat?d:{...d,g:(typeof GEO!=='undefined'&&GEO[gkey(d)])||{}}), b=c?c[4]:0; return Math.max(a<2000?a:0,b<2000?b:0); };
 const isOfficeType=d=>{ const so=window.SMALLONLY&&SMALLONLY.has(d.area.split(' ').pop()+'|'+d.n), small=so||(d.types||[{py:d.py}]).every(t=>t.py<=20); return small&&farOf(d)>=350; };
