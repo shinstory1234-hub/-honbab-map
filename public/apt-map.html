@@ -933,6 +933,7 @@ function whyLine(d){ if(!d.s4) return ''; const top=p=>{ const t=100-p; return t
   if(d.locParts&&d.locParts.lp) parts.push(`노선 +${Math.round(d.locParts.lp*100)}%(${d.locParts.lpl})`);
   if(d.locParts&&d.locParts.fut){ const f=d.locParts.fut; parts.push(`개통 예정 ${f.n}역(${f.line.replace('(신설)','')}, ${f.year}년 목표) 도보 ${Math.round(d.locParts.wf)}분 반영 — 빼면 입지 상위 ${Math.max(1,Math.round(100-d.loc0))}%`); }
   if(d.dead>=.5) parts.push(`재건축 어려움(사업성 낮음 · 여력·입지·종합 감점 −${d.s4.dp.toFixed(1)})`);
+  if(d.oldp>=3) parts.push(`정비 이슈 없는 구축(${2026-d.year}년차 · 재건축·리모델링 공식 단계 전 −${d.oldp.toFixed(1)})`);
   if(d.unitsRaw) parts.push(`세대수 추정(마을 합계 ${d.unitsRaw.toLocaleString()}세대 ÷ ${d.unitsN}단지)`);
   if(hakIn(d)) parts.push('학원가 1.5km 안'); if(isHill(d)) parts.push(`언덕 단지 · 주변 최저점보다 ${hR(d)}m 높음`);
   const pe=priceEv(d); if(pe&&pe.n<PRICE_THIN) parts.push(`가격 근거 적음(이 평형 최근 12개월 ${pe.n}건)`);
@@ -953,7 +954,7 @@ function renderDetail(i){
   <dl class="kpis tnum">
     ${d.opt?`<div><dt>지금 필요한 돈</dt><dd>${eokH(d.opt.dep)}</dd><small>${esc(d.opt.kind)} · ${d.opt.Y}년 ${eok(d.opt.K)} 매수권 · 시세 ${eok(d.p)}</small></div>`:`<div><dt>${d.py}평 시세</dt><dd>${eokH(d.p)}</dd><small>${d.reg==='free'?'비규제':'토허·실거주 2년'}${priceEv(d)?`<br>${esc(priceEvTxt(d))}`:''}</small></div>`}
     <div><dt>${esc(nd.l)}</dt><dd class="hl">${eokH(nd.v)}</dd><small>${esc(nd.x)}</small></div>
-    <div><dt>입지 점수</dt><dd class="hl">${d.loc.toFixed(1)}<i>/100</i></dd><small>${d.simple?'6억 이하 후보 단지끼리 비교한 점수':`종합 ${s4RankTxt(d)}${d.band?`<br>${s10BandTxt(d)}`:''}${d.s4?`<br>종합 ${d.score.toFixed(1)}점 = 세대수 ${d.s4.pU.toFixed(0)}×0.4 + 입지 ${d.s4.pLoc.toFixed(0)}×0.4 + 여력 ${d.s4.pUp.toFixed(0)}×0.2${d.s4.dp?` − 재건축 막힌 구축 ${d.s4.dp.toFixed(1)}`:''} (각각 수도권 6억 이하 ${((window.S4CFG||{}).types||0).toLocaleString()}개 평형 중 백분위)${d.s4.pUp>=80?' · 하락장 방어형':''}`:''}`}</small></div>
+    <div><dt>입지 점수</dt><dd class="hl">${d.loc.toFixed(1)}<i>/100</i></dd><small>${d.simple?'6억 이하 후보 단지끼리 비교한 점수':`종합 ${s4RankTxt(d)}${d.band?`<br>${s10BandTxt(d)}`:''}${d.s4?`<br>종합 ${d.score.toFixed(1)}점 = 세대수 ${d.s4.pU.toFixed(0)}×0.4 + 입지 ${d.s4.pLoc.toFixed(0)}×0.4 + 여력 ${d.s4.pUp.toFixed(0)}×0.2${d.s4.dp?` − 구축 감점 ${d.s4.dp.toFixed(1)}`:''} (각각 수도권 6억 이하 ${((window.S4CFG||{}).types||0).toLocaleString()}개 평형 중 백분위)${d.s4.pUp>=80?' · 하락장 방어형':''}`:''}`}</small></div>
     <div><dt>${d.simple?'주변 대비 가격 차이':'상승 여력'}</dt><dd class="hl">${d.up>=0?'+':''}${Math.round(d.up*100)}<i>%</i></dd><small>${d.simple?'주변 시세를 이용한 통계상 참고값 · 수익률 보장 아님':d.upSrc==='rb'?(d.m.rm?'리모델링':'재건축')+' 기대가치 기준':d.upSrc==='opt'?'확정가 매수권 기준':'같은 동네·연식 시세 기준'}</small></div>
   </dl>
   ${d.simple?trnPanel(d):''}${d.simple?`<section class="sec"><h3>단지 장점 한눈에 보기</h3><div class="score tnum">
