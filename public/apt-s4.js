@@ -142,6 +142,17 @@ function s4Score(d){ const Q=S4Q, C=window.S4CFG||{factors:['U7','A','E','J'],lo
   d.top=Math.max(.1,Math.round((100-pc)*10)/10);                                   // 상위 x%
   d.urank=Math.max(1,Math.round((100-pc)/100*((C.complexes)||4708))); }           // 약 N위/4,708단지
 const s4RankTxt=d=>{ const n=(typeof D!=='undefined'&&D.length)||1, r=d.rank||d.urank||0, t=Math.max(.1,r/n*100); return `이 화면 상위 ${t<1?t.toFixed(1):Math.max(1,Math.round(t))}% · ${r.toLocaleString()}위/${n.toLocaleString()}개 평형`; };
+/* 간략 상세에서도 지형 정보는 공개한다. 높이차(m)와 보행 부담 지수의 단위를 구분. */
+function terrainPanel(d){
+  const values=(window.DEM||{})[d.cxKey||gkey(d)]||[], R=hR(d), inside=values[1], walk=hW(d);
+  const height=x=>Number.isFinite(x)?`${x}<i>m</i>`:'자료 없음';
+  const terrain=R==null?'지형 자료 없음':R<10?'평지 기준':R>=30?'언덕 기준':'평지·언덕 사이';
+  return `<section class="sec terrain-panel"><h3>지형·경사 <small>${terrain}</small></h3><div class="score tnum">
+    <div><span class="l">주변 대비 높이<small>반경 500m 안 최저 지점 대비 단지 대표점 높이</small></span><span class="v">${height(R)}</span></div>
+    <div><span class="l">단지 주변 높이차<small>단지 중심 120m 안 지형 높이차</small></span><span class="v">${height(inside)}</span></div>
+    <div><span class="l">보행 경로 분석<small>${walk?`보행 부담 지수(0~100) · 경로 신뢰도 ${walk[2]===2?'B':walk[2]===1?'C':'D(지형값 유지)'}`:R==null?'별도 보행 경로 분석 없음':'별도 보행 경로 분석 없음 · 현재 지형 높이로 경사 보정'}</small></span><span class="v">${walk?Math.round(walk[0])+'<i>/100</i>':'자료 없음'}</span></div>
+  </div><p class="note">지형 격자에서 계산한 높이차입니다. 실제 도로의 경사도(%)나 동별 출입구 경사와는 다를 수 있습니다.</p></section>`;
+}
 /* 상세 화면 '입지 점수' 섹션(교체용) */
 function locPanel(d){ const L=d.locParts;
   if(!L) return `<section class="sec"><h3>입지 점수 <small>계산 중</small></h3></section>`;
