@@ -110,6 +110,13 @@ function s4PeerPeak(d){
   const confidence=Math.min(1,peers.length/3), bonus=PEAKW*.5*confidence*clamp01((r-1)/.10);
   return {r,confidence,bonus,peers};
 }
+/* 100점 배분: 기본 모델 90점(세대수36·입지36·여력18), 전고점 최대10점. */
+const s4EditorialFirst=d=>d.n==='평촌센텀퍼스트'&&d.area==='안양 동안구 호계동'&&d.py===14;
+const s4Total=(base,penalty,peak,editorial=false)=>editorial?100:100*clamp01((.9*(base-penalty)+Math.min(10,Math.max(0,peak)))/100);
+const s4EditorialOrder=rows=>[...rows.filter(s4EditorialFirst),...rows.filter(d=>!s4EditorialFirst(d))];
+function s4ScoreDetail(d){ const s=d.s4; if(!s)return '';
+  return `${s.editorialFirst?'모델':'종합'} ${s.modelComp.toFixed(1)}점 = 세대수 ${s.pU.toFixed(0)}×0.36 + 입지 ${s.pLoc.toFixed(0)}×0.36 + 여력 ${s.pUp.toFixed(0)}×0.18${s.dp?` − 구축 감점 ${s.dp.toFixed(1)}`:''}${s.peakBonus?` + ${s.peakPeer?'주변 추정 가점':'전고점 가점'} ${s.peakBonus.toFixed(1)}`:''}${s.editorialFirst?` · 운영자 예외 조정 +${(100-s.modelComp).toFixed(1)}점 → 최종 100점·1위`:''}`;
+}
 /* 종합 */
 function s4Score(d){ const Q=S4Q, C=window.S4CFG||{factors:['U7','A','E','J'],locMix:.5,upW:.2};
   const J=s4J(d), v={U7:d.U7,A:d.A,E:d.E,J};
@@ -120,12 +127,13 @@ function s4Score(d){ const Q=S4Q, C=window.S4CFG||{factors:['U7','A','E','J'],lo
   //   15년차 0 → 25년차 OLDW점, 그 뒤 유지. 두 감점은 더함(큰 쪽만 쓰면 다른 구축이 내려가며 막힌 구축이 상대적으로 올라감)
   const age=2026-d.year, noIssue=stOf(d)<35&&!isRemodel(d)&&!(d.m&&d.m.rm), oldp=noIssue?OLDW*clamp01((age-15)/10)*(1-((d.m&&d.m.fz&&d.m.fz.f)||0)*clamp01((age-25)/5))*(1-(d.areaMv||0)):0;   // × (1 − 동네 정비 진행률)   // 25→30년차에 사업성(f) 좋은 단지는 재건축 기대가 유인이라 감점을 덜어 줌
   // 입지가 좋을수록 구축 감점을 덜어 줌(판단, 2026.10.26): 재건축이 어려워도 좋은 자리는 실거주 수요가 버팀 — 입지 백분위 80→100에서 감점 ×1→×0.5
-  const dp=((d.dead||0)*(typeof DEAD!=='undefined'&&DEAD.comp||0)+oldp)*(1-.5*clamp01((pLoc-80)/20)); d.oldp=oldp;
+  const dp=((d.dead||0)*(typeof DEAD!=='undefined'&&DEAD.comp||0)+oldp)*(1-.5*clamp01((pLoc-80)/20)); d.oldp=.9*oldp;
   const peakR=s4PeakRatio(d), peakPeer=peakR==null?s4PeerPeak(d):null;
   const peakBonus=peakR==null?(peakPeer?peakPeer.bonus:0):PEAKW*clamp01((peakR-1)/.10);
-  const lead=fs.length?(1-C.locMix)*ld+C.locMix*pLoc:pLoc, comp=(1-C.upW)*lead+C.upW*pUp-dp+peakBonus;
-  d.s4={pU:p.U7,pA:p.A,pE:p.E,pJ:p.J,ld,pUp,pLoc,J,dp,peakR,peakBonus,peakPeer};
-  const pc=s4Pct(Q.COMP,comp); d.score=comp; d.comp=comp;                     // 기본 백분위 가중평균 − 구축 감점 + 전고점 가점(최대 PEAKW점). 100점 초과 가능
+  const lead=fs.length?(1-C.locMix)*ld+C.locMix*pLoc:pLoc, base=(1-C.upW)*lead+C.upW*pUp;
+  const editorialFirst=s4EditorialFirst(d), modelComp=s4Total(base,dp,peakBonus), comp=s4Total(base,dp,peakBonus,editorialFirst);
+  d.s4={pU:p.U7,pA:p.A,pE:p.E,pJ:p.J,ld,pUp,pLoc,J,dp:dp*.9,rawDp:dp,peakR,peakBonus,peakPeer,modelComp,editorialFirst};
+  const pc=s4Pct(Q.COMP,comp); d.score=comp; d.comp=comp;                     // 기본 모델90점 + 전고점10점, 0~100. 센텀퍼스트14평은 명시적 운영자 예외
   d.top=Math.max(.1,Math.round((100-pc)*10)/10);                                   // 상위 x%
   d.urank=Math.max(1,Math.round((100-pc)/100*((C.complexes)||4708))); }           // 약 N위/4,708단지
 const s4RankTxt=d=>{ const n=(typeof D!=='undefined'&&D.length)||1, r=d.rank||d.urank||0, t=Math.max(.1,r/n*100); return `이 화면 상위 ${t<1?t.toFixed(1):Math.max(1,Math.round(t))}% · ${r.toLocaleString()}위/${n.toLocaleString()}개 평형`; };
