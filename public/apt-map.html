@@ -880,11 +880,12 @@ const CAPINFO={
   15:{lo:'10억 초과 15억 이하',cap:'15억',bt:['+4.4/+17.6','+2.4/+1.2','+6.4/+26.9'],old:['+4.9/+13.2','+1.5/−0.4','+7.7/+20.4'],g:['+18.1','−0.4','+27.8'],snap:'apt-snap15-2026-11-01.json',snap2:'apt-snap15-2026-11-01-s14.json',snap3:'apt-snap15-2026-11-01-m2.json'},
   20:{lo:'15억 초과 20억 이하',cap:'20억',bt:['+7.1/+8.0','+5.1/+8.1','+6.6/+18.4'],old:['+6.8/+7.4','+5.3/+8.2','+7.6/+18.9'],g:['+9.9','+3.7','+19.0'],snap:'apt-snap20-2026-11-01.json',snap2:'apt-snap20-2026-11-01-s14.json',snap3:'apt-snap20-2026-11-01-m2.json',
       extra:'이 가격대는 표본이 구간당 270~430개 평형이라 다른 탭보다 결과의 오차가 큼. 15억 초과 주택은 주담대 한도가 4억(2025.10.15 대책)이라 필요 현금도 그 기준으로 계산.'}};
+const NOUP=()=>(window.S4CFG||{}).model==='m2';   // 6억 초과 통합 모델: 적정가 대비 숨김
 /* 6억 초과 탭 통합 모델(m2, 2026.11.1) 설명 */
 function m2Text(h,I){ const C=window.S4CFG||{};
-  h=h.replace(/(<dt>적정가 대비<small>)종합의 [0-9.]+%(<\/small>)/,(m,a,b)=>a+'참고 표시 · 순위 미반영'+b);
+  h=h.replace(/<div><dt>적정가 대비<small>[\s\S]*?<\/dd><\/div>/,'');
   const dd=`순위는 이 화면의 ${NCX.toLocaleString()}곳(${D.length.toLocaleString()}개 평형, 평형마다 따로) 안의 순위. 6~10억·10~15억·15~20억 세 탭은 <b>하나의 모델</b>로 채점함 — 백분위는 수도권 6억 초과 20억 이하 거래 단지 ${(C.complexes||0).toLocaleString()}곳(${(C.types||0).toLocaleString()}개 평형) 전체 기준이고, 탭은 가격으로 거르는 필터일 뿐.
-    <b>종합 = 세대수 50점 + 장기 급지 50점.</b> 장기 급지는 동(洞)별로 연식·면적을 뺀 평당가 수준을 2017·2020·2023·2026 네 시점에서 구해(수도권 중위 대비, 단지가 적은 동은 시·구 평균 쪽으로 축소) 평균한 값 — 최근 몇 년 사이 오른 곳보다 오래 비쌌던 곳을 높게 봄. 입지 점수·적정가 대비·전고점 비율은 상세에 참고로만 표시하고 순위에는 넣지 않음. 구축 감점 등 판단 보정 없음.
+    <b>종합 = 세대수 50점 + 장기 급지 50점.</b> 장기 급지는 동(洞)별로 연식·면적을 뺀 평당가 수준을 2017·2020·2023·2026 네 시점에서 구해(수도권 중위 대비, 단지가 적은 동은 시·구 평균 쪽으로 축소) 평균한 값 — 최근 몇 년 사이 오른 곳보다 오래 비쌌던 곳을 높게 봄. 입지 점수·전고점 비율은 상세에 참고로만 표시하고 순위에는 넣지 않음. 적정가 대비는 이 가격대에서 오를 신호로 확인되지 않아(아래) 표시하지 않음. 구축 감점 등 판단 보정 없음.
     <b>요인을 고른 방법</b>(결과 보기 전 고정한 규칙): 성과를 '같은 시·구 대비'와 '같은 가격대 전체 대비' 두 가지로 재서, 두 쪽 모두 2017→20·20→23·23→26 중 두 구간 이상 플러스이고 평균도 플러스인 요인만 채택. 통과: 장기 급지(시·구 대비 −7.4 / +7.1 / +0.8, 가격대 대비 +20.7 / −0.3 / +34.4%p), 세대수(+5.8 / −1.2 / +5.6, +1.0 / −0.9 / +2.3%p). 탈락: 같은 동 대비 싸기(세 가지 방식 모두, 23→26 −9.7%p), 최근 3년 덜 오름(거래 많은 평형에선 23→26 가격대 대비 −8.2%p — 시세 측정 잡음), 자기 과거 대비 할인(23→26 −5.6%p). 비중은 최적화하지 않고 동일 비중.
     <b>과거 성과</b>(상위−하위 20% 초과상승, 시·구 대비 / 가격대 전체 대비): 17→20 −0.8 / +16.3%p, 20→23 +3.8 / −3.1%p, 23→26 +4.2 / +25.9%p — 상승장엔 강하고 외곽이 따라잡던 20→23엔 약함. 진짜 검증은 앞으로의 성적뿐 — 2026.11.1 순위를 고정 저장(<a href="${I.snap3}">원본</a>, 이전 모델은 <a href="${I.snap}">원본</a>)했고 2027.5·2027.11에 공개함.`;
   return h.replace(/(<dt>종합<small>순위<\/small><\/dt><dd>)[\s\S]*?(<\/dd><\/div>)/, (m,a,b)=>a+dd+b);
@@ -933,7 +934,7 @@ function renderList(){
     h+=`<article class="row" data-i="${D.indexOf(d)}" data-s="1">
       <span class="rk tnum">${String(d.rank).padStart(2,'0')}</span>
       <div style="min-width:0"><div class="kicker">${badgeHTML(d)}<span>${esc(d.area)}</span>${d.auto?'<span>· 자동</span>':''}</div>
-        <h3>${esc(d.n)}${sibs(d).length>1?` <small class="tp">${d.py}평</small>`:''}</h3><p>입지 ${d.loc.toFixed(1)} · ${d.cur&&d.cur.n?esc(d.cur.n)+' '+fmtM(d.cur.m):'역 계산 중'} · 적정가 대비 ${d.up>=0?'+':''}${Math.round(d.up*100)}%</p></div>
+        <h3>${esc(d.n)}${sibs(d).length>1?` <small class="tp">${d.py}평</small>`:''}</h3><p>${NOUP()?`급지 ${Math.round((d.s4&&d.s4.pG)??50)} · ${d.units.toLocaleString()}세대`:`입지 ${d.loc.toFixed(1)}`} · ${d.cur&&d.cur.n?esc(d.cur.n)+' '+fmtM(d.cur.m):'역 계산 중'}${NOUP()?'':` · 적정가 대비 ${d.up>=0?'+':''}${Math.round(d.up*100)}%`}</p></div>
       <div class="px tnum"><strong>${short(cashOf(d))}</strong><span>${d.py}평 · ${d.opt?esc(d.opt.kind):d.reg==='free'?'비규제':'토허'}</span><b>${d.score.toFixed(1)}점</b></div>
     </article>`;
   });
@@ -1008,7 +1009,7 @@ function hakIn(d){ const h=(window.HAK||{})[gkey(d)]; return !!(h&&h[1]>=250); }
 /* 점수 근거 자동 생성: 기본 세 요소·감점·전고점 가점 */
 const hasNew=d=>!!(d.locParts&&(d.locParts.fut||/예정/.test(d.locParts.lpl||'')));
 function whyLine(d){ if(!d.s4) return ''; const top=p=>{ const t=100-p; return t<1?'상위 1% 안':`상위 ${Math.max(1,Math.round(t))}%`; };
-  const parts=[`세대수 ${top(d.s4.pU)}(${d.units.toLocaleString()}세대)`,`입지 ${top(d.s4.pLoc)}`,`적정가 대비 ${d.up>=0?'+':''}${Math.round(d.up*100)}%(가정)`];
+  const parts=NOUP()?[`세대수 ${top(d.s4.pU)}(${d.units.toLocaleString()}세대)`,`장기 급지 ${top(d.s4.pG??50)}`]:[`세대수 ${top(d.s4.pU)}(${d.units.toLocaleString()}세대)`,`입지 ${top(d.s4.pLoc)}`,`적정가 대비 ${d.up>=0?'+':''}${Math.round(d.up*100)}%(가정)`];
   if(d.s4.peakR!=null) parts.push(`전고점 대비 ${(d.s4.peakR*100).toFixed(1)}%(참고 · 순위 미반영)${d.s4.peakBonus>0?` · 전고점 가점 +${d.s4.peakBonus.toFixed(1)}점`:''}`);
   if(d.s4.peakPeer){ const p=d.s4.peakPeer; parts.push(`주변 유사 단지 전고점 대비 ${(p.r*100).toFixed(1)}%(참고 · 순위 미반영) · 비교군 ${p.peers.length}곳 · ${p.peers.map(x=>`${x.n}(${(x.m/1000).toFixed(1)}km)`).join(', ')}${p.bonus>0?` · 가점 +${p.bonus.toFixed(1)}점`:''}`); }
   if(d.locParts&&d.locParts.lp) parts.push(`노선 +${Math.round(d.locParts.lp*100)}%(${d.locParts.lpl})`);
@@ -1075,11 +1076,12 @@ function renderDetail(i){
     <div class="em" style="grid-column:1/-1"><dt>⚠️ 대출 금액은 참고용</dt><dd style="font-size:13px;font-weight:600;line-height:1.55;white-space:normal;text-align:left">실제 대출 한도는 소득(DSR)·신용·보유 주택 수·지역 규제·금리에 따라 크게 달라집니다. 이 계산만 믿고 자금을 준비하지 마시고, 반드시 은행 상담으로 실제 한도를 확인하세요.</dd></div>
     <div><dt>규제</dt><dd>${d.reg==='free'?'비규제 · 전세 끼고 매수 가능':'토지거래허가 · 실거주 2년'}</dd></div></dl></section>`;
   const S=sibs(d);
-  if(S.length>1) h+=`<section class="sec"><h3>이 단지 ${CAPTXT} 평형 <small>평형마다 따로 채점한 순위</small></h3><div class="cmp tnum">${S.map(x=>`<div${x===d?' class="me"':''} data-sib="${D.indexOf(x)}" style="cursor:pointer"><span class="n">${x.py}평 · ${x.rank.toLocaleString()}위 · ${x.score.toFixed(1)}점 · 적정가 대비 ${x.up>=0?'+':''}${Math.round(x.up*100)}%</span><span class="v">${eok(x.p)}</span>${bar(x.p,CAPHI)}</div>`).join('')}</div>${d.alt&&d.sub?`<p class="note">위 단지 소개 원고는 ${d.basePy}평 기준입니다.</p>`:''}</section>`;
+  if(S.length>1) h+=`<section class="sec"><h3>이 단지 ${CAPTXT} 평형 <small>평형마다 따로 채점한 순위</small></h3><div class="cmp tnum">${S.map(x=>`<div${x===d?' class="me"':''} data-sib="${D.indexOf(x)}" style="cursor:pointer"><span class="n">${x.py}평 · ${x.rank.toLocaleString()}위 · ${x.score.toFixed(1)}점${NOUP()?'':` · 적정가 대비 ${x.up>=0?'+':''}${Math.round(x.up*100)}%`}</span><span class="v">${eok(x.p)}</span>${bar(x.p,CAPHI)}</div>`).join('')}</div>${d.alt&&d.sub?`<p class="note">위 단지 소개 원고는 ${d.basePy}평 기준입니다.</p>`:''}</section>`;
   if(d.fit&&d.fit.length) h+=`<section class="sec"><h3>이런 사람에게</h3><div class="fit">${d.fit.map(f=>`<span>${esc(f)}</span>`).join('')}</div></section>`;
   if(d.check&&d.check.length) h+=`<section class="sec"><h3>사기 전에 확인</h3><ul class="checks">${d.check.map(f=>`<li>${esc(f)}</li>`).join('')}</ul></section>`;
   h+=`<p class="fine">필요한 돈은 주담대 한도(시가 15억 이하 6억, 15억 초과 4억)와 LTV만 반영한 계산입니다. 실제 대출은 소득(DSR)에 따라 줄어듭니다. ${d.u||d.p0?'시세는 국토부 실거래 기준 최근 시세(3개월 중위 또는 시세지수 환산)로 매물 호가와 다를 수 있습니다.':'시세는 리치고 추정치로 매물 호가와 다를 수 있습니다.'} 상승률 출처: ${esc(src)}.</p>
   <div class="pfoot"><a class="btn" target="_blank" rel="noopener" href="https://map.kakao.com/link/search/${encodeURIComponent(d.q)}">카카오맵에서 보기 ${ARROW}</a><a class="btn ghost" target="_blank" rel="noopener" href="https://m.land.naver.com/search/result/${encodeURIComponent(d.q)}">매물</a></div>`;
+   if(NOUP()) h=h.replace(/<div><dt>(?:주변 대비 가격 차이|적정가 대비)<\/dt>[\s\S]*?<\/small><\/div>/,'').replace(/<section class="sec"><h3>적정가 대비 [\s\S]*?<\/section>/,'');
   const b=$('#body'); b.innerHTML=h; b.scrollTop=0;
   $('#back').onclick=backToList;
   b.querySelectorAll('[data-sib]').forEach(x=>x.onclick=()=>{ const j=+x.dataset.sib; if(j!==i) select(j,false); });
