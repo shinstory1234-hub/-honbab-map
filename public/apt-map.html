@@ -288,7 +288,7 @@ aside{order:-1;width:408px;flex:none;border-right:1px solid var(--border);backgr
   var T=c!==6, x=String(c);
   /* 주변 시세 커널(apt-loc10·cx10)은 가격과 무관한 전체 단지 자료라 6~10억·10~15억 탭이 같이 씀 */
   var F=['apt-picks.js', T?'apt-picks10.js':'apt-auto3.js','apt-gj.js', T?'apt-loc10.js':'apt-loc.js', T?'apt-cx10.js':'apt-cx.js','apt-fard.js','apt-hak.js', T?'apt-univ'+x+'.js':'apt-univ.js',
-    'apt-farplan.js','apt-cur.js','apt-trn.js','apt-small.js', T?'apt-s4q'+x+'.js':'apt-s4q.js','apt-peak.js','apt-s4.js','apt-band.js','apt-plat.js','apt-dem.js', T?'apt-dem10.js':'', c>=15?'apt-dem15.js':'', c===20?'apt-dem20.js':'','apt-walk.js','apt-geo.js'];
+    'apt-farplan.js','apt-cur.js','apt-trn.js','apt-small.js', T?'apt-s4q'+x+'.js':'apt-s4q.js','apt-peak.js','apt-gjl.js','apt-s4.js','apt-band.js','apt-plat.js','apt-dem.js', T?'apt-dem10.js':'', c>=15?'apt-dem15.js':'', c===20?'apt-dem20.js':'','apt-walk.js','apt-geo.js'];
   for(var i=0;i<F.length;i++) if(F[i]) document.write('<script src="'+F[i]+'"><\/script>');
   if(T) document.title='저평가지도 · '+CAPTXT+' 아파트';
   var t6=document.getElementById('cap'+x); if(t6) t6.setAttribute('aria-current','page'); var hm=document.getElementById('home'); if(hm&&T) hm.href='apt-map.html?cap='+x;
@@ -872,24 +872,27 @@ const visible=d=>{
   return ok&&okp&&oks&&(!state.q||(d.n+d.area+d.headline+townOf(d)).includes(state.q));
 };
 
-/* 6~10억·10~15억 탭 설명(2026.11.1): 6억 탭 설명문에서 가격대 표현을 바꾸고, 종합 점수 설명은 그 탭의 백테스트 결과로 교체 */
+/* 탭별 '종합' 설명(s14, 2026.11.1 개편): 6억 외 탭은 가격대 표현을 바꾸고, 네 탭 모두 종합 점수 설명을 그 탭의 비중·백테스트 결과로 교체.
+   bt = [17→20, 20→23, 23→26] 상위20%−하위20% 초과상승 '시·구 대비 / 가격대 전체 대비'(%p), old = 개편 전 산식의 같은 값, g = 장기 급지 단독 '가격대 전체 대비' */
 const CAPINFO={
-  10:{lo:'6억 초과 10억 이하',cap:'10억',bt:['+0.6','+5.4','+8.6'],snap:'apt-snap10-2026-11-01.json',
-      single:'단일 요소로는 세대수만 사전 규칙을 통과(+7.3 / −2.4 / +6.4%p); 입지는 20→23 +8.5%p, 23→26 +5.7%p였지만 17→20 −6.4%p로 탈락.'},
-  15:{lo:'10억 초과 15억 이하',cap:'15억',bt:['+4.6','+1.4','+7.5'],snap:'apt-snap15-2026-11-01.json',
-      single:'단일 요소로는 세대수(+4.0 / −0.1 / +6.3%p)와 입지(+2.1 / +0.9 / +6.2%p)가 모두 사전 규칙을 통과 — 이 가격대에서는 입지도 데이터로 확인된 상승 요인. 적정가 대비는 +3.7 / +4.0 / −2.6%p로 탈락.'},
-  20:{lo:'15억 초과 20억 이하',cap:'20억',bt:['+6.8','+5.3','+7.6'],snap:'apt-snap20-2026-11-01.json',
-      single:'단일 요소로는 입지가 가장 강함(+9.0 / +3.4 / +6.1%p, 세 구간 모두 플러스). 세대수(−0.8 / +1.4 / +5.6%p)도 규칙은 통과했지만 약함. 적정가 대비는 +2.5 / +4.9 / −5.0%p로 탈락. 이 가격대는 표본이 구간당 270~430개 평형이라 다른 탭보다 결과의 오차가 큼. 15억 초과 주택은 주담대 한도가 4억(2025.10.15 대책)이라 필요 현금도 그 기준으로 계산.'}};
+  6:{lo:'6억 이하',cap:'6억',bt:['+5.1/+25.2','−0.4/−5.8','+5.6/+15.3'],old:['+5.2/+26.0','−0.5/−7.6','+5.5/+16.4'],g:['+36.8','−11.5','+18.6'],snap:'apt-snap-2026-10-23.json',snap2:'apt-snap6-2026-11-01-s14.json'},
+  10:{lo:'6억 초과 10억 이하',cap:'10억',bt:['−5.1/+21.2','+8.8/−1.5','+7.2/+31.9'],old:['+0.7/+16.2','+5.4/−3.1','+8.9/+24.6'],g:['+21.3','−3.2','+31.4'],snap:'apt-snap10-2026-11-01.json',snap2:'apt-snap10-2026-11-01-s14.json'},
+  15:{lo:'10억 초과 15억 이하',cap:'15억',bt:['+4.4/+17.6','+2.4/+1.2','+6.4/+26.9'],old:['+4.9/+13.2','+1.5/−0.4','+7.7/+20.4'],g:['+18.1','−0.4','+27.8'],snap:'apt-snap15-2026-11-01.json',snap2:'apt-snap15-2026-11-01-s14.json'},
+  20:{lo:'15억 초과 20억 이하',cap:'20억',bt:['+7.1/+8.0','+5.1/+8.1','+6.6/+18.4'],old:['+6.8/+7.4','+5.3/+8.2','+7.6/+18.9'],g:['+9.9','+3.7','+19.0'],snap:'apt-snap20-2026-11-01.json',snap2:'apt-snap20-2026-11-01-s14.json',
+      extra:'이 가격대는 표본이 구간당 270~430개 평형이라 다른 탭보다 결과의 오차가 큼. 15억 초과 주택은 주담대 한도가 4억(2025.10.15 대책)이라 필요 현금도 그 기준으로 계산.'}};
 function cap10Text(h){
   const I=CAPINFO[CAPT]; if(!I) return h;
-  h=h.replace(/6억 이하 · 오를 단지/g,CAPTXT+' · 오를 단지').replace(/6억 이하인 평형/g,I.lo+'인 평형').replace(/6억 이하 평형/g,CAPTXT+' 평형')
+  if(CAPT!==6) h=h.replace(/6억 이하 · 오를 단지/g,CAPTXT+' · 오를 단지').replace(/6억 이하인 평형/g,I.lo+'인 평형').replace(/6억 이하 평형/g,CAPTXT+' 평형')
      .replace(/6억 이하 거래/g,CAPTXT+' 거래').replace(/6억으로 살 수 있는/g,I.cap+'으로 살 수 있는').replace(/6억 이하/g,CAPTXT);
-  const C=window.S4CFG||{}, w=x=>+(x*100).toFixed(1), ws=`세대수 ${w((1-C.upW)*(1-C.locMix))}점 + 입지 ${w((1-C.upW)*C.locMix)}점 + 적정가 대비 ${w(C.upW)}점`;
+  const C=window.S4CFG||{}, gW=C.gW||0, w=x=>+(x*100).toFixed(1), ws=`세대수 ${w((1-C.upW-gW)*(1-C.locMix))}점 + 입지 ${w((1-C.upW-gW)*C.locMix)}점 + 적정가 대비 ${w(C.upW)}점 + 장기 급지 ${w(gW)}점`;
+  h=h.replace(/(<dt>적정가 대비<small>)종합의 20%(<\/small>)/,(m,a,b)=>a+'종합의 '+w(C.upW)+'%'+b);
   const dd=`순위는 이 화면의 ${NCX.toLocaleString()}곳(${D.length.toLocaleString()}개 평형, 평형마다 따로) 안의 순위. 점수에 쓰는 백분위는 수도권 ${CAPTXT} 거래 단지 ${(C.complexes||0).toLocaleString()}곳(${(C.types||0).toLocaleString()}개 평형) 전체 분포 기준이며 다른 가격대 탭과 섞지 않음.
-    종합은 100점 만점: ${ws} − 구축 감점. 전고점 대비 비율은 참고로만 표시하고 순위에는 넣지 않음. 모든 단지에 같은 산식, 단지별 예외 없음.
-    <b>비중을 정한 방법</b>: 6억 이하 탭과 같은 사전 규칙(결과를 보기 전에 고정) — 2017→20·20→23·23→26 세 구간 중 하나씩 빼고 나머지 두 구간에서 가장 좋은 비중을 고른 뒤 평균을 격자에 반올림하고, 상위 50곳의 언덕 비율이 전체 기저율 이하인지 확인.
-    <b>과거 성과</b>(상위−하위 20%, 시·구 중위 대비 초과상승): 17→20 ${I.bt[0]}%p, 20→23 ${I.bt[1]}%p, 23→26 ${I.bt[2]}%p — 세 구간 모두 플러스. ${I.single} 과거 데이터로 비중을 골랐기 때문에 실제 성과는 이보다 낮을 수 있음. 진짜 검증은 앞으로의 성적뿐 — 2026.11.1 순위를 그대로 고정 저장(<a href="${I.snap}">원본</a>)했고 2027.5·2027.11에 상위 20%와 하위 20%의 실제 초과상승을 공개함.
-    이 탭 단지는 대지지분 실측과 보행 경사 분석이 아직 없어 재건축 단지는 용적률 추정, 경사는 지형 높이로만 반영. 모두 시·구 대비 성과라 동네 전체가 빠지면 1위도 같이 빠짐.`;
+    종합은 100점 만점: ${ws} − 구축 감점. '적정가 대비'는 같은 동네·연식·평형 기준 적정가보다 지금 얼마나 싸거나 비싼지이며, 앞으로 오를 폭을 뜻하지 않음. 전고점 대비 비율은 참고로만 표시하고 순위에는 넣지 않음. 모든 단지에 같은 산식, 단지별 예외 없음.
+    <b>장기 급지</b>: 동(洞)별로 연식·면적을 뺀 평당가 수준을 2017·2020·2023·2026 네 시점에서 구해(수도권 중위 대비, 단지가 적은 동은 시·구 평균 쪽으로 축소) 평균한 값의 백분위. 최근 몇 년 사이 오른 곳보다 오래 비쌌던 곳을 높게 봄.
+    <b>입지의 장기 앵커</b>: 입지 평당가에서 그 동네(동) 급지가 2017·2020·2023 평균보다 지금 높아진 만큼을 빼고, 내려간 만큼은 더해 줌 — 최근 급등분은 입지로 인정하지 않음(사용자 판단에 따른 설정. 이 차감만 놓고 보면 과거 성과는 하락기 20→23엔 도움, 상승기 23→26엔 손해로 거의 중립).
+    <b>비중을 정한 방법</b>(결과를 보기 전에 고정한 규칙): 성과를 '같은 시·구 대비'와 '같은 가격대 전체 대비' 두 가지로 재고 둘의 평균을 구간 점수로 씀 — 시·구 대비만 보면 지역 간 차이(동탄이냐 마포냐)를 전혀 평가하지 못하기 때문. 2017→20·20→23·23→26 세 구간 중 하나씩 빼고 나머지 두 구간에서 (평균 − 가장 나쁜 구간 손실)이 가장 좋은 비중을 고른 뒤 평균을 격자에 반올림.
+    <b>과거 성과</b>(상위−하위 20% 초과상승, 시·구 대비 / 가격대 전체 대비): 17→20 ${I.bt[0]}%p, 20→23 ${I.bt[1]}%p, 23→26 ${I.bt[2]}%p. 개편 전 산식은 ${I.old.join(' · ')}%p. 장기 급지 하나만으로는 가격대 전체 대비 ${I.g.join(' / ')}%p — 상승장엔 강하고, 외곽이 따라잡던 20→23엔 약함. 재건축 단지 일괄 감점은 23→26(1기 신도시 기대감) 구간을 빼고 봐도 성과를 낮춰서 넣지 않음. ${I.extra||''} 과거 데이터로 비중을 골랐기 때문에 실제 성과는 이보다 낮을 수 있음. 진짜 검증은 앞으로의 성적뿐 — 개편 전 순위(<a href="${I.snap}">원본</a>)와 개편 후 2026.11.1 순위(<a href="${I.snap2}">원본</a>)를 고정 저장했고 2027.5·2027.11에 실제 초과상승을 공개함.
+    ${CAPT!==6?'이 탭 단지는 대지지분 실측과 보행 경사 분석이 아직 없어 재건축 단지는 용적률 추정, 경사는 지형 높이로만 반영.':''}`;
   return h.replace(/(<dt>종합<small>순위<\/small><\/dt><dd>)[\s\S]*?(<\/dd><\/div>)/, (m,a,b)=>a+dd+b);
 }
 function renderList(){
@@ -928,7 +931,7 @@ function renderList(){
   if(!list.length) h+=`<p class="source">조건에 맞는 단지가 없습니다.</p>`;
   h+=`${RIGHTSOUT.length?`<section class="excluded"><h2>권리 확인 전 순위 제외 <small>현금청산 위험 거래 오인 방지</small></h2><ul>${RIGHTSOUT.map(e=>`<li>${esc(e[0])} · ${esc(e[1])}<b class="tnum">기준 ${esc(e[2])}</b><span>${esc(e[3])} · 개별 매물의 조합원 지위 양도 가능 여부가 확인되면 다시 평가</span></li>`).join('')}</ul></section>`:''}<section class="excluded"><h2>최근 하락 지역 <small>2025.6~2026.9 누적 · 순위에는 포함</small></h2><ul>${EXCLUDED.map(e=>`<li>${esc(e[0])}<b class="tnum">${esc(e[1])}</b><span>${esc(e[2])}</span></li>`).join('')}</ul></section>
   <p class="source">상승률: 한국부동산원·KB 주간 아파트 동향(10월 2주), 누적 하락은 한국부동산원(파이낸셜뉴스 2026.9.21 인용). 시세·실거래: 리치고(국토부 실거래). 점수는 투자 권유가 아니라 비교용 지표입니다. <button type="button" class="linkbtn" id="noticeOpen">이용 유의사항</button></p>`;
-  if(CAPT!==6) h=cap10Text(h);
+  h=cap10Text(h);
   b.innerHTML=h;
   b.querySelectorAll('.filters button[data-f]').forEach(x=>x.onclick=()=>{state.f=x.dataset.f;state.lim=50;render();});
   b.querySelectorAll('.filters button[data-pb]').forEach(x=>x.onclick=()=>{state.pb=x.dataset.pb;state.lim=50;render();});

@@ -1,10 +1,13 @@
-/* 6억지도 순위 범위(평가 4번) — recompute()가 ORDER·rank를 정한 뒤 호출: s10Band();
-   비중 가정 범위: 채택한 (기본 모델 내부 세대수40%·입지40%·적정가 대비20%, 100점) 주변에서 가드레일(상위 50곳 언덕·역 먼 단지 비율 ≤ 전체 기저율)을 통과하는 설정들
+/* 저평가지도 순위 범위 — recompute()가 ORDER·rank를 정한 뒤 호출: s10Band();
+   비중 가정 범위(s14, 2026.11.1): 이 탭에서 채택한 비중(S4CFG의 locMix·upW·gW)과, 그중 하나씩만 격자 한 칸(입지 비율 ±0.25, 적정가 대비 ±0.1, 장기 급지 ±0.1) 옮긴 설정들.
    각 설정에서 페이지 전체 단지의 순위를 다시 매겨 중앙값·최소~최대 범위를 d.band=[중앙, 최고, 최저]로 둠. 등급은 중앙 순위 기준. */
-window.S10PLAUS=[[.25,.2],[.5,.1],[.5,.2],[.5,.3],[.75,.2]];   // 채택 설정(기본 모델 내부 세대수40%·입지40%·적정가 대비20%, 100점) 주변
+function s10Plaus(){ const C=window.S4CFG||{}, lm=C.locMix??.5, uw=C.upW??.2, gw=C.gW||0, out=[[lm,uw,gw]];
+  const ok=(a,b,c)=>a>=0&&a<=1&&b>=0&&c>=0&&b+c<=.6;
+  for(const [a,b,c] of [[lm-.25,uw,gw],[lm+.25,uw,gw],[lm,uw-.1,gw],[lm,uw+.1,gw],[lm,uw,gw-.1],[lm,uw,gw+.1]]) if(ok(a,b,c)) out.push([+a.toFixed(2),+b.toFixed(2),+c.toFixed(2)]);
+  return out; }
 function s10Band(){ const n=D.length, M=D.map(()=>[]);
-  for(const [lm,uw] of S10PLAUS){
-    const sc=D.map((d,i)=>{ const s=d.s4; if(!s) return -1; return s4Total((1-uw)*((1-lm)*s.pU+lm*s.pLoc)+uw*s.pUp,s.rawDp||0,s.peakBonus||0); });
+  for(const [lm,uw,gw] of s10Plaus()){
+    const sc=D.map((d,i)=>{ const s=d.s4; if(!s) return -1; return s4Total((1-uw-gw)*((1-lm)*s.pU+lm*s.pLoc)+uw*s.pUp+gw*(s.pG??50),s.rawDp||0,s.peakBonus||0); });
     const o=sc.map((v,i)=>i).sort((a,b)=>sc[b]-sc[a]); o.forEach((i,r)=>M[i].push(r+1)); }
   D.forEach((d,i)=>{ const v=M[i].slice().sort((a,b)=>a-b), med=v[Math.floor(v.length/2)];
     d.band=[med,v[0],v[v.length-1]];
