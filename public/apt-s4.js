@@ -134,7 +134,7 @@ function s4Score(d){ const Q=S4Q, C=window.S4CFG||{factors:['U7','A','E','J'],lo
   // 입지가 좋을수록 구축 감점을 덜어 줌(판단, 2026.10.26): 재건축이 어려워도 좋은 자리는 실거주 수요가 버팀 — 입지 백분위 80→100에서 감점 ×1→×0.5
   // m2(6억 초과 통합 모델): 일반 구축 감점은 끄고, 재건축 사업성 막힘 감점(대지지분·용적률 → 분담금 비율 → 사업성, 6억 이하 탭과 같은 DEAD 규칙)만 적용 — S4CFG.noPen
   const deadP=(d.dead||0)*(typeof DEAD!=='undefined'&&DEAD.comp||0);
-  const dp=(C.noPen?deadP:deadP+oldp)*(1-.5*clamp01((pLoc-80)/20)); d.oldp=C.noPen?0:oldp;
+  const dp=C.noPen?deadP:(deadP+oldp)*(1-.5*clamp01((pLoc-80)/20)); d.oldp=C.noPen?0:oldp;   // m2: 입지로 감점을 덜어 주지 않음(입지는 순위 미반영)
   const peakR=s4PeakRatio(d), peakPeer=peakR==null?s4PeerPeak(d):null;   // 표시용(배지·상세)
   const peakBonus=peakR==null?(peakPeer?peakPeer.bonus:0):PEAKW*clamp01((peakR-1)/.10);
   const gW=(Q.G&&C.gW)||0, pG=Q.G?s4Pct(Q.G,d.gj):null;   // 장기 급지(s14): 동 급지 2017~2026 평균의 유니버스 백분위
