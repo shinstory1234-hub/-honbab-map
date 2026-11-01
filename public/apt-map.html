@@ -268,7 +268,7 @@ aside{order:-1;width:408px;flex:none;border-right:1px solid var(--border);backgr
 </div>
 <header class="masthead">
   <a class="wordmark" id="home" href="apt-map.html" aria-label="저평가지도 처음 화면으로">저평가지도<i></i></a>
-  <nav class="captab" aria-label="가격대"><a href="apt-map.html" id="cap6">6억 이하</a><a href="apt-map.html?cap=10" id="cap10">6~10억</a><a href="apt-map.html?cap=15" id="cap15">10~15억</a></nav>
+  <nav class="captab" aria-label="가격대"><a href="apt-map.html" id="cap6">6억 이하</a><a href="apt-map.html?cap=10" id="cap10">6~10억</a><a href="apt-map.html?cap=15" id="cap15">10~15억</a><a href="apt-map.html?cap=20" id="cap20">15~20억</a></nav>
   <span class="caption" id="asof">서울·경기·인천</span>
   <label class="search"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg><input id="q" placeholder="단지명, 동네로 찾기" autocomplete="off"></label>
 </header>
@@ -282,13 +282,13 @@ aside{order:-1;width:408px;flex:none;border-right:1px solid var(--border);backgr
 
 <script>
 /* 가격대 탭(2026.11.1): ?cap=10 → 6~10억 탭. 탭마다 대상 단지·분위수(백분위 기준)·주변 시세 커널이 다르고, 점수는 탭 안에서만 비교 */
-(function(){ var v=new URLSearchParams(location.search).get('cap'), c=v==='15'?15:v==='10'?10:6;
-  window.CAPT=c; window.CAPLO=c===15?100000:c===10?60000:0; window.CAPHI=c===15?150000:c===10?100000:60000; window.CAPTXT=c===15?'10~15억':c===10?'6~10억':'6억 이하';
+(function(){ var v=new URLSearchParams(location.search).get('cap'), c=v==='20'?20:v==='15'?15:v==='10'?10:6;
+  window.CAPT=c; window.CAPLO=c===20?150000:c===15?100000:c===10?60000:0; window.CAPHI=c===20?200000:c===15?150000:c===10?100000:60000; window.CAPTXT=c===20?'15~20억':c===15?'10~15억':c===10?'6~10억':'6억 이하';
   window.inBand=function(p){ return p>CAPLO&&p<=CAPHI; };
   var T=c!==6, x=String(c);
   /* 주변 시세 커널(apt-loc10·cx10)은 가격과 무관한 전체 단지 자료라 6~10억·10~15억 탭이 같이 씀 */
   var F=['apt-picks.js', T?'apt-picks10.js':'apt-auto3.js','apt-gj.js', T?'apt-loc10.js':'apt-loc.js', T?'apt-cx10.js':'apt-cx.js','apt-fard.js','apt-hak.js', T?'apt-univ'+x+'.js':'apt-univ.js',
-    'apt-farplan.js','apt-cur.js','apt-trn.js','apt-small.js', T?'apt-s4q'+x+'.js':'apt-s4q.js','apt-peak.js','apt-s4.js','apt-band.js','apt-plat.js','apt-dem.js', T?'apt-dem10.js':'', c===15?'apt-dem15.js':'','apt-walk.js','apt-geo.js'];
+    'apt-farplan.js','apt-cur.js','apt-trn.js','apt-small.js', T?'apt-s4q'+x+'.js':'apt-s4q.js','apt-peak.js','apt-s4.js','apt-band.js','apt-plat.js','apt-dem.js', T?'apt-dem10.js':'', c>=15?'apt-dem15.js':'', c===20?'apt-dem20.js':'','apt-walk.js','apt-geo.js'];
   for(var i=0;i<F.length;i++) if(F[i]) document.write('<script src="'+F[i]+'"><\/script>');
   if(T) document.title='저평가지도 · '+CAPTXT+' 아파트';
   var t6=document.getElementById('cap'+x); if(t6) t6.setAttribute('aria-current','page'); var hm=document.getElementById('home'); if(hm&&T) hm.href='apt-map.html?cap='+x;
@@ -794,7 +794,7 @@ function recompute(){
   updatePins();
 }
 function money(d){
-  const P=d.p, cap=60000, r={};
+  const P=d.p, cap=P>250000?20000:P>150000?40000:60000, r={};   // 주담대 한도: 시가 15억 이하 6억, 15~25억 4억, 25억 초과 2억(2025.10.15 대책, 수도권·규제지역)
   if(d.reg==='free'){ r.loan=Math.min(P*.7,cap); r.cash=P-r.loan; r.note='비규제 LTV 70%'; if(d.jeon){r.gap=P-d.jeon;} }
   else { r.loan=Math.min(P*.4,cap); r.cash=P-r.loan; r.first=P-Math.min(P*.7,cap); r.note='규제지역 LTV 40%'; }
   return r;
@@ -855,7 +855,8 @@ const badgeHTML=d=>[{label:d.tier.k,color:d.tier.c},...cardFeatures(d).map(k=>FE
 const FILTERS=[['all','전체'],['top','핵심 1~30'],['mid','유망 31~300'],['interest','관심 301~1,000'],['explore','탐색 1,001+'],['신축','신축'],['학군','학군'],['재건축','재건축'],['리모델링','리모델링'],['천지개벽','천지개벽'],['역세권','역세권'],['초품아','초품아'],['대단지','대단지'],['신설역','신설역'],['반도체','반도체'],['소형할인','소형 할인'],['flat','평지'],['job50','출근 50분'],['free','비규제']];
 const state={f:'all',pb:'all',size:'all',q:'',sel:null,lim:50};
 // 6억 탭: 대출 끼고 필요한 현금 기준 / 6~10억 탭: 시세(가격) 기준 — 10억 탭에서 현금 구간은 '3억 이하'가 가격처럼 읽혀 헷갈림(2026.11.1)
-const PB=CAPT===15?[['all','전체 가격'],['p11','10~11억',100000,110000],['p12','11~12억',110000,120000],['p13','12~13억',120000,130000],['p14','13~14억',130000,140000],['p15','14~15억',140000,150000]]
+const PB=CAPT===20?[['all','전체 가격'],['p16','15~16억',150000,160000],['p17','16~17억',160000,170000],['p18','17~18억',170000,180000],['p19','18~19억',180000,190000],['p20','19~20억',190000,200000]]
+  :CAPT===15?[['all','전체 가격'],['p11','10~11억',100000,110000],['p12','11~12억',110000,120000],['p13','12~13억',120000,130000],['p14','13~14억',130000,140000],['p15','14~15억',140000,150000]]
   :CAPT===10?[['all','전체 가격'],['p7','6~7억',60000,70000],['p8','7~8억',70000,80000],['p9','8~9억',80000,90000],['p10','9~10억',90000,100000]]
   :[['all','전체 가격'],['3','3억 이하',0,30000],['4','3~4억',30000,40000],['5','4~5억',40000,50000],['6','5~6억',50000,60001]];
 const SIZES=[['all','전체 평형'],['10','10평대',10,20],['20','20평대',20,30],['30','30평 이상',30,Infinity]];
@@ -1062,7 +1063,7 @@ function renderDetail(i){
   if(S.length>1) h+=`<section class="sec"><h3>이 단지 ${CAPTXT} 평형 <small>평형마다 따로 채점한 순위</small></h3><div class="cmp tnum">${S.map(x=>`<div${x===d?' class="me"':''} data-sib="${D.indexOf(x)}" style="cursor:pointer"><span class="n">${x.py}평 · ${x.rank.toLocaleString()}위 · ${x.score.toFixed(1)}점 · 적정가 대비 ${x.up>=0?'+':''}${Math.round(x.up*100)}%</span><span class="v">${eok(x.p)}</span>${bar(x.p,CAPHI)}</div>`).join('')}</div>${d.alt&&d.sub?`<p class="note">위 단지 소개 원고는 ${d.basePy}평 기준입니다.</p>`:''}</section>`;
   if(d.fit&&d.fit.length) h+=`<section class="sec"><h3>이런 사람에게</h3><div class="fit">${d.fit.map(f=>`<span>${esc(f)}</span>`).join('')}</div></section>`;
   if(d.check&&d.check.length) h+=`<section class="sec"><h3>사기 전에 확인</h3><ul class="checks">${d.check.map(f=>`<li>${esc(f)}</li>`).join('')}</ul></section>`;
-  h+=`<p class="fine">필요한 돈은 주담대 한도 6억과 LTV만 반영한 계산입니다. 실제 대출은 소득(DSR)에 따라 줄어듭니다. ${d.u||d.p0?'시세는 국토부 실거래 기준 최근 시세(3개월 중위 또는 시세지수 환산)로 매물 호가와 다를 수 있습니다.':'시세는 리치고 추정치로 매물 호가와 다를 수 있습니다.'} 상승률 출처: ${esc(src)}.</p>
+  h+=`<p class="fine">필요한 돈은 주담대 한도(시가 15억 이하 6억, 15억 초과 4억)와 LTV만 반영한 계산입니다. 실제 대출은 소득(DSR)에 따라 줄어듭니다. ${d.u||d.p0?'시세는 국토부 실거래 기준 최근 시세(3개월 중위 또는 시세지수 환산)로 매물 호가와 다를 수 있습니다.':'시세는 리치고 추정치로 매물 호가와 다를 수 있습니다.'} 상승률 출처: ${esc(src)}.</p>
   <div class="pfoot"><a class="btn" target="_blank" rel="noopener" href="https://map.kakao.com/link/search/${encodeURIComponent(d.q)}">카카오맵에서 보기 ${ARROW}</a><a class="btn ghost" target="_blank" rel="noopener" href="https://m.land.naver.com/search/result/${encodeURIComponent(d.q)}">매물</a></div>`;
   const b=$('#body'); b.innerHTML=h; b.scrollTop=0;
   $('#back').onclick=backToList;
