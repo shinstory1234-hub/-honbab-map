@@ -119,6 +119,7 @@ function s4PeerPeak(d){
 const s4Total=(base,penalty,peak)=>100*clamp01((base-penalty+Math.max(0,peak||0))/100);   // 세대수·입지·적정가 대비 백분위 가중평균 − 구축 감점 (전고점 가점은 PEAKW=0이라 기본 0)
 function s4ScoreDetail(d){ const s=d.s4; if(!s)return '';
   const w=s.w||{u:.4,l:.4,p:.2}, f=x=>(+x.toFixed(3)).toString();
+  if((window.S4CFG||{}).model==='m2') return `종합 ${s.modelComp.toFixed(1)}점 = 세대수 ${s.pU.toFixed(0)}×${f(w.u)} + 장기 급지 ${(s.pG??50).toFixed(0)}×${f(w.g)} (입지·적정가 대비는 참고 표시, 순위 미반영)`;
   return `종합 ${s.modelComp.toFixed(1)}점 = 세대수 ${s.pU.toFixed(0)}×${f(w.u)} + 입지 ${s.pLoc.toFixed(0)}×${f(w.l)} + 적정가 대비 ${s.pUp.toFixed(0)}×${f(w.p)}${w.g?` + 장기 급지 ${(s.pG??50).toFixed(0)}×${f(w.g)}`:''}${s.dp?` − 구축 감점 ${s.dp.toFixed(1)}`:''}${s.peakBonus?` + ${s.peakPeer?'주변 추정 가점':'전고점 가점'} ${s.peakBonus.toFixed(1)}`:''}`;
 }
 /* 종합 */
@@ -131,7 +132,8 @@ function s4Score(d){ const Q=S4Q, C=window.S4CFG||{factors:['U7','A','E','J'],lo
   //   15년차 0 → 25년차 OLDW점, 그 뒤 유지. 두 감점은 더함(큰 쪽만 쓰면 다른 구축이 내려가며 막힌 구축이 상대적으로 올라감)
   const age=2026-d.year, noIssue=stOf(d)<35&&!isRemodel(d)&&!(d.m&&d.m.rm), oldp=noIssue?OLDW*clamp01((age-15)/10)*(1-((d.m&&d.m.fz&&d.m.fz.f)||0)*clamp01((age-25)/5))*(1-(d.areaMv||0)):0;   // × (1 − 동네 정비 진행률)   // 25→30년차에 사업성(f) 좋은 단지는 재건축 기대가 유인이라 감점을 덜어 줌
   // 입지가 좋을수록 구축 감점을 덜어 줌(판단, 2026.10.26): 재건축이 어려워도 좋은 자리는 실거주 수요가 버팀 — 입지 백분위 80→100에서 감점 ×1→×0.5
-  const dp=((d.dead||0)*(typeof DEAD!=='undefined'&&DEAD.comp||0)+oldp)*(1-.5*clamp01((pLoc-80)/20)); d.oldp=oldp;
+  // m2(6억 초과 통합 모델): 판단 감점 없음 — S4CFG.noPen
+  const dp=C.noPen?0:((d.dead||0)*(typeof DEAD!=='undefined'&&DEAD.comp||0)+oldp)*(1-.5*clamp01((pLoc-80)/20)); d.oldp=C.noPen?0:oldp;
   const peakR=s4PeakRatio(d), peakPeer=peakR==null?s4PeerPeak(d):null;   // 표시용(배지·상세)
   const peakBonus=peakR==null?(peakPeer?peakPeer.bonus:0):PEAKW*clamp01((peakR-1)/.10);
   const gW=(Q.G&&C.gW)||0, pG=Q.G?s4Pct(Q.G,d.gj):null;   // 장기 급지(s14): 동 급지 2017~2026 평균의 유니버스 백분위
