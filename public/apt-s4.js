@@ -80,8 +80,10 @@ function s4BlendOwnLarge(d,fw){ const b=d.bench||{}, n=b.name||''; if(!b.ppp||!/
   d.s4own=Math.round(own); return Math.round(Math.exp((1-S4BLEND)*Math.log(fw)+S4BLEND*Math.log(own))); }
 const OLDW=window.OLDW_OVERRIDE??10;   // 원천레이크파크 6→약 40위, 벽산5단지 43→약 90위(판단)
 /* 전고점: 2021-07~2022-06 상위 3건 평균(2건 이상, 현재 DB와 동일한 반올림 5㎡ 구간), 현재 거래수 n 가중 단지 비율.
-   비교 거래 없는 2023년 이후 신축은 주변 비교군 기반 추정 가점(최대 절반)을 별도로 계산. W=10은 상위권 구성 시뮬레이션 뒤 제한한 판단값(예측력 실증 아님). */
-const PEAKW=window.PEAKW_OVERRIDE??10;
+   비교 거래 없는 2023년 이후 신축은 주변 비교군 비율을 참고로 계산.
+   2026.11.1: 순위 점수에서 제외하고 배지·상세 표시만 함 — 예측력 검증이 안 됐고(고점 이후 구간이 2022→26 하나뿐),
+   고점 기간 거래가 없는 2022년 이후 신축은 구조적으로 받을 수 없어 신축에 불리했음. PEAKW_OVERRIDE로 실험용 가점만 켤 수 있음. */
+const PEAKW=window.PEAKW_OVERRIDE??0;
 const s4PeakKey=d=>d.n+'|'+(d.area||'').trim().split(/\s+/).pop();
 function s4PeakRatio(d){
   const r=(window.PEAK||{})[s4PeakKey(d)];
@@ -110,17 +112,11 @@ function s4PeerPeak(d){
   const confidence=Math.min(1,peers.length/3), bonus=PEAKW*.5*confidence*clamp01((r-1)/.10);
   return {r,confidence,bonus,peers};
 }
-/* 100점 배분: 기본 모델 90점(세대수36·입지36·여력18), 전고점 최대10점. */
-// 운영자 지정 비교: 센텀퍼스트는 어바인퍼스트의 전고점 가점만 동일 적용한다.
-function s4PeakReference(d){
-  if(d.n!=='평촌센텀퍼스트'||d.area!=='안양 동안구 호계동')return null;
-  const B=window.PEAK_PEER_BASE||{};if(B[s4PeakKey(d)])return null;
-  const e=B['평촌어바인퍼스트|호계동'];if(!e||!Number.isFinite(e[0])||e[0]<=0)return null;
-  return {n:'평촌어바인퍼스트',r:e[0],bonus:PEAKW*clamp01((e[0]-1)/.10)};
-}
-const s4Total=(base,penalty,peak)=>100*clamp01((.9*(base-penalty)+Math.min(10,Math.max(0,peak)))/100);
+/* 운영자 지정 비교 규칙(센텀퍼스트 ← 어바인퍼스트)은 2026.11.1 삭제: 모든 단지에 같은 규칙. */
+const s4Total=(base,penalty,peak)=>100*clamp01((base-penalty+Math.max(0,peak||0))/100);   // 세대수·입지·적정가 대비 백분위 가중평균 − 구축 감점 (전고점 가점은 PEAKW=0이라 기본 0)
 function s4ScoreDetail(d){ const s=d.s4; if(!s)return '';
-  return `종합 ${s.modelComp.toFixed(1)}점 = 세대수 ${s.pU.toFixed(0)}×0.36 + 입지 ${s.pLoc.toFixed(0)}×0.36 + 여력 ${s.pUp.toFixed(0)}×0.18${s.dp?` − 구축 감점 ${s.dp.toFixed(1)}`:''}${s.peakBonus?` + ${s.peakReference?'지정 비교 단지 가점':s.peakPeer?'주변 추정 가점':'전고점 가점'} ${s.peakBonus.toFixed(1)}`:''}`;
+  const w=s.w||{u:.4,l:.4,p:.2}, f=x=>(+x.toFixed(2)).toString();
+  return `종합 ${s.modelComp.toFixed(1)}점 = 세대수 ${s.pU.toFixed(0)}×${f(w.u)} + 입지 ${s.pLoc.toFixed(0)}×${f(w.l)} + 적정가 대비 ${s.pUp.toFixed(0)}×${f(w.p)}${s.dp?` − 구축 감점 ${s.dp.toFixed(1)}`:''}${s.peakBonus?` + ${s.peakPeer?'주변 추정 가점':'전고점 가점'} ${s.peakBonus.toFixed(1)}`:''}`;
 }
 /* 종합 */
 function s4Score(d){ const Q=S4Q, C=window.S4CFG||{factors:['U7','A','E','J'],locMix:.5,upW:.2};
@@ -132,13 +128,14 @@ function s4Score(d){ const Q=S4Q, C=window.S4CFG||{factors:['U7','A','E','J'],lo
   //   15년차 0 → 25년차 OLDW점, 그 뒤 유지. 두 감점은 더함(큰 쪽만 쓰면 다른 구축이 내려가며 막힌 구축이 상대적으로 올라감)
   const age=2026-d.year, noIssue=stOf(d)<35&&!isRemodel(d)&&!(d.m&&d.m.rm), oldp=noIssue?OLDW*clamp01((age-15)/10)*(1-((d.m&&d.m.fz&&d.m.fz.f)||0)*clamp01((age-25)/5))*(1-(d.areaMv||0)):0;   // × (1 − 동네 정비 진행률)   // 25→30년차에 사업성(f) 좋은 단지는 재건축 기대가 유인이라 감점을 덜어 줌
   // 입지가 좋을수록 구축 감점을 덜어 줌(판단, 2026.10.26): 재건축이 어려워도 좋은 자리는 실거주 수요가 버팀 — 입지 백분위 80→100에서 감점 ×1→×0.5
-  const dp=((d.dead||0)*(typeof DEAD!=='undefined'&&DEAD.comp||0)+oldp)*(1-.5*clamp01((pLoc-80)/20)); d.oldp=.9*oldp;
-  const peakR=s4PeakRatio(d), peakReference=peakR==null?s4PeakReference(d):null, peakPeer=peakR==null&&!peakReference?s4PeerPeak(d):null;
-  const peakBonus=peakR==null?(peakReference?peakReference.bonus:peakPeer?peakPeer.bonus:0):PEAKW*clamp01((peakR-1)/.10);
+  const dp=((d.dead||0)*(typeof DEAD!=='undefined'&&DEAD.comp||0)+oldp)*(1-.5*clamp01((pLoc-80)/20)); d.oldp=oldp;
+  const peakR=s4PeakRatio(d), peakPeer=peakR==null?s4PeerPeak(d):null;   // 표시용(배지·상세)
+  const peakBonus=peakR==null?(peakPeer?peakPeer.bonus:0):PEAKW*clamp01((peakR-1)/.10);
   const lead=fs.length?(1-C.locMix)*ld+C.locMix*pLoc:pLoc, base=(1-C.upW)*lead+C.upW*pUp;
   const comp=s4Total(base,dp,peakBonus), modelComp=comp;
-  d.s4={pU:p.U7,pA:p.A,pE:p.E,pJ:p.J,ld,pUp,pLoc,J,dp:dp*.9,rawDp:dp,peakR,peakBonus,peakPeer,peakReference,modelComp};
-  const pc=s4Pct(Q.COMP,comp); d.score=comp; d.comp=comp;                     // 기본 모델90점 + 전고점10점, 0~100. 센텀퍼스트도 공통 산식으로 계산
+  const wl=fs.length?C.locMix:1, w={u:(1-C.upW)*(1-wl),l:(1-C.upW)*wl,p:C.upW};
+  d.s4={pU:p.U7,pA:p.A,pE:p.E,pJ:p.J,ld,pUp,pLoc,J,dp,rawDp:dp,peakR,peakBonus,peakPeer,modelComp,w};
+  const pc=s4Pct(Q.COMP,comp); d.score=comp; d.comp=comp;                     // 0~100, 모든 단지 공통 산식
   d.top=Math.max(.1,Math.round((100-pc)*10)/10);                                   // 상위 x%
   d.urank=Math.max(1,Math.round((100-pc)/100*((C.complexes)||4708))); }           // 약 N위/4,708단지
 const s4RankTxt=d=>{ const n=(typeof D!=='undefined'&&D.length)||1, r=d.rank||d.urank||0, t=Math.max(.1,r/n*100); return `이 화면 상위 ${t<1?t.toFixed(1):Math.max(1,Math.round(t))}% · ${r.toLocaleString()}위/${n.toLocaleString()}개 평형`; };

@@ -32,11 +32,16 @@ console.log('PASS: peer eligibility, one-peer confidence, floor-plan deduplicati
 assert.equal(vm.runInContext('s4Total(100,0,10)',context),100);
 assert.equal(vm.runInContext('s4Total(0,100,0)',context),0);
 assert.equal(vm.runInContext('s4Total(100,0,1000)',context),100);
-assert.equal(vm.runInContext('s4Total(80,10,5)',context),68);
-context.referenceTarget={n:'평촌센텀퍼스트',area:'안양 동안구 호계동'};
-context.window.PEAK_PEER_BASE={'평촌어바인퍼스트|호계동':[1.319234,2021,180]};
-assert.equal(vm.runInContext('s4PeakReference(referenceTarget).bonus',context),10);
-context.referenceTarget.area='다른 지역';assert.equal(vm.runInContext('s4PeakReference(referenceTarget)',context),null);
-context.referenceTarget.area='안양 동안구 호계동';context.window.PEAK_PEER_BASE={};assert.equal(vm.runInContext('s4PeakReference(referenceTarget)',context),null);
-context.window.PEAK_PEER_BASE={'평촌어바인퍼스트|호계동':[.9,2021,180]};assert.equal(vm.runInContext('s4PeakReference(referenceTarget).bonus',context),0);
-console.log('PASS: identical reference bonus, exact region, missing reference and below-peak reference');
+assert.equal(vm.runInContext('s4Total(80,10,5)',context),75);
+assert.equal(vm.runInContext("typeof s4PeakReference",context),'undefined');
+console.log('PASS: total clamp and no complex-specific reference rule');
+
+// 기본 설정(PEAKW 미지정)에서는 전고점 비율이 표시만 되고 점수에 영향이 없어야 한다
+{
+  const fs2=await import('node:fs'), vm2=await import('node:vm');
+  const c2={console,window:{},clamp01:x=>Math.max(0,Math.min(1,x)),stOf:()=>40,isRemodel:()=>false};
+  vm2.createContext(c2); vm2.runInContext(fs2.readFileSync(new URL('../public/apt-s4.js',import.meta.url),'utf8'),c2);
+  assert.equal(vm2.runInContext('PEAKW',c2),0);
+  assert.equal(vm2.runInContext('s4Total(80,10,0)',c2),70);
+  console.log('PASS: default PEAKW=0 keeps peak ratio out of the score');
+}
