@@ -853,7 +853,9 @@ const badgeHTML=d=>[{label:d.tier.k,color:d.tier.c},...cardFeatures(d).map(k=>FE
   .map(x=>`<span class="chip" style="--chip:${x.color}">${esc(x.label)}</span>`).join('');
 const FILTERS=[['all','전체'],['top','핵심 1~30'],['mid','유망 31~300'],['interest','관심 301~1,000'],['explore','탐색 1,001+'],['신축','신축'],['학군','학군'],['재건축','재건축'],['리모델링','리모델링'],['천지개벽','천지개벽'],['역세권','역세권'],['초품아','초품아'],['대단지','대단지'],['신설역','신설역'],['반도체','반도체'],['소형할인','소형 할인'],['flat','평지'],['job50','출근 50분'],['free','비규제']];
 const state={f:'all',pb:'all',size:'all',q:'',sel:null,lim:50};
-const PB=[['all','전체 가격'],['3','3억 이하',0,30000],['4','3~4억',30000,40000],['5','4~5억',40000,50000],['6','5~6억',50000,60001]].concat(CAPT===10?[['7','6억 초과',60000,1e9]]:[]);   // 필요 현금 기준
+// 6억 탭: 대출 끼고 필요한 현금 기준 / 6~10억 탭: 시세(가격) 기준 — 10억 탭에서 현금 구간은 '3억 이하'가 가격처럼 읽혀 헷갈림(2026.11.1)
+const PB=CAPT===10?[['all','전체 가격'],['p7','6~7억',60000,70000],['p8','7~8억',70000,80000],['p9','8~9억',80000,90000],['p10','9~10억',90000,100000]]
+  :[['all','전체 가격'],['3','3억 이하',0,30000],['4','3~4억',30000,40000],['5','4~5억',40000,50000],['6','5~6억',50000,60001]];
 const SIZES=[['all','전체 평형'],['10','10평대',10,20],['20','20평대',20,30],['30','30평 이상',30,Infinity]];
 /* 검색용 신도시·생활권 이름(법정동 이름에 안 들어 있어 '운정'·'동탄' 등으로 검색이 안 되던 문제) */
 const TOWN=[[/^파주/,/동패동|목동동|와동동|야당동|다율동|당하동|상지석동/,'운정'],[/^화성/,/청계동|영천동|오산동|산척동|목동|송동|여울동|장지동|방교동|신동|중동|능동|반송동|석우동/,'동탄'],
@@ -862,7 +864,7 @@ const TOWN=[[/^파주/,/동패동|목동동|와동동|야당동|다율동|당하
 const townOf=d=>{ const dong=d.area.split(' ').pop(); return TOWN.filter(([r,dr])=>r.test(d.area)&&dr.test(dong)).map(t=>t[2]).join(' '); };
 const visible=d=>{
   const f=state.f, ok=f==='all'||(f==='top'&&d.rank<=30)||(f==='mid'&&d.rank>30&&d.rank<=300)||(f==='interest'&&d.rank>300&&d.rank<=1000)||(f==='explore'&&d.rank>1000)||(f==='flat'&&isFlat(d))||(f==='job50'&&jobMin(d)!=null&&jobMin(d)<=50)||(f==='free'&&d.reg==='free')||hasFeature(d,f);
-  const pb=PB.find(x=>x[0]===state.pb); const okp=state.pb==='all'||(cashOf(d)>pb[2]&&cashOf(d)<=pb[3])||(state.pb==='3'&&cashOf(d)<=30000);
+  const pb=PB.find(x=>x[0]===state.pb); const okp=state.pb==='all'||!pb||(CAPT===10?(d.p>pb[2]&&d.p<=pb[3]):((cashOf(d)>pb[2]&&cashOf(d)<=pb[3])||(state.pb==='3'&&cashOf(d)<=30000)));
   const size=SIZES.find(x=>x[0]===state.size), oks=state.size==='all'||(d.py>=size[2]&&d.py<size[3]);
   return ok&&okp&&oks&&(!state.q||(d.n+d.area+d.headline+townOf(d)).includes(state.q));
 };
