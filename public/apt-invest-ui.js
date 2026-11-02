@@ -107,7 +107,7 @@
     if(st)checks.push(`${st[0].replace(/ \S+$/,'')}까지 단지 출입구 기준 실제 보행시간 확인`);checks.push('배정 중학교는 교육지원청에 확인');
     if(age>=20)checks.push('주차·배관·승강기·장기수선계획과 내부 수리비 확인');if(age>=27||d.tags&&d.tags.includes('재건축'))checks.push('정비사업 고시·대지지분·조합원 지위·추가분담금 확인');if(land)checks.push(`대지지분 ${(land[0]/3.3058).toFixed(1)}평은 용적률 기반 추정치 · 등기부 재확인`);
     const timeline=[];if(special&&special[2])timeline.push([special[2],special[3]]);if(d.locParts&&d.locParts.fut)timeline.push([`${d.locParts.fut.year} 목표`,`${d.locParts.fut.n}역(${d.locParts.fut.line}) · 일정 변동 가능`]);
-    return `<section class="invest invest-researched"><div class="invest-head"><h3>핵심 투자포인트</h3><span class="tnum">단지별 조사 · 고정순위 ${rank}위</span></div><strong class="invest-lead">${esc(title(d,special))}</strong><div class="invest-essay"><h4>① 생활권과 상품성</h4><p>${esc(`${d.year}년 입주한 ${d.units.toLocaleString()}세대, ${d.py}평형이다. ${p[0]}`)}</p><h4>② 교통과 학군</h4><p>${esc(traffic+education(d))}</p><h4>③ 평형과 거래 근거</h4><p>${esc(trade(d,rank))}</p><h4>④ 이 단지만의 변수</h4><p>${esc(risk(d,p,special))}</p></div>${timeline.length?`<div class="invest-mini"><h4>확인할 일정</h4><ul>${timeline.map(t=>`<li><b>${esc(t[0])}</b> ${esc(t[1])}</li>`).join('')}</ul></div>`:''}<div class="invest-mini"><h4>사기 전에 확인</h4><ul>${checks.map(x=>`<li>${esc(x)}</li>`).join('')}</ul></div><p class="invest-source">조사 기준 2026.11.02 · 주요 출처: <a href="${p[3]}" target="_blank" rel="noopener">${esc(p[2])}</a>, 국토교통부 실거래, 학교알리미, 건축물대장·정비사업 공개자료. 가장 가까운 학교는 배정 학교를 뜻하지 않는다.</p></section>`;
+    return `<section class="invest invest-researched"><div class="invest-head"><h3>핵심 투자포인트</h3><span class="tnum">단지별 조사 1차 · 고정순위 ${rank}위</span></div><strong class="invest-lead">${esc(title(d,special))}</strong><div class="invest-essay"><h4>① 생활권과 상품성</h4><p>${esc(`${d.year}년 입주한 ${d.units.toLocaleString()}세대, ${d.py}평형이다. ${p[0]}`)}</p><h4>② 교통과 학군</h4><p>${esc(traffic+education(d))}</p><h4>③ 평형과 거래 근거</h4><p>${esc(trade(d,rank))}</p><h4>④ 이 단지만의 변수</h4><p>${esc(risk(d,p,special))}</p></div>${timeline.length?`<div class="invest-mini"><h4>확인할 일정</h4><ul>${timeline.map(t=>`<li><b>${esc(t[0])}</b> ${esc(t[1])}</li>`).join('')}</ul></div>`:''}<div class="invest-mini"><h4>사기 전에 확인</h4><ul>${checks.map(x=>`<li>${esc(x)}</li>`).join('')}</ul></div><p class="invest-source">조사 기준 2026.11.02 · 주요 출처: <a href="${p[3]}" target="_blank" rel="noopener">${esc(p[2])}</a>, 국토교통부 실거래, 학교알리미, 건축물대장·정비사업 공개자료. 가장 가까운 학교는 배정 학교를 뜻하지 않는다.</p></section>`;
   }
   function summary(d,rank){
     const station=nearestStation(d),school=(window.APT_INV_SCHOOL||{})[gkey(d)],hak=(window.HAK||{})[gkey(d)],age=2026-d.year,stage=stOf(d),land=landOf(d),pe=priceEv(d),hill=hR(d),flags=[];
@@ -125,7 +125,7 @@
     window.renderDetail=function(i){
       original(i);
       const body=document.getElementById('body'),d=D[i],lede=body&&body.querySelector('.lede'),html=panel(d),rank=((window.APT_INV_RANK||{})[CAPT]||{})[`${gkey(d)}|${d.py}`];
-      if(rank<=100){const cat=body&&body.querySelector('.identity .cat');if(cat)cat.textContent=cat.textContent.replace('전체 단지 자동 수집','단지별 조사 완료');}
+      if(rank<=100){const cat=body&&body.querySelector('.identity .cat');if(cat)cat.textContent=cat.textContent.replace('전체 단지 자동 수집','단지별 조사 1차 반영');}
       if(lede&&html)lede.insertAdjacentHTML('afterend',html);
     };
     if(typeof state!=='undefined'&&state.sel!=null)window.renderDetail(state.sel);
