@@ -31,5 +31,17 @@
     var big=types.filter(function(t){return t.py>d.py;}).sort(function(a,b){return b.py-a.py;})[0];
     if(big) d.bench={ppp:Math.round(big.p/big.py),name:'같은 단지 '+big.py+'평 '+eok(big.p)+' · 현재 시세'};
   });
+  /* 이상 거래 평형 제외(2026.11.3): 최근 12개월 거래 2건 이하인데 같은 단지 더 작은 평형보다 싸면(예: 고덕자이 전용 101㎡ 1건 16억 < 84㎡ 21억)
+     특수 거래로 보고 순위에서 뺌 — 평당가가 비정상적으로 낮아 '싼 평형'으로 대표가 되던 문제 */
+  var drop=0, odd=function(t,ts){ if(t.n>2) return false;
+      var sm=ts.filter(function(u){return u.py<t.py&&u.n>=3;}).reduce(function(m,u){return Math.max(m,u.p);},0); return sm>0&&t.p<sm; };
+  for(var j=P.length-1;j>=0;j--){ var e=P[j]; if(!e.live||!e.types) continue;
+    var ok=e.types.filter(function(t){return !odd(t,e.types);}); if(ok.length===e.types.length) continue;
+    drop+=e.types.length-ok.length;
+    if(!ok.length){ P.splice(j,1); continue; }
+    e.types=ok;
+    if(!ok.some(function(t){return t.py===e.py;})){   // 대표 평형이 빠졌으면 가장 가까운 평형으로
+      var me3=ok.slice().sort(function(a,b){return Math.abs(a.py-e.py)-Math.abs(b.py-e.py);})[0]; e.py=me3.py; e.p=me3.p; e.headline=e.py+'평 '+eok(e.p)+' · 현재 시세'; } }
+  window.LIVE_DROP=drop;
   window.LIVE_HIT=hit;
 })();

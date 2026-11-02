@@ -122,8 +122,6 @@ function s4PeerPeak(d){
 const s4Total=(base,penalty,peak)=>100*clamp01((base-penalty+Math.max(0,peak||0))/100);   // 세대수·입지·적정가 대비 백분위 가중평균 − 구축 감점 (전고점 가점은 PEAKW=0이라 기본 0)
 function s4ScoreDetail(d){ const s=d.s4; if(!s)return '';
   const w=s.w||{u:.4,l:.4,p:.2}, f=x=>(+x.toFixed(3)).toString();
-  if(s.m3){ const m=s.m3, n=x=>(+x.toFixed(1)).toString();
-    return `종합 ${d.score.toFixed(1)}점 = 장기 급지 ${Math.round(m.G)}${m.gcap?`(상한 85 · ${m.gcap})`:''}×0.45 + 세대수 ${s.pU.toFixed(0)}×0.2 + 상품성 ${n(m.P*20)}/20(${m.pl}) + 가성비 ${n(m.V*15)}/15(${m.rs==null?'재건축 단지 · 중립':`주변 시세로 본 받을 값보다 ${m.rs>=0?'싸게':'비싸게'} ${Math.abs(Math.round(m.rs*100))}%`})${m.sp?` − 비싼 소형 ${n(m.sp)}(같은 단지 ${m.ref}평 평당가의 ${m.r34.toFixed(2)}배)`:''} · 급지·세대수만 백테스트 통과, 나머지 비중은 판단`; }
   if((window.S4CFG||{}).model==='m2') { const z=s.za||{sm:0,pp:0}, zt=(z.sm?` − 소형 ${z.sm.toFixed(1)}`:'')+(z.pp?` ${z.pp>0?'+':'−'} 단지 내 평당가 ${Math.abs(z.pp).toFixed(1)}(다른 평형 대비 ${z.ppr>=1?'+':''}${((z.ppr-1)*100).toFixed(0)}%)`:'');
     return `종합 ${(zt?d.score:s.modelComp).toFixed(1)}점 = 세대수 ${s.pU.toFixed(0)}×${f(w.u)} + 장기 급지 ${(s.pG??50).toFixed(0)}×${f(w.g)}${zt?` (${s.modelComp.toFixed(1)})`+zt:''} · 입지·재건축 사업성은 참고 표시, 순위 미반영`; }
   return `종합 ${s.modelComp.toFixed(1)}점 = 세대수 ${s.pU.toFixed(0)}${d.uGate?`(원래 ${d.uGate.raw.toFixed(0)}, 입지 약해 대단지 가점 ${Math.round(d.uGate.g*100)}%만 인정)`:''}×${f(w.u)} + 입지 ${s.pLoc.toFixed(0)}×${f(w.l)} + 적정가 대비 ${s.pUp.toFixed(0)}×${f(w.p)}${w.g?` + 장기 급지 ${(s.pG??50).toFixed(0)}×${f(w.g)}`:''}${s.dp?` − 구축 감점 ${s.dp.toFixed(1)}`:''}${s.peakBonus?` + ${s.peakPeer?'주변 추정 가점':'전고점 가점'} ${s.peakBonus.toFixed(1)}`:''}`;
@@ -148,33 +146,6 @@ function s4SizeAdj(d){
   if(!o.length) return {sm,pp:0,ppr:null,old};
   const med=o.length%2?o[o.length>>1]:(o[o.length/2-1]+o[o.length/2])/2, r=me/med;
   return {sm,pp:-PPYW*Math.max(-1,Math.min(1,(r-1)/.15)),ppr:r,old}; }
-/* 6억 초과 탭 종합(m3, 2026.11.3 · 판단 가중치 — 과거 백테스트를 통과한 건 장기 급지·세대수뿐, 나머지 비중은 판단):
-   종합 = 장기 급지 45 + 세대수 20 + 상품성 20 + 가성비 15 − 비싼 소형 감점(최대 8)
-   · 상품성: 신축(5년 이내) 1 → 10년 0.9 → 15년 0.8 → 20년 0.75 → 구축 0.7. 27년차+ 재건축 대상은 재건축 모델 사업성으로 0.7~0.95(+정비 단계 0.05), 리모델링 0.6
-   · 가성비: 반경 약 600m 주변 시세(실제 거리, 상품 차이 제거)로 본 '받을 값' 대비 현재 시세 — 20% 비싸면 0, 20% 싸면 만점
-   · 비싼 소형: 30평 미만 평형의 평당가가 같은 단지 30평대 평당가의 1.2배 넘으면 감점 시작, 1.5배 −8. 사업성 되는 재건축 대상은 대지지분 가치라 제외
-   · 장기 급지 상한: 동 안 단지가 대부분 2012년 이후 준공인 신규 개발 동은 장기 급지가 시·구 평균으로 채워져 부풀려지므로 85 상한 */
-const M3NEW=new Set(["11140|입정동", "11200|상왕십리동", "11680|자곡동", "28155|운남동", "28155|중산동", "41111|이목동", "41117|신동", "41131|고등동", "41133|여수동", "41133|중앙동", "41135|대장동", "41150|고산동", "41194|옥길동", "41210|일직동", "41220|고덕동", "41220|죽백동", "41281|도내동", "41281|동산동", "41281|삼송동", "41281|신원동", "41281|원흥동", "41281|지축동", "41281|향동동", "41310|갈매동", "41360|별내동", "41370|내삼미동", "41390|군자동", "41390|배곧동", "41410|도마교동", "41430|고천동", "41430|학의동", "41450|감이동", "41450|망월동", "41450|선동", "41450|풍산동", "41450|학암동", "41595|반정동", "41597|목동", "41597|산척동", "41597|송동", "41597|장지동", "41597|청계동", "41610|역동", "41630|옥정동", "11650|내곡동"]);
-const M3FIX={'THESHARP판교퍼스트파크|성남 분당구 백현동':'실제 위치 대장동(자료상 백현동)'};
-function s4M3(d,pU,pG){
-  const f=FD(d)||[], sgg=f[6]||'', dong=d.area.split(' ').pop(), age=2026-d.year, rm=isRemodel(d)||!!(d.m&&d.m.rm);
-  let G=(pG??50)/100, gcap=''; if((M3NEW.has(sgg+'|'+dong)||M3FIX[gkey(d)])&&G>.85){ G=.85; gcap=M3FIX[gkey(d)]||'신규 개발 동'; }
-  /* 상품성(2026.11.3 개정): 연식 차이가 급지 차이를 덮지 않게 폭을 줄임 — 신축 1 → 10년 0.9 → 15년 0.8 → 20년 0.75 → 구축 0.7.
-     27년차+ 재건축 대상은 용적률 구간 대신 이 사이트 재건축 모델의 사업성(분담금 ÷ 신축가 → 정비 단계 진입 비율, d.m.fz.f 0~1)으로
-     0.7 + 0.25 × 사업성(0.7~0.95), 공식 정비 단계(35+)면 +0.05. 리모델링 0.6 */
-  let P, pl; const fz=d.m&&d.m.fz, st=stOf(d), fol=(d.m&&d.m.fol)||'';
-  if(rm){ P=.6; pl='리모델링(재건축 불가)'; }
-  else if(age>=27&&fz&&fz.f!=null){ P=Math.min(1,.7+.25*fz.f+(st>=35?.05:0)); pl=`재건축 사업성 ${Math.round(fz.f*100)}%${st>=35?' · 정비 단계 진행':''}${/추정/.test(fol)?' · 기존 용적률 추정':''}`; }
-  else if(age<=5){P=1;pl=`신축 ${Math.max(0,age)}년차`;} else if(age<=10){P=.9;pl=`준신축 ${age}년차`;} else if(age<=15){P=.8;pl=`${age}년차`;} else if(age<=20){P=.75;pl=`${age}년차`;} else {P=.7;pl=`구축 ${age}년차`;}
-  /* 가성비(2026.11.3 개정): 같은 동 평균이 아니라 실제 거리 기준 주변 시세 — 반경 약 600m 안 25년차 이하 단지들의 위치가치(상품 차이 제거)에
-     이 단지 연식·평형을 반영한 '받을 값' 대비 현재 시세(단지 전체, 평형별 거래 가중). 동 경계·대형 평형 쏠림 없음.
-     비교 단지가 적으면 신뢰도만큼 0 쪽으로 줄임. 재건축 계산만 있는 단지(일반 계산 없음)는 중립 0.5. −20% → 0, +20% → 만점 */
-  const ug=d.upGen, cf=d.conf??1, ue=ug==null?null:(ug>0?ug*cf:ug), V=ue==null?.5:clamp01((ue+.2)/.4), rs=ue==null?null:ue;
-  const me=d.p/d.py, ref=(d.types||[]).filter(t=>t.py>=30&&t.py<40&&t.p>0).sort((x,y)=>(y.n||0)-(x.n||0))[0];
-  const recon=age>=27&&!!fz&&!rm&&!((d.dead||0)>=.25), r34=ref&&d.py<30?me/(ref.p/ref.py):null, sp=(recon||r34==null)?0:8*clamp01((r34-1.2)/.3);
-  const score=Math.max(0,Math.min(100,45*G+20*(pU/100)+20*P+15*V-sp));
-  return {score,G:G*100,gcap,P,pl,V,rs,sp,r34,ref:ref?ref.py:null};
-}
 function s4Score(d){ const Q=S4Q, C=window.S4CFG||{factors:['U7','A','E','J'],locMix:.5,upW:.2};
   const J=s4J(d), v={U7:d.U7,A:d.A,E:d.E,J};
   const p={}; for(const f of ['U7','A','E','J']) p[f]=s4Pct(Q[f],v[f]);
@@ -200,9 +171,7 @@ function s4Score(d){ const Q=S4Q, C=window.S4CFG||{factors:['U7','A','E','J'],lo
   const comp=s4Total(base,dp,peakBonus), modelComp=comp;
   const wl=fs.length?C.locMix:1, w={u:(1-C.upW-gW)*(1-wl),l:(1-C.upW-gW)*wl,p:C.upW,g:gW};
   d.s4={pU:p.U7,pA:p.A,pE:p.E,pJ:p.J,ld,pUp,pLoc,pG,J,dp,rawDp:dp,peakR,peakBonus,peakPeer,modelComp,w};
-  let za=s4SizeAdj(d), adj=Math.max(0,Math.min(100,comp-za.sm+za.pp));
-  if(window.CAPT>6&&C.model==='m2'){ const m=s4M3(d,p.U7,pG); d.s4.m3=m; adj=m.score; za={sm:0,pp:0,ppr:null,old:za.old}; }   // m3: 평형 보정은 산식 안에서
-  d.s4.za=za;
+  const za=s4SizeAdj(d); d.s4.za=za; const adj=Math.max(0,Math.min(100,comp-za.sm+za.pp));
   const pc=s4Pct(Q.COMP,adj); d.score=adj; d.comp=comp;                     // 0~100, 모든 단지 공통 산식
   d.top=Math.max(.1,Math.round((100-pc)*10)/10);                                   // 상위 x%
   d.urank=Math.max(1,Math.round((100-pc)/100*((C.complexes)||4708))); }           // 약 N위/4,708단지
