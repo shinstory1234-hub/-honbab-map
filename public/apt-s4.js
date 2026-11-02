@@ -181,7 +181,10 @@ function s4Score(d){ const Q=S4Q, C=window.S4CFG||{factors:['U7','A','E','J'],lo
   const dp=C.noPen?0:(deadP+oldp)*(1-.5*clamp01((pLoc-80)/20)); d.oldp=C.noPen?0:oldp;   // m2(2026.11.1): 재건축 사업성은 감점하지 않고 위험 표시만(감점 시 과거 세 구간 모두 성과 하락, 감점 크기 근거 없음)
   const peakR=s4PeakRatio(d), peakPeer=peakR==null?s4PeerPeak(d):null;   // 표시용(배지·상세)
   const peakBonus=peakR==null?(peakPeer?peakPeer.bonus:0):PEAKW*clamp01((peakR-1)/.10);
-  const gW=(Q.G&&C.gW)||0, pG=Q.G?s4Pct(Q.G,d.gj):null;   // 장기 급지(s14): 동 급지 2017~2026 평균의 유니버스 백분위
+  /* 급지 점수(2026.11.3, S4CFG.gAbs·gMix): 백분위만 쓰면 '몇 번째냐'만 남아 상급지끼리의 차이가 사라짐
+     (도곡렉슬 위치가치 1.28 vs 과천 0.93 — 평당가 1.4배 차이인데 백분위로는 99 vs 96). 원값을 고정 눈금(gAbs[0] → 0점, gAbs[1] → 100점)으로 옮긴 직선 점수와
+     기존 백분위를 gMix : (1−gMix)로 섞음 — 직선만 쓰면 6~10억 탭에서 급지 변별력이 너무 줄고(입지 약한 대단지 신축이 상위로), 백분위만 쓰면 20억 넘는 탭에서 강남·과천·고덕이 한 덩어리가 됨 */
+  const GL=C.gAbs, gW=(Q.G&&C.gW)||0, pGl=(GL&&d.gj!=null)?100*clamp01((d.gj-GL[0])/(GL[1]-GL[0])):null, pGp=Q.G?s4Pct(Q.G,d.gj):null, pG=pGl==null?pGp:pGp==null?pGl:(C.gMix??1)*pGl+(1-(C.gMix??1))*pGp;   // gMix: 직선 비중(나머지는 백분위)   // 장기 급지(s14): 동 급지 2017~2026 평균의 유니버스 백분위
   const qW=C.qW||0, pq=qW?s4Prod(d):null, pQ=pq?pq.v:null;
   const lead=fs.length?(1-C.locMix)*ld+C.locMix*pLoc:pLoc, base=(1-C.upW-gW-qW)*lead+C.upW*pUp+gW*(pG??50)+qW*(pQ??50);
   const comp=s4Total(base,dp,peakBonus), modelComp=comp;
