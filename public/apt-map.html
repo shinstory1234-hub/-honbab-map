@@ -489,10 +489,7 @@ const D=fixUnits(PICKS.map(d=>({...d,opt:(window.OPT||{})[d.n]||null})).filter(d
   if(!big.length) return false;
   const t=big.reduce((a,b)=>b.n>a.n?b:a); d.py=t.py; d.p=t.p; d.me=null;
   d.headline=`${t.py}평 ${eok(t.p)} · 최근 시세 (초소형 평형은 순위에서 제외)`; d.deal=`${curSrc(t)} ${eok(t.p)}`;
-  return true; })).flatMap(typeRows).filter(d=>{ if(d.opt||inBand(d.p)) return true; BANDOUT.push([d.n,d.area,d.py,d.p]); return false; })
-  /* 2026.11.3: 6억 초과 탭은 최근 12개월 거래 1건뿐(3개월 0건)인 평형을 뺌 — 시세 근거가 거래 한 건이면 직거래·특수 거래 한 건이 곧 시세가 됨
-     (예: 올림픽선수기자촌2단지 24평, 2025.12 직거래 16.5억 한 건으로 17.1억 → 1위. 이 평형은 실제로 2026.7 24.2억 거래) */
-  .filter(d=>{ if(CAPT===6||d.opt) return true; const t=(d.types||[]).find(t=>t.py===d.py); if(!t||t.n3>0||t.n>=2) return true; THINOUT.push([d.n,d.area,d.py,d.p]); return false; });   // 2026.11.1: 대표 평형도 탭 가격대 안만(이전엔 대표 평형은 검사 없이 들어와 6~10억 탭에 306개 평형이 가격대 밖이었음)
+  return true; })).flatMap(typeRows).filter(d=>{ if(d.opt||inBand(d.p)) return true; BANDOUT.push([d.n,d.area,d.py,d.p]); return false; });   // 2026.11.1: 대표 평형도 탭 가격대 안만(이전엔 대표 평형은 검사 없이 들어와 6~10억 탭에 306개 평형이 가격대 밖이었음)
 const SIB={}; D.forEach(d=>(SIB[d.cxKey]=SIB[d.cxKey]||[]).push(d));
 const sibs=d=>SIB[d.cxKey]||[d];   // 같은 단지의 6억 이하 평형들(각자 순위 대상)
 const NCX=Object.keys(SIB).length;
