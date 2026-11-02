@@ -1,3 +1,12 @@
+/* 중복 단지 제거(2026.11.3) — 실거래 신고명만 '1단지·2단지'로 갈린 같은 단지(좌표·세대수·입주년도가 모두 같음)가 따로 순위에 오르던 문제(예: e편한세상신촌1·2단지).
+   자동 수집 단지만 대상, 같은 평형끼리 묶어 거래가 많은 쪽 하나만 남김 */
+(function(){ if(!(window.CAPT>6)||!window.PICKS) return; var best={}, drop=0;
+  function tn(d){ var t=(d.types||[]).filter(function(x){return x.py===d.py;})[0]; return t?(t.n||0):0; }
+  window.PICKS.forEach(function(d,i){ if(!d.auto||!d.lat) return; var k=[d.lat.toFixed(4),d.lng.toFixed(4),d.units,d.year,d.py].join('|'), b=best[k];
+    if(b==null||tn(d)>tn(window.PICKS[b])) best[k]=i; });
+  var keep={}; for(var k in best) keep[best[k]]=1;
+  window.PICKS=window.PICKS.filter(function(d,i){ if(!d.auto||!d.lat||keep[i]) return true; drop++; return false; });
+  window.DUP_DROP=drop; })();
 /* 단지 단위 장기 급지(2026.11.3) — 동(洞) 단위 급지(apt-gjl.js)를 대체. 동 안에서도 위치가 크게 다른 곳(예: 신정동 = 목동 신시가지 + 신정3동 외곽)을
    한 값으로 묶던 문제 해결. 계산(realestate-media bt_apt_trades, 직거래·해제 제외):
    ① 2017·2020·2023·2026(최근 12개월) 실거래 ㎡당가를 연도·연식(5년 구간)·ln 면적(27년차+ 별도 기울기)으로 회귀해 상품 차이를 뺀 잔차 = 위치가치
