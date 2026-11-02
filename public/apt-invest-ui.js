@@ -1,6 +1,6 @@
 /* 가격대별 투자포인트
- * 1~100위: 단지별 생활권·거래·정비사업 전수조사 원고
- * 101~1,000위: 기존 정형자료 요약(후속 조사 대상)
+ * 1~200위: 단지별 생활권·거래·정비사업 전수조사 원고
+ * 201~1,000위: 기존 정형자료 요약(후속 조사 대상)
  */
 (function(){
   const style=document.createElement('style');
@@ -155,14 +155,14 @@
     return `<section class="invest"><div class="invest-head"><h3>자동 요약</h3><span class="tnum">현재순위 ${rank}위</span></div><strong class="invest-lead">${esc(lead)}</strong><dl class="invest-list"><div><dt>교통</dt><dd>${esc(traffic)}</dd></div><div><dt>학군</dt><dd>${esc(edu)}</dd></div><div><dt>단지</dt><dd>${esc(product)}</dd></div><div><dt>확인</dt><dd>${esc(danger.join(' · '))}</dd></div></dl><p class="invest-note">아직 단지별 전수조사 전인 자동 요약이다. 조사 완료 단지만 상단에 ‘단지별 전수조사’로 표시한다.</p></section>`;
   }
   function rankOf(d){return d.rank;}
-  function deepOf(d){return (window.APT_DEEP6_100||{})[gkey(d)]||null;}
-  function panel(d){const rank=rankOf(d);if(!rank)return '';const deep=CAPT===6&&rank<=100?deepOf(d):null;return deep?deepPanel(d,rank,deep):summary(d,rank);}
+  function deepOf(d){const k=gkey(d);return (window.APT_DEEP6_200||{})[k]||(window.APT_DEEP6_100||{})[k]||null;}
+  function panel(d){const rank=rankOf(d);if(!rank)return '';const deep=CAPT===6&&rank<=200?deepOf(d):null;return deep?deepPanel(d,rank,deep):summary(d,rank);}
   function install(){
     if(window.__aptInvestInstalled||typeof window.renderDetail!=='function')return;window.__aptInvestInstalled=true;const original=window.renderDetail;
     window.renderDetail=function(i){
       original(i);
       const body=document.getElementById('body'),d=D[i],lede=body&&body.querySelector('.lede'),html=panel(d),rank=rankOf(d);
-      const deep=CAPT===6&&rank<=100?deepOf(d):null;
+      const deep=CAPT===6&&rank<=200?deepOf(d):null;
       if(deep){
         const cat=body&&body.querySelector('.identity .cat');if(cat)cat.textContent=cat.textContent.replace(/(?:전체 단지 자동 수집|점수식 자동 선별|직접 분석|단지별 조사 1차 반영)/,'단지별 전수조사');
         [...body.querySelectorAll('section.sec')].forEach(sec=>{const heading=sec.querySelector(':scope > h3');if(heading&&['이런 사람에게','사기 전에 확인'].includes(heading.textContent.trim()))sec.remove();});
