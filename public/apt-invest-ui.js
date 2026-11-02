@@ -187,7 +187,7 @@
 
     let compare='';
     if(peer){
-      const ps=nearestStation(peer),newer=peer.year>d.year?`${peer.n}이 ${peer.year-d.year}년 더 새 아파트다`:peer.year<d.year?`${d.n}이 ${d.year-peer.year}년 더 새 아파트다`:`두 단지 입주연도는 ${d.year}년으로 같다`;
+      const ps=nearestStation(peer),newer=peer.year>d.year?`비교 단지의 입주연도가 ${peer.year-d.year}년 더 늦다`:peer.year<d.year?`이 단지의 입주연도가 ${d.year-peer.year}년 더 늦다`:`두 단지 입주연도는 ${d.year}년으로 같다`;
       compare+=`같은 생활권에서 면적과 가격이 가까운 실제 대안은 ${peer.n} ${peer.py}평 ${eok(peer.p)}이다. ${newer}. `;
       if(ps&&st)compare+=`철도 좌표거리는 이 단지 ${st[0]} ${fmtM(st[1])}, 비교 단지 ${ps[0].replace(/ \S+$/,'')} ${fmtM(ps[1])}로 갈린다. `;
       compare+=`브랜드나 행정동 평균 대신 두 단지의 같은 날짜·비슷한 층 거래, 학교 배정과 주차 상태를 맞춰 추가금이 합리적인지 판단해야 한다.`;
