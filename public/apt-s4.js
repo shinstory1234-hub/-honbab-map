@@ -122,10 +122,29 @@ function s4PeerPeak(d){
 const s4Total=(base,penalty,peak)=>100*clamp01((base-penalty+Math.max(0,peak||0))/100);   // 세대수·입지·적정가 대비 백분위 가중평균 − 구축 감점 (전고점 가점은 PEAKW=0이라 기본 0)
 function s4ScoreDetail(d){ const s=d.s4; if(!s)return '';
   const w=s.w||{u:.4,l:.4,p:.2}, f=x=>(+x.toFixed(3)).toString();
-  if((window.S4CFG||{}).model==='m2') return `종합 ${s.modelComp.toFixed(1)}점 = 세대수 ${s.pU.toFixed(0)}×${f(w.u)} + 장기 급지 ${(s.pG??50).toFixed(0)}×${f(w.g)} (입지·재건축 사업성은 참고 표시, 순위 미반영)`;
+  if((window.S4CFG||{}).model==='m2') { const z=s.za||{sm:0,pp:0}, zt=(z.sm?` − 소형 ${z.sm.toFixed(1)}`:'')+(z.pp?` ${z.pp>0?'+':'−'} 단지 내 평당가 ${Math.abs(z.pp).toFixed(1)}(다른 평형 대비 ${z.ppr>=1?'+':''}${((z.ppr-1)*100).toFixed(0)}%)`:'');
+    return `종합 ${(zt?d.score:s.modelComp).toFixed(1)}점 = 세대수 ${s.pU.toFixed(0)}×${f(w.u)} + 장기 급지 ${(s.pG??50).toFixed(0)}×${f(w.g)}${zt?` (${s.modelComp.toFixed(1)})`+zt:''} · 입지·재건축 사업성은 참고 표시, 순위 미반영`; }
   return `종합 ${s.modelComp.toFixed(1)}점 = 세대수 ${s.pU.toFixed(0)}×${f(w.u)} + 입지 ${s.pLoc.toFixed(0)}×${f(w.l)} + 적정가 대비 ${s.pUp.toFixed(0)}×${f(w.p)}${w.g?` + 장기 급지 ${(s.pG??50).toFixed(0)}×${f(w.g)}`:''}${s.dp?` − 구축 감점 ${s.dp.toFixed(1)}`:''}${s.peakBonus?` + ${s.peakPeer?'주변 추정 가점':'전고점 가점'} ${s.peakBonus.toFixed(1)}`:''}`;
 }
 /* 종합 */
+/* 6억 초과 탭 평형 보정(2026.11.3, 판단) — m2 종합(세대수 + 장기 급지)은 평형을 안 봐서 상급지 소형이 자동으로 상위에 오던 문제.
+   ① 소형 감점: 재건축 대상이 아닌 평형은 24평(전용 60㎡) 이상 0 → 16평(전용 40㎡) 이하 −SMALLW. 15억 넘는 돈이면 같은 돈으로 다른 곳 국평이
+      대안이고, 40㎡대는 1~2인 수요뿐이라 매수층이 좁음. 재건축 대상은 가치가 대지지분이라 면적 감점 없음.
+   ② 단지 안 평당가 비교(34평 미만만): 같은 단지 더 큰 평형(최근 시세, 가격대 무관) 평당가 중위 대비 이 평형 평당가. 15% 비싸면 −PPYW, 15% 싸면 +PPYW.
+      재건축 단지는 대지지분이 면적에 비례하므로 단지 안에선 대지지분 평당가 비교와 같음. 다른 평형이 없으면 0 */
+const SMALLW=12, PPYW=6;
+function s4SizeAdj(d){
+  if(!(window.CAPT>6)) return {sm:0,pp:0,ppr:null,old:false};
+  const age=2026-d.year, fr=((window.FARD||{})[d.cxKey||(d.n+'|'+d.area)]||[])[0], old=(d.st||0)>=35||(age>=27&&(fr!=null?fr<=250:age>=30));
+  // 34평 미만 평형만, 자기보다 큰 평형과 비교(큰 평형은 원래 평당가가 낮아 큰 평형끼리 비교하면 늘 '싸 보임' → 대형 가점 쏠림, 2026.11.3 점검)
+  const sm=old?0:SMALLW*clamp01((24-d.py)/8), me=d.p/d.py;
+  const o=d.py>=34?[]:(d.types||[]).filter(t=>t.py>d.py&&t.p>0&&t.p/t.py>=me*.55).map(t=>t.p/t.py);
+  // 가격대 밖 큰 평형: 자료의 '같은 단지 N평 시세'(bench, 만원/평)도 비교에 넣음 — types는 이 탭 가격대 안 평형뿐이라 84㎡ 이상이 대개 빠져 있음
+  const bm=d.bench&&/^같은 단지 (\d+)평/.exec(d.bench.name||''); if(d.py<34&&bm&&+bm[1]>d.py&&d.bench.ppp>=me*.55) o.push(d.bench.ppp);
+  o.sort((a,b)=>a-b);
+  if(!o.length) return {sm,pp:0,ppr:null,old};
+  const med=o.length%2?o[o.length>>1]:(o[o.length/2-1]+o[o.length/2])/2, r=me/med;
+  return {sm,pp:-PPYW*Math.max(-1,Math.min(1,(r-1)/.15)),ppr:r,old}; }
 function s4Score(d){ const Q=S4Q, C=window.S4CFG||{factors:['U7','A','E','J'],locMix:.5,upW:.2};
   const J=s4J(d), v={U7:d.U7,A:d.A,E:d.E,J};
   const p={}; for(const f of ['U7','A','E','J']) p[f]=s4Pct(Q[f],v[f]);
@@ -145,7 +164,8 @@ function s4Score(d){ const Q=S4Q, C=window.S4CFG||{factors:['U7','A','E','J'],lo
   const comp=s4Total(base,dp,peakBonus), modelComp=comp;
   const wl=fs.length?C.locMix:1, w={u:(1-C.upW-gW)*(1-wl),l:(1-C.upW-gW)*wl,p:C.upW,g:gW};
   d.s4={pU:p.U7,pA:p.A,pE:p.E,pJ:p.J,ld,pUp,pLoc,pG,J,dp,rawDp:dp,peakR,peakBonus,peakPeer,modelComp,w};
-  const pc=s4Pct(Q.COMP,comp); d.score=comp; d.comp=comp;                     // 0~100, 모든 단지 공통 산식
+  const za=s4SizeAdj(d); d.s4.za=za; const adj=Math.max(0,Math.min(100,comp-za.sm+za.pp));
+  const pc=s4Pct(Q.COMP,adj); d.score=adj; d.comp=comp;                     // 0~100, 모든 단지 공통 산식
   d.top=Math.max(.1,Math.round((100-pc)*10)/10);                                   // 상위 x%
   d.urank=Math.max(1,Math.round((100-pc)/100*((C.complexes)||4708))); }           // 약 N위/4,708단지
 const s4RankTxt=d=>{ const n=(typeof D!=='undefined'&&D.length)||1, r=d.rank||d.urank||0, t=Math.max(.1,r/n*100); return `이 화면 상위 ${t<1?t.toFixed(1):Math.max(1,Math.round(t))}% · ${r.toLocaleString()}위/${n.toLocaleString()}개 평형`; };

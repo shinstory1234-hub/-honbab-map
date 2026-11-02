@@ -457,7 +457,7 @@ function typeRows(d){ d.basePy=d.py; d.cxKey=gkey(d);
    64묶음 137곳(예: 한일타운 대림·쌍용·우성 모두 5,350, 반달마을 건영·선경·동아 모두 2,742). 세대수가 종합의 40%라 순위가 부풀려짐.
    ① 이름이 다른 단지 이름 + 꼬리(107동·(기산) 등)인 건 같은 단지가 두 번 들어간 것 → 뒤쪽을 뺌
    ② 나머지는 합계를 단지 수로 나눈 값을 추정 세대수로 씀(단지별 실제 세대수 자료 없음) */
-const DUPOUT=[], BANDOUT=[];
+const DUPOUT=[], BANDOUT=[], THINOUT=[];
 function fixUnits(A){
   // 2026.11.1: 네 탭 합집합 기준으로 계산한 전역 표(apt-unitfix.js)가 있으면 그것만 씀 — 탭마다 같은 단지 세대수가 달라지던 오류 수정
   if(window.UNITFIX){ const DR=new Set(window.UNITDROP||[]), RT=new Set(window.UNITRENT||[]);
@@ -489,7 +489,10 @@ const D=fixUnits(PICKS.map(d=>({...d,opt:(window.OPT||{})[d.n]||null})).filter(d
   if(!big.length) return false;
   const t=big.reduce((a,b)=>b.n>a.n?b:a); d.py=t.py; d.p=t.p; d.me=null;
   d.headline=`${t.py}평 ${eok(t.p)} · 최근 시세 (초소형 평형은 순위에서 제외)`; d.deal=`${curSrc(t)} ${eok(t.p)}`;
-  return true; })).flatMap(typeRows).filter(d=>{ if(d.opt||inBand(d.p)) return true; BANDOUT.push([d.n,d.area,d.py,d.p]); return false; });   // 2026.11.1: 대표 평형도 탭 가격대 안만(이전엔 대표 평형은 검사 없이 들어와 6~10억 탭에 306개 평형이 가격대 밖이었음)
+  return true; })).flatMap(typeRows).filter(d=>{ if(d.opt||inBand(d.p)) return true; BANDOUT.push([d.n,d.area,d.py,d.p]); return false; })
+  /* 2026.11.3: 6억 초과 탭은 최근 12개월 거래 1건뿐(3개월 0건)인 평형을 뺌 — 시세 근거가 거래 한 건이면 직거래·특수 거래 한 건이 곧 시세가 됨
+     (예: 올림픽선수기자촌2단지 24평, 2025.12 직거래 16.5억 한 건으로 17.1억 → 1위. 이 평형은 실제로 2026.7 24.2억 거래) */
+  .filter(d=>{ if(CAPT===6||d.opt) return true; const t=(d.types||[]).find(t=>t.py===d.py); if(!t||t.n3>0||t.n>=2) return true; THINOUT.push([d.n,d.area,d.py,d.p]); return false; });   // 2026.11.1: 대표 평형도 탭 가격대 안만(이전엔 대표 평형은 검사 없이 들어와 6~10억 탭에 306개 평형이 가격대 밖이었음)
 const SIB={}; D.forEach(d=>(SIB[d.cxKey]=SIB[d.cxKey]||[]).push(d));
 const sibs=d=>SIB[d.cxKey]||[d];   // 같은 단지의 6억 이하 평형들(각자 순위 대상)
 const NCX=Object.keys(SIB).length;
@@ -598,7 +601,7 @@ const fsrc=c=>{ if(!c) return '추정'; if(c[0]==='E'){ const [r,n]=c.slice(1).s
 const isPlanned=d=>{ const f=FD(d); return !!(f&&f[2]); };
 
 /* 리모델링 경로: 조합이 리모델링을 택한 단지(사실 자료) — 이름 정규식 대신 단지 키로 */
-const REMODEL=new Set(['관양동 공작부영|안양 동안구 관양동','벽적골8단지주공|수원 영통구 영통동','벽적골8단지두산,우성,한신|수원 영통구 영통동']);
+const REMODEL=new Set(['성원대치2단지아파트|서울 강남구 개포동','관양동 공작부영|안양 동안구 관양동','벽적골8단지주공|수원 영통구 영통동','벽적골8단지두산,우성,한신|수원 영통구 영통동']);
 const isRemodel=d=>REMODEL.has(gkey(d));
 
 /* 기존 용적률: ① 정비계획·실측 ② 건축물대장 ③ 주변 같은 시기·같은 유형(주공/민간) 단지의 건축물대장 중앙값 ④ 시·도×시기×유형 중앙값 */
@@ -821,7 +824,12 @@ function recompute(){
     locNew(d); s4Score(d);                                                          // 수도권 6억 이하 4,700여 단지 중 백분위(0~100). apt-s4.js
   });
   ORDER=(window.S4CFG||{}).model==='m2'?D.slice().sort((x,y)=>y.score-x.score):hillGuard(D.slice().sort((x,y)=>y.score-x.score));   // m2: 판단 순위 조정(언덕 상한) 없음 — 표시 순위 = 점수 순위
-  ORDER.forEach((d,i)=>{ d.rank=i+1; d.tier=TIERS[i<30?0:i<300?1:i<1000?2:3]; }); if(window.s10Band) s10Band();
+  /* 2026.11.3: 6억 초과 탭은 단지당 대표 평형 하나(점수 가장 높은 평형)만 순위를 매김 — 같은 단지가 순위 여러 칸을 차지하던 문제.
+     나머지 평형은 d.sib=1로 표시하고 대표와 같은 순위·등급을 받음(가격 필터로 대표가 빠지면 목록에 대신 나옴) */
+  if(CAPT!==6){ const top={}; let n=0;
+    ORDER.forEach(d=>{ const t=top[d.cxKey]; if(t){ d.sib=1; d.rank=t.rank; d.tier=t.tier; return; }
+      d.sib=0; const i=n++; d.rank=i+1; d.tier=TIERS[i<30?0:i<300?1:i<1000?2:3]; top[d.cxKey]=d; }); }
+  else ORDER.forEach((d,i)=>{ d.rank=i+1; d.tier=TIERS[i<30?0:i<300?1:i<1000?2:3]; }); if(window.s10Band) s10Band();
   updatePins();
 }
 function money(d){
@@ -957,7 +965,7 @@ function cap10Text(h){
   return h.replace(/(<dt>종합<small>순위<\/small><\/dt><dd>)[\s\S]*?(<\/dd><\/div>)/, (m,a,b)=>a+dd+b);
 }
 function renderList(){
-  const b=$('#body'), list=ORDER.filter(visible), pend=D.filter(d=>d.pending).length;
+  const b=$('#body'), list=(()=>{ const L=ORDER.filter(visible); if(CAPT===6) return L; const seen=new Set(); return L.filter(d=>!seen.has(d.cxKey)&&seen.add(d.cxKey)); })(), pend=D.filter(d=>d.pending).length;
   let h=`<section class="intro">
     <div class="eyebrow">6억 이하 · 오를 단지<i></i>${NCX.toLocaleString()}곳 · ${D.length.toLocaleString()}개 평형</div>
     <h1>급지·학군·입지 좋은 순, 같은 입지면 싼 순</h1>
