@@ -252,7 +252,7 @@ aside{order:-1;width:408px;flex:none;border-right:1px solid var(--border);backgr
 <script defer src="/_vercel/insights/script.js"></script>   <!-- Vercel Web Analytics(방문자 수) -->
 </head>
 <body>
-<div class="notice-gate" id="noticeGate" role="dialog" aria-modal="true" aria-labelledby="noticeTitle">
+<div class="notice-gate" id="noticeGate" hidden role="dialog" aria-modal="true" aria-labelledby="noticeTitle">
   <section class="notice-card">
     <h2 id="noticeTitle">⚠️ 지도 이용 전 확인해주세요</h2>
     <div class="notice-list">
@@ -302,6 +302,8 @@ const noticeGate=document.getElementById('noticeGate'), noticeCheck=document.get
 const noticeOK=()=>{ try{ if(localStorage.getItem(NOTICE_KEY)==='yes') return true; }catch(e){} return /(^|\s)apt6notice=yes(\s|$)/.test(window.name||'')||new URLSearchParams(location.search).get('ok')==='1'; };
 // ④ 저장소를 전혀 못 쓰는 브라우저 대비: 동의 뒤엔 탭·처음 화면 링크 주소에 ok=1을 붙여 넘김(2026.11.2)
 const noticeLinks=()=>{ document.querySelectorAll('.captab a, #home').forEach(a=>{ const u=new URL(a.getAttribute('href'),location.href); u.searchParams.set('ok','1'); a.setAttribute('href',u.pathname.split('/').pop()+u.search); }); };
+/* 창은 HTML에서 기본 숨김(2026.11.3): 탭을 넘길 때 스크립트 실행 전 한순간 창이 비치던 문제 → 동의 안 한 경우에만 띄움 */
+if(!noticeOK()) noticeGate.hidden=false;
 if(noticeOK()){ noticeGate.hidden=true; noticeLinks(); if(!/apt6notice=yes/.test(window.name||'')) window.name=((window.name||'')+' apt6notice=yes').trim(); }
 noticeCheck.addEventListener('change',()=>{noticeAgree.disabled=!noticeCheck.checked;noticeError.textContent='';});
 noticeAgree.addEventListener('click',()=>{if(!noticeCheck.checked)return;try{localStorage.setItem(NOTICE_KEY,'yes');}catch(e){}
