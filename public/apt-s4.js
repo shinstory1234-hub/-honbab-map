@@ -125,7 +125,7 @@ const s4Total=(base,penalty,peak)=>100*clamp01((base-penalty+Math.max(0,peak||0)
 function s4ScoreDetail(d){ const s=d.s4; if(!s)return '';
   const w=s.w||{u:.4,l:.4,p:.2}, f=x=>(+x.toFixed(3)).toString();
   if((window.S4CFG||{}).model==='m2') { const z=s.za||{sm:0,pp:0}, zt=(z.sm?` − 소형 ${z.sm.toFixed(1)}`:'')+(z.pp?` ${z.pp>0?'+':'−'} 단지 내 평당가 ${Math.abs(z.pp).toFixed(1)}(다른 평형 대비 ${z.ppr>=1?'+':''}${((z.ppr-1)*100).toFixed(0)}%)`:'');
-    return `종합 ${(zt?d.score:s.modelComp).toFixed(1)}점 = 세대수 ${s.pU.toFixed(0)}×${f(w.u)} + 장기 급지 ${(s.pG??50).toFixed(0)}×${f(w.g)}${zt?` (${s.modelComp.toFixed(1)})`+zt:''} · 입지·재건축 사업성은 참고 표시, 순위 미반영`; }
+    return `종합 ${(zt?d.score:s.modelComp).toFixed(1)}점 = 세대수 ${s.pU.toFixed(0)}×${f(w.u)} + 장기 급지 ${(s.pG??50).toFixed(0)}×${f(w.g)}${w.q?` + 상품성 ${(s.pQ??50).toFixed(0)}${s.qrb?'(재건축 대상, 감가 멈춤)':''}×${f(w.q)}`:''}${zt?` (${s.modelComp.toFixed(1)})`+zt:''} · 입지·재건축 사업성은 참고 표시, 순위 미반영`; }
   return `종합 ${s.modelComp.toFixed(1)}점 = 세대수 ${s.pU.toFixed(0)}${d.uGate?`(원래 ${d.uGate.raw.toFixed(0)}, 입지 약해 대단지 가점 ${Math.round(d.uGate.g*100)}%만 인정)`:''}×${f(w.u)} + 입지 ${s.pLoc.toFixed(0)}×${f(w.l)} + 적정가 대비 ${s.pUp.toFixed(0)}×${f(w.p)}${w.g?` + 장기 급지 ${(s.pG??50).toFixed(0)}×${f(w.g)}`:''}${s.dp?` − 구축 감점 ${s.dp.toFixed(1)}`:''}${s.peakBonus?` + ${s.peakPeer?'주변 추정 가점':'전고점 가점'} ${s.peakBonus.toFixed(1)}`:''}`;
 }
 /* 종합 */
@@ -134,7 +134,7 @@ function s4ScoreDetail(d){ const s=d.s4; if(!s)return '';
       대안이고, 40㎡대는 1~2인 수요뿐이라 매수층이 좁음. 재건축 대상은 대지지분 가치를 감안해 절반만 감점(2026.11.3).
    ② 단지 안 평당가 비교(34평 미만만): 같은 단지 더 큰 평형(최근 시세, 가격대 무관) 평당가 중위 대비 이 평형 평당가. 15% 비싸면 −PPYW, 15% 싸면 +PPYW.
       재건축 단지는 대지지분이 면적에 비례하므로 단지 안에선 대지지분 평당가 비교와 같음. 다른 평형이 없으면 0 */
-const SMALLW=12, PPYW=6;
+const SMALLW=12, PPYW=3, PPYBASE=1.10;   // 2026.11.3: 작은 평형은 평당가가 원래 약 10% 비싼 게 정상 — 그 위로 15% 더 비쌀 때 −3(기존 기준 0%·폭 6은 24~28평을 일괄 감점해 과천·고덕 같은 단지를 끌어내림)
 function s4SizeAdj(d){
   if(!(window.CAPT>6)) return {sm:0,pp:0,ppr:null,old:false};
   const age=2026-d.year, fr=((window.FARD||{})[d.cxKey||(d.n+'|'+d.area)]||[])[0], rm=isRemodel(d)||!!(d.m&&d.m.rm),
@@ -148,7 +148,17 @@ function s4SizeAdj(d){
   o.sort((a,b)=>a-b);
   if(!o.length) return {sm,pp:0,ppr:null,old};
   const med=o.length%2?o[o.length>>1]:(o[o.length/2-1]+o[o.length/2])/2, r=me/med;
-  return {sm,pp:-PPYW*Math.max(-1,Math.min(1,(r-1)/.15)),ppr:r,old}; }
+  return {sm,pp:-PPYW*Math.max(-1,Math.min(1,(r-PPYBASE)/.15)),ppr:r,old}; }
+/* 상품성(2026.11.3, 판단, S4CFG.qW) — m2(세대수 + 급지)만으로는 연식이 0점 처리돼 '좋은 자리의 늙은 대단지'가 자동으로 상위에 오던 문제.
+   연식 곡선: 0~5년 100 → 10년 85 → 15년 72 → 20년 60 → 25년 45 → 30년 30 → 40년 20.
+   재건축 대상(정비 단계 35+ 또는 27년차+ 용적률 250% 이하 추정, 리모델링 아님)이고 사업성 막힘이 아니면 최소 55 — 가치가 건물이 아니라 대지지분이라 감가를 멈춤.
+   사업성 낮음·어려움(dead ≥ .25)·리모델링은 연식 곡선 그대로 */
+const PRODC=[[0,100],[5,100],[10,85],[15,72],[20,60],[25,45],[30,30],[40,20]];
+function s4Prod(d){ const age=Math.max(0,2026-d.year); let v=10;
+  for(let i=1;i<PRODC.length;i++){ const [a0,v0]=PRODC[i-1],[a1,v1]=PRODC[i]; if(age<=a1){ v=v0+(v1-v0)*(age-a0)/(a1-a0); break; } }
+  const fr=((window.FARD||{})[d.cxKey||(d.n+'|'+d.area)]||[])[0], rm=isRemodel(d)||!!(d.m&&d.m.rm),
+    rb=!rm&&!((d.dead||0)>=.25)&&((d.st||0)>=35||(age>=27&&(fr!=null?fr<=250:age>=30)));
+  return {v:rb?Math.max(v,55):v, rb}; }
 function s4Score(d){ const Q=S4Q, C=window.S4CFG||{factors:['U7','A','E','J'],locMix:.5,upW:.2};
   /* 세대수 포화(2026.11.3, 판단, S4CFG.uCap): 대단지 효과는 일정 규모 넘으면 더 안 커짐 — uCap세대 이상은 같은 점수 */
   const J=s4J(d), v={U7:C.uCap?Math.min(d.U7,unS(C.uCap)):d.U7,A:d.A,E:d.E,J};
@@ -171,10 +181,11 @@ function s4Score(d){ const Q=S4Q, C=window.S4CFG||{factors:['U7','A','E','J'],lo
   const peakR=s4PeakRatio(d), peakPeer=peakR==null?s4PeerPeak(d):null;   // 표시용(배지·상세)
   const peakBonus=peakR==null?(peakPeer?peakPeer.bonus:0):PEAKW*clamp01((peakR-1)/.10);
   const gW=(Q.G&&C.gW)||0, pG=Q.G?s4Pct(Q.G,d.gj):null;   // 장기 급지(s14): 동 급지 2017~2026 평균의 유니버스 백분위
-  const lead=fs.length?(1-C.locMix)*ld+C.locMix*pLoc:pLoc, base=(1-C.upW-gW)*lead+C.upW*pUp+gW*(pG??50);
+  const qW=C.qW||0, pq=qW?s4Prod(d):null, pQ=pq?pq.v:null;
+  const lead=fs.length?(1-C.locMix)*ld+C.locMix*pLoc:pLoc, base=(1-C.upW-gW-qW)*lead+C.upW*pUp+gW*(pG??50)+qW*(pQ??50);
   const comp=s4Total(base,dp,peakBonus), modelComp=comp;
-  const wl=fs.length?C.locMix:1, w={u:(1-C.upW-gW)*(1-wl),l:(1-C.upW-gW)*wl,p:C.upW,g:gW};
-  d.s4={pU:p.U7,pA:p.A,pE:p.E,pJ:p.J,ld,pUp,pLoc,pG,J,dp,rawDp:dp,peakR,peakBonus,peakPeer,modelComp,w};
+  const wl=fs.length?C.locMix:1, w={u:(1-C.upW-gW-qW)*(1-wl),l:(1-C.upW-gW-qW)*wl,p:C.upW,g:gW,q:qW};
+  d.s4={pU:p.U7,pA:p.A,pE:p.E,pJ:p.J,ld,pUp,pLoc,pG,pQ,qrb:pq?pq.rb:false,J,dp,rawDp:dp,peakR,peakBonus,peakPeer,modelComp,w};
   const za=s4SizeAdj(d); d.s4.za=za; const adj=Math.max(0,Math.min(100,comp-za.sm+za.pp));
   const pc=s4Pct(Q.COMP,adj); d.score=adj; d.comp=comp;                     // 0~100, 모든 단지 공통 산식
   d.top=Math.max(.1,Math.round((100-pc)*10)/10);                                   // 상위 x%
