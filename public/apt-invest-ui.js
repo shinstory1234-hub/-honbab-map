@@ -238,6 +238,7 @@
     if(researched.title)deep.title=researched.title;
     if(researched.section){
       const risk=deep.sections[deep.sections.length-1];
+      if(researched.risk&&risk)risk[1]=researched.risk;
       if(risk&&risk[0].startsWith('⑥'))risk[0]=risk[0].replace('⑥','⑦');
       deep.sections.splice(deep.sections.length-1,0,researched.section);
     }
