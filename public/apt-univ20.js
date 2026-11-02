@@ -5,7 +5,8 @@ const A=["서울 종로구 무악동", "서울 종로구 사직동", "서울 중
 const TB=['강남','광화문','여의도','판교'], TG=[['재건축',1],['신혼',2],['소형할인',4]];
 const eok=v=>{const e=Math.floor(v/10000),m=Math.round(v%10000/100)*100;return e?(m?`${e}억 ${m.toLocaleString()}`:`${e}억`):`${m.toLocaleString()}만`;};
 const P=window.PICKS, UG=window.UGEO=window.UGEO||{}, H=window.HAK=window.HAK||{}, F=window.FARD=window.FARD||{};
-for(const r of R){ const [n,a,py,p,year,units,la,ln,tq,[ntr,last,n3],b,toheo,gi,tb,tbj,tg,decl,sts,ac,sc,dh,hk,fd]=r;
+const TH=fd=>{ const c=fd&&fd[6]; return !!c&&(/^11/.test(c)||['41290','41210','41131','41133','41135','41111','41115','41117','41173','41465','41430','41450'].includes(c)); };   // 10·15 대책(2025.10.15) 아파트 토허: 서울 전역 + 경기 12곳(과천·광명·성남 3구·수원 영통·장안·팔달·안양 동안·용인 수지·의왕·하남) — 2026.10.29 해제 대상 아님
+for(const r of R){ const [n,a,py,p,year,units,la,ln,tq,[ntr,last,n3],b,toheo0,gi,tb,tbj,tg,decl,sts,ac,sc,dh,hk,fd]=r; const toheo=toheo0||TH(fd);
   const check=['자동 수집 단지 · 시세는 국토부 실거래 중위']; if(toheo) check.push('토허구역 · 실거주 2년 필수'); if(decl) check.push(`최근 15개월 하락 지역(${decl}) — 순위에는 그대로 포함`); if(2026-year>=30) check.push('30년 넘은 구축 · 설비·주차 확인'); if(units<500) check.push('세대수가 적은 편 · 거래가 드물 수 있음');
   const area=A[a], [gu,rv,rs]=G[gi].split('|'), dong=area.split(' ').pop(), k=n+'|'+area;
   const types=[]; for(let i=0;i<tq.length;i+=4) types.push({py:tq[i],p:tq[i+1],n:tq[i+2],n3:tq[i+3]});

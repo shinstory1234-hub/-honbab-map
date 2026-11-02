@@ -131,7 +131,7 @@ function s4ScoreDetail(d){ const s=d.s4; if(!s)return '';
 /* 종합 */
 /* 6억 초과 탭 평형 보정(2026.11.3, 판단) — m2 종합(세대수 + 장기 급지)은 평형을 안 봐서 상급지 소형이 자동으로 상위에 오던 문제.
    ① 소형 감점: 재건축 대상이 아닌 평형은 24평(전용 60㎡) 이상 0 → 16평(전용 40㎡) 이하 −SMALLW. 15억 넘는 돈이면 같은 돈으로 다른 곳 국평이
-      대안이고, 40㎡대는 1~2인 수요뿐이라 매수층이 좁음. 재건축 대상은 가치가 대지지분이라 면적 감점 없음.
+      대안이고, 40㎡대는 1~2인 수요뿐이라 매수층이 좁음. 재건축 대상은 대지지분 가치를 감안해 절반만 감점(2026.11.3).
    ② 단지 안 평당가 비교(34평 미만만): 같은 단지 더 큰 평형(최근 시세, 가격대 무관) 평당가 중위 대비 이 평형 평당가. 15% 비싸면 −PPYW, 15% 싸면 +PPYW.
       재건축 단지는 대지지분이 면적에 비례하므로 단지 안에선 대지지분 평당가 비교와 같음. 다른 평형이 없으면 0 */
 const SMALLW=12, PPYW=6;
@@ -140,7 +140,8 @@ function s4SizeAdj(d){
   const age=2026-d.year, fr=((window.FARD||{})[d.cxKey||(d.n+'|'+d.area)]||[])[0], rm=isRemodel(d)||!!(d.m&&d.m.rm),
     old=!rm&&!((d.dead||0)>=.25)&&((d.st||0)>=35||(age>=27&&(fr!=null?fr<=250:age>=30)));   // 사업성 낮음·어려움(대지지분 부족)이면 소형 면제 안 함 — 면제 근거가 '가치=대지지분'이므로   // 리모델링 단지는 재건축처럼 대지지분 가치가 없으니 소형 감점 면제 안 함(2026.11.3)
   // 34평 미만 평형만, 자기보다 큰 평형과 비교(큰 평형은 원래 평당가가 낮아 큰 평형끼리 비교하면 늘 '싸 보임' → 대형 가점 쏠림, 2026.11.3 점검)
-  const sm=old?0:SMALLW*clamp01((24-d.py)/8), me=d.p/d.py;
+  // 재건축 대상 소형도 절반은 감점(2026.11.3, 판단): 대지지분 가치를 감안해도 15억 넘는 20평대 이하는 같은 돈 국평 대비 매수층이 좁음
+  const sm=SMALLW*clamp01((24-d.py)/8)*(old?.5:1), me=d.p/d.py;
   const o=d.py>=34?[]:(d.types||[]).filter(t=>t.py>d.py&&t.p>0&&t.p/t.py>=me*.55).map(t=>t.p/t.py);
   // 가격대 밖 큰 평형: 자료의 '같은 단지 N평 시세'(bench, 만원/평)도 비교에 넣음 — types는 이 탭 가격대 안 평형뿐이라 84㎡ 이상이 대개 빠져 있음
   const bm=d.bench&&/^같은 단지 (\d+)평/.exec(d.bench.name||''); if(d.py<34&&bm&&+bm[1]>d.py&&d.bench.ppp>=me*.55) o.push(d.bench.ppp);
@@ -149,7 +150,8 @@ function s4SizeAdj(d){
   const med=o.length%2?o[o.length>>1]:(o[o.length/2-1]+o[o.length/2])/2, r=me/med;
   return {sm,pp:-PPYW*Math.max(-1,Math.min(1,(r-1)/.15)),ppr:r,old}; }
 function s4Score(d){ const Q=S4Q, C=window.S4CFG||{factors:['U7','A','E','J'],locMix:.5,upW:.2};
-  const J=s4J(d), v={U7:d.U7,A:d.A,E:d.E,J};
+  /* 세대수 포화(2026.11.3, 판단, S4CFG.uCap): 대단지 효과는 일정 규모 넘으면 더 안 커짐 — uCap세대 이상은 같은 점수 */
+  const J=s4J(d), v={U7:C.uCap?Math.min(d.U7,unS(C.uCap)):d.U7,A:d.A,E:d.E,J};
   const p={}; for(const f of ['U7','A','E','J']) p[f]=s4Pct(Q[f],v[f]);
   const pLoc=d.locV==null?s4Pct(Q.LOC,null):s4Pct(Q.LOC,d.locV), pUp=s4Pct(Q.UP,d.upR);
   /* 세대수 효과 입지 연동(2026.11.3, S4CFG.uGate=[a,b]): 세대수 백분위의 50 초과분(대단지 가점)을 입지 백분위 a→b 구간에서 0→100%만 인정.
