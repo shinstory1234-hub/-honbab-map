@@ -1,6 +1,7 @@
 /* 가격대별 투자포인트
- * 1~200위: 단지별 생활권·거래·정비사업 전수조사 원고
- * 201~1,000위: 기존 정형자료 요약(후속 조사 대상)
+ * 1~200위: 단지별 생활권·거래·정비사업 고정 전수조사 원고
+ * 201~500위: 현재 순위행의 교통·학교·거래·인접 평형·비교 단지를 교차한 상세 원고
+ * 501~1,000위: 기존 정형자료 요약(후속 조사 대상)
  */
 (function(){
   const style=document.createElement('style');
@@ -118,6 +119,117 @@
     const sources=(deep.sources||[]).map(s=>`<a href="${esc(s[1])}" target="_blank" rel="noopener">${esc(s[0])}</a>`).join(', ');
     return `<section class="invest invest-researched"><div class="invest-head"><h3>핵심 투자포인트</h3><span class="tnum">단지별 전수조사 · 현재순위 ${rank}위</span></div><strong class="invest-lead">${esc(deep.title)}</strong><div class="invest-essay">${sections.join('')}</div>${checks?`<div class="invest-mini"><h4>사기 전에 확인</h4><ul>${checks}</ul></div>`:''}<p class="invest-source">조사 기준 2026.11.02 · 주요 출처: ${sources||'국토교통부 실거래가 공개시스템, 단지·지자체 공개자료'}. 학교 거리는 배정을 뜻하지 않으며 철도·정비사업은 최신 고시를 다시 확인해야 한다.</p></section>`;
   }
+
+  /* 201~500위 상세 원고
+   * 지역 공통 문구를 붙이지 않는다. 선택 행의 단지·평형 자료를 기준으로 같은 생활권의
+   * 실제 대체 단지까지 찾아 비교한다. 순위가 움직여도 원고 안 숫자는 현재 행과 같이 움직인다. */
+  function peerOf(d){
+    const city=d.area.split(' ').slice(0,-1).join(' ');
+    const rows=D.filter(x=>x!==d&&x.n!==d.n&&x.p<=60000&&Math.abs(x.py-d.py)<=12&&(x.area===d.area||x.area.startsWith(city+' ')));
+    const score=x=>{
+      const sameArea=x.area===d.area?0:30000;
+      return sameArea+Math.abs(x.py-d.py)*4500+Math.abs(x.p-d.p)+Math.abs((x.rank||9999)-(d.rank||9999))*20;
+    };
+    return rows.sort((a,b)=>score(a)-score(b))[0]||null;
+  }
+  function stationSet(d){
+    const seen=new Set(),out=[];
+    for(const x of ((d.g&&d.g.sts)||[]).slice().sort((a,b)=>a[1]-b[1])){
+      const n=x[0].replace(/ \S+$/,'');
+      if(seen.has(n))continue;seen.add(n);out.push([n,x[1]]);if(out.length===3)break;
+    }
+    return out;
+  }
+  function detailed500(d){
+    const rank=rankOf(d),age=2026-d.year,ev=priceEv(d),sts=stationSet(d),st=sts[0]||null;
+    const school=(window.APT_INV_SCHOOL||{})[gkey(d)],hak=(window.HAK||{})[gkey(d)],peer=peerOf(d);
+    const types=(d.types||[]).filter(t=>t.p<=60000).slice().sort((a,b)=>a.py-b.py),land=landOf(d),stage=stOf(d),hill=hR(d);
+    const RT=['국토교통부 실거래가 공개시스템','https://rt.molit.go.kr/'];
+    const SI=['학교알리미','https://www.schoolinfo.go.kr/'];
+    const KA=['공동주택관리정보시스템','https://www.k-apt.go.kr/'];
+    const sources=[RT,SI,KA];
+    const size=d.py<=18?'소형 진입가격':d.py<=26?'중소형 실거주':d.py<=36?'가족형 면적':'대형 면적';
+    const ageText=age<=10?'신축급':age<=20?'준신축':age<27?'중년차 구축':'노후 구축';
+    const leadBits=[];
+    if(st)leadBits.push(`${st[0]} ${st[1]<=700?'도보권':'생활권'}`);
+    if(d.units>=1000)leadBits.push(`${d.units.toLocaleString()}세대`);else leadBits.push(`${d.units.toLocaleString()}세대`);
+    leadBits.push(`${d.py}평 ${size}`);
+
+    let product=`${d.year}년 입주한 ${age}년차 ${ageText}, ${d.units.toLocaleString()}세대 단지다. 사이트의 ${d.py}평은 ${size} 상품으로, `;
+    if(types.length>1){
+      const lo=types[0],hi=types[types.length-1];
+      product+=`6억원 이하에서 확인되는 평형은 ${types.map(t=>t.py+'평').join('·')}이고 ${lo.py}평 ${eok(lo.p)}부터 ${hi.py}평 ${eok(hi.p)}까지 선택지가 갈린다. `;
+    }else product+=`현재 6억원 이하 순위에 잡힌 대표 평형이다. `;
+    if(d.py<=18)product+='면적을 줄여 단지의 연식·조경·공용시설을 이용하는 대신 방 수, 수납과 장기 거주 가능성을 중형과 분리해 봐야 한다. ';
+    else if(d.py>=40)product+='같은 예산의 신축 중소형보다 실사용 면적은 크지만 관리비와 대형 평형의 매수층·거래 회전이 더 제한될 수 있다. ';
+    else product+='가족 실거주 수요가 붙기 쉬운 면적이지만 같은 단지 소형 또는 인근 신축과 총매입비 차이가 실제 공간 차이에 맞는지 확인해야 한다. ';
+    if(d.rent)product+='공공임대·분양전환 또는 임대혼합 이력이 잡힌 단지이므로 매매 대상 동·호의 소유권과 임차인 승계 조건을 일반분양 세대와 구분해야 한다.';
+
+    let transport='';
+    if(st){
+      transport+=`${st[0]}까지 단지 좌표상 ${fmtM(st[1])}, 도보 약 ${Math.round(walkMin(st[1]))}분 추정이다. `;
+      if(sts[1])transport+=`두 번째 대안은 ${sts[1][0]} 약 ${fmtM(sts[1][1])}로, 노선 환승과 배차를 포함한 문전 출퇴근시간을 비교해야 한다. `;
+      transport+=st[1]<=700?'현재 이용 가능한 철도 접근성이므로 미래 호재와 달리 관심 동 현관에서 출입구까지 직접 걸어 프리미엄을 검증할 수 있다. ':'직선거리만으로 도보 역세권이라 부르기 어려워 버스 환승·자전거·차량 이동을 현재 가격의 전제로 봐야 한다. ';
+    }else transport+='반경 3km 안에 점수에 반영된 현행 철도역이 없어 현재는 버스·차량 통근형 입지로 봐야 한다. ';
+    if(d.locParts&&d.locParts.fut){
+      const f=d.locParts.fut;transport+=`${f.n}역(${f.line||'신설 노선'})은 ${f.year}년 목표 자료가 반영됐지만 개통 시점과 출입구 위치가 바뀔 수 있어 현행 교통과 따로 가격을 매겨야 한다. `;
+    }
+    if(d.tbj&&d.tbe!=null)transport+=`${d.tbj} 방향 모형 통근은 약 ${Math.round(d.tbe)}분이지만 환승 대기와 단지 내부 보행은 현장에서 더해야 한다.`;
+
+    let edu='';
+    if(d.g&&d.g.scn&&d.g.sc<99999)edu+=`좌표상 가까운 초등학교는 ${d.g.scn}로 약 ${fmtM(d.g.sc)}다. `;
+    if(school){
+      edu+=`가장 가까운 중학교는 ${school[0]}로 약 ${fmtM(school[1])}다. `;
+      if(school[2]!=null)edu+=`2025 공시 졸업생 ${school[2]}명 중 과학고 ${school[4]}명, 외고·국제고 ${school[5]}명, 자사고 ${school[6]}명으로 합계 ${school[3].toFixed(1)}%다. `;
+    }else edu+='가까운 중학교의 진학 공시는 현재 단지 키에 결합되지 않아 학교알리미 원문 확인이 필요하다. ';
+    if(hak&&hak[0]!=null)edu+=`반경 1km 수학·영어 학원은 ${hak[0].toLocaleString()}곳으로 집계된다. `;
+    edu+='가장 가까운 학교가 실제 배정 학교라는 뜻은 아니므로 교육지원청 배정표와 통학로를 함께 확인해야 한다.';
+
+    let compare='';
+    if(peer){
+      const ps=nearestStation(peer),newer=peer.year>d.year?`${peer.n}이 ${peer.year-d.year}년 더 새 아파트다`:peer.year<d.year?`${d.n}이 ${d.year-peer.year}년 더 새 아파트다`:`두 단지 입주연도는 ${d.year}년으로 같다`;
+      compare+=`같은 생활권에서 면적과 가격이 가까운 실제 대안은 ${peer.n} ${peer.py}평 ${eok(peer.p)}이다. ${newer}. `;
+      if(ps&&st)compare+=`철도 좌표거리는 이 단지 ${st[0]} ${fmtM(st[1])}, 비교 단지 ${ps[0].replace(/ \S+$/,'')} ${fmtM(ps[1])}로 갈린다. `;
+      compare+=`브랜드나 행정동 평균 대신 두 단지의 같은 날짜·비슷한 층 거래, 학교 배정과 주차 상태를 맞춰 추가금이 합리적인지 판단해야 한다.`;
+    }else compare=`같은 생활권에 면적·가격이 가까운 비교 행이 없어 이 단지 내부의 인접 평형과 전세 거래를 우선 비교해야 한다. ${d.py}평의 매수층과 임대수요가 실제로 반복되는지가 핵심이다.`;
+
+    const riskBits=[];
+    if(age>=27){
+      riskBits.push(stage>=35?'저장 자료상 공식 정비 단계가 있어 최신 고시·총회자료와 사업시행자 지위를 확인해야 한다':'연식은 재건축 검토 대상이지만 개별 정비구역·추진위원회가 확인되지 않으면 사업 미착수로 봐야 한다');
+      if(land)riskBits.push(`${d.py}평 대지지분은 용적률 자료로 약 ${(land[0]/3.3058).toFixed(1)}평 추정되며 등기부 수치가 우선이다`);
+      riskBits.push('주차·배관·승강기·샷시와 전면수리비를 매입가에 더해야 한다');
+    }else if(age<=10)riskBits.push('신축 프리미엄이 인근 입주물량과 전세가로 유지되는지 확인해야 한다');
+    else riskBits.push('장기수선계획과 주차·배관·승강기 상태를 같은 연식 단지와 비교해야 한다');
+    if(d.rent)riskBits.push('등기 소유권·분양전환 자격·임차인 승계와 입주 가능일을 확인해야 한다');
+    if(typeof isJubok==='function'&&isJubok(d))riskBits.push('주상복합은 일반 판상형 아파트보다 전용률·관리비·상가동선과 환금성이 다를 수 있다');
+    if(ev&&ev.n<5)riskBits.push(`최근 12개월 거래가 ${ev.n}건뿐이라 한 건의 동·층 조건이 표시가격을 크게 움직일 수 있다`);
+    if(hill!=null&&hill>=20)riskBits.push(`주변 최저점보다 약 ${hill}m 높은 지형이라 역·학교까지 경사를 직접 걸어야 한다`);
+    if(d.py>=40)riskBits.push('대형 평형은 매수층이 좁아 매도기간과 관리비를 보수적으로 잡아야 한다');
+    if(d.p>=57000)riskBits.push('표시가격이 6억원 경계에 가까워 취득 부대비용과 현재 호가를 별도로 계산해야 한다');
+    if(d.reg==='toheo')riskBits.push('토지거래허가와 실거주·자금조달 요건을 계약 전에 확인해야 한다');
+    const risk=riskBits.join('. ')+'.';
+
+    const checks=[];
+    checks.push(`${d.py}평 최근 12개월 거래 ${ev?ev.n:'미확인'}건${ev&&ev.n3!=null?` · 최근 3개월 ${ev.n3}건`:''}${ev&&ev.last?` · 마지막 ${ev.last}`:''}`);
+    if(st)checks.push(`${st[0]}까지 관심 동 현관 기준 횡단보도·경사 포함 실제 시간`);else checks.push('평일 출퇴근 시간 버스 배차·환승과 차량 정체');
+    checks.push('배정 초·중학교와 통학로는 관할 교육지원청에 확인');
+    if(peer)checks.push(`${peer.n} ${peer.py}평과 같은 날짜·동급 층 실거래 비교`);
+    if(age>=20)checks.push('주차·배관·승강기·장기수선계획과 내부 수리비');
+    if(age>=27)checks.push('정비사업 고시·등기 대지권·조합원 지위·추가분담금');
+    if(d.rent)checks.push('일반분양/임대·분양전환 구분과 매수 가능한 소유권 여부');
+    return {
+      title:`${leadBits.join(' · ')}, ${ageText}의 현재 가치와 다음 매수자를 함께 볼 단지`,
+      sections:[
+        ['① 이 단지와 선택 평형의 성격',product],
+        ['② 현재 교통과 예정 교통을 분리해서 보기',transport],
+        ['④ 학교·학원가는 실제 배정과 공시 숫자로 확인',edu],
+        ['⑤ 같은 생활권의 실제 대안과 비교',compare],
+        ['⑥ 이 단지에서 가격을 바꿀 확인 변수',risk]
+      ],
+      byPy:{[d.py]:`${d.py}평은 ${size} 수요가 핵심이며 같은 단지의 다른 평형과 매수층을 같다고 가정하지 않았다.`},
+      checks,sources
+    };
+  }
   function risk(d,p,special){
     const age=2026-d.year,land=landOf(d),hill=hR(d),stage=stOf(d),bits=[];
     if(d.c_label)bits.push(d.c_label);
@@ -155,14 +267,14 @@
     return `<section class="invest"><div class="invest-head"><h3>자동 요약</h3><span class="tnum">현재순위 ${rank}위</span></div><strong class="invest-lead">${esc(lead)}</strong><dl class="invest-list"><div><dt>교통</dt><dd>${esc(traffic)}</dd></div><div><dt>학군</dt><dd>${esc(edu)}</dd></div><div><dt>단지</dt><dd>${esc(product)}</dd></div><div><dt>확인</dt><dd>${esc(danger.join(' · '))}</dd></div></dl><p class="invest-note">아직 단지별 전수조사 전인 자동 요약이다. 조사 완료 단지만 상단에 ‘단지별 전수조사’로 표시한다.</p></section>`;
   }
   function rankOf(d){return d.rank;}
-  function deepOf(d){const k=gkey(d);return (window.APT_DEEP6_200||{})[k]||(window.APT_DEEP6_100||{})[k]||null;}
-  function panel(d){const rank=rankOf(d);if(!rank)return '';const deep=CAPT===6&&rank<=200?deepOf(d):null;return deep?deepPanel(d,rank,deep):summary(d,rank);}
+  function deepOf(d){const k=gkey(d);return (window.APT_DEEP6_200||{})[k]||(window.APT_DEEP6_100||{})[k]||(rankOf(d)<=500?detailed500(d):null);}
+  function panel(d){const rank=rankOf(d);if(!rank)return '';const deep=CAPT===6&&rank<=500?deepOf(d):null;return deep?deepPanel(d,rank,deep):summary(d,rank);}
   function install(){
     if(window.__aptInvestInstalled||typeof window.renderDetail!=='function')return;window.__aptInvestInstalled=true;const original=window.renderDetail;
     window.renderDetail=function(i){
       original(i);
       const body=document.getElementById('body'),d=D[i],lede=body&&body.querySelector('.lede'),html=panel(d),rank=rankOf(d);
-      const deep=CAPT===6&&rank<=200?deepOf(d):null;
+      const deep=CAPT===6&&rank<=500?deepOf(d):null;
       if(deep){
         const cat=body&&body.querySelector('.identity .cat');if(cat)cat.textContent=cat.textContent.replace(/(?:전체 단지 자동 수집|점수식 자동 선별|직접 분석|단지별 조사 1차 반영)/,'단지별 전수조사');
         [...body.querySelectorAll('section.sec')].forEach(sec=>{const heading=sec.querySelector(':scope > h3');if(heading&&['이런 사람에게','사기 전에 확인'].includes(heading.textContent.trim()))sec.remove();});
