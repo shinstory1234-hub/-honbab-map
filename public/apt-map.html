@@ -288,7 +288,7 @@ aside{order:-1;width:408px;flex:none;border-right:1px solid var(--border);backgr
   var T=c!==6, x=String(c);
   /* 주변 시세 커널(apt-loc10·cx10)은 가격과 무관한 전체 단지 자료라 6~10억·10~15억 탭이 같이 씀 */
   var F=['apt-first'+(T?x:'')+'.js','apt-unitfix.js','apt-sd.js','apt-picks.js', T?'apt-picks10.js':'apt-auto3.js','apt-gj.js', T?'apt-loc10.js':'apt-loc.js', T?'apt-cx10.js':'apt-cx.js','apt-fard.js','apt-hak.js', T?'apt-univ10.js':'apt-univ.js', T?'apt-univ15.js':'', T?'apt-univ20.js':'', T?'apt-live.js':'', T?'apt-livefix.js':'',
-    'apt-farplan.js','apt-cur.js','apt-trn.js','apt-small.js', T?'apt-s4q'+x+'.js':'apt-s4q.js','apt-peak.js','apt-gjl.js','apt-s4.js','apt-band.js','apt-plat.js','apt-dem.js', T?'apt-dem10.js':'', T?'apt-dem15.js':'', T?'apt-dem20.js':'','apt-walk.js','apt-geo.js', T?'':'apt-deep6-100.js', T?'':'apt-deep6-200.js', T?'':'apt-invest-ui.js'];
+    'apt-farplan.js','apt-cur.js','apt-trn.js','apt-small.js', T?'apt-s4q'+x+'.js':'apt-s4q.js','apt-peak.js','apt-gjl.js','apt-s4.js','apt-band.js','apt-plat.js','apt-farfix.js','apt-dem.js', T?'apt-dem10.js':'', T?'apt-dem15.js':'', T?'apt-dem20.js':'','apt-walk.js','apt-geo.js', T?'':'apt-deep6-100.js', T?'':'apt-deep6-200.js', T?'':'apt-invest-ui.js'];
   for(var i=0;i<F.length;i++) if(F[i]) document.write('<script src="'+F[i]+'"><\/script>');
   if(T) document.title='저평가지도 · '+CAPTXT+' 아파트';
   var t6=document.getElementById('cap'+x); if(t6) t6.setAttribute('aria-current','page'); var hm=document.getElementById('home'); if(hm&&T) hm.href='apt-map.html?cap='+x;
@@ -591,7 +591,8 @@ const CKN={'관양동 공작부영':[1510,'실제 공사비 6,463억 ÷ 1,934세
 /* ── 3단계: 이름·지역명 규칙 → 데이터 조건(건축물대장·좌표) ── */
 const FD=d=>(window.FARD||{})[gkey(d)]||null;   // [기존용적률, 출처, 노후계획택지, 1km 30년+비중, 300m 노후세대, 활주로거리m, 시군구]
 const FSRC={F:'정비계획·실측 자료',L:'건축물대장 용적률',T:'같은 시·도·시기·유형 단지들의 건축물대장 중앙값(추정)'};
-const fsrc=c=>{ if(!c) return '추정'; if(c[0]==='E'){ const [r,n]=c.slice(1).split(':'); return `반경 ${r}km 안 같은 시기·같은 유형 ${n}곳의 건축물대장 중앙값(추정)`; } return FSRC[c]||'추정'; };
+const fsrc=c=>{ if(!c) return '추정'; if(c.length>2&&c[0]!=='E') return c;   // apt-farfix.js: 출처 문장 그대로
+  if(c[0]==='E'){ const [r,n]=c.slice(1).split(':'); return `반경 ${r}km 안 같은 시기·같은 유형 ${n}곳의 건축물대장 중앙값(추정)`; } return FSRC[c]||'추정'; };
 
 /* 노후계획택지(노후계획도시 특별법 대상 성격): 20년 넘었고, 반경 2km 안에 같은 시기(±4년) 지어진 세대가 2만5천 이상이면서
    그 지역 세대의 45% 이상 — 대규모 택지를 한꺼번에 개발한 곳. 지역 이름이 아니라 건축물대장 입주연도·세대수로 판정 */
