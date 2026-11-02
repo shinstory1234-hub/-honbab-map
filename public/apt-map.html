@@ -287,7 +287,7 @@ aside{order:-1;width:408px;flex:none;border-right:1px solid var(--border);backgr
   window.inBand=function(p){ return p>CAPLO&&p<=CAPHI; };
   var T=c!==6, x=String(c);
   /* 주변 시세 커널(apt-loc10·cx10)은 가격과 무관한 전체 단지 자료라 6~10억·10~15억 탭이 같이 씀 */
-  var F=['apt-unitfix.js','apt-sd.js','apt-picks.js', T?'apt-picks10.js':'apt-auto3.js','apt-gj.js', T?'apt-loc10.js':'apt-loc.js', T?'apt-cx10.js':'apt-cx.js','apt-fard.js','apt-hak.js', T?'apt-univ'+x+'.js':'apt-univ.js',
+  var F=['apt-first'+(T?x:'')+'.js','apt-unitfix.js','apt-sd.js','apt-picks.js', T?'apt-picks10.js':'apt-auto3.js','apt-gj.js', T?'apt-loc10.js':'apt-loc.js', T?'apt-cx10.js':'apt-cx.js','apt-fard.js','apt-hak.js', T?'apt-univ'+x+'.js':'apt-univ.js',
     'apt-farplan.js','apt-cur.js','apt-trn.js','apt-small.js', T?'apt-s4q'+x+'.js':'apt-s4q.js','apt-peak.js','apt-gjl.js','apt-s4.js','apt-band.js','apt-plat.js','apt-dem.js', T?'apt-dem10.js':'', c>=15?'apt-dem15.js':'', c===20?'apt-dem20.js':'','apt-walk.js','apt-geo.js', T?'':'apt-invest-ui.js'];
   for(var i=0;i<F.length;i++) if(F[i]) document.write('<script src="'+F[i]+'"><\/script>');
   if(T) document.title='저평가지도 · '+CAPTXT+' 아파트';
@@ -1133,7 +1133,8 @@ function renderDetail(i){
   b.querySelectorAll('[data-sib]').forEach(x=>x.onclick=()=>{ const j=+x.dataset.sib; if(j!==i) select(j,false); });
 }
 
-function render(){ state.sel==null?renderList():renderDetail(state.sel); if(map) renderMap(); }
+function render(){ const pb=document.getElementById('body'); if(pb&&pb.hasAttribute('data-pre')){ pb.removeAttribute('data-pre'); pb.style.cursor=''; }   // 첫 화면 미리보기(apt-first*.js) 표시 해제
+  state.sel==null?renderList():renderDetail(state.sel); if(map) renderMap(); }
 let qT=null;
 $('#q').addEventListener('input',e=>{state.q=e.target.value.trim();state.lim=50;close();render(); clearTimeout(qT); qT=setTimeout(fitSearch,450);});
 $('#q').addEventListener('keydown',e=>{ if(e.key==='Enter'){ clearTimeout(qT); fitSearch(); e.target.blur(); if(mobile()) snapTo('half'); } });
