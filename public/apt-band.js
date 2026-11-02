@@ -7,7 +7,10 @@ function s10Plaus(){ const C=window.S4CFG||{}, lm=C.locMix??.5, uw=C.upW??.2, gw
   for(const [a,b,c] of [[lm-.25,uw,gw],[lm+.25,uw,gw],[lm,uw-.1,gw],[lm,uw+.1,gw],[lm,uw,gw-.1],[lm,uw,gw+.1]]) if(ok(a,b,c)) out.push([+a.toFixed(2),+b.toFixed(2),+c.toFixed(2)]);
   return out; }
 function s10Band(){ const n=D.length, M=D.map(()=>[]);
-  for(const [lm,uw,gw] of s10Plaus()){
+  if(D.some(d=>d.s4&&d.s4.m3)){   // m3: 급지·세대수 비중을 ±5점 옮긴 순위로 범위 표시
+    for(const dw of [0,5,-5]){ const sc=D.map(d=>d.s4&&d.s4.m3?d.score+dw*((d.s4.m3.G-d.s4.pU)/100):-1);
+      const o=sc.map((v,i)=>i).sort((a,b)=>sc[b]-sc[a]); o.forEach((i,r)=>M[i].push(r+1)); } }
+  else for(const [lm,uw,gw] of s10Plaus()){
     const sc=D.map((d,i)=>{ const s=d.s4; if(!s) return -1; return s4Total((1-uw-gw)*((1-lm)*s.pU+lm*s.pLoc)+uw*s.pUp+gw*(s.pG??50),s.rawDp||0,s.peakBonus||0); });
     const o=sc.map((v,i)=>i).sort((a,b)=>sc[b]-sc[a]); o.forEach((i,r)=>M[i].push(r+1)); }
   D.forEach((d,i)=>{ const v=M[i].slice().sort((a,b)=>a-b), med=v[Math.floor(v.length/2)];
