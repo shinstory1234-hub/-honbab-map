@@ -288,7 +288,7 @@ aside{order:-1;width:408px;flex:none;border-right:1px solid var(--border);backgr
   var T=c!==6, x=String(c);
   /* 주변 시세 커널(apt-loc10·cx10)은 가격과 무관한 전체 단지 자료라 6~10억·10~15억 탭이 같이 씀 */
   var F=['apt-first'+(T?x:'')+'.js','apt-unitfix.js','apt-sd.js','apt-picks.js', T?'apt-picks10.js':'apt-auto3.js','apt-gj.js', T?'apt-loc10.js':'apt-loc.js', T?'apt-cx10.js':'apt-cx.js','apt-fard.js','apt-hak.js', T?'apt-univ10.js':'apt-univ.js', T?'apt-univ15.js':'', T?'apt-univ20.js':'', c>=25?'apt-univ30.js':'', T?'apt-live.js':'', T?'apt-livefix.js':'',
-    'apt-farplan.js','apt-cur.js','apt-trn.js','apt-small.js', T?'apt-s4q'+x+'.js':'apt-s4q.js','apt-peak.js','apt-gjl.js', T?'apt-gjc.js':'','apt-s4.js','apt-band.js','apt-plat.js','apt-farfix.js','apt-dem.js', T?'apt-dem10.js':'', T?'apt-dem15.js':'', T?'apt-dem20.js':'','apt-walk.js','apt-geo.js', T?'':'apt-deep6-100.js', T?'':'apt-deep6-200.js', T?'':'apt-research6-600.js', T?'':'apt-invest-ui.js'];
+    'apt-farplan.js','apt-cur.js','apt-trn.js','apt-small.js', T?'apt-s4q'+x+'.js':'apt-s4q.js','apt-peak.js','apt-gjl.js', T?'apt-gjc.js':'','apt-s4.js','apt-band.js','apt-plat.js','apt-farfix.js','apt-dem.js', T?'apt-dem10.js':'', T?'apt-dem15.js':'', T?'apt-dem20.js':'', c>=25?'apt-dem30.js':'','apt-walk.js','apt-geo.js', T?'':'apt-deep6-100.js', T?'':'apt-deep6-200.js', T?'':'apt-research6-600.js', T?'':'apt-invest-ui.js'];
   for(var i=0;i<F.length;i++) if(F[i]) document.write('<script src="'+F[i]+'"><\/script>');
   if(T) document.title='저평가지도 · '+CAPTXT+' 아파트';
   var t6=document.getElementById('cap'+x); if(t6){ t6.setAttribute('aria-current','page'); try{ t6.scrollIntoView({block:'nearest',inline:'center'}); }catch(e){} } var hm=document.getElementById('home'); if(hm&&T) hm.href='apt-map.html?cap='+x;
@@ -489,7 +489,8 @@ const D=fixUnits(PICKS.map(d=>({...d,opt:(window.OPT||{})[d.n]||null})).filter(d
   if(!big.length) return false;
   const t=big.reduce((a,b)=>b.n>a.n?b:a); d.py=t.py; d.p=t.p; d.me=null;
   d.headline=`${t.py}평 ${eok(t.p)} · 최근 시세 (초소형 평형은 순위에서 제외)`; d.deal=`${curSrc(t)} ${eok(t.p)}`;
-  return true; })).flatMap(typeRows).filter(d=>{ if(d.opt||inBand(d.p)) return true; BANDOUT.push([d.n,d.area,d.py,d.p]); return false; });   // 2026.11.1: 대표 평형도 탭 가격대 안만(이전엔 대표 평형은 검사 없이 들어와 6~10억 탭에 306개 평형이 가격대 밖이었음)
+  return true; })).flatMap(typeRows).filter(d=>{ if(d.opt||inBand(d.p)) return true; BANDOUT.push([d.n,d.area,d.py,d.p]); return false; })
+  .filter(d=>{ if(d.opt||!d.unitsK||d.units>=300) return true; SMALLOUT.push([d.n,d.area]); return false; });   // 2026.11.3: 공식 세대수(K-apt)가 300 미만이면 대상 아님 — 건축물대장 세대수가 이웃 동까지 합쳐 300을 넘던 단지(예: 도화동현대 1,021 → 196)   // 2026.11.1: 대표 평형도 탭 가격대 안만(이전엔 대표 평형은 검사 없이 들어와 6~10억 탭에 306개 평형이 가격대 밖이었음)
 const SIB={}; D.forEach(d=>(SIB[d.cxKey]=SIB[d.cxKey]||[]).push(d));
 const sibs=d=>SIB[d.cxKey]||[d];   // 같은 단지의 6억 이하 평형들(각자 순위 대상)
 const NCX=Object.keys(SIB).length;

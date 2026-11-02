@@ -1,11 +1,18 @@
 /* 중복 단지 제거(2026.11.3) — 실거래 신고명만 '1단지·2단지'로 갈린 같은 단지(좌표·세대수·입주년도가 모두 같음)가 따로 순위에 오르던 문제(예: e편한세상신촌1·2단지).
-   자동 수집 단지만 대상, 같은 평형끼리 묶어 거래가 많은 쪽 하나만 남김 */
-(function(){ if(!(window.CAPT>6)||!window.PICKS) return; var best={}, drop=0;
-  function tn(d){ var t=(d.types||[]).filter(function(x){return x.py===d.py;})[0]; return t?(t.n||0):0; }
-  window.PICKS.forEach(function(d,i){ if(!d.auto||!d.lat) return; var k=[d.lat.toFixed(4),d.lng.toFixed(4),d.units,d.year,d.py].join('|'), b=best[k];
-    if(b==null||tn(d)>tn(window.PICKS[b])) best[k]=i; });
-  var keep={}; for(var k in best) keep[best[k]]=1;
-  window.PICKS=window.PICKS.filter(function(d,i){ if(!d.auto||!d.lat||keep[i]) return true; drop++; return false; });
+   자동 수집 단지만 대상, 좌표·세대수가 같고 평형별 시세가 하나라도 똑같으면 거래가 많은 쪽 하나로 합침(평형은 합집합) */
+(function(){ if(!(window.CAPT>6)||!window.PICKS) return; var P=window.PICKS, grp={}, drop=0;
+  function tn(d){ return (d.types||[]).reduce(function(a,t){return a+(t.n||0);},0); }
+  P.forEach(function(d,i){ if(!d.auto||!d.lat) return; var k=[d.lat.toFixed(4),d.lng.toFixed(4),d.units].join('|'); /* 입주년도는 신고마다 엇갈릴 수 있어 키에서 뺌(예: 광장 극동1·2) */ (grp[k]=grp[k]||[]).push(i); });
+  var del={};
+  Object.keys(grp).forEach(function(k){ var a=grp[k]; if(a.length<2) return;
+    // 평형별 시세가 하나라도 똑같은(같은 지번 묶음의 실거래) 단지끼리만 같은 단지로 봄 — 좌표만 같은 이웃 단지(예: 사당 극동·우성2)는 그대로 둠
+    var sig=a.map(function(i){ return (P[i].types||[]).map(function(t){return t.py+':'+t.p;}); }), par=a.map(function(_,x){return x;});
+    function f(x){ while(par[x]!==x) x=par[x]=par[par[x]]; return x; }
+    for(var x=0;x<a.length;x++) for(var y=x+1;y<a.length;y++) if(sig[x].some(function(z){return sig[y].indexOf(z)>=0;})) par[f(x)]=f(y);
+    var cl={}; a.forEach(function(i,x){ (cl[f(x)]=cl[f(x)]||[]).push(i); });
+    Object.keys(cl).forEach(function(r){ var m=cl[r]; if(m.length<2) return; m.sort(function(u,v){return tn(P[v])-tn(P[u]);}); var keep=P[m[0]];
+      m.slice(1).forEach(function(i){ (P[i].types||[]).forEach(function(t){ if(!(keep.types||[]).some(function(u){return u.py===t.py;})) (keep.types=keep.types||[]).push(t); }); del[i]=1; drop++; }); }); });
+  if(drop){ var out=P.filter(function(_,i){return !del[i];}); P.length=0; Array.prototype.push.apply(P,out); }
   window.DUP_DROP=drop; })();
 /* 단지 단위 장기 급지(2026.11.3) — 동(洞) 단위 급지(apt-gjl.js)를 대체. 동 안에서도 위치가 크게 다른 곳(예: 신정동 = 목동 신시가지 + 신정3동 외곽)을
    한 값으로 묶던 문제 해결. 계산(realestate-media bt_apt_trades, 직거래·해제 제외):

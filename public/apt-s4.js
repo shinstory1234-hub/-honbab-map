@@ -203,7 +203,7 @@ function s4Score(d){ const Q=S4Q, C=window.S4CFG||{factors:['U7','A','E','J'],lo
      언덕: 주변 최저점 대비 높이 10m 0 → 52m −6(7m당 −1). 6억 이하 탭 회귀(1m당 −0.30%, 50m 상한)와 같은 방향.
      역 거리: 지금 운행 중인 역 도보 10분 0 → 25분 −5. 6억 이하 탭 회귀(10분 −6.6% → 20분 −18.6%)와 같은 방향 */
   let ta={h:0,w:0}; if(C.model==='m2'){ const R=typeof hR==='function'?hR(d):null, wm=d.locParts?d.locParts.wm:null;
-    if(R!=null) ta.h=6*clamp01((R-10)/42); if(wm!=null) ta.w=5*clamp01((wm-10)/15); ta.R=R; ta.wm=wm; }
+    if(R!=null) ta.h=6*clamp01((R-10)/42); ta.w=wm!=null?5*clamp01((wm-10)/15):(d.g&&d.g.lat?5:0); /* 3km 안에 역이 없으면 최대 감점(2026.11.3 — 이전엔 자료 없음으로 0점 처리돼 역 없는 단지가 오히려 유리) */ ta.R=R; ta.wm=wm; }
   d.s4.ta=ta; const adj=Math.max(0,Math.min(100,comp-za.sm+za.pp-ta.h-ta.w));
   const pc=s4Pct(Q.COMP,adj); d.score=adj; d.comp=comp;                     // 0~100, 모든 단지 공통 산식
   d.top=Math.max(.1,Math.round((100-pc)*10)/10);                                   // 상위 x%
