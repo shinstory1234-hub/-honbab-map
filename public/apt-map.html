@@ -300,11 +300,13 @@ const noticeGate=document.getElementById('noticeGate'), noticeCheck=document.get
 /* 동의 기억(2026.11.2): apt-6eok.vercel.app은 다른 도메인 iframe이라 브라우저가 iframe 저장소를 막으면 탭을 바꿀 때마다 다시 떴음.
    ① localStorage ② 같은 iframe 안 이동에서도 유지되는 window.name ③ 바깥 페이지가 기억해 넘겨주는 ?ok=1 — 셋 중 하나라도 있으면 통과 */
 const noticeOK=()=>{ try{ if(localStorage.getItem(NOTICE_KEY)==='yes') return true; }catch(e){} return /(^|\s)apt6notice=yes(\s|$)/.test(window.name||'')||new URLSearchParams(location.search).get('ok')==='1'; };
-if(noticeOK()){ noticeGate.hidden=true; if(!/apt6notice=yes/.test(window.name||'')) window.name=((window.name||'')+' apt6notice=yes').trim(); }
+// ④ 저장소를 전혀 못 쓰는 브라우저 대비: 동의 뒤엔 탭·처음 화면 링크 주소에 ok=1을 붙여 넘김(2026.11.2)
+const noticeLinks=()=>{ document.querySelectorAll('.captab a, #home').forEach(a=>{ const u=new URL(a.getAttribute('href'),location.href); u.searchParams.set('ok','1'); a.setAttribute('href',u.pathname.split('/').pop()+u.search); }); };
+if(noticeOK()){ noticeGate.hidden=true; noticeLinks(); if(!/apt6notice=yes/.test(window.name||'')) window.name=((window.name||'')+' apt6notice=yes').trim(); }
 noticeCheck.addEventListener('change',()=>{noticeAgree.disabled=!noticeCheck.checked;noticeError.textContent='';});
 noticeAgree.addEventListener('click',()=>{if(!noticeCheck.checked)return;try{localStorage.setItem(NOTICE_KEY,'yes');}catch(e){}
   window.name=((window.name||'')+' apt6notice=yes').trim(); try{ if(window.parent!==window) window.parent.postMessage({apt6notice:'yes'},'*'); }catch(e){}
-  noticeGate.hidden=true;});
+  noticeLinks(); noticeGate.hidden=true;});
 document.getElementById('noticeDecline').addEventListener('click',()=>{noticeCheck.checked=false;noticeAgree.disabled=true;noticeError.textContent='동의해야 지도를 볼 수 있습니다.';noticeCheck.focus();});
 const KAKAO_JS_KEY='106bb734e8600621686fade2de7f8afb';
 const $=s=>document.querySelector(s);
