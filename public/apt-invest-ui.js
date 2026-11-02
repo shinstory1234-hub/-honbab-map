@@ -80,7 +80,7 @@
   }
   function trade(d,rank){
     const e=priceEv(d),other=(d.types||[]).filter(t=>t.py!==d.py).sort((a,b)=>Math.abs(a.py-d.py)-Math.abs(b.py-d.py))[0];
-    let x=`${d.py}평 표시 시세는 ${eok(d.p)}, 이 가격대 고정순위 ${rank}위다. `;
+    let x=`${d.py}평 표시 시세는 ${eok(d.p)}, 이 가격대 현재순위 ${rank}위다. `;
     if(e)x+=`최근 12개월 ${e.n}건·최근 3개월 ${e.n3}건${e.last?`, 마지막 거래 ${e.last}`:''}을 가격 근거로 썼다. `;
     if(other)x+=`같은 단지 인접 평형 ${other.py}평은 ${eok(other.p)}로 면적 1평당 가격과 총액 차이를 함께 비교해야 한다. `;
     x+=e&&e.n<5?'거래표본이 5건보다 적어 개별 매물의 층·향·수리 상태가 더 중요하다.':'거래가 있어도 저층·고층, 향과 내부수리 여부를 나눠 비교해야 한다.';
@@ -110,7 +110,7 @@
     if(age>=20)checks.push('주차·배관·승강기·장기수선계획과 내부 수리비 확인');if(age>=27||d.tags&&d.tags.includes('재건축'))checks.push('정비사업 고시·대지지분·조합원 지위·추가분담금 확인');if(land)checks.push(`대지지분 ${(land[0]/3.3058).toFixed(1)}평은 용적률 기반 추정치 · 등기부 재확인`);
     const timeline=[];if(special&&special[2])timeline.push([special[2],special[3]]);if(d.locParts&&d.locParts.fut)timeline.push([`${d.locParts.fut.year} 목표`,`${d.locParts.fut.n}역(${d.locParts.fut.line}) · 일정 변동 가능`]);
     const source=special?`<a href="${p[3]}" target="_blank" rel="noopener">${esc(p[2])}</a>, 국토교통부 실거래, 학교알리미, 건축물대장·정비사업 공개자료`:'국토교통부 실거래, 학교알리미, 건축물대장 공개자료';
-    return `<section class="invest invest-researched"><div class="invest-head"><h3>핵심 투자포인트</h3><span class="tnum">단지별 조사 1차 · 고정순위 ${rank}위</span></div><strong class="invest-lead">${esc(title(d,special))}</strong><div class="invest-essay"><h4>① 생활권과 상품성</h4><p>${esc(`${d.year}년 입주한 ${d.units.toLocaleString()}세대, ${d.py}평형이다. ${p[0]}`)}</p><h4>② 교통과 학군</h4><p>${esc(traffic+education(d))}</p><h4>③ 평형과 거래 근거</h4><p>${esc(trade(d,rank))}</p><h4>④ 단지별 확인 변수</h4><p>${esc(risk(d,p,special))}</p></div>${timeline.length?`<div class="invest-mini"><h4>확인할 일정</h4><ul>${timeline.map(t=>`<li><b>${esc(t[0])}</b> ${esc(t[1])}</li>`).join('')}</ul></div>`:''}<div class="invest-mini"><h4>사기 전에 확인</h4><ul>${checks.map(x=>`<li>${esc(x)}</li>`).join('')}</ul></div><p class="invest-source">조사 기준 2026.11.02 · 주요 출처: ${source}. 가장 가까운 학교는 배정 학교를 뜻하지 않는다.</p></section>`;
+    return `<section class="invest invest-researched"><div class="invest-head"><h3>핵심 투자포인트</h3><span class="tnum">단지별 조사 1차 · 현재순위 ${rank}위</span></div><strong class="invest-lead">${esc(title(d,special))}</strong><div class="invest-essay"><h4>① 생활권과 상품성</h4><p>${esc(`${d.year}년 입주한 ${d.units.toLocaleString()}세대, ${d.py}평형이다. ${p[0]}`)}</p><h4>② 교통과 학군</h4><p>${esc(traffic+education(d))}</p><h4>③ 평형과 거래 근거</h4><p>${esc(trade(d,rank))}</p><h4>④ 단지별 확인 변수</h4><p>${esc(risk(d,p,special))}</p></div>${timeline.length?`<div class="invest-mini"><h4>확인할 일정</h4><ul>${timeline.map(t=>`<li><b>${esc(t[0])}</b> ${esc(t[1])}</li>`).join('')}</ul></div>`:''}<div class="invest-mini"><h4>사기 전에 확인</h4><ul>${checks.map(x=>`<li>${esc(x)}</li>`).join('')}</ul></div><p class="invest-source">조사 기준 2026.11.02 · 주요 출처: ${source}. 가장 가까운 학교는 배정 학교를 뜻하지 않는다.</p></section>`;
   }
   function researched6(d,rank){
     const p=profile(d),special=SPECIAL[gkey(d)]||null,st=nearestStation(d),age=2026-d.year,ev=priceEv(d),land=landOf(d),timeline=[];
@@ -121,7 +121,7 @@
     if(st)checks.push(`${st[0].replace(/ \S+$/,'')}까지 단지 출입구 기준 실제 보행시간 확인`);checks.push('초·중학교 배정은 교육지원청에 확인');
     if(age>=20)checks.push('주차·배관·승강기·장기수선계획과 내부 수리비 확인');if(age>=27||d.tags&&d.tags.includes('재건축'))checks.push('정비사업 고시·대지지분·조합원 지위·추가분담금 확인');if(land)checks.push(`대지지분 ${(land[0]/3.3058).toFixed(1)}평은 용적률 기반 추정치 · 등기부 재확인`);
     const source=special?`<a href="${p[3]}" target="_blank" rel="noopener">${esc(p[2])}</a>, 국토교통부 실거래, 학교알리미, 건축물대장·정비사업 공개자료`:'국토교통부 실거래, 학교알리미, 건축물대장 공개자료';
-    return `<section class="invest invest-researched"><div class="invest-head"><h3>단지별 검증정보</h3><span class="tnum">조사 1차 · 고정순위 ${rank}위</span></div><strong class="invest-lead">${esc(title(d,special))}</strong><div class="invest-essay"><h4>① 교통</h4><p>${esc(traffic)}</p><h4>② 학교와 학원가</h4><p>${esc(education(d))}</p><h4>③ 평형과 거래 근거</h4><p>${esc(trade(d,rank))}</p><h4>④ 단지별 확인 변수</h4><p>${esc(risk(d,p,special))}</p></div>${timeline.length?`<div class="invest-mini"><h4>확인할 일정</h4><ul>${timeline.map(t=>`<li><b>${esc(t[0])}</b> ${esc(t[1])}</li>`).join('')}</ul></div>`:''}<div class="invest-mini"><h4>사기 전에 확인</h4><ul>${checks.map(x=>`<li>${esc(x)}</li>`).join('')}</ul></div><p class="invest-source">조사 기준 2026.11.02 · 주요 출처: ${source}. 좌표상 가장 가까운 학교는 실제 배정 학교와 다를 수 있다.</p></section>`;
+    return `<section class="invest invest-researched"><div class="invest-head"><h3>단지별 검증정보</h3><span class="tnum">조사 1차 · 현재순위 ${rank}위</span></div><strong class="invest-lead">${esc(title(d,special))}</strong><div class="invest-essay"><h4>① 교통</h4><p>${esc(traffic)}</p><h4>② 학교와 학원가</h4><p>${esc(education(d))}</p><h4>③ 평형과 거래 근거</h4><p>${esc(trade(d,rank))}</p><h4>④ 단지별 확인 변수</h4><p>${esc(risk(d,p,special))}</p></div>${timeline.length?`<div class="invest-mini"><h4>확인할 일정</h4><ul>${timeline.map(t=>`<li><b>${esc(t[0])}</b> ${esc(t[1])}</li>`).join('')}</ul></div>`:''}<div class="invest-mini"><h4>사기 전에 확인</h4><ul>${checks.map(x=>`<li>${esc(x)}</li>`).join('')}</ul></div><p class="invest-source">조사 기준 2026.11.02 · 주요 출처: ${source}. 좌표상 가장 가까운 학교는 실제 배정 학교와 다를 수 있다.</p></section>`;
   }
   function summary(d,rank){
     const station=nearestStation(d),school=(window.APT_INV_SCHOOL||{})[gkey(d)],hak=(window.HAK||{})[gkey(d)],age=2026-d.year,stage=stOf(d),land=landOf(d),pe=priceEv(d),hill=hR(d),flags=[];
@@ -129,11 +129,11 @@
     const lead=flags.slice(0,3).join(' · ')||`${CAPTXT} 고정순위 상위 1,000행에 든 ${d.py}평형`;
     const traffic=station?`${station[0].replace(/ \S+$/,'')}까지 좌표상 ${fmtM(station[1])}, 도보 약 ${Math.round(walkMin(station[1]))}분 추정. ${d.tbj?`${d.tbj} 방향 모형 통근 ${Math.round(d.tbe)}분.`:''}`:'반경 3km 안 점수에 반영된 철도역이 없어 출퇴근 동선을 직접 확인해야 한다.';
     let edu=school?`가장 가까운 중학교는 ${school[0]}로 약 ${fmtM(school[1])}. ${school[2]!=null?`2025 공시 특목·자사고 진학 합계 ${school[3].toFixed(1)}%. `:'진학 공시는 미결합. '}`:'';if(hak&&hak[0]!=null)edu+=`반경 1km 수학·영어 학원 ${hak[0].toLocaleString()}곳.`;if(!edu)edu='학교·학원 자료는 현장 확인이 필요하다.';
-    let product=`${d.year}년 입주, ${d.units.toLocaleString()}세대. ${d.py}평 최근 시세 ${eok(d.p)}, 고정순위 ${rank}위.`;if(land)product+=` 대지지분 약 ${(land[0]/3.3058).toFixed(1)}평 추정(용적률 ${Math.round(land[2])}%).`;
+    let product=`${d.year}년 입주, ${d.units.toLocaleString()}세대. ${d.py}평 최근 시세 ${eok(d.p)}, 현재순위 ${rank}위.`;if(land)product+=` 대지지분 약 ${(land[0]/3.3058).toFixed(1)}평 추정(용적률 ${Math.round(land[2])}%).`;
     const danger=[];if(age>=27)danger.push(stage>=35?'공식 정비 단계·분담금 확인':'재건축 기대 선반영 금지');if(d.dead>=.5)danger.push('사업성 낮음 위험');if(hill!=null&&hill>=25)danger.push(`주변 최저점보다 약 ${hill}m 높음`);if(d.reg==='toheo')danger.push('토지거래허가·실거주 요건 확인');if(pe&&pe.n<5)danger.push(`최근 12개월 거래 ${pe.n}건`);if(!danger.length)danger.push('층·향·동별 가격과 주차·수선 상태 확인');
-    return `<section class="invest"><div class="invest-head"><h3>자동 요약</h3><span class="tnum">고정순위 ${rank}위</span></div><strong class="invest-lead">${esc(lead)}</strong><dl class="invest-list"><div><dt>교통</dt><dd>${esc(traffic)}</dd></div><div><dt>학군</dt><dd>${esc(edu)}</dd></div><div><dt>단지</dt><dd>${esc(product)}</dd></div><div><dt>확인</dt><dd>${esc(danger.join(' · '))}</dd></div></dl><p class="invest-note">501~1,000위는 아직 단지별 조사 전인 자동 요약이다.</p></section>`;
+    return `<section class="invest"><div class="invest-head"><h3>자동 요약</h3><span class="tnum">현재순위 ${rank}위</span></div><strong class="invest-lead">${esc(lead)}</strong><dl class="invest-list"><div><dt>교통</dt><dd>${esc(traffic)}</dd></div><div><dt>학군</dt><dd>${esc(edu)}</dd></div><div><dt>단지</dt><dd>${esc(product)}</dd></div><div><dt>확인</dt><dd>${esc(danger.join(' · '))}</dd></div></dl><p class="invest-note">501~1,000위는 아직 단지별 조사 전인 자동 요약이다.</p></section>`;
   }
-  function rankOf(d){return CAPT===6?d.rank:((window.APT_INV_RANK||{})[CAPT]||{})[`${gkey(d)}|${d.py}`];}
+  function rankOf(d){return d.rank;}
   function panel(d){const rank=rankOf(d);if(!rank)return '';return rank<=500?(CAPT===6?researched6(d,rank):researched(d,rank)):summary(d,rank);}
   function install(){
     if(window.__aptInvestInstalled||typeof window.renderDetail!=='function')return;window.__aptInvestInstalled=true;const original=window.renderDetail;
