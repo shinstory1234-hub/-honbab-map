@@ -124,7 +124,7 @@ function s4ScoreDetail(d){ const s=d.s4; if(!s)return '';
   const w=s.w||{u:.4,l:.4,p:.2}, f=x=>(+x.toFixed(3)).toString();
   if((window.S4CFG||{}).model==='m2') { const z=s.za||{sm:0,pp:0}, zt=(z.sm?` − 소형 ${z.sm.toFixed(1)}`:'')+(z.pp?` ${z.pp>0?'+':'−'} 단지 내 평당가 ${Math.abs(z.pp).toFixed(1)}(다른 평형 대비 ${z.ppr>=1?'+':''}${((z.ppr-1)*100).toFixed(0)}%)`:'');
     return `종합 ${(zt?d.score:s.modelComp).toFixed(1)}점 = 세대수 ${s.pU.toFixed(0)}×${f(w.u)} + 장기 급지 ${(s.pG??50).toFixed(0)}×${f(w.g)}${zt?` (${s.modelComp.toFixed(1)})`+zt:''} · 입지·재건축 사업성은 참고 표시, 순위 미반영`; }
-  return `종합 ${s.modelComp.toFixed(1)}점 = 세대수 ${s.pU.toFixed(0)}×${f(w.u)} + 입지 ${s.pLoc.toFixed(0)}×${f(w.l)} + 적정가 대비 ${s.pUp.toFixed(0)}×${f(w.p)}${w.g?` + 장기 급지 ${(s.pG??50).toFixed(0)}×${f(w.g)}`:''}${s.dp?` − 구축 감점 ${s.dp.toFixed(1)}`:''}${s.peakBonus?` + ${s.peakPeer?'주변 추정 가점':'전고점 가점'} ${s.peakBonus.toFixed(1)}`:''}`;
+  return `종합 ${s.modelComp.toFixed(1)}점 = 세대수 ${s.pU.toFixed(0)}${d.uGate?`(원래 ${d.uGate.raw.toFixed(0)}, 입지 약해 대단지 가점 ${Math.round(d.uGate.g*100)}%만 인정)`:''}×${f(w.u)} + 입지 ${s.pLoc.toFixed(0)}×${f(w.l)} + 적정가 대비 ${s.pUp.toFixed(0)}×${f(w.p)}${w.g?` + 장기 급지 ${(s.pG??50).toFixed(0)}×${f(w.g)}`:''}${s.dp?` − 구축 감점 ${s.dp.toFixed(1)}`:''}${s.peakBonus?` + ${s.peakPeer?'주변 추정 가점':'전고점 가점'} ${s.peakBonus.toFixed(1)}`:''}`;
 }
 /* 종합 */
 /* 6억 초과 탭 평형 보정(2026.11.3, 판단) — m2 종합(세대수 + 장기 급지)은 평형을 안 봐서 상급지 소형이 자동으로 상위에 오던 문제.
@@ -148,8 +148,14 @@ function s4SizeAdj(d){
 function s4Score(d){ const Q=S4Q, C=window.S4CFG||{factors:['U7','A','E','J'],locMix:.5,upW:.2};
   const J=s4J(d), v={U7:d.U7,A:d.A,E:d.E,J};
   const p={}; for(const f of ['U7','A','E','J']) p[f]=s4Pct(Q[f],v[f]);
-  const fs=C.factors||[], ld=fs.length?fs.reduce((s,f)=>s+p[f],0)/fs.length:0;
   const pLoc=d.locV==null?s4Pct(Q.LOC,null):s4Pct(Q.LOC,d.locV), pUp=s4Pct(Q.UP,d.upR);
+  /* 세대수 효과 입지 연동(2026.11.3, S4CFG.uGate=[a,b]): 세대수 백분위의 50 초과분(대단지 가점)을 입지 백분위 a→b 구간에서 0→100%만 인정.
+     근거(6억 이하 매칭 1,535단지, 시·구 중위 대비 초과상승, 대단지 pU80+ − 소단지 pU<50): 입지 0~40 +4.0/−5.7/+2.3%p(평균 +0.2) ·
+     40~70 +5.1/−2.8/+0.7(+1.0) · 70+ +5.7/−1.8/+6.4(+3.4) — 17→20/20→23/23→26. 입지 약한 대단지의 세대수 가점은 과거에 실현되지 않았음.
+     50 미만(소단지 감점)은 그대로 둠 — 입지 약한 소단지를 끌어올리지 않기 위해 */
+  const UG=C.uGate; d.uGate=null;
+  if(UG&&p.U7>50){ const g=clamp01((pLoc-UG[0])/(UG[1]-UG[0])); if(g<1){ d.uGate={raw:p.U7,g}; p.U7=50+(p.U7-50)*g; } }
+  const fs=C.factors||[], ld=fs.length?fs.reduce((s,f)=>s+p[f],0)/fs.length:0;
   // 구축 감점: ① 재건축 막힌 구축 20 × z(apt-map.html DEAD) ② 정비 이슈 없는 구축(공식 단계 35 미만 · 리모델링 아님) — 사람들이 들어갈 유인이 적음(판단):
   //   15년차 0 → 25년차 OLDW점, 그 뒤 유지. 두 감점은 더함(큰 쪽만 쓰면 다른 구축이 내려가며 막힌 구축이 상대적으로 올라감)
   const age=2026-d.year, noIssue=stOf(d)<35&&!isRemodel(d)&&!(d.m&&d.m.rm), oldp=noIssue?OLDW*clamp01((age-15)/10)*(1-((d.m&&d.m.fz&&d.m.fz.f)||0)*clamp01((age-25)/5))*(1-(d.areaMv||0)):0;   // × (1 − 동네 정비 진행률)   // 25→30년차에 사업성(f) 좋은 단지는 재건축 기대가 유인이라 감점을 덜어 줌
