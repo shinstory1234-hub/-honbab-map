@@ -124,7 +124,7 @@ function s4PeerPeak(d){
 const s4Total=(base,penalty,peak)=>100*clamp01((base-penalty+Math.max(0,peak||0))/100);   // 세대수·입지·적정가 대비 백분위 가중평균 − 구축 감점 (전고점 가점은 PEAKW=0이라 기본 0)
 function s4ScoreDetail(d){ const s=d.s4; if(!s)return '';
   const w=s.w||{u:.4,l:.4,p:.2}, f=x=>(+x.toFixed(3)).toString();
-  if((window.S4CFG||{}).model==='m2') { const z=s.za||{sm:0,pp:0}, zt=(z.sm?` − 소형 ${z.sm.toFixed(1)}`:'')+(z.pp?` ${z.pp>0?'+':'−'} 단지 내 평당가 ${Math.abs(z.pp).toFixed(1)}(다른 평형 대비 ${z.ppr>=1?'+':''}${((z.ppr-1)*100).toFixed(0)}%${z.gp?`, 국평 대안 −${z.gp.toFixed(1)}: 30평 이상과 ${Math.round(z.gr*100)}% 차이`:''})`:'');
+  if((window.S4CFG||{}).model==='m2') { const z=s.za||{sm:0,pp:0}, zt=(z.sm?` − 소형 ${z.sm.toFixed(1)}`:'')+(z.pp?` ${z.pp>0?'+':'−'} 단지 내 평당가 ${Math.abs(z.pp).toFixed(1)}(다른 평형 대비 ${z.ppr>=1?'+':''}${((z.ppr-1)*100).toFixed(0)}%)`:'');
     return `종합 ${(zt?d.score:s.modelComp).toFixed(1)}점 = 세대수 ${s.pU.toFixed(0)}×${f(w.u)} + 장기 급지 ${(s.pG??50).toFixed(0)}×${f(w.g)}${w.q?` + 상품성 ${(s.pQ??50).toFixed(0)}${s.qrb?'(재건축 대상, 감가 멈춤)':''}×${f(w.q)}`:''}${zt?` (${s.modelComp.toFixed(1)})`+zt:''} · 입지·재건축 사업성은 참고 표시, 순위 미반영`; }
   return `종합 ${s.modelComp.toFixed(1)}점 = 세대수 ${s.pU.toFixed(0)}${d.uGate?`(원래 ${d.uGate.raw.toFixed(0)}, 입지 약해 대단지 가점 ${Math.round(d.uGate.g*100)}%만 인정)`:''}×${f(w.u)} + 입지 ${s.pLoc.toFixed(0)}×${f(w.l)} + 적정가 대비 ${s.pUp.toFixed(0)}×${f(w.p)}${w.g?` + 장기 급지 ${(s.pG??50).toFixed(0)}×${f(w.g)}`:''}${s.dp?` − 구축 감점 ${s.dp.toFixed(1)}`:''}${s.peakBonus?` + ${s.peakPeer?'주변 추정 가점':'전고점 가점'} ${s.peakBonus.toFixed(1)}`:''}`;
 }
@@ -134,7 +134,7 @@ function s4ScoreDetail(d){ const s=d.s4; if(!s)return '';
       대안이고, 40㎡대는 1~2인 수요뿐이라 매수층이 좁음. 재건축 대상은 대지지분 가치를 감안해 절반만 감점(2026.11.3).
    ② 단지 안 평당가 비교(34평 미만만): 같은 단지 더 큰 평형(최근 시세, 가격대 무관) 평당가 중위 대비 이 평형 평당가. 15% 비싸면 −PPYW, 15% 싸면 +PPYW.
       재건축 단지는 대지지분이 면적에 비례하므로 단지 안에선 대지지분 평당가 비교와 같음. 다른 평형이 없으면 0 */
-const SMALLW=12, PPYW=3, PPYBASE=1.10, GAPW=8;   // 2026.11.3: 작은 평형은 평당가가 원래 약 10% 비싼 게 정상 — 그 위로 15% 더 비쌀 때 −3(기존 기준 0%·폭 6은 24~28평을 일괄 감점해 과천·고덕 같은 단지를 끌어내림)
+const SMALLW=12, PPYW=3, PPYBASE=1.10;   // 2026.11.3: 작은 평형은 평당가가 원래 약 10% 비싼 게 정상 — 그 위로 15% 더 비쌀 때 −3(기존 기준 0%·폭 6은 24~28평을 일괄 감점해 과천·고덕 같은 단지를 끌어내림)
 function s4SizeAdj(d){
   if(!(window.CAPT>6)) return {sm:0,pp:0,ppr:null,old:false};
   const age=2026-d.year, fr=((window.FARD||{})[d.cxKey||(d.n+'|'+d.area)]||[])[0], rm=isRemodel(d)||!!(d.m&&d.m.rm),
@@ -146,15 +146,9 @@ function s4SizeAdj(d){
   // 가격대 밖 큰 평형: 자료의 '같은 단지 N평 시세'(bench, 만원/평)도 비교에 넣음 — types는 이 탭 가격대 안 평형뿐이라 84㎡ 이상이 대개 빠져 있음
   const bm=d.bench&&/^같은 단지 (\d+)평/.exec(d.bench.name||''); if(d.py<34&&bm&&+bm[1]>d.py&&d.bench.ppp>=me*.55) o.push(d.bench.ppp);
   o.sort((a,b)=>a-b);
-  /* 국평 대안 감점(2026.11.3, 판단): 30평 미만인데 같은 단지 30평 이상이 이 평형 값의 10% 이내 더 주면 살 수 있으면 −GAPW, 25% 이상 차이면 0.
-     예: 신촌 24평 19.5억 vs 34평 21.5억(+10%) → −8, 슈르 24평 18.5억 vs 34평 21.5억(+16%) → 약 −5. 이 가격대 돈이면 국평이 기본 대안이라 소형은 되팔 때 매수층이 좁음 */
-  let gp=0, gr=null;
-  if(d.py<30){ const big=(d.types||[]).filter(t=>t.py>=30&&t.p>0).map(t=>t.p);
-    if(bm&&+bm[1]>=30&&d.bench.ppp) big.push(d.bench.ppp*(+bm[1]));
-    if(big.length){ gr=Math.min(...big)/d.p-1; gp=GAPW*clamp01((.25-gr)/.15); } }
-  if(!o.length) return {sm,pp:-gp,ppr:null,old,gp,gr};
+  if(!o.length) return {sm,pp:0,ppr:null,old};
   const med=o.length%2?o[o.length>>1]:(o[o.length/2-1]+o[o.length/2])/2, r=me/med;
-  return {sm,pp:-PPYW*Math.max(-1,Math.min(1,(r-PPYBASE)/.15))-gp,ppr:r,old,gp,gr}; }
+  return {sm,pp:-PPYW*Math.max(-1,Math.min(1,(r-PPYBASE)/.15)),ppr:r,old}; }
 /* 상품성(2026.11.3, 판단, S4CFG.qW) — m2(세대수 + 급지)만으로는 연식이 0점 처리돼 '좋은 자리의 늙은 대단지'가 자동으로 상위에 오던 문제.
    연식 곡선: 0~5년 100 → 10년 85 → 15년 72 → 20년 60 → 25년 45 → 30년 30 → 40년 20.
    재건축 대상(정비 단계 35+ 또는 27년차+ 용적률 250% 이하 추정, 리모델링 아님)이고 사업성 막힘이 아니면 최소 55 — 가치가 건물이 아니라 대지지분이라 감가를 멈춤.
