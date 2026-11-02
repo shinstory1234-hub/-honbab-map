@@ -64,6 +64,24 @@
     '목동신시가지14|서울 양천구 신정동':['양천공원·학원가를 누리는 목동14단지 소형, 신탁사업 속도를 확인할 단지','목동 14단지는 정비구역 지정 후 신탁방식 후속 절차를 추진한다. 22평은 학군 진입 총액을 낮추지만 대형과 대지지분·권리가액이 달라 별도 계산이 필요하다.']
   };
 
+  const DETAIL={
+    '평촌어바인퍼스트|안양 동안구 호계동':{
+      title:'호원초 인접·3,850세대 신축 대단지의 전용 39㎡ 소형, 호계역은 현재 교통과 나눠 볼 선택지',
+      product:'2021년 준공한 34개동 3,850세대 단지다. 사이트에서 16평으로 묶은 거래는 전용 약 39㎡ 계열로, 단지 정보상 475세대이며 방 1개·욕실 1개 구조다. 중앙광장·어린이놀이터·대단지 커뮤니티를 같은 단지 중형보다 낮은 총액으로 이용하는 것이 장점이다. 반대로 1~2인 가구용 평면이라 가족형 중소형과 매수층이 다르고, 면적 확대 수요를 그대로 받기는 어렵다.',
+      transport:'현재 교통은 1·4호선 금정역까지의 실제 보행·버스 동선을 기준으로 평가해야 한다. 인덕원~동탄 복선전철 호계역은 2024년 9월 착공해 공사 중이지만, 개통 목표와 출입구 위치는 바뀔 수 있다. 호계역을 이미 이용 가능한 역처럼 계산하거나 기대가 전부 실현된 가격을 가정하면 안 된다.',
+      education:'호원초가 단지와 인접하지만 최종 배정은 교육지원청 확인이 필요하다. 중학교는 단지에서 가장 가까운 한 곳에 자동 배정되는 방식이 아니라 출신 초등학교별 지원 가능 구역에서 선지원 후 추첨한다. 따라서 호계중 거리나 한 학교의 특목·자사고 진학률만으로 이 단지의 학군을 단정하지 않았다. 저장 자료상 반경 1km 수학·영어 학원은 61곳이며, 평촌 핵심 학원가까지 실제 이동 동선은 별도로 봐야 한다.',
+      risk:'2021년 준공 단지이므로 평촌 1기 신도시 특별정비구역이나 재건축 분담금은 이 단지의 투자 변수가 아니다. 핵심은 전용 39㎡ 소형의 환금성, 같은 단지 18·24평과의 총액 차이, 1·2단지와 동별 호원초·상가·출입구 접근성이다. 공동주택 공개자료의 주차 4,489대·세대당 약 1.17대도 단지 전체 평균이므로 야간에는 관심 동 주변의 실제 여유를 확인해야 한다. 호계역 기대를 제외한 현재 생활권만으로도 가격을 지지하는지가 판단의 기준이다.',
+      timeline:[['공사 중','인덕원~동탄 복선전철 호계역 · 개통 목표와 출입구 위치 변동 가능']],
+      checks:[
+        '사이트 16평 표기형이 전용 약 39㎡·방 1개 구조인지 매물 평면과 등기면적 확인',
+        '1단지·2단지와 해당 동에서 호원초·상가·주출입구까지 실제 동선 확인',
+        '금정역까지 출입구 기준 보행·버스 시간과 호계역 예정 출입구 위치 확인',
+        '주차 4,489대·세대당 약 1.17대와 관심 동의 야간 주차 여유 확인'
+      ],
+      source:'<a href="https://www.poscoenc.com/ko/business_areas/project.aspx?brpt=117" target="_blank" rel="noopener">포스코이앤씨 사업자료</a>, <a href="https://www.anyang.go.kr/DATA/contents/gongyak_plan/3-1.pdf" target="_blank" rel="noopener">안양시 동탄~인덕원선 추진자료</a>, <a href="https://anyangdong-e.goeay.kr/dext5editordata/2025/10/20251017_161803829_88902.pdf" target="_blank" rel="noopener">2026학년도 중학교 배정지침</a>, 국토교통부 실거래·공동주택관리 공개자료'
+    }
+  };
+
   function profile(d){
     const key=Object.keys(AREA).sort((a,b)=>b.length-a.length).find(k=>d.area.startsWith(k));
     return AREA[key]||[`${d.area}의 현재 생활권과 같은 가격대 대체 단지를 함께 비교해야 한다.`,'공식 자료가 없는 개발계획은 매수가격에 선반영하지 않는 편이 안전하다.','학교알리미','https://www.schoolinfo.go.kr/si/po/pnsipo_a01_s0.do'];
@@ -102,15 +120,15 @@
   }
 
   function researched(d,rank){
-    const p=profile(d),special=SPECIAL[gkey(d)]||null,st=nearestStation(d),age=2026-d.year,ev=priceEv(d),land=landOf(d);
+    const p=profile(d),special=SPECIAL[gkey(d)]||null,detail=DETAIL[gkey(d)]||null,st=nearestStation(d),age=2026-d.year,ev=priceEv(d),land=landOf(d);
     let traffic=st?`${st[0].replace(/ \S+$/,'')}까지 좌표상 ${fmtM(st[1])}, 도보 약 ${Math.round(walkMin(st[1]))}분 추정이다. ${d.tbj?`${d.tbj} 방향 모형 통근은 ${Math.round(d.tbe)}분이다. `:''}`:'반경 3km 안에 점수에 반영된 철도역이 없어 버스·환승 동선을 먼저 확인해야 한다. ';
     if(d.locParts&&d.locParts.fut)traffic+=`${d.locParts.fut.n}역은 ${d.locParts.fut.year}년 목표 자료로 반영됐지만 일정과 출입구 위치는 바뀔 수 있다. `;
     const checks=[`${d.py}평 최근 12개월 거래 ${ev?ev.n:'미확인'}건${ev&&ev.last?` · 마지막 ${ev.last}`:''}`];
-    if(st)checks.push(`${st[0].replace(/ \S+$/,'')}까지 단지 출입구 기준 실제 보행시간 확인`);checks.push('배정 중학교는 교육지원청에 확인');
-    if(age>=20)checks.push('주차·배관·승강기·장기수선계획과 내부 수리비 확인');if(age>=27||d.tags&&d.tags.includes('재건축'))checks.push('정비사업 고시·대지지분·조합원 지위·추가분담금 확인');if(land)checks.push(`대지지분 ${(land[0]/3.3058).toFixed(1)}평은 용적률 기반 추정치 · 등기부 재확인`);
-    const timeline=[];if(special&&special[2])timeline.push([special[2],special[3]]);if(d.locParts&&d.locParts.fut)timeline.push([`${d.locParts.fut.year} 목표`,`${d.locParts.fut.n}역(${d.locParts.fut.line}) · 일정 변동 가능`]);
-    const source=special?`<a href="${p[3]}" target="_blank" rel="noopener">${esc(p[2])}</a>, 국토교통부 실거래, 학교알리미, 건축물대장·정비사업 공개자료`:'국토교통부 실거래, 학교알리미, 건축물대장 공개자료';
-    return `<section class="invest invest-researched"><div class="invest-head"><h3>핵심 투자포인트</h3><span class="tnum">단지별 조사 1차 · 현재순위 ${rank}위</span></div><strong class="invest-lead">${esc(title(d,special))}</strong><div class="invest-essay"><h4>① 생활권과 상품성</h4><p>${esc(`${d.year}년 입주한 ${d.units.toLocaleString()}세대, ${d.py}평형이다. ${p[0]}`)}</p><h4>② 교통과 학군</h4><p>${esc(traffic+education(d))}</p><h4>③ 평형과 거래 근거</h4><p>${esc(trade(d,rank))}</p><h4>④ 단지별 확인 변수</h4><p>${esc(risk(d,p,special))}</p></div>${timeline.length?`<div class="invest-mini"><h4>확인할 일정</h4><ul>${timeline.map(t=>`<li><b>${esc(t[0])}</b> ${esc(t[1])}</li>`).join('')}</ul></div>`:''}<div class="invest-mini"><h4>사기 전에 확인</h4><ul>${checks.map(x=>`<li>${esc(x)}</li>`).join('')}</ul></div><p class="invest-source">조사 기준 2026.11.02 · 주요 출처: ${source}. 가장 가까운 학교는 배정 학교를 뜻하지 않는다.</p></section>`;
+    if(detail)checks.push(...detail.checks);else{if(st)checks.push(`${st[0].replace(/ \S+$/,'')}까지 단지 출입구 기준 실제 보행시간 확인`);checks.push('배정 중학교는 교육지원청에 확인');if(age>=20)checks.push('주차·배관·승강기·장기수선계획과 내부 수리비 확인');if(age>=27||d.tags&&d.tags.includes('재건축'))checks.push('정비사업 고시·대지지분·조합원 지위·추가분담금 확인');if(land)checks.push(`대지지분 ${(land[0]/3.3058).toFixed(1)}평은 용적률 기반 추정치 · 등기부 재확인`);}
+    const timeline=detail?detail.timeline.slice():[];if(!detail&&special&&special[2])timeline.push([special[2],special[3]]);if(!detail&&d.locParts&&d.locParts.fut)timeline.push([`${d.locParts.fut.year} 목표`,`${d.locParts.fut.n}역(${d.locParts.fut.line}) · 일정 변동 가능`]);
+    const source=detail?detail.source:(special?`<a href="${p[3]}" target="_blank" rel="noopener">${esc(p[2])}</a>, 국토교통부 실거래, 학교알리미, 건축물대장·정비사업 공개자료`:'국토교통부 실거래, 학교알리미, 건축물대장 공개자료');
+    const lead=detail?detail.title:title(d,special),product=detail?detail.product:`${d.year}년 입주한 ${d.units.toLocaleString()}세대, ${d.py}평형이다. ${p[0]}`,transportAndSchool=detail?`${detail.transport} ${detail.education}`:traffic+education(d),complexRisk=detail?detail.risk:risk(d,p,special);
+    return `<section class="invest invest-researched"><div class="invest-head"><h3>핵심 투자포인트</h3><span class="tnum">단지별 조사 1차 · 현재순위 ${rank}위</span></div><strong class="invest-lead">${esc(lead)}</strong><div class="invest-essay"><h4>① 생활권과 상품성</h4><p>${esc(product)}</p><h4>② 교통과 학군</h4><p>${esc(transportAndSchool)}</p><h4>③ 평형과 거래 근거</h4><p>${esc(trade(d,rank))}</p><h4>④ 단지별 확인 변수</h4><p>${esc(complexRisk)}</p></div>${timeline.length?`<div class="invest-mini"><h4>확인할 일정</h4><ul>${timeline.map(t=>`<li><b>${esc(t[0])}</b> ${esc(t[1])}</li>`).join('')}</ul></div>`:''}<div class="invest-mini"><h4>사기 전에 확인</h4><ul>${checks.map(x=>`<li>${esc(x)}</li>`).join('')}</ul></div><p class="invest-source">조사 기준 2026.11.02 · 주요 출처: ${source}. 가장 가까운 학교는 배정 학교를 뜻하지 않는다.</p></section>`;
   }
   function summary(d,rank){
     const station=nearestStation(d),school=(window.APT_INV_SCHOOL||{})[gkey(d)],hak=(window.HAK||{})[gkey(d)],age=2026-d.year,stage=stOf(d),land=landOf(d),pe=priceEv(d),hill=hR(d),flags=[];
