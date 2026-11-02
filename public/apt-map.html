@@ -598,7 +598,7 @@ const fsrc=c=>{ if(!c) return '추정'; if(c[0]==='E'){ const [r,n]=c.slice(1).s
 const isPlanned=d=>{ const f=FD(d); return !!(f&&f[2]); };
 
 /* 리모델링 경로: 조합이 리모델링을 택한 단지(사실 자료) — 이름 정규식 대신 단지 키로 */
-const REMODEL=new Set(['성원대치2단지아파트|서울 강남구 개포동','관양동 공작부영|안양 동안구 관양동','벽적골8단지주공|수원 영통구 영통동','벽적골8단지두산,우성,한신|수원 영통구 영통동']);
+const REMODEL=new Set(['성원대치2단지아파트|서울 강남구 개포동','가락(1차)쌍용아파트|서울 송파구 가락동','관양동 공작부영|안양 동안구 관양동','벽적골8단지주공|수원 영통구 영통동','벽적골8단지두산,우성,한신|수원 영통구 영통동']);
 const isRemodel=d=>REMODEL.has(gkey(d));
 
 /* 기존 용적률: ① 정비계획·실측 ② 건축물대장 ③ 주변 같은 시기·같은 유형(주공/민간) 단지의 건축물대장 중앙값 ④ 시·도×시기×유형 중앙값 */
@@ -870,7 +870,8 @@ function featureKeys(d){
   const out=[], add=(key,priority)=>out.push([key,priority]), tags=d.tags||[], stage=stOf(d);
   const remodel=isRemodel(d)||tags.includes('리모델링');
   if(remodel) add('리모델링',120);
-  if(d.dead>=.5) add('재건축어려움',118);
+  if(remodel){}                                                            // 리모델링 단지에 '재건축 기대'·'재건축'을 같이 달지 않음(2026.11.3 — 서로 다른 사업)
+  else if(d.dead>=.5) add('재건축어려움',118);
   else if(NOUP()&&d.dead>=.25) add('사업성낮음',117);   // m2: 재건축 사업성은 순위 대신 위험 표시
   else if(stage>=35) add('재건축',115);                                    // 공식 정비 단계(정비 대상 지구 이상)만
   else if(!(d.dead>=.5)&&(tags.includes('재건축')||d.rbw>=.5)) add('재건축기대',112);   // 단계 전 노후 단지 — 공식 사업 아님

@@ -135,7 +135,8 @@ function s4ScoreDetail(d){ const s=d.s4; if(!s)return '';
 const SMALLW=12, PPYW=6;
 function s4SizeAdj(d){
   if(!(window.CAPT>6)) return {sm:0,pp:0,ppr:null,old:false};
-  const age=2026-d.year, fr=((window.FARD||{})[d.cxKey||(d.n+'|'+d.area)]||[])[0], old=(d.st||0)>=35||(age>=27&&(fr!=null?fr<=250:age>=30));
+  const age=2026-d.year, fr=((window.FARD||{})[d.cxKey||(d.n+'|'+d.area)]||[])[0], rm=isRemodel(d)||!!(d.m&&d.m.rm),
+    old=!rm&&((d.st||0)>=35||(age>=27&&(fr!=null?fr<=250:age>=30)));   // 리모델링 단지는 재건축처럼 대지지분 가치가 없으니 소형 감점 면제 안 함(2026.11.3)
   // 34평 미만 평형만, 자기보다 큰 평형과 비교(큰 평형은 원래 평당가가 낮아 큰 평형끼리 비교하면 늘 '싸 보임' → 대형 가점 쏠림, 2026.11.3 점검)
   const sm=old?0:SMALLW*clamp01((24-d.py)/8), me=d.p/d.py;
   const o=d.py>=34?[]:(d.types||[]).filter(t=>t.py>d.py&&t.p>0&&t.p/t.py>=me*.55).map(t=>t.p/t.py);
