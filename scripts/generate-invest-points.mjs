@@ -91,7 +91,7 @@ async function universe(cap){
 }
 async function targets(cap,win){
   const snap=JSON.parse(await fs.readFile(path.join(PUBLIC,`apt-snap${cap}-2026-11-01-m2.json`),'utf8'));
-  const rows=snap.rows.slice(0,500), complexes=new Map(win.PICKS.map(d=>[`${d.n}|${d.area}`,d]));
+  const rows=snap.rows.slice(0,1000), complexes=new Map(win.PICKS.map(d=>[`${d.n}|${d.area}`,d]));
   return rows.map(r=>({rank:r[0],name:r[1],area:r[2],py:r[3],d:complexes.get(`${r[1]}|${r[2]}`)}));
 }
 function rateFor(s,rates){
@@ -122,7 +122,7 @@ for(const cap of CAPS){
   const keys=new Set(Object.keys(rankByCap[cap]).map(k=>k.split('|').slice(0,2).join('|')));
   const capSchools=Object.fromEntries([...keys].map(k=>[k,schoolOut[k]]).filter(x=>x[1]));
   const js=`/* 자동 생성: scripts/generate-invest-points.mjs
-   대상: ${cap===10?'6~10억':cap===15?'10~15억':'15~20억'} 탭 고정순위 상위 500행.
+   대상: ${cap===10?'6~10억':cap===15?'10~15억':'15~20억'} 탭 고정순위 상위 1,000행.
    학교: 가장 가까운 중학교(배정 학교 아님). 진학률: 학교알리미 2025 공시의 과학고+외고·국제고+자사고 합계. */
 window.APT_INV_RANK=window.APT_INV_RANK||{}; window.APT_INV_RANK[${cap}]=${JSON.stringify(rankByCap[cap])};
 window.APT_INV_SCHOOL=${JSON.stringify(capSchools)};
