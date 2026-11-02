@@ -1,4 +1,4 @@
-/* 6억 초과 탭 상위 500 투자포인트: 목록은 건드리지 않고 상세 화면에만 삽입 */
+/* 6억 초과 탭 상위 1,000 투자포인트: 목록은 건드리지 않고 상세 화면에만 삽입 */
 (function(){
   const style=document.createElement('style');
   style.textContent=`
@@ -24,7 +24,7 @@
     if(d.units>=1000) flags.push(`${d.units.toLocaleString()}세대 대단지`);
     if(age<=10) flags.push(`${age}년차 신축급`);
     else if(stage>=35) flags.push('정비사업 공식 단계 자료 있음');
-    const lead=flags.slice(0,3).join(' · ')||`${CAPTXT} 고정순위 상위 500행에 든 ${d.py}평형`;
+    const lead=flags.slice(0,3).join(' · ')||`${CAPTXT} 고정순위 상위 1,000행에 든 ${d.py}평형`;
     let traffic='';
     if(station){
       const sn=station[0].replace(/ \S+$/,''), lines=(g.sts||[]).filter(x=>x[0].replace(/ \S+$/,'')===sn).map(x=>x[0].split(' ').slice(1).join(' ')).filter(Boolean);
