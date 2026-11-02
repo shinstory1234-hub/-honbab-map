@@ -1,7 +1,8 @@
 /* 가격대별 투자포인트
  * 1~200위: 단지별 생활권·거래·정비사업 고정 전수조사 원고
  * 201~500위: 현재 순위행의 교통·학교·거래·인접 평형·비교 단지를 교차한 상세 원고
- * 501~1,000위: 기존 정형자료 요약(후속 조사 대상)
+ * 501~600위: 위 상세 원고에 단지별 교통·정비·생활권 대조 결과를 추가
+ * 601~1,000위: 기존 정형자료 요약(후속 조사 대상)
  */
 (function(){
   const style=document.createElement('style');
@@ -230,6 +231,23 @@
       checks,sources
     };
   }
+  function detailed600(d){
+    const researched=(window.APT_RESEARCH6_600||{})[gkey(d)];
+    if(!researched)return null;
+    const deep=detailed500(d);
+    if(researched.title)deep.title=researched.title;
+    if(researched.section){
+      const risk=deep.sections[deep.sections.length-1];
+      if(risk&&risk[0].startsWith('⑥'))risk[0]=risk[0].replace('⑥','⑦');
+      deep.sections.splice(deep.sections.length-1,0,researched.section);
+    }
+    if(researched.checks)deep.checks=deep.checks.concat(researched.checks);
+    if(researched.sources){
+      const seen=new Set(deep.sources.map(s=>s[1]));
+      for(const source of researched.sources)if(!seen.has(source[1])){deep.sources.push(source);seen.add(source[1]);}
+    }
+    return deep;
+  }
   function risk(d,p,special){
     const age=2026-d.year,land=landOf(d),hill=hR(d),stage=stOf(d),bits=[];
     if(d.c_label)bits.push(d.c_label);
@@ -267,14 +285,14 @@
     return `<section class="invest"><div class="invest-head"><h3>자동 요약</h3><span class="tnum">현재순위 ${rank}위</span></div><strong class="invest-lead">${esc(lead)}</strong><dl class="invest-list"><div><dt>교통</dt><dd>${esc(traffic)}</dd></div><div><dt>학군</dt><dd>${esc(edu)}</dd></div><div><dt>단지</dt><dd>${esc(product)}</dd></div><div><dt>확인</dt><dd>${esc(danger.join(' · '))}</dd></div></dl><p class="invest-note">아직 단지별 전수조사 전인 자동 요약이다. 조사 완료 단지만 상단에 ‘단지별 전수조사’로 표시한다.</p></section>`;
   }
   function rankOf(d){return d.rank;}
-  function deepOf(d){const k=gkey(d);return (window.APT_DEEP6_200||{})[k]||(window.APT_DEEP6_100||{})[k]||(rankOf(d)<=500?detailed500(d):null);}
-  function panel(d){const rank=rankOf(d);if(!rank)return '';const deep=CAPT===6&&rank<=500?deepOf(d):null;return deep?deepPanel(d,rank,deep):summary(d,rank);}
+  function deepOf(d){const k=gkey(d);return (window.APT_DEEP6_200||{})[k]||(window.APT_DEEP6_100||{})[k]||(rankOf(d)<=500?detailed500(d):rankOf(d)<=600?detailed600(d):null);}
+  function panel(d){const rank=rankOf(d);if(!rank)return '';const deep=CAPT===6&&rank<=600?deepOf(d):null;return deep?deepPanel(d,rank,deep):summary(d,rank);}
   function install(){
     if(window.__aptInvestInstalled||typeof window.renderDetail!=='function')return;window.__aptInvestInstalled=true;const original=window.renderDetail;
     window.renderDetail=function(i){
       original(i);
       const body=document.getElementById('body'),d=D[i],lede=body&&body.querySelector('.lede'),html=panel(d),rank=rankOf(d);
-      const deep=CAPT===6&&rank<=500?deepOf(d):null;
+      const deep=CAPT===6&&rank<=600?deepOf(d):null;
       if(deep){
         const cat=body&&body.querySelector('.identity .cat');if(cat)cat.textContent=cat.textContent.replace(/(?:전체 단지 자동 수집|점수식 자동 선별|직접 분석|단지별 조사 1차 반영)/,'단지별 전수조사');
         [...body.querySelectorAll('section.sec')].forEach(sec=>{const heading=sec.querySelector(':scope > h3');if(heading&&['이런 사람에게','사기 전에 확인'].includes(heading.textContent.trim()))sec.remove();});
