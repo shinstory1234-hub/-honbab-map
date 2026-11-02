@@ -125,7 +125,7 @@ const s4Total=(base,penalty,peak)=>100*clamp01((base-penalty+Math.max(0,peak||0)
 function s4ScoreDetail(d){ const s=d.s4; if(!s)return '';
   const w=s.w||{u:.4,l:.4,p:.2}, f=x=>(+x.toFixed(3)).toString();
   if((window.S4CFG||{}).model==='m2') { const z=s.za||{sm:0,pp:0}, zt=(z.sm?` − 소형 ${z.sm.toFixed(1)}`:'')+(z.pp?` ${z.pp>0?'+':'−'} 단지 내 평당가 ${Math.abs(z.pp).toFixed(1)}(큰 평형보다 평당가 ${z.ppr>=1?'+':''}${((z.ppr-1)*100).toFixed(0)}%, 같은 크기 평형 보통 ${z.ppx>=1?'+':''}${(((z.ppx||1)-1)*100).toFixed(0)}%)`:'');
-    const ta=s.ta||{h:0,w:0}, tt=(ta.h?` − 언덕 ${ta.h.toFixed(1)}(주변 대비 +${Math.round(ta.R)}m)`:'')+(ta.w?` − 역 거리 ${ta.w.toFixed(1)}(도보 ${Math.round(ta.wm)}분)`:'');
+    const ta=s.ta||{h:0,w:0}, tt=(ta.h?` − 언덕 ${ta.h.toFixed(1)}(주변 대비 +${Math.round(ta.R)}m)`:'')+(ta.w?` − 역 거리 ${ta.w.toFixed(1)}(${ta.wm!=null?`도보 ${Math.round(ta.wm)}분`:'3km 안에 역 없음'})`:'')+(ta.mb?` + 초대형 단지 ${ta.mb.toFixed(1)}`:'');
     return `종합 ${(zt||tt?d.score:s.modelComp).toFixed(1)}점 = 세대수 ${s.pU.toFixed(0)}×${f(w.u)} + 장기 급지 ${(s.pG??50).toFixed(0)}×${f(w.g)}${w.q?` + 상품성 ${(s.pQ??50).toFixed(0)}${s.qrb?'(재건축 대상, 감가 멈춤)':''}×${f(w.q)}`:''}${zt||tt?` (${s.modelComp.toFixed(1)})`+zt+tt:''} · 입지·재건축 사업성은 참고 표시, 순위 미반영`; }
   return `종합 ${s.modelComp.toFixed(1)}점 = 세대수 ${s.pU.toFixed(0)}${d.uGate?`(원래 ${d.uGate.raw.toFixed(0)}, 입지 약해 대단지 가점 ${Math.round(d.uGate.g*100)}%만 인정)`:''}×${f(w.u)} + 입지 ${s.pLoc.toFixed(0)}×${f(w.l)} + 적정가 대비 ${s.pUp.toFixed(0)}×${f(w.p)}${w.g?` + 장기 급지 ${(s.pG??50).toFixed(0)}×${f(w.g)}`:''}${s.dp?` − 구축 감점 ${s.dp.toFixed(1)}`:''}${s.peakBonus?` + ${s.peakPeer?'주변 추정 가점':'전고점 가점'} ${s.peakBonus.toFixed(1)}`:''}`;
 }
@@ -204,7 +204,10 @@ function s4Score(d){ const Q=S4Q, C=window.S4CFG||{factors:['U7','A','E','J'],lo
      역 거리: 지금 운행 중인 역 도보 10분 0 → 25분 −5. 6억 이하 탭 회귀(10분 −6.6% → 20분 −18.6%)와 같은 방향 */
   let ta={h:0,w:0}; if(C.model==='m2'){ const R=typeof hR==='function'?hR(d):null, wm=d.locParts?d.locParts.wm:null;
     if(R!=null) ta.h=6*clamp01((R-10)/42); ta.w=wm!=null?5*clamp01((wm-10)/15):(d.g&&d.g.lat?5:0); /* 3km 안에 역이 없으면 최대 감점(2026.11.3 — 이전엔 자료 없음으로 0점 처리돼 역 없는 단지가 오히려 유리) */ ta.R=R; ta.wm=wm; }
-  d.s4.ta=ta; const adj=Math.max(0,Math.min(100,comp-za.sm+za.pp-ta.h-ta.w));
+  /* 초대형 단지 가점(2026.11.3, 사용자 판단, S4CFG.mega=[시작, 만점 세대수, 점수]): 5천 세대 넘는 단지(헬리오시티·올림픽파크포레온·파크리오·잠실엘스 등)는
+     단지 안에 학교·상권·커뮤니티가 갖춰지고 거래가 많아 그 동네 대장 역할 — 세대수 점수(로그, 2천 세대에서 포화)로는 이 차이가 안 잡힘. 경계에서 점수가 튀지 않게 시작~만점 사이는 비례 */
+  const MG=C.mega, mb=MG?MG[2]*clamp01((d.units-MG[0])/(MG[1]-MG[0])):0; ta.mb=mb;
+  d.s4.ta=ta; const adj=Math.max(0,Math.min(100,comp-za.sm+za.pp-ta.h-ta.w+mb));
   const pc=s4Pct(Q.COMP,adj); d.score=adj; d.comp=comp;                     // 0~100, 모든 단지 공통 산식
   d.top=Math.max(.1,Math.round((100-pc)*10)/10);                                   // 상위 x%
   d.urank=Math.max(1,Math.round((100-pc)/100*((C.complexes)||4708))); }           // 약 N위/4,708단지
