@@ -1,6 +1,6 @@
 /* 가격대별 투자포인트
- * 1~500위: 단지별 생활권·거래·정비사업 조사형 원고
- * 501~1,000위: 기존 정형자료 요약
+ * 1~100위: 단지별 생활권·거래·정비사업 전수조사 원고
+ * 101~1,000위: 기존 정형자료 요약(후속 조사 대상)
  */
 (function(){
   const style=document.createElement('style');
@@ -9,6 +9,7 @@
   .invest-head{display:flex;align-items:baseline;justify-content:space-between;gap:12px;margin-bottom:10px}.invest-head h3{font-size:16px;font-weight:750;letter-spacing:-.035em}.invest-head span{font-size:11.5px;color:var(--text-tertiary);white-space:nowrap}
   .invest-lead{display:block;padding:14px;border-radius:5px;background:var(--bg-subtle);font-size:16px;line-height:1.55;letter-spacing:-.025em;word-break:keep-all}
   .invest-essay{padding:4px 0}.invest-essay h4{margin:18px 0 5px;font-size:14px}.invest-essay p{font-size:13.5px;line-height:1.78;color:var(--text-secondary);white-space:pre-line;word-break:keep-all}
+  .invest-essay h4:not(:first-child){padding-top:16px;border-top:1px solid var(--border-soft)}
   .invest-list>div{display:grid;grid-template-columns:58px minmax(0,1fr);gap:10px;padding:12px 0;border-bottom:1px solid var(--border-soft)}.invest-list dt{font-size:12px;font-weight:700;color:var(--primary-soft-fg)}.invest-list dd{font-size:13px;line-height:1.7;color:var(--text-secondary);word-break:keep-all}
   .invest-mini{margin-top:14px;padding-top:12px;border-top:1px solid var(--border-soft)}.invest-mini h4{margin-bottom:8px;font-size:13px}.invest-mini ul{display:flex;flex-direction:column;gap:6px;list-style:none}.invest-mini li{font-size:12.5px;line-height:1.6;color:var(--text-secondary)}.invest-mini li:before{content:'•';margin-right:7px;color:var(--primary-soft-fg)}
   .invest-source{margin-top:12px;font-size:11px;line-height:1.6;color:var(--text-tertiary)}.invest-source a{color:inherit;text-decoration:underline;text-underline-offset:2px}.invest-note{margin-top:11px;font-size:11.5px;line-height:1.65;color:var(--text-tertiary);word-break:keep-all}`;
@@ -104,6 +105,19 @@
     x+=e&&e.n<5?'거래표본이 5건보다 적어 개별 매물의 층·향·수리 상태가 더 중요하다.':'거래가 있어도 저층·고층, 향과 내부수리 여부를 나눠 비교해야 한다.';
     return x;
   }
+  function deepPanel(d,rank,deep){
+    const ev=priceEv(d),near=(d.types||[]).filter(t=>t.py!==d.py).sort((a,b)=>Math.abs(a.py-d.py)-Math.abs(b.py-d.py))[0];
+    let price=`사이트의 ${d.py}평 표시 시세는 ${eok(d.p)}이며 6억 이하 현재순위 ${rank}위다. `;
+    if(ev)price+=`최근 12개월 ${ev.n}건, 최근 3개월 ${ev.n3}건${ev.last?`, 마지막 거래일 ${ev.last}`:''}을 가격 근거로 썼다. `;
+    if(deep.byPy&&deep.byPy[d.py])price+=deep.byPy[d.py]+' ';
+    if(near)price+=`같은 단지에서 가장 가까운 ${near.py}평 표시 시세는 ${eok(near.p)}다. 면적 차이뿐 아니라 방 수, 공급 세대수, 동·층 조건이 다르므로 단순 평당가만으로 비교하지 않았다. `;
+    price+=ev&&ev.n<5?'표본이 5건보다 적어 평균값보다 현재 매물의 동·층·향·입주 조건을 우선 확인해야 한다.':'거래 건수가 있더라도 저층·고층과 내부 수리 여부를 분리해 실제 매물과 비교해야 한다.';
+    const sections=(deep.sections||[]).map((s,i)=>`<h4>${esc(s[0])}</h4><p>${esc(s[1])}</p>`);
+    sections.splice(Math.min(2,sections.length),0,`<h4>③ 선택 평형과 거래 근거</h4><p>${esc(price)}</p>`);
+    const checks=(deep.checks||[]).map(x=>`<li>${esc(x)}</li>`).join('');
+    const sources=(deep.sources||[]).map(s=>`<a href="${esc(s[1])}" target="_blank" rel="noopener">${esc(s[0])}</a>`).join(', ');
+    return `<section class="invest invest-researched"><div class="invest-head"><h3>핵심 투자포인트</h3><span class="tnum">단지별 전수조사 · 현재순위 ${rank}위</span></div><strong class="invest-lead">${esc(deep.title)}</strong><div class="invest-essay">${sections.join('')}</div>${checks?`<div class="invest-mini"><h4>사기 전에 확인</h4><ul>${checks}</ul></div>`:''}<p class="invest-source">조사 기준 2026.11.02 · 주요 출처: ${sources||'국토교통부 실거래가 공개시스템, 단지·지자체 공개자료'}. 학교 거리는 배정을 뜻하지 않으며 철도·정비사업은 최신 고시를 다시 확인해야 한다.</p></section>`;
+  }
   function risk(d,p,special){
     const age=2026-d.year,land=landOf(d),hill=hR(d),stage=stOf(d),bits=[];
     if(d.c_label)bits.push(d.c_label);
@@ -138,18 +152,20 @@
     let edu=school?`가장 가까운 중학교는 ${school[0]}로 약 ${fmtM(school[1])}. ${school[2]!=null?`2025 공시 특목·자사고 진학 합계 ${school[3].toFixed(1)}%. `:'진학 공시는 미결합. '}`:'';if(hak&&hak[0]!=null)edu+=`반경 1km 수학·영어 학원 ${hak[0].toLocaleString()}곳.`;if(!edu)edu='학교·학원 자료는 현장 확인이 필요하다.';
     let product=`${d.year}년 입주, ${d.units.toLocaleString()}세대. ${d.py}평 최근 시세 ${eok(d.p)}, 현재순위 ${rank}위.`;if(land)product+=` 대지지분 약 ${(land[0]/3.3058).toFixed(1)}평 추정(용적률 ${Math.round(land[2])}%).`;
     const danger=[];if(age>=27)danger.push(stage>=35?'공식 정비 단계·분담금 확인':'재건축 기대 선반영 금지');if(d.dead>=.5)danger.push('사업성 낮음 위험');if(hill!=null&&hill>=25)danger.push(`주변 최저점보다 약 ${hill}m 높음`);if(d.reg==='toheo')danger.push('토지거래허가·실거주 요건 확인');if(pe&&pe.n<5)danger.push(`최근 12개월 거래 ${pe.n}건`);if(!danger.length)danger.push('층·향·동별 가격과 주차·수선 상태 확인');
-    return `<section class="invest"><div class="invest-head"><h3>자동 요약</h3><span class="tnum">현재순위 ${rank}위</span></div><strong class="invest-lead">${esc(lead)}</strong><dl class="invest-list"><div><dt>교통</dt><dd>${esc(traffic)}</dd></div><div><dt>학군</dt><dd>${esc(edu)}</dd></div><div><dt>단지</dt><dd>${esc(product)}</dd></div><div><dt>확인</dt><dd>${esc(danger.join(' · '))}</dd></div></dl><p class="invest-note">501~1,000위는 아직 단지별 조사 전인 자동 요약이다.</p></section>`;
+    return `<section class="invest"><div class="invest-head"><h3>자동 요약</h3><span class="tnum">현재순위 ${rank}위</span></div><strong class="invest-lead">${esc(lead)}</strong><dl class="invest-list"><div><dt>교통</dt><dd>${esc(traffic)}</dd></div><div><dt>학군</dt><dd>${esc(edu)}</dd></div><div><dt>단지</dt><dd>${esc(product)}</dd></div><div><dt>확인</dt><dd>${esc(danger.join(' · '))}</dd></div></dl><p class="invest-note">아직 단지별 전수조사 전인 자동 요약이다. 조사 완료 단지만 상단에 ‘단지별 전수조사’로 표시한다.</p></section>`;
   }
   function rankOf(d){return d.rank;}
-  function panel(d){const rank=rankOf(d);if(!rank)return '';return rank<=500?researched(d,rank):summary(d,rank);}
+  function deepOf(d){return (window.APT_DEEP6_100||{})[gkey(d)]||null;}
+  function panel(d){const rank=rankOf(d);if(!rank)return '';const deep=CAPT===6&&rank<=100?deepOf(d):null;return deep?deepPanel(d,rank,deep):summary(d,rank);}
   function install(){
     if(window.__aptInvestInstalled||typeof window.renderDetail!=='function')return;window.__aptInvestInstalled=true;const original=window.renderDetail;
     window.renderDetail=function(i){
       original(i);
       const body=document.getElementById('body'),d=D[i],lede=body&&body.querySelector('.lede'),html=panel(d),rank=rankOf(d);
-      if(rank<=500){const cat=body&&body.querySelector('.identity .cat');if(cat)cat.textContent=cat.textContent.replace(/(?:전체 단지 자동 수집|점수식 자동 선별|직접 분석)/,'단지별 조사 1차 반영');}
+      const deep=CAPT===6&&rank<=100?deepOf(d):null;
+      if(deep){const cat=body&&body.querySelector('.identity .cat');if(cat)cat.textContent=cat.textContent.replace(/(?:전체 단지 자동 수집|점수식 자동 선별|직접 분석|단지별 조사 1차 반영)/,'단지별 전수조사');}
       if(lede&&html){
-        if(CAPT===6&&rank<=500)lede.outerHTML=html;
+        if(CAPT===6)lede.outerHTML=html;
         else lede.insertAdjacentHTML('afterend',html);
       }
     };
