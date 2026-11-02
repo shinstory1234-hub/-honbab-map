@@ -163,7 +163,10 @@
       original(i);
       const body=document.getElementById('body'),d=D[i],lede=body&&body.querySelector('.lede'),html=panel(d),rank=rankOf(d);
       const deep=CAPT===6&&rank<=100?deepOf(d):null;
-      if(deep){const cat=body&&body.querySelector('.identity .cat');if(cat)cat.textContent=cat.textContent.replace(/(?:전체 단지 자동 수집|점수식 자동 선별|직접 분석|단지별 조사 1차 반영)/,'단지별 전수조사');}
+      if(deep){
+        const cat=body&&body.querySelector('.identity .cat');if(cat)cat.textContent=cat.textContent.replace(/(?:전체 단지 자동 수집|점수식 자동 선별|직접 분석|단지별 조사 1차 반영)/,'단지별 전수조사');
+        [...body.querySelectorAll('section.sec')].forEach(sec=>{const heading=sec.querySelector(':scope > h3');if(heading&&['이런 사람에게','사기 전에 확인'].includes(heading.textContent.trim()))sec.remove();});
+      }
       if(lede&&html){
         if(CAPT===6)lede.outerHTML=html;
         else lede.insertAdjacentHTML('afterend',html);
