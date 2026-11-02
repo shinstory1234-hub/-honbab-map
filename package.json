@@ -7,6 +7,7 @@
     "build": "next build",
     "start": "next start",
     "lint": "eslint .",
+    "apt:invest": "node scripts/generate-invest-points.mjs",
     "apt:far-rules": "node scripts/collect-far-rules.mjs",
     "apt:far-zoning": "node scripts/collect-far-zoning.mjs"
   },
