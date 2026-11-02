@@ -7,6 +7,8 @@ const nextConfig = {
         { source: '/', has: [{ type: 'host', value: 'undervalued-map.vercel.app' }], destination: '/apt-map.html' },
         // 6억지도 고정 입지 데이터: 같은 출처로 프록시(CSP script-src 'self' 유지)
         { source: '/apt-geo.js', destination: 'https://realestate-media.vercel.app/api/backtest/aptgeo?export=js' },
+        // 현재 시세(매일 크론이 다시 계산, 2026.11.3)
+        { source: '/apt-live.js', destination: 'https://realestate-media.vercel.app/api/backtest/aptlive' },
       ],
     }
   },

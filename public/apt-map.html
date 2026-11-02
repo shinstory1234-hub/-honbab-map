@@ -281,14 +281,14 @@ aside{order:-1;width:408px;flex:none;border-right:1px solid var(--border);backgr
 </main>
 
 <script>
-/* 가격대 탭(2026.11.1): ?cap=10 → 6~10억 탭. 탭마다 대상 단지·분위수(백분위 기준)·주변 시세 커널이 다르고, 점수는 탭 안에서만 비교 */
+/* 가격대 탭(2026.11.1): ?cap=10 → 6~10억 탭. 2026.11.3: 6억 초과 탭은 세 탭 단지를 모두 읽고 매일 계산되는 현재 시세(apt-live.js)로 가격대를 다시 나눔(apt-livefix.js). 탭마다 대상 단지·분위수(백분위 기준)·주변 시세 커널이 다르고, 점수는 탭 안에서만 비교 */
 (function(){ var v=new URLSearchParams(location.search).get('cap'), c=v==='20'?20:v==='15'?15:v==='10'?10:6;
   window.CAPT=c; window.CAPLO=c===20?150000:c===15?100000:c===10?60000:0; window.CAPHI=c===20?200000:c===15?150000:c===10?100000:60000; window.CAPTXT=c===20?'15~20억':c===15?'10~15억':c===10?'6~10억':'6억 이하';
   window.inBand=function(p){ return p>CAPLO&&p<=CAPHI; };
   var T=c!==6, x=String(c);
   /* 주변 시세 커널(apt-loc10·cx10)은 가격과 무관한 전체 단지 자료라 6~10억·10~15억 탭이 같이 씀 */
-  var F=['apt-first'+(T?x:'')+'.js','apt-unitfix.js','apt-sd.js','apt-picks.js', T?'apt-picks10.js':'apt-auto3.js','apt-gj.js', T?'apt-loc10.js':'apt-loc.js', T?'apt-cx10.js':'apt-cx.js','apt-fard.js','apt-hak.js', T?'apt-univ'+x+'.js':'apt-univ.js',
-    'apt-farplan.js','apt-cur.js','apt-trn.js','apt-small.js', T?'apt-s4q'+x+'.js':'apt-s4q.js','apt-peak.js','apt-gjl.js','apt-s4.js','apt-band.js','apt-plat.js','apt-dem.js', T?'apt-dem10.js':'', c>=15?'apt-dem15.js':'', c===20?'apt-dem20.js':'','apt-walk.js','apt-geo.js', T?'':'apt-deep6-100.js', T?'':'apt-deep6-200.js', T?'':'apt-invest-ui.js'];
+  var F=['apt-first'+(T?x:'')+'.js','apt-unitfix.js','apt-sd.js','apt-picks.js', T?'apt-picks10.js':'apt-auto3.js','apt-gj.js', T?'apt-loc10.js':'apt-loc.js', T?'apt-cx10.js':'apt-cx.js','apt-fard.js','apt-hak.js', T?'apt-univ10.js':'apt-univ.js', T?'apt-univ15.js':'', T?'apt-univ20.js':'', T?'apt-live.js':'', T?'apt-livefix.js':'',
+    'apt-farplan.js','apt-cur.js','apt-trn.js','apt-small.js', T?'apt-s4q'+x+'.js':'apt-s4q.js','apt-peak.js','apt-gjl.js','apt-s4.js','apt-band.js','apt-plat.js','apt-dem.js', T?'apt-dem10.js':'', T?'apt-dem15.js':'', T?'apt-dem20.js':'','apt-walk.js','apt-geo.js', T?'':'apt-deep6-100.js', T?'':'apt-deep6-200.js', T?'':'apt-invest-ui.js'];
   for(var i=0;i<F.length;i++) if(F[i]) document.write('<script src="'+F[i]+'"><\/script>');
   if(T) document.title='저평가지도 · '+CAPTXT+' 아파트';
   var t6=document.getElementById('cap'+x); if(t6) t6.setAttribute('aria-current','page'); var hm=document.getElementById('home'); if(hm&&T) hm.href='apt-map.html?cap='+x;
@@ -428,7 +428,7 @@ const TIERS=[
 const TINY=13;   // 2026.10.24: 전용 약 32.5㎡ 미만(5㎡ 묶음 30㎡ 이하)만 제외로 완화 — 판단(37㎡대 신축 소형까지 빼는 건 과하다고 봄)
 /* 가격 기준 = 최근 시세: 최근 3개월(7.22~10.21) 실거래 5건 이상이면 그 중위, 적으면 12개월 실거래를 시·구 월별 시세지수로 오늘 기준 환산한 중위.
    직접 고른 단지도 같은 기준으로 덮어씀 — 지금 시세가 6억을 넘는 평형은 빼고, 남는 평형이 없으면 단지를 뺌 */
-const curSrc=t=>t.n3>=5?`최근 3개월 실거래 ${t.n3}건 중위`:t.n3>0?`최근 3개월 ${t.n3}건 중위와 12개월 ${t.n}건 환산 중위를 ${t.n3}:2로 섞음`:`최근 12개월 실거래 ${t.n}건을 시세 변동만큼 오늘 기준으로 환산한 중위`;   // 2026.10.26: 3개월 거래가 1~4건이면 버리지 않고 건수만큼 반영(급등 단지 과소평가 방지)
+const curSrc=t=>window.LIVE_ON&&CAPT!==6?`최근 12개월 실거래 ${t.n}건(3개월 ${t.n3}건, 직거래 제외)을 오늘 기준으로 환산해 최근 거래에 무게를 둔 시세`:t.n3>=5?`최근 3개월 실거래 ${t.n3}건 중위`:t.n3>0?`최근 3개월 ${t.n3}건 중위와 12개월 ${t.n}건 환산 중위를 ${t.n3}:2로 섞음`:`최근 12개월 실거래 ${t.n}건을 시세 변동만큼 오늘 기준으로 환산한 중위`;   // 2026.10.26: 3개월 거래가 1~4건이면 버리지 않고 건수만큼 반영(급등 단지 과소평가 방지)
 const isSmallOnly=d=>!!(window.SMALLONLY&&SMALLONLY.has(d.area.split(' ').pop()+'|'+d.n));
 const farOf=d=>{ const a=((window.FARD||{})[gkey(d)]||[])[0]||0, c=nearCx(d.g&&d.g.lat?d:{...d,g:(typeof GEO!=='undefined'&&GEO[gkey(d)])||{}}), b=c?c[4]:0; return Math.max(a<2000?a:0,b<2000?b:0); };
 const isOfficeType=d=>{ const so=window.SMALLONLY&&SMALLONLY.has(d.area.split(' ').pop()+'|'+d.n), small=so||(d.types||[{py:d.py}]).every(t=>t.py<=20); return small&&farOf(d)>=350; };
