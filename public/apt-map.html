@@ -297,9 +297,14 @@ aside{order:-1;width:408px;flex:none;border-right:1px solid var(--border);backgr
 <script>
 const NOTICE_KEY='apt6_notice_v1';
 const noticeGate=document.getElementById('noticeGate'), noticeCheck=document.getElementById('noticeCheck'), noticeAgree=document.getElementById('noticeAgree'), noticeError=document.getElementById('noticeError');
-try{if(localStorage.getItem(NOTICE_KEY)==='yes') noticeGate.hidden=true;}catch(e){}
+/* 동의 기억(2026.11.2): apt-6eok.vercel.app은 다른 도메인 iframe이라 브라우저가 iframe 저장소를 막으면 탭을 바꿀 때마다 다시 떴음.
+   ① localStorage ② 같은 iframe 안 이동에서도 유지되는 window.name ③ 바깥 페이지가 기억해 넘겨주는 ?ok=1 — 셋 중 하나라도 있으면 통과 */
+const noticeOK=()=>{ try{ if(localStorage.getItem(NOTICE_KEY)==='yes') return true; }catch(e){} return /(^|\s)apt6notice=yes(\s|$)/.test(window.name||'')||new URLSearchParams(location.search).get('ok')==='1'; };
+if(noticeOK()){ noticeGate.hidden=true; if(!/apt6notice=yes/.test(window.name||'')) window.name=((window.name||'')+' apt6notice=yes').trim(); }
 noticeCheck.addEventListener('change',()=>{noticeAgree.disabled=!noticeCheck.checked;noticeError.textContent='';});
-noticeAgree.addEventListener('click',()=>{if(!noticeCheck.checked)return;try{localStorage.setItem(NOTICE_KEY,'yes');}catch(e){}noticeGate.hidden=true;});
+noticeAgree.addEventListener('click',()=>{if(!noticeCheck.checked)return;try{localStorage.setItem(NOTICE_KEY,'yes');}catch(e){}
+  window.name=((window.name||'')+' apt6notice=yes').trim(); try{ if(window.parent!==window) window.parent.postMessage({apt6notice:'yes'},'*'); }catch(e){}
+  noticeGate.hidden=true;});
 document.getElementById('noticeDecline').addEventListener('click',()=>{noticeCheck.checked=false;noticeAgree.disabled=true;noticeError.textContent='동의해야 지도를 볼 수 있습니다.';noticeCheck.focus();});
 const KAKAO_JS_KEY='106bb734e8600621686fade2de7f8afb';
 const $=s=>document.querySelector(s);
@@ -506,10 +511,14 @@ function score(d){
     if(!d.cur) d.cur={v:0,n:'',m:99999,ls:[],gv:0,x:0}; }
   else if(g.st!=null) d.cur={v:23*stS(g.st)/25*.8,n:g.stn||'',m:g.st,ls:[],gv:.8,x:0,old:1};
   const la=g.lat||d.lat, ln=g.lng||d.lng;
-  if(FUTPOS&&la) FUTPOS.forEach((f,k)=>{ if(!f) return; const m=hav(la,ln,f[0],f[1]), F=FUT[k];
-    const ls=F[1].replace(/\(.*?\)/g,'').replace(/역|신설/g,'').split(/[·\s]+/).filter(x=>/선|GTX/.test(x));
-    const gv=Math.max(...ls.map(l=>lineG(l).v),.7), x=Math.min(.16,.08*(ls.length-1)), disc=Math.max(.8,1-.05*(F[2]-2026));
-    const v=23*stS(m)/25*Math.min(1,gv*(1+x))*disc; if(!d.fut||v>d.fut.v) d.fut={v,n:F[0].split(' ')[0],line:F[1],year:F[2],m,gv,disc}; });
+  // 속도(2026.11.2): 개통 예정 역의 노선 등급·할인은 역마다 고정이라 한 번만 계산, 결과는 좌표별 캐시 — 결과 동일
+  if(FUTPOS&&la){ const fk=la+','+ln; const FC=score.fc||(score.fc=new Map());
+    if(FC.has(fk)) d.fut=FC.get(fk)&&{...FC.get(fk)};
+    else { const FP=score.fp||(score.fp=FUT.map(F=>{ const ls=F[1].replace(/\(.*?\)/g,'').replace(/역|신설/g,'').split(/[·\s]+/).filter(x=>/선|GTX/.test(x));
+        return {gv:Math.max(...ls.map(l=>lineG(l).v),.7),x:Math.min(.16,.08*(ls.length-1)),disc:Math.max(.8,1-.05*(F[2]-2026))}; }));
+      FUTPOS.forEach((f,k)=>{ if(!f) return; const m=hav(la,ln,f[0],f[1]), F=FUT[k], {gv,x,disc}=FP[k];
+        const v=23*stS(m)/25*Math.min(1,gv*(1+x))*disc; if(!d.fut||v>d.fut.v) d.fut={v,n:F[0].split(' ')[0],line:F[1],year:F[2],m,gv,disc}; });
+      FC.set(fk,d.fut&&{...d.fut}); } }
   d.T=d.cur||d.fut?Math.max(d.cur?d.cur.v:0,d.fut?d.fut.v:0):null; d.Tsrc=d.fut&&(!d.cur||d.fut.v>d.cur.v)?'fut':'cur';
   /* 직주근접: 구 대표 통근시간(역 기준) + 이 단지에서 역까지 접근(도보 80m/분, 버스면 최대 15분) + 하위 노선 환승 */
   const sm=d.cur&&d.cur.m<99999?d.cur.m:null;
@@ -535,12 +544,24 @@ const SZM=a=>lerp([[25,1],[27,.9],[29,.7],[31,.45],[34,.35],[40,.3]],a);   // 27
 const SIZE=(py,age)=>Math.exp((HC.szY+HC.szO*clamp01((age-11)/10))*SZM(age)*Math.log(Math.max(py,TINY)*2.512/60));   // 16평 미만은 16평으로(회귀 범위 밖 외삽 방지)     // 전용 60㎡ 대비 평당가 배율(구축일수록 소형 평당가가 높음)
 /* 주변 시세(위치 가치): 반경 ~600m 가우시안 커널로 주변 단지들의 '상품 차이를 뺀' 평당가를 평균. 이 단지 자신은 제외.
    동 경계와 무관하게 실제 거리로 비교하므로, 같은 동이라도 멀리 떨어진 호재 지역 시세가 섞이지 않음 */
-function nearCx(d){ const g=d.g||{}; if(!g.lat||!window.CXP) return null; const c=Math.cos(g.lat*Math.PI/180); let best=null,bm=1e9;
-  for(const p of CXP){ const dy=(p[0]-g.lat)*111000; if(Math.abs(dy)>300) continue; const m=Math.hypot(dy,(p[1]-g.lng)*111000*c);
-    const pen=m+(d.units&&p[2]?300*Math.abs(Math.log(p[2]/d.units)):0); if(m<300&&pen<bm){bm=pen;best=p;} } return best; }
+/* 속도(2026.11.2): CXP를 약 330m 격자로 색인하고 결과를 (좌표·세대수)별로 캐시 — 같은 단지 평형마다·호출마다 전체 단지를 다시 훑던 것(재계산 시간의 20%) 제거. 결과는 동일 */
+var CXG=null, NCC=null;   // var: 이 정의보다 위쪽(farOf)에서 먼저 호출되므로 let/const면 초기화 전 접근 오류
+function nearCx(d){ const g=d.g||{}; if(!g.lat||!window.CXP) return null;
+  if(!NCC) NCC=new Map(); const key=g.lat+','+g.lng+','+(d.units||0); if(NCC.has(key)) return NCC.get(key);
+  if(!CXG){ CXG=new Map(); for(const p of CXP){ const k=Math.floor(p[0]/.003)+'|'+Math.floor(p[1]/.004); let a=CXG.get(k); if(!a) CXG.set(k,a=[]); a.push(p); } }
+  const c=Math.cos(g.lat*Math.PI/180), ci=Math.floor(g.lat/.003), cj=Math.floor(g.lng/.004); let best=null,bm=1e9;
+  for(let i=ci-1;i<=ci+1;i++) for(let j=cj-1;j<=cj+1;j++){ const a=CXG.get(i+'|'+j); if(!a) continue;
+    for(const p of a){ const dy=(p[0]-g.lat)*111000; if(Math.abs(dy)>300) continue; const m=Math.hypot(dy,(p[1]-g.lng)*111000*c);
+      const pen=m+(d.units&&p[2]?300*Math.abs(Math.log(p[2]/d.units)):0); if(m<300&&(pen<bm||(pen===bm&&CXP.indexOf(p)<CXP.indexOf(best)))){bm=pen;best=p;} } }
+  NCC.set(key,best); return best; }
+var LOCG=null;   // 속도(2026.11.2): LOCP를 약 2km 격자로 색인, 6km 안 후보만 원래 순서대로 훑음 — 결과 동일
 function locFW(d,cut){ const g=d.g||{}; if(!g.lat||!window.LOCP) return null; const la=g.lat, ln=g.lng, c=Math.cos(la*Math.PI/180);
   const near=[]; let self=null, sd=1e9;
-  for(const p of LOCP){ const dy=(p[0]-la)*111000; if(Math.abs(dy)>6000) continue; const dx=(p[1]-ln)*111000*c; if(Math.abs(dx)>6000) continue;
+  if(!LOCG){ LOCG=new Map(); LOCP.forEach((p,i)=>{ const k=Math.floor(p[0]/.02)+'|'+Math.floor(p[1]/.02); let a=LOCG.get(k); if(!a) LOCG.set(k,a=[]); a.push(i); }); }
+  const ci=Math.floor(la/.02), cj=Math.floor(ln/.02), ids=[];   // 격자 0.02°(위도 2.2km·경도 1.8km): 6km 안을 덮도록 위도 ±3·경도 ±4칸
+  for(let i=ci-3;i<=ci+3;i++) for(let j=cj-4;j<=cj+4;j++){ const a=LOCG.get(i+'|'+j); if(a) for(const x of a) ids.push(x); }
+  ids.sort((a,b)=>a-b);
+  for(const id of ids){ const p=LOCP[id]; const dy=(p[0]-la)*111000; if(Math.abs(dy)>6000) continue; const dx=(p[1]-ln)*111000*c; if(Math.abs(dx)>6000) continue;
     const m=Math.hypot(dx,dy); if(m<300&&Math.abs(p[4]-d.year)<=1&&m<sd){sd=m;self=p;}
     if(2026-p[4]<=cut) near.push([p,m]); }                // 일반 적정가는 25년차 이하, 재건축 완공가는 20년차 이하(교차검증)
   const sg=(self||d.cx||[])[self?7:5]||0;                 // 다른 시·구 단지는 가까워도 35%만 반영(행정 경계 = 생활권·학군 경계인 경우가 많음)
@@ -729,6 +750,7 @@ function areaMove(){ const C=Object.values(SIB).map(a=>a[0]).filter(d=>d.g&&d.g.
     mv[d.cxKey]=all?on/all:0; }
   D.forEach(d=>{ d.areaMv=mv[d.cxKey]||0; }); }
 function recompute(){
+  window.__RCV=(window.__RCV||0)+1;   // 재계산 회차(apt-s4.js s4PeerPeak 후보 캐시용)
   LFC={}; D.forEach(score); areaMove();
   D.forEach(d=>{
     const age=2026-d.year, J=G(), k=dkey(d), g=guTok(d);

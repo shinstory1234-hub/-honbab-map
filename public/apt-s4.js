@@ -99,9 +99,12 @@ function s4PeerPeak(d){
   const B=window.PEAK_PEER_BASE||{}, g=d.g||{};
   if(d.year<2023||!Number.isFinite(d.year)||!g.lat||!g.lng||!(d.units>0)||!(d.py>0)||B[s4PeakKey(d)]||typeof SIB==='undefined') return null;
   const candidates=[];
-  for(const group of Object.values(SIB)){
+  // 속도(2026.11.2): d와 무관한 후보 조건은 재계산 회차마다 한 번만 걸러 둠 — 결과는 동일
+  if(!s4PeerPeak.c||s4PeerPeak.c.v!==window.__RCV) s4PeerPeak.c={v:window.__RCV,list:Object.values(SIB).filter(group=>{ const x=group[0], e=B[s4PeakKey(x)], h=x.g||{};
+    return e&&x.year<=2022&&e[1]===x.year&&Number.isFinite(e[0])&&e[0]>0&&e[2]>0&&h.lat&&h.lng&&x.units>0&&!x.opt&&stOf(x)<35; })};
+  for(const group of s4PeerPeak.c.list){
     const x=group[0], e=B[s4PeakKey(x)], h=x.g||{};
-    if(!e||x.cxKey===d.cxKey||x.year>2022||x.year<d.year-8||e[1]!==x.year||!Number.isFinite(e[0])||e[0]<=0||!(e[2]>0)||!h.lat||!h.lng||!(x.units>0)||x.opt||stOf(x)>=35) continue;
+    if(x.cxKey===d.cxKey||x.year<d.year-8) continue;
     const unitRatio=x.units/d.units; if(unitRatio<1/3||unitRatio>3) continue;
     const m=hav(g.lat,g.lng,h.lat,h.lng); if(!Number.isFinite(m)||m>2500) continue;
     const py=group.reduce((best,t)=>Math.abs(Math.log(t.py/d.py))<Math.abs(Math.log(best/d.py))?t.py:best,group[0].py);
