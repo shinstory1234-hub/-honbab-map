@@ -8,7 +8,9 @@
     // 평형별 시세가 하나라도 똑같은(같은 지번 묶음의 실거래) 단지끼리만 같은 단지로 봄 — 좌표만 같은 이웃 단지(예: 사당 극동·우성2)는 그대로 둠
     var sig=a.map(function(i){ return (P[i].types||[]).map(function(t){return t.py+':'+t.p;}); }), par=a.map(function(_,x){return x;});
     function f(x){ while(par[x]!==x) x=par[x]=par[par[x]]; return x; }
-    for(var x=0;x<a.length;x++) for(var y=x+1;y<a.length;y++) if(sig[x].some(function(z){return sig[y].indexOf(z)>=0;})) par[f(x)]=f(y);
+    /* 시세 묶음을 단지명 기준으로 바꾼 뒤(2026.11.3)엔 1·2단지 시세가 따로 계산돼 값이 안 겹침 → 단지명에서 끝 번호(1단지·2차·(3))만 다른 경우도 같은 단지로 봄 */
+    var bn=a.map(function(i){ return P[i].n.replace(/\s/g,'').replace(/\(\d+\)$/,'').replace(/\d+(단지|차)?$/,''); });
+    for(var x=0;x<a.length;x++) for(var y=x+1;y<a.length;y++) if((bn[x]&&bn[x]===bn[y])||sig[x].some(function(z){return sig[y].indexOf(z)>=0;})) par[f(x)]=f(y);
     var cl={}; a.forEach(function(i,x){ (cl[f(x)]=cl[f(x)]||[]).push(i); });
     Object.keys(cl).forEach(function(r){ var m=cl[r]; if(m.length<2) return; m.sort(function(u,v){return tn(P[v])-tn(P[u]);}); var keep=P[m[0]];
       m.slice(1).forEach(function(i){ (P[i].types||[]).forEach(function(t){ if(!(keep.types||[]).some(function(u){return u.py===t.py;})) (keep.types=keep.types||[]).push(t); }); del[i]=1; drop++; }); }); });
