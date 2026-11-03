@@ -3,7 +3,7 @@
  * 201~500위: 현재 순위행의 교통·학교·거래·인접 평형·비교 단지를 교차한 상세 원고
  * 501~600위: 위 상세 원고에 단지별 교통·정비·생활권 대조 결과를 추가
  * 601~1,000위: 기존 정형자료 요약(후속 조사 대상)
- * 6억 초과 다섯 탭: 현재순위 1~100위만 행별 교차조사 + 정비사업 보정 원고
+ * 6억 초과 다섯 탭: 현재순위 1~300위 행별 교차조사 + 정비사업 보정 원고
  */
 (function(){
   const style=document.createElement('style');
@@ -251,7 +251,7 @@
     return deep;
   }
 
-  /* 6억 초과 상위 100위: 지역 소개문을 재사용하지 않고 현재 선택 행의 값으로 다시 쓴다.
+  /* 6억 초과 상위 300위: 지역 소개문을 재사용하지 않고 현재 선택 행의 값으로 다시 쓴다.
    * 역·학교·실거래·같은 단지 평형·실제 대체 단지·정비단계를 한 화면에서 교차한다. */
   function bandPeerOf(d){
     const city=d.area.split(' ').slice(0,-1).join(' ');
@@ -403,7 +403,7 @@
   function selectedDeep(d){
     const rank=rankOf(d);
     if(CAPT===6&&rank<=600)return deepOf(d);
-    if(CAPT>6&&rank<=100)return highDetailed(d);
+    if(CAPT>6&&rank<=300)return highDetailed(d);
     return null;
   }
   function panel(d){const rank=rankOf(d);if(!rank)return '';const deep=selectedDeep(d);return deep?deepPanel(d,rank,deep):summary(d,rank);}
