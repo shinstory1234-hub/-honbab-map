@@ -2,8 +2,8 @@
  * 1~200위: 단지별 생활권·거래·정비사업 고정 전수조사 원고
  * 201~500위: 현재 순위행의 교통·학교·거래·인접 평형·비교 단지를 교차한 상세 원고
  * 501~600위: 위 상세 원고에 단지별 교통·정비·생활권 대조 결과를 추가
- * 601~1,000위: 기존 정형자료 요약(후속 조사 대상)
- * 6억 초과 다섯 탭: 현재순위 1~300위 행별 교차조사 + 정비사업 보정 원고
+ * 601~1,000위: 현재 순위행의 교통·학교·거래·인접 평형·비교 단지를 교차한 상세 원고
+ * 6억 초과 다섯 탭: 현재순위 1~500위 행별 교차조사 + 정비사업 보정 원고
  */
 (function(){
   const style=document.createElement('style');
@@ -251,7 +251,7 @@
     return deep;
   }
 
-  /* 6억 초과 상위 300위: 지역 소개문을 재사용하지 않고 현재 선택 행의 값으로 다시 쓴다.
+  /* 6억 초과 상위 500위: 지역 소개문을 재사용하지 않고 현재 선택 행의 값으로 다시 쓴다.
    * 역·학교·실거래·같은 단지 평형·실제 대체 단지·정비단계를 한 화면에서 교차한다. */
   function bandPeerOf(d){
     const city=d.area.split(' ').slice(0,-1).join(' ');
@@ -399,11 +399,14 @@
     return `<section class="invest"><div class="invest-head"><h3>자동 요약</h3><span class="tnum">현재순위 ${rank}위</span></div><strong class="invest-lead">${esc(lead)}</strong><dl class="invest-list"><div><dt>교통</dt><dd>${esc(traffic)}</dd></div><div><dt>학군</dt><dd>${esc(edu)}</dd></div><div><dt>단지</dt><dd>${esc(product)}</dd></div><div><dt>확인</dt><dd>${esc(danger.join(' · '))}</dd></div></dl><p class="invest-note">아직 단지별 전수조사 전인 자동 요약이다. 조사 완료 단지만 상단에 ‘단지별 전수조사’로 표시한다.</p></section>`;
   }
   function rankOf(d){return d.rank;}
-  function deepOf(d){const k=gkey(d);return (window.APT_DEEP6_200||{})[k]||(window.APT_DEEP6_100||{})[k]||(rankOf(d)<=500?detailed500(d):rankOf(d)<=600?detailed600(d):null);}
+  function deepOf(d){
+    const k=gkey(d),rank=rankOf(d);
+    return (window.APT_DEEP6_200||{})[k]||(window.APT_DEEP6_100||{})[k]||(rank<=600?(detailed600(d)||detailed500(d)):rank<=1000?detailed500(d):null);
+  }
   function selectedDeep(d){
     const rank=rankOf(d);
-    if(CAPT===6&&rank<=600)return deepOf(d);
-    if(CAPT>6&&rank<=300)return highDetailed(d);
+    if(CAPT===6&&rank<=1000)return deepOf(d);
+    if(CAPT>6&&rank<=500)return highDetailed(d);
     return null;
   }
   function panel(d){const rank=rankOf(d);if(!rank)return '';const deep=selectedDeep(d);return deep?deepPanel(d,rank,deep):summary(d,rank);}
