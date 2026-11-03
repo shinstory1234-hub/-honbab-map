@@ -3,7 +3,7 @@
  * 201~500위: 현재 순위행의 교통·학교·거래·인접 평형·비교 단지를 교차한 상세 원고
  * 501~600위: 위 상세 원고에 단지별 교통·정비·생활권 대조 결과를 추가
  * 601~1,000위: 현재 순위행의 교통·학교·거래·인접 평형·비교 단지를 교차한 상세 원고
- * 6억 초과 다섯 탭: 현재순위 1~500위 행별 교차조사 + 정비사업 보정 원고
+ * 6억 초과 다섯 탭: 존재하는 전체 단지 행별 교차조사 + 정비사업 보정 원고
  */
 (function(){
   const style=document.createElement('style');
@@ -251,13 +251,19 @@
     return deep;
   }
 
-  /* 6억 초과 상위 500위: 지역 소개문을 재사용하지 않고 현재 선택 행의 값으로 다시 쓴다.
+  /* 6억 초과 전체 단지: 지역 소개문을 재사용하지 않고 현재 선택 행의 값으로 다시 쓴다.
    * 역·학교·실거래·같은 단지 평형·실제 대체 단지·정비단계를 한 화면에서 교차한다. */
   function bandPeerOf(d){
     const city=d.area.split(' ').slice(0,-1).join(' ');
     const rows=D.filter(x=>x!==d&&x.n!==d.n&&Math.abs(x.py-d.py)<=16&&(x.area===d.area||x.area.startsWith(city+' ')));
     const score=x=>(x.area===d.area?0:50000)+Math.abs(x.py-d.py)*7000+Math.abs(x.p-d.p)+Math.abs((x.rank||9999)-(d.rank||9999))*30;
     return rows.sort((a,b)=>score(a)-score(b))[0]||null;
+  }
+  function rankVerdict(rank){
+    if(rank<=30)return {label:'핵심권',text:`현재 ${rank}위로 이 가격대 상위 30위 핵심권이다. 급지·학군·교통·상품성과 가격 경쟁력의 종합점수가 높은 편이지만, 높은 순위가 미래 수익이나 현재 호가의 적정성을 보장하지는 않는다.`};
+    if(rank<=300)return {label:'유망권',text:`현재 ${rank}위로 31~300위 유망권이다. 비교할 장점은 분명하지만 상위 30개 단지보다 종합 우선도는 낮다. 아래에 적은 거래표본·동별 입지·정비사업 위험까지 확인한 뒤 가격 차이가 충분할 때 선택할 단지다.`};
+    if(rank<=1000)return {label:'관심권',text:`현재 ${rank}위로 301~1,000위 관심권이다. 일부 장점만 보고 상위 단지와 같은 수준으로 평가하면 안 된다. 같은 예산의 상위 300위 단지보다 분명한 가격 할인이나 실거주 이유가 확인될 때만 매수 후보로 올리는 편이 타당하다.`};
+    return {label:'탐색권 · 매수 우선도 낮음',text:`현재 ${rank}위로 1,001위 이하 탐색권이다. 이 평가모형에서는 급지·학군·교통·상품성·가격 경쟁력의 종합 매수 우선도가 같은 가격대 상위 단지보다 낮다. 단지 고유의 장점은 참고하되, 실거래 기준의 뚜렷한 할인이나 개인적인 실거주 이유가 없다면 투자 목적으로 우선 추천하기 어렵다.`};
   }
   function highDetailed(d){
     const rank=rankOf(d),age=2026-d.year,ev=priceEv(d),sts=stationSet(d),st=sts[0]||null;
@@ -268,9 +274,10 @@
     const SI=['학교알리미','https://www.schoolinfo.go.kr/'];
     const KA=['공동주택관리정보시스템','https://www.k-apt.go.kr/'];
     const sources=[RT,SI,KA];
-    const size=d.py<=20?'소형 진입상품':d.py<=26?'중소형 실거주':d.py<=36?'가족형 표준면적':d.py<=50?'중대형 면적':'대형 면적';
+    const verdict=rankVerdict(rank),size=d.py<=20?'소형 진입상품':d.py<=26?'중소형 실거주':d.py<=36?'가족형 표준면적':d.py<=50?'중대형 면적':'대형 면적';
     const ageText=age<=5?'신축':age<=10?'신축급':age<=20?'준신축':age<27?'중년차 구축':'노후 구축';
-    const title=special&&special.title?special.title:`${st?`${st[0]} ${st[1]<=700?'도보권':'생활권'} · `:''}${d.units.toLocaleString()}세대 ${d.n}, ${d.py}평 ${size}의 실제 수요와 대체재를 볼 단지`;
+    const baseTitle=special&&special.title?special.title:`${st?`${st[0]} ${st[1]<=700?'도보권':'생활권'} · `:''}${d.units.toLocaleString()}세대 ${d.n}, ${d.py}평 ${size}의 실제 수요와 대체재를 볼 단지`;
+    const title=`${verdict.label} · ${baseTitle}`;
 
     let product=`${d.n}은 ${d.year}년 입주한 ${age}년차 ${ageText}, ${d.units.toLocaleString()}세대다. 현재 선택한 ${d.py}평은 ${CAPTXT}에서 ${size}으로 거래된다. `;
     if(types.length>1){
@@ -343,12 +350,13 @@
     if(special&&special.risk)riskText=special.risk;
 
     const sections=[
-      ['① 이 단지와 선택 평형의 성격',product],
-      ['② 현재 교통과 예정 교통을 분리해서 보기',transport],
-      ['④ 학교·학원가는 실제 배정과 공시 숫자로 확인',edu],
-      ['⑤ 같은 생활권의 실제 대안과 비교',compare],
-      special&&special.section?special.section:['⑥ 이 단지만의 가격 결정 포인트',unique],
-      ['⑦ 이 단지에서 가격을 바꿀 확인 변수',riskText]
+      ['① 종합 판단',verdict.text],
+      ['② 이 단지와 선택 평형의 성격',product],
+      ['④ 현재 교통과 예정 교통을 분리해서 보기',transport],
+      ['⑤ 학교·학원가는 실제 배정과 공시 숫자로 확인',edu],
+      ['⑥ 같은 생활권의 실제 대안과 비교',compare],
+      special&&special.section?['⑦ 이 단지만의 투자포인트와 오해하기 쉬운 변수',special.section[1]]:['⑦ 이 단지만의 가격 결정 포인트',unique],
+      ['⑧ 이 단지에서 가격을 바꿀 확인 변수',riskText]
     ];
     const checks=[
       `${d.py}평 최근 12개월 거래 ${ev?ev.n:'미확인'}건${ev&&ev.n3!=null?` · 최근 3개월 ${ev.n3}건`:''}${ev&&ev.last?` · 마지막 ${ev.last}`:''}`,
@@ -406,7 +414,7 @@
   function selectedDeep(d){
     const rank=rankOf(d);
     if(CAPT===6&&rank<=1000)return deepOf(d);
-    if(CAPT>6&&rank<=500)return highDetailed(d);
+    if(CAPT>6)return highDetailed(d);
     return null;
   }
   function panel(d){const rank=rankOf(d);if(!rank)return '';const deep=selectedDeep(d);return deep?deepPanel(d,rank,deep):summary(d,rank);}
