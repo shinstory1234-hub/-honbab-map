@@ -119,7 +119,9 @@
     sections.splice(Math.min(2,sections.length),0,`<h4>③ 선택 평형과 거래 근거</h4><p>${esc(price)}</p>`);
     const checks=(deep.checks||[]).map(x=>`<li>${esc(x)}</li>`).join('');
     const sources=(deep.sources||[]).map(s=>`<a href="${esc(s[1])}" target="_blank" rel="noopener">${esc(s[0])}</a>`).join(', ');
-    return `<section class="invest invest-researched"><div class="invest-head"><h3>핵심 투자포인트</h3><span class="tnum">단지별 전수조사 · 현재순위 ${rank}위</span></div><strong class="invest-lead">${esc(deep.title)}</strong><div class="invest-essay">${sections.join('')}</div>${checks?`<div class="invest-mini"><h4>사기 전에 확인</h4><ul>${checks}</ul></div>`:''}<p class="invest-source">조사 기준 2026.11.03 · 주요 출처: ${sources||'국토교통부 실거래가 공개시스템, 단지·지자체 공개자료'}. 학교 거리는 배정을 뜻하지 않으며 철도·정비사업은 최신 고시를 다시 확인해야 한다.</p></section>`;
+    const coverage=deep.mode==='derived'?'전체 단지 자동 교차평가':deep.mode==='researched'?'개별 공개자료 확인':'단지별 전수조사';
+    const note=deep.mode==='derived'?' 실거래·교통·학교·평형·순위 자료를 단지별로 교차한 자동 평가이며, 개별 정비사업 공문까지 확인한 원고는 아니다.':'';
+    return `<section class="invest invest-researched"><div class="invest-head"><h3>핵심 투자포인트</h3><span class="tnum">${coverage} · 현재순위 ${rank}위</span></div><strong class="invest-lead">${esc(deep.title)}</strong><div class="invest-essay">${sections.join('')}</div>${checks?`<div class="invest-mini"><h4>사기 전에 확인</h4><ul>${checks}</ul></div>`:''}<p class="invest-source">평가 기준 2026.11.04 · 주요 출처: ${sources||'국토교통부 실거래가 공개시스템, 단지·지자체 공개자료'}.${note} 학교 거리는 배정을 뜻하지 않으며 철도·정비사업은 최신 고시를 다시 확인해야 한다.</p></section>`;
   }
 
   /* 201~500위 상세 원고
@@ -265,6 +267,27 @@
     if(rank<=1000)return {label:'관심권',text:`현재 ${rank}위로 301~1,000위 관심권이다. 일부 장점만 보고 상위 단지와 같은 수준으로 평가하면 안 된다. 같은 예산의 상위 300위 단지보다 분명한 가격 할인이나 실거주 이유가 확인될 때만 매수 후보로 올리는 편이 타당하다.`};
     return {label:'탐색권 · 매수 우선도 낮음',text:`현재 ${rank}위로 1,001위 이하 탐색권이다. 이 평가모형에서는 급지·학군·교통·상품성·가격 경쟁력의 종합 매수 우선도가 같은 가격대 상위 단지보다 낮다. 단지 고유의 장점은 참고하되, 실거래 기준의 뚜렷한 할인이나 개인적인 실거주 이유가 없다면 투자 목적으로 우선 추천하기 어렵다.`};
   }
+  function weaknessVerdict(d,rank,ctx){
+    const {age,ev,st,school,stage,hill,rm}=ctx,weak=[];
+    if(!st)weak.push('반경 3km 안에 점수에 반영된 현행 철도역이 없다');
+    else if(st[1]>1500)weak.push(`가장 가까운 ${st[0]}도 좌표상 ${fmtM(st[1])}라 도보 역세권이 아니다`);
+    else if(st[1]>700)weak.push(`${st[0]}까지 좌표상 ${fmtM(st[1])}라 역 접근이 상위 도보권 단지보다 약하다`);
+    if(d.units<500)weak.push(`${d.units.toLocaleString()}세대로 단지 규모와 거래 회전이 대단지보다 불리할 수 있다`);
+    if(age>=27&&!rm&&stage<35)weak.push(`${age}년차지만 저장 자료상 공식 정비 단계가 확인되지 않아 재건축 기대를 가격에 넣기 이르다`);
+    else if(age>=20&&age<27)weak.push(`${age}년차로 수리·주차 부담은 커지지만 재건축 가치를 붙이기에는 이른 구간이다`);
+    if(d.dead>=.5&&!rm)weak.push('현재 모형상 재건축 사업성이 낮게 잡힌다');
+    if(ev&&ev.n<5)weak.push(`최근 12개월 거래가 ${ev.n}건뿐이라 가격 신뢰도가 낮다`);
+    if(hill!=null&&hill>=20)weak.push(`주변 최저점보다 약 ${hill}m 높아 보행 경사 부담이 있다`);
+    if(d.py>=46)weak.push(`${d.py}평 중대형이라 매수층과 환금성이 표준 30평대보다 제한적이다`);
+    if(d.g&&d.g.sc<99999&&d.g.sc>1000)weak.push(`가까운 초등학교도 좌표상 ${fmtM(d.g.sc)}라 초등 통학이 강점이 아니다`);
+    if(school&&school[1]>1200)weak.push(`가까운 중학교가 좌표상 ${fmtM(school[1])}라 중학교 접근도 약하다`);
+    if(!weak.length)weak.push('뚜렷한 단일 결함보다 급지·교통·학군·상품성·가격 경쟁력의 합산 점수가 상위 단지보다 낮다');
+    const detail=weak.slice(0,rank>1000?5:4).join('. ')+'.';
+    if(rank<=30)return `상대평가 결론은 우선 검토다. 다만 ${detail} 상위 30위라는 이유만으로 현재 매물을 추격 매수하면 안 된다.`;
+    if(rank<=300)return `상대평가 결론은 조건부 검토다. ${detail} 상위 30위 대안보다 가격이 충분히 싸지 않으면 우선 선택할 이유가 약하다.`;
+    if(rank<=1000)return `적극 추천 단지로 보기는 어렵다. ${detail} 같은 가격대 상위 300위 단지보다 분명한 할인이나 실거주상 우위가 있을 때만 검토할 만하다.`;
+    return `투자 목적의 기본 결론은 매수 보류다. ${detail} 실거래가 추가로 내려가거나 개인적인 실거주 이유가 명확하지 않다면 상위 1,000위 안의 대안을 먼저 보는 편이 낫다.`;
+  }
   function highDetailed(d){
     const rank=rankOf(d),age=2026-d.year,ev=priceEv(d),sts=stationSet(d),st=sts[0]||null;
     const school=(window.APT_INV_SCHOOL||{})[gkey(d)],hak=(window.HAK||{})[gkey(d)],peer=bandPeerOf(d);
@@ -349,14 +372,16 @@
     let riskText=riskBits.join('. ')+'.';
     if(special&&special.risk)riskText=special.risk;
 
+    const weakness=weaknessVerdict(d,rank,{age,ev,st,school,stage,hill,rm});
     const sections=[
       ['① 종합 판단',verdict.text],
-      ['② 이 단지와 선택 평형의 성격',product],
-      ['④ 현재 교통과 예정 교통을 분리해서 보기',transport],
-      ['⑤ 학교·학원가는 실제 배정과 공시 숫자로 확인',edu],
-      ['⑥ 같은 생활권의 실제 대안과 비교',compare],
-      special&&special.section?['⑦ 이 단지만의 투자포인트와 오해하기 쉬운 변수',special.section[1]]:['⑦ 이 단지만의 가격 결정 포인트',unique],
-      ['⑧ 이 단지에서 가격을 바꿀 확인 변수',riskText]
+      ['② 약점과 매수 판단',weakness],
+      ['④ 이 단지와 선택 평형의 성격',product],
+      ['⑤ 현재 교통과 예정 교통을 분리해서 보기',transport],
+      ['⑥ 학교·학원가는 실제 배정과 공시 숫자로 확인',edu],
+      ['⑦ 같은 생활권의 실제 대안과 비교',compare],
+      special&&special.section?['⑧ 이 단지만의 투자포인트와 오해하기 쉬운 변수',special.section[1]]:['⑧ 이 단지만의 가격 결정 포인트',unique],
+      ['⑨ 이 단지에서 가격을 바꿀 확인 변수',riskText]
     ];
     const checks=[
       `${d.py}평 최근 12개월 거래 ${ev?ev.n:'미확인'}건${ev&&ev.n3!=null?` · 최근 3개월 ${ev.n3}건`:''}${ev&&ev.last?` · 마지막 ${ev.last}`:''}`,
@@ -368,7 +393,7 @@
     if(age>=27)checks.push(rm?'리모델링 조합의 인허가 단계·증축면적·분담금·이주비':'정비사업 고시·등기 대지권·조합원 지위·추가분담금');
     if(special&&special.checks)checks.push(...special.checks);
     if(special&&special.sources){const seen=new Set(sources.map(s=>s[1]));for(const s of special.sources)if(!seen.has(s[1])){sources.push(s);seen.add(s[1]);}}
-    return {title,sections,byPy:{[d.py]:`${d.py}평은 ${size} 수요가 핵심이며 같은 단지의 다른 평형과 매수층을 같다고 가정하지 않았다.`},checks,sources};
+    return {title,sections,byPy:{[d.py]:`${d.py}평은 ${size} 수요가 핵심이며 같은 단지의 다른 평형과 매수층을 같다고 가정하지 않았다.`},checks,sources,mode:special?'researched':'derived'};
   }
   function risk(d,p,special){
     const age=2026-d.year,land=landOf(d),hill=hR(d),stage=stOf(d),rm=typeof isRemodel==='function'&&isRemodel(d),bits=[];
@@ -425,7 +450,7 @@
       const body=document.getElementById('body'),d=D[i],lede=body&&body.querySelector('.lede'),html=panel(d),rank=rankOf(d);
       const deep=selectedDeep(d);
       if(deep){
-        const cat=body&&body.querySelector('.identity .cat');if(cat)cat.textContent=cat.textContent.replace(/(?:전체 단지 자동 수집|점수식 자동 선별|직접 분석|단지별 조사 1차 반영)/,'단지별 전수조사');
+        const cat=body&&body.querySelector('.identity .cat');if(cat){const label=deep.mode==='derived'?'전체 단지 자동 교차평가':deep.mode==='researched'?'개별 공개자료 확인':'단지별 전수조사';cat.textContent=cat.textContent.replace(/(?:전체 단지 자동 수집|점수식 자동 선별|직접 분석|단지별 조사 1차 반영|단지별 전수조사|전체 단지 자동 교차평가|개별 공개자료 확인)/,label);}
         [...body.querySelectorAll('section.sec')].forEach(sec=>{const heading=sec.querySelector(':scope > h3');if(heading&&['이런 사람에게','사기 전에 확인'].includes(heading.textContent.trim()))sec.remove();});
       }
       if(lede&&html){
