@@ -375,16 +375,17 @@ const STFIX={'상계주공2단지|서울 노원구 상계동':45,
   '주공1|광명시 하안동':40,'주공2|광명시 하안동':40};   // 1·2단지 통합 추진위 구성 중(동의율 45%)
 const stOf=d=>STFIX[d.n+'|'+d.area]??(d.st!=null?d.st:(MST[d.n]||0));
 const RGEN=[[0,20],[5,20],[10,17],[15,12],[20,7],[25,4],[29,2]];
-function rbScore(d){ const age=2026-d.year, w=rbW(d), g=lerp(RGEN,age), v=(1-w)*g+w*12;
-  const l=w>=1?`${age}년차 · 재건축 대상(단계 가치는 상승 여력에 반영)`:w>0?`${age}년차 · 재건축 경로 ${Math.round(w*100)}% 반영`:age<=10?`${age}년차 신축급`:age<=15?`${age}년차 준신축`:`${age}년차 구축`;
+function rbScore(d){ const age=2026-d.year, rm=typeof isRemodel==='function'&&isRemodel(d), w=rm?0:rbW(d), g=lerp(RGEN,age), v=(1-w)*g+w*12;
+  const l=rm?`${age}년차 · 리모델링 추진`:w>=1?`${age}년차 · 재건축 대상(단계 가치는 상승 여력에 반영)`:w>0?`${age}년차 · 재건축 경로 ${Math.round(w*100)}% 반영`:age<=10?`${age}년차 신축급`:age<=15?`${age}년차 준신축`:`${age}년차 구축`;
   return [v,l];
 }
 const unS=u=>7*clamp01(Math.log(u/300)/Math.log(3000/300));           // 300세대 0점 → 3,000세대 7점, 로그 연속
 const BR1=/래미안|자이|힐스테이트|아이파크|푸르지오|더샵|e편한|이편한|롯데캐슬|SK뷰|sk뷰|디에이치|아크로|써밋|르엘|센트럴아이파크/i;
 const BR2=/위브|센트레빌|포레나|꿈에그린|데시앙|호반|우미린|하늘채|스위첸|수자인|어울림|비발디|파크뷰|베르디움|리슈빌|휴먼시아|펜테리움|브라운스톤|에듀포레|스카이뷰|아이원|해링턴|트리지움|메가트리아|센텀|어바인|더샾|자연앤|꿈의숲|파밀리에|두산|유보라|스타힐스|풍경채|중흥|S클래스|예미지|스위트|우남|내안애|디에트르|노블랜드|굿모닝힐|한라|대방|모아엘가|엘가/;
 const BR0=/현대|삼성|대우|쌍용|한신|우성|롯데|대림|극동|벽산|한양|동아|럭키|LG|금호|GS|코오롱|한일|동부|선경|경남|삼익|청구|신동아|미성|건영|라이프/;
-function brS(d){ const t=d.n+' '+(d.q||''), w=rbW(d);
+function brS(d){ const t=d.n+' '+(d.q||''), rm=typeof isRemodel==='function'&&isRemodel(d), w=rm?0:rbW(d);
   const [b,l]=BR1.test(t)?[3,'1군 브랜드']:BR2.test(t)?[2,'중견·인지도 있는 브랜드']:BR0.test(t)?[1,'옛 대형 건설사 구축']:[0,'브랜드 약함'];
+  if(rm) return [b,l+' · 리모델링 추진'];
   if(w>=1) return [2,'재건축 시 새 브랜드로 바뀜(중간값)'];
   return [(1-w)*b+w*2, w>0?l+` · 재건축 경로 ${Math.round(w*100)}%`:l];
 }

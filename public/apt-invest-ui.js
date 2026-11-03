@@ -263,7 +263,7 @@
     const rank=rankOf(d),age=2026-d.year,ev=priceEv(d),sts=stationSet(d),st=sts[0]||null;
     const school=(window.APT_INV_SCHOOL||{})[gkey(d)],hak=(window.HAK||{})[gkey(d)],peer=bandPeerOf(d);
     const types=(d.types||[]).filter(t=>typeof inBand!=='function'||inBand(t.p)).slice().sort((a,b)=>a.py-b.py);
-    const land=landOf(d),stage=stOf(d),hill=hR(d),special=(window.APT_RESEARCH_OVER6_TOP100||{})[gkey(d)];
+    const land=landOf(d),stage=stOf(d),hill=hR(d),rm=typeof isRemodel==='function'&&isRemodel(d),special=(window.APT_RESEARCH_OVER6_TOP100||{})[gkey(d)];
     const RT=['국토교통부 실거래가 공개시스템','https://rt.molit.go.kr/'];
     const SI=['학교알리미','https://www.schoolinfo.go.kr/'];
     const KA=['공동주택관리정보시스템','https://www.k-apt.go.kr/'];
@@ -317,14 +317,17 @@
     if(types.length>1){const near=types.filter(t=>t.py!==d.py).sort((a,b)=>Math.abs(a.py-d.py)-Math.abs(b.py-d.py))[0];if(near)ub.push(`같은 단지 ${near.py}평 ${eok(near.p)}과의 ${eok(Math.abs(near.p-d.p))} 차이`);}
     if(st)ub.push(`${st[0]}까지 관심 동 기준 보행`);
     if(school)ub.push(`${school[0]} 실제 배정 가능 여부`);
-    if(age>=27)ub.push(`정비사업 공식 단계와 ${land?`${d.py}평 대지지분 약 ${(land[0]/3.3058).toFixed(1)}평 추정치의 등기 확인`:'등기 대지권'}`);
+    if(age>=27)ub.push(rm?'리모델링 조합의 공식 단계·증축면적·분담금':`정비사업 공식 단계와 ${land?`${d.py}평 대지지분 약 ${(land[0]/3.3058).toFixed(1)}평 추정치의 등기 확인`:'등기 대지권'}`);
     else ub.push('주차·커뮤니티·장기수선 상태');
     unique+=ub.join(', ')+'다. ';
     if(sameArea.length)unique+=`${d.area} 안에서는 ${sameArea.map(x=>`${x.n} ${x.py}평 ${eok(x.p)}`).join('와 ')}가 실제 대체재라 행정동 평균이 아니라 이 단지들과 비교해야 한다.`;
     else unique+=`같은 행정동에 바로 맞출 대체 행이 적어 같은 구·시의 실제 비교 단지와 전세가를 함께 봐야 한다.`;
 
     const riskBits=[];
-    if(age>=27){
+    if(age>=27&&rm){
+      riskBits.push('재건축이 아니라 리모델링 조합의 최신 건축심의·사업계획승인, 평형별 증축면적과 분담금을 확인해야 한다');
+      riskBits.push('주차·배관·승강기·샷시와 전면수리비를 매입가에 더해야 한다');
+    }else if(age>=27){
       riskBits.push(stage>=35?'저장 자료상 공식 정비 단계가 있어 최신 고시·조합자료와 사업시행자 지위를 확인해야 한다':'연식은 재건축 검토 대상이지만 개별 정비구역·추진위원회가 확인되지 않으면 사업 미착수로 봐야 한다');
       if(land)riskBits.push(`${d.py}평 대지지분은 용적률 자료로 약 ${(land[0]/3.3058).toFixed(1)}평 추정한 값이라 등기부 수치가 우선이다`);
       riskBits.push('주차·배관·승강기·샷시와 전면수리비를 매입가에 더해야 한다');
@@ -354,17 +357,17 @@
       peer?`${peer.n} ${peer.py}평과 같은 날짜·동급 층 실거래 비교`:'같은 단지 인접 평형의 실거래·전세가 비교'
     ];
     if(age>=20)checks.push('주차·배관·승강기·장기수선계획과 내부 수리비');
-    if(age>=27)checks.push('정비사업 고시·등기 대지권·조합원 지위·추가분담금');
+    if(age>=27)checks.push(rm?'리모델링 조합의 인허가 단계·증축면적·분담금·이주비':'정비사업 고시·등기 대지권·조합원 지위·추가분담금');
     if(special&&special.checks)checks.push(...special.checks);
     if(special&&special.sources){const seen=new Set(sources.map(s=>s[1]));for(const s of special.sources)if(!seen.has(s[1])){sources.push(s);seen.add(s[1]);}}
     return {title,sections,byPy:{[d.py]:`${d.py}평은 ${size} 수요가 핵심이며 같은 단지의 다른 평형과 매수층을 같다고 가정하지 않았다.`},checks,sources};
   }
   function risk(d,p,special){
-    const age=2026-d.year,land=landOf(d),hill=hR(d),stage=stOf(d),bits=[];
+    const age=2026-d.year,land=landOf(d),hill=hR(d),stage=stOf(d),rm=typeof isRemodel==='function'&&isRemodel(d),bits=[];
     if(d.c_label)bits.push(d.c_label);
-    if(age>=27)bits.push(stage>=35?'공식 정비 단계와 최신 총회자료 확인':'공식 정비 단계 전이라면 재건축 기대 선반영 금지');
-    if(land)bits.push(`${d.py}평 대지지분 약 ${(land[0]/3.3058).toFixed(1)}평 추정·용적률 약 ${Math.round(land[2])}%`);
-    if(d.dead>=.5)bits.push('현재 모형상 재건축 사업성 낮음 위험');if(hill!=null&&hill>=20)bits.push(`주변 최저점보다 약 ${hill}m 높은 지형`);if(d.reg==='toheo')bits.push('토지거래허가·실거주 요건');
+    if(age>=27)bits.push(rm?'리모델링 조합의 최신 인허가 단계·증축면적·분담금 확인':stage>=35?'공식 정비 단계와 최신 총회자료 확인':'공식 정비 단계 전이라면 재건축 기대 선반영 금지');
+    if(land&&!rm)bits.push(`${d.py}평 대지지분 약 ${(land[0]/3.3058).toFixed(1)}평 추정·용적률 약 ${Math.round(land[2])}%`);
+    if(d.dead>=.5&&!rm)bits.push('현재 모형상 재건축 사업성 낮음 위험');if(hill!=null&&hill>=20)bits.push(`주변 최저점보다 약 ${hill}m 높은 지형`);if(d.reg==='toheo')bits.push('토지거래허가·실거주 요건');
     return `${special?special[1]+' ':''}${p[1]} ${bits.join('. ')}${bits.length?'.':''}`;
   }
   function title(d,special){
@@ -386,13 +389,13 @@
     return `<section class="invest invest-researched"><div class="invest-head"><h3>핵심 투자포인트</h3><span class="tnum">단지별 조사 1차 · 현재순위 ${rank}위</span></div><strong class="invest-lead">${esc(lead)}</strong><div class="invest-essay"><h4>① 생활권과 상품성</h4><p>${esc(product)}</p><h4>② 교통과 학군</h4><p>${esc(transportAndSchool)}</p><h4>③ 평형과 거래 근거</h4><p>${esc(trade(d,rank))}</p><h4>④ 단지별 확인 변수</h4><p>${esc(complexRisk)}</p></div>${timeline.length?`<div class="invest-mini"><h4>확인할 일정</h4><ul>${timeline.map(t=>`<li><b>${esc(t[0])}</b> ${esc(t[1])}</li>`).join('')}</ul></div>`:''}<div class="invest-mini"><h4>사기 전에 확인</h4><ul>${checks.map(x=>`<li>${esc(x)}</li>`).join('')}</ul></div><p class="invest-source">조사 기준 2026.11.02 · 주요 출처: ${source}. 가장 가까운 학교는 배정 학교를 뜻하지 않는다.</p></section>`;
   }
   function summary(d,rank){
-    const station=nearestStation(d),school=(window.APT_INV_SCHOOL||{})[gkey(d)],hak=(window.HAK||{})[gkey(d)],age=2026-d.year,stage=stOf(d),land=landOf(d),pe=priceEv(d),hill=hR(d),flags=[];
+    const station=nearestStation(d),school=(window.APT_INV_SCHOOL||{})[gkey(d)],hak=(window.HAK||{})[gkey(d)],age=2026-d.year,stage=stOf(d),land=landOf(d),pe=priceEv(d),hill=hR(d),rm=typeof isRemodel==='function'&&isRemodel(d),flags=[];
     if(station&&station[1]<=700)flags.push(`${station[0].replace(/ \S+$/,'')} 도보권`);else if(station&&station[1]<=1500)flags.push(`${station[0].replace(/ \S+$/,'')} 생활권`);if(school&&school[1]<=300)flags.push(`${school[0]} 인접`);if(d.units>=1000)flags.push(`${d.units.toLocaleString()}세대 대단지`);if(age<=10)flags.push(`${age}년차 신축급`);
     const lead=flags.slice(0,3).join(' · ')||`${CAPTXT} 고정순위 상위 1,000행에 든 ${d.py}평형`;
     const traffic=station?`${station[0].replace(/ \S+$/,'')}까지 좌표상 ${fmtM(station[1])}, 도보 약 ${Math.round(walkMin(station[1]))}분 추정. ${d.tbj?`${d.tbj} 방향 모형 통근 ${Math.round(d.tbe)}분.`:''}`:'반경 3km 안 점수에 반영된 철도역이 없어 출퇴근 동선을 직접 확인해야 한다.';
     let edu=school?`가장 가까운 중학교는 ${school[0]}로 약 ${fmtM(school[1])}. ${school[2]!=null?`2025 공시 특목·자사고 진학 합계 ${school[3].toFixed(1)}%. `:'진학 공시는 미결합. '}`:'';if(hak&&hak[0]!=null)edu+=`반경 1km 수학·영어 학원 ${hak[0].toLocaleString()}곳.`;if(!edu)edu='학교·학원 자료는 현장 확인이 필요하다.';
-    let product=`${d.year}년 입주, ${d.units.toLocaleString()}세대. ${d.py}평 최근 시세 ${eok(d.p)}, 현재순위 ${rank}위.`;if(land)product+=` 대지지분 약 ${(land[0]/3.3058).toFixed(1)}평 추정(용적률 ${Math.round(land[2])}%).`;
-    const danger=[];if(age>=27)danger.push(stage>=35?'공식 정비 단계·분담금 확인':'재건축 기대 선반영 금지');if(d.dead>=.5)danger.push('사업성 낮음 위험');if(hill!=null&&hill>=25)danger.push(`주변 최저점보다 약 ${hill}m 높음`);if(d.reg==='toheo')danger.push('토지거래허가·실거주 요건 확인');if(pe&&pe.n<5)danger.push(`최근 12개월 거래 ${pe.n}건`);if(!danger.length)danger.push('층·향·동별 가격과 주차·수선 상태 확인');
+    let product=`${d.year}년 입주, ${d.units.toLocaleString()}세대. ${d.py}평 최근 시세 ${eok(d.p)}, 현재순위 ${rank}위.`;if(land&&!rm)product+=` 대지지분 약 ${(land[0]/3.3058).toFixed(1)}평 추정(용적률 ${Math.round(land[2])}%).`;
+    const danger=[];if(age>=27)danger.push(rm?'리모델링 인허가 단계·증축면적·분담금 확인':stage>=35?'공식 정비 단계·분담금 확인':'재건축 기대 선반영 금지');if(d.dead>=.5&&!rm)danger.push('사업성 낮음 위험');if(hill!=null&&hill>=25)danger.push(`주변 최저점보다 약 ${hill}m 높음`);if(d.reg==='toheo')danger.push('토지거래허가·실거주 요건 확인');if(pe&&pe.n<5)danger.push(`최근 12개월 거래 ${pe.n}건`);if(!danger.length)danger.push('층·향·동별 가격과 주차·수선 상태 확인');
     return `<section class="invest"><div class="invest-head"><h3>자동 요약</h3><span class="tnum">현재순위 ${rank}위</span></div><strong class="invest-lead">${esc(lead)}</strong><dl class="invest-list"><div><dt>교통</dt><dd>${esc(traffic)}</dd></div><div><dt>학군</dt><dd>${esc(edu)}</dd></div><div><dt>단지</dt><dd>${esc(product)}</dd></div><div><dt>확인</dt><dd>${esc(danger.join(' · '))}</dd></div></dl><p class="invest-note">아직 단지별 전수조사 전인 자동 요약이다. 조사 완료 단지만 상단에 ‘단지별 전수조사’로 표시한다.</p></section>`;
   }
   function rankOf(d){return d.rank;}
