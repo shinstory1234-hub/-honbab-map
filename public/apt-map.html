@@ -106,6 +106,7 @@ aside{order:-1;width:408px;flex:none;border-right:1px solid var(--border);backgr
 .chip{display:inline-flex;align-items:center;gap:5px;height:21px;padding:0 7px;border-radius:3px;font-size:11.5px;font-weight:650;color:var(--text);background:color-mix(in srgb,var(--chip) 14%,transparent);flex:none}
 .chip::before{content:"";width:6px;height:6px;border-radius:50%;background:var(--chip)}
 .row h3{font-size:16.5px;font-weight:700;letter-spacing:-.035em;line-height:1.4;margin-top:6px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.row p.sibl{font-size:12.5px;color:var(--text-tertiary);margin-top:2px;-webkit-line-clamp:1}
 .row h3 .tp{font-size:12.5px;font-weight:600;color:var(--text-tertiary);margin-left:4px;letter-spacing:-.02em}
 .row p{font-size:13px;line-height:1.6;color:var(--text-secondary);margin-top:3px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;word-break:keep-all}
 .row .px{text-align:right;padding-top:22px}
@@ -902,7 +903,8 @@ const badgeHTML=d=>[{label:d.tier.k,color:d.tier.c},...cardFeatures(d).map(k=>FE
 const FILTERS=[['all','전체'],['top','핵심 1~30'],['mid','유망 31~300'],['interest','관심 301~1,000'],['explore','탐색 1,001+'],['신축','신축'],['학군','학군'],['재건축','재건축'],['리모델링','리모델링'],['천지개벽','천지개벽'],['역세권','역세권'],['초품아','초품아'],['대단지','대단지'],['신설역','신설역'],['반도체','반도체'],['소형할인','소형 할인'],['flat','평지'],['job50','출근 50분'],['free','비규제']];
 const state={f:'all',pb:'all',size:'all',q:'',sel:null,lim:50};
 // 6억 탭: 대출 끼고 필요한 현금 기준 / 6~10억 탭: 시세(가격) 기준 — 10억 탭에서 현금 구간은 '3억 이하'가 가격처럼 읽혀 헷갈림(2026.11.1)
-const PB=CAPT===20?[['all','전체 가격'],['p16','15~16억',150000,160000],['p17','16~17억',160000,170000],['p18','17~18억',170000,180000],['p19','18~19억',180000,190000],['p20','19~20억',190000,200000]]
+const PB=CAPT>=25?[['all','전체 가격'],...[0,1,2,3,4].map(k=>{ const lo=CAPLO+k*10000; return ['p'+(lo/10000+1),`${lo/10000}~${lo/10000+1}억`,lo,lo+10000]; })]   // 2026.11.3: 20~25억·25~30억 탭에 6억 탭 칩(3억 이하…)이 뜨던 문제
+  :CAPT===20?[['all','전체 가격'],['p16','15~16억',150000,160000],['p17','16~17억',160000,170000],['p18','17~18억',170000,180000],['p19','18~19억',180000,190000],['p20','19~20억',190000,200000]]
   :CAPT===15?[['all','전체 가격'],['p11','10~11억',100000,110000],['p12','11~12억',110000,120000],['p13','12~13억',120000,130000],['p14','13~14억',130000,140000],['p15','14~15억',140000,150000]]
   :CAPT===10?[['all','전체 가격'],['p7','6~7억',60000,70000],['p8','7~8억',70000,80000],['p9','8~9억',80000,90000],['p10','9~10억',90000,100000]]
   :[['all','전체 가격'],['3','3억 이하',0,30000],['4','3~4억',30000,40000],['5','4~5억',40000,50000],['6','5~6억',50000,60001]];
@@ -995,12 +997,13 @@ function renderList(){
   <div class="filters pb" role="group" aria-label="가격대">${PB.map(([k,l])=>`<button data-pb="${k}" aria-pressed="${state.pb===k}">${l}</button>`).join('')}</div>
   <div class="filters pb" role="group" aria-label="평형(공급면적 기준)">${SIZES.map(([k,l])=>`<button data-size="${k}" aria-pressed="${state.size===k}">${l}</button>`).join('')}</div>
   <div class="filters" role="group" aria-label="필터">${FILTERS.map(([k,l])=>`<button data-f="${k}" aria-pressed="${state.f===k}">${l}</button>`).join('')}</div>
-  <div class="count"><span>${list.length.toLocaleString()}개 평형 · 종합 점수순</span><span>시세 리치고·국토부 실거래 · 2026.10</span></div>`;
+  <div class="count"><span>${CAPT!==6?`${list.length.toLocaleString()}개 단지(${ORDER.filter(visible).length.toLocaleString()}개 평형)`:`${list.length.toLocaleString()}개 평형`} · 종합 점수순</span><span>시세 리치고·국토부 실거래 · 2026.10</span></div>`;
   list.slice(0,state.lim).forEach(d=>{
     h+=`<article class="row" data-i="${D.indexOf(d)}" data-s="1">
       <span class="rk tnum">${String(d.rank).padStart(2,'0')}</span>
       <div style="min-width:0"><div class="kicker">${badgeHTML(d)}<span>${esc(d.area)}</span>${d.auto?'<span>· 자동</span>':''}</div>
-        <h3>${esc(d.n)}${sibs(d).length>1?` <small class="tp">${d.py}평</small>`:''}</h3><p>${NOUP()?`급지 ${Math.round((d.s4&&d.s4.pG)??50)} · ${d.units.toLocaleString()}세대${d.unitsN>1?'(추정)':''}`:`입지 ${d.loc.toFixed(1)}`} · ${d.cur&&d.cur.n?esc(d.cur.n)+' '+fmtM(d.cur.m):'역 계산 중'}${NOUP()?'':` · 적정가 대비 ${d.up>=0?'+':''}${Math.round(d.up*100)}%`}</p></div>
+        <h3>${esc(d.n)}${sibs(d).length>1?` <small class="tp">${d.py}평</small>`:''}</h3><p>${NOUP()?`급지 ${Math.round((d.s4&&d.s4.pG)??50)} · ${d.units.toLocaleString()}세대${d.unitsN>1?'(추정)':''}`:`입지 ${d.loc.toFixed(1)}`} · ${d.cur&&d.cur.n?esc(d.cur.n)+' '+fmtM(d.cur.m):'역 계산 중'}${NOUP()?'':` · 적정가 대비 ${d.up>=0?'+':''}${Math.round(d.up*100)}%`}</p>
+      ${CAPT!==6&&sibs(d).length>1?`<p class="sibl">같은 단지 ${sibs(d).filter(x=>x!==d).sort((x,y)=>x.py-y.py).map(x=>`${x.py}평 ${short(x.p)}`).join(' · ')}</p>`:''}</div>
       <div class="px tnum"><strong>${short(cashOf(d))}</strong><span>${d.py}평 · ${d.opt?esc(d.opt.kind):d.reg==='free'?'비규제':'토허'}</span><b>${d.score.toFixed(1)}점</b></div>
     </article>`;
   });
