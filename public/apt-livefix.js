@@ -1,7 +1,8 @@
 /* 저평가지도 6억 초과 탭 현재 시세 반영(2026.11.3)
    - 세 탭(6~10·10~15·15~20억) 단지 자료를 모두 읽고(시세가 올라 탭이 바뀐 단지도 옮겨 가게) 같은 단지는 하나로 합침
    - 시세는 매일 다시 계산되는 window.LIVEP(apt-live.js ← realestate-media /api/backtest/aptlive)로 덮어씀:
-     지번·면적대 묶음(신고 단지명 엇갈림 보정), 해제·직거래 제외, 시군구 월지수로 오늘 기준 환산, 최근 거래 가중(반감기 45일) 중위
+     법정동·단지명·면적대 묶음(2026.11.3 수정: 예전엔 '구+번지'로 묶어 다른 동 같은 번지 단지 거래가 섞였음), 해제·직거래 제외,
+     시군구 월지수로 오늘 기준 환산, 최근 거래 가중(반감기 45일) 중위 — 환산값은 최근 12개월 실거래 최저×0.95~최고×1.05 안으로 제한
    - LIVEP에 없는 단지(최근 12개월 4.5억 이상 거래 없음)는 예전 자료 그대로 */
 (function(){
   var P=window.PICKS, L=window.LIVEP||null, F=window.FARD||{};
@@ -34,7 +35,9 @@
   /* 이상 거래 평형 제외(2026.11.3): 최근 12개월 거래 2건 이하인데 같은 단지 더 작은 평형보다 싸면(예: 고덕자이 전용 101㎡ 1건 16억 < 84㎡ 21억)
      특수 거래로 보고 순위에서 뺌 — 평당가가 비정상적으로 낮아 '싼 평형'으로 대표가 되던 문제 */
   var drop=0, odd=function(t,ts){ if(t.n>2) return false;
-      var sm=ts.filter(function(u){return u.py<t.py&&u.n>=3;}).reduce(function(m,u){return Math.max(m,u.p);},0); return sm>0&&t.p<sm; };
+      var sm=ts.filter(function(u){return u.py<t.py&&u.n>=3;}).reduce(function(m,u){return Math.max(m,u.p);},0); if(sm>0&&t.p<sm) return true;
+      /* 큰 평형(거래 3건 이상)보다 평당가가 15% 넘게 싸도 특수 거래(예: 올림픽선수기자촌2단지 62㎡ 1건 16.6억 — 84㎡는 28~32억) */
+      var bp=ts.filter(function(u){return u.py>t.py&&u.n>=3;}).reduce(function(m,u){return Math.max(m,u.p/u.py);},0); return bp>0&&t.p/t.py<bp*.85; };
   for(var j=P.length-1;j>=0;j--){ var e=P[j]; if(!e.live||!e.types) continue;
     var ok=e.types.filter(function(t){return !odd(t,e.types);}); if(ok.length===e.types.length) continue;
     drop+=e.types.length-ok.length;
