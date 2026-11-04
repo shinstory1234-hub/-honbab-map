@@ -126,7 +126,7 @@ function s4ScoreDetail(d){ const s=d.s4; if(!s)return '';
   const w=s.w||{u:.4,l:.4,p:.2}, f=x=>(+x.toFixed(3)).toString();
   if((window.S4CFG||{}).model==='m2') { const z=s.za||{sm:0,pp:0}, zt=(z.sm?` − 소형 ${z.sm.toFixed(1)}`:'')+(z.pp?` ${z.pp>0?'+':'−'} 단지 내 평당가 ${Math.abs(z.pp).toFixed(1)}(큰 평형보다 평당가 ${z.ppr>=1?'+':''}${((z.ppr-1)*100).toFixed(0)}%, 같은 크기 평형 보통 ${z.ppx>=1?'+':''}${(((z.ppx||1)-1)*100).toFixed(0)}%)`:'');
     const ta=s.ta||{h:0,w:0}, tt=(ta.h?` − 언덕 ${ta.h.toFixed(1)}(주변 대비 +${Math.round(ta.R)}m)`:'')+(ta.w?` − 역 거리 ${ta.w.toFixed(1)}(${ta.wm!=null?`도보 ${Math.round(ta.wm)}분`:'3km 안에 역 없음'})`:'')+(ta.mb?` + 초대형 단지 ${ta.mb.toFixed(1)}`:'');
-    return `종합 ${(zt||tt?d.score:s.modelComp).toFixed(1)}점 = 세대수 ${s.pU.toFixed(0)}×${f(w.u)} + 장기 급지 ${(s.pG??50).toFixed(0)}×${f(w.g)}${w.q?` + 상품성 ${(s.pQ??50).toFixed(0)}${s.qrb?'(재건축 대상, 감가 멈춤)':''}×${f(w.q)}`:''}${zt||tt?` (${s.modelComp.toFixed(1)})`+zt+tt:''} · 입지·재건축 사업성은 참고 표시, 순위 미반영`; }
+    return `종합 ${(zt||tt?d.score:s.modelComp).toFixed(1)}점 = 세대수 ${s.pU.toFixed(0)}×${f(w.u)} + 장기 급지 ${(s.pG??50).toFixed(0)}×${f(w.g)}${w.q?` + 상품성 ${(s.pQ??50).toFixed(0)}${s.qrb?'(재건축 대상, 감가 멈춤)':''}×${f(w.q)}`:''}${s.transport?` + 교통 ${s.transport.score.toFixed(1)}×0.05`:''}${zt||tt?` (${s.modelComp.toFixed(1)})`+zt+tt:''} · 입지·재건축 사업성은 참고 표시, 순위 미반영`; }
   return `종합 ${s.modelComp.toFixed(1)}점 = 세대수 ${s.pU.toFixed(0)}${d.uGate?`(원래 ${d.uGate.raw.toFixed(0)}, 입지 약해 대단지 가점 ${Math.round(d.uGate.g*100)}%만 인정)`:''}×${f(w.u)} + 입지 ${s.pLoc.toFixed(0)}×${f(w.l)} + 적정가 대비 ${s.pUp.toFixed(0)}×${f(w.p)}${w.g?` + 장기 급지 ${(s.pG??50).toFixed(0)}×${f(w.g)}`:''}${s.dp?` − 구축 감점 ${s.dp.toFixed(1)}`:''}${s.peakBonus?` + ${s.peakPeer?'주변 추정 가점':'전고점 가점'} ${s.peakBonus.toFixed(1)}`:''}`;
 }
 /* 종합 */
@@ -196,10 +196,13 @@ function s4Score(d){ const Q=S4Q, C=window.S4CFG||{factors:['U7','A','E','J'],lo
      기존 백분위를 gMix : (1−gMix)로 섞음 — 직선만 쓰면 6~10억 탭에서 급지 변별력이 너무 줄고(입지 약한 대단지 신축이 상위로), 백분위만 쓰면 20억 넘는 탭에서 강남·과천·고덕이 한 덩어리가 됨 */
   const GL=C.gAbs, gW=(Q.G&&C.gW)||0, pGl=(GL&&d.gj!=null)?100*clamp01((d.gj-GL[0])/(GL[1]-GL[0])):null, pGp=Q.G?s4Pct(Q.G,d.gj):null, pG=pGl==null?pGp:pGp==null?pGl:(C.gMix??1)*pGl+(1-(C.gMix??1))*pGp;   // gMix: 직선 비중(나머지는 백분위)   // 장기 급지(s14): 동 급지 2017~2026 평균의 유니버스 백분위
   const qW=C.qW||0, pq=qW?s4Prod(d):null, pQ=pq?pq.v:null;
-  const lead=fs.length?(1-C.locMix)*ld+C.locMix*pLoc:pLoc, base=(1-C.upW-gW-qW)*lead+C.upW*pUp+gW*(pG??50)+qW*(pQ??50);
+  const high=typeof CAPT!=='undefined'&&CAPT>6&&C.model==='m2', tW=high?.05:0, effectiveGW=high?.50:gW;
+  const transport=high?APT_TRANSPORT.evaluate(d):null;
+  const lead=fs.length?(1-C.locMix)*ld+C.locMix*pLoc:pLoc, base=(1-C.upW-effectiveGW-qW-tW)*lead+C.upW*pUp+effectiveGW*(pG??50)+qW*(pQ??50)+tW*(transport?.score||0);
   const comp=s4Total(base,dp,peakBonus), modelComp=comp;
-  const wl=fs.length?C.locMix:1, w={u:(1-C.upW-gW-qW)*(1-wl),l:(1-C.upW-gW-qW)*wl,p:C.upW,g:gW,q:qW};
+  const wl=fs.length?C.locMix:1, w={u:(1-C.upW-effectiveGW-qW-tW)*(1-wl),l:(1-C.upW-effectiveGW-qW-tW)*wl,p:C.upW,g:effectiveGW,q:qW};
   d.s4={pU:p.U7,pA:p.A,pE:p.E,pJ:p.J,ld,pUp,pLoc,pG,pQ,qrb:pq?pq.rb:false,J,dp,rawDp:dp,peakR,peakBonus,peakPeer,modelComp,w};
+  if(high){d.s4.transport=transport;d.s4.w.t=tW;}
   const za=s4SizeAdj(d); d.s4.za=za;
   /* 언덕·역 거리 감점(2026.11.3, 판단, m2만): 급지는 주변 단지 평균이라 같은 동네 안에서 언덕 위·역에서 먼 단지를 구분 못 함(예: e편한세상신촌 주변 대비 +45m).
      언덕: 주변 최저점 대비 높이 10m 0 → 52m −6(7m당 −1). 6억 이하 탭 회귀(1m당 −0.30%, 50m 상한)와 같은 방향.
@@ -208,12 +211,13 @@ function s4Score(d){ const Q=S4Q, C=window.S4CFG||{factors:['U7','A','E','J'],lo
     if(R!=null) ta.h=6*clamp01((R-10)/42); ta.w=wm!=null?5*clamp01((wm-10)/15):(d.g&&d.g.lat?5:0); /* 3km 안에 역이 없으면 최대 감점(2026.11.3 — 이전엔 자료 없음으로 0점 처리돼 역 없는 단지가 오히려 유리) */ ta.R=R; ta.wm=wm; }
   /* 초대형 단지 가점(2026.11.3, 사용자 판단, S4CFG.mega=[시작, 만점 세대수, 점수]): 5천 세대 넘는 단지(헬리오시티·올림픽파크포레온·파크리오·잠실엘스 등)는
      단지 안에 학교·상권·커뮤니티가 갖춰지고 거래가 많아 그 동네 대장 역할 — 세대수 점수(로그, 2천 세대에서 포화)로는 이 차이가 안 잡힘. 경계에서 점수가 튀지 않게 시작~만점 사이는 비례 */
+  if(high)ta.w=0;
   const MG=C.mega, mb=MG?MG[2]*clamp01((d.units-MG[0])/(MG[1]-MG[0])):0; ta.mb=mb;
   d.s4.ta=ta; const adj=Math.max(0,Math.min(100,comp-za.sm+za.pp-ta.h-ta.w+mb));
   const pc=s4Pct(Q.COMP,adj); d.score=adj; d.comp=comp;                     // 0~100, 모든 단지 공통 산식
   d.top=Math.max(.1,Math.round((100-pc)*10)/10);                                   // 상위 x%
   d.urank=Math.max(1,Math.round((100-pc)/100*((C.complexes)||4708))); }           // 약 N위/4,708단지
-const s4RankTxt=d=>{ const n=(typeof D!=='undefined'&&D.length)||1, r=d.rank||d.urank||0, t=Math.max(.1,r/n*100); return `이 화면 상위 ${t<1?t.toFixed(1):Math.max(1,Math.round(t))}% · ${r.toLocaleString()}위/${n.toLocaleString()}개 평형`; };
+const s4RankTxt=d=>{ const high=typeof CAPT!=='undefined'&&CAPT>6, n=(high?NCX:typeof D!=='undefined'&&D.length)||1, r=d.rank||d.urank||0, t=Math.max(.1,r/n*100); return `이 화면 상위 ${t<1?t.toFixed(1):Math.max(1,Math.round(t))}% · ${r.toLocaleString()}위/${n.toLocaleString()}개 ${high?'단지':'평형'}`; };
 /* 간략 상세에서도 지형 정보는 공개한다. 높이차(m)와 보행 부담 지수의 단위를 구분. */
 function terrainPanel(d){
   const values=(window.DEM||{})[d.cxKey||gkey(d)]||[], R=hR(d), inside=values[1], walk=hW(d);
