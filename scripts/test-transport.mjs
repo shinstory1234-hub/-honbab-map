@@ -30,6 +30,7 @@ const inventory={};
 for(const cap of [6,10,15,20,25,30]){
  const old=run(before,cap),now=run(after,cap);assert.deepEqual(old.missing,[]);assert.deepEqual(now.missing,[]);
  if(cap===6){assert.deepEqual(now.rows,old.rows);report.validation.six={rows:now.rows.length,exactMatch:true};console.log('6억 이하 완전 동일',now.rows.length);continue;}
+ if(now.rows[0]?.s4?.budget){console.log(cap,'가격대별 모델은 test-budget-model.mjs에서 검증');continue;}
  const prior=new Map(old.rows.map(r=>[r.key+'|'+r.py,r]));
  for(const n of now.rows){const o=prior.get(n.key+'|'+n.py);assert.ok(o);for(const k of ['pU','pG','pQ','za','dp','peakBonus'])assert.deepEqual(n.s4[k],o.s4[k],k);assert.equal(n.s4.ta.h,o.s4.ta.h);assert.equal(n.s4.ta.mb,o.s4.ta.mb);assert.equal(n.s4.ta.w,0);assert.ok(n.s4.transport.score>=0&&n.s4.transport.score<=100);const s=n.s4;const expected=Math.max(0,Math.min(100,s.pU*.25+s.pG*.5+s.pQ*.2+s.transport.score*.05-s.za.sm+s.za.pp-s.ta.h+s.ta.mb));assert.ok(Math.abs(n.score-expected)<1e-9);for(const [name]of n.sts||[]){const l=name.match(/역\s+(.+)$/)?.[1]||'';inventory[l]=T.lines(l);}}
  const oldRep=old.rows.filter(r=>!r.sib),newRep=now.rows.filter(r=>!r.sib);assert.equal(new Set(newRep.map(r=>r.key)).size,newRep.length);
