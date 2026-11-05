@@ -122,7 +122,7 @@ function s4PeerPeak(d){
 }
 /* 운영자 지정 비교 규칙(센텀퍼스트 ← 어바인퍼스트)은 2026.11.1 삭제: 모든 단지에 같은 규칙. */
 const s4Total=(base,penalty,peak)=>100*clamp01((base-penalty+Math.max(0,peak||0))/100);   // 세대수·입지·적정가 대비 백분위 가중평균 − 구축 감점 (전고점 가점은 PEAKW=0이라 기본 0)
-function s4ScoreDetail(d){ const s=d.s4; if(!s)return ''; if(s.budget)return APT_BUDGET.detail(d);
+function s4ScoreDetail(d){ const s=d.s4; if(!s)return '';
   const w=s.w||{u:.4,l:.4,p:.2}, f=x=>(+x.toFixed(3)).toString();
   if((window.S4CFG||{}).model==='m2') { const z=s.za||{sm:0,pp:0}, zt=(z.sm?` − 소형 ${z.sm.toFixed(1)}`:'')+(z.pp?` ${z.pp>0?'+':'−'} 단지 내 평당가 ${Math.abs(z.pp).toFixed(1)}(큰 평형보다 평당가 ${z.ppr>=1?'+':''}${((z.ppr-1)*100).toFixed(0)}%, 같은 크기 평형 보통 ${z.ppx>=1?'+':''}${(((z.ppx||1)-1)*100).toFixed(0)}%)`:'');
     const ta=s.ta||{h:0,w:0}, tt=(ta.h?` − 언덕 ${ta.h.toFixed(1)}(주변 대비 +${Math.round(ta.R)}m)`:'')+(ta.w?` − 역 거리 ${ta.w.toFixed(1)}(${ta.wm!=null?`도보 ${Math.round(ta.wm)}분`:'3km 안에 역 없음'})`:'')+(ta.mb?` + 초대형 단지 ${ta.mb.toFixed(1)}`:'');
@@ -216,8 +216,7 @@ function s4Score(d){ const Q=S4Q, C=window.S4CFG||{factors:['U7','A','E','J'],lo
   d.s4.ta=ta; const adj=Math.max(0,Math.min(100,comp-za.sm+za.pp-ta.h-ta.w+mb));
   const pc=s4Pct(Q.COMP,adj); d.score=adj; d.comp=comp;                     // 0~100, 모든 단지 공통 산식
   d.top=Math.max(.1,Math.round((100-pc)*10)/10);                                   // 상위 x%
-  d.urank=Math.max(1,Math.round((100-pc)/100*((C.complexes)||4708)));
-  if(window.APT_BUDGET?.active())APT_BUDGET.apply(d); }           // 약 N위/4,708단지
+  d.urank=Math.max(1,Math.round((100-pc)/100*((C.complexes)||4708))); }           // 약 N위/4,708단지
 const s4RankTxt=d=>{ const high=typeof CAPT!=='undefined'&&CAPT>6, n=(high?NCX:typeof D!=='undefined'&&D.length)||1, r=d.rank||d.urank||0, t=Math.max(.1,r/n*100); return `이 화면 상위 ${t<1?t.toFixed(1):Math.max(1,Math.round(t))}% · ${r.toLocaleString()}위/${n.toLocaleString()}개 ${high?'단지':'평형'}`; };
 /* 간략 상세에서도 지형 정보는 공개한다. 높이차(m)와 보행 부담 지수의 단위를 구분. */
 function terrainPanel(d){
