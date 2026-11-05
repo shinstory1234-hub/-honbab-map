@@ -169,7 +169,9 @@ function s4Prod(d){ const age=Math.max(0,2026-d.year); let v=10;
   for(let i=1;i<PRODC.length;i++){ const [a0,v0]=PRODC[i-1],[a1,v1]=PRODC[i]; if(age<=a1){ v=v0+(v1-v0)*(age-a0)/(a1-a0); break; } }
   const fr=((window.FARD||{})[d.cxKey||(d.n+'|'+d.area)]||[])[0], rm=isRemodel(d)||!!(d.m&&d.m.rm),
     rb=!rm&&!((d.dead||0)>=.25)&&((d.st||0)>=35||(age>=27&&(fr!=null?fr<=250:age>=30)));
-  return {v:rb?Math.max(v,55):v, rb}; }
+  /* 재건축 하한(2026.11.5, S4CFG.rbFloor): 6~20억 탭은 45 — 55면 분당 등 1기 신도시 구축이 상품성으로 과하게 받쳐짐(재건축 고평가). 다른 탭은 55 유지 */
+  const fl=(window.S4CFG||{}).rbFloor??55;
+  return {v:rb?Math.max(v,fl):v, rb}; }
 function s4Score(d){ const Q=S4Q, C=window.S4CFG||{factors:['U7','A','E','J'],locMix:.5,upW:.2};
   /* 세대수 포화(2026.11.3, 판단, S4CFG.uCap): 대단지 효과는 일정 규모 넘으면 더 안 커짐 — uCap세대 이상은 같은 점수 */
   const J=s4J(d), v={U7:C.uCap?Math.min(d.U7,unS(C.uCap)):d.U7,A:d.A,E:d.E,J};
@@ -198,7 +200,11 @@ function s4Score(d){ const Q=S4Q, C=window.S4CFG||{factors:['U7','A','E','J'],lo
   const qW=C.qW||0, pq=qW?s4Prod(d):null, pQ=pq?pq.v:null;
   const high=typeof CAPT!=='undefined'&&CAPT>6&&C.model==='m2', tW=high?.05:0, effectiveGW=high?.50:gW;
   const transport=high?APT_TRANSPORT.evaluate(d):null;
-  const lead=fs.length?(1-C.locMix)*ld+C.locMix*pLoc:pLoc, base=(1-C.upW-effectiveGW-qW-tW)*lead+C.upW*pUp+effectiveGW*(pG??50)+qW*(pQ??50)+tW*(transport?.score||0);
+  /* 세대수 가점 급지 연동(2026.11.5, S4CFG.gGate=[a,b], 6~20억 탭): 세대수 백분위의 50 초과분(대단지 가점)을 장기 급지 a→b에서 0→100%만 인정.
+     6억 탭 uGate와 같은 원리 — 급지 약한 대단지 신축(신월 목센위브·수색 DMC·일산 요진 등)이 세대수만으로 상위에 오던 문제 */
+  const GG=C.gGate; let ldx=ld;
+  if(GG&&p.U7>50&&pG!=null){ const g=clamp01((pG-GG[0])/(GG[1]-GG[0])); if(g<1){ d.uGate={raw:p.U7,g}; p.U7=50+(p.U7-50)*g; ldx=fs.length?fs.reduce((s,f)=>s+p[f],0)/fs.length:0; } }
+  const lead=fs.length?(1-C.locMix)*ldx+C.locMix*pLoc:pLoc, base=(1-C.upW-effectiveGW-qW-tW)*lead+C.upW*pUp+effectiveGW*(pG??50)+qW*(pQ??50)+tW*(transport?.score||0);
   const comp=s4Total(base,dp,peakBonus), modelComp=comp;
   const wl=fs.length?C.locMix:1, w={u:(1-C.upW-effectiveGW-qW-tW)*(1-wl),l:(1-C.upW-effectiveGW-qW-tW)*wl,p:C.upW,g:effectiveGW,q:qW};
   d.s4={pU:p.U7,pA:p.A,pE:p.E,pJ:p.J,ld,pUp,pLoc,pG,pQ,qrb:pq?pq.rb:false,J,dp,rawDp:dp,peakR,peakBonus,peakPeer,modelComp,w};
