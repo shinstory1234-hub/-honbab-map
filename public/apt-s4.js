@@ -124,25 +124,25 @@ function s4PeerPeak(d){
 const s4Total=(base,penalty,peak)=>100*clamp01((base-penalty+Math.max(0,peak||0))/100);   // 세대수·입지·적정가 대비 백분위 가중평균 − 구축 감점 (전고점 가점은 PEAKW=0이라 기본 0)
 function s4ScoreDetail(d){ const s=d.s4; if(!s)return '';
   const w=s.w||{u:.4,l:.4,p:.2}, f=x=>(+x.toFixed(3)).toString();
-  if((window.S4CFG||{}).model==='m2') { const z=s.za||{sm:0,pp:0}, zt=(z.sm?` − 소형 ${z.sm.toFixed(1)}`:'')+(z.pp?` ${z.pp>0?'+':'−'} 단지 내 평당가 ${Math.abs(z.pp).toFixed(1)}(큰 평형보다 평당가 ${z.ppr>=1?'+':''}${((z.ppr-1)*100).toFixed(0)}%, 같은 크기 평형 보통 ${z.ppx>=1?'+':''}${(((z.ppx||1)-1)*100).toFixed(0)}%)`:'');
+  if((window.S4CFG||{}).model==='m2') { const z=s.za||{sm:0,pp:0}, dn=s.density||{pen:0}, zt=(z.sm?` − 소형 ${z.sm.toFixed(1)}`:'')+(z.pp?` ${z.pp>0?'+':'−'} 단지 내 평당가 ${Math.abs(z.pp).toFixed(1)}(큰 평형보다 평당가 ${z.ppr>=1?'+':''}${((z.ppr-1)*100).toFixed(0)}%, 같은 크기 평형 보통 ${z.ppx>=1?'+':''}${(((z.ppx||1)-1)*100).toFixed(0)}%)`:'')+(dn.pen?` − 고밀도 ${dn.pen.toFixed(1)}(용적률 ${Math.round(dn.far)}%)`:'');
     const ta=s.ta||{h:0,w:0}, tt=(ta.h?` − 언덕 ${ta.h.toFixed(1)}(주변 대비 +${Math.round(ta.R)}m)`:'')+(ta.w?` − 역 거리 ${ta.w.toFixed(1)}(${ta.wm!=null?`도보 ${Math.round(ta.wm)}분`:'3km 안에 역 없음'})`:'')+(ta.mb?` + 초대형 단지 ${ta.mb.toFixed(1)}`:'');
     return `종합 ${(zt||tt?d.score:s.modelComp).toFixed(1)}점 = 세대수 ${s.pU.toFixed(0)}×${f(w.u)} + 장기 급지 ${(s.pG??50).toFixed(0)}×${f(w.g)}${w.q?` + 상품성 ${(s.pQ??50).toFixed(0)}${s.qrb?'(재건축 대상, 감가 멈춤)':''}×${f(w.q)}`:''}${s.transport?` + 교통 ${s.transport.score.toFixed(1)}×0.05`:''}${zt||tt?` (${s.modelComp.toFixed(1)})`+zt+tt:''} · 입지·재건축 사업성은 참고 표시, 순위 미반영`; }
   return `종합 ${s.modelComp.toFixed(1)}점 = 세대수 ${s.pU.toFixed(0)}${d.uGate?`(원래 ${d.uGate.raw.toFixed(0)}, 입지 약해 대단지 가점 ${Math.round(d.uGate.g*100)}%만 인정)`:''}×${f(w.u)} + 입지 ${s.pLoc.toFixed(0)}×${f(w.l)} + 적정가 대비 ${s.pUp.toFixed(0)}×${f(w.p)}${w.g?` + 장기 급지 ${(s.pG??50).toFixed(0)}×${f(w.g)}`:''}${s.dp?` − 구축 감점 ${s.dp.toFixed(1)}`:''}${s.peakBonus?` + ${s.peakPeer?'주변 추정 가점':'전고점 가점'} ${s.peakBonus.toFixed(1)}`:''}`;
 }
 /* 종합 */
 /* 6억 초과 탭 평형 보정(2026.11.3, 판단) — m2 종합(세대수 + 장기 급지)은 평형을 안 봐서 상급지 소형이 자동으로 상위에 오던 문제.
-   ① 소형 감점: 재건축 대상이 아닌 평형은 24평(전용 60㎡) 이상 0 → 16평(전용 40㎡) 이하 −SMALLW. 15억 넘는 돈이면 같은 돈으로 다른 곳 국평이
+   ① 소형 감점: 재건축 대상이 아닌 평형은 24평(전용 60㎡) 이상 0 → 16평(전용 40㎡) 이하 −12. 15억 넘는 돈이면 같은 돈으로 다른 곳 국평이
       대안이고, 40㎡대는 1~2인 수요뿐이라 매수층이 좁음. 재건축 대상은 대지지분 가치를 감안해 절반만 감점(2026.11.3).
    ② 단지 안 평당가 비교(34평 미만만): 같은 단지 더 큰 평형(최근 시세, 가격대 무관) 평당가 중위 대비 이 평형 평당가. 15% 비싸면 −PPYW, 15% 싸면 +PPYW.
       재건축 단지는 대지지분이 면적에 비례하므로 단지 안에선 대지지분 평당가 비교와 같음. 다른 평형이 없으면 0 */
-const SMALLW=16, PPYW=3;   // 2026.11.3: 작은 평형은 평당가가 원래 약 10% 비싼 게 정상 — 그 위로 15% 더 비쌀 때 −3(기존 기준 0%·폭 6은 24~28평을 일괄 감점해 과천·고덕 같은 단지를 끌어내림)
+const SMALLW=12, PPYW=3, DENSITYW=8;   // 소형은 24평 0 → 16평 이하 −12. 확인된 용적률은 400% 0 → 600% 이상 −8.
 function s4SizeAdj(d){
   if(!(window.CAPT>6)) return {sm:0,pp:0,ppr:null,old:false};
   const age=2026-d.year, fr=((window.FARD||{})[d.cxKey||(d.n+'|'+d.area)]||[])[0], rm=isRemodel(d)||!!(d.m&&d.m.rm),
     old=!rm&&!((d.dead||0)>=.25)&&((d.st||0)>=35||(age>=27&&(fr!=null?fr<=250:age>=30)));   // 사업성 낮음·어려움(대지지분 부족)이면 소형 면제 안 함 — 면제 근거가 '가치=대지지분'이므로   // 리모델링 단지는 재건축처럼 대지지분 가치가 없으니 소형 감점 면제 안 함(2026.11.3)
   // 34평 미만 평형만, 자기보다 큰 평형과 비교(큰 평형은 원래 평당가가 낮아 큰 평형끼리 비교하면 늘 '싸 보임' → 대형 가점 쏠림, 2026.11.3 점검)
   // 재건축 대상 소형도 절반은 감점(2026.11.3, 판단): 대지지분 가치를 감안해도 15억 넘는 20평대 이하는 같은 돈 국평 대비 매수층이 좁음
-  /* 2026.11.3 강화: 59㎡(24평)를 하한으로 보고 그보다 작은 평형은 더 빨리 감점 — 24평 0 → 20평 −8 → 16평 이하 −16(기존 −12). 재건축 대상은 3/4(기존 1/2)
+  /* 2026.11.7 조정: 59㎡(24평)를 하한으로 보고 그보다 작은 평형을 연속 감점 — 24평 0 → 20평 −6 → 16평 이하 −12. 재건축 대상은 3/4만 적용
      6~10억 탭 상위 30개 중 29개가 10~20평대(12평 재건축·14평 신축까지)이던 문제. 24평 이상(요즘 대세인 59㎡)은 그대로라 '평수 줄여 급지 올리기'는 유지 */
   const sm=SMALLW*clamp01((24-d.py)/8)*(old?.75:1), r=s4RawPPR(d);
   if(r==null) return {sm,pp:0,ppr:null,old};
@@ -160,12 +160,22 @@ function s4RawPPR(d){ const me=d.p/d.py;
   o.sort((a,b)=>a-b);
   if(!o.length) return null;
   const med=o.length%2?o[o.length>>1]:(o[o.length/2-1]+o[o.length/2])/2; return me/med; }
+/* 고밀도 주거 감점: 이름이 주상복합인지가 아니라 확인된 용적률로 비교한다.
+   건축물대장·정비계획 실측(F/L)만 일반 단지에 사용하고, MIXHI는 건축물대장에서 용적률 600% 이상과 업무·오피스텔 혼용을 확인한 표라 600%로 보완한다.
+   추정 용적률(E/T)은 감점하지 않아 추정 오차가 순위를 크게 바꾸지 않게 한다. */
+function s4DensityAdj(d){
+  if(!(window.CAPT>6)) return {pen:0,far:null,src:null};
+  const key=d.cxKey||(d.n+'|'+d.area), f=((window.FARD||{})[key]||[]), src=String(f[1]||''), raw=Number(f[0]),
+    mix=!!(window.MIXHI&&MIXHI.has((d.area||'').split(' ').pop()+'|'+d.n)), measured=src==='F'||src==='L',
+    far=mix?Math.max(Number.isFinite(raw)?raw:0,600):(measured&&Number.isFinite(raw)?raw:null);
+  if(far==null||far<=400) return {pen:0,far,src:mix?'MIXHI':src};
+  return {pen:DENSITYW*clamp01((far-400)/200),far,src:mix?'MIXHI':src}; }
 /* 상품성(2026.11.3, 판단, S4CFG.qW) — m2(세대수 + 급지)만으로는 연식이 0점 처리돼 '좋은 자리의 늙은 대단지'가 자동으로 상위에 오던 문제.
    연식 곡선: 0~5년 100 → 10년 85 → 15년 72 → 20년 60 → 25년 45 → 30년 30 → 40년 20.
    재건축 대상(정비 단계 35+ 또는 27년차+ 용적률 250% 이하 추정, 리모델링 아님)이고 사업성 막힘이 아니면 최소 55 — 가치가 건물이 아니라 대지지분이라 감가를 멈춤.
    사업성 낮음·어려움(dead ≥ .25)·리모델링은 연식 곡선 그대로 */
 const PRODC=[[0,100],[5,100],[10,85],[15,72],[20,60],[25,45],[30,30],[40,20]];
-function s4Prod(d){ const age=Math.max(0,2026-d.year); let v=10;
+function s4Prod(d){ const age=Math.max(0,2026-d.year); let v=20;
   for(let i=1;i<PRODC.length;i++){ const [a0,v0]=PRODC[i-1],[a1,v1]=PRODC[i]; if(age<=a1){ v=v0+(v1-v0)*(age-a0)/(a1-a0); break; } }
   const fr=((window.FARD||{})[d.cxKey||(d.n+'|'+d.area)]||[])[0], rm=isRemodel(d)||!!(d.m&&d.m.rm),
     rb=!rm&&!((d.dead||0)>=.25)&&((d.st||0)>=35||(age>=27&&(fr!=null?fr<=250:age>=30)));
@@ -219,11 +229,12 @@ function s4Score(d){ const Q=S4Q, C=window.S4CFG||{factors:['U7','A','E','J'],lo
      단지 안에 학교·상권·커뮤니티가 갖춰지고 거래가 많아 그 동네 대장 역할 — 세대수 점수(로그, 2천 세대에서 포화)로는 이 차이가 안 잡힘. 경계에서 점수가 튀지 않게 시작~만점 사이는 비례 */
   if(high)ta.w=0;
   const MG=C.mega, mb=MG?MG[2]*clamp01((d.units-MG[0])/(MG[1]-MG[0])):0; ta.mb=mb;
-  d.s4.ta=ta; const adj=Math.max(0,Math.min(100,comp-za.sm+za.pp-ta.h-ta.w+mb));
+  const density=s4DensityAdj(d); d.s4.density=density;
+  d.s4.ta=ta; const adj=Math.max(0,Math.min(100,comp-za.sm+za.pp-ta.h-ta.w+mb-density.pen));
   const pc=s4Pct(Q.COMP,adj); d.score=adj; d.comp=comp;                     // 0~100, 모든 단지 공통 산식
   d.top=Math.max(.1,Math.round((100-pc)*10)/10);                                   // 상위 x%
   d.urank=Math.max(1,Math.round((100-pc)/100*((C.complexes)||4708))); }           // 약 N위/4,708단지
-const s4RankTxt=d=>{ const high=typeof CAPT!=='undefined'&&CAPT>6, n=(high?NCX:typeof D!=='undefined'&&D.length)||1, r=d.rank||d.urank||0, t=Math.max(.1,r/n*100); return `이 화면 상위 ${t<1?t.toFixed(1):Math.max(1,Math.round(t))}% · ${r.toLocaleString()}위/${n.toLocaleString()}개 ${high?'단지':'평형'}`; };
+const s4RankTxt=d=>{ const n=(typeof D!=='undefined'&&D.length)||1, r=d.rank||d.urank||0, t=Math.max(.1,r/n*100); return `이 화면 상위 ${t<1?t.toFixed(1):Math.max(1,Math.round(t))}% · ${r.toLocaleString()}위/${n.toLocaleString()}개 평형`; };
 /* 간략 상세에서도 지형 정보는 공개한다. 높이차(m)와 보행 부담 지수의 단위를 구분. */
 function terrainPanel(d){
   const values=(window.DEM||{})[d.cxKey||gkey(d)]||[], R=hR(d), inside=values[1], walk=hW(d);
@@ -248,3 +259,4 @@ function locPanel(d){ const L=d.locParts;
     ${L.anc?`<div><span class="l">최근 급등분 차감<small>이 동네(동) 급지가 2017·2020·2023년 평균보다 지금 ${pc(L.os)} ${L.os>=0?'높아짐':'낮아짐'} — 최근 오른 만큼은 장기 급지로 되돌려 계산(내려간 곳은 올려 줌)</small></span><span class="v">${pc(-L.anc)}</span></div>`:''}
     <div><span class="l">입지 평당가<small>세대수·학군·초품아·직주·연식·브랜드는 입지 점수에 넣지 않음(상승 요인·적정가에서 따로 반영)</small></span><span class="v">${L.ppp.toLocaleString()}<i>만/평</i></span></div>
   </div></section>`; }
+

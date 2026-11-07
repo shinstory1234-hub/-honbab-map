@@ -32,14 +32,14 @@
     var big=types.filter(function(t){return t.py>d.py;}).sort(function(a,b){return b.py-a.py;})[0];
     if(big) d.bench={ppp:Math.round(big.p/big.py),name:'같은 단지 '+big.py+'평 '+eok(big.p)+' · 현재 시세'};
   });
-  /* 이상 거래 평형 제외(2026.11.3): 최근 12개월 거래 2건 이하인데 같은 단지 더 작은 평형보다 싸면(예: 고덕자이 전용 101㎡ 1건 16억 < 84㎡ 21억)
-     특수 거래로 보고 순위에서 뺌 — 평당가가 비정상적으로 낮아 '싼 평형'으로 대표가 되던 문제 */
-  var drop=0, odd=function(t,ts){ if(t.n>2) return false;
+  /* 이상 거래 평형 제외: 기존 단지에서 최근 12개월 거래 2건 이하이고 같은 단지 다른 평형과 가격이 비정상적으로 역전되면 제외한다.
+     입주 3년 이내 신축은 등기·입주 진행으로 거래량이 적은 것이 정상일 수 있어 이 거래량 규칙을 적용하지 않는다. */
+  var drop=0, odd=function(t,ts,d){ if((2026-(d.year||0))<=3||t.n>2) return false;
       var sm=ts.filter(function(u){return u.py<t.py&&u.n>=3;}).reduce(function(m,u){return Math.max(m,u.p);},0); if(sm>0&&t.p<sm) return true;
       /* 큰 평형(거래 3건 이상)보다 평당가가 15% 넘게 싸도 특수 거래(예: 올림픽선수기자촌2단지 62㎡ 1건 16.6억 — 84㎡는 28~32억) */
       var bp=ts.filter(function(u){return u.py>t.py&&u.n>=3;}).reduce(function(m,u){return Math.max(m,u.p/u.py);},0); return bp>0&&t.p/t.py<bp*.85; };
   for(var j=P.length-1;j>=0;j--){ var e=P[j]; if(!e.live||!e.types) continue;
-    var ok=e.types.filter(function(t){return !odd(t,e.types);}); if(ok.length===e.types.length) continue;
+    var ok=e.types.filter(function(t){return !odd(t,e.types,e);}); if(ok.length===e.types.length) continue;
     drop+=e.types.length-ok.length;
     if(!ok.length){ P.splice(j,1); continue; }
     e.types=ok;
@@ -48,3 +48,4 @@
   window.LIVE_DROP=drop;
   window.LIVE_HIT=hit;
 })();
+
