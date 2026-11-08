@@ -360,6 +360,8 @@ for(const [k,v] of Object.entries(GEOADD)) GEO[k]=Object.assign({cat:'부동산 
 const GEOOUT=new Set(['시흥동 현대982|서울 금천구 시흥동']);   // 정확한 위치 확인 불가(지번 982 실거래·지오코딩 없음) — 순위 제외
 const saveGeo=()=>{try{localStorage.setItem('apt6geo_'+GEO_V,JSON.stringify(GEO));}catch(e){}};
 const gkey=d=>d.n+'|'+d.area;
+const unitN=d=>d.unitsOwn??d.units;   // 통합 단지명에 임대동이 섞인 경우 실제 매매 가능한 일반분양 세대수 우선 표시
+const unitU=d=>d.unitsOwn?unS(d.unitsOwn):d.U7;
 /* 구간 선형보간: 계단식 점수표를 연속 함수로(경계에서 점수가 툭 끊기지 않게) */
 const lerp=(pts,x)=>{ if(x<=pts[0][0]) return pts[0][1]; for(let i=1;i<pts.length;i++) if(x<=pts[i][0]){ const [x0,y0]=pts[i-1],[x1,y1]=pts[i]; return y0+(y1-y0)*(x-x0)/(x1-x0); } return pts[pts.length-1][1]; };
 const clamp01=x=>Math.max(0,Math.min(1,x));
@@ -885,7 +887,7 @@ function featureKeys(d){
   if(d.cur&&d.cur.n&&d.cur.m<=800) add('역세권',90);
   if(d.g&&d.g.sc!=null&&d.g.sc<=300) add('초품아',85);
   if(d.unitsN>1) add('추정세대수',119);   // 마을 합계 ÷ 단지 수로 추정한 세대수(단지별 공식 세대수 없음)
-  if(d.units>=1500) add('대단지',80);
+  if(unitN(d)>=1500) add('대단지',80);
   if(hasNew(d)) add('신설역',75);
   if(tags.includes('반도체')) add('반도체',70);
   if(tags.includes('소형할인')) add('소형할인',65);
@@ -1001,7 +1003,7 @@ function renderList(){
     h+=`<article class="row" data-i="${D.indexOf(d)}" data-s="1">
       <span class="rk tnum">${String(d.rank).padStart(2,'0')}</span>
       <div style="min-width:0"><div class="kicker">${badgeHTML(d)}<span>${esc(d.area)}</span>${d.auto?'<span>· 자동</span>':''}</div>
-        <h3>${esc(d.n)}${sibs(d).length>1?` <small class="tp">${d.py}평</small>`:''}</h3><p>${NOUP()?`급지 ${Math.round((d.s4&&d.s4.pG)??50)} · ${d.units.toLocaleString()}세대${d.unitsN>1?'(추정)':''}`:`입지 ${d.loc.toFixed(1)}`} · ${d.cur&&d.cur.n?esc(d.cur.n)+' '+fmtM(d.cur.m):'역 계산 중'}${NOUP()?'':` · 적정가 대비 ${d.up>=0?'+':''}${Math.round(d.up*100)}%`}</p>
+        <h3>${esc(d.n)}${sibs(d).length>1?` <small class="tp">${d.py}평</small>`:''}</h3><p>${NOUP()?`급지 ${Math.round((d.s4&&d.s4.pG)??50)} · ${unitN(d).toLocaleString()}세대${d.unitsOwn?'(매매 대상)':''}${d.unitsN>1?'(추정)':''}`:`입지 ${d.loc.toFixed(1)}`} · ${d.cur&&d.cur.n?esc(d.cur.n)+' '+fmtM(d.cur.m):'역 계산 중'}${NOUP()?'':` · 적정가 대비 ${d.up>=0?'+':''}${Math.round(d.up*100)}%`}</p>
       ${CAPT!==6&&sibs(d).length>1?`<p class="sibl">같은 단지 ${sibs(d).filter(x=>x!==d).sort((x,y)=>x.py-y.py).map(x=>`${x.py}평 ${short(x.p)}`).join(' · ')}</p>`:''}</div>
       <div class="px tnum"><strong>${short(cashOf(d))}</strong><span>${d.py}평 · ${d.opt?esc(d.opt.kind):d.reg==='free'?'비규제':'토허'}</span><b>${d.score.toFixed(1)}점</b></div>
     </article>`;
@@ -1077,14 +1079,15 @@ function hakIn(d){ const h=(window.HAK||{})[gkey(d)]; return !!(h&&h[1]>=250); }
 /* 점수 근거 자동 생성: 기본 세 요소·감점·전고점 가점 */
 const hasNew=d=>!!(d.locParts&&(d.locParts.fut||/예정/.test(d.locParts.lpl||'')));
 function whyLine(d){ if(!d.s4) return ''; const top=p=>{ const t=100-p; return t<1?'상위 1% 안':`상위 ${Math.max(1,Math.round(t))}%`; };
-  const parts=NOUP()?[`세대수 ${top(d.s4.pU)}(${d.units.toLocaleString()}세대)`,`장기 급지 ${top(d.s4.pG??50)}`].concat(d.s4.pQ!=null?[`상품성 ${Math.round(d.s4.pQ)}점(${d.year}년 입주${d.s4.qrb?' · 재건축 대상':''})`]:[]):[`세대수 ${top(d.s4.pU)}(${d.units.toLocaleString()}세대)`,`입지 ${top(d.s4.pLoc)}`,`적정가 대비 ${d.up>=0?'+':''}${Math.round(d.up*100)}%(가정)`];
+  const parts=NOUP()?[`세대수 ${top(d.s4.pU)}(${unitN(d).toLocaleString()}세대${d.unitsOwn?' · 매매 대상':''})`,`장기 급지 ${top(d.s4.pG??50)}`].concat(d.s4.pQ!=null?[`상품성 ${Math.round(d.s4.pQ)}점(${d.year}년 입주${d.s4.qrb?' · 재건축 대상':''})`]:[]):[`세대수 ${top(d.s4.pU)}(${unitN(d).toLocaleString()}세대)`,`입지 ${top(d.s4.pLoc)}`,`적정가 대비 ${d.up>=0?'+':''}${Math.round(d.up*100)}%(가정)`];
   if(d.s4.peakR!=null) parts.push(`전고점 대비 ${(d.s4.peakR*100).toFixed(1)}%(참고 · 순위 미반영)${d.s4.peakBonus>0?` · 전고점 가점 +${d.s4.peakBonus.toFixed(1)}점`:''}`);
   if(d.s4.peakPeer){ const p=d.s4.peakPeer; parts.push(`주변 유사 단지 전고점 대비 ${(p.r*100).toFixed(1)}%(참고 · 순위 미반영) · 비교군 ${p.peers.length}곳 · ${p.peers.map(x=>`${x.n}(${(x.m/1000).toFixed(1)}km)`).join(', ')}${p.bonus>0?` · 가점 +${p.bonus.toFixed(1)}점`:''}`); }
   if(d.locParts&&d.locParts.lp) parts.push(`노선 +${Math.round(d.locParts.lp*100)}%(${d.locParts.lpl})`);
   if(d.locParts&&d.locParts.fut){ const f=d.locParts.fut; parts.push(`개통 예정 ${f.n}역(${f.line.replace('(신설)','')}, ${f.year}년 목표) 도보 ${Math.round(d.locParts.wf)}분 반영 — 빼면 입지 상위 ${Math.max(1,Math.round(100-d.loc0))}%`); }
   if(d.dead>=.5) parts.push(`재건축 어려움(사업성 낮음 · 여력·입지·종합 감점 −${d.s4.dp.toFixed(1)})`);
   if(d.oldp>=3) parts.push(`정비 이슈 없는 구축(${2026-d.year}년차 · 재건축·리모델링 공식 단계 전 −${d.oldp.toFixed(1)})`);
-  if(d.unitsN>1) parts.push(`세대수 추정(마을 합계 ${d.unitsRaw.toLocaleString()}세대 ÷ ${d.unitsN}단지)`); else if(d.unitsK) parts.push(`세대수 공식값(K-apt ${d.units.toLocaleString()}세대)`);
+  if(d.unitsOwn) parts.push(`세대수 보정(통합 명칭의 임대단지 제외 · 매매 가능한 일반분양 ${d.unitsOwn.toLocaleString()}세대)`);
+  else if(d.unitsN>1) parts.push(`세대수 추정(마을 합계 ${d.unitsRaw.toLocaleString()}세대 ÷ ${d.unitsN}단지)`); else if(d.unitsK) parts.push(`세대수 공식값(K-apt ${d.units.toLocaleString()}세대)`);
   if(d.rent) parts.push('K-apt 분양구분 임대(분양 전환 전이면 매매 물량 적음)');
   if(hakIn(d)) parts.push('학원가 1.5km 안'); if(isHill(d)) parts.push(`언덕 단지 · 주변 최저점보다 ${hR(d)}m 높음`);
   const pe=priceEv(d); if(pe&&pe.n<PRICE_THIN) parts.push(`가격 근거 적음(이 평형 최근 12개월 ${pe.n}건)`);
@@ -1100,7 +1103,7 @@ function renderDetail(i){
   const src=RATE_SRC[d.rate.src];
   let h=`<div class="phead"><button id="back"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M15 18 9 12l6-6"/></svg>목록</button><span class="tnum">${d.rank}위 / ${D.length}</span></div>
   <section class="identity"><div class="cat">${esc(tags)}${d.u?' · 전체 단지 자동 수집':d.auto?' · 점수식 자동 선별':' · 직접 분석'}</div><h2>${esc(d.n)}</h2>
-    <div class="meta tnum"><span>${esc(d.area)}</span><span>${d.year}년 입주</span><span>${d.units.toLocaleString()}세대${d.unitsRaw?` <small>(같은 마을 ${d.unitsN}개 단지 합계 ${d.unitsRaw.toLocaleString()}세대를 나눈 추정)</small>`:''}</span></div></section>
+    <div class="meta tnum"><span>${esc(d.area)}</span><span>${d.year}년 입주</span><span>${unitN(d).toLocaleString()}세대${d.unitsOwn?` <small>(임대단지 제외 매매 대상)</small>`:d.unitsRaw?` <small>(같은 마을 ${d.unitsN}개 단지 합계 ${d.unitsRaw.toLocaleString()}세대를 나눈 추정)</small>`:''}</span></div></section>
   <div class="lede"><strong>${esc(d.headline)}</strong><p>${esc(d.sub)}</p>${d.s4&&(!d.simple||d.s4.peakR!=null||d.s4.peakPeer)?`<p class="why"><b>순위 근거</b> ${esc(whyLine(d))}</p>`:''}${!d.simple&&hasNew(d)?`<p class="why"><b>신설역 주의</b> 입지 점수에 개통 예정 역·노선을 넣어 순위가 올라간 단지예요${d.locParts.fut?` — ${esc(d.locParts.fut.n)}역(${esc(d.locParts.fut.line)}) 도보 약 ${Math.round(d.locParts.wf)}분`:''}${/예정/.test(d.locParts.lpl||'')?` · 노선 프리미엄 ${esc(d.locParts.lpl)} +${Math.round(d.locParts.lp*100)}%(가정)`:''}. 철도는 지연이 잦고 역 위치는 공사·계획 기준(OpenStreetMap)이에요. 개통 전까지 1년당 5%(최대 20%) 할인해서 반영했고, 예정 역을 빼면 입지 상위 ${Math.max(1,Math.round(100-d.loc0))}%예요. 지금 쓰는 역은 ${esc((d.cur&&d.cur.n)||'없음')}${d.cur&&d.cur.m<99999?` 도보 약 ${Math.round(walkMin(d.cur.m))}분`:''}.</p>`:''}</div>
   <dl class="kpis tnum">
     ${d.opt?`<div><dt>지금 필요한 돈</dt><dd>${eokH(d.opt.dep)}</dd><small>${esc(d.opt.kind)} · ${d.opt.Y}년 ${eok(d.opt.K)} 매수권 · 시세 ${eok(d.p)}</small></div>`:`<div><dt>${d.py}평 시세</dt><dd>${eokH(d.p)}</dd><small>${d.reg==='free'?'비규제':'토허·실거주 2년'}${priceEv(d)?`<br>${esc(priceEvTxt(d))}`:''}</small></div>`}
@@ -1112,14 +1115,14 @@ function renderDetail(i){
     <div><span class="l">학군<small>${d.Al?esc(d.Al):d.g.ac!=null?`반경 1km 학원 ${d.g.ac.toLocaleString()}곳`:'계산 중'}</small></span><span class="v">${d.A!=null?d.A.toFixed(1):'–'}<i> / 10</i></span>${bar(d.A||0,10)}</div>
     <div><span class="l">직주근접<small>${esc(d.tbj)}까지 약 ${d.tbe}분 = 구 대표 ${d.tbm}분${d.acc?` + 역까지 ${Math.round(d.acc)}분`:''}${d.lnp?` + 하위 노선 환승 ${d.lnp}분`:''}</small></span><span class="v">${d.J.toFixed(1)}<i> / 9</i></span>${bar(d.J,9)}</div>
     <div><span class="l">상품성(연식)<small>${esc(d.rl)}</small></span><span class="v">${d.R.toFixed(1)}<i> / 12</i></span>${bar(d.R,12)}</div>
-    <div><span class="l">대단지<small>${d.units.toLocaleString()}세대${d.unitsN>1?` · 추정(같은 마을 ${d.unitsN}개 단지 합계 ${d.unitsRaw.toLocaleString()}세대 ÷ ${d.unitsN} — 단지별 공식 세대수 없음)`:''}</small></span><span class="v">${d.U7.toFixed(1)}<i> / 7</i></span>${bar(d.U7,7)}</div>
+    <div><span class="l">대단지<small>${unitN(d).toLocaleString()}세대${d.unitsOwn?' · 임대단지 제외 매매 대상':d.unitsN>1?` · 추정(같은 마을 ${d.unitsN}개 단지 합계 ${d.unitsRaw.toLocaleString()}세대 ÷ ${d.unitsN} — 단지별 공식 세대수 없음)`:''}</small></span><span class="v">${unitU(d).toFixed(1)}<i> / 7</i></span>${bar(unitU(d),7)}</div>
     <div><span class="l">초품아<small>${d.g.scn?esc(d.g.scn)+' '+fmtM(d.g.sc):d.E===0?'900m 안에 초등학교 없음':'계산 중'}</small></span><span class="v">${d.E!=null?d.E.toFixed(1):'–'}<i> / 6</i></span>${bar(d.E||0,6)}</div>
     <div><span class="l">브랜드<small>${esc(d.bl)}</small></span><span class="v">${d.B.toFixed(1)}<i> / 3</i></span>${bar(d.B,3)}</div>
   </div></section>`:''}<div class="${d.simple?'detail-tech-hidden':''}">${locPanel(d)}${d.simple?'':trnPanel(d)}<section class="sec"><h3>상승 요인·상품 <small>입지 점수에는 미포함 · 예전 배점(참고)</small></h3><div class="score tnum">
     <div><span class="l">학군<small>${d.Al?esc(d.Al):d.g.ac!=null?`반경 1km 학원 ${d.g.ac.toLocaleString()}곳`:'계산 중'}</small></span><span class="v">${d.A!=null?d.A.toFixed(1):'–'}<i> / 10</i></span>${bar(d.A||0,10)}</div>
     <div><span class="l">직주근접<small>${esc(d.tbj)}까지 약 ${d.tbe}분 = 구 대표 ${d.tbm}분${d.acc?` + 역까지 ${Math.round(d.acc)}분`:''}${d.lnp?` + 하위 노선 환승 ${d.lnp}분`:''}</small></span><span class="v">${d.J.toFixed(1)}<i> / 9</i></span>${bar(d.J,9)}</div>
     <div><span class="l">상품성(연식)<small>${esc(d.rl)}</small></span><span class="v">${d.R.toFixed(1)}<i> / 12</i></span>${bar(d.R,12)}</div>
-    <div><span class="l">대단지<small>${d.units.toLocaleString()}세대${d.unitsN>1?` · 추정(같은 마을 ${d.unitsN}개 단지 합계 ${d.unitsRaw.toLocaleString()}세대 ÷ ${d.unitsN} — 단지별 공식 세대수 없음)`:''}</small></span><span class="v">${d.U7.toFixed(1)}<i> / 7</i></span>${bar(d.U7,7)}</div>
+    <div><span class="l">대단지<small>${unitN(d).toLocaleString()}세대${d.unitsOwn?' · 임대단지 제외 매매 대상':d.unitsN>1?` · 추정(같은 마을 ${d.unitsN}개 단지 합계 ${d.unitsRaw.toLocaleString()}세대 ÷ ${d.unitsN} — 단지별 공식 세대수 없음)`:''}</small></span><span class="v">${unitU(d).toFixed(1)}<i> / 7</i></span>${bar(unitU(d),7)}</div>
     <div><span class="l">초품아<small>${d.g.scn?esc(d.g.scn)+' '+fmtM(d.g.sc):d.E===0?'900m 안에 초등학교 없음':'계산 중'}</small></span><span class="v">${d.E!=null?d.E.toFixed(1):'–'}<i> / 6</i></span>${bar(d.E||0,6)}</div>
     <div><span class="l">브랜드<small>${esc(d.bl)}</small></span><span class="v">${d.B.toFixed(1)}<i> / 3</i></span>${bar(d.B,3)}</div>
   </div></section>
