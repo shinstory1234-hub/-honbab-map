@@ -135,7 +135,7 @@ function s4ScoreDetail(d){ const s=d.s4; if(!s)return '';
       대안이고, 40㎡대는 1~2인 수요뿐이라 매수층이 좁음. 재건축 대상은 대지지분 가치를 감안해 절반만 감점(2026.11.3).
    ② 단지 안 평당가 비교(34평 미만만): 같은 단지 더 큰 평형(최근 시세, 가격대 무관) 평당가 중위 대비 이 평형 평당가. 15% 비싸면 −PPYW, 15% 싸면 +PPYW.
       재건축 단지는 대지지분이 면적에 비례하므로 단지 안에선 대지지분 평당가 비교와 같음. 다른 평형이 없으면 0 */
-const SMALLW=12, PPYW=3, DENSITYW=8;   // 소형은 24평 0 → 16평 이하 −12. 확인된 용적률은 400% 0 → 600% 이상 −8.
+const SMALLW=12, PPYW=3, DENSITYW=8;   // 기준값. m2는 가격대별 실구매 대안을 반영해 아래에서 조정한다.
 function s4SizeAdj(d){
   if(!(window.CAPT>6)) return {sm:0,pp:0,ppr:null,old:false};
   const age=2026-d.year, fr=((window.FARD||{})[d.cxKey||(d.n+'|'+d.area)]||[])[0], rm=isRemodel(d)||!!(d.m&&d.m.rm),
@@ -144,7 +144,8 @@ function s4SizeAdj(d){
   // 재건축 대상 소형도 절반은 감점(2026.11.3, 판단): 대지지분 가치를 감안해도 15억 넘는 20평대 이하는 같은 돈 국평 대비 매수층이 좁음
   /* 2026.11.7 조정: 59㎡(24평)를 하한으로 보고 그보다 작은 평형을 연속 감점 — 24평 0 → 20평 −6 → 16평 이하 −12. 재건축 대상은 3/4만 적용
      6~10억 탭 상위 30개 중 29개가 10~20평대(12평 재건축·14평 신축까지)이던 문제. 24평 이상(요즘 대세인 59㎡)은 그대로라 '평수 줄여 급지 올리기'는 유지 */
-  const sm=SMALLW*clamp01((24-d.py)/8)*(old?.75:1), r=s4RawPPR(d);
+  const smallW=(window.S4CFG||{}).model==='m2'&&window.CAPT>10?16:SMALLW,
+    sm=smallW*clamp01((24-d.py)/8)*(old?.75:1), r=s4RawPPR(d);
   if(r==null) return {sm,pp:0,ppr:null,old};
   /* 기대 비율(2026.11.3): 작은 평형이 큰 평형보다 평당가가 비싼 정도는 평형마다 다름(24평은 크게, 30평은 조금) — 고정값 1.10을 쓰면 30평은 늘 '싸 보여' 가점,
      24평은 거의 다 상한 감점(예: 힐스테이트e편한세상문정 30평 +2.6 vs 24평 단지들 −3). 이 탭 평형들의 실제 비율 중위를 평형(2평 단위)별로 써서, 같은 크기끼리 비교 */
@@ -166,15 +167,22 @@ function s4RawPPR(d){ const me=d.p/d.py;
 function s4DensityAdj(d){
   if(!(window.CAPT>6)) return {pen:0,far:null,src:null};
   const key=d.cxKey||(d.n+'|'+d.area), f=((window.FARD||{})[key]||[]), src=String(f[1]||''), raw=Number(f[0]),
-    mix=!!(window.MIXHI&&MIXHI.has((d.area||'').split(' ').pop()+'|'+d.n)), measured=src==='F'||src==='L',
+    mix=!!(window.MIXHI&&MIXHI.has((d.area||'').split(' ').pop()+'|'+d.n)), measured=src==='F'||src==='L'||/건축물대장|정비계획|실측/.test(src),
     far=mix?Math.max(Number.isFinite(raw)?raw:0,600):(measured&&Number.isFinite(raw)?raw:null);
   if(far==null||far<=400) return {pen:0,far,src:mix?'MIXHI':src};
-  return {pen:DENSITYW*clamp01((far-400)/200),far,src:mix?'MIXHI':src}; }
+  const densityW=(window.S4CFG||{}).model==='m2'?(window.CAPT<=10?12:window.CAPT<=15?10:DENSITYW):DENSITYW;
+  return {pen:densityW*clamp01((far-400)/200),far,src:mix?'MIXHI':src}; }
 /* 상품성(2026.11.3, 판단, S4CFG.qW) — m2(세대수 + 급지)만으로는 연식이 0점 처리돼 '좋은 자리의 늙은 대단지'가 자동으로 상위에 오던 문제.
    연식 곡선: 0~5년 100 → 10년 85 → 15년 72 → 20년 60 → 25년 45 → 30년 30 → 40년 20.
    재건축 대상(정비 단계 35+ 또는 27년차+ 용적률 250% 이하 추정, 리모델링 아님)이고 사업성 막힘이 아니면 최소 55 — 가치가 건물이 아니라 대지지분이라 감가를 멈춤.
    사업성 낮음·어려움(dead ≥ .25)·리모델링은 연식 곡선 그대로 */
 const PRODC=[[0,100],[5,100],[10,85],[15,72],[20,60],[25,45],[30,30],[40,20]];
+/* 세대수 25%는 유지하되, 고가 탭은 탭 안 백분위만 쓰지 않는다. 같은 단지의 여러 평형 수와 표본 구성에 따라 점수가 흔들리는 문제를 줄이기 위해
+   15~20억은 보수적 절대곡선, 20억 초과는 완화 절대곡선을 쓴다. 6~15억과 6억 이하는 기존 백분위를 그대로 유지한다. */
+const S4UNIT_STRICT=[[300,20],[400,32],[500,43],[700,58],[1000,72],[1500,86],[2000,94],[3000,100]],
+  S4UNIT_MID=[[300,30],[400,42],[500,52],[700,66],[1000,79],[1500,90],[2000,96],[3000,100]];
+function s4Curve(points,x){ if(x<=points[0][0])return points[0][1]; for(let i=1;i<points.length;i++){ const a=points[i-1],b=points[i]; if(x<=b[0])return a[1]+(b[1]-a[1])*(x-a[0])/(b[0]-a[0]); } return points[points.length-1][1]; }
+function s4UnitScore(d,pct){ if(!((window.S4CFG||{}).model==='m2')||window.CAPT<=15)return pct; return s4Curve(window.CAPT===20?S4UNIT_STRICT:S4UNIT_MID,d.units||0); }
 function s4Prod(d){ const age=Math.max(0,2026-d.year); let v=20;
   for(let i=1;i<PRODC.length;i++){ const [a0,v0]=PRODC[i-1],[a1,v1]=PRODC[i]; if(age<=a1){ v=v0+(v1-v0)*(age-a0)/(a1-a0); break; } }
   const fr=((window.FARD||{})[d.cxKey||(d.n+'|'+d.area)]||[])[0], rm=isRemodel(d)||!!(d.m&&d.m.rm),
@@ -186,6 +194,7 @@ function s4Score(d){ const Q=S4Q, C=window.S4CFG||{factors:['U7','A','E','J'],lo
   /* 세대수 포화(2026.11.3, 판단, S4CFG.uCap): 대단지 효과는 일정 규모 넘으면 더 안 커짐 — uCap세대 이상은 같은 점수 */
   const J=s4J(d), v={U7:C.uCap?Math.min(d.U7,unS(C.uCap)):d.U7,A:d.A,E:d.E,J};
   const p={}; for(const f of ['U7','A','E','J']) p[f]=s4Pct(Q[f],v[f]);
+  p.U7=s4UnitScore(d,p.U7);
   const pLoc=d.locV==null?s4Pct(Q.LOC,null):s4Pct(Q.LOC,d.locV), pUp=s4Pct(Q.UP,d.upR);
   /* 세대수 효과 입지 연동(2026.11.3, S4CFG.uGate=[a,b]): 세대수 백분위의 50 초과분(대단지 가점)을 입지 백분위 a→b 구간에서 0→100%만 인정.
      근거(6억 이하 매칭 1,535단지, 시·구 중위 대비 초과상승, 대단지 pU80+ − 소단지 pU<50): 입지 0~40 +4.0/−5.7/+2.3%p(평균 +0.2) ·
@@ -206,9 +215,12 @@ function s4Score(d){ const Q=S4Q, C=window.S4CFG||{factors:['U7','A','E','J'],lo
   /* 급지 점수(2026.11.3, S4CFG.gAbs·gMix): 백분위만 쓰면 '몇 번째냐'만 남아 상급지끼리의 차이가 사라짐
      (도곡렉슬 위치가치 1.28 vs 과천 0.93 — 평당가 1.4배 차이인데 백분위로는 99 vs 96). 원값을 고정 눈금(gAbs[0] → 0점, gAbs[1] → 100점)으로 옮긴 직선 점수와
      기존 백분위를 gMix : (1−gMix)로 섞음 — 직선만 쓰면 6~10억 탭에서 급지 변별력이 너무 줄고(입지 약한 대단지 신축이 상위로), 백분위만 쓰면 20억 넘는 탭에서 강남·과천·고덕이 한 덩어리가 됨 */
-  const GL=C.gAbs, gW=(Q.G&&C.gW)||0, pGl=(GL&&d.gj!=null)?100*clamp01((d.gj-GL[0])/(GL[1]-GL[0])):null, pGp=Q.G?s4Pct(Q.G,d.gj):null, pG=pGl==null?pGp:pGp==null?pGl:(C.gMix??1)*pGl+(1-(C.gMix??1))*pGp;   // gMix: 직선 비중(나머지는 백분위)   // 장기 급지(s14): 동 급지 2017~2026 평균의 유니버스 백분위
-  const qW=C.qW||0, pq=qW?s4Prod(d):null, pQ=pq?pq.v:null;
+  const GL=C.gAbs, gW=(Q.G&&C.gW)||0, pGl=(GL&&d.gj!=null)?100*clamp01((d.gj-GL[0])/(GL[1]-GL[0])):null, pGp=Q.G?s4Pct(Q.G,d.gj):null;
+  let pG=pGl==null?pGp:pGp==null?pGl:(C.gMix??1)*pGl+(1-(C.gMix??1))*pGp;   // gMix: 직선 비중(나머지는 백분위)   // 장기 급지(s14): 동 급지 2017~2026 평균의 유니버스 백분위
+  const qW=C.qW||0, pq=qW?s4Prod(d):null; let pQ=pq?pq.v:null;
   const high=typeof CAPT!=='undefined'&&CAPT>6&&C.model==='m2', tW=high?.05:0, effectiveGW=high?.50:gW;
+  const gMissing=high&&d.gj==null; if(gMissing)pG=0;   // 급지 자료가 없으면 중립 50점으로 상위 노출하지 않는다.
+  let qGate=null; if(high&&window.CAPT===10&&pQ>50){ const g=clamp01((pG-45)/25); if(g<1){qGate={raw:pQ,g};pQ=50+(pQ-50)*g;} }
   const transport=high?APT_TRANSPORT.evaluate(d):null;
   /* 세대수 가점 급지 연동(2026.11.5, S4CFG.gGate=[a,b], 6~20억 탭): 세대수 백분위의 50 초과분(대단지 가점)을 장기 급지 a→b에서 0→100%만 인정.
      6억 탭 uGate와 같은 원리 — 급지 약한 대단지 신축(신월 목센위브·수색 DMC·일산 요진 등)이 세대수만으로 상위에 오던 문제 */
@@ -217,7 +229,7 @@ function s4Score(d){ const Q=S4Q, C=window.S4CFG||{factors:['U7','A','E','J'],lo
   const lead=fs.length?(1-C.locMix)*ldx+C.locMix*pLoc:pLoc, base=(1-C.upW-effectiveGW-qW-tW)*lead+C.upW*pUp+effectiveGW*(pG??50)+qW*(pQ??50)+tW*(transport?.score||0);
   const comp=s4Total(base,dp,peakBonus), modelComp=comp;
   const wl=fs.length?C.locMix:1, w={u:(1-C.upW-effectiveGW-qW-tW)*(1-wl),l:(1-C.upW-effectiveGW-qW-tW)*wl,p:C.upW,g:effectiveGW,q:qW};
-  d.s4={pU:p.U7,pA:p.A,pE:p.E,pJ:p.J,ld,pUp,pLoc,pG,pQ,qrb:pq?pq.rb:false,J,dp,rawDp:dp,peakR,peakBonus,peakPeer,modelComp,w};
+  d.s4={pU:p.U7,pA:p.A,pE:p.E,pJ:p.J,ld,pUp,pLoc,pG,pQ,qrb:pq?pq.rb:false,qGate,gMissing,J,dp,rawDp:dp,peakR,peakBonus,peakPeer,modelComp,w};
   if(high){d.s4.transport=transport;d.s4.w.t=tW;}
   const za=s4SizeAdj(d); d.s4.za=za;
   /* 언덕·역 거리 감점(2026.11.3, 판단, m2만): 급지는 주변 단지 평균이라 같은 동네 안에서 언덕 위·역에서 먼 단지를 구분 못 함(예: e편한세상신촌 주변 대비 +45m).
