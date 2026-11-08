@@ -15,6 +15,11 @@ const LINEP={S:.18,G:.13,WP:.09};   // 신분당선(회귀) / GTX(운행 중 GTX
    ■ 종합 = 백분위( (1−upW) × [ (1−locMix) × 상승요인 백분위 평균 + locMix × 입지 백분위 ] + upW × 여력 백분위 ) — 가중치는 S4CFG
    ■ 같은 단지 큰 평형 반영 비율 0.75(ln 기준) — 2026 실거래 소형 2,476개 예측 오차 최소(0→.186, .25→.161, .5→.142, .75→.133, 1→.136)
    ■ 화면: '상위 x% · N위/화면의 평형 수'(d.rank, 이 화면 안 순위) — 유니버스 추정 순위 d.urank 는 따로 */
+/* 2026.11.9 확인값: L=건축물대장·공식 단지정보 기준 실측 용적률. */
+Object.assign(window.FARD=window.FARD||{}, {
+  '한남동리첸시아|서울 용산구 한남동':[499,'L',0,.37,96,31608,'11170'],
+  '송파더플래티넘|서울 송파구 오금동':[430,'L',0,.387,0,30566,'11710']
+});
 function s4Pct(Q,x){ if(x==null||isNaN(x)) return 50; const n=Q.length-1;
   if(x<Q[0]) return 0; if(x>Q[n]) return 100;
   let lo=0; while(lo<n&&Q[lo]<x) lo++; let hi=lo; while(hi<n&&Q[hi+1]<=x) hi++;
@@ -177,20 +182,36 @@ function s4DensityAdj(d){
    재건축 대상(정비 단계 35+ 또는 27년차+ 용적률 250% 이하 추정, 리모델링 아님)이고 사업성 막힘이 아니면 최소 55 — 가치가 건물이 아니라 대지지분이라 감가를 멈춤.
    사업성 낮음·어려움(dead ≥ .25)·리모델링은 연식 곡선 그대로 */
 const PRODC=[[0,100],[5,100],[10,85],[15,72],[20,60],[25,45],[30,30],[40,20]];
-/* 세대수 25%는 유지하되, 고가 탭은 탭 안 백분위만 쓰지 않는다. 같은 단지의 여러 평형 수와 표본 구성에 따라 점수가 흔들리는 문제를 줄이기 위해
-   15~20억은 보수적 절대곡선, 20억 초과는 완화 절대곡선을 쓴다. 6~15억과 6억 이하는 기존 백분위를 그대로 유지한다. */
+/* 준공 리모델링은 설비·외관·주차가 신축에 가깝지만 기존 골조와 평면 제약이 남는다. 입주연도만으로 신축 100점을 주지 않고 90점에서 막는다. */
+const S4REMODEL_DONE=new Set(['송파더플래티넘|서울 송파구 오금동']);
+/* 세대수 25%는 유지하되, 10억 초과 탭은 탭 안 백분위만 쓰지 않는다. 같은 단지의 여러 평형 수와 표본 구성에 따라 점수가 흔들리는 문제를 줄이기 위해
+   10~15억은 기존 백분위와 보수적 절대곡선을 절반씩 혼합하고, 15~20억은 보수적 절대곡선, 20억 초과는 완화 절대곡선을 쓴다.
+   6~10억과 6억 이하는 기존 백분위를 그대로 유지한다. */
 const S4UNIT_STRICT=[[300,20],[400,32],[500,43],[700,58],[1000,72],[1500,86],[2000,94],[3000,100]],
   S4UNIT_MID=[[300,30],[400,42],[500,52],[700,66],[1000,79],[1500,90],[2000,96],[3000,100]];
+/* 통합 명칭 중 실제 매매 가능한 일반분양 단지의 소유 세대수. 정비사업성 계산은 기존 지구 자료를 유지하고 최종 세대수 점수·표시만 바로잡는다. */
+const S4OWN_UNITS=new Map([
+  ['등촌1,2단지주공아파트|서울 강서구 등촌동',505],
+  ['등촌7,8단지주공아파트|서울 강서구 등촌동',445]
+]);
 function s4Curve(points,x){ if(x<=points[0][0])return points[0][1]; for(let i=1;i<points.length;i++){ const a=points[i-1],b=points[i]; if(x<=b[0])return a[1]+(b[1]-a[1])*(x-a[0])/(b[0]-a[0]); } return points[points.length-1][1]; }
-function s4UnitScore(d,pct){ if(!((window.S4CFG||{}).model==='m2')||window.CAPT<=15)return pct; return s4Curve(window.CAPT===20?S4UNIT_STRICT:S4UNIT_MID,d.units||0); }
+function s4UnitScore(d,pct){
+  const own=S4OWN_UNITS.get(d.cxKey||(d.n+'|'+d.area)), units=own??d.units, rel=own?s4Pct(S4Q.U7,unS(own)):pct;
+  if(!((window.S4CFG||{}).model==='m2')||window.CAPT<=10) return rel;
+  const abs=s4Curve(window.CAPT<=20?S4UNIT_STRICT:S4UNIT_MID,units||0);
+  return window.CAPT===15?(rel+abs)/2:abs;
+}
 function s4Prod(d){ const age=Math.max(0,2026-d.year); let v=20;
   for(let i=1;i<PRODC.length;i++){ const [a0,v0]=PRODC[i-1],[a1,v1]=PRODC[i]; if(age<=a1){ v=v0+(v1-v0)*(age-a0)/(a1-a0); break; } }
+  if(S4REMODEL_DONE.has(d.cxKey||(d.n+'|'+d.area))) v=Math.min(v,90);
   const fr=((window.FARD||{})[d.cxKey||(d.n+'|'+d.area)]||[])[0], rm=isRemodel(d)||!!(d.m&&d.m.rm),
     rb=!rm&&!((d.dead||0)>=.25)&&((d.st||0)>=35||(age>=27&&(fr!=null?fr<=250:age>=30)));
   /* 재건축 하한(2026.11.5, S4CFG.rbFloor): 6~20억 탭은 45 — 55면 분당 등 1기 신도시 구축이 상품성으로 과하게 받쳐짐(재건축 고평가). 다른 탭은 55 유지 */
   const fl=(window.S4CFG||{}).rbFloor??55;
   return {v:rb?Math.max(v,fl):v, rb}; }
 function s4Score(d){ const Q=S4Q, C=window.S4CFG||{factors:['U7','A','E','J'],locMix:.5,upW:.2};
+  const ownUnits=S4OWN_UNITS.get(d.cxKey||(d.n+'|'+d.area));
+  d.unitsOwn=ownUnits??null;
   /* 세대수 포화(2026.11.3, 판단, S4CFG.uCap): 대단지 효과는 일정 규모 넘으면 더 안 커짐 — uCap세대 이상은 같은 점수 */
   const J=s4J(d), v={U7:C.uCap?Math.min(d.U7,unS(C.uCap)):d.U7,A:d.A,E:d.E,J};
   const p={}; for(const f of ['U7','A','E','J']) p[f]=s4Pct(Q[f],v[f]);
