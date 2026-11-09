@@ -25,7 +25,7 @@ window.S4GJC={"11110|익선동|현대뜨레비앙":0.3038,"11110|숭인동|종�
 /* 이웃 단지 평활(2026.11.3, 판단) — 반경 450m 커널만으로는 바로 옆 단지끼리도 급지 백분위가 89~97로 널뛰던 문제(예: 행당동 대림e편한세상 vs 금호동 두산).
    급지 상위권은 원값 차이가 작아도 백분위로 크게 벌어지므로, 표시 단지 좌표 기준 가우시안(σ 600m, 1.5km 컷)으로 주변 단지 급지를 평균해 자기 값과 반반 섞음. 주변 단지가 없으면 그대로 */
 (function(){ if(!(window.CAPT>6)||!window.PICKS||!window.S4GJC) return; var F=window.FARD||{}, C=window.S4GJC, seen={}, U=[];
-  window.PICKS.forEach(function(d){ var f=F[d.n+'|'+d.area], k=f&&f[6]?f[6]+'|'+d.area.split(' ').pop()+'|'+d.n:null; if(!k||seen[k]||C[k]==null||!d.lat) return; seen[k]=1; U.push([k,d.lat,d.lng,C[k]]); });
+  window.PICKS.forEach(function(d){ var f=F[d.n+'|'+d.area], k=typeof window.aptSourceKey==='function'?window.aptSourceKey(d):f&&f[6]?f[6]+'|'+d.area.split(' ').pop()+'|'+d.n:null; if(!k||seen[k]||C[k]==null||!d.lat) return; seen[k]=1; U.push([k,d.lat,d.lng,C[k]]); });
   var R=6371000, rad=Math.PI/180, out={};
   U.forEach(function(a){ var sw=0, sv=0, cl=Math.cos(a[1]*rad);
     U.forEach(function(b){ if(b===a) return; var dy=(b[1]-a[1])*rad*R; if(Math.abs(dy)>1500) return; var dx=(b[2]-a[2])*rad*R*cl, m=Math.sqrt(dx*dx+dy*dy); if(m>1500) return;
@@ -34,7 +34,7 @@ window.S4GJC={"11110|익선동|현대뜨레비앙":0.3038,"11110|숭인동|종�
   for(var k in out) C[k]=Math.round(out[k]*1e4)/1e4; window.GJC_SMOOTH=Object.keys(out).length; })();
 /* 6억 초과 탭: 백분위 기준표(S4Q.G)를 실제 표시 단지(세 탭 합집합, 평형 수 가중)의 새 급지 분포로 다시 만듦 */
 (function(){ if(!(window.CAPT>6)||!window.PICKS||!window.S4Q) return; var F=window.FARD||{}, L=window.S4GJL||{}, C=window.S4GJC, v=[], hit=0;
-  window.PICKS.forEach(function(d){ var f=F[d.n+'|'+d.area], k=f&&f[6]?f[6]+'|'+d.area.split(' ').pop()+'|'+d.n:null, g=k?C[k]:null, x=g!=null?g:(L[d.area]||[])[0];
+  window.PICKS.forEach(function(d){ var f=F[d.n+'|'+d.area], k=typeof window.aptSourceKey==='function'?window.aptSourceKey(d):f&&f[6]?f[6]+'|'+d.area.split(' ').pop()+'|'+d.n:null, g=k?C[k]:null, x=g!=null?g:(L[d.area]||[])[0];
     if(g!=null) hit++; if(x==null) return; var n=(d.types||[1]).length||1; for(var i=0;i<n;i++) v.push(x); });
   if(v.length<100) return; v.sort(function(a,b){return a-b;});
   var q=[]; for(var i=0;i<=200;i++) q.push(v[Math.min(v.length-1,Math.round(i/200*(v.length-1)))]); window.S4Q.G=q; window.GJC_HIT=hit; window.GJC_N=window.PICKS.length; })();

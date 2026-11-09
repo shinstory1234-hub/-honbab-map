@@ -71,7 +71,8 @@ function locNew(d){ const g=d.g||{};
   // 장기 앵커(s14, 2026.11.1): 동(洞) 급지가 2017·2020·2023 평균보다 지금 높아진 만큼(OS, apt-gjl.js)을 입지에서 뺌 — 최근 급등으로 오른 주변 시세를 장기 급지 수준으로 되돌림.
   //   페이지 상단 S4CFG.anchor(1=전부 차감). 내려간 동네(OS<0)는 그만큼 올려 줌(대칭). 동 자료 없으면 0
   const gjl=(window.S4GJL||{})[d.area], gfk=((window.FARD||{})[d.n+'|'+d.area]||[])[6],
-    gjc=window.CAPT>6&&gfk&&window.S4GJC?window.S4GJC[gfk+'|'+d.area.split(' ').pop()+'|'+d.n]:null;   // 6억 초과: 단지 단위 급지(apt-gjc.js) 우선
+    gjKey=window.CAPT>6?(typeof window.aptSourceKey==='function'?window.aptSourceKey(d):gfk?gfk+'|'+d.area.split(' ').pop()+'|'+d.n:null):null,
+    gjc=gjKey&&window.S4GJC?window.S4GJC[gjKey]:null;   // 6억 초과: 현재 시세와 동일한 단지 식별키로 단지 급지를 연결
   d.gj=gjc!=null?gjc:(gjl?gjl[0]:null); d.gjc=gjc!=null; d.os=gjl?gjl[1]:0; const anc=((window.S4CFG||{}).anchor||0)*d.os;
   d.locV=Math.log(base)+wa+fa+lp-anc;
   d.locParts={base,base0,dw,own,wm,wa,wa0,fa,lp,lpl,wf,fut:wf!=null?d.fut:null,anc,os:d.os,gj:d.gj,ppp:Math.round(Math.exp(d.locV))};
