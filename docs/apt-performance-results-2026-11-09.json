@@ -1,0 +1,56 @@
+[
+  {
+    "cap": 6,
+    "rows": 5822,
+    "exactMatch": true,
+    "beforeLoadMs": 8043,
+    "afterLoadMs": 3332,
+    "beforeRecomputeMs": 2982,
+    "afterRecomputeMs": 1250
+  },
+  {
+    "cap": 10,
+    "rows": 2819,
+    "exactMatch": true,
+    "beforeLoadMs": 6710,
+    "afterLoadMs": 3128,
+    "beforeRecomputeMs": 4260,
+    "afterRecomputeMs": 663
+  },
+  {
+    "cap": 15,
+    "rows": 1997,
+    "exactMatch": true,
+    "beforeLoadMs": 5866,
+    "afterLoadMs": 2769,
+    "beforeRecomputeMs": 2724,
+    "afterRecomputeMs": 386
+  },
+  {
+    "cap": 20,
+    "rows": 1128,
+    "exactMatch": true,
+    "beforeLoadMs": 4810,
+    "afterLoadMs": 1697,
+    "beforeRecomputeMs": 1649,
+    "afterRecomputeMs": 272
+  },
+  {
+    "cap": 25,
+    "rows": 558,
+    "exactMatch": true,
+    "beforeLoadMs": 2782,
+    "afterLoadMs": 1115,
+    "beforeRecomputeMs": 968,
+    "afterRecomputeMs": 120
+  },
+  {
+    "cap": 30,
+    "rows": 255,
+    "exactMatch": true,
+    "beforeLoadMs": 2513,
+    "afterLoadMs": 825,
+    "beforeRecomputeMs": 439,
+    "afterRecomputeMs": 56
+  }
+]

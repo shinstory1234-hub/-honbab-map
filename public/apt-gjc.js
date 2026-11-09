@@ -26,9 +26,13 @@ window.S4GJC={"11110|익선동|현대뜨레비앙":0.3038,"11110|숭인동|종�
    급지 상위권은 원값 차이가 작아도 백분위로 크게 벌어지므로, 표시 단지 좌표 기준 가우시안(σ 600m, 1.5km 컷)으로 주변 단지 급지를 평균해 자기 값과 반반 섞음. 주변 단지가 없으면 그대로 */
 (function(){ if(!(window.CAPT>6)||!window.PICKS||!window.S4GJC) return; var F=window.FARD||{}, C=window.S4GJC, seen={}, U=[];
   window.PICKS.forEach(function(d){ var f=F[d.n+'|'+d.area], k=typeof window.aptSourceKey==='function'?window.aptSourceKey(d):f&&f[6]?f[6]+'|'+d.area.split(' ').pop()+'|'+d.n:null; if(!k||seen[k]||C[k]==null||!d.lat) return; seen[k]=1; U.push([k,d.lat,d.lng,C[k]]); });
-  var R=6371000, rad=Math.PI/180, out={};
+  var R=6371000, rad=Math.PI/180, out={}, grid={}, cell=.02;
+  U.forEach(function(a,i){ var k=Math.floor(a[1]/cell)+'|'+Math.floor(a[2]/cell); (grid[k]=grid[k]||[]).push(i); });
   U.forEach(function(a){ var sw=0, sv=0, cl=Math.cos(a[1]*rad);
-    U.forEach(function(b){ if(b===a) return; var dy=(b[1]-a[1])*rad*R; if(Math.abs(dy)>1500) return; var dx=(b[2]-a[2])*rad*R*cl, m=Math.sqrt(dx*dx+dy*dy); if(m>1500) return;
+    var ci=Math.floor(a[1]/cell), cj=Math.floor(a[2]/cell), di=Math.ceil(1500/(rad*R*cell)), dj=Math.ceil(1500/(rad*R*cell*cl)), ids=[];
+    for(var i=ci-di;i<=ci+di;i++) for(var j=cj-dj;j<=cj+dj;j++){ var bucket=grid[i+'|'+j]; if(bucket) Array.prototype.push.apply(ids,bucket); }
+    // 원래 U 순서로 합산해 부동소수점 반올림까지 유지한다.
+    ids.sort(function(i,j){return i-j;}).forEach(function(i){ var b=U[i]; if(b===a) return; var dy=(b[1]-a[1])*rad*R; if(Math.abs(dy)>1500) return; var dx=(b[2]-a[2])*rad*R*cl, m=Math.sqrt(dx*dx+dy*dy); if(m>1500) return;
       var w=Math.exp(-m*m/(2*600*600)); sw+=w; sv+=w*b[3]; });
     if(sw>0) out[a[0]]=.5*a[3]+.5*sv/sw; });
   for(var k in out) C[k]=Math.round(out[k]*1e4)/1e4; window.GJC_SMOOTH=Object.keys(out).length; })();

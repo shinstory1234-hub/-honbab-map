@@ -14,8 +14,10 @@
   }).filter(l=>l.name);
  }
  const access=min=>Number.isFinite(min)&&min>=0?clamp((20-min)/10):0;
+ const bestLineCache=new Map();
  function candidate(station,line,m,route,future=false,year=null){
-  const best=lines(line).sort((a,b)=>b.v-a.v)[0]||{name:'노선 미확인',v:0,t:'미확인'};
+  if(!bestLineCache.has(line))bestLineCache.set(line,lines(line).sort((a,b)=>b.v-a.v)[0]||{name:'노선 미확인',v:0,t:'미확인'});
+  const best=bestLineCache.get(line);
   const measured=route&&Number.isFinite(route.minutes)&&route.minutes>=0&&route.source&&route.checkedAt;
   const minutes=measured?route.minutes:Number.isFinite(m)&&m>=0?m*1.25/80:null;
   const discount=future?(Number.isFinite(year)?Math.max(.8,1-.05*Math.max(0,year-2026)):0):1;
@@ -30,8 +32,26 @@
  // 2024년에 개통한 두 구간. 삼성·창릉은 운행 중으로 간주하지 않는다.
  // GTX-A 운영사/국가철도공단의 개통 자료. 기존 역 거리 자료가 있는 환승역만 보완.
  const openGtxA=new Set(['운정중앙역','킨텍스역','대곡역','연신내역','서울역','수서역','성남역','구성역','동탄역']);
+ let pass=-1, futureRef=null, futureSignature='', futureList=[], cache=new Map();
+ function prepare(){
+  const source=typeof FUT==='undefined'?null:FUT;
+  if(pass===window.__RCV&&futureRef===source)return;
+  pass=window.__RCV;futureRef=source;
+  const signature=JSON.stringify(source);
+  if(signature===futureSignature)return;
+  futureSignature=signature;cache.clear();futureList=[];
+  for(const f of source||[]){
+   if(!f[3])continue;
+   const ls=lines(f[1]).filter(l=>confirmed.has(l.name)||(l.name==='1호선'&&f[0]==='회천중앙'));
+   if(ls.length)futureList.push({f,ls,name:f[0].replace(/\s+(?:\d+호선|KTX)$/,'')});
+  }
+ }
  function evaluate(d){
+  prepare();
   const routes=(window.APT_STATION_WALKS||{})[d.cxKey]||{}, candidates=[];
+  const lat=d.g?.lat||d.lat,lng=d.g?.lng||d.lng;
+  const key=JSON.stringify([lat,lng,d.g?.sts||[],routes]);
+  if(cache.has(key))return cache.get(key);
   for(const [name,m] of d.g?.sts||[]){
    const match=name.match(/^(.*?)역\s+(.+)$/);if(!match)continue;
    const station=match[1]+'역';
@@ -39,11 +59,7 @@
    if(openGtxA.has(station)&&!ls.some(l=>l.name==='GTX-A'))ls.push({name:'GTX-A',v:1,t:'S'});
    if(ls.length)candidates.push(candidate(match[1]+'역',ls.map(l=>l.name).join('·'),m,routes[name]));
   }
-  const lat=d.g?.lat||d.lat,lng=d.g?.lng||d.lng;
-  if(lat&&lng&&typeof FUT!=='undefined')for(const f of FUT){
-   if(!f[3])continue;
-   const ls=lines(f[1]).filter(l=>confirmed.has(l.name)||(l.name==='1호선'&&f[0]==='회천중앙'));if(!ls.length)continue;
-   const name=f[0].replace(/\s+(?:\d+호선|KTX)$/,'');
+  if(lat&&lng)for(const {f,ls,name} of futureList){
    const m=hav(lat,lng,f[3][0],f[3][1]);
    for(const l of ls){
     if(candidates.some(c=>!c.future&&c.station===name&&c.line===l.name))continue;
@@ -52,7 +68,8 @@
    }
   }
   candidates.sort((a,b)=>b.score-a.score||Number(a.future)-Number(b.future));
-  return {score:candidates[0]?.score||0,best:candidates[0]||null,candidates};
+  const result={score:candidates[0]?.score||0,best:candidates[0]||null,candidates};
+  cache.set(key,result);return result;
  }
  function panel(d){
   const t=d.s4?.transport;if(!t)return '';const b=t.best;
@@ -60,3 +77,4 @@
  }
  window.APT_TRANSPORT={lines,access,candidate,evaluate,panel};
 })();
+
