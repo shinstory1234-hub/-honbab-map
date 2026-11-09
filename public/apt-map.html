@@ -773,11 +773,11 @@ function areaMove(){ const C=Object.values(SIB).map(a=>a[0]).filter(d=>d.g&&d.g.
 // 좌표가 같은 평형의 예정 역 거리를 공유한다. 좌표 자료가 갱신되면 캐시를 비운다.
 const FUTDIST=new Map(); let FUTDIST_VERSION='';
 function futureDistances(la,ln){ const key=la+','+ln; if(!FUTDIST.has(key)) FUTDIST.set(key,FUTPOS.map(f=>f?hav(la,ln,f[0],f[1]):null)); return FUTDIST.get(key); }
-function recompute(){
+function* recomputeSteps(){
   const fv=JSON.stringify(FUTPOS); if(fv!==FUTDIST_VERSION){ FUTDIST_VERSION=fv; FUTDIST.clear(); score.fc=null; }
   window.__RCV=(window.__RCV||0)+1;   // 재계산 회차(apt-s4.js s4PeerPeak 후보 캐시용)
-  LFC={}; D.forEach(score); areaMove();
-  D.forEach(d=>{
+  LFC={}; for(const d of D){ score(d); yield; } areaMove();
+  for(const d of D){
     const age=2026-d.year, J=G(), k=dkey(d), g=guTok(d);
     /* 이 동네 신축 34평 표준 평당가
        ① 동 신축 회귀(25년차 이하 단지만 — 재건축 기대가 섞이지 않게)  ② 없으면 동 전체 회귀 환산  ③ 주변 실제 신축  ④ 구 평균 × 동 급지 비율
@@ -815,12 +815,13 @@ function recompute(){
       const fz=d.m&&d.m.fz; d.dead=(!fz||d.m.rm||stOf(d)>=35)?0:clamp01((age-27)/3)*(1-fz.f);
       if(d.dead>0&&/추정/.test(d.m.fol)) d.dead*=.5;   // 기존 용적률이 추정치면 사업성 차이가 노이즈(분담금 비율 0.28 vs 0.31에 사업성 92% vs 75%) — 막힘 판정 절반
     }
-  });
+    yield;
+  }
   /* 같은 단지 평형들은 위치가 같음 → 일반 계산의 '주변보다 싸다'는 단지 전체(평형별 12개월 거래 가중)로 한 번만 판단.
      같은 단지 안 평형 간 평당가 차이는 복도식·동 위치 같은 구조 차이라 오를 여지로 보지 않음(예: 원천레이크파크 20평 +48% vs 24평 +18%).
      재건축 계산은 평형마다 대지지분·분담금이 달라 평형별 그대로 */
   const UGC={}; D.forEach(d=>{ if(d.ugRaw==null) return; const w=Math.max(1,(priceEv(d)||{n:1}).n), o=UGC[d.cxKey]||(UGC[d.cxKey]={w:0,l:0,n:0}); o.w+=w; o.l+=w*Math.log(1+d.ugRaw); o.n++; });
-  D.forEach(d=>{
+  for(const d of D){
     if(d.upSrc!=='opt'){ const o=UGC[d.cxKey], ur=d.urRaw; let ug=d.ugRaw; d.upGenOwn=null;
       if(ug!=null&&o&&o.n>1){ d.upGenOwn=ug; ug=Math.exp(o.l/o.w)-1; } d.upGen=ug;
       d.up=d.rbw<=0?ug:d.rbw>=1?ur:(1-d.rbw)*ug+d.rbw*ur;                  // 27~33년차는 두 계산을 연식에 따라 섞음
@@ -840,12 +841,31 @@ function recompute(){
     d.conf=cf; d.confl=cl; d.upR=d.up>0?d.up*cf:d.up;
     d.U=Math.max(0,Math.min(100,d.upR/.5*100));                       // 신뢰도 반영 여력 50% 이상이면 만점
     locNew(d); s4Score(d);                                                          // 수도권 6억 이하 4,700여 단지 중 백분위(0~100). apt-s4.js
-  });
+    yield;
+  }
   ORDER=(window.S4CFG||{}).model==='m2'?D.slice().sort((x,y)=>y.score-x.score):hillGuard(D.slice().sort((x,y)=>y.score-x.score));   // m2: 판단 순위 조정(언덕 상한) 없음 — 표시 순위 = 점수 순위
   /* 모든 가격대에서 단지+평형을 하나의 후보로 본다. 같은 가격대에 들어오는 평형은 각 점수대로 개별 순위와 등급을 받는다. */
   ORDER.forEach((d,i)=>{ d.sib=0; d.rank=i+1; d.tier=TIERS[i<30?0:i<300?1:i<1000?2:3]; }); if(window.s10Band) s10Band();
   updatePins();
 }
+// Keep synchronous refreshes compatible; initial scoring yields between small batches.
+function recompute(){ for(const _ of recomputeSteps()){} }
+function recomputeAsync(){
+  const steps=recomputeSteps();
+  return new Promise((resolve,reject)=>{
+    function batch(){
+      const started=performance.now();
+      try{
+        while(true){
+          if(steps.next().done){resolve();return;}
+          if(performance.now()-started>=12){setTimeout(batch,0);return;}
+        }
+      }catch(error){reject(error);}
+    }
+    setTimeout(batch,0);
+  });
+}
+
 function money(d){
   const P=d.p, cap=P>250000?20000:P>150000?40000:60000, r={};   // 주담대 한도: 시가 15억 이하 6억, 15~25억 4억, 25억 초과 2억(2025.10.15 대책, 수도권·규제지역)
   if(d.reg==='free'){ r.loan=Math.min(P*.7,cap); r.cash=P-r.loan; r.note='비규제 LTV 70%'; if(d.jeon){r.gap=P-d.jeon;} }
@@ -1292,9 +1312,11 @@ function snapTo(name){ if(!mobile())return; calcSnaps(); cur=name; setY(snaps[na
   addEventListener('resize',()=>{calcSnaps();setY(snaps[cur],false);});
 })();
 
-recompute();
+recomputeAsync().then(()=>{
+state.q=($('#q').value||'').trim();
 { const i=fromHash(); if(i>=0){ state.sel=i; history.replaceState(null,'',location.pathname+location.search); history.pushState({apt:1},'',hashOf(D[i])); } }   // 공유 링크(#단지)로 들어오면 그 단지 상세부터 — 목록 기록을 밑에 깔아 뒤로가기가 목록으로
 render();
+document.body.dataset.aptReadyMs=String(Math.round(performance.now()-(window.__APT_LOAD_START||0)));
 
 (function(){
   const s=document.createElement('script');
@@ -1303,6 +1325,12 @@ render();
   s.onload=()=>kakao.maps.load(init);
   document.head.append(s);
 })();
+}).catch(error=>{
+  console.error('Apartment startup failed',error);
+  const el=document.getElementById('aptLoading');
+  if(el)el.textContent='자료를 불러오지 못했습니다. 새로고침해 주세요.';
+});
+
 const inMetro=(la,ln)=>la>36.85&&la<38.3&&ln>126.3&&ln<127.95;
 const NEWGU=/병점구|동탄구|효행구|만세구|서해구|검단구|영종구|제물포구/;   // 2026 신설 구: 지도 주소엔 아직 없을 수 있음
 function addrOK(d,a){ const t=d.area.split(' ').slice(0,-1).filter(x=>!NEWGU.test(x)).map(x=>x.replace(/(시|군)$/,'')); return t.every(x=>a.includes(x)); }

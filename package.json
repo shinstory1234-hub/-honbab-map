@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "build": "next build",
+    "build": "node scripts/build-apt-assets.mjs && next build",
     "start": "next start",
     "lint": "eslint .",
     "apt:invest": "node scripts/generate-invest-points.mjs",
@@ -25,3 +25,4 @@
     "typescript": "^5"
   }
 }
+

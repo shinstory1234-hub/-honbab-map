@@ -6,7 +6,7 @@ const nextConfig = {
   async rewrites() {
     return {
       beforeFiles: [
-        ...SERVE.map((h) => ({ source: '/', has: [{ type: 'host', value: h }], destination: '/apt-map.html' })),
+        ...SERVE.map((h) => ({ source: '/', has: [{ type: 'host', value: h }], destination: '/apt-map-fast.html' })),
         // 고정 입지 데이터: 같은 출처로 프록시(CSP script-src 'self' 유지)
         { source: '/apt-geo.js', destination: 'https://realestate-media.vercel.app/api/backtest/aptgeo?export=js' },
         // 현재 시세(매일 크론이 다시 계산, 2026.11.3)
@@ -27,6 +27,7 @@ const nextConfig = {
   },
   async headers() {
     return [
+      { source: '/apt-assets/:path*', headers: [{ key: 'Cache-Control', value: 'public, max-age=31536000, immutable' }] },
       {
         source: '/(.*)',
         headers: [
@@ -40,3 +41,4 @@ const nextConfig = {
   },
 }
 export default nextConfig
+

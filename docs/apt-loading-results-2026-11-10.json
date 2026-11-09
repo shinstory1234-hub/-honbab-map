@@ -1,0 +1,50 @@
+[
+  {
+    "cap": 6,
+    "rows": 5822,
+    "requests": 6,
+    "exactMatch": true,
+    "slices": 74,
+    "maxSliceMs": 174
+  },
+  {
+    "cap": 10,
+    "rows": 2819,
+    "requests": 9,
+    "exactMatch": true,
+    "slices": 40,
+    "maxSliceMs": 32
+  },
+  {
+    "cap": 15,
+    "rows": 1997,
+    "requests": 9,
+    "exactMatch": true,
+    "slices": 35,
+    "maxSliceMs": 21
+  },
+  {
+    "cap": 20,
+    "rows": 1128,
+    "requests": 9,
+    "exactMatch": true,
+    "slices": 17,
+    "maxSliceMs": 15
+  },
+  {
+    "cap": 25,
+    "rows": 558,
+    "requests": 9,
+    "exactMatch": true,
+    "slices": 9,
+    "maxSliceMs": 12
+  },
+  {
+    "cap": 30,
+    "rows": 255,
+    "requests": 9,
+    "exactMatch": true,
+    "slices": 5,
+    "maxSliceMs": 12
+  }
+]
