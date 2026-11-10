@@ -1525,21 +1525,23 @@ function renderMap(){
   const order=pins.slice().sort((a,b)=>(b.i===state.sel)-(a.i===state.sel)||D[b.i].score-D[a.i].score);
   shownN=0;
   let cand=0;
+  const visibleComplexes=new Set();
   order.forEach(o=>{ const d=D[o.i]; let on=false;
-    const vis=o.i===state.sel||visible(d);
+    const key=complexRankKey(d);
+    const vis=(o.i===state.sel||visible(d))&&!visibleComplexes.has(key);
     if(vis&&o.i!==state.sel) cand++;
     if(vis&&(o.i===state.sel||(!(far&&!state.q&&cand>300)&&shownN<400))){
       const p=proj.containerPointFromCoords(d._pos);
       if(p.x>-pw&&p.x<W+pw&&p.y>-ph&&p.y<H+ph*2){
         const r=[p.x-pw/2,p.y-ph-6,p.x+pw/2,p.y-6];
-        if(o.i===state.sel||!placed.some(q=>r[0]<q[2]&&r[2]>q[0]&&r[1]<q[3]&&r[3]>q[1])){ placed.push(r); on=true; shownN++; }
+        if(o.i===state.sel||!placed.some(q=>r[0]<q[2]&&r[2]>q[0]&&r[1]<q[3]&&r[3]>q[1])){ placed.push(r); on=true; shownN++; visibleComplexes.add(key); }
       }
     }
     if(on&&!o.ov) materializePin(o);
     if(on!==o.on){ if(o.ov) o.ov.setMap(on?map:null); o.on=on; }
     if(on){ o.el.classList.toggle('sel',o.i===state.sel); o.el.classList.toggle('far',far); }
   });
-  const c=$('#mapcount'); if(c){ const inV=pins.filter(o=>{ if(!visible(D[o.i])) return false; const p=proj.containerPointFromCoords(D[o.i]._pos); return p.x>=0&&p.x<=W&&p.y>=0&&p.y<=H; }).length; c.textContent=shownN<inV?`이 화면 ${inV}곳 중 ${shownN}곳 표시 · 확대하면 더`:`이 화면 ${inV}곳`; }
+  const c=$('#mapcount'); if(c){ const inV=new Set(pins.filter(o=>{ if(!visible(D[o.i])) return false; const p=proj.containerPointFromCoords(D[o.i]._pos); return p.x>=0&&p.x<=W&&p.y>=0&&p.y<=H; }).map(o=>complexRankKey(D[o.i]))).size; c.textContent=shownN<inV?`이 화면 ${inV}곳 중 ${shownN}곳 표시 · 확대하면 더`:`이 화면 ${inV}곳`; }
 }
 function close(){ state.sel=null; }
 /* 주소(#단지|동네|평)와 뒤로가기: 상세를 열면 기록을 하나 쌓아, 휴대폰 뒤로가기가 사이트를 나가지 않고 목록으로 돌아오게 함 */
