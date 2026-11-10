@@ -42,6 +42,14 @@ export function auditRows(cap,rows,{previous=[],curated=[]}={}){
       if(cap===6&&(prior.score!==d.score||prior.rank!==d.rank||prior.p!==d.p))
         push('error','PROTECTED_SIX_BAND_CHANGED',d,'<=6억 protected price/score/rank changed');
     } else if(cap===6&&previous.length)push('error','PROTECTED_SIX_BAND_ADDED',d,'New <=6억 unit absent from baseline');
+    // Score and label are separate claims: a stage can proceed with costly contributions.
+    // A '재건축 어려움' badge must not be read as official redevelopment prohibition.
+    if(cap>6&&d.stage>=35&&d.dead>=.5)
+      push('review','REDEVELOPMENT_STAGE_AND_LABEL_CONFLICT',d,'Declared redevelopment stage '+d.stage+' but feasibility badge would say difficult; verify both sources and distinguish status from modeled cost');
+    if(cap>6&&d.m3&&d.rank<=100&&d.m3.raw?.G<=25)
+      push('review','TOP100_LOW_GRADE',d,'Top-100 complex with grade '+d.m3.raw.G+'; investigate other factor compensation');
+    if(cap>6&&d.m3&&d.rank>1000&&d.m3.raw?.G>=80&&d.m3.raw?.U>=80)
+      push('review','STRONG_GRADE_AND_UNITS_LOW_RANK',d,'Grade '+d.m3.raw.G+' and unit score '+d.m3.raw.U+' but rank '+d.rank+'; inspect quality, price and transport');
     const matches=curatedById.get(id(d))||[];
     if(matches.length===1){
       matched++;
@@ -68,19 +76,29 @@ export function auditRows(cap,rows,{previous=[],curated=[]}={}){
   return {cap,rows:rows.length,curatedMatchedFlats:matched,counts,findings};
 }
 function getCurated(root){
-  const filename=path.join(root,'public/apt-data.js');
-  if(!fs.existsSync(filename))return {rows:[],note:'apt-data.js not found'};
-  try{
-    const context={window:{}};vm.runInNewContext(fs.readFileSync(filename,'utf8'),context,{filename});
-    return {rows:Array.isArray(context.window.D)?JSON.parse(JSON.stringify(context.window.D)):[],note:null};
-  }catch(e){return {rows:[],note:'Cannot parse curated records: '+e.message};}
+  // These are editorial project records, NOT a complete official redevelopment database.
+  const byId=new Map(), warnings=[];
+  for(const [filename,global] of [['apt-data.js','D'],['apt-auto.js','AUTO']]){
+    const file=path.join(root,'public',filename);
+    if(!fs.existsSync(file)){warnings.push(filename+': not found');continue;}
+    try{
+      const context={window:{}};vm.runInNewContext(fs.readFileSync(file,'utf8'),context,{filename,timeout:3000});
+      const records=Array.isArray(context.window[global])?JSON.parse(JSON.stringify(context.window[global])):[];
+      for(const d of records){
+        const key=id(d),prev=byId.get(key);
+        if(!prev || (d.cat||[]).includes('정비대기열') && !(prev.cat||[]).includes('정비대기열'))byId.set(key,d);
+      }
+    }catch(e){warnings.push(filename+': '+e.message);}
+  }
+  return {rows:[...byId.values()],note:warnings.length?warnings.join('; '):null};
 }
 function getRows(root,cap){
   const result=run(root,cap);
   if(result.missing?.length)throw Error('Required inputs missing: '+result.missing.join(', '));
   const raw=vm.runInContext(`JSON.stringify(ORDER.map(d=>({
     key:d.cxKey,n:d.n,area:d.area,py:d.py,rank:d.rank,score:d.score,p:d.p,
-    dead:d.dead??0,year:d.year,units:d.units,m3:d.m3||null
+    dead:d.dead??0,stage:typeof stOf==='function'?stOf(d):null,
+    year:d.year,units:d.units,m3:d.m3||null
   })))`,result.c);
   const rows=JSON.parse(raw);
   if(!rows.length)throw Error('No ranked rows returned');
