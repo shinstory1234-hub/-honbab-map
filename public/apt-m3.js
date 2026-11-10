@@ -78,7 +78,16 @@
   const price=priceConfidence(d);
   // 고가 아파트는 회전율이 낮아 거래량 부족을 품질 점수에 반영하지 않는다.
   // 거래 부족에 대한 사실·신뢰도 경고 자체는 유지한다.
-  const pricePenalty=cap===30?0:price.penalty;
+  // 실거래 표본이 충분한 평형이 거래공백만으로 단지 경쟁력 평가에서
+  // 과도하게 밀리지 않도록 하되, 오래된 시세는 더 보수적으로 취급한다.
+  // 12개월 5건 미만, 평형 간 가격 역전/하한 보정, 최근 실거래와 큰 괴리 등
+  // 가격 자체의 검증 위험이 있으면 감점 완화를 일절 적용하지 않는다.
+  const reliableVolume=price.known && price.n12>=5
+    && !price.inversion && !price.latestRaised && !price.latestBeyondBand;
+  const maxPricePenalty=(price.ageDays!=null && price.ageDays>270)?7:
+    (price.ageDays!=null && price.ageDays>180)?5:3;
+  const pricePenalty=cap===30?0:
+    reliableVolume?Math.min(price.penalty,maxPricePenalty):price.penalty;
   const score=clamp(Object.values(parts).reduce((sum,v)=>sum+v,0)-density-hill-jubok-pricePenalty);
   return {score,raw,parts,price,penalties:{density,hill,jubok,price:pricePenalty},
     far:s.density?.far??null,farSrc:s.density?.src??'',
