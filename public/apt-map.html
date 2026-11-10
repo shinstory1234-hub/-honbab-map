@@ -845,7 +845,18 @@ function* recomputeSteps(){
   }
   ORDER=(window.S4CFG||{}).model==='m2'?D.slice().sort((x,y)=>y.score-x.score):hillGuard(D.slice().sort((x,y)=>y.score-x.score));   // m2: 판단 순위 조정(언덕 상한) 없음 — 표시 순위 = 점수 순위
   /* 모든 가격대에서 단지+평형을 하나의 후보로 본다. 같은 가격대에 들어오는 평형은 각 점수대로 개별 순위와 등급을 받는다. */
-  ORDER.forEach((d,i)=>{ d.sib=0; d.rank=i+1; d.tier=TIERS[i<30?0:i<300?1:i<1000?2:3]; }); if(window.s10Band) s10Band();
+  // M3: 중간 가격대에서 각 단지는 하나의 순위만 갖는다. 평형별 점수와 원본 데이터는 유지한다.
+  if(window.APT_M3 && CAPT>6 && CAPT<30){
+    const ranks=new Map();
+    ORDER.forEach(d=>{
+      let rank=ranks.get(d.cxKey);
+      if(rank==null){ rank=ranks.size+1; ranks.set(d.cxKey,rank); }
+      d.sib=0; d.rank=rank; d.tier=TIERS[rank<=30?0:rank<=300?1:rank<=1000?2:3];
+    });
+  } else {
+    ORDER.forEach((d,i)=>{ d.sib=0; d.rank=i+1; d.tier=TIERS[i<30?0:i<300?1:i<1000?2:3]; });
+  }
+  if(window.s10Band) s10Band();
   updatePins();
 }
 // Keep synchronous refreshes compatible; initial scoring yields between small batches.
@@ -991,7 +1002,7 @@ function m2Text(h,I){ const C=window.S4CFG||{};
   return h.replace(/(<dt>종합<small>순위<\/small><\/dt><dd>)[\s\S]*?(<\/dd><\/div>)/, (m,a,b)=>a+dd+b);
 }
 function m3Text(h,I){
-  h=m2Text(h,I).replace(/종합의 5%/g,'종합의 15%');
+  h=m2Text(h,I).replace(/종합의 5%/g,'종합의 15%').replace('같은 가격대에 들어오는 모든 평형을 각각 채점하고 개별 순위를 매깁니다.','한 단지의 여러 평형은 같은 순위를 공유하며 대표 평형 한 개만 목록에 표시합니다.');
   const dd=`이 화면은 ${D.length.toLocaleString()}개 평형 중 예산별 M3 순위를 제공합니다.
     <b>M3 잠정 가중치: 장기 급지 35% + 주요 업무지구 접근성 10% + 지하철 교통 15% + 매매 대상 세대수 20% + 건물 상품성 15% + 평형 효용 5%.</b>
     세대수는 전 가격대에 동일한 100~5,000세대 연속 곡선, 상품성은 실제 입주연도, 평형은 공급 10~34평 연속 곡선으로 평가합니다.
@@ -999,7 +1010,7 @@ function m3Text(h,I){
     교통은 현재 운영 중인 역의 노선 등급과 실제 또는 추정 도보시간을 반영하며, 예정 노선의 기여도를 보수적으로 할인합니다.
     확인된 용적률 400% 초과 고밀도 감점과 언덕 감점을 적용합니다.
     <b>중요: 2026년 11월 10일 M3 시험 산식으로, 가중치·급지 원자료·직주 소요시간에 대한 과거 시점 백테스트는 아직 완료되지 않았습니다.</b>
-    6억 이하와 25억 이상 구간은 기존 모델을 그대로 사용합니다. 현재는 같은 단지의 평형별로 별도 순위를 표시합니다.`;
+    6억 이하와 25억 이상 구간은 기존 모델을 그대로 사용합니다. 중간 가격대는 같은 단지를 한 번만 순위에 표시하며, 평형별 점수와 시세는 상세 화면에서 모두 비교할 수 있습니다.`;
   return h.replace(/(<dt>종합<small>순위<\/small><\/dt><dd>)[\s\S]*?(<\/dd><\/div>)/,(all,a,b)=>a+dd+b);
 }
 function cap10Text(h){
@@ -1019,7 +1030,14 @@ function cap10Text(h){
   return h.replace(/(<dt>종합<small>순위<\/small><\/dt><dd>)[\s\S]*?(<\/dd><\/div>)/, (m,a,b)=>a+dd+b);
 }
 function renderList(){
-  const b=$('#body'), list=ORDER.filter(visible), pend=D.filter(d=>d.pending).length;
+  const b=$('#body'), matches=ORDER.filter(visible), pend=D.filter(d=>d.pending).length;
+  // 평형 필터를 먼저 적용하므로 필터에 해당하는 평형이 있는 단지는 항상 표시된다.
+  const singleComplex=!!(window.APT_M3 && CAPT>6 && CAPT<30);
+  const seen=new Set();
+  const list=singleComplex
+    ?matches.filter(d=>{ if(seen.has(d.cxKey))return false; seen.add(d.cxKey); return true; })
+      .sort((a,b)=>a.rank-b.rank || b.score-a.score)
+    :matches;
   let h=`<section class="intro">
     <div class="eyebrow">6억 이하 · 오를 단지<i></i>${NCX.toLocaleString()}곳 · ${D.length.toLocaleString()}개 평형</div>
     <h1>급지·학군·입지 좋은 순, 같은 입지면 싼 순</h1>
@@ -1041,7 +1059,7 @@ function renderList(){
   <div class="filters pb" role="group" aria-label="가격대">${PB.map(([k,l])=>`<button data-pb="${k}" aria-pressed="${state.pb===k}">${l}</button>`).join('')}</div>
   <div class="filters pb" role="group" aria-label="평형(공급면적 기준)">${SIZES.map(([k,l])=>`<button data-size="${k}" aria-pressed="${state.size===k}">${l}</button>`).join('')}</div>
   <div class="filters" role="group" aria-label="필터">${FILTERS.map(([k,l])=>`<button data-f="${k}" aria-pressed="${state.f===k}">${l}</button>`).join('')}</div>
-  <div class="count"><span>${list.length.toLocaleString()}개 평형${CAPT!==6?`(${new Set(list.map(d=>d.cxKey)).size.toLocaleString()}개 단지)`:''} · 종합 점수순</span><span>시세 리치고·국토부 실거래 · 2026.10</span></div>`;
+  <div class="count"><span>${singleComplex?list.length.toLocaleString()+'개 단지 (대표 평형 1개씩)':list.length.toLocaleString()+'개 평형'+(CAPT!==6?' ('+new Set(list.map(d=>d.cxKey)).size.toLocaleString()+'개 단지)':'')} · 종합 점수순</span><span>시세 리치고·국토부 실거래 · 2026.10</span></div>`;
   list.slice(0,state.lim).forEach(d=>{
     h+=`<article class="row" data-i="${D.indexOf(d)}" data-s="1">
       <span class="rk tnum">${String(d.rank).padStart(2,'0')}</span>
@@ -1144,7 +1162,7 @@ function renderDetail(i){
   const d=D[i], m=money(d), nd=need(d), tags=[d.tier.k,...cardFeatures(d).map(k=>FEATURE_META[k].label)].join(' · ');
   const bar=(v,max)=>`<div class="t"><b style="width:${Math.round(v/max*100)}%"></b></div>`;
   const src=RATE_SRC[d.rate.src];
-  let h=`<div class="phead"><button id="back"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M15 18 9 12l6-6"/></svg>목록</button><span class="tnum">${d.rank}위 / ${D.length}</span></div>
+  let h=`<div class="phead"><button id="back"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M15 18 9 12l6-6"/></svg>목록</button><span class="tnum">${d.rank}위 / ${d.m3?NCX:D.length}</span></div>
   <section class="identity"><div class="cat">${esc(tags)}${d.u?' · 전체 단지 자동 수집':d.auto?' · 점수식 자동 선별':' · 직접 분석'}</div><h2>${esc(d.n)}</h2>
     <div class="meta tnum"><span>${esc(d.area)}</span><span>${d.year}년 입주</span><span>${unitN(d).toLocaleString()}세대${d.unitsOwn?` <small>(임대단지 제외 매매 대상)</small>`:d.unitsRaw?` <small>(같은 마을 ${d.unitsN}개 단지 합계 ${d.unitsRaw.toLocaleString()}세대를 나눈 추정)</small>`:''}</span></div></section>
   <div class="lede"><strong>${esc(d.headline)}</strong><p>${esc(d.sub)}</p>${d.s4&&(!d.simple||d.s4.peakR!=null||d.s4.peakPeer)?`<p class="why"><b>순위 근거</b> ${esc(whyLine(d))}</p>`:''}${!d.simple&&hasNew(d)?`<p class="why"><b>신설역 주의</b> 입지 점수에 개통 예정 역·노선을 넣어 순위가 올라간 단지예요${d.locParts.fut?` — ${esc(d.locParts.fut.n)}역(${esc(d.locParts.fut.line)}) 도보 약 ${Math.round(d.locParts.wf)}분`:''}${/예정/.test(d.locParts.lpl||'')?` · 노선 프리미엄 ${esc(d.locParts.lpl)} +${Math.round(d.locParts.lp*100)}%(가정)`:''}. 철도는 지연이 잦고 역 위치는 공사·계획 기준(OpenStreetMap)이에요. 개통 전까지 1년당 5%(최대 20%) 할인해서 반영했고, 예정 역을 빼면 입지 상위 ${Math.max(1,Math.round(100-d.loc0))}%예요. 지금 쓰는 역은 ${esc((d.cur&&d.cur.n)||'없음')}${d.cur&&d.cur.m<99999?` 도보 약 ${Math.round(walkMin(d.cur.m))}분`:''}.</p>`:''}</div>
@@ -1191,7 +1209,7 @@ function renderDetail(i){
     <div class="em" style="grid-column:1/-1"><dt>⚠️ 대출 금액은 참고용</dt><dd style="font-size:13px;font-weight:600;line-height:1.55;white-space:normal;text-align:left">실제 대출 한도는 소득(DSR)·신용·보유 주택 수·지역 규제·금리에 따라 크게 달라집니다. 이 계산만 믿고 자금을 준비하지 마시고, 반드시 은행 상담으로 실제 한도를 확인하세요.</dd></div>
     <div><dt>규제</dt><dd>${d.reg==='free'?'비규제 · 전세 끼고 매수 가능':'토지거래허가 · 실거주 2년'}</dd></div></dl></section>`;
   const S=sibs(d);
-  if(S.length>1) h+=`<section class="sec"><h3>이 단지 ${CAPTXT} 평형 <small>평형마다 따로 채점한 순위</small></h3><div class="cmp tnum">${S.map(x=>`<div${x===d?' class="me"':''} data-sib="${D.indexOf(x)}" style="cursor:pointer"><span class="n">${x.py}평 · ${x.rank.toLocaleString()}위 · ${x.score.toFixed(1)}점${NOUP()?'':` · 적정가 대비 ${x.up>=0?'+':''}${Math.round(x.up*100)}%`}</span><span class="v">${eok(x.p)}</span>${bar(x.p,CAPHI)}</div>`).join('')}</div>${d.alt&&d.sub?`<p class="note">위 단지 소개 원고는 ${d.basePy}평 기준입니다.</p>`:''}</section>`;
+  if(S.length>1) h+=`<section class="sec"><h3>이 단지 ${CAPTXT} 평형 <small>${d.m3?"단지 순위 공유 · 평형별 점수 비교":"평형마다 따로 채점한 순위"}</small></h3><div class="cmp tnum">${S.map(x=>`<div${x===d?' class="me"':''} data-sib="${D.indexOf(x)}" style="cursor:pointer"><span class="n">${x.py}평 · ${d.m3?'단지 '+x.rank.toLocaleString()+'위 · ':x.rank.toLocaleString()+'위 · '}${x.score.toFixed(1)}점${NOUP()?'':` · 적정가 대비 ${x.up>=0?'+':''}${Math.round(x.up*100)}%`}</span><span class="v">${eok(x.p)}</span>${bar(x.p,CAPHI)}</div>`).join('')}</div>${d.alt&&d.sub?`<p class="note">위 단지 소개 원고는 ${d.basePy}평 기준입니다.</p>`:''}</section>`;
   if(d.fit&&d.fit.length) h+=`<section class="sec"><h3>이런 사람에게</h3><div class="fit">${d.fit.map(f=>`<span>${esc(f)}</span>`).join('')}</div></section>`;
   if(d.check&&d.check.length) h+=`<section class="sec"><h3>사기 전에 확인</h3><ul class="checks">${d.check.map(f=>`<li>${esc(f)}</li>`).join('')}</ul></section>`;
   h+=`<p class="fine">필요한 돈은 주담대 한도(시가 15억 이하 6억, 15억 초과 4억)와 LTV만 반영한 계산입니다. 실제 대출은 소득(DSR)에 따라 줄어듭니다. ${d.u||d.p0?'시세는 국토부 실거래 기준 최근 시세(3개월 중위 또는 시세지수 환산)로 매물 호가와 다를 수 있습니다.':'시세는 리치고 추정치로 매물 호가와 다를 수 있습니다.'} 상승률 출처: ${esc(src)}.</p>
