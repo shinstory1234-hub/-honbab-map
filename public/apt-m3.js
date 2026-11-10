@@ -40,9 +40,9 @@
   const parsed=/^20\d\d-\d\d-\d\d$/.test(date)?Date.parse(date+'T00:00:00Z'):NaN;
   const ageDays=Number.isFinite(parsed)?Math.max(0,Math.floor((now.getTime()-parsed)/86400000)):null;
   const newborn=Number.isFinite(Number(d.year)) && Number(d.year)>=now.getUTCFullYear()-2;
-  const volume=newborn?0:n12===0?9:n12===1?7:n12===2?5:n12<=4?3:n12<=9?1:0;
-  const stale=ageDays==null?2:ageDays>270?5:ageDays>180?4:ageDays>90?2:0;
-  const penalty=clamp(volume+(newborn?Math.min(2,stale):stale),0,12);
+  const volume=newborn?0:n12===0?14:n12===1?11:n12===2?9:n12<=4?6:n12<=9?2:0;
+  const stale=ageDays==null?3:ageDays>270?8:ageDays>180?7:ageDays>90?3:0;
+  const penalty=clamp(volume+(newborn?Math.min(3,stale):stale),0,20);
   const warn=penalty>=4 || (n12<5 && !newborn) || (ageDays!=null&&ageDays>180);
   const level=penalty>=8?'high':warn?'medium':'ok';
   return {known:true,n12,n3,last:date,ageDays,newborn,volume,stale,penalty,warn,level};
