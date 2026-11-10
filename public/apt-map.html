@@ -1039,6 +1039,55 @@ function cap10Text(h){
 }
 // 단지별 순위를 유지하되, 한 단지의 모든 대상 평형을 목록에서 바로 공개한다.
 // 특정 평형을 누르면 그 평형의 시세·거래 근거와 상세 평가를 확인할 수 있다.
+// 라이브 실거래 반영 기준일을 별도 API에서 확인한다. 가격 계산은 서버의 일일 수집을
+// 이용하며, 브라우저에서 새 매물 호가나 아직 신고되지 않은 계약을 추정하지 않는다.
+let aptLiveHealth=null;
+function updateSourceStatus(){
+  const el=document.getElementById('liveSourceStatus');
+  if(!el)return;
+  el.classList.remove('stale');
+  if(CAPT===6){
+    el.textContent='6억 이하: 고정 기준 시세 자료 · 마지막 확인 계약 '+(ASOF||'미확인')+' · 자동 일일 갱신 대상 아님';
+    return;
+  }
+  const h=aptLiveHealth;
+  if(!h){
+    el.textContent='국토부 신고 실거래 기반 · 시세 계산 '+(window.LIVEP_AT||'확인 중')+' · 확인된 계약 '+(ASOF||'미확인')+'까지';
+    return;
+  }
+  const date=window.LIVEP_AT||h.priceCalculatedAt||'미확인';
+  if(h.stale){
+    el.classList.add('stale');
+    const days=Math.max(1,Math.floor((Number(h.ageHours)||0)/24));
+    el.textContent='⚠ 시세 갱신 지연 · 실제로 불러온 가격 자료 '+date+' ('+days+'일 전) · 최근 신고 계약 '+(h.lastContractDate||'미확인')+' · 최신 매수가격이 아닐 수 있습니다.';
+  }else{
+    el.textContent='국토부 신고 실거래 · 시세 계산 '+date+' · 최근 신고 계약 '+(h.lastContractDate||ASOF||'미확인')+' · 일별 수집 후 재계산';
+  }
+  // 열린 화면을 멋대로 새로고침하지 않는다. 더 최신의 가격 배치가 나오면 선택적으로 적용.
+  if(h.priceCalculatedAt&&window.LIVEP_AT&&h.priceCalculatedAt>window.LIVEP_AT){
+    el.append(' · 새로운 자료가 나왔습니다.');
+    const btn=document.createElement('button');
+    btn.type='button';btn.className='live-refresh';btn.textContent='새 자료 불러오기';
+    btn.onclick=()=>location.reload();el.append(btn);
+  }
+}
+async function refreshAptLiveHealth(){
+  if(CAPT===6)return;
+  try{
+    const res=await fetch('/apt-freshness.json',{cache:'no-store'});
+    if(!res.ok)throw Error('price freshness endpoint unavailable');
+    const info=await res.json();
+    if(!/^20\d\d-\d\d-\d\d$/.test(String(info.priceCalculatedAt||'')))return;
+    aptLiveHealth=info;updateSourceStatus();
+  }catch(e){
+    // 조회 실패를 '최신 상태'라고 오인시키지 않는다. 원래 로드된 시세 계산일 유지.
+    const el=document.getElementById('liveSourceStatus');
+    if(el){el.classList.add('stale');el.textContent='시세 갱신 상태 확인 실패 · 표시 자료 '+(window.LIVEP_AT||'미확인')+' 기준 · 현재 호가를 확인하세요.';}
+  }
+}
+setTimeout(refreshAptLiveHealth,1200);
+setInterval(()=>{if(!document.hidden)refreshAptLiveHealth();},10*60*1000);
+
 function m3FlatOptions(d){
   const peers=sibs(d).filter(visible).sort((a,b)=>a.py-b.py||b.score-a.score);
   if(peers.length<=1)return '';
@@ -1095,6 +1144,7 @@ function renderList(){
   <p class="source">지역별 최신 아파트 가격동향은 <a href="https://www.reb.or.kr/r-one/portal/main/indexPage.do" target="_blank" rel="noopener noreferrer">한국부동산원 공식 통계</a>에서 확인하세요. 과거 하락률은 현재 수치가 아니므로 제외했습니다. <button type="button" class="linkbtn" id="noticeOpen">이용 유의사항</button></p>`;
   h=publicMethodSummary(cap10Text(h));
   b.innerHTML=h;
+  updateSourceStatus();
   b.querySelectorAll('.filters button[data-f]').forEach(x=>x.onclick=()=>{state.f=x.dataset.f;state.lim=50;render();});
   b.querySelectorAll('.filters button[data-pb]').forEach(x=>x.onclick=()=>{state.pb=x.dataset.pb;state.lim=50;render();});
   b.querySelectorAll('.filters button[data-size]').forEach(x=>x.onclick=()=>{state.size=x.dataset.size;state.lim=50;render();});
