@@ -496,10 +496,49 @@ function typeRows(d){ d.basePy=d.py; d.cxKey=gkey(d);
    ① 이름이 다른 단지 이름 + 꼬리(107동·(기산) 등)인 건 같은 단지가 두 번 들어간 것 → 뒤쪽을 뺌
    ② 나머지는 합계를 단지 수로 나눈 값을 추정 세대수로 씀(단지별 실제 세대수 자료 없음) */
 const DUPOUT=[], BANDOUT=[], THINOUT=[];
+
+/* K-apt 단지 통합 등록 검증:
+   여러 개의 독립 실거래 단지(1단지/2단지 등)에 K-apt 통합세대수 1개가
+   중복 매칭되면 신축 대단지 점수가 여러 번 부풀려진다.
+   원본의 각 구분단지 세대수를 합산해 정확히 K-apt 공식 통합세대수와
+   일치할 때에만 구분단지 원본값을 사용한다. 불일치할 경우 추측하지 않는다.
+   대상 목록은 이름이 아니라 전체 UNITFIX 테이블을 매번 검사해 자동 생성한다. */
+function verifiedSplitUnitCounts(){
+  const groups=new Map(), correct=new Map();
+  for(const [key,f] of Object.entries(window.UNITFIX||{})){
+    if(!Array.isArray(f)||f[3]!=='k')continue;
+    const sep=key.indexOf('|');if(sep<0)continue;
+    const name=key.slice(0,sep),area=key.slice(sep+1);
+    const m=/^(.+?)([1-9][0-9]*)단지$/.exec(name);
+    const total=Number(f[0]),original=Number(f[1]);
+    if(!m||!Number.isInteger(total)||!Number.isInteger(original)
+       ||total<=0||original<=0||original>=total)continue;
+    const group=area+'|'+m[1];
+    if(!groups.has(group))groups.set(group,[]);
+    groups.get(group).push({key,total,original,block:+m[2]});
+  }
+  for(const items of groups.values()){
+    if(items.length<2)continue;
+    const total=items[0].total;
+    if(!items.every(x=>x.total===total)||new Set(items.map(x=>x.block)).size!==items.length)continue;
+    if(items.reduce((n,x)=>n+x.original,0)!==total)continue;
+    for(const x of items)correct.set(x.key,x.original);
+  }
+  return correct;
+}
+const SPLIT_UNIT_COUNT=verifiedSplitUnitCounts();
+
 function fixUnits(A){
   // 2026.11.1: 네 탭 합집합 기준으로 계산한 전역 표(apt-unitfix.js)가 있으면 그것만 씀 — 탭마다 같은 단지 세대수가 달라지던 오류 수정
   if(window.UNITFIX){ const DR=new Set(window.UNITDROP||[]), RT=new Set(window.UNITRENT||[]);
-    A.forEach(d=>{ const f=UNITFIX[gkey(d)]; if(f){ d.unitsRaw=f[1]; d.unitsN=f[2]; d.units=f[0]; d.unitsK=f[3]==='k'; } if(RT.has(gkey(d))) d.rent=1; if(DR.has(gkey(d))) DUPOUT.push([d.n,d.area]); });
+    A.forEach(d=>{ const key=gkey(d),f=UNITFIX[key]; if(f){ d.unitsRaw=f[1]; d.unitsN=f[2]; d.units=f[0]; d.unitsK=f[3]==='k'; }
+      // 보호 구간(6억 이하, 25~30억)은 기존 산식과 점수를 유지한다.
+      // 구분단지 원본 합계가 K-apt 합계와 정확히 일치할 때만 분리 보정.
+      if(CAPT!==6&&CAPT!==30&&SPLIT_UNIT_COUNT.has(key)&&!d.unitsOwn){
+        d.units=SPLIT_UNIT_COUNT.get(key);
+        d.unitsRaw=0;d.unitsN=0;d.unitsK=false;d.unitsBlockVerified=1;
+      }
+      if(RT.has(key)) d.rent=1; if(DR.has(key)) DUPOUT.push([d.n,d.area]); });
     return A.filter(d=>!DR.has(gkey(d))); }
   const g={}; A.forEach(d=>{ const k=d.area+'|'+d.units+'|'+d.year; (g[k]=g[k]||[]).push(d); });
   const drop=new Set();
@@ -1342,7 +1381,7 @@ function publicDetailSummary(b,d){
   const details=[
     {label:'신축·연식',score:m3?.Q??(Number.isFinite(d.R)?d.R:undefined),max:m3?100:12,desc:esc(String(d.year))+'년 입주'},
     {label:'학군',score:Number.isFinite(d.A)?d.A:undefined,max:10,desc:d.Al?esc(d.Al):d.g?.ac!=null?'주변 학원 '+Number(d.g.ac).toLocaleString()+'곳':'지역별 자료 확인 필요'},
-    {label:'대단지',score:m3?.U??(Number.isFinite(unitU(d))?unitU(d):undefined),max:m3?100:7,desc:unitN(d).toLocaleString()+'세대'},
+    {label:'대단지',score:m3?.U??(Number.isFinite(unitU(d))?unitU(d):undefined),max:m3?100:7,desc:unitN(d).toLocaleString()+'세대'+(d.unitsBlockVerified?' · 구분 단지 기준':'')},
     {label:'브랜드',score:Number.isFinite(d.B)?d.B:undefined,max:3,desc:esc(d.bl||'브랜드 확인 필요')},
     {label:'역세권·교통',score:m3?.T,max:100,desc:transport},
     {label:'초등학교 접근성',score:Number.isFinite(d.E)?d.E:undefined,max:6,desc:d.g?.scn?esc(d.g.scn)+' · '+fmtM(d.g.sc):'학교명 미등록 · 점수와 실제 통학 거리 확인 필요'}
@@ -1364,7 +1403,7 @@ function renderDetail(i){
   const src=RATE_SRC[d.rate.src];
   let h=`<div class="phead"><button id="back"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M15 18 9 12l6-6"/></svg>목록</button><span class="tnum">${d.rank}위 / ${d.m3?NCX:D.length}</span></div>
   <section class="identity"><div class="cat">${esc(tags)}${d.u?' · 전체 단지 자동 수집':d.auto?' · 점수식 자동 선별':' · 직접 분석'}</div><h2>${esc(d.n)}</h2>
-    <div class="meta tnum"><span>${esc(d.area)}</span><span>${d.year}년 입주</span><span>${unitN(d).toLocaleString()}세대${d.unitsOwn?` <small>(임대단지 제외 매매 대상)</small>`:d.unitsRaw?` <small>(같은 마을 ${d.unitsN}개 단지 합계 ${d.unitsRaw.toLocaleString()}세대를 나눈 추정)</small>`:''}</span></div></section>
+    <div class="meta tnum"><span>${esc(d.area)}</span><span>${d.year}년 입주</span><span>${unitN(d).toLocaleString()}세대${d.unitsBlockVerified?` <small>(분리 단지 기준 · 통합 세대수 중복 제외)</small>`:d.unitsOwn?` <small>(임대단지 제외 매매 대상)</small>`:d.unitsRaw?` <small>(같은 마을 ${d.unitsN}개 단지 합계 ${d.unitsRaw.toLocaleString()}세대를 나눈 추정)</small>`:''}</span></div></section>
   ${m3DensityNote(d)}${m3PriceWarning(d)}<div class="lede"><strong>${esc(d.headline)}</strong><p>${esc(d.sub)}</p>${d.s4&&(!d.simple||d.s4.peakR!=null||d.s4.peakPeer)?`<p class="why"><b>순위 근거</b> ${esc(whyLine(d))}</p>`:''}${!d.simple&&hasNew(d)?`<p class="why"><b>신설역 주의</b> 입지 점수에 개통 예정 역·노선을 넣어 순위가 올라간 단지예요${d.locParts.fut?` — ${esc(d.locParts.fut.n)}역(${esc(d.locParts.fut.line)}) 도보 약 ${Math.round(d.locParts.wf)}분`:''}${/예정/.test(d.locParts.lpl||'')?` · 노선 프리미엄 ${esc(d.locParts.lpl)} +${Math.round(d.locParts.lp*100)}%(가정)`:''}. 철도는 지연이 잦고 역 위치는 공사·계획 기준(OpenStreetMap)이에요. 개통 전까지 1년당 5%(최대 20%) 할인해서 반영했고, 예정 역을 빼면 입지 상위 ${Math.max(1,Math.round(100-d.loc0))}%예요. 지금 쓰는 역은 ${esc((d.cur&&d.cur.n)||'없음')}${d.cur&&d.cur.m<99999?` 도보 약 ${Math.round(walkMin(d.cur.m))}분`:''}.</p>`:''}</div>
   <dl class="kpis tnum">
     ${d.opt?`<div><dt>지금 필요한 돈</dt><dd>${eokH(d.opt.dep)}</dd><small>${esc(d.opt.kind)} · ${d.opt.Y}년 ${eok(d.opt.K)} 매수권 · 시세 ${eok(d.p)}</small></div>`:`<div><dt>${d.py}평 시세</dt><dd>${eokH(d.p)}</dd><small>${d.reg==='free'?'비규제':'토허·실거주 2년'}${priceEv(d)?`<br>${esc(priceEvTxt(d))}`:''}</small></div>`}
