@@ -59,18 +59,29 @@
     latestRaised,lastSale:latestRaised?t.lastSale:null,rawWeightedPrice:latestRaised?t.pBeforeLatest:null,
     latestBeyondBand,latestBeyondSale:latestBeyondBand?t.lastSale:null};
  }
- function compute(d,cap=root.CAPT){
+ function compute(d,cap=root.CAPT,integratedSite=null){
   if(!active(d,cap))return null;
   const s=d.s4||{};
   const years=Number(d.year);
   const raw={
-   G:Number.isFinite(s.pG)?s.pG:50,
-   J:Number.isFinite(s.pJ)?s.pJ:50,
-   T:transportScore(s.transport?.candidates),
-   U:interp(Number(d.unitsOwn??d.units)||0,unitCurve),
-   Q:Number.isFinite(years)&&years>=1950?interp(Math.max(0,2026-years),ageCurve):50,
+   G:integratedSite?.G??(Number.isFinite(s.pG)?s.pG:50),
+   J:integratedSite?.J??(Number.isFinite(s.pJ)?s.pJ:50),
+   T:integratedSite?.T??transportScore(s.transport?.candidates),
+   U:integratedSite?.U??interp(Number(d.unitsOwn??d.units)||0,unitCurve),
+   Q:integratedSite?.Q??(Number.isFinite(years)&&years>=1950?interp(Math.max(0,2026-years),ageCurve):50),
    S:interp(Number(d.py)||0,sizeCurve),
   };
+  // 공식 K-apt 통합 관리단지의 단지 규모는 전체 공식 세대수를 유지한다.
+  // 다만 여러 구분 블록에 분산된 규모의 추가 프리미엄을 해당 단지의
+  // 세대수 가중 장기 급지에 연동한다. 일반 단지의 상품성까지 무차별
+  // 감점하면 좋은 역세권 신축이 100~300위씩 떨어져 백테스트 전에는 금지한다.
+  // 실제 순위 검증: 10~15억 통합단지에만 기존 S4 급지 게이트 적용.
+  const baseRaw={...raw};
+  if(cap===15&&integratedSite){
+    const gg=Array.isArray(root.S4CFG?.gGate)?root.S4CFG.gGate:[45,70];
+    const gate=clamp((raw.G-gg[0])/(gg[1]-gg[0]),0,1);
+    if(raw.U>50)raw.U=50+(raw.U-50)*gate;
+  }
   const effectiveWeights=cap===15?weights:baselineWeights;
   const parts=Object.fromEntries(Object.entries(effectiveWeights).map(([k,w])=>[k,raw[k]*w]));
   const density=Number.isFinite(s.density?.pen)?s.density.pen:0;
@@ -100,12 +111,12 @@
   const pricePenalty=cap===30?0:
     reliableVolume?Math.min(price.penalty,maxPricePenalty):price.penalty;
   const score=clamp(Object.values(parts).reduce((sum,v)=>sum+v,0)-density-hill-jubok-pricePenalty);
-  return {score,raw,parts,price,penalties:{density,hill,jubok,price:pricePenalty},
+  return {score,raw,baseRaw,parts,price,penalties:{density,hill,jubok,price:pricePenalty},
     far:s.density?.far??null,farSrc:s.density?.src??'',
     model:'M3 (가중치·가격 근거 감점 백테스트 전)'};
  }
- function apply(d){
-  const m=compute(d);
+ function apply(d,integratedSite=null){
+  const m=compute(d,root.CAPT,integratedSite);
   if(!m)return;
   d.m3=m;
   d.score=m.score;

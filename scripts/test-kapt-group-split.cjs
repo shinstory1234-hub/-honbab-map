@@ -1,6 +1,6 @@
 'use strict';
-/* 공식 통합 단지 세대수의 중복 매칭을 검출하고, 원본 각 단지의 세대수 합계가
- * 정확히 통합 총 세대수에 일치하는 경우에만 구분단지 세대수를 사용할 것. */
+/* K-apt 통합 관리단지를 분리해버리는 오류를 방지하는 회귀검사.
+ * 각 구분단지의 실제 세대수 합계로 하나의 공식 통합 단지임을 입증한다. */
 const assert=require('node:assert/strict');
 const fs=require('node:fs');
 const path=require('node:path');
@@ -30,6 +30,10 @@ assert.equal(Object.values(focus).reduce((a,b)=>a+b,0),3045,'목동 통합 세�
 assert.ok(corrections.size>=14,'통합 K-apt 집계 오매칭 사례가 소실됨');
 assert.ok(!corrections.has('다산리버펠리체1단지|남양주시 다산동'),'합계 불일치 단지는 수정 금지');
 assert.ok(!corrections.has('벽산블루밍1단지|용인 수지구 죽전동'),'합계 불일치 단지는 수정 금지');
-assert.ok(html.includes('CAPT!==6&&CAPT!==30&&SPLIT_UNIT_COUNT.has(key)'),
-  '6억 이하와 25~30억 기존 모델 보호 필터 누락');
-console.log('PASS: K-apt 통합세대수 중복 검증, 4개 목동 구분단지, 미검증 단지 제외, 보호 구간');
+assert.ok(html.includes('CAPT>6&&CAPT<30&&MASTER_COMPLEX_KEY.has(key)'),
+  '6억 이하와 25~30억 보호, 나머지 공식 통합 단지 합산 규칙 누락');
+assert.ok(html.includes('d.masterComplexKey=MASTER_COMPLEX_KEY.get(key)'),
+  '공식 통합 단지에 단일 순위 키를 부여해야 함');
+assert.ok(!html.includes('d.units=SPLIT_UNIT_COUNT.get(key)'),
+  'K-apt 전체 세대수를 각 블록 원본 세대수로 나누는 이전 오류 재발');
+console.log('PASS: 통합 K-apt 3,045세대 유지, 단지 순위 1개, 기존 구분단지 합계 검증, 보호 구간');
