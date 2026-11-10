@@ -48,9 +48,11 @@ for(const cap of caps.filter(x=>x>6)){
  findings.push({cap,before:a.length,after:b.length,removed,added,
    remainingPriceBandViolations:bad.map(x=>({key:x.key,py:x.py,p:x.p,rank:x.rank})),
    top30Change:a.slice(0,30).map(id).join('|')!==b.slice(0,30).map(id).join('|')});
+ const affectedKeys=new Set(a.filter(x=>x.hasOption).map(x=>x.key));
  assert.ok(removed.every(x=>x.hasOption&&x.p<=lo),
    'The fix must not remove a legitimate non-option candidate');
- assert.equal(added.length,0,'The fix must not add an unrelated candidate');
+ assert.ok(added.every(x=>affectedKeys.has(x.key)&&x.p>lo&&x.p<=cap*10000),
+   'Only genuine in-band flats of an option-bearing complex may be added');
  assert.equal(bad.length,0,'No >6억 price-band candidate may be outside its band');
 }
 const output={readonlyTest:true,siteFilesRestored:true,protectedSixUnchanged:true,findings};
