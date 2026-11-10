@@ -35,7 +35,30 @@
     var sourceKey=window.aptSourceKey(d), rows=sourceKey&&L[sourceKey];
     if(!rows||!rows.length) return;
     hit++;
-    var types=rows.map(function(r){return {py:r[0],p:r[1],n:r[2],n3:r[3],last:r[4]};});
+    var types=rows.map(function(r){return {
+      py:r[0],p:r[1],n:r[2],n3:r[3],last:r[4],
+      // upstream 실거래 기반: 최신 동일 면적대·동일 날짜의 실제 계약 중앙값(만원).
+      // 없으면 null로 두고 12개월 가중중위만 사용한다.
+      lastSale:Number.isFinite(Number(r[5]))&&Number(r[5])>0?Number(r[5]):null
+    };});
+    /* M3 전체 중간 가격대: 12개월 중위 추정이 가장 최근 정상 중개
+       실거래보다 낮으면, 최근 275일·해당 평형 표본 2건 이상·급격한
+       단일 이상값(추정치 대비 +25% 초과)을 제외한 범위에서
+       실제 마지막 계약가를 가격대 분류와 표시 추정치의 하한으로 쓴다.
+       거래일·금액은 상위 API가 거래 취소와 직거래를 제외한 값이다.
+       6억 이하와 25억 이상은 기존 값을 보존한다. */
+    if(window.CAPT>6&&window.CAPT<30){
+      types.forEach(function(t){
+        if(!(t.lastSale>t.p&&t.p>0&&t.n>=2))return;
+        var millis=Date.parse(String(t.last||'')+'T00:00:00Z');
+        if(!Number.isFinite(millis))return;
+        var age=Math.max(0,(Date.now()-millis)/86400000);
+        if(age>275||t.lastSale>t.p*1.25)return;
+        t.pBeforeLatest=t.p;
+        t.p=Math.round(t.lastSale);
+        t.latestPriceFloor=1;
+      });
+    }
     /* M3 중간 가격대: 같은 단지에서 면적이 더 큰 평형의 가격이
        거래가 충분한 작은 평형보다 낮아지는 역전 현상을 막는다.
        12개월 가중중위는 급등장에 후행하므로 작은 평형의 관측 시세를
@@ -63,7 +86,7 @@
     var me=types.find(function(t){return t.py===d.py;})
       ||types.slice().sort(function(a,b){return Math.abs(a.py-d.py)-Math.abs(b.py-d.py);})[0];
     d.types=types; d.py=me.py; d.p=me.p; d.live=1; d.liveKey=sourceKey;
-    var src='최근 12개월 실거래 '+me.n+'건(3개월 '+me.n3+'건, 직거래 제외)을 오늘 기준으로 환산해 최근 거래에 무게를 둔 시세';
+    var src=me.latestPriceFloor?'최근 정상 중개 실거래 '+me.last+'의 '+eok(me.lastSale)+'을 하한으로 적용한 추정 시세':('최근 12개월 실거래 '+me.n+'건(3개월 '+me.n3+'건, 직거래 제외)을 오늘 기준으로 환산해 최근 거래에 무게를 둔 시세');
     d.headline=d.py+'평 '+eok(d.p)+' · 현재 시세';
     d.deal=src+' '+eok(d.p)+(me.last?' (마지막 거래 '+me.last+')':'');
     d.sub=d.units.toLocaleString()+'세대, '+d.year+'년 입주. 이 평형 '+src+' '+eok(d.p)+'.';
