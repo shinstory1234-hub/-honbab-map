@@ -59,18 +59,31 @@
     latestRaised,lastSale:latestRaised?t.lastSale:null,rawWeightedPrice:latestRaised?t.pBeforeLatest:null,
     latestBeyondBand,latestBeyondSale:latestBeyondBand?t.lastSale:null};
  }
- function compute(d,cap=root.CAPT){
+ function compute(d,cap=root.CAPT,integratedSite=null){
   if(!active(d,cap))return null;
   const s=d.s4||{};
   const years=Number(d.year);
   const raw={
-   G:Number.isFinite(s.pG)?s.pG:50,
-   J:Number.isFinite(s.pJ)?s.pJ:50,
-   T:transportScore(s.transport?.candidates),
-   U:interp(Number(d.unitsOwn??d.units)||0,unitCurve),
-   Q:Number.isFinite(years)&&years>=1950?interp(Math.max(0,2026-years),ageCurve):50,
+   G:integratedSite?.G??(Number.isFinite(s.pG)?s.pG:50),
+   J:integratedSite?.J??(Number.isFinite(s.pJ)?s.pJ:50),
+   T:integratedSite?.T??transportScore(s.transport?.candidates),
+   U:integratedSite?.U??interp(Number(d.unitsOwn??d.units)||0,unitCurve),
+   Q:integratedSite?.Q??(Number.isFinite(years)&&years>=1950?interp(Math.max(0,2026-years),ageCurve):50),
    S:interp(Number(d.py)||0,sizeCurve),
   };
+  // 구분단지 통합 전의 물리적 입지·상품 특성은 관찰 가능한 원값으로 보존한다.
+  // M3에서는 기존 S4의 '급지가 약한 곳에서 대단지 프리미엄 제한'이
+  // 무시되고 있었다. 10~15억에서는 동일한 장기 급지 구간을 이용해
+  // 세대수 가점에 전부, 신축 상품성 가점에는 65%만 연동한다.
+  // 단지 규모나 연식을 실제보다 작게 바꾸는 방식이 아니라
+  // 해당 위치에서 추가 프리미엄이 얼마나 유효한지 평가하는 규칙이다.
+  const baseRaw={...raw};
+  if(cap===15){
+    const gg=Array.isArray(root.S4CFG?.gGate)?root.S4CFG.gGate:[45,70];
+    const gate=clamp((raw.G-gg[0])/(gg[1]-gg[0]),0,1);
+    if(raw.U>50)raw.U=50+(raw.U-50)*gate;
+    if(raw.Q>50)raw.Q=50+(raw.Q-50)*(1-.65*(1-gate));
+  }
   const effectiveWeights=cap===15?weights:baselineWeights;
   const parts=Object.fromEntries(Object.entries(effectiveWeights).map(([k,w])=>[k,raw[k]*w]));
   const density=Number.isFinite(s.density?.pen)?s.density.pen:0;
@@ -100,12 +113,12 @@
   const pricePenalty=cap===30?0:
     reliableVolume?Math.min(price.penalty,maxPricePenalty):price.penalty;
   const score=clamp(Object.values(parts).reduce((sum,v)=>sum+v,0)-density-hill-jubok-pricePenalty);
-  return {score,raw,parts,price,penalties:{density,hill,jubok,price:pricePenalty},
+  return {score,raw,baseRaw,parts,price,penalties:{density,hill,jubok,price:pricePenalty},
     far:s.density?.far??null,farSrc:s.density?.src??'',
     model:'M3 (가중치·가격 근거 감점 백테스트 전)'};
  }
- function apply(d){
-  const m=compute(d);
+ function apply(d,integratedSite=null){
+  const m=compute(d,root.CAPT,integratedSite);
   if(!m)return;
   d.m3=m;
   d.score=m.score;
