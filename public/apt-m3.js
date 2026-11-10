@@ -4,11 +4,10 @@
  */
 (function(root){
  'use strict';
- // 6~25억: 신월동 대단지 신축이 왕십리 역세권·도심 입지보다 과대평가되는지
- // 전 구간 비교 검증. 입지·교통의 설명력을 높이고 단지 규모·평형만의 편익을 낮춘다.
- // 25~30억 상위권은 사용자 요청에 따라 기존 검증된 배점을 유지한다.
+ // 10~15억: 도심 입지·철도 접근성 대비 대단지·면적을 과도하게 우대한
+ // 구간을 전수 검증하여 균형을 보정한다. 다른 가격대의 검증된 순위는 유지한다.
  const weights=Object.freeze({G:.38,J:.10,T:.18,U:.17,Q:.14,S:.03});
- const highEndWeights=Object.freeze({G:.35,J:.10,T:.15,U:.20,Q:.15,S:.05});
+ const baselineWeights=Object.freeze({G:.35,J:.10,T:.15,U:.20,Q:.15,S:.05});
  const unitCurve=[[100,0],[200,15],[300,27],[500,43],[700,55],[1000,66],[1500,78],[2000,87],[3000,95],[5000,100]];
  const ageCurve=[[0,100],[5,100],[10,85],[15,72],[20,60],[25,45],[30,30],[40,20]];
  const sizeCurve=[[10,0],[16,20],[20,48],[24,76],[30,93],[34,100]];
@@ -72,7 +71,7 @@
    Q:Number.isFinite(years)&&years>=1950?interp(Math.max(0,2026-years),ageCurve):50,
    S:interp(Number(d.py)||0,sizeCurve),
   };
-  const effectiveWeights=cap===30?highEndWeights:weights;
+  const effectiveWeights=cap===15?weights:baselineWeights;
   const parts=Object.fromEntries(Object.entries(effectiveWeights).map(([k,w])=>[k,raw[k]*w]));
   const density=Number.isFinite(s.density?.pen)?s.density.pen:0;
   const hill=Number.isFinite(s.ta?.h)?s.ta.h*.5:0;
@@ -115,7 +114,7 @@
  function detail(d){
   const m=d.m3;if(!m)return '';
   const f=x=>Number(x??0).toFixed(1);
-  const w=root.CAPT===30?highEndWeights:weights;
+  const w=root.CAPT===15?weights:baselineWeights;
   const parts=[['장기 급지','G'],['직주','J'],['교통','T'],['세대수','U'],['상품성','Q'],['평형 효용','S']].map(([label,key])=>[label,key,w[key]*100]);
   return 'M3 종합 '+f(m.score)+'점 = '+parts.map(([label,key,w])=>label+' '+f(m.raw[key])+' × '+w+'%').join(' + ')+(m.penalties.density?' − 고밀도 '+f(m.penalties.density):'')+(m.penalties.hill?' − 언덕 '+f(m.penalties.hill):'')+(m.penalties.jubok?' − 주상복합 '+f(m.penalties.jubok):'')+(m.penalties.price?' − 가격 신뢰도 '+f(m.penalties.price):'')+' · 검증 전 잠정 산식';
  }
