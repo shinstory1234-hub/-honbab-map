@@ -1269,7 +1269,7 @@ function publicMethodSummary(h){
   const intro='<details class="method"><summary>평가 기준 안내 '+CHEV+'</summary>'
     +'<div style="padding:14px 16px;font-size:13px;line-height:1.8;color:var(--text-secondary)">'
     +'<strong>아파트맵 종합 평가</strong><br>입지 경쟁력, 실제 교통 접근성, 단지 규모, 준공연도와 주거 상품성, 실거래 신뢰도 및 정비사업 위험 등을 종합하여 같은 가격대의 단지를 비교합니다.'
-    +'<br><br>점수와 순위는 구매 결정을 돕기 위한 비교 지표이며, 개별 매물의 매수가격·대출 가능 여부·미래 수익률을 보장하지 않습니다.'
+    +'<br><br>점수와 순위는 구매 결정을 돕기 위한 비교 지표이며, 개별 매물의 실제 매수가격이나 미래 수익률을 보장하지 않습니다.'
     +'<br>평가 항목별 세부 가중치와 시세 보정 방법은 아파트맵 자체 평가 모델에 해당하여 공개하지 않습니다.</div></details>';
   return h.replace(/<details class="method">[\s\S]*?<\/details>/,intro);
 }
@@ -1283,7 +1283,7 @@ function publicDetailSummary(b,d){
     // 6억 초과 매물은 개인별 규제·소득 조건을 무시한 가상 대출 가능액을 표시하지 않는다.
     // 원래 세 번째 칸을 잡아둔 다음 대출 및 참고 수익률 칸을 삭제한다.
     const scoreTile=k[2];
-    if(d.p>60000){
+    if(d.p>=60000){
       if(k[1])k[1].remove();
       if(k[3])k[3].remove();
     }
@@ -1293,7 +1293,7 @@ function publicDetailSummary(b,d){
       if(value)value.innerHTML=d.score.toFixed(1)+'<i>/100</i>';
       if(note)note.textContent='같은 가격대 '+(d.m3?'단지':'평형')+' 순위 '+d.rank.toLocaleString()+'위';
     }
-    if(d.p<=60000 && k[3]){
+    if(d.p<60000 && k[3]){
       const note=k[3].querySelector('small');
       if(note)note.textContent='유사 단지와 실거래 기반으로 산출한 참고 평가 결과이며 실제 거래 가능가격과 다를 수 있습니다.';
     }
@@ -1303,7 +1303,7 @@ function publicDetailSummary(b,d){
   b.querySelectorAll('section.sec').forEach(sec=>{
     const h=sec.querySelector(':scope > h3');
     const label=h?.textContent?.trim()||'';
-    if(!keep.test(label) || (d.p>60000 && /^자금/.test(label))){sec.remove();return;}
+    if(!keep.test(label) || (d.p>=60000 && /^자금/.test(label))){sec.remove();return;}
     // 가격 실거래 비교의 사실관계는 유지하고 산출 근거의 수학적 설명만 제외.
     if(/^가격 비교/.test(label)||/평형/.test(label)){
       sec.querySelectorAll('p.note').forEach(p=>{
