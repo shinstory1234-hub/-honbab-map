@@ -1254,7 +1254,7 @@ function renderList(){
   b.innerHTML=h;
   b.querySelectorAll('.filters').forEach((el,i)=>{el.scrollLeft=filterScroll[i]||0;});
   updateSourceStatus();
-  const browseReset=b.querySelector('#browseReset'); if(browseReset) browseReset.onclick=()=>{state.browse=false;render();b.scrollTop=0;};
+  const browseReset=b.querySelector('#browseReset'); if(browseReset) browseReset.onclick=()=>{state.browse=false;render();b.scrollTop=0;syncMapViewUrl();};
   b.querySelectorAll('.filters button[data-f]').forEach(x=>x.onclick=()=>{state.f=x.dataset.f;state.lim=50;render();b.scrollTop=0;});
   b.querySelectorAll('.filters button[data-pb]').forEach(x=>x.onclick=()=>{state.pb=x.dataset.pb;state.lim=50;render();b.scrollTop=0;});
   b.querySelectorAll('.filters button[data-size]').forEach(x=>x.onclick=()=>{state.size=x.dataset.size;state.lim=50;render();b.scrollTop=0;});
@@ -1531,7 +1531,7 @@ function clearSearchToMap(){
   if(mobile()) snapTo('peek');
 }
 $('#clearSearch').addEventListener('click',clearSearchToMap);
-$('#q').addEventListener('input',e=>{state.q=e.target.value.trim();state.browse=false;state.lim=50;close();render();$('#body').scrollTop=0; clearTimeout(qT); qT=setTimeout(fitSearch,450);});
+$('#q').addEventListener('input',e=>{state.q=e.target.value.trim();state.browse=false;state.lim=50;close();render();$('#body').scrollTop=0;syncMapViewUrl(); clearTimeout(qT); qT=setTimeout(fitSearch,450);});
 $('#q').addEventListener('keydown',e=>{
   if(e.key==='Enter'){ clearTimeout(qT); fitSearch(); e.target.blur(); if(mobile()) snapTo('half'); }
   else if(e.key==='Escape'){ e.preventDefault();clearSearchToMap(); }
@@ -1547,6 +1547,16 @@ function fitSearch(){
 }
 
 let map,pins=[];
+function syncMapViewUrl(){
+  if(!map)return;
+  const c=map.getCenter(),u=new URL(location.href);
+  u.searchParams.set('vlat',c.getLat().toFixed(5));
+  u.searchParams.set('vlng',c.getLng().toFixed(5));
+  u.searchParams.set('vlevel',String(map.getLevel()));
+  if(state.browse)u.searchParams.set('browse','1');else u.searchParams.delete('browse');
+  const next=u.pathname+u.search+u.hash;
+  if(next!==location.pathname+location.search+location.hash)history.replaceState(history.state,'',next);
+}
 function browseMap(){
   clearTimeout(qT);
   const q=$('#q'); q.blur();q.value='';
@@ -1554,6 +1564,7 @@ function browseMap(){
   state.q='';state.browse=true;state.lim=50;
   if(state.sel!=null)close();
   if(changed){render();$('#body').scrollTop=0;}
+  syncMapViewUrl();
   if(mobile())snapTo('peek');
 }
 // 가격대 변경 시 지도 중심·확대 수준만 전달한다. 단지 검색과 가격별 필터는 새 탭에 강제하지 않는다.
@@ -1819,6 +1830,7 @@ function init(){
   }
   kakao.maps.event.addListener(map,'idle',()=>{
     queueMap();
+    syncMapViewUrl();
     if(state.browse&&state.sel==null)renderList();
   });
 }
