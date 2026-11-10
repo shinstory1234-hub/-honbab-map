@@ -1193,7 +1193,7 @@ setTimeout(refreshAptLiveHealth,1200);
 setInterval(()=>{if(!document.hidden)refreshAptLiveHealth();},10*60*1000);
 
 function m3FlatOptions(d){
-  const peers=sibs(d).filter(visible).sort((a,b)=>a.py-b.py||b.score-a.score);
+  const peers=sibs(d).filter(x=>visible(x)).sort((a,b)=>a.py-b.py||b.score-a.score);
   if(peers.length<=1)return '';
   return '<div class="m3-flat-options" aria-label="같은 단지 전체 평형">'+peers.map(x=>
     '<button type="button" class="m3-flat-item'+(x===d?' representative':'')+'" data-flat-index="'+D.indexOf(x)+'" aria-label="'+esc(x.n+' '+x.py+'평 '+short(x.p))+' 상세보기">'
@@ -1527,7 +1527,7 @@ function clearSearchToMap(){
   clearTimeout(qT);
   const q=$('#q'); q.value=''; q.blur();
   state.q='';state.browse=!!map;state.lim=50;
-  close();render();$('#body').scrollTop=0;
+  close();render();$('#body').scrollTop=0;syncMapViewUrl();
   if(mobile()) snapTo('peek');
 }
 $('#clearSearch').addEventListener('click',clearSearchToMap);
@@ -1790,7 +1790,7 @@ function init(){
       done2(); fin(); }));
   });
   pump();
-  if(state.browse) renderList();
+  if(state.browse&&state.sel==null) renderList();
   function analyze(){
     const ps=new kakao.maps.services.Places(), OK=kakao.maps.services.Status.OK, ZERO=kakao.maps.services.Status.ZERO_RESULT, DIST=kakao.maps.services.SortBy.DISTANCE;
     const todo=D.filter(d=>{const g=GEO[gkey(d)];return d._pos&&!(g&&g.sc!=null&&g.sts!=null&&g.ac!=null);});
