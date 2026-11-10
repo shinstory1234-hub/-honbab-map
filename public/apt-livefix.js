@@ -87,6 +87,32 @@
         }
       });
     }
+    /* 새 아파트도 '표본 부족' 자체로 점수를 깎지는 않지만,
+       근접한 큰 평형 거래가 충분한데 소형의 단독 이상 저가 계약을
+       정상 시세로 오인하는 경우는 예산대 확정 추천에서 제외한다.
+       6억 이하와 25억 이상 기존 시세·가격대는 수정하지 않는다.
+       동일 단지 유사 평형 가격과 너무 크게 어긋난 표본만 검증 보류. */
+    if(window.CAPT>6&&window.CAPT<30){
+      types.forEach(function(t){
+        if(!(t.n<=2 && t.n3===0 && t.p>0 && t.py>=12))return;
+        var lastMs=Date.parse(String(t.last||'')+'T00:00:00Z');
+        if(!Number.isFinite(lastMs)||(Date.now()-lastMs)<90*86400000)return;
+        var comps=types.filter(function(u){return u!==t&&u.n>=5&&u.p>0&&Math.abs(u.py-t.py)<=8;});
+        if(!comps.length)return;
+        var estimates=comps.map(function(u){return {py:u.py,p:u.p,expected:u.p*t.py/u.py,anchorN:u.n};});
+        // 정상 거래 5건 이상 비교군이 환산해 주는 값보다 22% 넘게 싸면
+        // 현재 구매 가능가격이 확인될 때까지 순위 후보에서 제외한다.
+        var best=estimates.sort(function(a,b){return Math.abs(a.py-t.py)-Math.abs(b.py-t.py);})[0];
+        if(t.p<best.expected*.78){
+          t.priceReview=1;
+          t.priceReviewAnchorPy=best.py;
+          t.priceReviewReason='유사 평형 실거래와 가격 괴리';
+          (window.LIVE_PRICE_REVIEW=window.LIVE_PRICE_REVIEW||[]).push({
+            name:d.n,area:d.area,py:t.py,oldPrice:t.p,anchorPy:best.py,anchorPrice:best.p
+          });
+        }
+      });
+    }
     var me=types.find(function(t){return t.py===d.py;})
       ||types.slice().sort(function(a,b){return Math.abs(a.py-d.py)-Math.abs(b.py-d.py);})[0];
     d.types=types; d.py=me.py; d.p=me.p; d.live=1; d.liveKey=sourceKey;
@@ -105,7 +131,7 @@
       /* 큰 평형(거래 3건 이상)보다 평당가가 15% 넘게 싸도 특수 거래(예: 올림픽선수기자촌2단지 62㎡ 1건 16.6억 — 84㎡는 28~32억) */
       var bp=ts.filter(function(u){return u.py>t.py&&u.n>=3;}).reduce(function(m,u){return Math.max(m,u.p/u.py);},0); return bp>0&&t.p/t.py<bp*.85; };
   for(var j=P.length-1;j>=0;j--){ var e=P[j]; if(!e.live||!e.types) continue;
-    var ok=e.types.filter(function(t){return !odd(t,e.types,e);}); if(ok.length===e.types.length) continue;
+    var ok=e.types.filter(function(t){return !t.priceReview&&!odd(t,e.types,e);}); if(ok.length===e.types.length) continue;
     drop+=e.types.length-ok.length;
     if(!ok.length){ P.splice(j,1); continue; }
     e.types=ok;
