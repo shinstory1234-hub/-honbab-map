@@ -52,4 +52,20 @@ assert.equal(relaxed.penalties.price,3,'예산 상단에서 충분히 떨어져 
 const protectedCap=score(flat(5,210),30);
 assert.equal(protectedCap.penalties.price,0,'25~30억 거래량 감점 기존 제외 정책 보호');
 assert.equal(score(flat(5,120),6),null,'6억 이하 기존 평가 모델 보호');
-console.log('PASS: 3/5/7점, 예산상단 10% 보호, 소표본/이상 가격 제외, 6억 이하/25~30억 보호');
+// 10~15억 구간은 도심 교통 비중을 높이되 다른 가격대는 기존 배점을 지킨다.
+for(const cap of [10,15,20,25,30]){
+  const d=flat(9,35); d.p=cap*10000-5000;
+  d.s4.transport.candidates=[{minutes:5,lineFactor:1,future:false}];
+  const result=M3.compute(d,cap);
+  const planned=cap===15?{G:.38,J:.10,T:.18,U:.17,Q:.14,S:.03}
+                        :{G:.35,J:.10,T:.15,U:.20,Q:.15,S:.05};
+  for(const [key,weight] of Object.entries(planned)){
+    assert.ok(Math.abs(result.parts[key]-result.raw[key]*weight)<1e-8,
+      `${cap}억 구간 ${key} 평가 가중치 보호`);
+  }
+}
+const frontend=fs.readFileSync(path.resolve(__dirname,'../public/apt-map.html'),'utf8');
+assert.ok(frontend.includes("if(d.p>=60000)"),'6억 이상 임의 주담대 칸 숨김 유지');
+assert.ok(frontend.includes('public-factor-scores'),'신축/학군/대단지/브랜드/역세권 점수 안내 유지');
+assert.ok(frontend.includes('세부 산식 비공개'),'구체적인 가중치 공개 금지');
+console.log('PASS: 3/5/7점 신뢰도, 10~15억 입지·교통 보정, 타 가격대 보호, 주담대 노출 금지, 단지 항목별 점수');
