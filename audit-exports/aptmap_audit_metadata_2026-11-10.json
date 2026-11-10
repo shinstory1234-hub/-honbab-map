@@ -1,0 +1,301 @@
+{
+  "createdKST": "2026-11-10 18:06:00",
+  "source": "https://aptmap-kr.vercel.app/",
+  "columns": [
+    "추출기준(KST)",
+    "가격대",
+    "순위",
+    "단지명",
+    "지역",
+    "평형(평)",
+    "최근시세(만원)",
+    "시세(억원)",
+    "종합점수",
+    "점수모델",
+    "상품성_원점수(연식보정)",
+    "세대수_평가적용",
+    "세대수_보정후(지도표시)",
+    "세대수_수정전",
+    "세대수_수정시_분리개수",
+    "세대수_공식값여부",
+    "세대수_출처",
+    "세대수_매매가능(직접보정)",
+    "임대단지여부",
+    "입주연도",
+    "용적률_원본(%)",
+    "용적률_원본출처",
+    "용적률_고밀도판정사용값(%)",
+    "용적률_감점출처",
+    "고밀도감점(점)",
+    "주상복합판정",
+    "초고밀주상복합MIXHI",
+    "세대수백분위",
+    "장기급지백분위",
+    "장기급지_원점수",
+    "장기급지_원점수출처",
+    "장기급지_자체실측여부",
+    "급지_지역보정값",
+    "입지백분위",
+    "상승여력백분위",
+    "상품성백분위",
+    "교통점수",
+    "최고교통역",
+    "교통노선",
+    "노선등급",
+    "역까지도보시간(분)",
+    "세대수비중",
+    "급지비중",
+    "상품성비중",
+    "교통비중",
+    "입지비중",
+    "상승여력비중",
+    "모델감점전점수",
+    "최종점수",
+    "소형감점",
+    "단지내평당가보정",
+    "재건축대상(상품성)",
+    "상품성_입지제한계수",
+    "언덕감점",
+    "역거리감점",
+    "초대단지가점",
+    "재건축사업성감점",
+    "현시세대비상승여력(%)",
+    "가격근거_12개월거래",
+    "가격근거_3개월거래",
+    "최근거래일",
+    "원본_표시세대수",
+    "원본_그룹합계세대수",
+    "단지식별키",
+    "상세점수산식"
+  ],
+  "summary": [
+    {
+      "cap": 6,
+      "model": "s14",
+      "count": 5822,
+      "rawFarKnown": 3045,
+      "penalizedDensity": 0,
+      "unitsOwn": 0,
+      "errorCount": 0,
+      "config": {
+        "factors": [
+          "U7"
+        ],
+        "locMix": 0.5,
+        "uGate": [
+          30,
+          70
+        ],
+        "upW": 0.2,
+        "gW": 0.2,
+        "anchor": 1,
+        "blend": 0.75,
+        "hakR": 1.5,
+        "types": 8964,
+        "complexes": 4619,
+        "model": "s14"
+      }
+    },
+    {
+      "cap": 10,
+      "model": "m2",
+      "count": 2819,
+      "rawFarKnown": 1047,
+      "penalizedDensity": 34,
+      "unitsOwn": 3,
+      "errorCount": 0,
+      "config": {
+        "factors": [
+          "U7"
+        ],
+        "locMix": 0,
+        "upW": 0,
+        "gW": 0.5,
+        "qW": 0.2,
+        "uCap": 2000,
+        "mega": [
+          4000,
+          5000,
+          5
+        ],
+        "gAbs": [
+          -0.6,
+          1.4
+        ],
+        "gMix": 0.5,
+        "anchor": 0,
+        "noPen": true,
+        "blend": 0.75,
+        "hakR": 1.5,
+        "types": 6141,
+        "complexes": 2514,
+        "gGate": [
+          45,
+          70
+        ],
+        "rbFloor": 45,
+        "model": "m2",
+        "universe": "page"
+      }
+    },
+    {
+      "cap": 15,
+      "model": "m2",
+      "count": 1997,
+      "rawFarKnown": 710,
+      "penalizedDensity": 28,
+      "unitsOwn": 0,
+      "errorCount": 0,
+      "config": {
+        "factors": [
+          "U7"
+        ],
+        "locMix": 0,
+        "upW": 0,
+        "gW": 0.5,
+        "qW": 0.2,
+        "uCap": 2000,
+        "mega": [
+          4000,
+          5000,
+          5
+        ],
+        "gAbs": [
+          -0.6,
+          1.4
+        ],
+        "gMix": 0.5,
+        "anchor": 0,
+        "noPen": true,
+        "blend": 0.75,
+        "hakR": 1.5,
+        "types": 6141,
+        "complexes": 2514,
+        "gGate": [
+          45,
+          70
+        ],
+        "rbFloor": 45,
+        "model": "m2",
+        "universe": "page"
+      }
+    },
+    {
+      "cap": 20,
+      "model": "m2",
+      "count": 1128,
+      "rawFarKnown": 486,
+      "penalizedDensity": 28,
+      "unitsOwn": 0,
+      "errorCount": 0,
+      "config": {
+        "factors": [
+          "U7"
+        ],
+        "locMix": 0,
+        "upW": 0,
+        "gW": 0.5,
+        "qW": 0.2,
+        "uCap": 2000,
+        "mega": [
+          4000,
+          5000,
+          5
+        ],
+        "gAbs": [
+          -0.6,
+          1.4
+        ],
+        "gMix": 0.5,
+        "anchor": 0,
+        "noPen": true,
+        "blend": 0.75,
+        "hakR": 1.5,
+        "types": 6141,
+        "complexes": 2514,
+        "gGate": [
+          45,
+          70
+        ],
+        "rbFloor": 45,
+        "model": "m2",
+        "universe": "page"
+      }
+    },
+    {
+      "cap": 25,
+      "model": "m2",
+      "count": 558,
+      "rawFarKnown": 325,
+      "penalizedDensity": 29,
+      "unitsOwn": 0,
+      "errorCount": 0,
+      "config": {
+        "factors": [
+          "U7"
+        ],
+        "locMix": 0,
+        "upW": 0,
+        "gW": 0.5,
+        "qW": 0.2,
+        "uCap": 2000,
+        "mega": [
+          4000,
+          5000,
+          5
+        ],
+        "gAbs": [
+          -0.6,
+          1.4
+        ],
+        "gMix": 0.5,
+        "anchor": 0,
+        "noPen": true,
+        "blend": 0.75,
+        "hakR": 1.5,
+        "types": 6141,
+        "complexes": 2514,
+        "model": "m2",
+        "universe": "page"
+      }
+    },
+    {
+      "cap": 30,
+      "model": "m2",
+      "count": 255,
+      "rawFarKnown": 172,
+      "penalizedDensity": 31,
+      "unitsOwn": 0,
+      "errorCount": 0,
+      "config": {
+        "factors": [
+          "U7"
+        ],
+        "locMix": 0,
+        "upW": 0,
+        "gW": 0.5,
+        "qW": 0.2,
+        "uCap": 2000,
+        "mega": [
+          4000,
+          5000,
+          5
+        ],
+        "gAbs": [
+          -0.6,
+          1.4
+        ],
+        "gMix": 0.5,
+        "anchor": 0,
+        "noPen": true,
+        "blend": 0.75,
+        "hakR": 1.5,
+        "types": 6141,
+        "complexes": 2514,
+        "model": "m2",
+        "universe": "page"
+      }
+    }
+  ],
+  "description": "현재 배포된 사이트에서 ORDER 배열을 직접 읽음. 단지별 점수/순위 재계산 또는 수동 보정 없음."
+}
