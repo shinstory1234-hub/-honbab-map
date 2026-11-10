@@ -496,10 +496,49 @@ function typeRows(d){ d.basePy=d.py; d.cxKey=gkey(d);
    ① 이름이 다른 단지 이름 + 꼬리(107동·(기산) 등)인 건 같은 단지가 두 번 들어간 것 → 뒤쪽을 뺌
    ② 나머지는 합계를 단지 수로 나눈 값을 추정 세대수로 씀(단지별 실제 세대수 자료 없음) */
 const DUPOUT=[], BANDOUT=[], THINOUT=[];
+
+/* K-apt 단지 통합 등록 검증:
+   여러 개의 독립 실거래 단지(1단지/2단지 등)에 K-apt 통합세대수 1개가
+   중복 매칭되면 신축 대단지 점수가 여러 번 부풀려진다.
+   원본의 각 구분단지 세대수를 합산해 정확히 K-apt 공식 통합세대수와
+   일치할 때에만 구분단지 원본값을 사용한다. 불일치할 경우 추측하지 않는다.
+   대상 목록은 이름이 아니라 전체 UNITFIX 테이블을 매번 검사해 자동 생성한다. */
+function verifiedSplitUnitCounts(){
+  const groups=new Map(), correct=new Map();
+  for(const [key,f] of Object.entries(window.UNITFIX||{})){
+    if(!Array.isArray(f)||f[3]!=='k')continue;
+    const sep=key.indexOf('|');if(sep<0)continue;
+    const name=key.slice(0,sep),area=key.slice(sep+1);
+    const m=/^(.+?)([1-9][0-9]*)단지$/.exec(name);
+    const total=Number(f[0]),original=Number(f[1]);
+    if(!m||!Number.isInteger(total)||!Number.isInteger(original)
+       ||total<=0||original<=0||original>=total)continue;
+    const group=area+'|'+m[1];
+    if(!groups.has(group))groups.set(group,[]);
+    groups.get(group).push({key,total,original,block:+m[2]});
+  }
+  for(const items of groups.values()){
+    if(items.length<2)continue;
+    const total=items[0].total;
+    if(!items.every(x=>x.total===total)||new Set(items.map(x=>x.block)).size!==items.length)continue;
+    if(items.reduce((n,x)=>n+x.original,0)!==total)continue;
+    for(const x of items)correct.set(x.key,x.original);
+  }
+  return correct;
+}
+const SPLIT_UNIT_COUNT=verifiedSplitUnitCounts();
+
 function fixUnits(A){
   // 2026.11.1: 네 탭 합집합 기준으로 계산한 전역 표(apt-unitfix.js)가 있으면 그것만 씀 — 탭마다 같은 단지 세대수가 달라지던 오류 수정
   if(window.UNITFIX){ const DR=new Set(window.UNITDROP||[]), RT=new Set(window.UNITRENT||[]);
-    A.forEach(d=>{ const f=UNITFIX[gkey(d)]; if(f){ d.unitsRaw=f[1]; d.unitsN=f[2]; d.units=f[0]; d.unitsK=f[3]==='k'; } if(RT.has(gkey(d))) d.rent=1; if(DR.has(gkey(d))) DUPOUT.push([d.n,d.area]); });
+    A.forEach(d=>{ const key=gkey(d),f=UNITFIX[key]; if(f){ d.unitsRaw=f[1]; d.unitsN=f[2]; d.units=f[0]; d.unitsK=f[3]==='k'; }
+      // 보호 구간(6억 이하, 25~30억)은 기존 산식과 점수를 유지한다.
+      // 구분단지 원본 합계가 K-apt 합계와 정확히 일치할 때만 분리 보정.
+      if(CAPT!==6&&CAPT!==30&&SPLIT_UNIT_COUNT.has(key)&&!d.unitsOwn){
+        d.units=SPLIT_UNIT_COUNT.get(key);
+        d.unitsRaw=0;d.unitsN=0;d.unitsK=false;d.unitsBlockVerified=1;
+      }
+      if(RT.has(key)) d.rent=1; if(DR.has(key)) DUPOUT.push([d.n,d.area]); });
     return A.filter(d=>!DR.has(gkey(d))); }
   const g={}; A.forEach(d=>{ const k=d.area+'|'+d.units+'|'+d.year; (g[k]=g[k]||[]).push(d); });
   const drop=new Set();
