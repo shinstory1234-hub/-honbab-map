@@ -128,7 +128,7 @@ function s4PeerPeak(d){
 }
 /* 운영자 지정 비교 규칙(센텀퍼스트 ← 어바인퍼스트)은 2026.11.1 삭제: 모든 단지에 같은 규칙. */
 const s4Total=(base,penalty,peak)=>100*clamp01((base-penalty+Math.max(0,peak||0))/100);   // 세대수·입지·적정가 대비 백분위 가중평균 − 구축 감점 (전고점 가점은 PEAKW=0이라 기본 0)
-function s4ScoreDetail(d){ const s=d.s4; if(!s)return '';
+function s4ScoreDetail(d){ if(d.m3&&window.APT_M3)return APT_M3.detail(d); const s=d.s4; if(!s)return '';
   const w=s.w||{u:.4,l:.4,p:.2}, f=x=>(+x.toFixed(3)).toString();
   if((window.S4CFG||{}).model==='m2') { const z=s.za||{sm:0,pp:0}, dn=s.density||{pen:0}, zt=(z.sm?` − 소형 ${z.sm.toFixed(1)}`:'')+(z.pp?` ${z.pp>0?'+':'−'} 단지 내 평당가 ${Math.abs(z.pp).toFixed(1)}(큰 평형보다 평당가 ${z.ppr>=1?'+':''}${((z.ppr-1)*100).toFixed(0)}%, 같은 크기 평형 보통 ${z.ppx>=1?'+':''}${(((z.ppx||1)-1)*100).toFixed(0)}%)`:'')+(dn.pen?` − 고밀도 ${dn.pen.toFixed(1)}(용적률 ${Math.round(dn.far)}%)`:'');
     const ta=s.ta||{h:0,w:0}, tt=(ta.h?` − 언덕 ${ta.h.toFixed(1)}(주변 대비 +${Math.round(ta.R)}m)`:'')+(ta.w?` − 역 거리 ${ta.w.toFixed(1)}(${ta.wm!=null?`도보 ${Math.round(ta.wm)}분`:'3km 안에 역 없음'})`:'')+(ta.mb?` + 초대형 단지 ${ta.mb.toFixed(1)}`:'');
