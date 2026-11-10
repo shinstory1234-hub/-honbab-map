@@ -36,6 +36,30 @@
     if(!rows||!rows.length) return;
     hit++;
     var types=rows.map(function(r){return {py:r[0],p:r[1],n:r[2],n3:r[3],last:r[4]};});
+    /* M3 중간 가격대: 같은 단지에서 면적이 더 큰 평형의 가격이
+       거래가 충분한 작은 평형보다 낮아지는 역전 현상을 막는다.
+       12개월 가중중위는 급등장에 후행하므로 작은 평형의 관측 시세를
+       '추정가격 하한'으로 쓸 뿐 현재 호가나 실거래가라고 주장하지 않는다.
+       인접한 두 평형(차이 6평 이내), 작은 평형 거래 5건 이상,
+       가격 차이가 25% 이내인 경우에만 보정하고 원래 추정치는 따로 보존한다.
+       6억 이하, 25억 이상은 가격도 기존 결과를 보존한다. */
+    if(window.CAPT>6&&window.CAPT<30){
+      var ordered=types.slice().sort(function(a,b){return a.py-b.py;});
+      ordered.forEach(function(t){
+        if(!(t.py>=18&&t.n>=2&&t.p>0)) return;
+        var smaller=ordered.filter(function(u){
+          return u.py<t.py&&t.py-u.py<=6&&u.n>=5&&u.p>0;
+        });
+        if(!smaller.length) return;
+        var reference=smaller.reduce(function(a,u){return u.p>a.p?u:a;},smaller[0]);
+        if(t.p<reference.p&&t.p>=reference.p*.75){
+          t.pBeforeGuard=t.p;
+          t.p=Math.round(reference.p);
+          t.priceGuardFrom=reference.py;
+          t.priceGuardEvidence=reference.n;
+        }
+      });
+    }
     var me=types.find(function(t){return t.py===d.py;})
       ||types.slice().sort(function(a,b){return Math.abs(a.py-d.py)-Math.abs(b.py-d.py);})[0];
     d.types=types; d.py=me.py; d.p=me.p; d.live=1; d.liveKey=sourceKey;
