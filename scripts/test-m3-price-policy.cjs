@@ -64,8 +64,20 @@ for(const cap of [10,15,20,25,30]){
       `${cap}억 구간 ${key} 평가 가중치 보호`);
   }
 }
+// 공통 M3 신규 급지 게이트를 일반 단지에 일괄 적용하면 안 된다.
+// 공식 통합 단지의 분산 규모 가점만 장기 급지에 연동한다.
+const example=flat(9,35);example.p=125000;example.units=3045;example.s4.pG=54;
+const aggregate={G:54,J:60,T:55,U:95.1125,Q:100};
+const ordinary=M3.compute(example,15);
+const master=M3.compute(example,15,aggregate);
+const expectedGate=(54-45)/(70-45);
+assert.equal(ordinary.raw.U,ordinary.baseRaw.U,'일반 단지 규모는 급지 게이트 일괄 적용 금지');
+assert.ok(Math.abs(master.raw.U-(50+(aggregate.U-50)*expectedGate))<1e-7,'통합 단지 규모 가점만 검증된 급지에 연동');
+assert.equal(master.raw.Q,100,'신축 자체 품질 점수는 급지 때문에 깎지 않음');
+assert.equal(M3.compute(example,10,aggregate).raw.U,aggregate.U,'6~10억의 기존 M3 규모점수 보호');
+assert.equal(M3.compute(example,20,aggregate).raw.U,aggregate.U,'15~20억의 기존 M3 규모점수 보호');
 const frontend=fs.readFileSync(path.resolve(__dirname,'../public/apt-map.html'),'utf8');
 assert.ok(frontend.includes("if(d.p>=60000)"),'6억 이상 임의 주담대 칸 숨김 유지');
 assert.ok(frontend.includes('public-factor-scores'),'신축/학군/대단지/브랜드/역세권 점수 안내 유지');
 assert.ok(frontend.includes('세부 산식 비공개'),'구체적인 가중치 공개 금지');
-console.log('PASS: 3/5/7점 신뢰도, 10~15억 입지·교통 보정, 타 가격대 보호, 주담대 노출 금지, 단지 항목별 점수');
+console.log('PASS: 3/5/7점 신뢰도, K-apt 통합단지 급지 연동, 일반 신축 품질 및 타 가격대 보호, 주담대 노출 금지, 단지 항목별 점수');
