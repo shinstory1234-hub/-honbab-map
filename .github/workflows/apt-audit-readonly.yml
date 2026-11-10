@@ -30,11 +30,8 @@ jobs:
           node scripts/audit-apt-snapshots.mjs --out /tmp/apt-snapshot-audit.json > /tmp/apt-snapshot-summary.json || {
             echo "Historical snapshot anomalies found. Inspect artifact; this does not prove current production errors."
           }
-      - name: Try complete live-input audit (never declare missing inputs PASS)
-        run: |
-          node scripts/audit-apt-ranks.mjs --out /tmp/apt-live-audit.json > /tmp/apt-live-summary.json || {
-            echo "Current full audit blocked or found errors. See artifact; do not treat as passed."
-          }
+      - name: Execute full live audit (fail closed when live inputs are missing)
+        run: node scripts/audit-apt-ranks.mjs --out /tmp/apt-live-audit.json > /tmp/apt-live-summary.json
       - name: Upload separate read-only audit reports
         if: always()
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
