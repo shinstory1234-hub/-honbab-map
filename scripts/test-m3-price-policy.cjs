@@ -41,7 +41,15 @@ for(const flag of [{invert:true},{raised:true},{beyond:true}]){
   const r=score(flat(7,120,flag));
   assert.equal(r.penalties.price,r.price.penalty,'가격 역전, 최근 실거래 하한, 가격대 경계 위험에서는 감점 완화 금지');
 }
+// 오래된 거래가 예산 상단에 붙어 있으면, 상승장을 무시하고
+// 예전 가격을 '오늘 이 예산으로 살 수 있다'고 승격시키지 않는다.
+const nearCap=flat(7,125);nearCap.p=191000; // 20억의 95.5%
+const untouched=score(nearCap);
+assert.equal(untouched.penalties.price,untouched.price.penalty,'상단 경계의 오래된 가격은 그대로 보수적으로 취급');
+const freshEnough=flat(7,125);freshEnough.p=175000;
+const relaxed=score(freshEnough);
+assert.equal(relaxed.penalties.price,3,'예산 상단에서 충분히 떨어져 있는 가격만 완화');
 const protectedCap=score(flat(5,210),30);
 assert.equal(protectedCap.penalties.price,0,'25~30억 거래량 감점 기존 제외 정책 보호');
 assert.equal(score(flat(5,120),6),null,'6억 이하 기존 평가 모델 보호');
-console.log('PASS: 3/5/7점, 소표본 제외, 이상 가격 제외, 6억 이하/25~30억 보호');
+console.log('PASS: 3/5/7점, 예산상단 10% 보호, 소표본/이상 가격 제외, 6억 이하/25~30억 보호');
