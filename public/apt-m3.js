@@ -82,8 +82,15 @@
   // 과도하게 밀리지 않도록 하되, 오래된 시세는 더 보수적으로 취급한다.
   // 12개월 5건 미만, 평형 간 가격 역전/하한 보정, 최근 실거래와 큰 괴리 등
   // 가격 자체의 검증 위험이 있으면 감점 완화를 일절 적용하지 않는다.
+  // 최근 3개월 거래가 없고 마지막 거래가 90일 이상 지났는데 표시가격이
+  // 현재 가격구간 상한의 90% 이상이면, 상승장에 해당 가격대로 구매할 수
+  // 있는지 불확실하다. 충분한 과거 표본이 있어도 감점을 풀지 않는다.
+  const nearUnverifiedCeiling=price.n3===0
+    && price.ageDays!=null && price.ageDays>90
+    && Number(d.p)>=cap*10000*.90;
   const reliableVolume=price.known && price.n12>=5
-    && !price.inversion && !price.latestRaised && !price.latestBeyondBand;
+    && !price.inversion && !price.latestRaised && !price.latestBeyondBand
+    && !nearUnverifiedCeiling;
   const maxPricePenalty=(price.ageDays!=null && price.ageDays>270)?7:
     (price.ageDays!=null && price.ageDays>180)?5:3;
   const pricePenalty=cap===30?0:
