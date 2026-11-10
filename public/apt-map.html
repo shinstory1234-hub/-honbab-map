@@ -1019,6 +1019,7 @@ function m3Text(h,I){
     급지 때문에 세대수와 신축 상품성을 50점으로 낮추던 기존 관문을 없앴습니다.
     교통은 현재 운영 중인 역의 노선 등급과 실제 또는 추정 도보시간을 반영하며, 예정 노선의 기여도를 보수적으로 할인합니다.
     건축정보 자료에서 확인된 용적률 400% 초과 고밀도 감점(최대 12점), 주상복합 확인 단지 별도 감점(6점), 언덕 감점을 적용합니다. <b>최근 12개월 실거래 건수와 마지막 거래일이 부족하거나 오래되면 가격 신뢰도 위험으로 최대 20점 감점하며, 준공 2년 이내 신축은 거래 건수만으로 감점하지 않습니다.</b> 같은 단지에서 큰 평형이 거래가 충분한 인접 소형보다 저렴하게 계산되면 추정가격의 하한을 보정하고 근거를 표시합니다. 현재 구매 가능한 가격은 호가 확인 전까지 미확인입니다.
+    가장 최근 정상 중개거래가가 12개월 가중중위 추정시세보다 높으면 기간·표본·극단값을 검증한 뒤 가격 하한으로 반영하고 잘못된 저가 가격대 분류를 막습니다. 단, 현재 매수 가능가격을 보증하지는 않습니다.
     <b>중요: 2026년 11월 10일 M3 시험 산식으로, 가중치·급지 원자료·직주 소요시간에 대한 과거 시점 백테스트는 아직 완료되지 않았습니다.</b>
     6억 이하와 25억 이상 구간은 기존 모델을 그대로 사용합니다. 중간 가격대는 같은 단지를 한 번만 순위에 표시하며, 평형별 점수와 시세는 상세 화면에서 모두 비교할 수 있습니다.`;
   return h.replace(/(<dt>종합<small>순위<\/small><\/dt><dd>)[\s\S]*?(<\/dd><\/div>)/,(all,a,b)=>a+dd+b);
@@ -1176,7 +1177,8 @@ function m3PriceWarning(d,compact=false){
   const evidence=`해당 평형 최근 12개월 ${r.n12}건 · 최근 3개월 ${r.n3}건 · ${age} (${r.last||'미확인'})`;
   const title=`⚠ 현재 매수가격 미확인 · 가격 신뢰도 −${r.penalty}점`;
   const guard=r.inversion?`<div class="m3-alert-desc">인접 ${r.referencePy}평보다 낮게 계산된 원래 추정치 ${short(r.rawPrice)}을(를) 단지 내부 가격 하한으로 보정했습니다. 현재 거래가를 확인한 것은 아닙니다.</div>`:'';
-  return `<div role="note" class="m3-price-warning${r.level==='high'?' severe':''}${compact?' compact':''}"><strong class="m3-alert-title">${title}</strong><div class="m3-alert-meta">${esc(evidence)}</div><div class="m3-alert-desc">표시 시세는 과거 실거래를 환산한 추정치입니다. 현재 호가나 실매수 가능가격을 뜻하지 않습니다.</div>${guard}</div>`;
+  const latest=r.latestRaised?`<div class="m3-alert-desc"><strong>최신 정상 실거래 ${short(r.lastSale)}를 가격 하한으로 반영</strong>했습니다. 종전 가중중위 추정치는 ${short(r.rawWeightedPrice)}였으며, 마지막 거래 이후 시장 상승분과 현재 호가는 별도로 확인해야 합니다.</div>`:'';
+  return `<div role="note" class="m3-price-warning${r.level==='high'?' severe':''}${compact?' compact':''}"><strong class="m3-alert-title">${title}</strong><div class="m3-alert-meta">${esc(evidence)}</div><div class="m3-alert-desc">표시 시세는 과거 실거래 환산 또는 최근 정상 계약가를 반영한 참고가격입니다. 현재 호가나 실매수 가능가격을 뜻하지 않습니다.</div>${guard}${latest}</div>`;
 }
 function m3DensityNote(d){
   const m=d.m3;if(!m)return '';
