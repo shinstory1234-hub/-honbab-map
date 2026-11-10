@@ -1008,7 +1008,7 @@ function m3Text(h,I){
     세대수는 전 가격대에 동일한 100~5,000세대 연속 곡선, 상품성은 실제 입주연도, 평형은 공급 10~34평 연속 곡선으로 평가합니다.
     급지 때문에 세대수와 신축 상품성을 50점으로 낮추던 기존 관문을 없앴습니다.
     교통은 현재 운영 중인 역의 노선 등급과 실제 또는 추정 도보시간을 반영하며, 예정 노선의 기여도를 보수적으로 할인합니다.
-    확인된 용적률 400% 초과 고밀도 감점과 언덕 감점을 적용합니다.
+    확인된 용적률 400% 초과 고밀도 감점과 언덕 감점을 적용합니다. <b>최근 12개월 실거래 건수와 마지막 거래일이 부족하거나 오래되면 가격 신뢰도 위험으로 최대 12점 감점하며, 준공 2년 이내 신축은 거래 건수만으로 감점하지 않습니다.</b> 현재 구매 가능한 가격은 호가 확인 전까지 미확인입니다.
     <b>중요: 2026년 11월 10일 M3 시험 산식으로, 가중치·급지 원자료·직주 소요시간에 대한 과거 시점 백테스트는 아직 완료되지 않았습니다.</b>
     6억 이하와 25억 이상 구간은 기존 모델을 그대로 사용합니다. 중간 가격대는 같은 단지를 한 번만 순위에 표시하며, 평형별 점수와 시세는 상세 화면에서 모두 비교할 수 있습니다.`;
   return h.replace(/(<dt>종합<small>순위<\/small><\/dt><dd>)[\s\S]*?(<\/dd><\/div>)/,(all,a,b)=>a+dd+b);
@@ -1065,8 +1065,8 @@ function renderList(){
       <span class="rk tnum">${String(d.rank).padStart(2,'0')}</span>
       <div style="min-width:0"><div class="kicker">${badgeHTML(d)}<span>${esc(d.area)}</span>${d.auto?'<span>· 자동</span>':''}</div>
         <h3>${esc(d.n)}${sibs(d).length>1?` <small class="tp">${d.py}평</small>`:''}</h3><p>${NOUP()?`급지 ${Math.round((d.s4&&d.s4.pG)??50)} · ${unitN(d).toLocaleString()}세대${d.unitsOwn?'(매매 대상)':''}${d.unitsN>1?'(추정)':''}`:`입지 ${d.loc.toFixed(1)}`} · ${d.cur&&d.cur.n?esc(d.cur.n)+' '+fmtM(d.cur.m):'역 계산 중'}${NOUP()?'':` · 적정가 대비 ${d.up>=0?'+':''}${Math.round(d.up*100)}%`}</p>
-      ${CAPT!==6&&sibs(d).length>1?`<p class="sibl">같은 단지 ${sibs(d).filter(x=>x!==d).sort((x,y)=>x.py-y.py).map(x=>`${x.py}평 ${short(x.p)}`).join(' · ')}</p>`:''}</div>
-      <div class="px tnum"><strong>${short(cashOf(d))}</strong><span>${d.py}평 · ${d.opt?esc(d.opt.kind):d.reg==='free'?'비규제':'토허'}</span><b>${d.score.toFixed(1)}점</b></div>
+      ${CAPT!==6&&sibs(d).length>1?`<p class="sibl">같은 단지 ${sibs(d).filter(x=>x!==d).sort((x,y)=>x.py-y.py).map(x=>`${x.py}평 ${short(x.p)}${x.m3?.price?.warn?' ⚠':''}`).join(' · ')}</p>`:''}${m3PriceWarning(d,true)}</div>
+      <div class="px tnum"><strong${d.m3?.price?.warn?' style="color:#b91c1c"':''}>${d.m3?.price?.warn?'추정 ':''}${short(cashOf(d))}</strong><span>${d.py}평 · ${d.opt?esc(d.opt.kind):d.reg==='free'?'비규제':'토허'}</span><b>${d.score.toFixed(1)}점</b></div>
     </article>`;
   });
   if(list.length>state.lim) h+=`<button class="btn ghost more" id="more" style="display:block;margin:12px auto;width:calc(100% - 32px)">${Math.min(100,list.length-state.lim)}개 더 보기 · 남은 ${(list.length-state.lim).toLocaleString()}개</button>`;
@@ -1158,6 +1158,17 @@ function whyLine(d){ if(d.m3&&window.APT_M3)return APT_M3.why(d); if(!d.s4) retu
 const PRICE_THIN=5;
 function priceEv(d){ const t=(d.types||[]).find(x=>x.py===d.py)||null; return t&&t.n!=null?{n:t.n,n3:t.n3||0,last:t.last||''}:null; }
 const priceEvTxt=d=>{ const e=priceEv(d); return e?`이 평형 실거래 최근 12개월 ${e.n}건 · 3개월 ${e.n3}건${e.last?` · 마지막 ${e.last}`:''}${e.n<PRICE_THIN?' — 가격 근거가 적어 시세 자체가 틀릴 수 있음':''}`:''; };
+function m3PriceWarning(d,compact=false){
+  const r=d.m3?.price;
+  if(!r?.warn) return '';
+  const bg=r.level==='high'?'#fff1f2':'#fff7ed';
+  const border=r.level==='high'?'#fb7185':'#fb923c';
+  const color=r.level==='high'?'#9f1239':'#9a3412';
+  const age=r.ageDays==null?'거래일 미확인':r.ageDays>=30?'마지막 거래 약 '+Math.floor(r.ageDays/30)+'개월 전':'마지막 거래 '+r.ageDays+'일 전';
+  const evidence=`해당 평형 12개월 ${r.n12}건, 최근 3개월 ${r.n3}건 · ${age} (${r.last||'확인 불가'})`;
+  const summary=`⚠️ 현재 매수가격 미확인 · 시세 신뢰도 감점 −${r.penalty}점`;
+  return `<div role="note" style="margin-top:${compact?'7':'12'}px;padding:${compact?'8px 9px':'12px'};border:2px solid ${border};border-radius:9px;background:${bg};color:${color};font-size:${compact?'12px':'14px'};line-height:1.55;font-weight:600"><strong>${summary}</strong><br><span>${esc(evidence)}</span><br><span style="font-weight:500">표시가격은 과거 실거래 환산 추정치입니다. 현재 호가나 실제 구매 가능가격이 아닙니다.</span></div>`;
+}
 function renderDetail(i){
   const d=D[i], m=money(d), nd=need(d), tags=[d.tier.k,...cardFeatures(d).map(k=>FEATURE_META[k].label)].join(' · ');
   const bar=(v,max)=>`<div class="t"><b style="width:${Math.round(v/max*100)}%"></b></div>`;
@@ -1165,7 +1176,7 @@ function renderDetail(i){
   let h=`<div class="phead"><button id="back"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M15 18 9 12l6-6"/></svg>목록</button><span class="tnum">${d.rank}위 / ${d.m3?NCX:D.length}</span></div>
   <section class="identity"><div class="cat">${esc(tags)}${d.u?' · 전체 단지 자동 수집':d.auto?' · 점수식 자동 선별':' · 직접 분석'}</div><h2>${esc(d.n)}</h2>
     <div class="meta tnum"><span>${esc(d.area)}</span><span>${d.year}년 입주</span><span>${unitN(d).toLocaleString()}세대${d.unitsOwn?` <small>(임대단지 제외 매매 대상)</small>`:d.unitsRaw?` <small>(같은 마을 ${d.unitsN}개 단지 합계 ${d.unitsRaw.toLocaleString()}세대를 나눈 추정)</small>`:''}</span></div></section>
-  <div class="lede"><strong>${esc(d.headline)}</strong><p>${esc(d.sub)}</p>${d.s4&&(!d.simple||d.s4.peakR!=null||d.s4.peakPeer)?`<p class="why"><b>순위 근거</b> ${esc(whyLine(d))}</p>`:''}${!d.simple&&hasNew(d)?`<p class="why"><b>신설역 주의</b> 입지 점수에 개통 예정 역·노선을 넣어 순위가 올라간 단지예요${d.locParts.fut?` — ${esc(d.locParts.fut.n)}역(${esc(d.locParts.fut.line)}) 도보 약 ${Math.round(d.locParts.wf)}분`:''}${/예정/.test(d.locParts.lpl||'')?` · 노선 프리미엄 ${esc(d.locParts.lpl)} +${Math.round(d.locParts.lp*100)}%(가정)`:''}. 철도는 지연이 잦고 역 위치는 공사·계획 기준(OpenStreetMap)이에요. 개통 전까지 1년당 5%(최대 20%) 할인해서 반영했고, 예정 역을 빼면 입지 상위 ${Math.max(1,Math.round(100-d.loc0))}%예요. 지금 쓰는 역은 ${esc((d.cur&&d.cur.n)||'없음')}${d.cur&&d.cur.m<99999?` 도보 약 ${Math.round(walkMin(d.cur.m))}분`:''}.</p>`:''}</div>
+  ${m3PriceWarning(d)}<div class="lede"><strong>${esc(d.headline)}</strong><p>${esc(d.sub)}</p>${d.s4&&(!d.simple||d.s4.peakR!=null||d.s4.peakPeer)?`<p class="why"><b>순위 근거</b> ${esc(whyLine(d))}</p>`:''}${!d.simple&&hasNew(d)?`<p class="why"><b>신설역 주의</b> 입지 점수에 개통 예정 역·노선을 넣어 순위가 올라간 단지예요${d.locParts.fut?` — ${esc(d.locParts.fut.n)}역(${esc(d.locParts.fut.line)}) 도보 약 ${Math.round(d.locParts.wf)}분`:''}${/예정/.test(d.locParts.lpl||'')?` · 노선 프리미엄 ${esc(d.locParts.lpl)} +${Math.round(d.locParts.lp*100)}%(가정)`:''}. 철도는 지연이 잦고 역 위치는 공사·계획 기준(OpenStreetMap)이에요. 개통 전까지 1년당 5%(최대 20%) 할인해서 반영했고, 예정 역을 빼면 입지 상위 ${Math.max(1,Math.round(100-d.loc0))}%예요. 지금 쓰는 역은 ${esc((d.cur&&d.cur.n)||'없음')}${d.cur&&d.cur.m<99999?` 도보 약 ${Math.round(walkMin(d.cur.m))}분`:''}.</p>`:''}</div>
   <dl class="kpis tnum">
     ${d.opt?`<div><dt>지금 필요한 돈</dt><dd>${eokH(d.opt.dep)}</dd><small>${esc(d.opt.kind)} · ${d.opt.Y}년 ${eok(d.opt.K)} 매수권 · 시세 ${eok(d.p)}</small></div>`:`<div><dt>${d.py}평 시세</dt><dd>${eokH(d.p)}</dd><small>${d.reg==='free'?'비규제':'토허·실거주 2년'}${priceEv(d)?`<br>${esc(priceEvTxt(d))}`:''}</small></div>`}
     <div><dt>${esc(nd.l)}</dt><dd class="hl">${eokH(nd.v)}</dd><small>${esc(nd.x)}</small></div>
