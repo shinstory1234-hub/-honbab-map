@@ -11,9 +11,10 @@ const section=(start,end)=>{
 assert.match(html,/const visible=\(d,withSearch=true\)/);
 assert.match(html,/!withSearch\|\|!state\.q\|\|textMatches\(d\)/);
 assert.match(html,/visible\(d,false\)/);
-assert.match(html,/getBounds\(\).*contain\(d\._pos\)/);
-assert.match(html,/addEventListener\(map,'dragstart',browseMap\)/);
-assert.match(html,/addEventListener\(map,'click',browseMap\)/);
+assert.match(html,/const viewport=state\.browse&&map\?map\.getBounds\(\):null/);
+assert.match(html,/viewport\.contain\(d\._pos\)/);
+assert.match(html,/kakao\.maps\.event\.addListener\(map,'dragstart',browseMap\)/);
+assert.match(html,/kakao\.maps\.event\.addListener\(map,'click',browseMap\)/);
 assert.match(html,/url\.searchParams\.set\('vlat'/);
 assert.match(html,/url\.searchParams\.set\('vlng'/);
 assert.match(html,/url\.searchParams\.set\('vlevel'/);
