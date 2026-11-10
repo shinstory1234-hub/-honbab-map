@@ -82,6 +82,14 @@ jobs:
                 members:p.members,observations:p.observations,issues:p.issues}));
             }
           '
+      - name: Regression-test proposed option candidate fix in disposable worktree
+        if: always()
+        run: |
+          set -euo pipefail
+          test -d "${RUNNER_TEMP}/aptmap-master"
+          cp scripts/test-apt-option-price-band.mjs "${RUNNER_TEMP}/aptmap-master/scripts/test-apt-option-price-band.mjs"
+          TRANSPORT_INPUTS="${RUNNER_TEMP}/apt-audit-inputs" node "${RUNNER_TEMP}/aptmap-master/scripts/test-apt-option-price-band.mjs" \
+            --temp-root "${RUNNER_TEMP}/aptmap-master" --out /tmp/apt-option-fix-test.json
       - name: Upload separate read-only audit reports
         if: always()
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
@@ -92,5 +100,6 @@ jobs:
             /tmp/apt-snapshot-audit.json
             /tmp/apt-live-audit.json
             /tmp/apt-project-facts.json
+            /tmp/apt-option-fix-test.json
           if-no-files-found: warn
           retention-days: 14
