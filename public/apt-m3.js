@@ -1,6 +1,6 @@
-/* Apartment Map M3 — provisional scoring, 6 < price < 25e8 only.
- * Data calibration and historical out-of-sample tests are still pending.
- * Cap 6 and cap 30 MUST continue to use the original s4 scoring untouched.
+/* Apartment Map M3 — provisional scoring for 6억 초과~30억 이하.
+ * Cap 6 retains the legacy model. Cap 30 uses M3 without transaction-volume penalty.
+ * Weights need historical backtesting. Results are experimental.
  */
 (function(root){
  'use strict';
@@ -27,7 +27,7 @@
   return operating>0?clamp(operating+.25*Math.max(0,planned-operating)):Math.min(35,planned);
  }
  function active(d,cap=root.CAPT){
-  return [10,15,20,25].includes(cap)&&Number(d?.p)>60000&&Number(d?.p)<250000;
+  return [10,15,20,25,30].includes(cap)&&Number(d?.p)>60000&&Number(d?.p)<=300000;
  }
  // 가격의 불확실성은 '아파트 품질'이 아니라 예산 내 실매수 가능성에 대한 위험이다.
  // 검증 전 정책값: 준공 2년 이내는 거래량 부족만으로 감점하지 않는다.
@@ -76,8 +76,11 @@
   const mixed=typeof isJubok==='function'&&isJubok(d) || (Array.isArray(d.cx)&&Number(d.cx[3])===1);
   const jubok=mixed?6:0;
   const price=priceConfidence(d);
-  const score=clamp(Object.values(parts).reduce((sum,v)=>sum+v,0)-density-hill-jubok-price.penalty);
-  return {score,raw,parts,price,penalties:{density,hill,jubok,price:price.penalty},
+  // 고가 아파트는 회전율이 낮아 거래량 부족을 품질 점수에 반영하지 않는다.
+  // 거래 부족에 대한 사실·신뢰도 경고 자체는 유지한다.
+  const pricePenalty=cap===30?0:price.penalty;
+  const score=clamp(Object.values(parts).reduce((sum,v)=>sum+v,0)-density-hill-jubok-pricePenalty);
+  return {score,raw,parts,price,penalties:{density,hill,jubok,price:pricePenalty},
     far:s.density?.far??null,farSrc:s.density?.src??'',
     model:'M3 (가중치·가격 근거 감점 백테스트 전)'};
  }
