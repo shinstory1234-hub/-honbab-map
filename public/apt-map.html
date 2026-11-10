@@ -65,6 +65,9 @@ a{color:inherit;text-decoration:none}
 .search svg{flex:none;color:var(--text-tertiary)}
 .search input{flex:1;min-width:0;font-size:15px;padding:8px 12px 8px 0;outline:none}
 .search input::placeholder{color:var(--text-tertiary)}
+.search button{flex:none;margin-right:6px;width:32px;height:32px;border:0;border-radius:50%;font-size:21px;line-height:1;color:var(--text-secondary);background:transparent;cursor:pointer}
+.search button:hover{background:var(--border-soft)}
+.search button[hidden]{display:none}
 
 main{flex:1;display:flex;min-height:0;position:relative}
 .mapwrap{flex:1;position:relative;min-width:0;background:var(--bg-subtle)}
@@ -98,6 +101,8 @@ aside{order:-1;width:408px;flex:none;border-right:1px solid var(--border);backgr
 .filters.pb{border-bottom:0;padding-bottom:8px}
 .filters button[aria-pressed=true]{background:var(--text);border-color:var(--text);color:var(--bg);font-weight:650}
 .count{display:flex;justify-content:space-between;padding:12px 24px;font-size:12px;color:var(--text-tertiary);border-bottom:1px solid var(--border-soft)}
+.region-mode{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:10px 24px;border-bottom:1px solid var(--border-soft);font-size:12px;font-weight:650;color:var(--primary-soft-fg);background:var(--bg-subtle)}
+.region-mode button{border:1px solid var(--border);border-radius:4px;background:var(--bg);padding:6px 10px;font-size:12px;font-weight:650;white-space:nowrap;cursor:pointer}
 
 .row{display:grid;grid-template-columns:22px minmax(0,1fr) auto;gap:12px;padding:18px 24px;border-bottom:1px solid var(--border-soft);cursor:pointer;transition:background .15s}
 .row:hover{background:var(--bg-subtle)}
@@ -248,6 +253,9 @@ aside{order:-1;width:408px;flex:none;border-right:1px solid var(--border);backgr
 .mk b{font-size:12.5px;font-weight:750;color:#171719}
 .mk small{display:block;font-size:10.5px;color:#70737c;font-weight:500;max-width:90px;overflow:hidden;text-overflow:ellipsis}
 .mk.far small{display:none}
+.mk.match>div{background:#edf5ff;border:2px solid #176ac3;box-shadow:0 2px 9px rgba(23,106,195,.25)}
+.mk.match::after{border-top-color:#edf5ff}
+.mk.match .sc{background:#176ac3}
 .mk.sel>div{background:#171719;border-color:#171719}
 .mk.sel::after{border-top-color:#171719}
 .mk.sel b{color:#fff}.mk.sel small{color:rgba(255,255,255,.7)}
@@ -303,7 +311,7 @@ aside{order:-1;width:408px;flex:none;border-right:1px solid var(--border);backgr
   <a class="wordmark" id="home" href="apt-map.html" aria-label="아파트맵 처음 화면으로">아파트맵<i></i></a>
   <nav class="captab" aria-label="가격대"><a href="apt-map.html" id="cap6">6억 이하</a><a href="apt-map.html?cap=10" id="cap10">6~10억</a><a href="apt-map.html?cap=15" id="cap15">10~15억</a><a href="apt-map.html?cap=20" id="cap20">15~20억</a><a href="apt-map.html?cap=25" id="cap25">20~25억</a><a href="apt-map.html?cap=30" id="cap30">25~30억</a></nav>
   <span class="caption" id="asof">서울·경기·인천</span>
-  <label class="search"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg><input id="q" placeholder="단지명, 동네로 찾기" autocomplete="off"></label>
+  <label class="search"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg><input id="q" placeholder="단지명, 동네로 찾기" autocomplete="off" enterkeyhint="search"><button type="button" id="clearSearch" aria-label="검색어 지우기" hidden>×</button></label>
 </header>
 <main>
   <div class="mapwrap"><div id="mapcount" class="mapcount"></div><div id="map"></div><div id="keymsg"></div></div>
@@ -1059,7 +1067,13 @@ const hasFeature=(d,key)=>featureKeys(d).includes(key);
 const badgeHTML=d=>[{label:d.tier.k,color:d.tier.c},...cardFeatures(d).map(k=>FEATURE_META[k]&&{label:FEATURE_META[k].label,color:FEATURE_META[k].color}).filter(Boolean)]
   .map(x=>`<span class="chip" style="--chip:${x.color}">${esc(x.label)}</span>`).join('');
 const FILTERS=[['all','전체'],['top','핵심 1~30'],['mid','유망 31~300'],['interest','관심 301~1,000'],['explore','탐색 1,001+'],['신축','신축'],['학군','학군'],['재건축','재건축'],['리모델링','리모델링'],['천지개벽','천지개벽'],['역세권','역세권'],['초품아','초품아'],['대단지','대단지'],['신설역','신설역'],['반도체','반도체'],['소형할인','소형 할인'],['flat','평지'],['job50','출근 50분'],['free','비규제']];
-const state={f:'all',pb:'all',size:'all',q:'',sel:null,lim:50};
+// 지도 화면은 가격대별 페이지가 바뀌어도 같은 위치를 유지한다. 잘못된 좌표는 무시한다.
+const savedMapView=(()=>{
+  const p=new URLSearchParams(location.search), lat=Number(p.get('vlat')), lng=Number(p.get('vlng')), level=Number(p.get('vlevel'));
+  return p.has('vlat')&&p.has('vlng')&&p.has('vlevel')&&Number.isFinite(lat)&&Number.isFinite(lng)&&Number.isInteger(level)
+    &&lat>36.85&&lat<38.3&&lng>126.3&&lng<127.95&&level>=1&&level<=14?{lat,lng,level}:null;
+})();
+const state={f:'all',pb:'all',size:'all',q:'',sel:null,lim:50,browse:!!(savedMapView&&new URLSearchParams(location.search).get('browse')==='1')};
 // 6억 탭: 대출 끼고 필요한 현금 기준 / 6~10억 탭: 시세(가격) 기준 — 10억 탭에서 현금 구간은 '3억 이하'가 가격처럼 읽혀 헷갈림(2026.11.1)
 const PB=CAPT>=25?[['all','전체 가격'],...[0,1,2,3,4].map(k=>{ const lo=CAPLO+k*10000; return ['p'+(lo/10000+1),`${lo/10000}~${lo/10000+1}억`,lo,lo+10000]; })]   // 2026.11.3: 20~25억·25~30억 탭에 6억 탭 칩(3억 이하…)이 뜨던 문제
   :CAPT===20?[['all','전체 가격'],['p16','15~16억',150000,160000],['p17','16~17억',160000,170000],['p18','17~18억',170000,180000],['p19','18~19억',180000,190000],['p20','19~20억',190000,200000]]
@@ -1072,12 +1086,13 @@ const TOWN=[[/^파주/,/동패동|목동동|와동동|야당동|다율동|당하
   [/^수원|^용인/,/이의동|하동|원천동|상현동/,'광교'],[/^하남|^성남/,/학암동|창곡동/,'위례'],[/^김포/,/장기동|운양동|구래동|마산동|양촌읍/,'한강신도시'],[/^양주/,/옥정동|회천/,'옥정'],
   [/^하남/,/망월동|선동|풍산동/,'미사'],[/^남양주/,/다산동/,'다산'],[/^인천/,/청라동/,'청라'],[/^인천/,/송도동/,'송도'],[/^고양/,/삼송동|동산동|원흥동|지축동|향동동|덕은동/,'삼송·원흥·지축·향동']];
 const townOf=d=>{ const dong=d.area.split(' ').pop(); return TOWN.filter(([r,dr])=>r.test(d.area)&&dr.test(dong)).map(t=>t[2]).join(' '); };
-const visible=d=>{
+const textMatches=(d,query=(state.q||'').trim().toLocaleLowerCase())=>
+  !!query&&(d.n+' '+d.area+' '+(d.headline||'')+' '+townOf(d)).toLocaleLowerCase().includes(query);
+const visible=(d,withSearch=true)=>{
   const f=state.f, ok=f==='all'||(f==='top'&&d.rank<=30)||(f==='mid'&&d.rank>30&&d.rank<=300)||(f==='interest'&&d.rank>300&&d.rank<=1000)||(f==='explore'&&d.rank>1000)||(f==='flat'&&isFlat(d))||(f==='job50'&&jobMin(d)!=null&&jobMin(d)<=50)||(f==='free'&&d.reg==='free')||hasFeature(d,f);
   const pb=PB.find(x=>x[0]===state.pb); const okp=state.pb==='all'||!pb||(CAPT!==6?(d.p>pb[2]&&d.p<=pb[3]):((cashOf(d)>pb[2]&&cashOf(d)<=pb[3])||(state.pb==='3'&&cashOf(d)<=30000)));
   const size=SIZES.find(x=>x[0]===state.size), oks=state.size==='all'||(d.py>=size[2]&&d.py<size[3]);
-  const query=(state.q||'').trim().toLocaleLowerCase();
-  return ok&&okp&&oks&&(!query||(d.n+' '+d.area+' '+(d.headline||'')+' '+townOf(d)).toLocaleLowerCase().includes(query));
+  return ok&&okp&&oks&&(!withSearch||!state.q||textMatches(d));
 };
 
 /* 탭별 '종합' 설명(s14, 2026.11.1 개편): 6억 외 탭은 가격대 표현을 바꾸고, 네 탭 모두 종합 점수 설명을 그 탭의 비중·백테스트 결과로 교체.
@@ -1187,7 +1202,10 @@ function m3FlatOptions(d){
     +'<span class="flat-price">'+(x.m3?.price?.warn?'추정 ':'')+short(x.p)+'</span></button>').join('')+'</div>';
 }
 function renderList(){
-  const b=$('#body'), matches=ORDER.filter(visible), pend=D.filter(d=>d.pending).length;
+  const b=$('#body'), filterScroll=[...b.querySelectorAll('.filters')].map(el=>el.scrollLeft);
+  const viewport=state.browse&&map?map.getBounds():null;
+  const matches=ORDER.filter(d=>visible(d)&&(!viewport||(d._pos&&viewport.contain(d._pos))));
+  const pend=D.filter(d=>d.pending).length;
   // 평형 필터를 먼저 적용하므로 필터에 해당하는 평형이 있는 단지는 항상 표시된다.
   const singleComplex=!!(window.APT_M3 && CAPT>6);
   const seen=new Set();
@@ -1205,6 +1223,7 @@ function renderList(){
   <div class="filters pb" role="group" aria-label="가격대">${PB.map(([k,l])=>`<button data-pb="${k}" aria-pressed="${state.pb===k}">${l}</button>`).join('')}</div>
   <div class="filters pb" role="group" aria-label="평형(공급면적 기준)">${SIZES.map(([k,l])=>`<button data-size="${k}" aria-pressed="${state.size===k}">${l}</button>`).join('')}</div>
   <div class="filters" role="group" aria-label="필터">${FILTERS.map(([k,l])=>`<button data-f="${k}" aria-pressed="${state.f===k}">${l}</button>`).join('')}</div>
+  ${viewport?'<div class="region-mode">현재 지도 범위의 단지 <button type="button" id="browseReset">전체 순위 보기</button></div>':''}
   <div class="count"><span>${singleComplex?list.length.toLocaleString()+'개 단지 · 전체 평형 표시':list.length.toLocaleString()+'개 평형'+(CAPT!==6?' ('+new Set(list.map(d=>complexRankKey(d))).size.toLocaleString()+'개 단지)':'')} · 종합 점수순</span><span>시세 리치고·국토부 실거래 · ${CAPT>6?(window.LIVEP_AT||'갱신일 확인 중'):('고정 자료 '+(ASOF||''))}</span></div>`;
   list.slice(0,state.lim).forEach(d=>{
     h+=`<article class="row" data-i="${D.indexOf(d)}" data-s="1">
@@ -1233,7 +1252,9 @@ function renderList(){
   <p class="source">지역별 최신 아파트 가격동향은 <a href="https://www.reb.or.kr/r-one/portal/main/indexPage.do" target="_blank" rel="noopener noreferrer">한국부동산원 공식 통계</a>에서 확인하세요. 과거 하락률은 현재 수치가 아니므로 제외했습니다. <button type="button" class="linkbtn" id="noticeOpen">이용 유의사항</button></p>`;
   h=publicMethodSummary(cap10Text(h));
   b.innerHTML=h;
+  b.querySelectorAll('.filters').forEach((el,i)=>{el.scrollLeft=filterScroll[i]||0;});
   updateSourceStatus();
+  const browseReset=b.querySelector('#browseReset'); if(browseReset) browseReset.onclick=()=>{state.browse=false;render();};
   b.querySelectorAll('.filters button[data-f]').forEach(x=>x.onclick=()=>{state.f=x.dataset.f;state.lim=50;render();});
   b.querySelectorAll('.filters button[data-pb]').forEach(x=>x.onclick=()=>{state.pb=x.dataset.pb;state.lim=50;render();});
   b.querySelectorAll('.filters button[data-size]').forEach(x=>x.onclick=()=>{state.size=x.dataset.size;state.lim=50;render();});
@@ -1499,10 +1520,22 @@ function renderDetail(i){
 }
 
 function render(){ const pb=document.getElementById('body'); if(pb&&pb.hasAttribute('data-pre')){ pb.removeAttribute('data-pre'); pb.style.cursor=''; }   // 첫 화면 미리보기(apt-first*.js) 표시 해제
+  $('#clearSearch').hidden=!state.q;
   state.sel==null?renderList():renderDetail(state.sel); if(map) queueMap(); }
 let qT=null;
-$('#q').addEventListener('input',e=>{state.q=e.target.value.trim();state.lim=50;close();render(); clearTimeout(qT); qT=setTimeout(fitSearch,450);});
-$('#q').addEventListener('keydown',e=>{ if(e.key==='Enter'){ clearTimeout(qT); fitSearch(); e.target.blur(); if(mobile()) snapTo('half'); } });
+function clearSearchToMap(){
+  clearTimeout(qT);
+  const q=$('#q'); q.value=''; q.blur();
+  state.q='';state.browse=!!map;state.lim=50;
+  close();render();
+  if(mobile()) snapTo('peek');
+}
+$('#clearSearch').addEventListener('click',clearSearchToMap);
+$('#q').addEventListener('input',e=>{state.q=e.target.value.trim();state.browse=false;state.lim=50;close();render(); clearTimeout(qT); qT=setTimeout(fitSearch,450);});
+$('#q').addEventListener('keydown',e=>{
+  if(e.key==='Enter'){ clearTimeout(qT); fitSearch(); e.target.blur(); if(mobile()) snapTo('half'); }
+  else if(e.key==='Escape'){ e.preventDefault();clearSearchToMap(); }
+});
 function fitSearch(){
   if(!map||!state.q) return;
   const hit=D.filter(d=>d._pos&&visible(d));
@@ -1514,6 +1547,22 @@ function fitSearch(){
 }
 
 let map,pins=[];
+function browseMap(){
+  clearTimeout(qT);
+  const q=$('#q'); q.blur();q.value='';
+  state.q='';state.browse=true;state.lim=50;
+  if(state.sel!=null){close();history.replaceState(null,'',location.pathname+location.search);}
+  render();
+  if(mobile())snapTo('peek');
+}
+// 가격대 변경 시 지도 중심·확대 수준만 전달한다. 단지 검색과 가격별 필터는 새 탭에 강제하지 않는다.
+document.querySelectorAll('.captab a').forEach(a=>a.addEventListener('click',()=>{
+  const url=new URL(a.href,location.href), c=map?.getCenter();
+  const view=c?{lat:c.getLat(),lng:c.getLng(),level:map.getLevel()}:savedMapView;
+  if(view){url.searchParams.set('vlat',view.lat.toFixed(5));url.searchParams.set('vlng',view.lng.toFixed(5));url.searchParams.set('vlevel',String(view.level));}
+  if(state.browse)url.searchParams.set('browse','1');else url.searchParams.delete('browse');
+  a.href=url.pathname+url.search;
+}));
 let mapFrame=null;
 function queueMap(){ if(mapFrame!=null) return; mapFrame=requestAnimationFrame(()=>{ mapFrame=null; renderMap(); }); }
 /* 핀 겹침 정리: 점수 높은 순으로 놓고, 화면에서 이미 놓인 핀과 겹치면 숨김. 확대하면 더 보임 */
@@ -1522,26 +1571,45 @@ function renderMap(){
   if(!map) return;
   const proj=map.getProjection(), W=$('#map').clientWidth, H=$('#map').clientHeight, placed=[];
   const far=map.getLevel()>8, pw=far?78:116, ph=far?30:40;
-  const order=pins.slice().sort((a,b)=>(b.i===state.sel)-(a.i===state.sel)||D[b.i].score-D[a.i].score);
+  const query=(state.q||'').trim().toLocaleLowerCase();
+  const highlights=new Set(query?pins.filter(o=>textMatches(D[o.i],query)).map(o=>o.i):[]);
+  // 검색한 단지는 먼저 배치하고 파란색으로 표시하지만, 다른 단지 핀을 숨기지는 않는다.
+  const order=pins.slice().sort((a,b)=>(b.i===state.sel)-(a.i===state.sel)
+    ||Number(highlights.has(b.i))-Number(highlights.has(a.i))||D[b.i].score-D[a.i].score);
   shownN=0;
   let cand=0;
   const visibleComplexes=new Set();
   order.forEach(o=>{ const d=D[o.i]; let on=false;
     const key=complexRankKey(d);
-    const vis=(o.i===state.sel||visible(d))&&!visibleComplexes.has(key);
-    if(vis&&o.i!==state.sel) cand++;
-    if(vis&&(o.i===state.sel||(!(far&&!state.q&&cand>300)&&shownN<400))){
+    const vis=(o.i===state.sel||visible(d,false))&&!visibleComplexes.has(key);
+    if(vis){
       const p=proj.containerPointFromCoords(d._pos);
+      // 화면 밖 상위 순위 단지가 이 화면의 표시 개수 한도를 소진하지 않도록 한다.
       if(p.x>-pw&&p.x<W+pw&&p.y>-ph&&p.y<H+ph*2){
-        const r=[p.x-pw/2,p.y-ph-6,p.x+pw/2,p.y-6];
-        if(o.i===state.sel||!placed.some(q=>r[0]<q[2]&&r[2]>q[0]&&r[1]<q[3]&&r[3]>q[1])){ placed.push(r); on=true; shownN++; visibleComplexes.add(key); }
+        if(o.i!==state.sel)cand++;
+        if(o.i===state.sel||((!far||cand<=300)&&shownN<400)){
+          const r=[p.x-pw/2,p.y-ph-6,p.x+pw/2,p.y-6];
+          if(o.i===state.sel||!placed.some(q=>r[0]<q[2]&&r[2]>q[0]&&r[1]<q[3]&&r[3]>q[1])){
+            placed.push(r);on=true;shownN++;visibleComplexes.add(key);
+          }
+        }
       }
     }
     if(on&&!o.ov) materializePin(o);
     if(on!==o.on){ if(o.ov) o.ov.setMap(on?map:null); o.on=on; }
-    if(on){ o.el.classList.toggle('sel',o.i===state.sel); o.el.classList.toggle('far',far); }
+    if(on){
+      o.el.classList.toggle('sel',o.i===state.sel);
+      o.el.classList.toggle('match',highlights.has(o.i)&&o.i!==state.sel);
+      o.el.classList.toggle('far',far);
+    }
   });
-  const c=$('#mapcount'); if(c){ const inV=new Set(pins.filter(o=>{ if(!visible(D[o.i])) return false; const p=proj.containerPointFromCoords(D[o.i]._pos); return p.x>=0&&p.x<=W&&p.y>=0&&p.y<=H; }).map(o=>complexRankKey(D[o.i]))).size; c.textContent=shownN<inV?`이 화면 ${inV}곳 중 ${shownN}곳 표시 · 확대하면 더`:`이 화면 ${inV}곳`; }
+  const c=$('#mapcount'); if(c){
+    const inV=new Set(pins.filter(o=>{ if(!visible(D[o.i],false)) return false;
+      const p=proj.containerPointFromCoords(D[o.i]._pos); return p.x>=0&&p.x<=W&&p.y>=0&&p.y<=H;
+    }).map(o=>complexRankKey(D[o.i]))).size;
+    const searched=query?'검색 단지 파란색 표시 · ':'';
+    c.textContent=searched+(shownN<inV?`이 화면 ${inV}곳 중 ${shownN}곳 표시 · 확대하면 더`:`이 화면 ${inV}곳`);
+  }
 }
 function close(){ state.sel=null; }
 /* 주소(#단지|동네|평)와 뒤로가기: 상세를 열면 기록을 하나 쌓아, 휴대폰 뒤로가기가 사이트를 나가지 않고 목록으로 돌아오게 함 */
@@ -1550,14 +1618,19 @@ const fromHash=()=>{ const h=decodeURIComponent(location.hash.slice(1)); if(!h) 
 function backToList(){ if(history.state&&history.state.apt) history.back(); else { close(); render(); history.replaceState(null,'',location.pathname+location.search); } }
 let homeB=null;
 function goHome(){                                                     // 로고: 필터·검색·선택을 모두 지우고 처음 화면(전체 목록·수도권 전체 지도)으로
-  Object.assign(state,{f:'all',pb:'all',size:'all',q:'',sel:null,lim:50}); $('#q').value='';
-  history.replaceState(null,'',location.pathname+location.search);
+  clearTimeout(qT);$('#q').blur();
+  Object.assign(state,{f:'all',pb:'all',size:'all',q:'',sel:null,lim:50,browse:false}); $('#q').value='';
+  const url=new URL(location.href);
+  ['vlat','vlng','vlevel','browse'].forEach(k=>url.searchParams.delete(k));
+  history.replaceState(null,'',url.pathname+url.search);
   render(); $('#body').scrollTop=0;
   if(map&&homeB) map.setBounds(homeB,60,40,mobile()?150:40,40);
   if(mobile()) snapTo('half'); }
 $('#home').addEventListener('click',e=>{ e.preventDefault(); goHome(); });
 addEventListener('popstate',()=>{ const i=fromHash(); if(i>=0) select(i,false,true); else { close(); render(); } });
 function select(i,fromList,noPush){
+  if(state.q&&!textMatches(D[i])){state.q='';$('#q').value='';clearTimeout(qT);}
+  $('#q').blur();
   const d0=D[i]; if(!noPush&&d0){ const st={apt:1}; if(history.state&&history.state.apt) history.replaceState(st,'',hashOf(d0)); else history.pushState(st,'',hashOf(d0)); }
   state.sel=i; render();
   if(mobile()) snapTo(fromList?'half':'half');
@@ -1595,7 +1668,7 @@ function snapTo(name){ if(!mobile())return; calcSnaps(); cur=name; setY(snaps[na
   calcSnaps(); setY(snaps.peek,false);
   let sy=0,sp=0,ly=0,lt=0,vel=0,drag=false,fromBody=false,moved=0;
   const body=$('#body'), head=$('#head');
-  const down=(e,fb)=>{const t=e.touches[0];drag=true;fromBody=fb;sy=ly=t.clientY;sp=y;lt=performance.now();vel=0;moved=0;sheet.classList.remove('anim');};
+  const down=(e,fb)=>{if(document.activeElement===$('#q'))$('#q').blur();const t=e.touches[0];drag=true;fromBody=fb;sy=ly=t.clientY;sp=y;lt=performance.now();vel=0;moved=0;sheet.classList.remove('anim');};
   const move=e=>{
     if(!drag)return; const t=e.touches[0], dy=t.clientY-sy; moved=Math.max(moved,Math.abs(dy));
     if(fromBody){ if(y<=0&&(body.scrollTop>0||dy<0)){sy=t.clientY;sp=y;return;} if(e.cancelable)e.preventDefault(); }
@@ -1644,12 +1717,21 @@ const inMetro=(la,ln)=>la>36.85&&la<38.3&&ln>126.3&&ln<127.95;
 const NEWGU=/병점구|동탄구|효행구|만세구|서해구|검단구|영종구|제물포구/;   // 2026 신설 구: 지도 주소엔 아직 없을 수 있음
 function addrOK(d,a){ const t=d.area.split(' ').slice(0,-1).filter(x=>!NEWGU.test(x)).map(x=>x.replace(/(시|군)$/,'')); return t.every(x=>a.includes(x)); }
 function init(){
-  map=new kakao.maps.Map($('#map'),{center:new kakao.maps.LatLng(37.45,127.0),level:9});
+  map=new kakao.maps.Map($('#map'),{
+    center:new kakao.maps.LatLng(savedMapView?.lat??37.45,savedMapView?.lng??127.0),
+    level:savedMapView?.level??9
+  });
   map.addControl(new kakao.maps.ZoomControl(),kakao.maps.ControlPosition.RIGHT);
-  kakao.maps.event.addListener(map,'click',()=>{ if(mobile()) snapTo('peek'); });
+  $('#map').addEventListener('pointerdown',()=>{if(document.activeElement===$('#q'))$('#q').blur();},{passive:true});
+  kakao.maps.event.addListener(map,'dragstart',browseMap);
+  kakao.maps.event.addListener(map,'click',browseMap);
   const places=new kakao.maps.services.Places(),bounds=new kakao.maps.LatLngBounds();
   let pending=D.length;
-  const done=()=>{ if(--pending===0&&!bounds.isEmpty()){ homeB=bounds; if(state.sel==null) map.setBounds(bounds,60,40,mobile()?150:40,40); else select(state.sel,false,true); } };
+  const done=()=>{ if(--pending===0&&!bounds.isEmpty()){ homeB=bounds;
+    if(state.sel!=null) select(state.sel,false,true);
+    else if(!savedMapView) map.setBounds(bounds,60,40,mobile()?150:40,40);
+    else if(state.browse) renderList();
+  } };
   const done2=()=>{ done(); if(pending===0) analyze(); };
   (function fut(){
     const c=GEO.__fut2;
@@ -1694,6 +1776,7 @@ function init(){
       done2(); fin(); }));
   });
   pump();
+  if(state.browse) renderList();
   function analyze(){
     const ps=new kakao.maps.services.Places(), OK=kakao.maps.services.Status.OK, ZERO=kakao.maps.services.Status.ZERO_RESULT, DIST=kakao.maps.services.SortBy.DISTANCE;
     const todo=D.filter(d=>{const g=GEO[gkey(d)];return d._pos&&!(g&&g.sc!=null&&g.sts!=null&&g.ac!=null);});
@@ -1731,7 +1814,10 @@ function init(){
     }
     if(changed){ saveGeo(); recompute(); render(); }
   }
-  kakao.maps.event.addListener(map,'idle',queueMap);
+  kakao.maps.event.addListener(map,'idle',()=>{
+    queueMap();
+    if(state.browse&&state.sel==null)renderList();
+  });
 }
 </script>
 </body>
