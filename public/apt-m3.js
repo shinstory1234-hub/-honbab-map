@@ -42,10 +42,12 @@
   const newborn=Number.isFinite(Number(d.year)) && Number(d.year)>=now.getUTCFullYear()-2;
   const volume=newborn?0:n12===0?14:n12===1?11:n12===2?9:n12<=4?6:n12<=9?2:0;
   const stale=ageDays==null?3:ageDays>270?8:ageDays>180?7:ageDays>90?3:0;
-  const penalty=clamp(volume+(newborn?Math.min(3,stale):stale),0,20);
-  const warn=penalty>=4 || (n12<5 && !newborn) || (ageDays!=null&&ageDays>180);
+  const inversion=Number.isFinite(Number(t.pBeforeGuard))&&t.pBeforeGuard>0;
+  const penalty=clamp(volume+(newborn?Math.min(3,stale):stale)+(inversion?3:0),0,20);
+  const warn=inversion||penalty>=4 || (n12<5 && !newborn) || (ageDays!=null&&ageDays>180);
   const level=penalty>=8?'high':warn?'medium':'ok';
-  return {known:true,n12,n3,last:date,ageDays,newborn,volume,stale,penalty,warn,level};
+  return {known:true,n12,n3,last:date,ageDays,newborn,volume,stale,penalty,warn,level,
+    inversion,rawPrice:inversion?t.pBeforeGuard:null,referencePy:t.priceGuardFrom||null};
  }
  function compute(d,cap=root.CAPT){
   if(!active(d,cap))return null;
@@ -62,9 +64,15 @@
   const parts=Object.fromEntries(Object.entries(weights).map(([k,w])=>[k,raw[k]*w]));
   const density=Number.isFinite(s.density?.pen)?s.density.pen:0;
   const hill=Number.isFinite(s.ta?.h)?s.ta.h*.5:0;
+  // 용적률과 별개로 혼합용도 건축물의 주거 상품성/전용률 위험을 평가한다.
+  // 미확인 단지는 감점하지 않고, CXP 건물용도 또는 공식 단지정보로 확인된 곳만 적용.
+  const mixed=typeof isJubok==='function'&&isJubok(d) || (Array.isArray(d.cx)&&Number(d.cx[3])===1);
+  const jubok=mixed?6:0;
   const price=priceConfidence(d);
-  const score=clamp(Object.values(parts).reduce((sum,v)=>sum+v,0)-density-hill-price.penalty);
-  return {score,raw,parts,price,penalties:{density,hill,price:price.penalty},model:'M3 (가중치·가격 근거 감점 백테스트 전)'};
+  const score=clamp(Object.values(parts).reduce((sum,v)=>sum+v,0)-density-hill-jubok-price.penalty);
+  return {score,raw,parts,price,penalties:{density,hill,jubok,price:price.penalty},
+    far:s.density?.far??null,farSrc:s.density?.src??'',
+    model:'M3 (가중치·가격 근거 감점 백테스트 전)'};
  }
  function apply(d){
   const m=compute(d);
@@ -77,11 +85,11 @@
   const m=d.m3;if(!m)return '';
   const f=x=>Number(x??0).toFixed(1);
   const parts=[['장기 급지','G',35],['직주','J',10],['교통','T',15],['세대수','U',20],['상품성','Q',15],['평형 효용','S',5]];
-  return 'M3 종합 '+f(m.score)+'점 = '+parts.map(([label,key,w])=>label+' '+f(m.raw[key])+' × '+w+'%').join(' + ')+(m.penalties.density?' − 고밀도 '+f(m.penalties.density):'')+(m.penalties.hill?' − 언덕 '+f(m.penalties.hill):'')+(m.penalties.price?' − 실거래 근거 부족 '+f(m.penalties.price):'')+' · 검증 전 잠정 산식';
+  return 'M3 종합 '+f(m.score)+'점 = '+parts.map(([label,key,w])=>label+' '+f(m.raw[key])+' × '+w+'%').join(' + ')+(m.penalties.density?' − 고밀도 '+f(m.penalties.density):'')+(m.penalties.hill?' − 언덕 '+f(m.penalties.hill):'')+(m.penalties.jubok?' − 주상복합 '+f(m.penalties.jubok):'')+(m.penalties.price?' − 가격 신뢰도 '+f(m.penalties.price):'')+' · 검증 전 잠정 산식';
  }
  function why(d){
   const m=d.m3;if(!m)return '';
-  return 'M3 급지 '+m.raw.G.toFixed(0)+' · 직주 '+m.raw.J.toFixed(0)+' · 교통 '+m.raw.T.toFixed(0)+' · '+(d.unitsOwn??d.units).toLocaleString()+'세대 · 상품성 '+m.raw.Q.toFixed(0)+' · 평형 '+m.raw.S.toFixed(0)+(m.penalties.price?' · 시세 신뢰도 감점 −'+m.penalties.price.toFixed(0)+'점':'')+' (가중치 검증 전)';
+  return 'M3 급지 '+m.raw.G.toFixed(0)+' · 직주 '+m.raw.J.toFixed(0)+' · 교통 '+m.raw.T.toFixed(0)+' · '+(d.unitsOwn??d.units).toLocaleString()+'세대 · 상품성 '+m.raw.Q.toFixed(0)+' · 평형 '+m.raw.S.toFixed(0)+(m.penalties.price?' · 시세 신뢰도 감점 −'+m.penalties.price.toFixed(0)+'점':'')+(m.penalties.density?' · 용적률 감점 −'+m.penalties.density.toFixed(0)+'점':'')+(m.penalties.jubok?' · 주상복합 감점 −'+m.penalties.jubok+'점':'')+' (가중치 검증 전)';
  }
  const oldPanel=root.APT_TRANSPORT?.panel;
  if(oldPanel){

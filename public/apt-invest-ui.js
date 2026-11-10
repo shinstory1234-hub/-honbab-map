@@ -9,8 +9,8 @@
   const style=document.createElement('style');
   style.textContent=`
   .invest{margin:18px 24px 0;padding:18px;border:1px solid var(--border);border-radius:8px;background:var(--bg)}
-  .invest-head{display:flex;align-items:baseline;justify-content:space-between;gap:12px;margin-bottom:10px}.invest-head h3{font-size:16px;font-weight:750;letter-spacing:-.035em}.invest-head span{font-size:11.5px;color:var(--text-tertiary);white-space:nowrap}
-  .invest-lead{display:block;padding:14px;border-radius:5px;background:var(--bg-subtle);font-size:16px;line-height:1.55;letter-spacing:-.025em;word-break:keep-all}
+  .invest-head{display:flex;flex-direction:column;align-items:stretch;justify-content:flex-start;gap:5px;margin-bottom:12px}.invest-head h3{font-size:17px;font-weight:750;letter-spacing:-.035em;white-space:nowrap;line-height:1.45}.invest-head span{display:block;font-size:11.5px;line-height:1.45;color:var(--text-tertiary);white-space:normal}
+  .invest-lead{display:block;width:100%;padding:14px 15px;border-radius:7px;background:var(--bg-subtle);font-size:15px;line-height:1.65;letter-spacing:-.025em;word-break:keep-all;overflow-wrap:anywhere}
   .invest-essay{padding:4px 0}.invest-essay h4{margin:18px 0 5px;font-size:14px}.invest-essay p{font-size:13.5px;line-height:1.78;color:var(--text-secondary);white-space:pre-line;word-break:keep-all}
   .invest-essay h4:not(:first-child){padding-top:16px;border-top:1px solid var(--border-soft)}
   .invest-list>div{display:grid;grid-template-columns:58px minmax(0,1fr);gap:10px;padding:12px 0;border-bottom:1px solid var(--border-soft)}.invest-list dt{font-size:12px;font-weight:700;color:var(--primary-soft-fg)}.invest-list dd{font-size:13px;line-height:1.7;color:var(--text-secondary);word-break:keep-all}
