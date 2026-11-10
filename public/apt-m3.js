@@ -71,18 +71,16 @@
    Q:integratedSite?.Q??(Number.isFinite(years)&&years>=1950?interp(Math.max(0,2026-years),ageCurve):50),
    S:interp(Number(d.py)||0,sizeCurve),
   };
-  // 구분단지 통합 전의 물리적 입지·상품 특성은 관찰 가능한 원값으로 보존한다.
-  // M3에서는 기존 S4의 '급지가 약한 곳에서 대단지 프리미엄 제한'이
-  // 무시되고 있었다. 10~15억에서는 동일한 장기 급지 구간을 이용해
-  // 세대수 가점에 전부, 신축 상품성 가점에는 65%만 연동한다.
-  // 단지 규모나 연식을 실제보다 작게 바꾸는 방식이 아니라
-  // 해당 위치에서 추가 프리미엄이 얼마나 유효한지 평가하는 규칙이다.
+  // 공식 K-apt 통합 관리단지의 단지 규모는 전체 공식 세대수를 유지한다.
+  // 다만 여러 구분 블록에 분산된 규모의 추가 프리미엄을 해당 단지의
+  // 세대수 가중 장기 급지에 연동한다. 일반 단지의 상품성까지 무차별
+  // 감점하면 좋은 역세권 신축이 100~300위씩 떨어져 백테스트 전에는 금지한다.
+  // 실제 순위 검증: 10~15억 통합단지에만 기존 S4 급지 게이트 적용.
   const baseRaw={...raw};
-  if(cap===15){
+  if(cap===15&&integratedSite){
     const gg=Array.isArray(root.S4CFG?.gGate)?root.S4CFG.gGate:[45,70];
     const gate=clamp((raw.G-gg[0])/(gg[1]-gg[0]),0,1);
     if(raw.U>50)raw.U=50+(raw.U-50)*gate;
-    if(raw.Q>50)raw.Q=50+(raw.Q-50)*(1-.65*(1-gate));
   }
   const effectiveWeights=cap===15?weights:baselineWeights;
   const parts=Object.fromEntries(Object.entries(effectiveWeights).map(([k,w])=>[k,raw[k]*w]));
