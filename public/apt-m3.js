@@ -43,11 +43,14 @@
   const volume=newborn?0:n12===0?14:n12===1?11:n12===2?9:n12<=4?6:n12<=9?2:0;
   const stale=ageDays==null?3:ageDays>270?8:ageDays>180?7:ageDays>90?3:0;
   const inversion=Number.isFinite(Number(t.pBeforeGuard))&&t.pBeforeGuard>0;
-  const penalty=clamp(volume+(newborn?Math.min(3,stale):stale)+(inversion?3:0),0,20);
-  const warn=inversion||penalty>=4 || (n12<5 && !newborn) || (ageDays!=null&&ageDays>180);
+  const latestRaised=!!(t.latestPriceFloor&&t.lastSale>0&&t.pBeforeLatest>0);
+  // 마지막 계약가가 중위 추정치를 초과하면 시세 후행 위험을 별도 표시한다.
+  const penalty=clamp(volume+(newborn?Math.min(3,stale):stale)+(inversion?3:0)+(latestRaised?2:0),0,20);
+  const warn=inversion||latestRaised||penalty>=4||(n12<5&&!newborn)||(n3===0&&ageDays!=null&&ageDays>90)||(ageDays!=null&&ageDays>180);
   const level=penalty>=8?'high':warn?'medium':'ok';
   return {known:true,n12,n3,last:date,ageDays,newborn,volume,stale,penalty,warn,level,
-    inversion,rawPrice:inversion?t.pBeforeGuard:null,referencePy:t.priceGuardFrom||null};
+    inversion,rawPrice:inversion?t.pBeforeGuard:null,referencePy:t.priceGuardFrom||null,
+    latestRaised,lastSale:latestRaised?t.lastSale:null,rawWeightedPrice:latestRaised?t.pBeforeLatest:null};
  }
  function compute(d,cap=root.CAPT){
   if(!active(d,cap))return null;
