@@ -1,0 +1,48 @@
+name: Apartment Map Read-only Audit
+
+on:
+  push:
+    branches:
+      - audit/read-only-rank-validation-20261111
+
+permissions:
+  contents: read
+
+jobs:
+  audit:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+        with:
+          persist-credentials: false
+      - name: Check Node.js
+        run: node --version
+      - name: Run isolated auditor tests
+        run: |
+          node scripts/test-apt-ranks-audit.mjs
+          node scripts/test-apt-snapshots-audit.mjs
+          node scripts/test-apt-policy-audit.mjs
+      - name: Analyze scoring policy without any deployment
+        run: node scripts/audit-apt-policy.mjs --out /tmp/apt-policy-audit.json
+      - name: Analyze stored historical snapshots
+        run: |
+          node scripts/audit-apt-snapshots.mjs --out /tmp/apt-snapshot-audit.json > /tmp/apt-snapshot-summary.json || {
+            echo "Historical snapshot anomalies found. Inspect artifact; this does not prove current production errors."
+          }
+      - name: Try complete live-input audit (never declare missing inputs PASS)
+        run: |
+          node scripts/audit-apt-ranks.mjs --out /tmp/apt-live-audit.json > /tmp/apt-live-summary.json || {
+            echo "Current full audit blocked or found errors. See artifact; do not treat as passed."
+          }
+      - name: Upload separate read-only audit reports
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: apt-rank-read-only-audit
+          path: |
+            /tmp/apt-policy-audit.json
+            /tmp/apt-snapshot-audit.json
+            /tmp/apt-live-audit.json
+          if-no-files-found: warn
+          retention-days: 14
