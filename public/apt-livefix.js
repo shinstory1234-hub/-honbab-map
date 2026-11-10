@@ -53,7 +53,11 @@
         var millis=Date.parse(String(t.last||'')+'T00:00:00Z');
         if(!Number.isFinite(millis))return;
         var age=Math.max(0,(Date.now()-millis)/86400000);
-        if(age>275||t.lastSale>t.p*1.25)return;
+        if(age>275)return;
+        // 25억 이상 보호 구간으로 가격을 이동시키지 않는다.
+        // 그 경우는 높은 최신 거래 근거만 표시하고 별도 가격위험 감점을 적용한다.
+        if(t.lastSale>=250000){ t.latestAbove25=1; return; }
+        if(t.lastSale>t.p*1.25){ t.latestFarAboveEstimate=1; return; }
         t.pBeforeLatest=t.p;
         t.p=Math.round(t.lastSale);
         t.latestPriceFloor=1;
