@@ -64,6 +64,24 @@ jobs:
             }
           '
           exit "$status"
+      - name: Cross-check dated government redevelopment evidence against all price bands
+        if: always()
+        run: |
+          set -euo pipefail
+          test -d "${RUNNER_TEMP}/aptmap-master"
+          cp scripts/audit-apt-project-facts.mjs "${RUNNER_TEMP}/aptmap-master/scripts/audit-apt-project-facts.mjs"
+          TRANSPORT_INPUTS="${RUNNER_TEMP}/apt-audit-inputs" node "${RUNNER_TEMP}/aptmap-master/scripts/audit-apt-project-facts.mjs" \
+            --root "${RUNNER_TEMP}/aptmap-master" \
+            --evidence "$GITHUB_WORKSPACE/docs/audit-redevelopment-registry.json" \
+            --out /tmp/apt-project-facts.json > /tmp/apt-project-facts-stdout.json
+          node --input-type=module -e '
+            import fs from "node:fs";
+            const x=JSON.parse(fs.readFileSync("/tmp/apt-project-facts.json","utf8"));
+            for(const p of x.projects){
+              console.log("PROJECT",JSON.stringify({id:p.project_id,status:p.status,
+                members:p.members,observations:p.observations,issues:p.issues}));
+            }
+          '
       - name: Upload separate read-only audit reports
         if: always()
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
@@ -73,5 +91,6 @@ jobs:
             /tmp/apt-policy-audit.json
             /tmp/apt-snapshot-audit.json
             /tmp/apt-live-audit.json
+            /tmp/apt-project-facts.json
           if-no-files-found: warn
           retention-days: 14
