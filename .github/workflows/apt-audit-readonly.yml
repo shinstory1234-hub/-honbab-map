@@ -30,8 +30,39 @@ jobs:
           node scripts/audit-apt-snapshots.mjs --out /tmp/apt-snapshot-audit.json > /tmp/apt-snapshot-summary.json || {
             echo "Historical snapshot anomalies found. Inspect artifact; this does not prove current production errors."
           }
-      - name: Execute full live audit (fail closed when live inputs are missing)
-        run: node scripts/audit-apt-ranks.mjs --out /tmp/apt-live-audit.json > /tmp/apt-live-summary.json
+      - name: Restore frozen geographic and live-price input backups
+        run: |
+          mkdir -p "${RUNNER_TEMP}/apt-audit-inputs"
+          gzip -t docs/transport-inputs/apt-live.js.gz
+          gzip -t docs/transport-inputs/apt-geo.js.gz
+          gzip -dc docs/transport-inputs/apt-live.js.gz > "${RUNNER_TEMP}/apt-audit-inputs/apt-live.js"
+          gzip -dc docs/transport-inputs/apt-geo.js.gz > "${RUNNER_TEMP}/apt-audit-inputs/apt-geo.js"
+          echo "Restored frozen input files; these are NOT the live database."
+      - name: Audit latest master in temporary worktree against isolated baseline
+        run: |
+          set -euo pipefail
+          git fetch --depth=1 origin master
+          git worktree add --detach "${RUNNER_TEMP}/aptmap-master" FETCH_HEAD
+          cp scripts/audit-apt-ranks.mjs "${RUNNER_TEMP}/aptmap-master/scripts/audit-apt-ranks.mjs"
+          set +e
+          TRANSPORT_INPUTS="${RUNNER_TEMP}/apt-audit-inputs" node "${RUNNER_TEMP}/aptmap-master/scripts/audit-apt-ranks.mjs" \
+            --root "${RUNNER_TEMP}/aptmap-master" --baseline-root "$GITHUB_WORKSPACE" \
+            --out /tmp/apt-live-audit.json > /tmp/apt-live-summary.json
+          status=$?
+          set -e
+          node --input-type=module -e '
+            import fs from "node:fs";
+            const x=JSON.parse(fs.readFileSync("/tmp/apt-live-audit.json","utf8"));
+            console.log("AUDIT_STATUS",x.status,"BASELINE",x.baselineRoot,"SOURCE",x.root);
+            for(const b of x.bands){
+              const codes={};
+              for(const f of b.findings||[])codes[f.code]=(codes[f.code]||0)+1;
+              console.log("BAND",JSON.stringify({cap:b.cap,status:b.status,rows:b.rows||0,
+                errors:b.counts?.error||0,review:b.counts?.review||0,reason:b.reason||null,codes,
+                firstFindings:(b.findings||[]).slice(0,5)}));
+            }
+          '
+          exit "$status"
       - name: Upload separate read-only audit reports
         if: always()
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
