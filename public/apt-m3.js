@@ -29,6 +29,24 @@
  function active(d,cap=root.CAPT){
   return [10,15,20,25].includes(cap)&&Number(d?.p)>60000&&Number(d?.p)<250000;
  }
+ // 가격의 불확실성은 '아파트 품질'이 아니라 예산 내 실매수 가능성에 대한 위험이다.
+ // 검증 전 정책값: 준공 2년 이내는 거래량 부족만으로 감점하지 않는다.
+ function priceConfidence(d,now=new Date()){
+  const t=(d.types||[]).find(x=>Number(x.py)===Number(d.py));
+  if(!t || !Number.isFinite(Number(t.n))) return {known:false,penalty:0,warn:false,level:'unknown'};
+  const n12=Math.max(0,Number(t.n));
+  const n3=Math.max(0,Number(t.n3)||0);
+  const date=String(t.last||'').replace(/\./g,'-').slice(0,10);
+  const parsed=/^20\d\d-\d\d-\d\d$/.test(date)?Date.parse(date+'T00:00:00Z'):NaN;
+  const ageDays=Number.isFinite(parsed)?Math.max(0,Math.floor((now.getTime()-parsed)/86400000)):null;
+  const newborn=Number.isFinite(Number(d.year)) && Number(d.year)>=now.getUTCFullYear()-2;
+  const volume=newborn?0:n12===0?9:n12===1?7:n12===2?5:n12<=4?3:n12<=9?1:0;
+  const stale=ageDays==null?2:ageDays>270?5:ageDays>180?4:ageDays>90?2:0;
+  const penalty=clamp(volume+(newborn?Math.min(2,stale):stale),0,12);
+  const warn=penalty>=4 || (n12<5 && !newborn) || (ageDays!=null&&ageDays>180);
+  const level=penalty>=8?'high':warn?'medium':'ok';
+  return {known:true,n12,n3,last:date,ageDays,newborn,volume,stale,penalty,warn,level};
+ }
  function compute(d,cap=root.CAPT){
   if(!active(d,cap))return null;
   const s=d.s4||{};
@@ -44,8 +62,9 @@
   const parts=Object.fromEntries(Object.entries(weights).map(([k,w])=>[k,raw[k]*w]));
   const density=Number.isFinite(s.density?.pen)?s.density.pen:0;
   const hill=Number.isFinite(s.ta?.h)?s.ta.h*.5:0;
-  const score=clamp(Object.values(parts).reduce((sum,v)=>sum+v,0)-density-hill);
-  return {score,raw,parts,penalties:{density,hill},model:'M3 (가중치 백테스트 전)'};
+  const price=priceConfidence(d);
+  const score=clamp(Object.values(parts).reduce((sum,v)=>sum+v,0)-density-hill-price.penalty);
+  return {score,raw,parts,price,penalties:{density,hill,price:price.penalty},model:'M3 (가중치·가격 근거 감점 백테스트 전)'};
  }
  function apply(d){
   const m=compute(d);
@@ -58,11 +77,11 @@
   const m=d.m3;if(!m)return '';
   const f=x=>Number(x??0).toFixed(1);
   const parts=[['장기 급지','G',35],['직주','J',10],['교통','T',15],['세대수','U',20],['상품성','Q',15],['평형 효용','S',5]];
-  return 'M3 종합 '+f(m.score)+'점 = '+parts.map(([label,key,w])=>label+' '+f(m.raw[key])+' × '+w+'%').join(' + ')+(m.penalties.density?' − 고밀도 '+f(m.penalties.density):'')+(m.penalties.hill?' − 언덕 '+f(m.penalties.hill):'')+' · 검증 전 잠정 산식';
+  return 'M3 종합 '+f(m.score)+'점 = '+parts.map(([label,key,w])=>label+' '+f(m.raw[key])+' × '+w+'%').join(' + ')+(m.penalties.density?' − 고밀도 '+f(m.penalties.density):'')+(m.penalties.hill?' − 언덕 '+f(m.penalties.hill):'')+(m.penalties.price?' − 실거래 근거 부족 '+f(m.penalties.price):'')+' · 검증 전 잠정 산식';
  }
  function why(d){
   const m=d.m3;if(!m)return '';
-  return 'M3 급지 '+m.raw.G.toFixed(0)+' · 직주 '+m.raw.J.toFixed(0)+' · 교통 '+m.raw.T.toFixed(0)+' · '+(d.unitsOwn??d.units).toLocaleString()+'세대 · 상품성 '+m.raw.Q.toFixed(0)+' · 평형 '+m.raw.S.toFixed(0)+' (가중치 검증 전)';
+  return 'M3 급지 '+m.raw.G.toFixed(0)+' · 직주 '+m.raw.J.toFixed(0)+' · 교통 '+m.raw.T.toFixed(0)+' · '+(d.unitsOwn??d.units).toLocaleString()+'세대 · 상품성 '+m.raw.Q.toFixed(0)+' · 평형 '+m.raw.S.toFixed(0)+(m.penalties.price?' · 시세 신뢰도 감점 −'+m.penalties.price.toFixed(0)+'점':'')+' (가중치 검증 전)';
  }
  const oldPanel=root.APT_TRANSPORT?.panel;
  if(oldPanel){
@@ -77,6 +96,6 @@
        +'<p class="note">운행 중인 역 우선, 도보 0~25분 연속 평가. 미개통 노선은 할인 반영. M3 가중치는 과거 시점 검증 전 잠정값입니다.</p></section>';
   };
  }
- root.APT_M3=Object.freeze({active,compute,apply,detail,why,transportScore,weights});
+ root.APT_M3=Object.freeze({active,compute,apply,detail,why,transportScore,priceConfidence,weights});
 })(window);
 
