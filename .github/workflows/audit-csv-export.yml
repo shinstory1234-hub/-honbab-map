@@ -1,0 +1,47 @@
+name: Export Apartment Map Audit CSV
+on:
+  push:
+    branches:
+      - audit/csv-2026-11-10
+    paths:
+      - scripts/export-audit-csv.cjs
+      - .github/workflows/audit-csv-export.yml
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  export:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - name: Checkout isolated audit branch
+        uses: actions/checkout@v4
+        with:
+          ref: audit/csv-2026-11-10
+          persist-credentials: true
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Install browser automation
+        run: |
+          npm install --no-save --no-audit --no-fund playwright@1.58.2
+          npx playwright install --with-deps chromium
+      - name: Extract current live site rankings
+        run: node scripts/export-audit-csv.cjs
+      - name: Save CSV files to isolated audit branch
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add audit-exports
+          if ! git diff --cached --quiet; then
+            git commit -m 'Save current Apartment Map audit CSV snapshot [skip ci]'
+            git push origin HEAD:audit/csv-2026-11-10
+          fi
+      - name: Upload CSV as downloadable workflow artifact
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: aptmap-65-column-audit-${{ github.run_number }}
+          path: audit-exports/
+          retention-days: 14
