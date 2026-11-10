@@ -289,7 +289,7 @@ aside{order:-1;width:408px;flex:none;border-right:1px solid var(--border);backgr
   var T=c!==6, x=String(c);
   /* 주변 시세 커널(apt-loc10·cx10)은 가격과 무관한 전체 단지 자료라 6~10억·10~15억 탭이 같이 씀 */
   var F=[T?'':'apt-first.js','apt-unitfix.js','apt-sd.js','apt-picks.js', T?'apt-picks10.js':'apt-auto3.js','apt-gj.js', T?'apt-loc10.js':'apt-loc.js', T?'apt-cx10.js':'apt-cx.js','apt-fard.js','apt-hak.js', T?'apt-univ10.js':'apt-univ.js', T?'apt-univ15.js':'', T?'apt-univ20.js':'', T?'apt-univ30.js':'', T?'apt-univadd.js':'', T?'apt-live.js':'', T?'apt-livefix.js':'',
-    'apt-farplan.js','apt-mixhi.js','apt-cur.js','apt-trn.js','apt-small.js', T?'apt-s4q'+x+'.js':'apt-s4q.js','apt-peak.js','apt-gjl.js', T?'apt-gjc.js':'',T?'apt-transport.js':'','apt-s4.js','apt-band.js','apt-plat.js','apt-farfix.js','apt-dem.js', T?'apt-dem10.js':'', T?'apt-dem15.js':'', T?'apt-dem20.js':'', T?'apt-dem30.js':'', T?'apt-demadd.js':'','apt-walk.js','apt-geo.js', T?'':'apt-deep6-100.js', T?'':'apt-deep6-200.js', T?'':'apt-research6-600.js', T?'':'apt-invest-ui.js'];
+    'apt-farplan.js','apt-mixhi.js','apt-cur.js','apt-trn.js','apt-small.js', T?'apt-s4q'+x+'.js':'apt-s4q.js','apt-peak.js','apt-gjl.js', T?'apt-gjc.js':'',T?'apt-transport.js':'','apt-s4.js',T&&c<30?'apt-m3.js':'','apt-band.js','apt-plat.js','apt-farfix.js','apt-dem.js', T?'apt-dem10.js':'', T?'apt-dem15.js':'', T?'apt-dem20.js':'', T?'apt-dem30.js':'', T?'apt-demadd.js':'','apt-walk.js','apt-geo.js', T?'':'apt-deep6-100.js', T?'':'apt-deep6-200.js', T?'':'apt-research6-600.js', T?'':'apt-invest-ui.js'];
   for(var i=0;i<F.length;i++) if(F[i]) document.write('<script src="'+F[i]+'"><\/script>');
   if(T) document.title='아파트맵 · '+CAPTXT+' 아파트';
   var t6=document.getElementById('cap'+x); if(t6){ t6.setAttribute('aria-current','page'); try{ t6.scrollIntoView({block:'nearest',inline:'center'}); }catch(e){} } var hm=document.getElementById('home'); if(hm&&T) hm.href='apt-map.html?cap='+x;
@@ -840,7 +840,7 @@ function* recomputeSteps(){
     if(d.disp>0){ cf*=1-.6*d.disp; cl+=` · 주변 시세가 엇갈림(이웃 위치가치 편차 ${d.kfw.sd.toFixed(2)})`; }
     d.conf=cf; d.confl=cl; d.upR=d.up>0?d.up*cf:d.up;
     d.U=Math.max(0,Math.min(100,d.upR/.5*100));                       // 신뢰도 반영 여력 50% 이상이면 만점
-    locNew(d); s4Score(d);                                                          // 수도권 6억 이하 4,700여 단지 중 백분위(0~100). apt-s4.js
+    locNew(d); s4Score(d); if(window.APT_M3) APT_M3.apply(d);                                                          // 수도권 6억 이하 4,700여 단지 중 백분위(0~100). apt-s4.js
     yield;
   }
   ORDER=(window.S4CFG||{}).model==='m2'?D.slice().sort((x,y)=>y.score-x.score):hillGuard(D.slice().sort((x,y)=>y.score-x.score));   // m2: 판단 순위 조정(언덕 상한) 없음 — 표시 순위 = 점수 순위
@@ -990,11 +990,23 @@ function m2Text(h,I){ const C=window.S4CFG||{};
     <b>교통 5% 개편 전 성과(신규 모델 백테스트 아님)</b>(시점 기준 — 각 구간 시작 시점 가격을 수도권 상승률로 환산해 6억 초과 20억 이하·300세대 이상인 평형만, 지금 화면에 남았는지와 무관; 상위−하위 20% 초과상승, 시·구 대비 / 가격대 전체 대비): 17→20 −2.7 / +18.2%p, 20→23 +4.1 / −3.8%p, 23→26 +3.1 / +25.6%p — 같은 시·구 안에서 고르는 힘은 약하고, 지역 간 차이(가격대 대비)에서 상승장에 강함. 재건축 사업성 감점은 과거 시점 정보로 재계산할 수 없어 이 수치에 없음 — 지금 정보로 과거에 적용해 보면 세 구간 모두 시·구 대비 −0.2~−2.1%p로 성과를 낮춰 순위에서 뺌. 이 순위는 '오래 선호된 지역의 대단지'를 고르는 것이지 같은 단지를 싸게 사는지는 판단하지 않음 — 같은 평형 가격이 올라도 점수는 그대로. 진짜 검증은 앞으로의 성적뿐 — 2026.11.1 순위를 고정 저장(<a href="${I.snap3}">원본</a>, 이전 모델은 <a href="${I.snap}">원본</a>)했고 2027.5·2027.11에 공개함.`;
   return h.replace(/(<dt>종합<small>순위<\/small><\/dt><dd>)[\s\S]*?(<\/dd><\/div>)/, (m,a,b)=>a+dd+b);
 }
+function m3Text(h,I){
+  h=m2Text(h,I).replace(/종합의 5%/g,'종합의 15%');
+  const dd=`이 화면은 ${D.length.toLocaleString()}개 평형 중 예산별 M3 순위를 제공합니다.
+    <b>M3 잠정 가중치: 장기 급지 35% + 주요 업무지구 접근성 10% + 지하철 교통 15% + 매매 대상 세대수 20% + 건물 상품성 15% + 평형 효용 5%.</b>
+    세대수는 전 가격대에 동일한 100~5,000세대 연속 곡선, 상품성은 실제 입주연도, 평형은 공급 10~34평 연속 곡선으로 평가합니다.
+    급지 때문에 세대수와 신축 상품성을 50점으로 낮추던 기존 관문을 없앴습니다.
+    교통은 현재 운영 중인 역의 노선 등급과 실제 또는 추정 도보시간을 반영하며, 예정 노선의 기여도를 보수적으로 할인합니다.
+    확인된 용적률 400% 초과 고밀도 감점과 언덕 감점을 적용합니다.
+    <b>중요: 2026년 11월 10일 M3 시험 산식으로, 가중치·급지 원자료·직주 소요시간에 대한 과거 시점 백테스트는 아직 완료되지 않았습니다.</b>
+    6억 이하와 25억 이상 구간은 기존 모델을 그대로 사용합니다. 현재는 같은 단지의 평형별로 별도 순위를 표시합니다.`;
+  return h.replace(/(<dt>종합<small>순위<\/small><\/dt><dd>)[\s\S]*?(<\/dd><\/div>)/,(all,a,b)=>a+dd+b);
+}
 function cap10Text(h){
   const I=CAPINFO[CAPT]; if(!I) return h;
   if(CAPT!==6) h=h.replace(/6억 이하 · 오를 단지/g,CAPTXT+' · 오를 단지').replace(/6억 이하인 평형/g,I.lo+'인 평형').replace(/6억 이하 평형/g,CAPTXT+' 평형')
      .replace(/6억 이하 거래/g,CAPTXT+' 거래').replace(/6억으로 살 수 있는/g,I.cap+'으로 살 수 있는').replace(/6억 이하/g,CAPTXT);
-  if((window.S4CFG||{}).model==='m2') return m2Text(h,I);
+  if((window.S4CFG||{}).model==='m2') return window.APT_M3&&CAPT<30?m3Text(h,I):m2Text(h,I);
   const C=window.S4CFG||{}, gW=C.gW||0, w=x=>+(x*100).toFixed(1), ws=`세대수 ${w((1-C.upW-gW)*(1-C.locMix))}점 + 입지 ${w((1-C.upW-gW)*C.locMix)}점 + 적정가 대비 ${w(C.upW)}점 + 장기 급지 ${w(gW)}점`;
   h=h.replace(/(<dt>적정가 대비<small>)종합의 20%(<\/small>)/,(m,a,b)=>a+'종합의 '+w(C.upW)+'%'+b);
   const dd=`순위는 이 화면의 ${NCX.toLocaleString()}곳(${D.length.toLocaleString()}개 평형, 평형마다 따로) 안의 순위. 점수에 쓰는 백분위는 수도권 ${CAPTXT} 거래 단지 ${(C.complexes||0).toLocaleString()}곳(${(C.types||0).toLocaleString()}개 평형) 전체 분포 기준이며 다른 가격대 탭과 섞지 않음.
@@ -1109,7 +1121,7 @@ function hillGuard(S,top=50){                // S: 점수순 정렬된 배열. �
 function hakIn(d){ const h=(window.HAK||{})[gkey(d)]; return !!(h&&h[1]>=250); }
 /* 점수 근거 자동 생성: 기본 세 요소·감점·전고점 가점 */
 const hasNew=d=>!!(d.locParts&&(d.locParts.fut||/예정/.test(d.locParts.lpl||'')));
-function whyLine(d){ if(!d.s4) return ''; const top=p=>{ const t=100-p; return t<1?'상위 1% 안':`상위 ${Math.max(1,Math.round(t))}%`; };
+function whyLine(d){ if(d.m3&&window.APT_M3)return APT_M3.why(d); if(!d.s4) return ''; const top=p=>{ const t=100-p; return t<1?'상위 1% 안':`상위 ${Math.max(1,Math.round(t))}%`; };
   const parts=NOUP()?[`세대수 ${top(d.s4.pU)}(${unitN(d).toLocaleString()}세대${d.unitsOwn?' · 매매 대상':''})`,`장기 급지 ${top(d.s4.pG??50)}`].concat(d.s4.pQ!=null?[`상품성 ${Math.round(d.s4.pQ)}점(${d.year}년 입주${d.s4.qrb?' · 재건축 대상':''})`]:[]):[`세대수 ${top(d.s4.pU)}(${unitN(d).toLocaleString()}세대)`,`입지 ${top(d.s4.pLoc)}`,`적정가 대비 ${d.up>=0?'+':''}${Math.round(d.up*100)}%(가정)`];
   if(d.s4.peakR!=null) parts.push(`전고점 대비 ${(d.s4.peakR*100).toFixed(1)}%(참고 · 순위 미반영)${d.s4.peakBonus>0?` · 전고점 가점 +${d.s4.peakBonus.toFixed(1)}점`:''}`);
   if(d.s4.peakPeer){ const p=d.s4.peakPeer; parts.push(`주변 유사 단지 전고점 대비 ${(p.r*100).toFixed(1)}%(참고 · 순위 미반영) · 비교군 ${p.peers.length}곳 · ${p.peers.map(x=>`${x.n}(${(x.m/1000).toFixed(1)}km)`).join(', ')}${p.bonus>0?` · 가점 +${p.bonus.toFixed(1)}점`:''}`); }
