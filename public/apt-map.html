@@ -559,7 +559,7 @@ function fixUnits(A){
     a.forEach(b=>{ if(a.some(x=>x!==b&&nm(b).length>nm(x).length&&nm(b).startsWith(nm(x)))){ drop.add(b); DUPOUT.push([b.n,b.area]); } });
     const k=a.filter(d=>!drop.has(d)); if(k.length>1) k.forEach(d=>{ d.unitsRaw=d.units; d.unitsN=k.length; d.units=Math.round(d.units/k.length); }); });
   return A.filter(d=>!drop.has(d)); }
-const D=fixUnits(PICKS.map(d=>({...d,opt:(window.OPT||{})[d.n]||null})).filter(d=>{
+const D=fixUnits(PICKS.map(d=>({...d,opt:(CAPT===6?(window.OPT||{})[d.n]:null)||null})).filter(d=>{
   if(GEOOUT.has(gkey(d))) return false;
   const rr=RIGHTS_BLOCK.get(gkey(d));
   if(rr){ RIGHTSOUT.push([d.n,d.area,rr.date,rr.why]); return false; }
