@@ -1202,7 +1202,8 @@ function m3FlatOptions(d){
     +'<span class="flat-price">'+(x.m3?.price?.warn?'추정 ':'')+short(x.p)+'</span></button>').join('')+'</div>';
 }
 function renderList(){
-  const b=$('#body'), filterScroll=[...b.querySelectorAll('.filters')].map(el=>el.scrollLeft);
+  const b=$('#body'), previousScroll=b.querySelector('.intro')?b.scrollTop:0;
+  const filterScroll=[...b.querySelectorAll('.filters')].map(el=>el.scrollLeft);
   const viewport=state.browse&&map?map.getBounds():null;
   const matches=ORDER.filter(d=>visible(d)&&(!viewport||(d._pos&&viewport.contain(d._pos))));
   const pend=D.filter(d=>d.pending).length;
@@ -1252,6 +1253,7 @@ function renderList(){
   <p class="source">지역별 최신 아파트 가격동향은 <a href="https://www.reb.or.kr/r-one/portal/main/indexPage.do" target="_blank" rel="noopener noreferrer">한국부동산원 공식 통계</a>에서 확인하세요. 과거 하락률은 현재 수치가 아니므로 제외했습니다. <button type="button" class="linkbtn" id="noticeOpen">이용 유의사항</button></p>`;
   h=publicMethodSummary(cap10Text(h));
   b.innerHTML=h;
+  b.scrollTop=previousScroll;
   b.querySelectorAll('.filters').forEach((el,i)=>{el.scrollLeft=filterScroll[i]||0;});
   updateSourceStatus();
   const browseReset=b.querySelector('#browseReset'); if(browseReset) browseReset.onclick=()=>{state.browse=false;render();b.scrollTop=0;syncMapViewUrl();};
