@@ -44,6 +44,7 @@ jobs:
           git fetch --depth=1 origin master
           git worktree add --detach "${RUNNER_TEMP}/aptmap-master" FETCH_HEAD
           cp scripts/audit-apt-ranks.mjs "${RUNNER_TEMP}/aptmap-master/scripts/audit-apt-ranks.mjs"
+          cp scripts/transport-runtime.mjs "${RUNNER_TEMP}/aptmap-master/scripts/transport-runtime.mjs"
           set +e
           TRANSPORT_INPUTS="${RUNNER_TEMP}/apt-audit-inputs" node "${RUNNER_TEMP}/aptmap-master/scripts/audit-apt-ranks.mjs" \
             --root "${RUNNER_TEMP}/aptmap-master" --baseline-root "$GITHUB_WORKSPACE" \
