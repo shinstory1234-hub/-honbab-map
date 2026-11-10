@@ -11,6 +11,8 @@ const section=(start,end)=>{
 assert.match(html,/const visible=\(d,withSearch=true\)/);
 assert.match(html,/!withSearch\|\|!state\.q\|\|textMatches\(d\)/);
 assert.match(html,/visible\(d,false\)/);
+assert.match(html,/sibs\(d\)\.filter\(x=>visible\(x\)\)/);
+assert.match(html,/if\(state\.browse&&state\.sel==null\) renderList\(\)/);
 assert.match(html,/const viewport=state\.browse&&map\?map\.getBounds\(\):null/);
 assert.match(html,/viewport\.contain\(d\._pos\)/);
 assert.match(html,/kakao\.maps\.event\.addListener\(map,'dragstart',browseMap\)/);
