@@ -1,0 +1,46 @@
+name: Export Complete Apartment Ranking Raw CSV
+on:
+  push:
+    branches:
+      - export/full-ranking-csv-20261111
+permissions:
+  contents: read
+jobs:
+  export:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+        with:
+          persist-credentials: false
+      - name: Prepare verified live trade and geo source, fallback to dated frozen snapshots
+        run: |
+          set -euo pipefail
+          mkdir -p "${RUNNER_TEMP}/rank-sources"
+          gzip -dc docs/transport-inputs/apt-live.js.gz > "${RUNNER_TEMP}/rank-sources/apt-live.js"
+          gzip -dc docs/transport-inputs/apt-geo.js.gz > "${RUNNER_TEMP}/rank-sources/apt-geo.js"
+          echo 'APT_RANK_INPUT_KIND=2026-11-11 보관된 실거래 및 좌표 스냅샷' >> "$GITHUB_ENV"
+          if curl -fLsS --retry 1 --connect-timeout 8 --max-time 55 'https://realestate-media.vercel.app/api/backtest/aptlive' -o "${RUNNER_TEMP}/apt-live-current.js"; then
+            if grep -q 'window.LIVEP=' "${RUNNER_TEMP}/apt-live-current.js"; then
+              mv "${RUNNER_TEMP}/apt-live-current.js" "${RUNNER_TEMP}/rank-sources/apt-live.js"
+              echo 'APT_RANK_INPUT_KIND=실시간 제공 실거래 집계 및 2026-11-11 보관 좌표' >> "$GITHUB_ENV"
+            fi
+          fi
+          if curl -fLsS --retry 1 --connect-timeout 8 --max-time 55 'https://realestate-media.vercel.app/api/backtest/aptgeo?export=js' -o "${RUNNER_TEMP}/apt-geo-current.js"; then
+            if grep -q 'window.GEO=' "${RUNNER_TEMP}/apt-geo-current.js"; then
+              mv "${RUNNER_TEMP}/apt-geo-current.js" "${RUNNER_TEMP}/rank-sources/apt-geo.js"
+              echo 'APT_RANK_INPUT_KIND=실시간 제공 실거래 집계 및 지리정보' >> "$GITHUB_ENV"
+            fi
+          fi
+          echo "TRANSPORT_INPUTS=${RUNNER_TEMP}/rank-sources" >> "$GITHUB_ENV"
+      - name: Generate six individual and one combined raw ranking CSV
+        run: |
+          node scripts/export-all-apartment-rankings.mjs --out exported-rankings
+          ls -lh exported-rankings
+      - name: Upload complete ranking CSV
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: aptmap-all-6-bands-ranked-raw-csv
+          path: exported-rankings/
+          if-no-files-found: error
+          retention-days: 30
