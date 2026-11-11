@@ -340,7 +340,7 @@ aside{order:-1;width:408px;flex:none;border-right:1px solid var(--border);backgr
   /* 첫 화면 미리보기(2026.11.11): 서버가 미리 계산한 기본 목록을 무거운 자료보다 먼저 받아 바로 보여 줌(async — 자료 로딩을 막지 않음) */
   try{ var ps=document.createElement('script'); ps.async=true; ps.src='/api/apt-first?cap='+x; document.head.appendChild(ps); }catch(e){}
   /* 주변 시세 커널(apt-loc10·cx10)은 가격과 무관한 전체 단지 자료라 6~10억·10~15억 탭이 같이 씀 */
-  var F=[T?'':'apt-first.js','apt-unitfix.js','apt-sd.js','apt-picks.js', T?'apt-picks10.js':'apt-auto3.js','apt-gj.js', T?'apt-loc10.js':'apt-loc.js', T?'apt-cx10.js':'apt-cx.js','apt-fard.js','apt-hak.js', T?'apt-univ10.js':'apt-univ.js', T?'apt-univ15.js':'', T?'apt-univ20.js':'', T?'apt-univ30.js':'', T?'apt-univadd.js':'', T?'apt-live.js':'',
+  var F=[T?'':'apt-first.js','apt-unitfix.js',T?'apt-stsfix.js':'','apt-sd.js','apt-picks.js', T?'apt-picks10.js':'apt-auto3.js','apt-gj.js', T?'apt-loc10.js':'apt-loc.js', T?'apt-cx10.js':'apt-cx.js','apt-fard.js','apt-hak.js', T?'apt-univ10.js':'apt-univ.js', T?'apt-univ15.js':'', T?'apt-univ20.js':'', T?'apt-univ30.js':'', T?'apt-univadd.js':'', T?'apt-live.js':'',
     'apt-farplan.js','apt-mixhi.js','apt-cur.js',T?'apt-livefix.js':'','apt-trn.js','apt-small.js', T?'apt-s4q'+x+'.js':'apt-s4q.js','apt-peak.js','apt-gjl.js', T?'apt-gjc.js':'',T?'apt-transport.js':'','apt-s4.js',T?'apt-redevelopment-evidence.js':'',T?'apt-m3.js':'','apt-band.js','apt-plat.js','apt-farfix.js','apt-dem.js', T?'apt-dem10.js':'', T?'apt-dem15.js':'', T?'apt-dem20.js':'', T?'apt-dem30.js':'', T?'apt-demadd.js':'','apt-walk.js','apt-geo.js', T?'':'apt-deep6-100.js', T?'':'apt-deep6-200.js', T?'':'apt-research6-600.js', T?'':'apt-invest-ui.js'];
   for(var i=0;i<F.length;i++) if(F[i]) document.write('<script src="'+F[i]+'"><\/script>');
   if(T) document.title='아파트맵 · '+CAPTXT+' 아파트';
@@ -411,6 +411,10 @@ const GEOADD={
   '중앙하이츠빌2단지|서울 성북구 정릉동':{sc:410,ac:356}   // 초등학교·학원만 비어 있어 566m 옆 정릉우성 값
 };
 for(const [k,v] of Object.entries(GEOADD)) GEO[k]=Object.assign({cat:'부동산 > 주거시설 > 아파트'},GEO[k]||{},v,{gv:1});
+/* 역 보충(2026.11.12, apt-stsfix.js): 카카오 지하철역 분류 3km 검색에 동탄역(GTX-A·SRT) 등이 안 잡혀 '역 없음'이던 6억 초과 단지만.
+   역 정보가 이미 있는 단지는 건드리지 않고, 6억 이하 탭 결과는 유지 */
+if(window.GEOSTS&&CAPT>6){ for(const [k,v] of Object.entries(GEOSTS)){ const g=GEO[k]; if(g&&Array.isArray(g.sts)&&g.sts.length) continue;
+  const {lat,lng,...st}=v; GEO[k]=Object.assign({cat:'부동산 > 주거시설 > 아파트'},g&&g.lat?{}:{lat,lng},g||{},st,{gv:1,fix:1}); } }
 const GEOOUT=new Set(['시흥동 현대982|서울 금천구 시흥동']);   // 정확한 위치 확인 불가(지번 982 실거래·지오코딩 없음) — 순위 제외
 const saveGeo=()=>{try{localStorage.setItem('apt6geo_'+GEO_V,JSON.stringify(GEO));}catch(e){}};
 const gkey=d=>d.n+'|'+d.area;
@@ -560,8 +564,10 @@ for(const key of SPLIT_UNIT_COUNT.keys()){
 
 function fixUnits(A){
   // 2026.11.1: 네 탭 합집합 기준으로 계산한 전역 표(apt-unitfix.js)가 있으면 그것만 씀 — 탭마다 같은 단지 세대수가 달라지던 오류 수정
-  if(window.UNITFIX){ const DR=new Set(window.UNITDROP||[]), RT=new Set(window.UNITRENT||[]);
-    A.forEach(d=>{ const key=gkey(d),f=UNITFIX[key]; if(f){ d.unitsRaw=f[1]; d.unitsN=f[2]; d.units=f[0]; d.unitsK=f[3]==='k'; }
+  if(window.UNITFIX){ const M3X=CAPT>6;   // 2026.11.12 전수조사 정정표(*_M3)는 6억 초과 탭에만 — 6억 이하 기존 결과 보존
+    const UF=M3X?Object.assign({},UNITFIX,window.UNITFIX_M3||{}):UNITFIX;
+    const DR=new Set([...(window.UNITDROP||[]),...(M3X?window.UNITDROP_M3||[]:[])]), RT=new Set([...(window.UNITRENT||[]),...(M3X?window.UNITRENT_M3||[]:[])]);
+    A.forEach(d=>{ const key=gkey(d),f=UF[key]; if(f){ d.unitsRaw=f[1]; d.unitsN=f[2]; d.units=f[0]; d.unitsK=f[3]==='k'; }
       // 1~4단지를 따로 잘라 규모가 작은 단지로 점수화하면 실제로
       // 공유하는 3,045세대 규모의 거주 편익을 잘못 무시한다.
       // 검증된 K-apt 관리단지는 공식 합계 세대수를 그대로 유지하고
