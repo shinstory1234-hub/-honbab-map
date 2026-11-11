@@ -61,15 +61,21 @@
  }
  // 직주근접(2026.11.12): 기존 pJ는 업무지구(강남·시청·여의도·판교) 7.7km 안이면 전부 최고점이라
  // 탭 단지 60~90%가 같은 백분위(약 80)에 몰리고, 조금만 벗어난 고덕·둔촌·과천·상계는 26~44로 급락했다.
- // 가장 가까운 업무지구까지 직선거리로 3km 이내 100점 → 20km 0점 직선 점수로 바꿔 변별력을 살린다.
- // 업무지구는 기존 4곳에 서울 2040 광역중심 중 고용이 큰 잠실·마곡·용산을 더한다(6억 이하 S4 점수는 그대로).
- // 마곡은 2급 업무지구(고용 규모가 강남·시청·여의도의 일부) → 마곡 기준 점수는 ×0.7. 1급은 그대로.
- const M3_CBD=[[37.5133,127.1001,1],[37.5602,126.8254,.7],[37.5299,126.9648,1]];
+ // 업무지구별로 직선거리 3km 100점 → 20km 0점, 2급은 ×0.7.
+ //  1급: 강남·시청·여의도·판교(기존 S4CBD) + 잠실·용산 / 2급: 마곡, 반도체벨트(수원 삼성디지털시티·기흥/화성·평택·SK하이닉스 이천 — 묶어서 한 곳으로 침)
+ // 여러 업무지구로 출퇴근 가능한지: 가장 가까운 곳 점수(3→20km) × (0.75 + 0.25 × 다른 업무지구 접근도).
+ // 다른 업무지구 접근도 = 2위 + 0.5×3위 (각 3→25km, 합 100 이상이면 만점). 한 곳만 되면 ×0.75(감점), 겹치면 ×1.
+ // → 여의도·마곡만 되는 인천·일산은 낮게, 판교+강남·잠실이 되는 분당, 강남+판교+용산이 되는 과천은 유지.
+ const M3_CBD=[[37.5133,127.1001,1,'잠실'],[37.5299,126.9648,1,'용산'],[37.5602,126.8254,.7,'마곡'],
+  [37.2580,127.0530,.7,'반도체'],[37.2190,127.0700,.7,'반도체'],[37.0210,127.0480,.7,'반도체'],[37.2060,127.4780,.7,'반도체']];
  function commuteScore(d,s){
-  const cbd=typeof S4CBD!=='undefined'?S4CBD.map(([a,b])=>[a,b,1]).concat(M3_CBD):null, g=d.g||{};
-  if(!cbd||!Number.isFinite(g.lat)||!Number.isFinite(g.lng))return Number.isFinite(s.pJ)?s.pJ:50;
-  const rad=Math.PI/180;
-  return Math.max(...cbd.map(([a,b,w])=>{const x=(b-g.lng)*rad*Math.cos((a+g.lat)/2*rad),y=(a-g.lat)*rad,km=6371*Math.sqrt(x*x+y*y);return w*clamp(100*(1-(km-3)/17));}));
+  const g=d.g||{};
+  if(typeof S4CBD==='undefined'||!Number.isFinite(g.lat)||!Number.isFinite(g.lng))return Number.isFinite(s.pJ)?s.pJ:50;
+  const cbd=S4CBD.map(([a,b],i)=>[a,b,1,'c'+i]).concat(M3_CBD), rad=Math.PI/180, near={}, far={};
+  for(const [a,b,w,k] of cbd){const x=(b-g.lng)*rad*Math.cos((a+g.lat)/2*rad),y=(a-g.lat)*rad,km=6371*Math.sqrt(x*x+y*y);
+   const v=w*clamp(100*(1-(km-3)/17)), u=w*clamp(100*(1-(km-3)/22)); if(!(near[k]>=v)){near[k]=v;} if(!(far[k]>=u))far[k]=u;}
+  const top=Object.keys(near).sort((x,y)=>near[y]-near[x])[0], rest=Object.keys(far).filter(k=>k!==top).map(k=>far[k]).sort((x,y)=>y-x);
+  return clamp(near[top]*(.75+.25*Math.min(1,((rest[0]||0)+.5*(rest[1]||0))/100)));
  }
  function compute(d,cap=root.CAPT,integratedSite=null){
   if(!active(d,cap))return null;
