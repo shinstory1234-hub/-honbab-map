@@ -1129,7 +1129,7 @@ const CAPINFO={
 const NOUP=()=>(window.S4CFG||{}).model==='m2';   // 6억 초과 통합 모델: 적정가 대비 숨김
 /* m2(6억 초과): 재건축 사업성 위험 표시(순위 미반영) — 대지지분·용적률 → 1:1 분담금 ÷ 신축가 → 사업성 */
 function rbRiskPanel(d){ const m=d.m; if(!m||!m.fz||m.fz.x==null) return '';
-  const Ld=landOf(d), lvl=d.dead>=.5?'재건축 어려움':d.dead>=.25?'사업성 낮음':d.dead>0?'사업성 다소 낮음':'사업성 양호';
+  const Ld=landOf(d), lvl=d.dead>=.5?(CAPT>6?'추정 분담금 부담':'재건축 어려움'):d.dead>=.25?'사업성 낮음':d.dead>0?'사업성 다소 낮음':'사업성 양호';
   return `<section class="sec"><h3>재건축 사업성 <small>${lvl} · 순위 미반영(위험 표시)</small></h3><div class="score tnum">
     <div><span class="l">대지지분<small>${Ld?`${esc(Ld[1])} 실측 용적률 ${Ld[2]}%`:`용적률 ${farOld(d)[0]}% 추정(${esc(farOld(d)[1]||'')}) — 건축물대장 실측 없음`}</small></span><span class="v">${(Ld?Ld[0]/3.3058:d.py*100/(farOld(d)[0]||250)).toFixed(1)}<i>평</i></span></div>
     <div><span class="l">1:1 재건축 분담금 ÷ 신축가<small>같은 평형으로 재건축할 때 낼 돈의 비율 — 낮을수록 사업성 좋음</small></span><span class="v">${Math.round(m.fz.x*100)}<i>%</i></span></div>
@@ -1363,7 +1363,7 @@ function whyLine(d){ if(d.m3&&window.APT_M3)return APT_M3.why(d); if(!d.s4) retu
   if(d.s4.peakPeer){ const p=d.s4.peakPeer; parts.push(`주변 유사 단지 전고점 대비 ${(p.r*100).toFixed(1)}%(참고 · 순위 미반영) · 비교군 ${p.peers.length}곳 · ${p.peers.map(x=>`${x.n}(${(x.m/1000).toFixed(1)}km)`).join(', ')}${p.bonus>0?` · 가점 +${p.bonus.toFixed(1)}점`:''}`); }
   if(d.locParts&&d.locParts.lp) parts.push(`노선 +${Math.round(d.locParts.lp*100)}%(${d.locParts.lpl})`);
   if(d.locParts&&d.locParts.fut){ const f=d.locParts.fut; parts.push(`개통 예정 ${f.n}역(${f.line.replace('(신설)','')}, ${f.year}년 목표) 도보 ${Math.round(d.locParts.wf)}분 반영 — 빼면 입지 상위 ${Math.max(1,Math.round(100-d.loc0))}%`); }
-  if(d.dead>=.5) parts.push(`재건축 어려움(사업성 낮음 · 여력·입지·종합 감점 −${d.s4.dp.toFixed(1)})`);
+  if(d.dead>=.5) parts.push(`${CAPT>6?'추정 분담금 부담':'재건축 어려움'}(사업성 낮음 · 여력·입지·종합 감점 −${d.s4.dp.toFixed(1)})`);
   if(d.oldp>=3) parts.push(`정비 이슈 없는 구축(${2026-d.year}년차 · 재건축·리모델링 공식 단계 전 −${d.oldp.toFixed(1)})`);
   if(d.unitsOwn) parts.push(`세대수 보정(통합 명칭의 임대단지 제외 · 매매 가능한 일반분양 ${d.unitsOwn.toLocaleString()}세대)`);
   else if(d.unitsN>1) parts.push(`세대수 추정(마을 합계 ${d.unitsRaw.toLocaleString()}세대 ÷ ${d.unitsN}단지)`); else if(d.unitsK) parts.push(`세대수 공식값(K-apt ${d.units.toLocaleString()}세대)`);
@@ -1530,7 +1530,7 @@ function renderDetail(i){
     <div><span class="l">초품아<small>${d.g.scn?esc(d.g.scn)+' '+fmtM(d.g.sc):d.E===0?'900m 안에 초등학교 없음':'계산 중'}</small></span><span class="v">${d.E!=null?d.E.toFixed(1):'–'}<i> / 6</i></span>${bar(d.E||0,6)}</div>
     <div><span class="l">브랜드<small>${esc(d.bl)}</small></span><span class="v">${d.B.toFixed(1)}<i> / 3</i></span>${bar(d.B,3)}</div>
   </div></section>
-  <section class="sec"><h3>적정가 대비 <small>${d.up>=0?'+':''}${Math.round(d.up*100)}% → 신뢰도 ${Math.round(d.conf*100)}% 반영 ${d.upR>=0?'+':''}${Math.round(d.upR*100)}%</small></h3><p class="note" style="margin:-4px 0 8px">신뢰도: ${esc(d.confl)}. 순위에는 신뢰도 반영값을 씀.${d.rbw>0&&d.rbw<1?`<br>${2026-d.year}년차라 일반 계산 ${(d.upGen*100).toFixed(0)}%와 재건축 계산 ${(d.upRb*100).toFixed(0)}%를 ${Math.round((1-d.rbw)*100)} : ${Math.round(d.rbw*100)}로 섞음(27~33년차 구간).`:''}${d.dead>0?`<br><b>재건축 막힌 구축 ${Math.round(d.dead*100)}%</b>: 사업성이 낮아(분담금 비율 ${d.m.fz.x.toFixed(2)} → 정비 단계 진입률이 사업성 좋은 단지의 ${Math.round(d.m.fz.f*100)}%) 같은 연식보다 싸 보이는 몫${d.upGen>0?`(${(d.upGen*100).toFixed(0)}% → ${(d.upGenD*100).toFixed(0)}%)`:''}을 덜 믿고, 재건축 없이 계속 낡는 몫 −${Math.round(DEAD.drag*d.dead*100)}%를 뺌(판단·가정). 섞기 전 ${d.upPre>=0?'+':''}${Math.round(d.upPre*100)}%.`:''}</p>
+  <section class="sec"><h3>적정가 대비 <small>${d.up>=0?'+':''}${Math.round(d.up*100)}% → 신뢰도 ${Math.round(d.conf*100)}% 반영 ${d.upR>=0?'+':''}${Math.round(d.upR*100)}%</small></h3><p class="note" style="margin:-4px 0 8px">신뢰도: ${esc(d.confl)}. 순위에는 신뢰도 반영값을 씀.${d.rbw>0&&d.rbw<1?`<br>${2026-d.year}년차라 일반 계산 ${(d.upGen*100).toFixed(0)}%와 재건축 계산 ${(d.upRb*100).toFixed(0)}%를 ${Math.round((1-d.rbw)*100)} : ${Math.round(d.rbw*100)}로 섞음(27~33년차 구간).`:''}${d.dead>0?`<br><b>${CAPT>6?'추정 분담금 부담':'재건축 막힌 구축'} ${Math.round(d.dead*100)}%</b>: 사업성이 낮아(분담금 비율 ${d.m.fz.x.toFixed(2)} → 정비 단계 진입률이 사업성 좋은 단지의 ${Math.round(d.m.fz.f*100)}%) 같은 연식보다 싸 보이는 몫${d.upGen>0?`(${(d.upGen*100).toFixed(0)}% → ${(d.upGenD*100).toFixed(0)}%)`:''}을 덜 믿고, 재건축 없이 계속 낡는 몫 −${Math.round(DEAD.drag*d.dead*100)}%를 뺌(판단·가정). 섞기 전 ${d.upPre>=0?'+':''}${Math.round(d.upPre*100)}%.`:''}</p>
   ${d.upSrc==='now'?`<div class="cmp tnum">
     <div class="me"><span class="n">이 단지 현재 (${d.py}평 ${eok(d.p)})</span><span class="v">${d.me.toLocaleString()}</span>${bar(d.me,Math.max(d.me,d.fair))}</div>
     <div><span class="n">이 동네에서 ${2026-d.year}년차·${d.py}평이 받을 값</span><span class="v">${d.fair.toLocaleString()}</span>${bar(d.fair,Math.max(d.me,d.fair))}</div>
