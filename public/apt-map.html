@@ -264,6 +264,7 @@ aside{order:-1;width:408px;flex:none;border-right:1px solid var(--border);backgr
 .mk.sel::after{border-top-color:#171719}
 .mk.sel b{color:#fff}.mk.sel small{color:rgba(255,255,255,.7)}
 .mk:hover{z-index:5}
+.mk:focus-visible,.row:focus-visible{outline:3px solid var(--primary);outline-offset:2px}
 .mk.hide{display:none}
 .mapcount{position:absolute;z-index:3;left:12px;top:12px;max-width:calc(100% - 110px);background:rgba(255,255,255,.94);border:1px solid rgba(112,115,124,.22);border-radius:6px;padding:5px 9px;font-size:12px;font-weight:600;color:#46474c;pointer-events:none;box-shadow:0 1px 4px rgba(0,0,0,.06)}
 
@@ -1231,7 +1232,7 @@ function renderList(){
   ${viewport?'<div class="region-mode">현재 지도 범위의 단지 <button type="button" id="browseReset">전체 순위 보기</button></div>':''}
   <div class="count"><span>${singleComplex?list.length.toLocaleString()+'개 단지 · 전체 평형 표시':list.length.toLocaleString()+'개 평형'+(CAPT!==6?' ('+new Set(list.map(d=>complexRankKey(d))).size.toLocaleString()+'개 단지)':'')} · 종합 점수순</span><span>시세 리치고·국토부 실거래 · ${CAPT>6?(window.LIVEP_AT||'갱신일 확인 중'):('고정 자료 '+(ASOF||''))}</span></div>`;
   list.slice(0,state.lim).forEach(d=>{
-    h+=`<article class="row" data-i="${D.indexOf(d)}" data-s="1">
+    h+=`<article class="row" data-i="${D.indexOf(d)}" data-s="1" tabindex="0" role="button" aria-label="${esc(publicComplexName(d)+' '+d.py+'평 상세보기')}">
       <span class="rk tnum">${String(d.rank).padStart(2,'0')}</span>
       <div style="min-width:0"><div class="kicker">${badgeHTML(d)}<span>${esc(d.area)}</span>${d.auto?'<span>· 자동</span>':''}</div>
         <h3>${esc(publicComplexName(d))}${sibs(d).length>1?` <small class="tp">${d.py}평</small>`:''}</h3><p>${NOUP()?`급지 ${Math.round((d.s4&&d.s4.pG)??50)} · ${unitN(d).toLocaleString()}세대${d.unitsOwn?'(매매 대상)':''}${d.unitsN>1?'(추정)':''}`:`입지 ${d.loc.toFixed(1)}`} · ${d.cur&&d.cur.n?esc(d.cur.n)+' '+fmtM(d.cur.m):'역 계산 중'}${NOUP()?'':` · 적정가 대비 ${d.up>=0?'+':''}${Math.round(d.up*100)}%`}</p>
@@ -1276,7 +1277,13 @@ function renderList(){
   b.querySelectorAll('.filters button[data-size]').forEach(x=>x.onclick=()=>{state.size=x.dataset.size;state.lim=50;render();b.scrollTop=0;});
   const no=b.querySelector('#noticeOpen'); if(no) no.onclick=()=>{ noticeCheck.checked=false; noticeAgree.disabled=true; noticeError.textContent=''; noticeGate.hidden=false; noticeCheck.focus(); };
   const mb=b.querySelector('#more'); if(mb) mb.onclick=()=>{ const y=b.scrollTop; state.lim+=100; renderList(); b.scrollTop=y; };
-  b.querySelectorAll('.row').forEach(x=>x.onclick=()=>select(+x.dataset.i,true));
+  b.querySelectorAll('.row').forEach(x=>{
+    x.onclick=()=>select(+x.dataset.i,true);
+    x.onkeydown=e=>{
+      if(e.target!==x)return;
+      if(e.key==='Enter'||e.key===' '){e.preventDefault();select(+x.dataset.i,true);}
+    };
+  });
   b.querySelectorAll('[data-flat-index]').forEach(x=>x.onclick=e=>{e.stopPropagation();select(+x.dataset.flatIndex,true);});
 }
 
@@ -1681,14 +1688,19 @@ function select(i,fromList,noPush){
   }
 }
 function pinHTML(d){ return `<div><span class="sc">${d.rank.toLocaleString()}위</span><span><b>${short(cashOf(d))}</b><small>${esc(d.s)}</small></span></div>`; }
-function updatePins(){ pins.forEach(o=>{ if(!o.el) return; const d=D[o.i]; o.el.style.setProperty('--chip',d.tier.c); o.el.innerHTML=pinHTML(d); o.ov.setZIndex(d.score); }); }
+function updatePins(){ pins.forEach(o=>{ if(!o.el) return; const d=D[o.i]; o.el.style.setProperty('--chip',d.tier.c); o.el.innerHTML=pinHTML(d); o.el.setAttribute('aria-label',short(cashOf(d))+' '+d.n+' '+d.rank+'위 상세보기');o.ov.setZIndex(d.score); }); }
 // 수천 개의 숨겨진 지도 DOM을 미리 만들지 않고 화면에 표시될 때 생성한다.
 function addPin(i){ pins.push({i,ov:null,el:null,on:false}); }
 function materializePin(o){ const i=o.i;
   const d=D[i], el=document.createElement('div');
   el.className='mk'; el.style.setProperty('--chip',d.tier.c);
+  el.setAttribute('role','button');el.tabIndex=0;
+  el.setAttribute('aria-label',short(cashOf(d))+' '+d.n+' '+d.rank+'위 상세보기');
   el.innerHTML=pinHTML(d);
   el.addEventListener('click',e=>{e.stopPropagation();select(i,false);});
+  el.addEventListener('keydown',e=>{
+    if(e.key==='Enter'||e.key===' '){e.preventDefault();e.stopPropagation();select(i,false);}
+  });
   const ov=new kakao.maps.CustomOverlay({position:d._pos,content:el,xAnchor:0,yAnchor:0,zIndex:d.score,clickable:true});
   o.ov=ov; o.el=el;
 }
@@ -1718,6 +1730,8 @@ function snapTo(name){ if(!mobile())return; calcSnaps(); cur=name; setY(snaps[na
     const t=e.touches[0], dy=t.clientY-sy, dx=t.clientX-sx;
     // 가격·평형·속성 필터를 좌우로 넘길 때 바텀시트가 제스처를 가로채지 않는다.
     if(fromBody&&Math.abs(dx)>9&&Math.abs(dx)>Math.abs(dy)*1.1){drag=false;return;}
+    // 움직임 방향이 정해지기 전에는 기본 스크롤을 막지 않는다.
+    if(fromBody&&Math.abs(dx)<9&&Math.abs(dy)<9)return;
     moved=Math.max(moved,Math.abs(dy));
     if(fromBody){
       if(y<=0&&(body.scrollTop>0||dy<0)){sy=t.clientY;sp=y;return;}
