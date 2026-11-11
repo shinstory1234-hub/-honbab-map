@@ -21,7 +21,9 @@ const dump=(root,cap)=>{
    bonus:d.m3?.bonuses?.verifiedProgress||0,master:d.masterComplexKey||null})),
   backups:window.LIVE_MISSING_TYPES||[],bandOut:BANDOUT,smallOut:SMALLOUT
  })`,c);
- return JSON.parse(json);
+ const details=JSON.parse(json);
+ details.preLive=c.__APT_PRELIVE||[];
+ return details;
 };
 const report={generatedAt:new Date().toISOString(),baseline:before,after:root,readOnly:true,
   sixUnchanged:false,errors:[],bands:[]};
@@ -63,12 +65,12 @@ for(const cap of [6,10,15,20,25,30]){
     backedUpComplexes:nw.backups.length,backedUpFlats:nw.backups.reduce((n,x)=>n+x.restored.length,0),
     changedExistingScore:modified.length,changedExistingPrice:modifiedPrices.length,
     top30Entered:entered,top30Exited:missing,
-    newFlatSamples:added.slice(0,30),irvineBefore:oldIrvine,irvineAfter:irvine});
+    newFlatSamples:added.slice(0,30),irvineBefore:oldIrvine,irvineAfter:irvine,preLive:nw.preLive});
  console.log('CAP_DIFF',JSON.stringify({cap,old:old.candidates.length,new:nw.candidates.length,
   added:added.length,lost:lost.length,backedUpComplexes:nw.backups.length,
   backedUpTypes:nw.backups.reduce((n,x)=>n+x.restored.length,0),
   changedExistingScore:modified.length,changedExistingPrice:modifiedPrices.length,
-  top30Entered:entered.length,irvineBefore:oldIrvine,irvineAfter:irvine,firstAdded:added.slice(0,7)}));
+  top30Entered:entered.length,preLive:nw.preLive,irvineBefore:oldIrvine,irvineAfter:irvine,firstAdded:added.slice(0,7)}));
 }
 const ir10=report.bands.find(x=>x.cap===10),ir15=report.bands.find(x=>x.cap===15);
 if(!ir10.irvineAfter.some(x=>x.py>=18&&x.p>60000&&x.p<=100000))
