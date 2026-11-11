@@ -27,6 +27,7 @@ jobs:
       - name: Verify existing core price and estate regression tests
         run: |
           node scripts/test-m3-price-policy.cjs
+          node scripts/test-apt-redevelopment-facts.cjs
           node scripts/test-kapt-group-split.cjs
           node --check public/apt-redevelopment-evidence.js
           node --check public/apt-m3.js
