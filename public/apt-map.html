@@ -1584,6 +1584,7 @@ function fitSearch(){
 
 let map,pins=[];
 let mapInteracted=false,restoreFullBoundsOnReady=false,manualZoomUntil=0,browseListTimer=null;
+let manualMapMovePending=false;
 function syncMapViewUrl(){
   if(!map)return;
   const c=map.getCenter(),u=new URL(location.href);
@@ -1594,8 +1595,34 @@ function syncMapViewUrl(){
   const next=u.pathname+u.search+u.hash;
   if(next!==location.pathname+location.search+location.hash)history.replaceState(history.state,'',next);
 }
+// 검색 단지가 주변에 남아 있는 동안에는 지도 조작만으로 검색을 해제하지 않는다.
+function pointNearViewport(point){
+  if(!map||!point)return false;
+  const bounds=map.getBounds(),sw=bounds.getSouthWest(),ne=bounds.getNorthEast();
+  const latPad=Math.max(.012,(ne.getLat()-sw.getLat())*.6);
+  const lngPad=Math.max(.016,(ne.getLng()-sw.getLng())*.6);
+  return point.getLat()>=sw.getLat()-latPad&&point.getLat()<=ne.getLat()+latPad
+    &&point.getLng()>=sw.getLng()-lngPad&&point.getLng()<=ne.getLng()+lngPad;
+}
+function shouldReleaseMapFocus(){
+  if(state.q)return !D.some(d=>d._pos&&textMatches(d)&&pointNearViewport(d._pos));
+  if(state.sel!=null)return !pointNearViewport(D[state.sel]?._pos);
+  return false;
+}
+function beginManualMapMove(){
+  mapInteracted=true;
+  manualMapMovePending=true;
+  if(document.activeElement===$('#q'))$('#q').blur();
+  if(mobile()&&state.q)snapTo('peek');
+}
+function finishManualMapMove(){
+  if(!manualMapMovePending)return;
+  manualMapMovePending=false;
+  if(shouldReleaseMapFocus())browseMap();
+}
 function browseMap(){
   clearTimeout(qT);
+  manualMapMovePending=false;
   const q=$('#q'); q.blur();q.value='';
   const changed=!!state.q||state.sel!=null||!state.browse;
   mapInteracted=true;
@@ -1817,10 +1844,14 @@ function init(){
   $('#map').addEventListener('wheel',()=>{manualZoomUntil=performance.now()+1800;},{passive:true});
   kakao.maps.event.addListener(map,'zoom_changed',()=>{
     // 카카오 줌 버튼·휠·핀치 조작은 검색 결과에 갇히지 않고 현재 지도 탐색으로 넘어간다.
-    if(performance.now()<manualZoomUntil){manualZoomUntil=0;browseMap();}
+    if(performance.now()<manualZoomUntil){manualZoomUntil=0;beginManualMapMove();}
   });
-  kakao.maps.event.addListener(map,'dragstart',browseMap);
-  kakao.maps.event.addListener(map,'click',browseMap);
+  kakao.maps.event.addListener(map,'dragstart',beginManualMapMove);
+  kakao.maps.event.addListener(map,'dragend',()=>{setTimeout(finishManualMapMove,160);});
+  kakao.maps.event.addListener(map,'click',()=>{ 
+    if(document.activeElement===$('#q'))$('#q').blur();
+    if(mobile()&&state.q)snapTo('peek');
+  });
   const places=new kakao.maps.services.Places(),bounds=new kakao.maps.LatLngBounds();
   let pending=D.length;
   const done=()=>{ if(--pending===0&&!bounds.isEmpty()){ homeB=bounds;
@@ -1915,6 +1946,7 @@ function init(){
     if(changed){ saveGeo(); recompute(); render(); }
   }
   kakao.maps.event.addListener(map,'idle',()=>{
+    finishManualMapMove();
     queueMap();
     syncMapViewUrl();
     if(state.browse&&state.sel==null){
