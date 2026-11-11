@@ -170,6 +170,11 @@
     e.types=ok;
     if(!ok.some(function(t){return t.py===e.py;})){   // 대표 평형이 빠졌으면 가장 가까운 평형으로
       var me3=ok.slice().sort(function(a,b){return Math.abs(a.py-e.py)-Math.abs(b.py-e.py);})[0]; e.py=me3.py; e.p=me3.p; e.headline=e.py+'평 '+eok(e.p)+' · 현재 시세'; } }
+  if(window.__APT_DEBUG_IRVINE) {
+    var target=P.find(function(d){return d.n==='평촌어바인퍼스트';});
+    window.__APT_DEBUG_IRVINE.end=target?
+      {py:target.py,p:target.p,types:(target.types||[]).map(function(t){return {py:t.py,p:t.p,n:t.n,review:t.priceReview||0};})}:null;
+  }
   window.LIVE_DROP=drop;
   window.LIVE_HIT=hit;
 })();
