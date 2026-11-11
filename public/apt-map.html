@@ -103,6 +103,10 @@ aside{order:-1;width:408px;flex:none;border-right:1px solid var(--border);backgr
 .count{display:flex;justify-content:space-between;padding:12px 24px;font-size:12px;color:var(--text-tertiary);border-bottom:1px solid var(--border-soft)}
 .region-mode{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:10px 24px;border-bottom:1px solid var(--border-soft);font-size:12px;font-weight:650;color:var(--primary-soft-fg);background:var(--bg-subtle)}
 .region-mode button{border:1px solid var(--border);border-radius:4px;background:var(--bg);padding:6px 10px;font-size:12px;font-weight:650;white-space:nowrap;cursor:pointer}
+.empty-results{padding:24px;text-align:center;border-bottom:1px solid var(--border-soft);font-size:13.5px}
+.empty-results strong{display:block;font-size:14px}
+.empty-results p{margin:8px 0 14px;color:var(--text-secondary)}
+.empty-results button{min-height:40px;padding:8px 18px;border:1px solid var(--border);border-radius:5px;background:var(--bg);font-weight:650}
 
 .row{display:grid;grid-template-columns:22px minmax(0,1fr) auto;gap:12px;padding:18px 24px;border-bottom:1px solid var(--border-soft);cursor:pointer;transition:background .15s}
 .row:hover{background:var(--bg-subtle)}
@@ -1238,7 +1242,11 @@ function renderList(){
     </article>`;
   });
   if(list.length>state.lim) h+=`<button class="btn ghost more" id="more" style="display:block;margin:12px auto;width:calc(100% - 32px)">${Math.min(100,list.length-state.lim)}개 더 보기 · 남은 ${(list.length-state.lim).toLocaleString()}개</button>`;
-  if(!list.length) h+=`<p class="source">조건에 맞는 단지가 없습니다.</p>`;
+  if(!list.length){
+    const reason=state.browse?'현재 지도 범위에 조건에 맞는 단지가 없습니다.':state.q?'검색 결과가 없습니다.':'선택한 조건에 맞는 단지가 없습니다.';
+    const reset=state.q?'검색어 지우기':state.f!=='all'||state.pb!=='all'||state.size!=='all'?'필터 초기화':state.browse?'전체 지역 보기':'';
+    h+=`<div class="empty-results" role="status"><strong>${reason}</strong><p>${state.browse?'지도 위치를 옮기거나 확대 범위를 조정해 보세요.':'다른 단지나 조건을 검색해 보세요.'}</p>${reset?'<button type="button" id="emptyReset">'+reset+'</button>':''}</div>`;
+  }
   if(state.q&&(window.LIVE_PRICE_REVIEW||[]).length){
     const q=state.q.trim().toLocaleLowerCase();
     const excluded=(window.LIVE_PRICE_REVIEW||[]).filter(x=>(x.name+' '+x.area).toLocaleLowerCase().includes(q)).slice(0,12);
@@ -1257,6 +1265,12 @@ function renderList(){
   b.querySelectorAll('.filters').forEach((el,i)=>{el.scrollLeft=filterScroll[i]||0;});
   updateSourceStatus();
   const browseReset=b.querySelector('#browseReset'); if(browseReset) browseReset.onclick=()=>{state.browse=false;render();b.scrollTop=0;syncMapViewUrl();};
+  const emptyReset=b.querySelector('#emptyReset');if(emptyReset)emptyReset.onclick=()=>{
+    if(state.q){clearSearchToMap();return;}
+    if(state.f!=='all'||state.pb!=='all'||state.size!=='all'){Object.assign(state,{f:'all',pb:'all',size:'all'});}
+    else state.browse=false;
+    render();b.scrollTop=0;syncMapViewUrl();
+  };
   b.querySelectorAll('.filters button[data-f]').forEach(x=>x.onclick=()=>{state.f=x.dataset.f;state.lim=50;render();b.scrollTop=0;});
   b.querySelectorAll('.filters button[data-pb]').forEach(x=>x.onclick=()=>{state.pb=x.dataset.pb;state.lim=50;render();b.scrollTop=0;});
   b.querySelectorAll('.filters button[data-size]').forEach(x=>x.onclick=()=>{state.size=x.dataset.size;state.lim=50;render();b.scrollTop=0;});
@@ -1542,6 +1556,10 @@ function fitSearch(){
   if(!map||!state.q) return;
   const hit=D.filter(d=>d._pos&&visible(d));
   if(hit.length){ const b=new kakao.maps.LatLngBounds(); hit.forEach(d=>b.extend(d._pos));
+    // 너무 넓게 흩어진 브랜드명 등은 수도권 전체로 지도를 튕기게 하지 않는다.
+    const lat=hit.map(d=>d._pos.getLat()),lng=hit.map(d=>d._pos.getLng());
+    const scattered=hit.length>12&&(Math.max(...lat)-Math.min(...lat)>.065||Math.max(...lng)-Math.min(...lng)>.09);
+    if(scattered)return;
     if(hit.length===1){ map.setLevel(5); map.setCenter(hit[0]._pos); } else map.setBounds(b,60,40,mobile()?Math.round($('#map').clientHeight*.5):40,40); return; }
   // 일치하는 아파트가 없는 경우 지명 검색으로 지도를 혼자 이동시키지 않는다.
   // 검색 결과 0건을 그대로 보여주고 지도 중심과 줌을 유지한다.
@@ -1549,6 +1567,7 @@ function fitSearch(){
 }
 
 let map,pins=[];
+let mapInteracted=false;
 function syncMapViewUrl(){
   if(!map)return;
   const c=map.getCenter(),u=new URL(location.href);
@@ -1563,6 +1582,7 @@ function browseMap(){
   clearTimeout(qT);
   const q=$('#q'); q.blur();q.value='';
   const changed=!!state.q||state.sel!=null||!state.browse;
+  mapInteracted=true;
   state.q='';state.browse=true;state.lim=50;
   if(state.sel!=null)close();
   if(changed){render();$('#body').scrollTop=0;}
@@ -1629,7 +1649,7 @@ let listScrollY=0;
 function close(){ state.sel=null; if(location.hash)history.replaceState(null,'',location.pathname+location.search); }
 /* 주소(#단지|동네|평)와 뒤로가기: 상세를 열면 기록을 하나 쌓아, 휴대폰 뒤로가기가 사이트를 나가지 않고 목록으로 돌아오게 함 */
 const hashOf=d=>'#'+encodeURIComponent(d.cxKey+'|'+d.py);
-const fromHash=()=>{ const h=decodeURIComponent(location.hash.slice(1)); if(!h) return -1; return D.findIndex(d=>d.cxKey+'|'+d.py===h); };
+const fromHash=()=>{ let h='';try{h=decodeURIComponent(location.hash.slice(1));}catch{return -1;} if(!h) return -1; return D.findIndex(d=>d.cxKey+'|'+d.py===h); };
 function backToList(){ if(history.state&&history.state.apt) history.back(); else { close(); render(); $('#body').scrollTop=listScrollY; history.replaceState(null,'',location.pathname+location.search); } }
 let homeB=null;
 function goHome(){                                                     // 로고: 필터·검색·선택을 모두 지우고 처음 화면(전체 목록·수도권 전체 지도)으로
@@ -1639,6 +1659,7 @@ function goHome(){                                                     // 로고
   ['vlat','vlng','vlevel','browse'].forEach(k=>url.searchParams.delete(k));
   history.replaceState(null,'',url.pathname+url.search);
   render(); $('#body').scrollTop=0;
+  mapInteracted=false;
   if(map&&homeB) map.setBounds(homeB,60,40,mobile()?150:40,40);
   if(mobile()) snapTo('half'); }
 $('#home').addEventListener('click',e=>{ e.preventDefault(); goHome(); });
@@ -1745,8 +1766,9 @@ function init(){
   let pending=D.length;
   const done=()=>{ if(--pending===0&&!bounds.isEmpty()){ homeB=bounds;
     if(state.sel!=null) select(state.sel,false,true);
-    else if(!savedMapView) map.setBounds(bounds,60,40,mobile()?150:40,40);
+    else if(state.q) fitSearch();
     else if(state.browse) renderList();
+    else if(!savedMapView&&!mapInteracted) map.setBounds(bounds,60,40,mobile()?150:40,40);
   } };
   const done2=()=>{ done(); if(pending===0) analyze(); };
   (function fut(){
