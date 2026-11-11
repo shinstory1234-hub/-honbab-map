@@ -63,12 +63,13 @@
  // 탭 단지 60~90%가 같은 백분위(약 80)에 몰리고, 조금만 벗어난 고덕·둔촌·과천·상계는 26~44로 급락했다.
  // 가장 가까운 업무지구까지 직선거리로 3km 이내 100점 → 20km 0점 직선 점수로 바꿔 변별력을 살린다.
  // 업무지구는 기존 4곳에 서울 2040 광역중심 중 고용이 큰 잠실·마곡·용산을 더한다(6억 이하 S4 점수는 그대로).
- const M3_CBD=[[37.5133,127.1001],[37.5602,126.8254],[37.5299,126.9648]];
+ // 마곡은 2급 업무지구(고용 규모가 강남·시청·여의도의 일부) → 마곡 기준 점수는 ×0.7. 1급은 그대로.
+ const M3_CBD=[[37.5133,127.1001,1],[37.5602,126.8254,.7],[37.5299,126.9648,1]];
  function commuteScore(d,s){
-  const cbd=typeof S4CBD!=='undefined'?S4CBD.concat(M3_CBD):null, g=d.g||{};
+  const cbd=typeof S4CBD!=='undefined'?S4CBD.map(([a,b])=>[a,b,1]).concat(M3_CBD):null, g=d.g||{};
   if(!cbd||!Number.isFinite(g.lat)||!Number.isFinite(g.lng))return Number.isFinite(s.pJ)?s.pJ:50;
-  const rad=Math.PI/180, km=Math.min(...cbd.map(([a,b])=>{const x=(b-g.lng)*rad*Math.cos((a+g.lat)/2*rad),y=(a-g.lat)*rad;return 6371*Math.sqrt(x*x+y*y);}));
-  return clamp(100*(1-(km-3)/17));
+  const rad=Math.PI/180;
+  return Math.max(...cbd.map(([a,b,w])=>{const x=(b-g.lng)*rad*Math.cos((a+g.lat)/2*rad),y=(a-g.lat)*rad,km=6371*Math.sqrt(x*x+y*y);return w*clamp(100*(1-(km-3)/17));}));
  }
  function compute(d,cap=root.CAPT,integratedSite=null){
   if(!active(d,cap))return null;
