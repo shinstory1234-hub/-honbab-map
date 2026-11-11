@@ -1900,6 +1900,8 @@ function init(){
     syncMapViewUrl();
     if(state.browse&&state.sel==null)renderList();
   });
+  // 첫 setBounds가 이벤트 등록 전에 끝나더라도 핀과 지도 내 개수를 확실하게 표시한다.
+  queueMap();
 }
 </script>
 </body>
