@@ -4,7 +4,7 @@ import path from 'node:path';
 export function run(root,cap,compiled=false){
  const noop=()=>{};
  const el={style:{},dataset:{},classList:{add:noop,remove:noop,toggle:noop},addEventListener:noop,setAttribute:noop,getAttribute:()=>'',scrollIntoView:noop,querySelector:()=>null,querySelectorAll:()=>[],appendChild:noop};
- const c={console,URL,URLSearchParams,performance,location:{search:`?cap=${cap}&ok=1`,href:`https://aptmap-kr.vercel.app/apt-map.html?cap=${cap}`},localStorage:{getItem:()=>null,setItem:noop},setTimeout:noop,clearTimeout:noop,addEventListener:noop,matchMedia:()=>({matches:false}),document:{getElementById:()=>el,querySelector:()=>el,querySelectorAll:()=>[],createElement:()=>({...el}),head:el,addEventListener:noop},};
+ const c={console,URL,URLSearchParams,performance,location:{search:`?cap=${cap}&ok=1`,href:`https://aptmap-kr.vercel.app/apt-map.html?cap=${cap}`},localStorage:{getItem:()=>null,setItem:noop},setTimeout:noop,clearTimeout:noop,setInterval:noop,clearInterval:noop,requestAnimationFrame:noop,cancelAnimationFrame:noop,addEventListener:noop,matchMedia:()=>({matches:false}),document:{getElementById:()=>el,querySelector:()=>el,querySelectorAll:()=>[],createElement:()=>({...el}),head:el,addEventListener:noop},};
  c.window=c;c.parent=c;vm.createContext(c);
  const missing=[];
  const deferred=[];

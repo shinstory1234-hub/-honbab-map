@@ -1,0 +1,28 @@
+/* Evidence-backed renewal status for named complexes only. As-of 2026-11-11.
+ * Exact name + administrative area required; no fuzzy matching, no automatic merging of estates.
+ * PUBLIC_REVIEW is a draft and DOES NOT mean district designation/approval.
+ * Operator-designated status is supported by Anyang City's official lead-district records.
+ * Future planned household counts must never replace current unit counts.
+ */
+window.APT_REDEV_FACTS=Object.freeze({
+  "관악성원|안양 동안구 비산동":Object.freeze({"zone":"A-1","phase":"public_review","label":"특별정비계획안 주민공람","date":"2026-08-31","notice":"안양시 공고 제2026-1441호","url":"https://jaegebal.com/gnotices/ay-gg-2026-1441","note":""}),
+  "관악부영|안양 동안구 비산동":Object.freeze({"zone":"A-1","phase":"public_review","label":"특별정비계획안 주민공람","date":"2026-08-31","notice":"안양시 공고 제2026-1441호","url":"https://jaegebal.com/gnotices/ay-gg-2026-1441","note":""}),
+  "관악타운|안양 동안구 비산동":Object.freeze({"zone":"A-1","phase":"public_review","label":"특별정비계획안 주민공람","date":"2026-08-31","notice":"안양시 공고 제2026-1441호","url":"https://jaegebal.com/gnotices/ay-gg-2026-1441","note":""}),
+  "샛별한양1|안양 동안구 비산동":Object.freeze({"zone":"A-2","phase":"public_review","label":"특별정비계획안 주민공람","date":"2026-08-31","notice":"안양시 공고 제2026-1433호","url":"https://www.anyang.go.kr/main/selectEminwonView.do?key=4101&notAncmtSeCode=01%2C04&not_ancmt_mgt_no=84774&ofr_pageSize=10","note":""}),
+  "샛별한양2|안양 동안구 비산동":Object.freeze({"zone":"A-2","phase":"public_review","label":"특별정비계획안 주민공람","date":"2026-08-31","notice":"안양시 공고 제2026-1433호","url":"https://www.anyang.go.kr/main/selectEminwonView.do?key=4101&notAncmtSeCode=01%2C04&not_ancmt_mgt_no=84774&ofr_pageSize=10","note":""}),
+  "샛별한양3|안양 동안구 비산동":Object.freeze({"zone":"A-2","phase":"public_review","label":"특별정비계획안 주민공람","date":"2026-08-31","notice":"안양시 공고 제2026-1433호","url":"https://www.anyang.go.kr/main/selectEminwonView.do?key=4101&notAncmtSeCode=01%2C04&not_ancmt_mgt_no=84774&ofr_pageSize=10","note":""}),
+  "은하수샛별5,6단지|안양 동안구 비산동":Object.freeze({"zone":"A-4","phase":"public_review","label":"특별정비계획안 주민공람","date":"2026-08-31","notice":"안양시 공고 제2026-1442호","url":"https://jaegebal.com/gnotices?gu=ay&kind=gongo&sido=gyeonggi","note":""}),
+  "한가람(한양)|안양 동안구 관양동":Object.freeze({"zone":"A-5","phase":"public_review","label":"특별정비계획안 주민공람","date":"2026-08-31","notice":"안양시 공고 제2026-1444호","url":"https://www.anyang.go.kr/main/selectEminwonView.do?key=4101&notAncmtSeCode=01%2C04&not_ancmt_mgt_no=84794&ofr_pageSize=10&pageIndex=1&pageUnit=10&searchCnd=all","note":"통합정비 총 2,096세대 현행, 계획 2,839세대. 사업시행 인가나 지구 지정 완료가 아니다."}),
+  "한가람(삼성)|안양 동안구 관양동":Object.freeze({"zone":"A-5","phase":"public_review","label":"특별정비계획안 주민공람","date":"2026-08-31","notice":"안양시 공고 제2026-1444호","url":"https://www.anyang.go.kr/main/selectEminwonView.do?key=4101&notAncmtSeCode=01%2C04&not_ancmt_mgt_no=84794&ofr_pageSize=10&pageIndex=1&pageUnit=10&searchCnd=all","note":"통합정비 총 2,096세대 현행, 계획 2,839세대. 사업시행 인가나 지구 지정 완료가 아니다."}),
+  "한가람(두산)|안양 동안구 관양동":Object.freeze({"zone":"A-5","phase":"public_review","label":"특별정비계획안 주민공람","date":"2026-08-31","notice":"안양시 공고 제2026-1444호","url":"https://www.anyang.go.kr/main/selectEminwonView.do?key=4101&notAncmtSeCode=01%2C04&not_ancmt_mgt_no=84794&ofr_pageSize=10&pageIndex=1&pageUnit=10&searchCnd=all","note":"통합정비 총 2,096세대 현행, 계획 2,839세대. 사업시행 인가나 지구 지정 완료가 아니다."}),
+  "목련두산|안양 동안구 호계동":Object.freeze({"zone":"A-9","phase":"public_review","label":"특별정비계획안 주민공람","date":"2026-08-31","notice":"안양시 공고 제2026-1443호","url":"https://jaegebal.com/gnotices?gu=ay&kind=gongo&sido=gyeonggi","note":""}),
+  "목련우성|안양 동안구 호계동":Object.freeze({"zone":"A-9","phase":"public_review","label":"특별정비계획안 주민공람","date":"2026-08-31","notice":"안양시 공고 제2026-1443호","url":"https://jaegebal.com/gnotices?gu=ay&kind=gongo&sido=gyeonggi","note":""}),
+  "초원부영|안양 동안구 평촌동":Object.freeze({"zone":"A-13","phase":"public_review","label":"특별정비계획안 주민공람","date":"2026-08-31","notice":"안양시 공고 제2026-1445호","url":"https://jaegebal.com/gnotices?gu=ay&kind=gongo&sido=gyeonggi","note":""}),
+  "꿈마을금호|안양 동안구 평촌동":Object.freeze({"zone":"A-17","phase":"operator_designated","label":"특별정비구역 지정 및 사업시행자 지정","date":"2026-04-27","notice":"안양시 선도지구 현황 / 고시 제2025-279호","url":"https://anyang.go.kr/main/contents.do?key=5339","note":""}),
+  "꿈마을한신|안양 동안구 평촌동":Object.freeze({"zone":"A-17","phase":"operator_designated","label":"특별정비구역 지정 및 사업시행자 지정","date":"2026-04-27","notice":"안양시 선도지구 현황 / 고시 제2025-279호","url":"https://anyang.go.kr/main/contents.do?key=5339","note":""}),
+  "꿈마을라이프|안양 동안구 평촌동":Object.freeze({"zone":"A-17","phase":"operator_designated","label":"특별정비구역 지정 및 사업시행자 지정","date":"2026-04-27","notice":"안양시 선도지구 현황 / 고시 제2025-279호","url":"https://anyang.go.kr/main/contents.do?key=5339","note":""}),
+  "꿈마을현대|안양 동안구 평촌동":Object.freeze({"zone":"A-17","phase":"operator_designated","label":"특별정비구역 지정 및 사업시행자 지정","date":"2026-04-27","notice":"안양시 선도지구 현황 / 고시 제2025-279호","url":"https://anyang.go.kr/main/contents.do?key=5339","note":""}),
+  "꿈마을우성|안양 동안구 평촌동":Object.freeze({"zone":"A-18","phase":"operator_designated","label":"특별정비구역 지정 및 사업시행자 지정","date":"2026-04-27","notice":"안양시 선도지구 현황 / 고시 제2025-277호","url":"https://anyang.go.kr/main/contents.do?key=5339","note":""}),
+  "꿈마을건영5|안양 동안구 평촌동":Object.freeze({"zone":"A-18","phase":"operator_designated","label":"특별정비구역 지정 및 사업시행자 지정","date":"2026-04-27","notice":"안양시 선도지구 현황 / 고시 제2025-277호","url":"https://anyang.go.kr/main/contents.do?key=5339","note":""}),
+  "꿈마을동아건영3|안양 동안구 평촌동":Object.freeze({"zone":"A-18","phase":"operator_designated","label":"특별정비구역 지정 및 사업시행자 지정","date":"2026-04-27","notice":"안양시 선도지구 현황 / 고시 제2025-277호","url":"https://anyang.go.kr/main/contents.do?key=5339","note":""})
+});
