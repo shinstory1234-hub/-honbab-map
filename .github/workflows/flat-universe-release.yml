@@ -1,0 +1,50 @@
+name: Release gate for missing apartment flat sizes
+on:
+  push:
+    branches:
+      - fix/live-price-missing-flat-universe-20261111
+
+permissions:
+  contents: read
+jobs:
+  compare:
+    runs-on: ubuntu-latest
+    timeout-minutes: 18
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+        with:
+          persist-credentials: false
+      - name: Restore frozen live-pricing and geo snapshots
+        run: |
+          set -euo pipefail
+          mkdir -p "${RUNNER_TEMP}/apt-inputs"
+          gzip -t docs/transport-inputs/apt-live.js.gz
+          gzip -t docs/transport-inputs/apt-geo.js.gz
+          gzip -dc docs/transport-inputs/apt-live.js.gz > "${RUNNER_TEMP}/apt-inputs/apt-live.js"
+          gzip -dc docs/transport-inputs/apt-geo.js.gz > "${RUNNER_TEMP}/apt-inputs/apt-geo.js"
+      - name: Run six-band actual source comparison to current master
+        env:
+          TRANSPORT_INPUTS: ${{ runner.temp }}/apt-inputs
+        run: |
+          set -euo pipefail
+          git fetch --depth=1 origin master
+          git worktree add --detach "${RUNNER_TEMP}/apt-before" FETCH_HEAD
+          node scripts/test-live-flat-preservation.mjs --before "${RUNNER_TEMP}/apt-before" --out /tmp/apt-preservation-result.json
+      - name: Verify existing scoring and estate identity rules
+        run: |
+          node --check public/apt-livefix.js
+          node scripts/test-m3-price-policy.cjs
+          node scripts/test-kapt-group-split.cjs
+          node scripts/test-apt-redevelopment-facts.cjs
+      - name: Verify production build
+        run: |
+          npm ci --ignore-scripts
+          npm run build
+      - name: Upload complete six-band result
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: apartment-flat-coverage-before-after
+          path: /tmp/apt-preservation-result.json
+          if-no-files-found: warn
+          retention-days: 14
