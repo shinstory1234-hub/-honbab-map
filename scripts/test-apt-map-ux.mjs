@@ -30,6 +30,14 @@ assert.ok(html.includes('id="emptyReset"'));
 assert.ok(html.includes('const scattered=hit.length>12'));
 assert.ok(html.includes('restoreFullBoundsOnReady=!homeB'));
 assert.ok(html.includes('try{h=decodeURIComponent(location.hash.slice(1))'));
+const zsrc=section('const TOWN=[','const textMatches=');
+const townOf=new Function(zsrc+';return townOf;')();
+assert.ok(townOf({area:'경기 안양시 동안구 관양동'}).includes('평촌'));
+assert.ok(townOf({area:'경기 안양시 동안구 평촌동'}).includes('평촌'));
+assert.ok(townOf({area:'경기 화성시 청계동'}).includes('동탄'));
+assert.ok(townOf({area:'경기 군포시 산본동'}).includes('산본'));
+assert.ok(html.includes('const baseOrder=scoredPins()'));
+assert.ok(html.includes('browseListTimer=setTimeout'));
 const vsrc=section('const savedMapView=','const state=');
 const view=(search)=>new Function('location',vsrc+';return savedMapView;')({search});
 assert.deepEqual(JSON.parse(JSON.stringify(view('?vlat=37.39&vlng=126.96&vlevel=5'))),{lat:37.39,lng:126.96,level:5});
@@ -55,9 +63,23 @@ function runPins(query){
   o.el={classList:{classes,toggle(k,on){if(on)classes.add(k);else classes.delete(k);}}};
   o.ov={setMap(){}};
  };
- const run=new Function('map','pins','D','state','$','materializePin','complexRankKey',
-  'textMatches','visible','shownN',mapSource+';renderMap();');
- run(map,pins,D,state,$,materializePin,d=>d.n,textMatches,visible,0);
+ const run=new Function('map','pins','D','state','
+ return {pins,count:node.textContent};
+}
+for(const q of ['','하이어스']){
+ const result=runPins(q),local=result.pins.filter(x=>x.i>=2000&&x.on);
+ assert.ok(local.length>=3,'Offscreen rank cap hid local pins: '+q);
+ if(q){
+  assert.ok(result.pins[2005].on);
+  assert.ok(result.pins[2005].el.classList.classes.has('match'));
+  assert.match(result.count,/검색 단지 파란색 표시/);
+ }
+}
+console.log('PASS: script syntax, viewport persistence, map search isolation, highlighted and neighboring pins');
+,'materializePin','complexRankKey',
+  'textMatches','visible','shownN','scoredPins',mapSource+';renderMap();');
+ run(map,pins,D,state,$,materializePin,d=>d.n,textMatches,visible,0,
+  ()=>pins.slice().sort((a,b)=>D[b.i].score-D[a.i].score));
  return {pins,count:node.textContent};
 }
 for(const q of ['','하이어스']){
