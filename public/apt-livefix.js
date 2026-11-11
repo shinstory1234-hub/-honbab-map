@@ -123,6 +123,12 @@
        모든 고가 탭에 동일 규칙을 적용하고, 6억 이하에서는 로드하지 않는다.
     */
     var snapshot=d.types||[];
+    if(d.n==='평촌어바인퍼스트') window.__APT_DEBUG_IRVINE={
+       before: snapshot.map(function(t){return {py:t.py,p:t.p,n:t.n};}),
+       returned: types.map(function(t){return {py:t.py,p:t.p,n:t.n};}),
+       original: d.py,
+       sourceKey:sourceKey
+    };
     var currentPys=new Set(types.map(function(t){return t.py;}));
     var recovered=snapshot.filter(function(t){
       return Number.isFinite(Number(t.py))&&Number(t.py)>=13&&
