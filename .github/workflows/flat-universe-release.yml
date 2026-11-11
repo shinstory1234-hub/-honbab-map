@@ -33,6 +33,7 @@ jobs:
       - name: Verify existing scoring and estate identity rules
         run: |
           node --check public/apt-livefix.js
+          node scripts/test-live-flat-loader.cjs
           node scripts/test-m3-price-policy.cjs
           node scripts/test-kapt-group-split.cjs
           node scripts/test-apt-redevelopment-facts.cjs
