@@ -1,0 +1,52 @@
+name: Redevelopment Evidence Scoring Release Gate
+on:
+  push:
+    branches:
+      - feature/redevelopment-verified-data-m3-20261111
+
+permissions:
+  contents: read
+
+jobs:
+  compare:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+        with:
+          persist-credentials: false
+          fetch-depth: 1
+      - name: Restore frozen price and geo inputs
+        run: |
+          set -euo pipefail
+          mkdir -p "${RUNNER_TEMP}/apt-frozen"
+          gzip -t docs/transport-inputs/apt-geo.js.gz
+          gzip -t docs/transport-inputs/apt-live.js.gz
+          gzip -dc docs/transport-inputs/apt-geo.js.gz > "${RUNNER_TEMP}/apt-frozen/apt-geo.js"
+          gzip -dc docs/transport-inputs/apt-live.js.gz > "${RUNNER_TEMP}/apt-frozen/apt-live.js"
+      - name: Verify existing core price and estate regression tests
+        run: |
+          node scripts/test-m3-price-policy.cjs
+          node scripts/test-kapt-group-split.cjs
+          node --check public/apt-redevelopment-evidence.js
+          node --check public/apt-m3.js
+      - name: Compare every price band against identical current master inputs
+        env:
+          TRANSPORT_INPUTS: ${{ runner.temp }}/apt-frozen
+        run: |
+          set -euo pipefail
+          git fetch --depth=1 origin master
+          git worktree add --detach "${RUNNER_TEMP}/apt-before" FETCH_HEAD
+          node scripts/test-redevelopment-release.mjs --baseline-root "${RUNNER_TEMP}/apt-before" --out /tmp/apt-redevelopment-release.json
+      - name: Validate production build
+        run: |
+          npm ci --ignore-scripts
+          npm run build
+      - name: Upload complete rank comparison
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: redevelopment-six-band-comparison
+          path: /tmp/apt-redevelopment-release.json
+          if-no-files-found: warn
+          retention-days: 14
