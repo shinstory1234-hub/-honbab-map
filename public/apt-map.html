@@ -337,6 +337,8 @@ aside{order:-1;width:408px;flex:none;border-right:1px solid var(--border);backgr
   window.CAPT=c; window.CAPLO=c===30?250000:c===25?200000:c===20?150000:c===15?100000:c===10?60000:0; window.CAPHI=c===30?300000:c===25?250000:c===20?200000:c===15?150000:c===10?100000:60000; window.CAPTXT=c===30?'25~30억':c===25?'20~25억':c===20?'15~20억':c===15?'10~15억':c===10?'6~10억':'6억 이하';
   window.inBand=function(p){ return p>CAPLO&&p<=CAPHI; };
   var T=c!==6, x=String(c);
+  /* 첫 화면 미리보기(2026.11.11): 서버가 미리 계산한 기본 목록을 무거운 자료보다 먼저 받아 바로 보여 줌(async — 자료 로딩을 막지 않음) */
+  try{ var ps=document.createElement('script'); ps.async=true; ps.src='/api/apt-first?cap='+x; document.head.appendChild(ps); }catch(e){}
   /* 주변 시세 커널(apt-loc10·cx10)은 가격과 무관한 전체 단지 자료라 6~10억·10~15억 탭이 같이 씀 */
   var F=[T?'':'apt-first.js','apt-unitfix.js','apt-sd.js','apt-picks.js', T?'apt-picks10.js':'apt-auto3.js','apt-gj.js', T?'apt-loc10.js':'apt-loc.js', T?'apt-cx10.js':'apt-cx.js','apt-fard.js','apt-hak.js', T?'apt-univ10.js':'apt-univ.js', T?'apt-univ15.js':'', T?'apt-univ20.js':'', T?'apt-univ30.js':'', T?'apt-univadd.js':'', T?'apt-live.js':'', T?'apt-livefix.js':'',
     'apt-farplan.js','apt-mixhi.js','apt-cur.js','apt-trn.js','apt-small.js', T?'apt-s4q'+x+'.js':'apt-s4q.js','apt-peak.js','apt-gjl.js', T?'apt-gjc.js':'',T?'apt-transport.js':'','apt-s4.js',T?'apt-redevelopment-evidence.js':'',T?'apt-m3.js':'','apt-band.js','apt-plat.js','apt-farfix.js','apt-dem.js', T?'apt-dem10.js':'', T?'apt-dem15.js':'', T?'apt-dem20.js':'', T?'apt-dem30.js':'', T?'apt-demadd.js':'','apt-walk.js','apt-geo.js', T?'':'apt-deep6-100.js', T?'':'apt-deep6-200.js', T?'':'apt-research6-600.js', T?'':'apt-invest-ui.js'];

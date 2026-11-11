@@ -3,6 +3,8 @@ const MAIN = 'aptmap-kr.vercel.app'   // 대표 주소(2026.11.3, 사이트 이�
 // 옛 주소: 카카오 등록이 끝나기 전까지 지도가 끊기지 않게 undervalued-map은 그대로 지도를 보여줌 — Vercel에서 도메인을 떼면 이 줄은 자연히 쓰이지 않음
 const SERVE = [MAIN, 'undervalued-map.vercel.app']
 const nextConfig = {
+  // 첫 화면 미리보기 API가 서버에서 지도와 같은 계산 코드를 실행하도록 생성된 자료 파일을 함께 배포
+  outputFileTracingIncludes: { '/api/apt-first': ['./public/apt-map-fast.html', './public/apt-assets/**/*'] },
   async rewrites() {
     return {
       beforeFiles: [
