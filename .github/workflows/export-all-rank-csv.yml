@@ -43,6 +43,7 @@ jobs:
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add exported-rankings/
+          git add -f exported-rankings/*.csv  # CSV is globally gitignored in this repository
           if git diff --staged --quiet; then
             echo "Full ranking files already up to date"
           else
