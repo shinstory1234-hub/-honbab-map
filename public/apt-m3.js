@@ -1,5 +1,5 @@
-/* Apartment Map M3 — provisional scoring for 6억 초과~30억 이하.
- * Cap 6 retains the legacy model. Cap 30 uses M3 without transaction-volume penalty.
+/* Apartment Map M3 — 6억 이하 실험 사이트에서도 적용되는 시험 모델.
+ * Main site uses S14 for cap 6; this independent branch applies M3. Cap 30 retains no trade-volume penalty.
  * Weights need historical backtesting. Results are experimental.
  */
 (function(root){
@@ -30,6 +30,7 @@
   return operating>0?clamp(operating+.25*Math.max(0,planned-operating)):Math.min(35,planned);
  }
  function active(d,cap=root.CAPT){
+  if(cap===6) return Number(d?.p)>0&&Number(d?.p)<=60000;
   return [10,15,20,25,30].includes(cap)&&Number(d?.p)>60000&&Number(d?.p)<=300000;
  }
  // 가격의 불확실성은 '아파트 품질'이 아니라 예산 내 실매수 가능성에 대한 위험이다.
@@ -80,6 +81,10 @@
  function compute(d,cap=root.CAPT,integratedSite=null){
   if(!active(d,cap))return null;
   const s=d.s4||{};
+  // 6억 이하 원본 S14는 교통 후보를 계산하지 않으므로 같은 교통 계산기를 직접 호출한다.
+  // 원본 S14 점수는 비교용으로 보존하고 실제 표시 점수만 M3로 덮어쓴다.
+  if(cap===6 && !Number.isFinite(d.s14Score))d.s14Score=Number(d.score)||0;
+  if(cap===6 && !s.transport && root.APT_TRANSPORT) s.transport=root.APT_TRANSPORT.evaluate(d);
   const years=Number(d.year);
   const raw={
    G:integratedSite?.G??(Number.isFinite(s.pG)?s.pG:50),
