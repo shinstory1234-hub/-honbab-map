@@ -165,7 +165,7 @@
   const f=x=>Number(x??0).toFixed(1);
   const w=root.CAPT===15?weights:baselineWeights;
   const parts=[['장기 급지','G'],['직주','J'],['교통','T'],['세대수','U'],['상품성','Q'],['평형 효용','S']].map(([label,key])=>[label,key,w[key]*100]);
-  return 'M3 종합 '+f(m.score)+'점 = '+parts.map(([label,key,w])=>label+' '+f(m.raw[key])+' × '+w+'%').join(' + ')+(m.penalties.density?' − 고밀도 '+f(m.penalties.density):'')+(m.penalties.hill?' − 언덕 '+f(m.penalties.hill):'')+(m.penalties.jubok?' − 주상복합 '+f(m.penalties.jubok):'')+(m.penalties.price?' − 가격 신뢰도 '+f(m.penalties.price):'')+(m.penalties.tiny?' − 초소형 평형 '+f(m.penalties.tiny):'')+(m.bonuses?.verifiedProgress?' + 공고 검증 정비진행 '+f(m.bonuses.verifiedProgress):'')+' · 검증 전 잠정 산식';
+  return 'M3 종합 '+f(m.score)+'점 = '+parts.map(([label,key,w])=>label+' '+f(m.raw[key])+' × '+w+'%').join(' + ')+(m.penalties.density?' − 고밀도 '+f(m.penalties.density):'')+(m.penalties.hill?' − 언덕 '+f(m.penalties.hill):'')+(m.penalties.jubok?' − 주상복합 '+f(m.penalties.jubok):'')+(m.penalties.price?' − 가격 신뢰도 '+f(m.penalties.price):'')+(m.penalties.tiny?' − 초소형 평형 '+f(m.penalties.tiny):'')+(m.bonuses?.verifiedProgress?' + 공고 검증 정비진행 '+f(m.bonuses.verifiedProgress):'')+' · 검증 전 잠정 산식'+(root.CAPT===6&&Number.isFinite(d.s14Score)?' · 원래 S14 '+f(d.s14Score)+'점(비교용)':'');
  }
  function why(d){
   const m=d.m3;if(!m)return '';
