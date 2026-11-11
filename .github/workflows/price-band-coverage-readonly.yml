@@ -1,0 +1,34 @@
+name: Read-only price-band coverage and missing-flat audit
+on:
+  push:
+    branches:
+      - audit/price-band-missing-complexes-20261111
+permissions:
+  contents: read
+jobs:
+  coverage:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+        with:
+          persist-credentials: false
+      - name: Restore frozen production pricing and geo input backups
+        run: |
+          mkdir -p "${RUNNER_TEMP}/apt-inputs"
+          gzip -t docs/transport-inputs/apt-live.js.gz
+          gzip -t docs/transport-inputs/apt-geo.js.gz
+          gzip -dc docs/transport-inputs/apt-live.js.gz > "${RUNNER_TEMP}/apt-inputs/apt-live.js"
+          gzip -dc docs/transport-inputs/apt-geo.js.gz > "${RUNNER_TEMP}/apt-inputs/apt-geo.js"
+      - name: Analyze all missing flats across five high-price tabs
+        env:
+          TRANSPORT_INPUTS: ${{ runner.temp }}/apt-inputs
+        run: node scripts/audit-price-band-coverage.mjs --out /tmp/apt-coverage-report.json
+      - name: Upload complete report
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: apt-price-band-coverage
+          path: /tmp/apt-coverage-report.json
+          if-no-files-found: warn
+          retention-days: 14
