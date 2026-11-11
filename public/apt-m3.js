@@ -116,8 +116,14 @@
   const project=root.APT_REDEV_FACTS?.[d.n+'|'+d.area]||null;
   const verifiedProgress=project?.phase==='operator_designated'?2.5:
     project?.phase==='public_review'?1.25:0;
-  const score=clamp(Object.values(parts).reduce((sum,v)=>sum+v,0)-density-hill-jubok-pricePenalty+verifiedProgress);
-  return {score,raw,baseRaw,parts,price,penalties:{density,hill,jubok,price:pricePenalty},
+  // 초소형 보정(2026.11.12 전수조사): 14평 이하(전용 약 35㎡ 이하, 원룸·1.5룸)는 가족 실거주 평형이 아니어서
+  // 상급지 입지·대단지 점수만으로 탭 1~5위를 차지하던 문제(파크리오·수서 신동아·성원대치2 14평 등)를 막는다.
+  // 25년 이상 구축의 15~18평은 재건축 기대 소형으로 같은 문제가 생겨(가양·강변 16평 등) 추가로 낮춘다.
+  // 24평(59㎡)과 신축 16~18평(헬리오시티·올림픽파크포레온 등)은 감점하지 않는다.
+  const flatPy=Number(d.py)||0, flatAge=Number.isFinite(years)?2026-years:0;
+  const tiny=(flatPy>0&&flatPy<=14?8:0)+(flatPy>0&&flatPy<=18&&flatAge>=25?4:0);
+  const score=clamp(Object.values(parts).reduce((sum,v)=>sum+v,0)-density-hill-jubok-pricePenalty-tiny+verifiedProgress);
+  return {score,raw,baseRaw,parts,price,penalties:{density,hill,jubok,price:pricePenalty,tiny},
     bonuses:{verifiedProgress},verifiedProject:project?{zone:project.zone,phase:project.phase,date:project.date}:null,
     far:s.density?.far??null,farSrc:s.density?.src??'',
     model:'M3 (공식 정비 진행 단계·가격 근거 감점 백테스트 전)'};
@@ -134,7 +140,7 @@
   const f=x=>Number(x??0).toFixed(1);
   const w=root.CAPT===15?weights:baselineWeights;
   const parts=[['장기 급지','G'],['직주','J'],['교통','T'],['세대수','U'],['상품성','Q'],['평형 효용','S']].map(([label,key])=>[label,key,w[key]*100]);
-  return 'M3 종합 '+f(m.score)+'점 = '+parts.map(([label,key,w])=>label+' '+f(m.raw[key])+' × '+w+'%').join(' + ')+(m.penalties.density?' − 고밀도 '+f(m.penalties.density):'')+(m.penalties.hill?' − 언덕 '+f(m.penalties.hill):'')+(m.penalties.jubok?' − 주상복합 '+f(m.penalties.jubok):'')+(m.penalties.price?' − 가격 신뢰도 '+f(m.penalties.price):'')+(m.bonuses?.verifiedProgress?' + 공고 검증 정비진행 '+f(m.bonuses.verifiedProgress):'')+' · 검증 전 잠정 산식';
+  return 'M3 종합 '+f(m.score)+'점 = '+parts.map(([label,key,w])=>label+' '+f(m.raw[key])+' × '+w+'%').join(' + ')+(m.penalties.density?' − 고밀도 '+f(m.penalties.density):'')+(m.penalties.hill?' − 언덕 '+f(m.penalties.hill):'')+(m.penalties.jubok?' − 주상복합 '+f(m.penalties.jubok):'')+(m.penalties.price?' − 가격 신뢰도 '+f(m.penalties.price):'')+(m.penalties.tiny?' − 초소형 평형 '+f(m.penalties.tiny):'')+(m.bonuses?.verifiedProgress?' + 공고 검증 정비진행 '+f(m.bonuses.verifiedProgress):'')+' · 검증 전 잠정 산식';
  }
  function why(d){
   const m=d.m3;if(!m)return '';
