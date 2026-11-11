@@ -334,7 +334,7 @@ aside{order:-1;width:408px;flex:none;border-right:1px solid var(--border);backgr
   var T=c!==6, x=String(c);
   /* 주변 시세 커널(apt-loc10·cx10)은 가격과 무관한 전체 단지 자료라 6~10억·10~15억 탭이 같이 씀 */
   var F=[T?'':'apt-first.js','apt-unitfix.js','apt-sd.js','apt-picks.js', T?'apt-picks10.js':'apt-auto3.js','apt-gj.js', T?'apt-loc10.js':'apt-loc.js', T?'apt-cx10.js':'apt-cx.js','apt-fard.js','apt-hak.js', T?'apt-univ10.js':'apt-univ.js', T?'apt-univ15.js':'', T?'apt-univ20.js':'', T?'apt-univ30.js':'', T?'apt-univadd.js':'', T?'apt-live.js':'', T?'apt-livefix.js':'',
-    'apt-farplan.js','apt-mixhi.js','apt-cur.js','apt-trn.js','apt-small.js', T?'apt-s4q'+x+'.js':'apt-s4q.js','apt-peak.js','apt-gjl.js', T?'apt-gjc.js':'',T?'apt-transport.js':'','apt-s4.js',T?'apt-m3.js':'','apt-band.js','apt-plat.js','apt-farfix.js','apt-dem.js', T?'apt-dem10.js':'', T?'apt-dem15.js':'', T?'apt-dem20.js':'', T?'apt-dem30.js':'', T?'apt-demadd.js':'','apt-walk.js','apt-geo.js', T?'':'apt-deep6-100.js', T?'':'apt-deep6-200.js', T?'':'apt-research6-600.js', T?'':'apt-invest-ui.js'];
+    'apt-farplan.js','apt-mixhi.js','apt-cur.js','apt-trn.js','apt-small.js', T?'apt-s4q'+x+'.js':'apt-s4q.js','apt-peak.js','apt-gjl.js', T?'apt-gjc.js':'',T?'apt-transport.js':'','apt-s4.js',T?'apt-redevelopment-evidence.js':'',T?'apt-m3.js':'','apt-band.js','apt-plat.js','apt-farfix.js','apt-dem.js', T?'apt-dem10.js':'', T?'apt-dem15.js':'', T?'apt-dem20.js':'', T?'apt-dem30.js':'', T?'apt-demadd.js':'','apt-walk.js','apt-geo.js', T?'':'apt-deep6-100.js', T?'':'apt-deep6-200.js', T?'':'apt-research6-600.js', T?'':'apt-invest-ui.js'];
   for(var i=0;i<F.length;i++) if(F[i]) document.write('<script src="'+F[i]+'"><\/script>');
   if(T) document.title='아파트맵 · '+CAPTXT+' 아파트';
   var t6=document.getElementById('cap'+x); if(t6){ t6.setAttribute('aria-current','page'); try{ t6.scrollIntoView({block:'nearest',inline:'center'}); }catch(e){} } var hm=document.getElementById('home'); if(hm&&T) hm.href='apt-map.html?cap='+x;
@@ -1030,6 +1030,8 @@ const FEATURE_META={
   '학군':{label:'학군',color:'#b26a00'},
   '재건축':{label:'재건축',color:'#6541f2'},
   '재건축어려움':{label:'재건축 어려움',color:'#8b8d98'},
+  '정비계획공람':{label:'정비계획안 공람',color:'#6553a9'},
+  '사업성부담':{label:'추정 분담금 부담',color:'#a87532'},
   '사업성낮음':{label:'사업성 낮음',color:'#a0a3ab'},
   '재건축기대':{label:'재건축 기대',color:'#9d8df1'},
   '리모델링':{label:'리모델링',color:'#7856d8'},
@@ -1044,15 +1046,26 @@ const FEATURE_META={
   '신혼':{label:'가족형',color:'#9a6700'},
   '평지':{label:'평지',color:'#687076'}
 };
+const verifiedProjectOf=d=>CAPT>6?(window.APT_REDEV_FACTS||{})[gkey(d)]||null:null;
 function featureKeys(d){
   const out=[], add=(key,priority)=>out.push([key,priority]), tags=d.tags||[], stage=stOf(d);
-  const remodel=isRemodel(d)||tags.includes('리모델링');
+  const remodel=isRemodel(d)||tags.includes('리모델링'), verified=verifiedProjectOf(d);
   if(remodel) add('리모델링',120);
-  if(remodel){}                                                            // 리모델링 단지에 '재건축 기대'·'재건축'을 같이 달지 않음(2026.11.3 — 서로 다른 사업)
-  else if(d.dead>=.5) add('재건축어려움',118);
-  else if(NOUP()&&d.dead>=.25) add('사업성낮음',117);   // m2: 재건축 사업성은 순위 대신 위험 표시
-  else if(stage>=35) add('재건축',115);                                    // 공식 정비 단계(정비 대상 지구 이상)만
-  else if(!(d.dead>=.5)&&(tags.includes('재건축')||d.rbw>=.5)) add('재건축기대',112);   // 단계 전 노후 단지 — 공식 사업 아님
+  if(CAPT===6){
+    // 보호 가격대는 기존 카드, 분류, 순위를 완전히 유지한다.
+    if(!remodel&&d.dead>=.5) add('재건축어려움',118);
+    else if(!remodel&&NOUP()&&d.dead>=.25) add('사업성낮음',117);
+    else if(!remodel&&stage>=35) add('재건축',115);
+    else if(!remodel&&!(d.dead>=.5)&&(tags.includes('재건축')||d.rbw>=.5)) add('재건축기대',112);
+  }else if(!remodel){
+    // 실제 계획 공람과 추정 분담금 부담은 별개이다. '재건축 불가능'이라고 표현하지 않는다.
+    if(verified?.phase==='public_review') add('정비계획공람',121);
+    else if(verified?.phase==='operator_designated') add('재건축',121);
+    else if(stage>=35) add('재건축',115);
+    else if(tags.includes('재건축')||d.rbw>=.5) add('재건축기대',112);
+    if(d.dead>=.5) add('사업성부담',118);
+    else if(NOUP()&&d.dead>=.25) add('사업성낮음',117);
+  }
   if(tags.includes('천지개벽')||(stage>=70&&d.units>=1000)) add('천지개벽',tags.includes('천지개벽')?110:108);
   if(2026-d.year<=10) add('신축',105);
   if(d.A>=7) add('학군',100);
@@ -1068,7 +1081,7 @@ function featureKeys(d){
   return out.sort((a,b)=>b[1]-a[1]).map(x=>x[0]);
 }
 const cardFeatures=d=>featureKeys(d).slice(0,2);
-const hasFeature=(d,key)=>featureKeys(d).includes(key);
+const hasFeature=(d,key)=>{ const f=featureKeys(d);return f.includes(key)||(key==='재건축'&&f.includes('정비계획공람')); };
 const badgeHTML=d=>[{label:d.tier.k,color:d.tier.c},...cardFeatures(d).map(k=>FEATURE_META[k]&&{label:FEATURE_META[k].label,color:FEATURE_META[k].color}).filter(Boolean)]
   .map(x=>`<span class="chip" style="--chip:${x.color}">${esc(x.label)}</span>`).join('');
 const FILTERS=[['all','전체'],['top','핵심 1~30'],['mid','유망 31~300'],['interest','관심 301~1,000'],['explore','탐색 1,001+'],['신축','신축'],['학군','학군'],['재건축','재건축'],['리모델링','리모델링'],['천지개벽','천지개벽'],['역세권','역세권'],['초품아','초품아'],['대단지','대단지'],['신설역','신설역'],['반도체','반도체'],['소형할인','소형 할인'],['flat','평지'],['job50','출근 50분'],['free','비규제']];
@@ -1480,6 +1493,14 @@ function publicDetailSummary(b,d){
   // 같은 단지 투자포인트는 별도 확장 스크립트가 삽입하며, 해석 요약을 유지한다.
 }
 
+function redevelopmentEvidencePanel(d){
+  const info=verifiedProjectOf(d);if(!info)return '';
+  const warning=d.dead>=.5?'추정 분담금 부담이 높게 계산됐지만 정비사업 자체가 불가능하다는 의미는 아닙니다.':'사업성 계산값은 분담금과 권리조건에 따라 달라질 수 있습니다.';
+  return `<section class="sec"><h3>정비사업 공식 진행 단계 <small>${esc(info.zone)} · ${esc(info.date)} 확인</small></h3>
+    <p><b>${esc(info.label)}</b> · ${esc(info.notice)}</p>
+    <p class="note">주민공람은 정비구역 지정이나 사업시행인가가 아닙니다. 현행 세대수는 기존 단지 기준이며 계획 세대수를 합산하지 않습니다. ${warning} 정비 추진 진행도만 제한적으로 평가에 반영합니다.</p>
+    <p class="note"><a href="${esc(info.url)}" target="_blank" rel="noopener noreferrer">공고 및 근거 자료 확인 ↗</a></p></section>`;
+}
 function renderDetail(i){
   const d=D[i], m=money(d), nd=need(d), tags=[d.tier.k,...cardFeatures(d).map(k=>FEATURE_META[k].label)].join(' · ');
   const bar=(v,max)=>`<div class="t"><b style="width:${Math.round(v/max*100)}%"></b></div>`;
@@ -1487,7 +1508,7 @@ function renderDetail(i){
   let h=`<div class="phead"><button id="back"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M15 18 9 12l6-6"/></svg>목록</button><span class="tnum">${d.rank}위 / ${d.m3?NCX:D.length}</span></div>
   <section class="identity"><div class="cat">${esc(tags)}${d.u?' · 전체 단지 자동 수집':d.auto?' · 점수식 자동 선별':' · 직접 분석'}</div><h2>${esc(publicComplexName(d))}</h2>
     <div class="meta tnum">${d.masterComplexKey?`<span>선택 평형 · ${esc(d.n.replace(publicComplexName(d),'')||d.n)} ${d.py}평</span>`:''}<span>${esc(d.area)}</span><span>${d.year}년 입주</span><span>${unitN(d).toLocaleString()}세대${d.masterComplexKey?` <small>(통합 관리단지 · 해당 구분 블록 ${d.masterBlockUnits.toLocaleString()}세대)</small>`:d.unitsBlockVerified?` <small>(분리 단지 기준 · 통합 세대수 중복 제외)</small>`:d.unitsOwn?` <small>(임대단지 제외 매매 대상)</small>`:d.unitsRaw?` <small>(같은 마을 ${d.unitsN}개 단지 합계 ${d.unitsRaw.toLocaleString()}세대를 나눈 추정)</small>`:''}</span></div></section>
-  ${m3DensityNote(d)}${m3PriceWarning(d)}<div class="lede"><strong>${esc(d.headline)}</strong><p>${esc(d.sub)}</p>${d.s4&&(!d.simple||d.s4.peakR!=null||d.s4.peakPeer)?`<p class="why"><b>순위 근거</b> ${esc(whyLine(d))}</p>`:''}${!d.simple&&hasNew(d)?`<p class="why"><b>신설역 주의</b> 입지 점수에 개통 예정 역·노선을 넣어 순위가 올라간 단지예요${d.locParts.fut?` — ${esc(d.locParts.fut.n)}역(${esc(d.locParts.fut.line)}) 도보 약 ${Math.round(d.locParts.wf)}분`:''}${/예정/.test(d.locParts.lpl||'')?` · 노선 프리미엄 ${esc(d.locParts.lpl)} +${Math.round(d.locParts.lp*100)}%(가정)`:''}. 철도는 지연이 잦고 역 위치는 공사·계획 기준(OpenStreetMap)이에요. 개통 전까지 1년당 5%(최대 20%) 할인해서 반영했고, 예정 역을 빼면 입지 상위 ${Math.max(1,Math.round(100-d.loc0))}%예요. 지금 쓰는 역은 ${esc((d.cur&&d.cur.n)||'없음')}${d.cur&&d.cur.m<99999?` 도보 약 ${Math.round(walkMin(d.cur.m))}분`:''}.</p>`:''}</div>
+  ${redevelopmentEvidencePanel(d)}${m3DensityNote(d)}${m3PriceWarning(d)}<div class="lede"><strong>${esc(d.headline)}</strong><p>${esc(d.sub)}</p>${d.s4&&(!d.simple||d.s4.peakR!=null||d.s4.peakPeer)?`<p class="why"><b>순위 근거</b> ${esc(whyLine(d))}</p>`:''}${!d.simple&&hasNew(d)?`<p class="why"><b>신설역 주의</b> 입지 점수에 개통 예정 역·노선을 넣어 순위가 올라간 단지예요${d.locParts.fut?` — ${esc(d.locParts.fut.n)}역(${esc(d.locParts.fut.line)}) 도보 약 ${Math.round(d.locParts.wf)}분`:''}${/예정/.test(d.locParts.lpl||'')?` · 노선 프리미엄 ${esc(d.locParts.lpl)} +${Math.round(d.locParts.lp*100)}%(가정)`:''}. 철도는 지연이 잦고 역 위치는 공사·계획 기준(OpenStreetMap)이에요. 개통 전까지 1년당 5%(최대 20%) 할인해서 반영했고, 예정 역을 빼면 입지 상위 ${Math.max(1,Math.round(100-d.loc0))}%예요. 지금 쓰는 역은 ${esc((d.cur&&d.cur.n)||'없음')}${d.cur&&d.cur.m<99999?` 도보 약 ${Math.round(walkMin(d.cur.m))}분`:''}.</p>`:''}</div>
   <dl class="kpis tnum">
     ${d.opt?`<div><dt>지금 필요한 돈</dt><dd>${eokH(d.opt.dep)}</dd><small>${esc(d.opt.kind)} · ${d.opt.Y}년 ${eok(d.opt.K)} 매수권 · 시세 ${eok(d.p)}</small></div>`:`<div><dt>${d.py}평 시세</dt><dd>${eokH(d.p)}</dd><small>${d.reg==='free'?'비규제':'토허·실거주 2년'}${priceEv(d)?`<br>${esc(priceEvTxt(d))}`:''}</small></div>`}
     <div><dt>${esc(nd.l)}</dt><dd class="hl">${eokH(nd.v)}</dd><small>${esc(nd.x)}</small></div>
