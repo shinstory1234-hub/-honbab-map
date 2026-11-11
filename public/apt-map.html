@@ -1567,7 +1567,7 @@ function fitSearch(){
 }
 
 let map,pins=[];
-let mapInteracted=false;
+let mapInteracted=false,restoreFullBoundsOnReady=false,manualZoomUntil=0;
 function syncMapViewUrl(){
   if(!map)return;
   const c=map.getCenter(),u=new URL(location.href);
@@ -1660,7 +1660,8 @@ function goHome(){                                                     // 로고
   history.replaceState(null,'',url.pathname+url.search);
   render(); $('#body').scrollTop=0;
   mapInteracted=false;
-  if(map&&homeB) map.setBounds(homeB,60,40,mobile()?150:40,40);
+  restoreFullBoundsOnReady=!homeB;
+  if(map&&homeB){ map.setBounds(homeB,60,40,mobile()?150:40,40);restoreFullBoundsOnReady=false; }
   if(mobile()) snapTo('half'); }
 $('#home').addEventListener('click',e=>{ e.preventDefault(); goHome(); });
 addEventListener('popstate',()=>{ const i=fromHash(); if(i>=0) select(i,false,true); else { close(); render(); $('#body').scrollTop=listScrollY; } });
@@ -1695,20 +1696,33 @@ function materializePin(o){ const i=o.i;
 /* ── 바텀시트 ── */
 const sheet=$('#sheet'); let snaps={},cur='peek',y=0;
 function calcSnaps(){
-  sheet.style.height=(innerHeight-$('.masthead').offsetHeight-8)+'px';
-  const H=sheet.offsetHeight; snaps={full:0,half:Math.round(H*0.45),peek:H-132};
+  sheet.style.height=Math.max(0,innerHeight-$('.masthead').offsetHeight-8)+'px';
+  const H=sheet.offsetHeight;
+  const peek=Math.max(0,H-132);
+  snaps={full:0,half:Math.min(peek,Math.round(H*0.45)),peek};
 }
 function setY(v,anim){ y=Math.max(0,Math.min(snaps.peek,v)); sheet.classList.toggle('anim',!!anim); sheet.style.setProperty('--y',y+'px'); }
 function snapTo(name){ if(!mobile())return; calcSnaps(); cur=name; setY(snaps[name],true); }
 (function(){
-  if(!mobile())return;
-  calcSnaps(); setY(snaps.peek,false);
-  let sy=0,sp=0,ly=0,lt=0,vel=0,drag=false,fromBody=false,moved=0;
+  if(mobile()){calcSnaps();setY(snaps.peek,false);}
+  let sy=0,sx=0,sp=0,ly=0,lt=0,vel=0,drag=false,fromBody=false,moved=0;
   const body=$('#body'), head=$('#head');
-  const down=(e,fb)=>{if(document.activeElement===$('#q'))$('#q').blur();const t=e.touches[0];drag=true;fromBody=fb;sy=ly=t.clientY;sp=y;lt=performance.now();vel=0;moved=0;sheet.classList.remove('anim');};
+  const down=(e,fb)=>{
+    if(!mobile())return;
+    if(document.activeElement===$('#q'))$('#q').blur();
+    const t=e.touches[0];drag=true;fromBody=fb;sx=t.clientX;sy=ly=t.clientY;
+    sp=y;lt=performance.now();vel=0;moved=0;sheet.classList.remove('anim');
+  };
   const move=e=>{
-    if(!drag)return; const t=e.touches[0], dy=t.clientY-sy; moved=Math.max(moved,Math.abs(dy));
-    if(fromBody){ if(y<=0&&(body.scrollTop>0||dy<0)){sy=t.clientY;sp=y;return;} if(e.cancelable)e.preventDefault(); }
+    if(!drag||!mobile())return;
+    const t=e.touches[0], dy=t.clientY-sy, dx=t.clientX-sx;
+    // 가격·평형·속성 필터를 좌우로 넘길 때 바텀시트가 제스처를 가로채지 않는다.
+    if(fromBody&&Math.abs(dx)>9&&Math.abs(dx)>Math.abs(dy)*1.1){drag=false;return;}
+    moved=Math.max(moved,Math.abs(dy));
+    if(fromBody){
+      if(y<=0&&(body.scrollTop>0||dy<0)){sy=t.clientY;sp=y;return;}
+      if(e.cancelable)e.preventDefault();
+    }
     const now=performance.now(); vel=(t.clientY-ly)/Math.max(1,now-lt); ly=t.clientY; lt=now;
     setY(sp+dy,false);
   };
@@ -1728,7 +1742,10 @@ function snapTo(name){ if(!mobile())return; calcSnaps(); cur=name; setY(snaps[na
   body.addEventListener('scroll',()=>{ if(y>0) body.scrollTop=0; });
   head.addEventListener('click',()=>{ if(moved<6) snapTo(cur==='full'?'peek':cur==='half'?'full':'half'); });
   $('#q').addEventListener('focus',()=>snapTo('full'));
-  addEventListener('resize',()=>{calcSnaps();setY(snaps[cur],false);});
+  addEventListener('resize',()=>{
+    if(!mobile()){sheet.style.removeProperty('height');sheet.style.removeProperty('--y');return;}
+    calcSnaps();setY(snaps[cur],false);
+  });
 })();
 
 recomputeAsync().then(()=>{
@@ -1759,7 +1776,16 @@ function init(){
     level:savedMapView?.level??9
   });
   map.addControl(new kakao.maps.ZoomControl(),kakao.maps.ControlPosition.RIGHT);
-  $('#map').addEventListener('pointerdown',()=>{if(document.activeElement===$('#q'))$('#q').blur();},{passive:true});
+  $('#map').addEventListener('pointerdown',e=>{
+    if(document.activeElement===$('#q'))$('#q').blur();
+    // 핀을 누른 뒤 select()가 확대하는 것은 사용자 수동 줌으로 보지 않는다.
+    if(!e.target.closest('.mk'))manualZoomUntil=performance.now()+1800;
+  },{passive:true});
+  $('#map').addEventListener('wheel',()=>{manualZoomUntil=performance.now()+1800;},{passive:true});
+  kakao.maps.event.addListener(map,'zoom_changed',()=>{
+    // 카카오 줌 버튼·휠·핀치 조작은 검색 결과에 갇히지 않고 현재 지도 탐색으로 넘어간다.
+    if(performance.now()<manualZoomUntil){manualZoomUntil=0;browseMap();}
+  });
   kakao.maps.event.addListener(map,'dragstart',browseMap);
   kakao.maps.event.addListener(map,'click',browseMap);
   const places=new kakao.maps.services.Places(),bounds=new kakao.maps.LatLngBounds();
@@ -1768,7 +1794,10 @@ function init(){
     if(state.sel!=null) select(state.sel,false,true);
     else if(state.q) fitSearch();
     else if(state.browse) renderList();
-    else if(!savedMapView&&!mapInteracted) map.setBounds(bounds,60,40,mobile()?150:40,40);
+    else if(restoreFullBoundsOnReady||(!savedMapView&&!mapInteracted)){
+      restoreFullBoundsOnReady=false;
+      map.setBounds(bounds,60,40,mobile()?150:40,40);
+    }
   } };
   const done2=()=>{ done(); if(pending===0) analyze(); };
   (function fut(){
