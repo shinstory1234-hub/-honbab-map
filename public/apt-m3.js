@@ -59,13 +59,24 @@
     latestRaised,lastSale:latestRaised?t.lastSale:null,rawWeightedPrice:latestRaised?t.pBeforeLatest:null,
     latestBeyondBand,latestBeyondSale:latestBeyondBand?t.lastSale:null};
  }
+ // 직주근접(2026.11.12): 기존 pJ는 업무지구(강남·시청·여의도·판교) 7.7km 안이면 전부 최고점이라
+ // 탭 단지 60~90%가 같은 백분위(약 80)에 몰리고, 조금만 벗어난 고덕·둔촌·과천·상계는 26~44로 급락했다.
+ // 가장 가까운 업무지구까지 직선거리로 3km 이내 100점 → 20km 0점 직선 점수로 바꿔 변별력을 살린다.
+ // 업무지구는 기존 4곳에 서울 2040 광역중심 중 고용이 큰 잠실·마곡·용산을 더한다(6억 이하 S4 점수는 그대로).
+ const M3_CBD=[[37.5133,127.1001],[37.5602,126.8254],[37.5299,126.9648]];
+ function commuteScore(d,s){
+  const cbd=typeof S4CBD!=='undefined'?S4CBD.concat(M3_CBD):null, g=d.g||{};
+  if(!cbd||!Number.isFinite(g.lat)||!Number.isFinite(g.lng))return Number.isFinite(s.pJ)?s.pJ:50;
+  const rad=Math.PI/180, km=Math.min(...cbd.map(([a,b])=>{const x=(b-g.lng)*rad*Math.cos((a+g.lat)/2*rad),y=(a-g.lat)*rad;return 6371*Math.sqrt(x*x+y*y);}));
+  return clamp(100*(1-(km-3)/17));
+ }
  function compute(d,cap=root.CAPT,integratedSite=null){
   if(!active(d,cap))return null;
   const s=d.s4||{};
   const years=Number(d.year);
   const raw={
    G:integratedSite?.G??(Number.isFinite(s.pG)?s.pG:50),
-   J:integratedSite?.J??(Number.isFinite(s.pJ)?s.pJ:50),
+   J:integratedSite?.J??commuteScore(d,s),
    T:integratedSite?.T??transportScore(s.transport?.candidates),
    U:integratedSite?.U??interp(Number(d.unitsOwn??d.units)||0,unitCurve),
    Q:integratedSite?.Q??(Number.isFinite(years)&&years>=1950?interp(Math.max(0,2026-years),ageCurve):50),
@@ -76,6 +87,8 @@
   // 세대수 가중 장기 급지에 연동한다. 일반 단지의 상품성까지 무차별
   // 감점하면 좋은 역세권 신축이 100~300위씩 떨어져 백테스트 전에는 금지한다.
   // 실제 순위 검증: 10~15억 통합단지에만 기존 S4 급지 게이트 적용.
+  // 직주 점수도 급지에 연동: 급지 약한 외곽 단지가 업무지구 거리만으로 오르지 않게 급지 45 이하 ×0.5 → 70 이상 ×1
+  if(!integratedSite){ const jg=clamp((raw.G-45)/25,0,1); raw.J=raw.J*(.5+.5*jg); }
   const baseRaw={...raw};
   if(cap===15&&integratedSite){
     const gg=Array.isArray(root.S4CFG?.gGate)?root.S4CFG.gGate:[45,70];

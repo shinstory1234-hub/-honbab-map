@@ -1111,7 +1111,7 @@ const savedMapView=(()=>{
   return p.has('vlat')&&p.has('vlng')&&p.has('vlevel')&&Number.isFinite(lat)&&Number.isFinite(lng)&&Number.isInteger(level)
     &&lat>36.85&&lat<38.3&&lng>126.3&&lng<127.95&&level>=1&&level<=14?{lat,lng,level}:null;
 })();
-const state={f:'all',pb:'all',size:'all',q:'',sel:null,lim:50,browse:!!(savedMapView&&new URLSearchParams(location.search).get('browse')==='1')};
+const state={f:'all',pb:'all',size:'all',age:'all',q:'',sel:null,lim:50,browse:!!(savedMapView&&new URLSearchParams(location.search).get('browse')==='1')};
 // 6억 탭: 대출 끼고 필요한 현금 기준 / 6~10억 탭: 시세(가격) 기준 — 10억 탭에서 현금 구간은 '3억 이하'가 가격처럼 읽혀 헷갈림(2026.11.1)
 const PB=CAPT>=25?[['all','전체 가격'],...[0,1,2,3,4].map(k=>{ const lo=CAPLO+k*10000; return ['p'+(lo/10000+1),`${lo/10000}~${lo/10000+1}억`,lo,lo+10000]; })]   // 2026.11.3: 20~25억·25~30억 탭에 6억 탭 칩(3억 이하…)이 뜨던 문제
   :CAPT===20?[['all','전체 가격'],['p16','15~16억',150000,160000],['p17','16~17억',160000,170000],['p18','17~18억',170000,180000],['p19','18~19억',180000,190000],['p20','19~20억',190000,200000]]
@@ -1119,6 +1119,10 @@ const PB=CAPT>=25?[['all','전체 가격'],...[0,1,2,3,4].map(k=>{ const lo=CAPL
   :CAPT===10?[['all','전체 가격'],['p7','6~7억',60000,70000],['p8','7~8억',70000,80000],['p9','8~9억',80000,90000],['p10','9~10억',90000,100000]]
   :[['all','전체 가격'],['3','3억 이하',0,30000],['4','3~4억',30000,40000],['5','4~5억',40000,50000],['6','5~6억',50000,60001]];
 const SIZES=[['all','전체 평형'],['10','10평대',10,20],['20','20평대',20,30],['30','30평 이상',30,Infinity]];
+/* 연식 구분(2026.11.12, 6억 초과 탭): 같은 예산에서 서울 구축과 경기 신축이 한 줄에 서는 구간이라, 비슷한 단지끼리 볼 수 있게 연식으로 나눠 보기.
+   순위·점수는 그대로(전체 순위 번호 유지) — 보기만 거름 */
+const AGES=[['all','전체 연식'],['new','신축 10년 이내',0,10],['mid','준신축 11~25년',11,25],['old','구축 26년 이상',26,Infinity]];
+const ageOf=d=>Number.isFinite(Number(d.year))?2026-Number(d.year):null;
 /* 검색용 신도시·생활권 이름(법정동 이름에 안 들어 있어 '운정'·'동탄' 등으로 검색이 안 되던 문제) */
 const TOWN=[[/^파주/,/동패동|목동동|와동동|야당동|다율동|당하동|상지석동/,'운정'],[/^화성/,/청계동|영천동|오산동|산척동|목동|송동|여울동|장지동|방교동|신동|중동|능동|반송동|석우동/,'동탄'],
   [/^수원|^용인/,/이의동|하동|원천동|상현동/,'광교'],[/^하남|^성남/,/학암동|창곡동/,'위례'],[/^김포/,/장기동|운양동|구래동|마산동|양촌읍/,'한강신도시'],[/^양주/,/옥정동|회천/,'옥정'],
@@ -1131,7 +1135,8 @@ const visible=(d,withSearch=true)=>{
   const f=state.f, ok=f==='all'||(f==='top'&&d.rank<=30)||(f==='mid'&&d.rank>30&&d.rank<=300)||(f==='interest'&&d.rank>300&&d.rank<=1000)||(f==='explore'&&d.rank>1000)||(f==='flat'&&isFlat(d))||(f==='job50'&&jobMin(d)!=null&&jobMin(d)<=50)||(f==='free'&&d.reg==='free')||hasFeature(d,f);
   const pb=PB.find(x=>x[0]===state.pb); const okp=state.pb==='all'||!pb||(CAPT!==6?(d.p>pb[2]&&d.p<=pb[3]):((cashOf(d)>pb[2]&&cashOf(d)<=pb[3])||(state.pb==='3'&&cashOf(d)<=30000)));
   const size=SIZES.find(x=>x[0]===state.size), oks=state.size==='all'||(d.py>=size[2]&&d.py<size[3]);
-  return ok&&okp&&oks&&(!withSearch||!state.q||textMatches(d));
+  const ag=AGES.find(x=>x[0]===state.age), ay=ageOf(d), oka=!state.age||state.age==='all'||!ag||(ay!=null&&ay>=ag[2]&&ay<=ag[3]);
+  return ok&&okp&&oks&&oka&&(!withSearch||!state.q||textMatches(d));
 };
 
 /* 탭별 '종합' 설명(s14, 2026.11.1 개편): 6억 외 탭은 가격대 표현을 바꾸고, 네 탭 모두 종합 점수 설명을 그 탭의 비중·백테스트 결과로 교체.
@@ -1262,6 +1267,7 @@ function renderList(){
   </section>
   <div class="filters pb" role="group" aria-label="가격대">${PB.map(([k,l])=>`<button data-pb="${k}" aria-pressed="${state.pb===k}">${l}</button>`).join('')}</div>
   <div class="filters pb" role="group" aria-label="평형(공급면적 기준)">${SIZES.map(([k,l])=>`<button data-size="${k}" aria-pressed="${state.size===k}">${l}</button>`).join('')}</div>
+  ${CAPT>6?`<div class="filters pb" role="group" aria-label="연식">${AGES.map(([k,l])=>`<button data-age="${k}" aria-pressed="${state.age===k}">${l}</button>`).join('')}</div>`:''}
   <div class="filters" role="group" aria-label="필터">${FILTERS.map(([k,l])=>`<button data-f="${k}" aria-pressed="${state.f===k}">${l}</button>`).join('')}</div>
   ${viewport?'<div class="region-mode">현재 지도 범위의 단지 <button type="button" id="browseReset">전체 순위 보기</button></div>':''}
   <div class="count"><span>${singleComplex?list.length.toLocaleString()+'개 단지 · 전체 평형 표시':list.length.toLocaleString()+'개 평형'+(CAPT!==6?' ('+new Set(list.map(d=>complexRankKey(d))).size.toLocaleString()+'개 단지)':'')} · 종합 점수순</span><span>시세 리치고·국토부 실거래 · ${CAPT>6?(window.LIVEP_AT||'갱신일 확인 중'):('고정 자료 '+(ASOF||''))}</span></div>`;
@@ -1279,7 +1285,7 @@ function renderList(){
   if(list.length>state.lim) h+=`<button class="btn ghost more" id="more" style="display:block;margin:12px auto;width:calc(100% - 32px)">${Math.min(100,list.length-state.lim)}개 더 보기 · 남은 ${(list.length-state.lim).toLocaleString()}개</button>`;
   if(!list.length){
     const reason=state.browse?'현재 지도 범위에 조건에 맞는 단지가 없습니다.':state.q?'검색 결과가 없습니다.':'선택한 조건에 맞는 단지가 없습니다.';
-    const reset=state.q?'검색어 지우기':state.f!=='all'||state.pb!=='all'||state.size!=='all'?'필터 초기화':state.browse?'전체 지역 보기':'';
+    const reset=state.q?'검색어 지우기':state.f!=='all'||state.pb!=='all'||state.size!=='all'||state.age!=='all'?'필터 초기화':state.browse?'전체 지역 보기':'';
     h+=`<div class="empty-results" role="status"><strong>${reason}</strong><p>${state.browse?'지도 위치를 옮기거나 확대 범위를 조정해 보세요.':'다른 단지나 조건을 검색해 보세요.'}</p>${reset?'<button type="button" id="emptyReset">'+reset+'</button>':''}</div>`;
   }
   if(state.q&&(window.LIVE_PRICE_REVIEW||[]).length){
@@ -1302,13 +1308,14 @@ function renderList(){
   const browseReset=b.querySelector('#browseReset'); if(browseReset) browseReset.onclick=()=>{state.browse=false;render();b.scrollTop=0;syncMapViewUrl();};
   const emptyReset=b.querySelector('#emptyReset');if(emptyReset)emptyReset.onclick=()=>{
     if(state.q){clearSearchToMap();return;}
-    if(state.f!=='all'||state.pb!=='all'||state.size!=='all'){Object.assign(state,{f:'all',pb:'all',size:'all'});}
+    if(state.f!=='all'||state.pb!=='all'||state.size!=='all'||state.age!=='all'){Object.assign(state,{f:'all',pb:'all',size:'all',age:'all'});}
     else state.browse=false;
     render();b.scrollTop=0;syncMapViewUrl();
   };
   b.querySelectorAll('.filters button[data-f]').forEach(x=>x.onclick=()=>{state.f=x.dataset.f;state.lim=50;render();b.scrollTop=0;});
   b.querySelectorAll('.filters button[data-pb]').forEach(x=>x.onclick=()=>{state.pb=x.dataset.pb;state.lim=50;render();b.scrollTop=0;});
   b.querySelectorAll('.filters button[data-size]').forEach(x=>x.onclick=()=>{state.size=x.dataset.size;state.lim=50;render();b.scrollTop=0;});
+  b.querySelectorAll('.filters button[data-age]').forEach(x=>x.onclick=()=>{state.age=x.dataset.age;state.lim=50;render();b.scrollTop=0;});
   const no=b.querySelector('#noticeOpen'); if(no) no.onclick=()=>{ noticeCheck.checked=false; noticeAgree.disabled=true; noticeError.textContent=''; noticeGate.hidden=false; noticeCheck.focus(); };
   const mb=b.querySelector('#more'); if(mb) mb.onclick=()=>{ const y=b.scrollTop; state.lim+=100; renderList(); b.scrollTop=y; };
   b.querySelectorAll('.row').forEach(x=>{
