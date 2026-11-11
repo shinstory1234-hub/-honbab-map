@@ -25,7 +25,6 @@ jobs:
       - name: Run six-band actual source comparison to current master
         env:
           TRANSPORT_INPUTS: ${{ runner.temp }}/apt-inputs
-          APT_AUDIT_PRELIVE: '1'
         run: |
           set -euo pipefail
           git fetch --depth=1 origin master
