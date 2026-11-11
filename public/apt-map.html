@@ -1434,6 +1434,10 @@ function publicMethodSummary(h){
     +'<strong>아파트맵 종합 평가</strong><br>입지 경쟁력, 실제 교통 접근성, 단지 규모, 준공연도와 주거 상품성, 실거래 신뢰도 및 정비사업 위험 등을 종합하여 같은 가격대의 단지를 비교합니다.'
     +'<br><br>점수와 순위는 구매 결정을 돕기 위한 비교 지표이며, 개별 매물의 실제 매수가격이나 미래 수익률을 보장하지 않습니다.'
     +'<br>평가 항목별 세부 가중치와 시세 보정 방법은 아파트맵 자체 평가 모델에 해당하여 공개하지 않습니다.</div></details>';
+  if(CAPT===6&&window.APT_M3){
+    const exp='<details class="method"><summary>실험판 평가 기준 '+CHEV+'</summary><div style="padding:14px 16px;font-size:13px;line-height:1.8;color:var(--text-secondary)"><strong>6억 이하 M3 테스트</strong><br>장기 급지 35%, 직주근접 10%, 교통 15%, 세대수 20%, 연식·상품성 15%, 평형 효용 5%. 고밀도, 언덕, 주상복합, 거래 신뢰도 등은 별도 위험 보정합니다.<br>원본 S14와 달리 저평가 정도는 직접 가산하지 않습니다. 과거 성과 백테스트 전인 실험 순위입니다.</div></details>';
+    return h.replace(/<details class="method">[\s\S]*?<\/details>/,exp);
+  }
   return h.replace(/<details class="method">[\s\S]*?<\/details>/,intro);
 }
 function publicDetailSummary(b,d){
