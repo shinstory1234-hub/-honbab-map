@@ -7,11 +7,11 @@ function s10Plaus(){ const C=window.S4CFG||{}, lm=C.locMix??.5, uw=C.upW??.2, gw
   for(const [a,b,c] of [[lm-.25,uw,gw],[lm+.25,uw,gw],[lm,uw-.1,gw],[lm,uw+.1,gw],[lm,uw,gw-.1],[lm,uw,gw+.1]]) if(ok(a,b,c)) out.push([+a.toFixed(2),+b.toFixed(2),+c.toFixed(2)]);
   return out; }
 function s10Band(){ const n=D.length, M=D.map(()=>[]);
-  if(typeof CAPT!=='undefined'&&CAPT>6){const count=new Set(D.map(d=>d.cxKey)).size;D.forEach(d=>{d.band=[d.rank,d.rank,d.rank];const t=d.rank/count;d.btier=t<=.01?'상위 1%':t<=.05?'상위 5%':t<=.1?'상위 10%':t<=.25?'상위 25%':'그 외';});return;}
+  if(typeof CAPT!=='undefined'&&(CAPT>6||!!window.APT_M3)){const count=new Set(D.map(d=>complexRankKey(d))).size;D.forEach(d=>{d.band=[d.rank,d.rank,d.rank];const t=d.rank/count;d.btier=t<=.01?'상위 1%':t<=.05?'상위 5%':t<=.1?'상위 10%':t<=.25?'상위 25%':'그 외';});return;}
   for(const [lm,uw,gw] of s10Plaus()){
     const sc=D.map((d,i)=>{ const s=d.s4; if(!s) return -1; return s4Total((1-uw-gw)*((1-lm)*s.pU+lm*s.pLoc)+uw*s.pUp+gw*(s.pG??50),s.rawDp||0,s.peakBonus||0); });
     const o=sc.map((v,i)=>i).sort((a,b)=>sc[b]-sc[a]); o.forEach((i,r)=>M[i].push(r+1)); }
   D.forEach((d,i)=>{ const v=M[i].slice().sort((a,b)=>a-b), med=v[Math.floor(v.length/2)];
     d.band=[med,v[0],v[v.length-1]];
     const t=med/n; d.btier=t<=.01?'상위 1%':t<=.05?'상위 5%':t<=.1?'상위 10%':t<=.25?'상위 25%':'그 외'; }); }
-const s10BandTxt=d=>d.band?(typeof CAPT!=='undefined'&&CAPT>6?`${d.btier} · ${d.rank.toLocaleString()}위(확정 비중 기준)`:`${d.btier} · 약 ${d.band[0].toLocaleString()}위(비중 가정에 따라 ${d.band[1].toLocaleString()}~${d.band[2].toLocaleString()}위)`):'';
+const s10BandTxt=d=>d.band?(typeof CAPT!=='undefined'&&(CAPT>6||!!window.APT_M3)?`${d.btier} · ${d.rank.toLocaleString()}위(확정 비중 기준)`:`${d.btier} · 약 ${d.band[0].toLocaleString()}위(비중 가정에 따라 ${d.band[1].toLocaleString()}~${d.band[2].toLocaleString()}위)`):'';
