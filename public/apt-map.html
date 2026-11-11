@@ -1850,6 +1850,9 @@ render();
 document.body.dataset.aptReadyMs=String(Math.round(performance.now()-(window.__APT_LOAD_START||0)));
 
 (function(){
+  // 첫 화면 미리보기가 이미 카카오 지도를 받아 두었으면 그대로 이어서 사용(2026.11.11)
+  if(window.kakao&&kakao.maps&&kakao.maps.load){ kakao.maps.load(init); return; }
+  if(window.__aptSdk){ window.__aptSdk.addEventListener('load',()=>kakao.maps.load(init)); window.__aptSdk.addEventListener('error',()=>{const m=$('#keymsg');m.style.display='flex';m.textContent='지도를 불러오지 못했습니다. 잠시 후 새로고침해 주세요.';}); return; }
   const s=document.createElement('script');
   s.src=`https://dapi.kakao.com/v2/maps/sdk.js?appkey=${KAKAO_JS_KEY}&libraries=services&autoload=false`;
   s.onerror=()=>{const m=$('#keymsg');m.style.display='flex';m.textContent='지도를 불러오지 못했습니다. 잠시 후 새로고침해 주세요.';};
@@ -1866,7 +1869,10 @@ const inMetro=(la,ln)=>la>36.85&&la<38.3&&ln>126.3&&ln<127.95;
 const NEWGU=/병점구|동탄구|효행구|만세구|서해구|검단구|영종구|제물포구/;   // 2026 신설 구: 지도 주소엔 아직 없을 수 있음
 function addrOK(d,a){ const t=d.area.split(' ').slice(0,-1).filter(x=>!NEWGU.test(x)).map(x=>x.replace(/(시|군)$/,'')); return t.every(x=>a.includes(x)); }
 function init(){
-  map=new kakao.maps.Map($('#map'),{
+  window.__aptEngineMap=true;
+  const pre=window.__preMap;   // 미리보기 지도를 이어받음: 미리보기 핀만 지우고 같은 지도·같은 위치 유지
+  if(pre&&pre.map){ pre.clear(); map=pre.map; if(pre.moved()) mapInteracted=true; }
+  else map=new kakao.maps.Map($('#map'),{
     center:new kakao.maps.LatLng(savedMapView?.lat??37.45,savedMapView?.lng??127.0),
     level:savedMapView?.level??9
   });

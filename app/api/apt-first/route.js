@@ -22,8 +22,8 @@ export async function GET(request) {
   if (!CAPS.has(cap)) return js('', 'public, max-age=0, s-maxage=86400');
   try {
     const [geo, live] = await Promise.all([text(`${UP}/aptgeo?export=js`), cap > 6 ? text(`${UP}/aptlive`) : Promise.resolve('')]);
-    const html = previewHTML(path.join(process.cwd(), 'public'), cap, { geo, live });
-    return js(previewScript(html), 'public, max-age=0, s-maxage=3600, stale-while-revalidate=86400');
+    const { html, pins, key } = previewHTML(path.join(process.cwd(), 'public'), cap, { geo, live, withPins: true });
+    return js(previewScript(html, pins, key), 'public, max-age=0, s-maxage=3600, stale-while-revalidate=86400');
   } catch (e) {
     console.error('apt-first preview failed', cap, e);
     // 실패해도 지도는 평소대로 뜬다(미리보기만 생략). 짧게 캐시해 곧 다시 시도
