@@ -110,10 +110,17 @@
     (price.ageDays!=null && price.ageDays>180)?5:3;
   const pricePenalty=cap===30?0:
     reliableVolume?Math.min(price.penalty,maxPricePenalty):price.penalty;
-  const score=clamp(Object.values(parts).reduce((sum,v)=>sum+v,0)-density-hill-jubok-pricePenalty);
+  // 실제 고시 또는 공람 공고로 소속 단지와 단계가 확인된 정비사업만 인정한다.
+  // 공람은 정비구역 지정이나 사업시행인가가 아니며, 계획 신축 세대수를 현재 세대수로 대체하지 않는다.
+  // 상품성 Q는 현재 주택의 연식으로 그대로 평가하고, 추진 단계는 별도의 소폭 보정으로 구분한다.
+  const project=root.APT_REDEV_FACTS?.[d.n+'|'+d.area]||null;
+  const verifiedProgress=project?.phase==='operator_designated'?2.5:
+    project?.phase==='public_review'?1.25:0;
+  const score=clamp(Object.values(parts).reduce((sum,v)=>sum+v,0)-density-hill-jubok-pricePenalty+verifiedProgress);
   return {score,raw,baseRaw,parts,price,penalties:{density,hill,jubok,price:pricePenalty},
+    bonuses:{verifiedProgress},verifiedProject:project?{zone:project.zone,phase:project.phase,date:project.date}:null,
     far:s.density?.far??null,farSrc:s.density?.src??'',
-    model:'M3 (가중치·가격 근거 감점 백테스트 전)'};
+    model:'M3 (공식 정비 진행 단계·가격 근거 감점 백테스트 전)'};
  }
  function apply(d,integratedSite=null){
   const m=compute(d,root.CAPT,integratedSite);
@@ -127,11 +134,11 @@
   const f=x=>Number(x??0).toFixed(1);
   const w=root.CAPT===15?weights:baselineWeights;
   const parts=[['장기 급지','G'],['직주','J'],['교통','T'],['세대수','U'],['상품성','Q'],['평형 효용','S']].map(([label,key])=>[label,key,w[key]*100]);
-  return 'M3 종합 '+f(m.score)+'점 = '+parts.map(([label,key,w])=>label+' '+f(m.raw[key])+' × '+w+'%').join(' + ')+(m.penalties.density?' − 고밀도 '+f(m.penalties.density):'')+(m.penalties.hill?' − 언덕 '+f(m.penalties.hill):'')+(m.penalties.jubok?' − 주상복합 '+f(m.penalties.jubok):'')+(m.penalties.price?' − 가격 신뢰도 '+f(m.penalties.price):'')+' · 검증 전 잠정 산식';
+  return 'M3 종합 '+f(m.score)+'점 = '+parts.map(([label,key,w])=>label+' '+f(m.raw[key])+' × '+w+'%').join(' + ')+(m.penalties.density?' − 고밀도 '+f(m.penalties.density):'')+(m.penalties.hill?' − 언덕 '+f(m.penalties.hill):'')+(m.penalties.jubok?' − 주상복합 '+f(m.penalties.jubok):'')+(m.penalties.price?' − 가격 신뢰도 '+f(m.penalties.price):'')+(m.bonuses?.verifiedProgress?' + 공고 검증 정비진행 '+f(m.bonuses.verifiedProgress):'')+' · 검증 전 잠정 산식';
  }
  function why(d){
   const m=d.m3;if(!m)return '';
-  return 'M3 급지 '+m.raw.G.toFixed(0)+' · 직주 '+m.raw.J.toFixed(0)+' · 교통 '+m.raw.T.toFixed(0)+' · '+(d.unitsOwn??d.units).toLocaleString()+'세대 · 상품성 '+m.raw.Q.toFixed(0)+' · 평형 '+m.raw.S.toFixed(0)+(m.penalties.price?' · 시세 신뢰도 감점 −'+m.penalties.price.toFixed(0)+'점':'')+(m.penalties.density?' · 용적률 감점 −'+m.penalties.density.toFixed(0)+'점':'')+(m.penalties.jubok?' · 주상복합 감점 −'+m.penalties.jubok+'점':'')+' (가중치 검증 전)';
+  return 'M3 급지 '+m.raw.G.toFixed(0)+' · 직주 '+m.raw.J.toFixed(0)+' · 교통 '+m.raw.T.toFixed(0)+' · '+(d.unitsOwn??d.units).toLocaleString()+'세대 · 상품성 '+m.raw.Q.toFixed(0)+' · 평형 '+m.raw.S.toFixed(0)+(m.penalties.price?' · 시세 신뢰도 감점 −'+m.penalties.price.toFixed(0)+'점':'')+(m.penalties.density?' · 용적률 감점 −'+m.penalties.density.toFixed(0)+'점':'')+(m.penalties.jubok?' · 주상복합 감점 −'+m.penalties.jubok+'점':'')+(m.verifiedProject?' · 정비사업 확인':'')+' (가중치 검증 전)';
  }
  const oldPanel=root.APT_TRANSPORT?.panel;
  if(oldPanel){
