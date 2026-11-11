@@ -12,6 +12,9 @@ export function run(root,cap,compiled=false){
    let p=path.join(root,'public',f);
    if(!fs.existsSync(p)&&process.env.TRANSPORT_INPUTS)p=path.join(process.env.TRANSPORT_INPUTS,f);
    if(!fs.existsSync(p)){missing.push(f);return;}
+   if(f==='apt-livefix.js'&&process.env.APT_AUDIT_PRELIVE==='1') {
+     c.__APT_PRELIVE=JSON.parse(vm.runInContext(`JSON.stringify(PICKS.filter(x=>/어바인퍼스트/.test(x.n)).map(x=>({n:x.n,area:x.area,py:x.py,p:x.p,types:x.types})))`,c));
+   }
    let code=fs.readFileSync(p,'utf8');
    if(compiled&&code.includes('function recompute()')) code=code.split('let qT=null;')[0];
    vm.runInContext(code,c,{filename:f});
