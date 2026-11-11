@@ -19,7 +19,7 @@ for(const cap of [6,10,15,20,25,30]){
     }
     const details=JSON.parse(vm.runInContext(
       'JSON.stringify(ORDER.map(d=>({key:d.cxKey,name:d.n,area:d.area,py:d.py,p:d.p,units:d.units,score:d.score,rank:d.rank,sourceKey:d.liveKey||null})))',c));
-    const low=cap===6?0:(cap-5)*10000,high=cap*10000;
+    const low=cap===6?0:cap===10?60000:(cap-5)*10000,high=cap*10000;
     const bandErrors=details.filter(d=>!(d.p>low&&d.p<=high));
     const duplicates=[];const keys=new Set();
     for(const d of details){
