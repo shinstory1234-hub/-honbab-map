@@ -113,11 +113,38 @@
         }
       });
     }
-    var me=types.find(function(t){return t.py===d.py;})
-      ||types.slice().sort(function(a,b){return Math.abs(a.py-d.py)-Math.abs(b.py-d.py);})[0];
-    d.types=types; d.py=me.py; d.p=me.p; d.live=1; d.liveKey=sourceKey;
-    var src=me.latestPriceFloor?'최근 정상 중개 실거래 '+me.last+'의 '+eok(me.lastSale)+'을 하한으로 적용한 추정 시세':('최근 12개월 실거래 '+me.n+'건(3개월 '+me.n3+'건, 직거래 제외)을 오늘 기준으로 환산해 최근 거래에 무게를 둔 시세');
-    d.headline=d.py+'평 '+eok(d.p)+' · 현재 시세';
+    /*
+       LIVEP는 일부 단지에서 한 평형만 내려오며, 그때 기존 유니버스의
+       나머지 정상 거래 평형을 모두 지워 버리던 문제를 복구한다.
+       원본 평형은 apt-univ10/15/20/30 합집합에서 이미 확보했다.
+       동일 평형은 최신 LIVEP를 우선하고, LIVEP가 아예 제공하지 않은
+       평형만 12개월 거래 3건 이상인 경우 보조 자료로 보존한다.
+       보조 자료의 가격은 현재가가 아닌 저장된 참조가격으로 명시한다.
+       모든 고가 탭에 동일 규칙을 적용하고, 6억 이하에서는 로드하지 않는다.
+    */
+    var snapshot=d.types||[];
+    var currentPys=new Set(types.map(function(t){return t.py;}));
+    var recovered=snapshot.filter(function(t){
+      return Number.isFinite(Number(t.py))&&Number(t.py)>=13&&
+        Number.isFinite(Number(t.p))&&Number(t.p)>0&&
+        Number(t.n)>=3&&!currentPys.has(Number(t.py));
+    }).map(function(t){return {...t,snapshotOnly:1,n3:Number(t.n3)||0};});
+    if(recovered.length){
+      (window.LIVE_MISSING_TYPES=window.LIVE_MISSING_TYPES||[]).push({
+        name:d.n,area:d.area,liveKey:sourceKey,
+        restored:recovered.map(function(t){return {py:t.py,p:t.p,n:t.n};})
+      });
+    }
+    var mergedTypes=types.concat(recovered);
+    var me=mergedTypes.find(function(t){return t.py===d.py;})
+      ||mergedTypes.slice().sort(function(a,b){return Math.abs(a.py-d.py)-Math.abs(b.py-d.py);})[0];
+    d.types=mergedTypes; d.py=me.py; d.p=me.p; d.live=1; d.liveKey=sourceKey;
+    d.snapshotOnly=!!me.snapshotOnly;
+    var src=me.snapshotOnly?
+      '실시간 실거래 조회에서 해당 평형이 누락되어 기존 수집 시세를 임시 사용(현재가 재확인 필요)':
+      me.latestPriceFloor?'최근 정상 중개 실거래 '+me.last+'의 '+eok(me.lastSale)+'을 하한으로 적용한 추정 시세':
+      ('최근 12개월 실거래 '+me.n+'건(3개월 '+me.n3+'건, 직거래 제외)을 오늘 기준으로 환산해 최근 거래에 무게를 둔 시세');
+    d.headline=d.py+'평 '+eok(d.p)+(me.snapshotOnly?' · 기존 수집 참고시세':' · 현재 시세');
     d.deal=src+' '+eok(d.p)+(me.last?' (마지막 거래 '+me.last+')':'');
     d.sub=d.units.toLocaleString()+'세대, '+d.year+'년 입주. 이 평형 '+src+' '+eok(d.p)+'.';
     // 같은 단지 큰 평형 비교값(bench)도 현재 시세로
