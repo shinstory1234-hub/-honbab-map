@@ -20,5 +20,9 @@ for(const k of [
 ]) assert.equal(u[k],undefined,'검증되지 않은 K-apt 세대수 재적용 금지: '+k);
 const curated=u['성원대치2단지아파트|서울 강남구 개포동'];
 assert.equal(curated?.[0],1753,'수동 확정 세대수를 잘못된 추정값으로 덮어씀');
-assert.ok(Object.keys(u).length>=600,'정상 보정 대량 소실');
-console.log('PASS: 6 검증된 식별키, 임대/제외 리스트, 성원대치2 세대수 보호');
+for(const k of [
+  '송도더샵마스터뷰23-1BL|인천 연수구 송도동',
+  '현대|서울 노원구 하계동'
+]) assert.equal(u[k],undefined,'검증된 원천 세대수에 잘못된 수치 적용 금지: '+k);
+assert.equal(Object.keys(u).length,643,'세대수 보정 변경 수 회귀: 추가 감사 전 원천 유지');
+console.log('PASS: 10 검증된 단지 식별키, 보정 643건, 하계현대·마스터뷰 세대수와 성원대치2 보호');
