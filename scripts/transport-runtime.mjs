@@ -12,21 +12,9 @@ export function run(root,cap,compiled=false){
    let p=path.join(root,'public',f);
    if(!fs.existsSync(p)&&process.env.TRANSPORT_INPUTS)p=path.join(process.env.TRANSPORT_INPUTS,f);
    if(!fs.existsSync(p)){missing.push(f);return;}
-   if(f==='apt-livefix.js'&&process.env.APT_AUDIT_PRELIVE==='1') {
-     c.__APT_PRELIVE=JSON.parse(vm.runInContext(`JSON.stringify(PICKS.filter(x=>/어바인퍼스트/.test(x.n)).map(x=>({n:x.n,area:x.area,py:x.py,p:x.p,types:x.types})))`,c));
-   }
    let code=fs.readFileSync(p,'utf8');
    if(compiled&&code.includes('function recompute()')) code=code.split('let qT=null;')[0];
-   const pre=process.env.APT_AUDIT_PRELIVE==='1'&&c.PICKS?
-     c.PICKS.find(x=>x.n==='평촌어바인퍼스트')?.types?.map(x=>[x.py,x.p,x.n]):null;
    vm.runInContext(code,c,{filename:f});
-   if(process.env.APT_AUDIT_PRELIVE==='1'&&c.PICKS){
-     const post=c.PICKS.find(x=>x.n==='평촌어바인퍼스트')?.types?.map(x=>[x.py,x.p,x.n])||null;
-     if(JSON.stringify(pre)!==JSON.stringify(post)){
-       c.__APT_MUTATION_TRACE=c.__APT_MUTATION_TRACE||[];
-       c.__APT_MUTATION_TRACE.push({file:f,before:pre,after:post});
-     }
-   }
  };
  c.document.write=s=>{for(const match of s.matchAll(/<script([^>]+)>/g)){
    const f=/src="([^"]+)"/.exec(match[1])?.[1];if(!f)continue;
