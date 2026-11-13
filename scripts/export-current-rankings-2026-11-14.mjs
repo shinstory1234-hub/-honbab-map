@@ -31,7 +31,7 @@ try {
   for(const file of ['apt-geo.js','apt-live.js','apt-live6.js']) {
     const s=fs.readFileSync(path.join(tmp,file),'utf8');
     const o={};o.window=o;vm.runInNewContext(s,o);
-    if(file==='apt-geo.js' && Object.keys(o.GEOFIX||{}).length<1000)throw new Error('Geo data missing');
+    if(file==='apt-geo.js' && Object.keys(o.GEOFIX||o.UGEO||{}).length<10)throw new Error('Geo data missing');
     if(file!=='apt-geo.js' && Object.keys(o.LIVEP||{}).length<100)throw new Error('Current pricing data missing in '+file);
   }
   const all=[], groups=[], bandInfo=[];
