@@ -45,7 +45,7 @@ export function buildAptAssets(root, output = path.join(root, 'public')) {
     const flush = () => { if (chunk.length) urls.push(writeAsset(chunk.join('\n;\n'), names)); chunk = []; names = []; };
     for (const file of ordered) {
       // These URLs are rewritten to live upstream data. Never freeze them at build time.
-      if (file === 'apt-live.js' || file === 'apt-geo.js') { flush(); urls.push(file); continue; }
+      if (file === 'apt-live.js' || file === 'apt-live6.js' || file === 'apt-geo.js') { flush(); urls.push(file); continue; }
       let code = fs.readFileSync(path.join(sourceDir, file), 'utf8');
       if (file === 'apt-picks10.js') code = code.replace(/^if\(document\.write\).*$/m, '');
       if (/document\.write\s*\(/.test(code)) throw new Error(`Unexpanded script dependency: ${file}`);

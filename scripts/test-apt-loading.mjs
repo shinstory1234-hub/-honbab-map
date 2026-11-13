@@ -28,6 +28,7 @@ for (const cap of [6, 10, 15, 20, 25, 30]) {
   const urls = built.manifest[cap];
   assert.ok(urls.includes('apt-geo.js'));
   assert.equal(urls.includes('apt-live.js'), cap > 6, 'live prices must not be bundled');
+  assert.equal(urls.includes('apt-live6.js'), cap === 6, '6억 탭 현재 시세는 번들에 굳히지 않음');
   results.push({cap, rows: compiled.rows.length, requests: urls.length, exactMatch: true, slices, maxSliceMs: Math.round(maxSliceMs)});
   console.log(JSON.stringify(results.at(-1)));
 }

@@ -14,8 +14,10 @@ const pFix=boot.indexOf("'apt-livefix.js'");
 assert.ok(pLive>=0&&pOld>=0&&pFix>=0,'Missing required price input assets');
 assert.ok(pLive<pOld&&pOld<pFix,
  'Live price overlay must run after historic apt-cur.js, otherwise valid price bands vanish');
-assert.ok(boot.includes("T?'apt-livefix.js':''"),
- 'Live overlay must not load for protected 6억 이하');
+assert.ok(boot.includes("T?'apt-livefix.js':'apt-curlive.js'"),
+ '6억 초과는 apt-livefix.js, 6억 이하는 apt-curlive.js(2026.11.14부터 매일 실거래)로 시세를 덮어써야 함');
+const pLive6=boot.indexOf("'apt-live6.js'"), pCurLive=boot.indexOf("'apt-curlive.js'");
+assert.ok(pLive6>=0&&pLive6<pOld&&pOld<pCurLive,'6억 탭 현재 시세(apt-live6.js)는 apt-cur.js 뒤 apt-curlive.js에서 덮어써야 함');
 assert.ok(html.includes("opt:(CAPT===6?"),
  'Protected purchase options must not leak into high-price flats');
-console.log('PASS: live price overlay runs after cached price bundle, and never affects protected 6억 tab');
+console.log('PASS: live price overlay runs after cached price bundle in every tab (6억 이하: apt-live6 → apt-curlive)');

@@ -21,7 +21,7 @@ export async function GET(request) {
   } });
   if (!CAPS.has(cap)) return js('', 'public, max-age=0, s-maxage=86400');
   try {
-    const [geo, live] = await Promise.all([text(`${UP}/aptgeo?export=js`), cap > 6 ? text(`${UP}/aptlive`) : Promise.resolve('')]);
+    const [geo, live] = await Promise.all([text(`${UP}/aptgeo?export=js`), text(cap > 6 ? `${UP}/aptlive` : `${UP}/aptlive?min=0`)]);
     const { html, pins, key } = previewHTML(path.join(process.cwd(), 'public'), cap, { geo, live, withPins: true });
     return js(previewScript(html, pins, key), 'public, max-age=0, s-maxage=3600, stale-while-revalidate=86400');
   } catch (e) {

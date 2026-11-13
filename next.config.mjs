@@ -13,6 +13,8 @@ const nextConfig = {
         { source: '/apt-geo.js', destination: 'https://realestate-media.vercel.app/api/backtest/aptgeo?export=js' },
         // 현재 시세(매일 크론이 다시 계산, 2026.11.3)
         { source: '/apt-live.js', destination: 'https://realestate-media.vercel.app/api/backtest/aptlive' },
+        // 6억 이하 탭 현재 시세(2026.11.14): 4.5억 미만 평형까지
+        { source: '/apt-live6.js', destination: 'https://realestate-media.vercel.app/api/backtest/aptlive?min=0' },
         // 실제 최근 수집·가격 재계산 기준일: 정기 갱신 지연을 숨기지 않고 이용자에게 표시
         { source: '/apt-freshness.json', destination: 'https://realestate-media.vercel.app/api/backtest/aptfreshness' },
       ],
