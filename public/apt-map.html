@@ -679,33 +679,35 @@ const SIZE=(py,age)=>Math.exp((HC.szY+HC.szO*clamp01((age-11)/10))*SZM(age)*Math
 /* 주변 시세(위치 가치): 반경 ~600m 가우시안 커널로 주변 단지들의 '상품 차이를 뺀' 평당가를 평균. 이 단지 자신은 제외.
    동 경계와 무관하게 실제 거리로 비교하므로, 같은 동이라도 멀리 떨어진 호재 지역 시세가 섞이지 않음 */
 /* 속도(2026.11.2): CXP를 약 330m 격자로 색인하고 결과를 (좌표·세대수)별로 캐시 — 같은 단지 평형마다·호출마다 전체 단지를 다시 훑던 것(재계산 시간의 20%) 제거. 결과는 동일 */
-var CXG=null, NCC=null;   // var: 이 정의보다 위쪽(farOf)에서 먼저 호출되므로 let/const면 초기화 전 접근 오류
+var CXG=null, CXI=null, NCC=null;   // var: 이 정의보다 위쪽(farOf)에서 먼저 호출되므로 let/const면 초기화 전 접근 오류
 function nearCx(d){ const g=d.g||{}; if(!g.lat||!window.CXP) return null;
   if(!NCC) NCC=new Map(); const key=g.lat+','+g.lng+','+(d.units||0); if(NCC.has(key)) return NCC.get(key);
-  if(!CXG){ CXG=new Map(); for(const p of CXP){ const k=Math.floor(p[0]/.003)+'|'+Math.floor(p[1]/.004); let a=CXG.get(k); if(!a) CXG.set(k,a=[]); a.push(p); } }
+  if(!CXG){ CXG=new Map(); CXI=new Map(); CXP.forEach((p,i)=>{ if(!CXI.has(p)) CXI.set(p,i); const k=Math.floor(p[0]/.003)+'|'+Math.floor(p[1]/.004); let a=CXG.get(k); if(!a) CXG.set(k,a=[]); a.push(p); }); }
   const c=Math.cos(g.lat*Math.PI/180), ci=Math.floor(g.lat/.003), cj=Math.floor(g.lng/.004); let best=null,bm=1e9;
   for(let i=ci-1;i<=ci+1;i++) for(let j=cj-1;j<=cj+1;j++){ const a=CXG.get(i+'|'+j); if(!a) continue;
     for(const p of a){ const dy=(p[0]-g.lat)*111000; if(Math.abs(dy)>300) continue; const m=Math.hypot(dy,(p[1]-g.lng)*111000*c);
-      const pen=m+(d.units&&p[2]?300*Math.abs(Math.log(p[2]/d.units)):0); if(m<300&&(pen<bm||(pen===bm&&CXP.indexOf(p)<CXP.indexOf(best)))){bm=pen;best=p;} } }
+      const pen=m+(d.units&&p[2]?300*Math.abs(Math.log(p[2]/d.units)):0); if(m<300&&(pen<bm||(pen===bm&&CXI.get(p)<(best?CXI.get(best):-1)))){bm=pen;best=p;} } }
   NCC.set(key,best); return best; }
 var LOCG=null, LOCRESULT=new Map(), LOCNEARKEY='', LOCNEAR=null;   // 속도(2026.11.2): LOCP를 약 2km 격자로 색인, 6km 안 후보만 원래 순서대로 훑음 — 결과 동일
 function locFW(d,cut){ const g=d.g||{}; if(!g.lat||!window.LOCP) return null; const la=g.lat, ln=g.lng, c=Math.cos(la*Math.PI/180);
   const cacheKey=la+'|'+ln+'|'+d.year+'|'+cut+'|'+((d.cx||[])[5]||0);
   if(LOCRESULT.has(cacheKey)) return LOCRESULT.get(cacheKey);
   const nearKey=la+'|'+ln+'|'+d.year;
-  if(nearKey!==LOCNEARKEY){
-  const all=[]; let self=null, sd=1e9;
   if(!LOCG){ LOCG=new Map(); LOCP.forEach((p,i)=>{ const k=Math.floor(p[0]/.02)*100000+Math.floor(p[1]/.02); let a=LOCG.get(k); if(!a) LOCG.set(k,a=[]); a.push(i); }); }
-  const ci=Math.floor(la/.02), cj=Math.floor(ln/.02), ids=[];   // 격자 0.02°(위도 2.2km·경도 1.8km): 6km 안을 덮도록 위도 ±3·경도 ±4칸
-  for(let i=ci-3;i<=ci+3;i++) for(let j=cj-4;j<=cj+4;j++){ const a=LOCG.get(i*100000+j); if(a) for(const x of a) ids.push(x); }
-  ids.sort((a,b)=>a-b);
-  for(const id of ids){ const p=LOCP[id]; const dy=(p[0]-la)*111000; if(Math.abs(dy)>6000) continue; const dx=(p[1]-ln)*111000*c; if(Math.abs(dx)>6000) continue;
-    const m=Math.hypot(dx,dy); if(m<300&&Math.abs(p[4]-d.year)<=1&&m<sd){sd=m;self=p;}
-    all.push([p,m]); }
-  LOCNEARKEY=nearKey; LOCNEAR={all,self,sub:{}};
+  // 속도(2026.11.14): 반경(bw×4) 안 격자칸만 훑어 그 반경 후보를 원래(번호) 순서로 만든다 — 대부분 400m(→1.6km)에서 끝나 6km 전체를 계산하지 않음. 후보·순서가 같아 결과 동일
+  const gather=R=>{ const ci=Math.floor(la/.02), cj=Math.floor(ln/.02), ki=Math.min(3,Math.ceil(R/2200)), kj=Math.min(4,Math.ceil(R/(2220*c*.97))), out=[], cells=[]; let n=0;
+    for(let i=ci-ki;i<=ci+ki;i++) for(let j=cj-kj;j<=cj+kj;j++){ const a=LOCG.get(i*100000+j); if(a){ cells.push(a); n+=a.length; } }
+    const ids=new Int32Array(n); n=0; for(const a of cells) for(let q=0;q<a.length;q++) ids[n++]=a[q];
+    ids.sort();
+    for(let q=0;q<ids.length;q++){ const id=ids[q]; const p=LOCP[id]; const dy=(p[0]-la)*111000; if(Math.abs(dy)>R) continue; const dx=(p[1]-ln)*111000*c; if(Math.abs(dx)>R) continue;
+      const m=Math.hypot(dx,dy); if(!(m>R)) out.push([p,m]); }
+    return out; };
+  if(nearKey!==LOCNEARKEY){
+    const s16=gather(1600); let self=null, sd=1e9;
+    for(const [p,m] of s16) if(m<300&&Math.abs(p[4]-d.year)<=1&&m<sd){sd=m;self=p;}
+    LOCNEARKEY=nearKey; LOCNEAR={self,sub:{1600:s16}};
   }
-  // 속도(2026.11.11): 반경별 후보(bw×4 안)를 원래 순서 그대로 한 번만 추려 재사용 — 6km 안 전체를 반경마다 다시 훑지 않음. 합산 순서가 같아 결과 동일
-  const sub=bw=>LOCNEAR.sub[bw]||(LOCNEAR.sub[bw]=LOCNEAR.all.filter(x=>!(x[1]>bw*4)));
+  const sub=bw=>LOCNEAR.sub[bw*4]||(LOCNEAR.sub[bw*4]=gather(bw*4));
   const self=LOCNEAR.self, okY=p=>2026-p[4]<=cut;                // 일반 적정가는 25년차 이하, 재건축 완공가는 20년차 이하(교차검증)
   const sg=(self||d.cx||[])[self?7:5]||0;                 // 다른 시·구 단지는 가까워도 35%만 반영(행정 경계 = 생활권·학군 경계인 경우가 많음)
   let close=0; for(const [p,m] of sub(400)){ if(okY(p)&&p!==self&&m<700&&(!sg||p[7]===sg)) close++; }
@@ -888,14 +890,25 @@ let LFC={};
 /* 동네 정비 진행률(천지개벽, 2026.10.26): 반경 1km 안 30년+ 단지 세대 중 공식 정비 단계(st≥35) 세대 비율. 동네 전체가 움직이면
    개별 단지 단계가 늦어도 '정비 이슈 없는 구축' 감점을 그 비율만큼 덜어 줌(apt-s4.js) */
 function areaMove(){ const C=Object.values(SIB).map(a=>a[0]).filter(d=>d.g&&d.g.lat&&2026-d.year>=30), mv={};
-  for(const d of C){ let all=0,on=0; const c=Math.cos(d.g.lat*Math.PI/180);
-    for(const x of C){ const dy=(x.g.lat-d.g.lat)*111000; if(Math.abs(dy)>1000) continue; if(Math.hypot(dy,(x.g.lng-d.g.lng)*111000*c)>1000) continue;
+  // 속도(2026.11.14): 1km 안 후보만 격자(약 1.1km)로 추려 원래 순서대로 합산 — 결과 동일
+  const AG=new Map(); C.forEach((x,i)=>{ const k=Math.floor(x.g.lat/.01)*100000+Math.floor(x.g.lng/.01); let a=AG.get(k); if(!a) AG.set(k,a=[]); a.push(i); });
+  for(const d of C){ let all=0,on=0; const c=Math.cos(d.g.lat*Math.PI/180), ci=Math.floor(d.g.lat/.01), cj=Math.floor(d.g.lng/.01), kj=Math.ceil(1000/(1110*c*.97)), near=[];
+    for(let i=ci-1;i<=ci+1;i++) for(let j=cj-kj;j<=cj+kj;j++){ const a=AG.get(i*100000+j); if(a) for(const q of a) near.push(q); }
+    near.sort((a,b)=>a-b);
+    for(const q of near){ const x=C[q]; const dy=(x.g.lat-d.g.lat)*111000; if(Math.abs(dy)>1000) continue; if(Math.hypot(dy,(x.g.lng-d.g.lng)*111000*c)>1000) continue;
       all+=x.units; if(stOf(x)>=35) on+=x.units; }
     mv[d.cxKey]=all?on/all:0; }
   D.forEach(d=>{ d.areaMv=mv[d.cxKey]||0; }); }
 // 좌표가 같은 평형의 예정 역 거리를 공유한다. 좌표 자료가 갱신되면 캐시를 비운다.
 const FUTDIST=new Map(); let FUTDIST_VERSION='';
-function futureDistances(la,ln){ const key=la+','+ln; if(!FUTDIST.has(key)) FUTDIST.set(key,FUTPOS.map(f=>f?hav(la,ln,f[0],f[1]):null)); return FUTDIST.get(key); }
+// 속도(2026.11.14): 역 쪽 cos·라디안은 역마다 한 번만 — hav와 같은 연산 순서라 결과(비트) 동일
+let FUTPRE=null, FUTPRE_SRC=null;
+function futureDistances(la,ln){ const key=la+','+ln; let v=FUTDIST.get(key); if(v) return v;
+  if(FUTPRE_SRC!==FUTPOS){ FUTPRE_SRC=FUTPOS; const r=Math.PI/180; FUTPRE=FUTPOS.map(f=>f?[f[0],f[1],Math.cos(f[0]*r)]:null); }
+  const R=6371000, r=Math.PI/180, ca=Math.cos(la*r); v=new Array(FUTPRE.length);
+  for(let k=0;k<FUTPRE.length;k++){ const f=FUTPRE[k]; if(!f){ v[k]=null; continue; }
+    const x=(f[0]-la)*r, y=(f[1]-ln)*r, s=Math.sin(x/2)**2+ca*f[2]*Math.sin(y/2)**2; v[k]=2*R*Math.asin(Math.sqrt(s)); }
+  FUTDIST.set(key,v); return v; }
 function* recomputeSteps(){
   const fv=JSON.stringify(FUTPOS); if(fv!==FUTDIST_VERSION){ FUTDIST_VERSION=fv; FUTDIST.clear(); score.fc=null; }
   window.__RCV=(window.__RCV||0)+1;   // 재계산 회차(apt-s4.js s4PeerPeak 후보 캐시용)
@@ -1032,6 +1045,35 @@ function recomputeAsync(){
   });
 }
 
+/* 속도(2026.11.14): 위치로만 정해지는 계산(주변 시세 커널·단지 매칭·예정 역 거리)을 휴대폰에 저장해 두고 다음 방문에 재사용.
+   키에 좌표·연식 등 입력이 모두 들어 있고, 정적 자료(apt-assets 파일 이름 = 내용 해시)나 예정 역 좌표가 바뀌면 통째로 버림 → 결과 동일.
+   네트워크 전송량 0(1원칙), 저장 실패·미지원이면 그냥 평소대로 계산 */
+const APT_CACHE_V=(()=>{ try{ return 'c1|'+CAPT+'|'+[...document.scripts].map(x=>x.src||'').filter(x=>/apt-assets\//.test(x)).map(x=>x.split('/').pop()).sort().join(','); }catch(e){ return ''; } })();
+let APT_CACHE_HIT=0, APT_CACHE_LATE=false;
+function aptIdb(){ return new Promise((res,rej)=>{ const q=indexedDB.open('aptmap-cache',1); q.onupgradeneeded=()=>q.result.createObjectStore('c'); q.onsuccess=()=>res(q.result); q.onerror=()=>rej(q.error); }); }
+function aptCacheLoad(){
+  if(!APT_CACHE_V||!window.indexedDB) return Promise.resolve();
+  const t=new Promise(r=>setTimeout(()=>{ APT_CACHE_LATE=true; r(); },800));   // 저장소가 느리면 기다리지 않고 바로 계산(늦게 온 값은 버림)
+  return Promise.race([t, aptIdb().then(db=>new Promise(res=>{ const g=db.transaction('c').objectStore('c').get('geo'+CAPT); g.onsuccess=()=>{ const v=g.result;
+    try{ if(!APT_CACHE_LATE&&v&&v.ver===APT_CACHE_V&&v.fv===JSON.stringify(FUTPOS)){
+      for(const [k,r] of v.loc) LOCRESULT.set(k,r);
+      if(window.CXP){ NCC=NCC||new Map(); for(const [k,i] of v.ncc) NCC.set(k,i<0?null:CXP[i]); }
+      FUTDIST_VERSION=v.fv; for(const [k,a] of v.fd) FUTDIST.set(k,Array.from(a,(x,j)=>FUTPOS[j]?x:null));
+      score.fc=new Map(v.fc); APT_CACHE_HIT=LOCRESULT.size+FUTDIST.size; } }catch(e){} res(); db.close(); }; g.onerror=()=>{ res(); db.close(); }; })).catch(()=>{})]);
+}
+function aptCacheSave(){
+  if((APT_CACHE_HIT&&LOCRESULT.size+FUTDIST.size<=APT_CACHE_HIT)||!APT_CACHE_V||!window.indexedDB||!FUTPOS) return;
+  try{ const ix=new Map(); (window.CXP||[]).forEach((p,i)=>{ if(!ix.has(p)) ix.set(p,i); });
+    const v={ver:APT_CACHE_V, fv:FUTDIST_VERSION, loc:[...LOCRESULT], ncc:NCC?[...NCC].map(([k,p])=>[k,p?ix.get(p):-1]):[],
+      fd:[...FUTDIST].map(([k,a])=>[k,Float64Array.from(a,x=>x==null?NaN:x)]), fc:score.fc?[...score.fc]:[]};
+    aptIdb().then(db=>{ const tx=db.transaction('c','readwrite'); tx.objectStore('c').put(v,'geo'+CAPT); tx.oncomplete=tx.onerror=()=>db.close(); }).catch(()=>{});
+  }catch(e){}
+}
+/* 속도(2026.11.14): 첫 화면 뒤 지도 자료(경사·역)로 다시 계산할 때 화면이 수 초 멈추던 것 — 작은 조각으로 나눠 계산(겹치면 한 번 더) */
+let REFRESH_RUN=null, REFRESH_AGAIN=false;
+function refreshAsync(){ if(REFRESH_RUN){ REFRESH_AGAIN=true; return REFRESH_RUN; }
+  REFRESH_RUN=recomputeAsync().then(()=>{ render(); }).catch(e=>console.error(e)).finally(()=>{ REFRESH_RUN=null; if(REFRESH_AGAIN){ REFRESH_AGAIN=false; refreshAsync(); } });
+  return REFRESH_RUN; }
 function money(d){
   const P=d.p, cap=P>250000?20000:P>150000?40000:60000, r={};   // 주담대 한도: 시가 15억 이하 6억, 15~25억 4억, 25억 초과 2억(2025.10.15 대책, 수도권·규제지역)
   if(d.reg==='free'){ r.loan=Math.min(P*.7,cap); r.cash=P-r.loan; r.note='비규제 LTV 70%'; if(d.jeon){r.gap=P-d.jeon;} }
@@ -1862,11 +1904,12 @@ function snapTo(name){ if(!mobile())return; calcSnaps(); cur=name; setY(snaps[na
   });
 })();
 
-recomputeAsync().then(()=>{
+aptCacheLoad().then(()=>recomputeAsync()).then(()=>{
 state.q=($('#q').value||'').trim();
 { const i=fromHash(); if(i>=0){ state.sel=i; history.replaceState(null,'',location.pathname+location.search); history.pushState({apt:1},'',hashOf(D[i])); } }   // 공유 링크(#단지)로 들어오면 그 단지 상세부터 — 목록 기록을 밑에 깔아 뒤로가기가 목록으로
 render();
 document.body.dataset.aptReadyMs=String(Math.round(performance.now()-(window.__APT_LOAD_START||0)));
+setTimeout(aptCacheSave,3000);
 
 (function(){
   // 첫 화면 미리보기가 이미 카카오 지도를 받아 두었으면 그대로 이어서 사용(2026.11.11)
@@ -1927,11 +1970,11 @@ function init(){
   (function fut(){
     const c=GEO.__fut2;
     if(FUTPOS) return;   // 첫 계산에 이미 같은 예정 역 좌표를 사용했으면 중복 재계산하지 않는다.
-    if(FUT.every(f=>f[3])){ FUTPOS=FUT.map(f=>f[3]); recompute(); render(); return; }   // 2026.10: 역 좌표를 OSM 공사·계획 역 위치로 고정(이름 검색 좌표는 신설역에서 틀림)
-    if(c&&c.length===FUT.length&&c.every(Boolean)){ FUTPOS=c; recompute(); render(); return; }
+    if(FUT.every(f=>f[3])){ FUTPOS=FUT.map(f=>f[3]); refreshAsync(); return; }   // 2026.10: 역 좌표를 OSM 공사·계획 역 위치로 고정(이름 검색 좌표는 신설역에서 틀림)
+    if(c&&c.length===FUT.length&&c.every(Boolean)){ FUTPOS=c; refreshAsync(); return; }
     const out=(c&&c.length===FUT.length)?c.slice():Array(FUT.length).fill(null);
     const todo=FUT.map((f,k)=>k).filter(k=>!out[k]); let n=0;
-    const step=()=>{ if(n>=todo.length){ FUTPOS=out; GEO.__fut2=out; saveGeo(); recompute(); render(); return; }
+    const step=()=>{ if(n>=todo.length){ FUTPOS=out; GEO.__fut2=out; saveGeo(); refreshAsync(); return; }
       const k=todo[n++], tries=[FUT[k][0],FUT[k][0].split(' ')[0]];
       const go=(t,left)=>places.keywordSearch(t,(r,st)=>{
         if(st===kakao.maps.services.Status.OK&&r.length){ const h=r.find(x=>/지하철|기차|역/.test(x.category_name+x.place_name))||r[0]; out[k]=[+h.y,+h.x]; setTimeout(step,80); }
@@ -1988,7 +2031,7 @@ function init(){
     };
     const finish=()=>elevation(true);
     const pump=()=>{ while(active<6&&idx<todo.length){ const d=todo[idx++]; active++;
-      one(d).then(()=>{ active--; if(++tick%20===0){ saveGeo(); recompute(); render(); }
+      one(d).then(()=>{ active--; if(++tick%20===0){ saveGeo(); refreshAsync(); }
         if(idx>=todo.length&&active===0) finish(); else pump(); }); } };
     if(todo.length) pump(); else elevation(false);
   }
@@ -2003,7 +2046,7 @@ function init(){
         part.forEach((d,n)=>{const g=GEO[gkey(d)];const a=j.elevation[n*2],b=j.elevation[n*2+1];if(a!=null&&b!=null){g.dh=a-b;changed=true;}});
       }catch(e){}
     }
-    if(changed){ saveGeo(); recompute(); render(); }
+    if(changed){ saveGeo(); refreshAsync(); }
   }
   kakao.maps.event.addListener(map,'idle',()=>{
     finishManualMapMove();

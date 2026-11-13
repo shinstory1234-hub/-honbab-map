@@ -59,14 +59,16 @@ function locNew(d){ const g=d.g||{};
   // 개통 예정: GTX +13%(GTX-A 실측), 신분당선 연장 +18%(회귀), 월판선 +9%(판단), 그 외 0 — 개통 전 할인 적용
   let lp=0, lpl='';
   if((g.sts||[]).some(([n,m])=>/신분당/.test(n)&&walkMin(m)<=15)){ lp=LINEP.S; lpl='신분당선'; }
-  if(typeof FUTPOS!=='undefined'&&FUTPOS&&g.lat) FUT.forEach((F,k)=>{ const f=FUTPOS[k]; if(!f) return; const pr=F[4]!=null?F[4]:/GTX/.test(F[1])?LINEP.G:/신분당/.test(F[1])?LINEP.S:/월판/.test(F[1])?LINEP.WP:0;   // 인동선은 역마다: 인덕원(GTX-C·4호선·월판선)·동탄(GTX-A·SRT) 환승 허브까지 2정거장 이내 +9%, 3~4정거장 +4%, 그 밖 0(판단) if(!pr) return;
-    if(walkMin(futureDistances(g.lat,g.lng)[k])>15) return; const v=pr*Math.max(.8,1-.05*(F[2]-2026)); if(v>lp){ lp=v; lpl=`${F[0].split(' ')[0]} ${F[1].replace(/\(.*?\)/g,'')}(${F[2]} 예정)`; } });
+  // 속도(2026.11.14): 예정 역 거리 배열은 단지마다 한 번만 꺼내고, 역별 노선 판정(정규식)은 한 번만 — 결과 동일
+  const FD=(typeof FUTPOS!=='undefined'&&FUTPOS&&g.lat)?futureDistances(g.lat,g.lng):null, FM=FD?s4FutMeta():null;
+  if(FD) FUT.forEach((F,k)=>{ const f=FUTPOS[k]; if(!f) return; const pr=FM[k].pr;   // 인동선은 역마다: 인덕원(GTX-C·4호선·월판선)·동탄(GTX-A·SRT) 환승 허브까지 2정거장 이내 +9%, 3~4정거장 +4%, 그 밖 0(판단) if(!pr) return;
+    if(walkMin(FD[k])>15) return; const v=pr*Math.max(.8,1-.05*(F[2]-2026)); if(v>lp){ lp=v; lpl=`${F[0].split(' ')[0]} ${F[1].replace(/\(.*?\)/g,'')}(${F[2]} 예정)`; } });
   // GTX 한 정거장 환승권(판단, 2026.10.26): 도보 10분 안 지하철역이 있고 GTX 역(운행·예정)이 2.5km 안이면 GTX 프리미엄의 절반(개통 전 할인 동일)
-  if(lp<LINEP.G/2&&wm!=null&&wm<=10&&typeof FUTPOS!=='undefined'&&FUTPOS&&g.lat) FUT.forEach((F,k)=>{ const f=FUTPOS[k]; if(!f||!/GTX/.test(F[1])) return;
-    const m=futureDistances(g.lat,g.lng)[k]; if(m>2500||walkMin(m)<=15) return; const v=LINEP.G/2*Math.max(.8,1-.05*(F[2]-2026)); if(v>lp){ lp=v; lpl=`${F[0].split(' ')[0]} GTX 한 정거장 환승권(${F[2]} 예정)`; } });
+  if(lp<LINEP.G/2&&wm!=null&&wm<=10&&FD) FUT.forEach((F,k)=>{ const f=FUTPOS[k]; if(!f||!FM[k].gtx) return;
+    const m=FD[k]; if(m>2500||walkMin(m)<=15) return; const v=LINEP.G/2*Math.max(.8,1-.05*(F[2]-2026)); if(v>lp){ lp=v; lpl=`${F[0].split(' ')[0]} GTX 한 정거장 환승권(${F[2]} 예정)`; } });
   // GTX 버스·연계 접근권(판단, 2026.10.26): 도보 15분(1.2km) 밖이어도 4km까지는 버스 등으로 이용 — 프리미엄 절반에서 거리에 따라 0으로
-  if(typeof FUTPOS!=='undefined'&&FUTPOS&&g.lat) FUT.forEach((F,k)=>{ const f=FUTPOS[k]; if(!f||!/GTX/.test(F[1])) return;
-    const m=futureDistances(g.lat,g.lng)[k]; if(walkMin(m)<=15||m>4000) return; const v=LINEP.G/2*clamp01((4000-m)/(4000-1200))*Math.max(.8,1-.05*(F[2]-2026));
+  if(FD) FUT.forEach((F,k)=>{ const f=FUTPOS[k]; if(!f||!FM[k].gtx) return;
+    const m=FD[k]; if(walkMin(m)<=15||m>4000) return; const v=LINEP.G/2*clamp01((4000-m)/(4000-1200))*Math.max(.8,1-.05*(F[2]-2026));
     if(v>lp){ lp=v; lpl=`${F[0].split(' ')[0]} GTX 버스·연계 접근(${(m/1000).toFixed(1)}km · ${F[2]} 예정)`; } });
   // 장기 앵커(s14, 2026.11.1): 동(洞) 급지가 2017·2020·2023 평균보다 지금 높아진 만큼(OS, apt-gjl.js)을 입지에서 뺌 — 최근 급등으로 오른 주변 시세를 장기 급지 수준으로 되돌림.
   //   페이지 상단 S4CFG.anchor(1=전부 차감). 내려간 동네(OS<0)는 그만큼 올려 줌(대칭). 동 자료 없으면 0
@@ -78,6 +80,8 @@ function locNew(d){ const g=d.g||{};
   d.locParts={base,base0,dw,own,wm,wa,wa0,fa,lp,lpl,wf,fut:wf!=null?d.fut:null,anc,os:d.os,gj:d.gj,ppp:Math.round(Math.exp(d.locV))};
   const futLp=/예정/.test(lpl)?lp:0; d.loc0=(wf!=null||futLp)?Math.round(s4Pct(S4Q.LOC,d.locV-wa+wa0-futLp)*10)/10:null;            // 예정 역을 빼면 입지 백분위
   d.loc=Math.round(s4Pct(S4Q.LOC,d.locV)*10)/10; }
+let S4FM=null, S4FM_SRC=null;
+function s4FutMeta(){ if(S4FM_SRC!==FUT){ S4FM_SRC=FUT; S4FM=FUT.map(F=>({pr:F[4]!=null?F[4]:/GTX/.test(F[1])?LINEP.G:/신분당/.test(F[1])?LINEP.S:/월판/.test(F[1])?LINEP.WP:0, gtx:/GTX/.test(F[1])})); } return S4FM; }
 const LOCOWN=(window.S4LOCOWN!=null)?S4LOCOWN:.5;
 function cxOwnLoc(d){ const S=typeof sibs==='function'?sibs(d):[d]; let sw=0,sl=0;
   for(const x of S){ if(!(x.me>0)||!x.g) continue; const age=2026-x.year, w=Math.max(1,(priceEv(x)||{n:1}).n);
@@ -114,6 +118,7 @@ function s4PeerPeak(d){
     const x=group[0], e=B[s4PeakKey(x)], h=x.g||{};
     if(x.cxKey===d.cxKey||x.year<d.year-8) continue;
     const unitRatio=x.units/d.units; if(unitRatio<1/3||unitRatio>3) continue;
+    if(Math.abs(h.lat-g.lat)*111194>2600) continue;   // 속도(2026.11.14): 위도 차만으로 2.5km 밖이 확실하면 거리 계산 생략(대권거리 ≥ 위도 차) — 결과 동일
     const m=hav(g.lat,g.lng,h.lat,h.lng); if(!Number.isFinite(m)||m>2500) continue;
     const py=group.reduce((best,t)=>Math.abs(Math.log(t.py/d.py))<Math.abs(Math.log(best/d.py))?t.py:best,group[0].py);
     const sizeRatio=py/d.py; if(sizeRatio<1/1.35||sizeRatio>1.35) continue;
