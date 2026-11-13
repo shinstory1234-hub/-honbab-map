@@ -3,6 +3,7 @@ import path from 'node:path';
 import vm from 'node:vm';
 import {createHash} from 'node:crypto';
 import {fileURLToPath} from 'node:url';
+import zlib from 'node:zlib';
 
 // Keep apt-map.html as the editable source. Production serves the generated page.
 export function buildAptAssets(root, output = path.join(root, 'public')) {
@@ -71,8 +72,33 @@ export function buildAptAssets(root, output = path.join(root, 'public')) {
   return {manifest, inventory, html};
 }
 
+// 1원칙(2026.11.14): 절대 느려지면 안 된다. 탭별 전송량·요청 수·런타임 파일이 scripts/perf-budget.json을 넘으면 빌드 실패.
+export function checkPerfBudget(root, output, result) {
+  const budget = JSON.parse(fs.readFileSync(path.join(root, 'scripts', 'perf-budget.json'), 'utf8'));
+  const gz = buf => zlib.gzipSync(buf, {level: 6}).length;
+  const errors = [], report = {};
+  for (const [cap, urls] of Object.entries(result.manifest)) {
+    let bytes = 0;
+    for (const u of urls) {
+      if (result.inventory[u]) { bytes += gz(fs.readFileSync(path.join(output, u))); continue; }
+      if (!budget.runtimeFiles.includes(u)) errors.push(`${cap}억 탭: 등록 안 된 런타임 파일 ${u} (perf-budget.json runtimeFiles)`);
+    }
+    report[cap] = bytes;
+    const max = budget.gzipBytesPerTab[cap];
+    if (max == null) errors.push(`${cap}억 탭: 예산 없음(perf-budget.json에 추가 필요)`);
+    else if (bytes > max) errors.push(`${cap}억 탭: 전송량 ${bytes.toLocaleString()}B > 상한 ${max.toLocaleString()}B`);
+    if (urls.length > budget.maxRequestsPerTab) errors.push(`${cap}억 탭: 요청 ${urls.length}개 > 상한 ${budget.maxRequestsPerTab}개`);
+  }
+  const html = gz(Buffer.from(result.html));
+  if (html > budget.htmlGzipBytes) errors.push(`첫 HTML ${html}B > 상한 ${budget.htmlGzipBytes}B`);
+  if (errors.length) throw new Error('속도 예산 초과 — 배포 중단(1원칙: 절대 느려지면 안 됨)\n' + errors.join('\n'));
+  return {gzipBytesPerTab: report, htmlGzipBytes: html};
+}
+
 if (process.argv[1] && path.resolve(process.argv[1]) === fileURLToPath(import.meta.url)) {
   const root = path.resolve(process.argv[2] || path.join(path.dirname(fileURLToPath(import.meta.url)), '..'));
+  const output = process.argv[3] ? path.resolve(process.argv[3]) : path.join(root, 'public');
   const result = buildAptAssets(root, process.argv[3] && path.resolve(process.argv[3]));
+  console.log('perf budget OK', JSON.stringify(checkPerfBudget(root, output, result)));
   console.log(JSON.stringify(Object.fromEntries(Object.entries(result.manifest).map(([cap, urls]) => [cap, urls.length]))));
 }
