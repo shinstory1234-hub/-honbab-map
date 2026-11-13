@@ -141,7 +141,9 @@
   // 25년 이상 구축의 15~18평은 재건축 기대 소형으로 같은 문제가 생겨(가양·강변 16평 등) 추가로 낮춘다.
   // 24평(59㎡)과 신축 16~18평(헬리오시티·올림픽파크포레온 등)은 감점하지 않는다.
   const flatPy=Number(d.py)||0, flatAge=Number.isFinite(years)?2026-years:0;
-  const tiny=(flatPy>0&&flatPy<=14?8:0)+(flatPy>0&&flatPy<=18&&flatAge>=25?4:0);
+  // 2026.11.14 전수 재점검: 8/4점으로는 의도가 안 지켜졌음 — 파크리오 14평이 10~15억 1위, 6~10억 상위 30위 중 9곳이
+  // 25년 이상 구축 16~18평(거여1·강변·가양6·현대리버빌 16~18평 등). 14평 이하 18점, 25년 이상 구축 18평 이하 +9점으로 강화.
+  const tiny=(flatPy>0&&flatPy<=14?18:0)+(flatPy>0&&flatPy<=18&&flatAge>=25?9:0);
   const score=clamp(Object.values(parts).reduce((sum,v)=>sum+v,0)-density-hill-jubok-pricePenalty-tiny+verifiedProgress);
   return {score,raw,baseRaw,parts,price,penalties:{density,hill,jubok,price:pricePenalty,tiny},
     bonuses:{verifiedProgress},verifiedProject:project?{zone:project.zone,phase:project.phase,date:project.date}:null,
