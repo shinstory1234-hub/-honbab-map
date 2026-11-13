@@ -1,0 +1,32 @@
+name: Export current Apartment Map rankings
+on:
+  push:
+    branches:
+      - export-rankings-2026-11-14
+    paths:
+      - .github/workflows/export-current-rankings-2026-11-14.yml
+      - scripts/export-current-rankings-2026-11-14.mjs
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  export:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: true
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Compute production-equivalent ranking for all 6 tabs
+        run: node scripts/export-current-rankings-2026-11-14.mjs
+      - name: Commit the verified CSV export only to this isolated branch
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add exports/2026-11-14/*.csv exports/2026-11-14/rankings-source.json
+          git diff --cached --quiet && exit 0
+          git commit -m "Export current Apartment Map rankings as CSV"
+          git push origin HEAD:export-rankings-2026-11-14
