@@ -3,6 +3,7 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import vm from 'node:vm';
+import { matchLive } from '../../../lib/live6-match.mjs';
 
 export const maxDuration = 60;
 
@@ -43,8 +44,11 @@ export async function GET() {
     if (!r.ok) throw new Error('upstream ' + r.status);
     const c = {}; c.window = c;
     vm.runInNewContext(await r.text(), c);
-    const all = c.LIVEP || {}, want = keys(), out = {};
-    for (const k of want) if (all[k]) out[k] = all[k];
+    const all = c.LIVEP || {}, want = keys();
+    const { out: m } = matchLive(all, want);   // 읍·면 '리' 표기, 시군구 개편 코드 차이까지 맞춤(lib/live6-match.mjs)
+    // 속도: 6억 넘는 평형은 6억 탭에서 안 쓰므로 뺌. 전부 6억 넘으면 '탭에서 빠짐' 판단용으로 가장 싼 평형 1개만 남김(gzip 약 −17%)
+    const out = {};
+    for (const [k, r] of Object.entries(m)) { const b = r.filter(x => x[1] <= 60000); out[k] = b.length ? b : [r.reduce((a, x) => (x[1] < a[1] ? x : a))]; }
     return js(`window.LIVEP=${JSON.stringify(out)};window.LIVEP_AT=${JSON.stringify(c.LIVEP_AT || null)};`,
       'public, max-age=0, s-maxage=3600, stale-while-revalidate=86400');
   } catch (e) {

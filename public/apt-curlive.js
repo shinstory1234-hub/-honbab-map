@@ -21,15 +21,18 @@
     '주공8|광명시 하안동':'41210|하안동|주공8(고층)'
   };
   var dot=function(s){ return String(s||'').replace(/-/g,'.'); };
-  var hit=0, seen={};
+  var hit=0, seen={}, LU=window.CUR_LIVE_U={};
   for(var i=0;i<P.length;i++){
     var d=P[i], k=d.n+'|'+d.area;
-    if(seen[k]||keep[k]||d.u) continue; seen[k]=1;
+    /* 2026.11.14 버그 수정: 예전엔 자동 수집 단지(d.u, 6억 탭 2,755곳 중 2,421곳)를 건너뛰어 실제로 매일 시세가 바뀐 단지가
+       326곳뿐이었음 → 자동 수집 단지도 덮어씀(본문은 CUR_LIVE에 표시된 자동 수집 단지만 CUR을 사용) */
+    if(seen[k]||keep[k]) continue; seen[k]=1;
     var fd=FD[k], sgg=fd&&fd[6];
     var src=Object.prototype.hasOwnProperty.call(aliases,k)?aliases[k]:(sgg?sgg+'|'+d.area.split(' ').pop()+'|'+d.n:null);
     var rows=src&&L[src];
     if(!rows||!rows.length) continue;
     CUR[k]=rows.map(function(r){ return [r[0], r[1], r[2], r[3], dot(r[4])]; });
+    if(d.u) LU[k]=1;
     hit++;
   }
   window.LIVE_HIT=hit;

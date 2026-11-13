@@ -592,7 +592,7 @@ const D=fixUnits(PICKS.map(d=>({...d,opt:(CAPT===6?(window.OPT||{})[d.n]:null)||
   const rr=RIGHTS_BLOCK.get(gkey(d));
   if(rr){ RIGHTSOUT.push([d.n,d.area,rr.date,rr.why]); return false; }
   if(!d.opt&&isOfficeType(d)){ SMALLOUT.push([d.n,d.area]); return false; }   // 사이트 범위(정책): 고밀(용적률 350% 이상) 소형 전용 단지 = 오피스텔형은 가족 실거주 아파트 추천 대상에서 제외
-  const cr=!d.u&&!d.opt&&(window.CUR||{})[d.n+'|'+d.area];
+  const cr=(!d.u||(window.CUR_LIVE_U||{})[d.n+'|'+d.area])&&!d.opt&&(window.CUR||{})[d.n+'|'+d.area];   // 자동 수집 단지는 매일 실거래(apt-curlive.js)가 있을 때만
   if(cr){ const ts=cr.map(([py,p,n,n3,last])=>({py,p,n,n3,last})), ok=ts.filter(t=>inBand(t.p));
     if(!ok.length){ CUROUT.push([d.n,d.area,Math.min(...ts.map(t=>t.p))]); return false; }
     const t=ok.reduce((a,b)=>Math.abs(b.py-d.py)<Math.abs(a.py-d.py)||(Math.abs(b.py-d.py)===Math.abs(a.py-d.py)&&b.n>a.n)?b:a);

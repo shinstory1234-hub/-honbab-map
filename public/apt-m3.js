@@ -51,10 +51,24 @@
   // 마지막 계약가가 중위 추정치를 초과하면 시세 후행 위험을 별도 표시한다.
   // 25억 이상 보호 구간 또는 극단적 시세 괴리가 있는 경우 가격을 임의 변경하지 않고
   // 주거 품질이 아닌 예산 내 구매 가능성에 대한 위험 감점을 적용한다.
-  const penalty=clamp(volume+(newborn?Math.min(3,stale):stale)+(inversion?3:0)+(latestRaised?2:0)+(latestBeyondBand?12:0),0,20);
+  // 같은 단지 교차검증(2026.11.14): 거래 1~4건 평형이라도 같은 단지에서 거래 많고 최근 거래가 있는 평형(12개월 5건+, 120일 안)과
+  // 평당가가 맞으면(아래 need 참고) 가격이 현재 시세와 맞는다고 보고 거래 부족·경과 감점을 70%/50% 줄임.
+  // 옆 단지 역전 전수점검: 래미안에스티움 20평·힐스테이트신촌 16평·당산센트럴아이파크 18평 등 좋은 신축이 거래 1건 평형 하나 때문에
+  // 18~19점 감점돼 같은 구역 구축보다 100~400계단 아래로 밀림. 싸게 찍힌 오래된 단일 거래는 평당가 검증에서 걸러져 감점 유지.
+  let corroborated=null;
+  if(n12<5){
+    const recent=x=>{const s=String(x.last||'').replace(/\./g,'-').slice(0,10),q=Date.parse(s+'T00:00:00Z');return Number.isFinite(q)&&(now.getTime()-q)/86400000<=120;};
+    const liquid=(d.types||[]).filter(x=>Number(x.py)!==Number(t.py)&&Number(x.n)>=5&&Number(x.p)>0&&Number(x.py)>0&&recent(x))
+      .sort((a,b)=>Math.abs(a.py-t.py)-Math.abs(b.py-t.py))[0];
+    // 작은 평형은 평당가가 원래 더 비쌈 → 평형 차 1평당 +1%p(최대 +10%) 이상이어야 '현재 시세와 맞음', 큰 평형은 1평당 −1%p(최저 85%)
+    if(liquid){ const r=(t.p/t.py)/(liquid.p/liquid.py), gap=Math.abs(t.py-liquid.py), need=Number(t.py)<Number(liquid.py)?1+Math.min(.10,.01*gap):Math.max(.85,1-.01*gap);
+      if(r>=need) corroborated={py:liquid.py,ratio:r}; }
+  }
+  const volEff=corroborated?volume*.3:volume, staleEff=corroborated?stale*.5:stale;
+  const penalty=clamp(volEff+(newborn?Math.min(3,staleEff):staleEff)+(inversion?3:0)+(latestRaised?2:0)+(latestBeyondBand?12:0),0,20);
   const warn=inversion||latestRaised||latestBeyondBand||penalty>=4||(n12<5&&!newborn)||(n3===0&&ageDays!=null&&ageDays>90)||(ageDays!=null&&ageDays>180);
   const level=penalty>=8?'high':warn?'medium':'ok';
-  return {known:true,n12,n3,last:date,ageDays,newborn,volume,stale,penalty,warn,level,
+  return {known:true,n12,n3,last:date,ageDays,newborn,volume,stale,penalty,warn,level,corroborated,
     inversion,rawPrice:inversion?t.pBeforeGuard:null,referencePy:t.priceGuardFrom||null,
     latestRaised,lastSale:latestRaised?t.lastSale:null,rawWeightedPrice:latestRaised?t.pBeforeLatest:null,
     latestBeyondBand,latestBeyondSale:latestBeyondBand?t.lastSale:null};
