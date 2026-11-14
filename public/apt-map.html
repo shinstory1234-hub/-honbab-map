@@ -102,8 +102,16 @@ aside{order:-1;width:408px;flex:none;border-right:1px solid var(--border);backgr
 .filters button[aria-pressed=true]{background:var(--text);border-color:var(--text);color:var(--bg);font-weight:650}
 .count{display:flex;justify-content:space-between;padding:12px 24px;font-size:12px;color:var(--text-tertiary);border-bottom:1px solid var(--border-soft)}
 .count{align-items:center}
-.sortsel{font:inherit;font-size:13px;font-weight:700;color:var(--text);background:var(--bg);border:1px solid var(--border);border-radius:6px;padding:7px 28px 7px 12px;appearance:none;-webkit-appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%2370737c' stroke-width='2.5'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 10px center;cursor:pointer}
-.fsel{flex:none}.fsel.on{background-color:var(--text);color:var(--bg);border-color:var(--text)}
+.sortsel{font:inherit;font-size:13px;font-weight:700;color:var(--text);background:var(--bg);border:1px solid var(--border);border-radius:6px;padding:7px 12px;cursor:pointer}
+.psheet-bg{position:fixed;inset:0;z-index:1000;background:rgba(0,0,0,0);transition:background .2s}.psheet-bg.in{background:rgba(0,0,0,.4)}
+.psheet{position:absolute;left:0;right:0;bottom:0;max-width:480px;margin:0 auto;background:var(--bg);border-radius:22px 22px 0 0;padding:8px 0 calc(14px + env(safe-area-inset-bottom));transform:translateY(100%);transition:transform .22s cubic-bezier(.2,.8,.2,1);box-shadow:0 -8px 30px rgba(0,0,0,.12)}
+.psheet-bg.in .psheet{transform:none}
+.psheet i{display:block;width:36px;height:4px;border-radius:4px;background:var(--border);margin:2px auto 10px}
+.psheet h4{font-size:18px;font-weight:800;letter-spacing:-.03em;padding:6px 24px 10px}
+.psheet button{display:flex;align-items:center;justify-content:space-between;width:100%;min-height:54px;padding:0 24px;font-size:16px;font-weight:500;color:var(--text);text-align:left}
+.psheet button:active{background:var(--bg-muted)}
+.psheet button[aria-current]{color:var(--primary-soft-fg);font-weight:750}
+.fsel{flex:none;display:inline-flex;align-items:center;gap:8px}.fsel::after{content:"";width:7px;height:7px;border-right:2px solid currentColor;border-bottom:2px solid currentColor;transform:translateY(-2px) rotate(45deg);opacity:.5}.fsel.on{background-color:var(--text);color:var(--bg);border-color:var(--text)}
 .region-mode{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:10px 24px;border-bottom:1px solid var(--border-soft);font-size:12px;font-weight:650;color:var(--primary-soft-fg);background:var(--bg-subtle)}
 .region-mode button{border:1px solid var(--border);border-radius:4px;background:var(--bg);padding:6px 10px;font-size:12px;font-weight:650;white-space:nowrap;cursor:pointer}
 .empty-results{padding:24px;text-align:center;border-bottom:1px solid var(--border-soft);font-size:13.5px}
@@ -1174,6 +1182,15 @@ const badgeHTML=d=>[{label:d.tier.k,color:d.tier.c},...cardFeatures(d).map(k=>FE
 const FAV=(()=>{ try{ return new Set(JSON.parse(localStorage.getItem('aptFav')||'[]')); }catch(e){ return new Set(); } })();
 const favSave=()=>{ try{ localStorage.setItem('aptFav',JSON.stringify([...FAV])); }catch(e){} };
 const SORTS=[['rank','추천순',null],['price','가격 낮은순',(a,b)=>a.p-b.p],['new','신축순',(a,b)=>b.year-a.year],['units','세대수 많은순',(a,b)=>unitN(b)-unitN(a)],['station','역 가까운순',(a,b)=>((a.cur&&a.cur.m)??1e9)-((b.cur&&b.cur.m)??1e9)]];
+const PICKMENU={pb:['가격대',()=>PB],size:['평형',()=>SIZES],age:['연식',()=>AGES],sort:['정렬',()=>SORTS]};
+/* 2026.11.15 UX: 선택 목록을 휴대폰 기본 창 대신 아래에서 올라오는 시트로 */
+function pickSheet(title,list,cur,cb){
+  const bg=document.createElement('div'); bg.className='psheet-bg';
+  bg.innerHTML=`<div class="psheet" role="dialog" aria-modal="true" aria-label="${esc(title)}"><i></i><h4>${esc(title)}</h4>${list.map(([k,l])=>`<button type="button" data-v="${esc(k)}"${k===cur?' aria-current="true"':''}>${esc(l)}${k===cur?'<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="m5 12 5 5 9-10"/></svg>':''}</button>`).join('')}</div>`;
+  const shut=()=>{ bg.classList.remove('in'); setTimeout(()=>bg.remove(),200); document.removeEventListener('keydown',esck); }, esck=e=>{ if(e.key==='Escape') shut(); };
+  bg.onclick=e=>{ const t=e.target.closest('button[data-v]'); if(t){ shut(); if(t.dataset.v!==cur) cb(t.dataset.v); } else if(e.target===bg) shut(); };
+  document.addEventListener('keydown',esck); document.body.appendChild(bg); requestAnimationFrame(()=>bg.classList.add('in')); (bg.querySelector('[aria-current]')||bg.querySelector('button')).focus({preventScroll:true});
+}
 const FILTERS=[['all','전체'],['fav','♥ 저장'],['top','핵심 1~30'],['mid','유망 31~300'],['interest','관심 301~1,000'],['explore','탐색 1,001+'],['신축','신축'],['학군','학군'],['재건축','재건축'],['리모델링','리모델링'],['천지개벽','천지개벽'],['역세권','역세권'],['초품아','초품아'],['대단지','대단지'],['신설역','신설역'],['반도체','반도체'],['소형할인','소형 할인'],['flat','평지'],['job50','출근 50분'],['free','비규제']];
 // 지도 화면은 가격대별 페이지가 바뀌어도 같은 위치를 유지한다. 잘못된 좌표는 무시한다.
 const savedMapView=(()=>{
@@ -1339,10 +1356,10 @@ function renderList(){
     ${pend?`<div class="inline-note tnum" style="margin-top:12px">역·초등학교·경사를 지도 데이터로 계산하는 중 · ${D.length-pend}/${D.length}<br><small>처음 한 번만 걸리고, 끝나면 순위가 확정됩니다.</small></div>`:''}
     <details class="method"><summary>평가 기준 안내 ${CHEV}</summary><div style="padding:14px 16px;font-size:13px;line-height:1.8;color:var(--text-secondary)">아파트맵은 교통, 입지 경쟁력, 단지 규모, 주거 상품성 및 가격 신뢰도를 종합 비교합니다. 각 항목의 정확한 가중치, 보정식, 학습 기준 및 예측 모델은 공개하지 않습니다. 단지별 점수와 순위는 투자수익이나 매매 가능가격을 보장하지 않습니다.</div></details>
   </section>
-  <div class="filters pb" role="group" aria-label="조건">${[['pb','가격대',PB],['size','평형',SIZES],...(CAPT>6?[['age','연식',AGES]]:[])].map(([k,a,L])=>{ const v=state[k]||'all'; return `<select class="sortsel fsel${v!=='all'?' on':''}" data-k="${k}" aria-label="${a}">${L.map(([o,l])=>`<option value="${o}"${v===o?' selected':''}>${l}</option>`).join('')}</select>`; }).join('')}</div>
+  <div class="filters pb" role="group" aria-label="조건">${['pb','size',...(CAPT>6?['age']:[])].map(k=>{ const v=state[k]||'all', L=PICKMENU[k]; return `<button type="button" class="sortsel fsel${v!=='all'?' on':''}" data-k="${k}" aria-haspopup="dialog" aria-label="${L[0]}">${(L[1]().find(x=>x[0]===v)||L[1]()[0])[1]}</button>`; }).join('')}</div>
   <div class="filters" role="group" aria-label="필터">${FILTERS.map(([k,l])=>`<button data-f="${k}" aria-pressed="${state.f===k}">${l}</button>`).join('')}</div>
   ${viewport?'<div class="region-mode">현재 지도 범위의 단지 <button type="button" id="browseReset">전체 순위 보기</button></div>':''}
-  <div class="count"><span>${singleComplex?list.length.toLocaleString()+'개 단지 · 전체 평형 표시':list.length.toLocaleString()+'개 평형'+(CAPT!==6?' ('+new Set(list.map(d=>complexRankKey(d))).size.toLocaleString()+'개 단지)':'')}</span><select id="sortSel" class="sortsel" aria-label="정렬">${SORTS.map(([k,l])=>`<option value="${k}"${state.sort===k?' selected':''}>${l}</option>`).join('')}</select></div>`;
+  <div class="count"><span>${singleComplex?list.length.toLocaleString()+'개 단지 · 전체 평형 표시':list.length.toLocaleString()+'개 평형'+(CAPT!==6?' ('+new Set(list.map(d=>complexRankKey(d))).size.toLocaleString()+'개 단지)':'')}</span><button type="button" class="sortsel fsel" data-k="sort" aria-haspopup="dialog" aria-label="정렬">${(SORTS.find(x=>x[0]===state.sort)||SORTS[0])[1]}</button></div>`;
   list.slice(0,state.lim).forEach(d=>{
     h+=`<article class="row" data-i="${D.indexOf(d)}" data-s="1" tabindex="0" role="button" aria-label="${esc(publicComplexName(d)+' '+d.py+'평 상세보기')}">
       <span class="rk tnum">${String(d.rank).padStart(2,'0')}</span>
@@ -1385,12 +1402,11 @@ function renderList(){
     render();b.scrollTop=0;syncMapViewUrl();
   };
   b.querySelectorAll('.filters button[data-f]').forEach(x=>x.onclick=()=>{state.f=x.dataset.f;state.lim=50;render();b.scrollTop=0;});
-  b.querySelectorAll('.fsel').forEach(x=>x.onchange=()=>{state[x.dataset.k]=x.value;state.lim=50;render();b.scrollTop=0;});
+  b.querySelectorAll('.fsel').forEach(x=>x.onclick=()=>{ const k=x.dataset.k, L=PICKMENU[k]; pickSheet(L[0],L[1](),state[k]||'all',v=>{ state[k]=v; state.lim=50; if(k==='sort'){ renderList(); b.scrollTop=b.querySelector('.count').offsetTop; } else { render(); b.scrollTop=0; } }); });
   b.querySelectorAll('.filters button[data-pb]').forEach(x=>x.onclick=()=>{state.pb=x.dataset.pb;state.lim=50;render();b.scrollTop=0;});
   b.querySelectorAll('.filters button[data-size]').forEach(x=>x.onclick=()=>{state.size=x.dataset.size;state.lim=50;render();b.scrollTop=0;});
   b.querySelectorAll('.filters button[data-age]').forEach(x=>x.onclick=()=>{state.age=x.dataset.age;state.lim=50;render();b.scrollTop=0;});
   const no=b.querySelector('#noticeOpen'); if(no) no.onclick=()=>{ noticeCheck.checked=false; noticeAgree.disabled=true; noticeError.textContent=''; noticeGate.hidden=false; noticeCheck.focus(); };
-  const ss=b.querySelector('#sortSel'); if(ss) ss.onchange=()=>{state.sort=ss.value;state.lim=50;renderList();b.scrollTop=b.querySelector('.count').offsetTop;};
   const mb=b.querySelector('#more'); if(mb) mb.onclick=()=>{ const y=b.scrollTop; state.lim+=100; renderList(); b.scrollTop=y; };
   b.querySelectorAll('.row').forEach(x=>{
     x.onclick=()=>select(+x.dataset.i,true);
