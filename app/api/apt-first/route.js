@@ -1,6 +1,8 @@
 // 첫 화면 미리보기(2026.11.11): 휴대폰 계산이 끝나기 전에 기본 순위 목록을 바로 보여 주는 작은 스크립트.
 // 브라우저와 같은 코드·같은 데이터(입지 고정값·현재 시세)로 서버가 한 번 계산하고, CDN이 1시간(만료 후 하루는 이전 값 즉시) 캐시한다.
+import fs from 'node:fs';
 import path from 'node:path';
+import { createHash } from 'node:crypto';
 import { unstable_cache } from 'next/cache';
 import { buildLive6 } from '../../../lib/live6.mjs';
 import { previewHTML, previewScript } from '../../../lib/apt-preview.mjs';
@@ -24,7 +26,9 @@ async function buildPreview(cap) {
   const { html, pins, key } = previewHTML(path.join(process.cwd(), 'public'), cap, { geo, live, withPins: true });
   return previewScript(html, pins, key);
 }
-const cachedPreview = unstable_cache(buildPreview, ['apt-first-v1'], { revalidate: 600 });
+// 캐시 키에 자산 버전(apt-assets/manifest.json = 코드·자료 내용 해시)을 넣음 — 코드·자료가 바뀐 배포 뒤 예전 순위 미리보기가 잠깐 뜨던 문제(2026.11.15 30억 탭 1위가 신반포르엘→원베일리로 바뀌어 보임) 방지
+const VER = (() => { try { return createHash('sha1').update(fs.readFileSync(path.join(process.cwd(), 'public', 'apt-assets', 'manifest.json'))).digest('hex').slice(0, 12); } catch { return 'dev'; } })();
+const cachedPreview = unstable_cache(buildPreview, ['apt-first-v2', VER], { revalidate: 600 });
 
 export async function GET(request) {
   const cap = Number(new URL(request.url).searchParams.get('cap')) || 6;

@@ -2,12 +2,12 @@
 // 속도(2026.11.15): 결과를 Vercel 데이터 캐시(전 지역·배포 간 공유)에 10분 보관 + 만료 뒤엔 이전 값을 즉시 주고 뒤에서 갱신.
 // 예전엔 배포 직후·지역 CDN 캐시가 비면 매번 상위 1.5MB를 받아 다시 계산했음. 함수는 서울(icn1)에서 실행.
 import { unstable_cache } from 'next/cache';
-import { buildLive6 } from '../../../lib/live6.mjs';
+import { buildLive6, live6Version } from '../../../lib/live6.mjs';
 
 export const maxDuration = 60;
 export const preferredRegion = 'icn1';
 
-const cachedLive6 = unstable_cache(buildLive6, ['apt-live6-v1'], { revalidate: 600 });
+const cachedLive6 = unstable_cache(buildLive6, ['apt-live6-v2', live6Version()], { revalidate: 600 });   // 키에 단지 목록 파일 버전
 
 export async function GET() {
   const js = (body, cache) => new Response(body, { headers: {
