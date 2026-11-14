@@ -103,6 +103,7 @@ aside{order:-1;width:408px;flex:none;border-right:1px solid var(--border);backgr
 .count{display:flex;justify-content:space-between;padding:12px 24px;font-size:12px;color:var(--text-tertiary);border-bottom:1px solid var(--border-soft)}
 .count{align-items:center}
 .sortsel{font:inherit;font-size:13px;font-weight:700;color:var(--text);background:var(--bg);border:1px solid var(--border);border-radius:6px;padding:7px 28px 7px 12px;appearance:none;-webkit-appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%2370737c' stroke-width='2.5'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 10px center;cursor:pointer}
+.fsel{flex:none}.fsel.on{background-color:var(--text);color:var(--bg);border-color:var(--text)}
 .region-mode{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:10px 24px;border-bottom:1px solid var(--border-soft);font-size:12px;font-weight:650;color:var(--primary-soft-fg);background:var(--bg-subtle)}
 .region-mode button{border:1px solid var(--border);border-radius:4px;background:var(--bg);padding:6px 10px;font-size:12px;font-weight:650;white-space:nowrap;cursor:pointer}
 .empty-results{padding:24px;text-align:center;border-bottom:1px solid var(--border-soft);font-size:13.5px}
@@ -1338,9 +1339,7 @@ function renderList(){
     ${pend?`<div class="inline-note tnum" style="margin-top:12px">역·초등학교·경사를 지도 데이터로 계산하는 중 · ${D.length-pend}/${D.length}<br><small>처음 한 번만 걸리고, 끝나면 순위가 확정됩니다.</small></div>`:''}
     <details class="method"><summary>평가 기준 안내 ${CHEV}</summary><div style="padding:14px 16px;font-size:13px;line-height:1.8;color:var(--text-secondary)">아파트맵은 교통, 입지 경쟁력, 단지 규모, 주거 상품성 및 가격 신뢰도를 종합 비교합니다. 각 항목의 정확한 가중치, 보정식, 학습 기준 및 예측 모델은 공개하지 않습니다. 단지별 점수와 순위는 투자수익이나 매매 가능가격을 보장하지 않습니다.</div></details>
   </section>
-  <div class="filters pb" role="group" aria-label="가격대">${PB.map(([k,l])=>`<button data-pb="${k}" aria-pressed="${state.pb===k}">${l}</button>`).join('')}</div>
-  <div class="filters pb" role="group" aria-label="평형(공급면적 기준)">${SIZES.map(([k,l])=>`<button data-size="${k}" aria-pressed="${state.size===k}">${l}</button>`).join('')}</div>
-  ${CAPT>6?`<div class="filters pb" role="group" aria-label="연식">${AGES.map(([k,l])=>`<button data-age="${k}" aria-pressed="${state.age===k}">${l}</button>`).join('')}</div>`:''}
+  <div class="filters pb" role="group" aria-label="조건">${[['pb','가격대',PB],['size','평형',SIZES],...(CAPT>6?[['age','연식',AGES]]:[])].map(([k,a,L])=>{ const v=state[k]||'all'; return `<select class="sortsel fsel${v!=='all'?' on':''}" data-k="${k}" aria-label="${a}">${L.map(([o,l])=>`<option value="${o}"${v===o?' selected':''}>${l}</option>`).join('')}</select>`; }).join('')}</div>
   <div class="filters" role="group" aria-label="필터">${FILTERS.map(([k,l])=>`<button data-f="${k}" aria-pressed="${state.f===k}">${l}</button>`).join('')}</div>
   ${viewport?'<div class="region-mode">현재 지도 범위의 단지 <button type="button" id="browseReset">전체 순위 보기</button></div>':''}
   <div class="count"><span>${singleComplex?list.length.toLocaleString()+'개 단지 · 전체 평형 표시':list.length.toLocaleString()+'개 평형'+(CAPT!==6?' ('+new Set(list.map(d=>complexRankKey(d))).size.toLocaleString()+'개 단지)':'')}</span><select id="sortSel" class="sortsel" aria-label="정렬">${SORTS.map(([k,l])=>`<option value="${k}"${state.sort===k?' selected':''}>${l}</option>`).join('')}</select></div>`;
@@ -1386,6 +1385,7 @@ function renderList(){
     render();b.scrollTop=0;syncMapViewUrl();
   };
   b.querySelectorAll('.filters button[data-f]').forEach(x=>x.onclick=()=>{state.f=x.dataset.f;state.lim=50;render();b.scrollTop=0;});
+  b.querySelectorAll('.fsel').forEach(x=>x.onchange=()=>{state[x.dataset.k]=x.value;state.lim=50;render();b.scrollTop=0;});
   b.querySelectorAll('.filters button[data-pb]').forEach(x=>x.onclick=()=>{state.pb=x.dataset.pb;state.lim=50;render();b.scrollTop=0;});
   b.querySelectorAll('.filters button[data-size]').forEach(x=>x.onclick=()=>{state.size=x.dataset.size;state.lim=50;render();b.scrollTop=0;});
   b.querySelectorAll('.filters button[data-age]').forEach(x=>x.onclick=()=>{state.age=x.dataset.age;state.lim=50;render();b.scrollTop=0;});
