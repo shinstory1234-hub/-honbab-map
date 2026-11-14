@@ -277,6 +277,7 @@ aside{order:-1;width:408px;flex:none;border-right:1px solid var(--border);backgr
 .mk:hover{z-index:5}
 .mk:focus-visible,.row:focus-visible{outline:3px solid var(--primary);outline-offset:2px}
 .mk.hide{display:none}
+.mapcount:empty{display:none}
 .mapcount{position:absolute;z-index:3;left:12px;top:12px;max-width:calc(100% - 110px);background:rgba(255,255,255,.94);border:1px solid rgba(112,115,124,.22);border-radius:6px;padding:5px 9px;font-size:12px;font-weight:600;color:#46474c;pointer-events:none;box-shadow:0 1px 4px rgba(0,0,0,.06)}
 
 @media (max-width:767px){
@@ -1357,7 +1358,7 @@ function renderList(){
     <details class="method"><summary>평가 기준 안내 ${CHEV}</summary><div style="padding:14px 16px;font-size:13px;line-height:1.8;color:var(--text-secondary)">아파트맵은 교통, 입지 경쟁력, 단지 규모, 주거 상품성 및 가격 신뢰도를 종합 비교합니다. 각 항목의 정확한 가중치, 보정식, 학습 기준 및 예측 모델은 공개하지 않습니다. 단지별 점수와 순위는 투자수익이나 매매 가능가격을 보장하지 않습니다.</div></details>
   </section>
   <div class="filters" role="group" aria-label="조건"><button data-f="fav" aria-pressed="${state.f==='fav'}">♥ 저장</button>${['pb','size','age','f'].map(k=>{ const v=state[k]||'all', L=PICKMENU[k], o=L[1]().find(x=>x[0]===v); return `<button type="button" class="sortsel fsel${o&&v!=='all'?' on':''}" data-k="${k}" aria-haspopup="dialog" aria-label="${L[0]}">${(o||L[1]()[0])[1]}</button>`; }).join('')}</div>
-  ${viewport?'<div class="region-mode">현재 지도 범위의 단지 <button type="button" id="browseReset">전체 순위 보기</button></div>':''}
+  ${state.q&&!viewport?`<div class="region-mode">‘${esc(state.q)}’ 검색 결과 <button type="button" id="searchReset">전체 순위 보기</button></div>`:''}${viewport?'<div class="region-mode">현재 지도 범위의 단지 <button type="button" id="browseReset">전체 순위 보기</button></div>':''}
   <div class="count"><span>${singleComplex?list.length.toLocaleString()+'개 단지 · 전체 평형 표시':list.length.toLocaleString()+'개 평형'+(CAPT!==6?' ('+new Set(list.map(d=>complexRankKey(d))).size.toLocaleString()+'개 단지)':'')}</span><button type="button" class="sortsel fsel" data-k="sort" aria-haspopup="dialog" aria-label="정렬">${(SORTS.find(x=>x[0]===state.sort)||SORTS[0])[1]}</button></div>`;
   list.slice(0,state.lim).forEach(d=>{
     h+=`<article class="row" data-i="${D.indexOf(d)}" data-s="1" tabindex="0" role="button" aria-label="${esc(publicComplexName(d)+' '+d.py+'평 상세보기')}">
@@ -1393,6 +1394,7 @@ function renderList(){
   b.scrollTop=previousScroll;
   b.querySelectorAll('.filters').forEach((el,i)=>{el.scrollLeft=filterScroll[i]||0;});
   updateSourceStatus();
+  const searchReset=b.querySelector('#searchReset'); if(searchReset) searchReset.onclick=goHome;
   const browseReset=b.querySelector('#browseReset'); if(browseReset) browseReset.onclick=()=>{state.browse=false;render();b.scrollTop=0;syncMapViewUrl();};
   const emptyReset=b.querySelector('#emptyReset');if(emptyReset)emptyReset.onclick=()=>{
     if(state.q){clearSearchToMap();return;}
@@ -1686,6 +1688,7 @@ function renderDetail(i){
 
 function render(){ const pb=document.getElementById('body'); if(pb&&pb.hasAttribute('data-pre')){ pb.removeAttribute('data-pre'); pb.style.cursor=''; }   // 첫 화면 미리보기(apt-first*.js) 표시 해제
   $('#clearSearch').hidden=!state.q;
+  { const rb=document.getElementById('resetBtn'); if(rb) rb.hidden=!(state.q||state.browse||state.sel!=null||state.f!=='all'||state.pb!=='all'||state.size!=='all'||(state.age&&state.age!=='all')||state.sort!=='rank'); }
   state.sel==null?renderList():renderDetail(state.sel); if(map) queueMap(); }
 let qT=null;
 function clearSearchToMap(){
@@ -1835,11 +1838,11 @@ function renderMap(){
     const inV=new Set(pins.filter(o=>{ if(!visible(D[o.i],false)) return false;
       const p=proj.containerPointFromCoords(D[o.i]._pos); return p.x>=0&&p.x<=W&&p.y>=0&&p.y<=H;
     }).map(o=>complexRankKey(D[o.i]))).size;
-    const searched=query?'검색 단지 파란색 표시 · ':'';
-    c.textContent=searched+(shownN<inV?`이 화면 ${inV}곳 중 ${shownN}곳 표시 · 확대하면 더`:`이 화면 ${inV}곳`);
+    const searched=query?'파란색=검색 단지 · ':'';
+    c.textContent=searched+(shownN<inV?`${inV}곳 중 ${shownN}곳 표시(확대하면 더)`:`이 화면 ${inV}곳`);
   }
 }
-let listScrollY=0;
+let listScrollY=0, pinTapAt=0;
 function close(){ state.sel=null; if(location.hash)history.replaceState(null,'',location.pathname+location.search); }
 /* 주소(#단지|동네|평)와 뒤로가기: 상세를 열면 기록을 하나 쌓아, 휴대폰 뒤로가기가 사이트를 나가지 않고 목록으로 돌아오게 함 */
 const hashOf=d=>'#'+encodeURIComponent(d.cxKey+'|'+d.py);
@@ -1848,7 +1851,7 @@ function backToList(){ if(history.state&&history.state.apt) history.back(); else
 let homeB=null;
 function goHome(){                                                     // 로고: 필터·검색·선택을 모두 지우고 처음 화면(전체 목록·수도권 전체 지도)으로
   clearTimeout(qT);$('#q').blur();
-  Object.assign(state,{f:'all',pb:'all',size:'all',q:'',sel:null,lim:50,browse:false}); $('#q').value='';
+  Object.assign(state,{f:'all',pb:'all',size:'all',age:'all',sort:'rank',q:'',sel:null,lim:50,browse:false}); $('#q').value='';
   const url=new URL(location.href);
   ['vlat','vlng','vlevel','browse'].forEach(k=>url.searchParams.delete(k));
   history.replaceState(null,'',url.pathname+url.search);
@@ -1884,11 +1887,13 @@ function materializePin(o){ const i=o.i;
   el.setAttribute('role','button');el.tabIndex=0;
   el.setAttribute('aria-label',short(cashOf(d))+' '+d.n+' '+d.rank+'위 상세보기');
   el.innerHTML=pinHTML(d);
-  el.addEventListener('click',e=>{e.stopPropagation();select(i,false);});
+  // 2026.11.15: 핀 위에서 끌어도 지도가 움직이게(clickable:false) — 대신 끌다 놓은 건 탭으로 보지 않음
+  let px=0,py=0; el.addEventListener('pointerdown',e=>{px=e.clientX;py=e.clientY;});
+  el.addEventListener('click',e=>{e.stopPropagation(); if(Math.hypot(e.clientX-px,e.clientY-py)>8) return; pinTapAt=performance.now(); select(i,false);});
   el.addEventListener('keydown',e=>{
     if(e.key==='Enter'||e.key===' '){e.preventDefault();e.stopPropagation();select(i,false);}
   });
-  const ov=new kakao.maps.CustomOverlay({position:d._pos,content:el,xAnchor:0,yAnchor:0,zIndex:d.score,clickable:true});
+  const ov=new kakao.maps.CustomOverlay({position:d._pos,content:el,xAnchor:0,yAnchor:0,zIndex:d.score,clickable:false});
   o.ov=ov; o.el=el;
 }
 
@@ -1983,7 +1988,7 @@ function init(){
     center:new kakao.maps.LatLng(savedMapView?.lat??37.45,savedMapView?.lng??127.0),
     level:savedMapView?.level??9
   });
-  map.addControl(new kakao.maps.ZoomControl(),kakao.maps.ControlPosition.RIGHT);
+  if(!mobile()) map.addControl(new kakao.maps.ZoomControl(),kakao.maps.ControlPosition.RIGHT);   // 휴대폰은 두 손가락 확대 — 버튼이 내 위치·처음으로를 가림
   /* 2026.11.15 UX: 내 위치 — 자동 이동 없이 버튼을 눌렀을 때만(탐색하던 지도 유지) */
   if(navigator.geolocation){ const gb=document.createElement('button'); gb.type='button'; gb.textContent='◎ 내 위치'; gb.setAttribute('aria-label','현재 위치로 이동');
     gb.style.cssText='position:absolute;z-index:3;right:12px;top:12px;padding:8px 12px;border-radius:20px;background:#fff;color:#171719;border:1px solid rgba(112,115,124,.28);box-shadow:0 2px 8px rgba(0,0,0,.12);font-size:13px;font-weight:700';
@@ -1991,6 +1996,9 @@ function init(){
       if(!me) me=new kakao.maps.CustomOverlay({content:'<div style="width:14px;height:14px;border-radius:50%;background:#0066ff;border:3px solid #fff;box-shadow:0 0 0 1px rgba(0,0,0,.2)"></div>',zIndex:4}); me.setPosition(ll); me.setMap(map);
       map.setLevel(Math.min(map.getLevel(),6)); map.setCenter(ll); browseMap(); },()=>{ gb.textContent='위치 권한 필요'; setTimeout(()=>gb.textContent='◎ 내 위치',2500); },{enableHighAccuracy:false,timeout:8000,maximumAge:60000}); };
     $('#map').parentNode.appendChild(gb); }
+  { const rb=document.createElement('button'); rb.type='button'; rb.id='resetBtn'; rb.hidden=true; rb.textContent='↺ 처음으로'; rb.setAttribute('aria-label','검색·필터 지우고 전체 순위로');
+    rb.style.cssText='position:absolute;z-index:3;right:12px;top:58px;padding:8px 12px;border-radius:20px;background:#171719;color:#fff;border:0;box-shadow:0 2px 8px rgba(0,0,0,.18);font-size:13px;font-weight:700';
+    rb.onclick=goHome; $('#map').parentNode.appendChild(rb); }
   $('#map').addEventListener('pointerdown',e=>{
     if(document.activeElement===$('#q'))$('#q').blur();
     // 핀을 누른 뒤 select()가 확대하는 것은 사용자 수동 줌으로 보지 않는다.
@@ -2004,6 +2012,7 @@ function init(){
   kakao.maps.event.addListener(map,'dragstart',beginManualMapMove);
   kakao.maps.event.addListener(map,'dragend',()=>{setTimeout(finishManualMapMove,160);});
   kakao.maps.event.addListener(map,'click',()=>{ 
+    if(performance.now()-pinTapAt<400) return;   // 핀 탭이 지도 클릭으로도 전달된 경우
     if(document.activeElement===$('#q'))$('#q').blur();
     if(mobile()&&state.q)snapTo('peek');
   });

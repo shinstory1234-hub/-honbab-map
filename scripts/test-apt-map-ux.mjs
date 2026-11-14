@@ -74,7 +74,7 @@ for(const q of ['','하이어스']){
  if(q){
   assert.ok(result.pins[2005].on);
   assert.ok(result.pins[2005].el.classList.classes.has('match'));
-  assert.match(result.count,/검색 단지 파란색 표시/);
+  assert.match(result.count,/파란색=검색 단지/);
  }
 }
 console.log('PASS: script syntax, viewport persistence, map search isolation, highlighted and neighboring pins');
