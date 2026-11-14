@@ -1167,14 +1167,18 @@ const cardFeatures=d=>featureKeys(d).slice(0,2);
 const hasFeature=(d,key)=>{ const f=featureKeys(d);return f.includes(key)||(key==='재건축'&&f.includes('정비계획공람')); };
 const badgeHTML=d=>[{label:d.tier.k,color:d.tier.c},...cardFeatures(d).map(k=>FEATURE_META[k]&&{label:FEATURE_META[k].label,color:FEATURE_META[k].color}).filter(Boolean)]
   .map(x=>`<span class="chip" style="--chip:${x.color}">${esc(x.label)}</span>`).join('');
-const FILTERS=[['all','전체'],['top','핵심 1~30'],['mid','유망 31~300'],['interest','관심 301~1,000'],['explore','탐색 1,001+'],['신축','신축'],['학군','학군'],['재건축','재건축'],['리모델링','리모델링'],['천지개벽','천지개벽'],['역세권','역세권'],['초품아','초품아'],['대단지','대단지'],['신설역','신설역'],['반도체','반도체'],['소형할인','소형 할인'],['flat','평지'],['job50','출근 50분'],['free','비규제']];
+/* 2026.11.15 UX: 저장한 단지(♥, 이 기기에만 저장)·정렬. 정렬을 바꿔도 순위 숫자는 추천 순위 그대로 */
+const FAV=(()=>{ try{ return new Set(JSON.parse(localStorage.getItem('aptFav')||'[]')); }catch(e){ return new Set(); } })();
+const favSave=()=>{ try{ localStorage.setItem('aptFav',JSON.stringify([...FAV])); }catch(e){} };
+const SORTS=[['rank','추천순',null],['price','가격 낮은순',(a,b)=>a.p-b.p],['new','신축순',(a,b)=>b.year-a.year],['units','세대수 많은순',(a,b)=>unitN(b)-unitN(a)],['station','역 가까운순',(a,b)=>((a.cur&&a.cur.m)??1e9)-((b.cur&&b.cur.m)??1e9)]];
+const FILTERS=[['all','전체'],['fav','♥ 저장'],['top','핵심 1~30'],['mid','유망 31~300'],['interest','관심 301~1,000'],['explore','탐색 1,001+'],['신축','신축'],['학군','학군'],['재건축','재건축'],['리모델링','리모델링'],['천지개벽','천지개벽'],['역세권','역세권'],['초품아','초품아'],['대단지','대단지'],['신설역','신설역'],['반도체','반도체'],['소형할인','소형 할인'],['flat','평지'],['job50','출근 50분'],['free','비규제']];
 // 지도 화면은 가격대별 페이지가 바뀌어도 같은 위치를 유지한다. 잘못된 좌표는 무시한다.
 const savedMapView=(()=>{
   const p=new URLSearchParams(location.search), lat=Number(p.get('vlat')), lng=Number(p.get('vlng')), level=Number(p.get('vlevel'));
   return p.has('vlat')&&p.has('vlng')&&p.has('vlevel')&&Number.isFinite(lat)&&Number.isFinite(lng)&&Number.isInteger(level)
     &&lat>36.85&&lat<38.3&&lng>126.3&&lng<127.95&&level>=1&&level<=14?{lat,lng,level}:null;
 })();
-const state={f:'all',pb:'all',size:'all',age:'all',q:'',sel:null,lim:50,browse:!!(savedMapView&&new URLSearchParams(location.search).get('browse')==='1')};
+const state={sort:'rank',f:'all',pb:'all',size:'all',age:'all',q:'',sel:null,lim:50,browse:!!(savedMapView&&new URLSearchParams(location.search).get('browse')==='1')};
 // 6억 탭: 대출 끼고 필요한 현금 기준 / 6~10억 탭: 시세(가격) 기준 — 10억 탭에서 현금 구간은 '3억 이하'가 가격처럼 읽혀 헷갈림(2026.11.1)
 const PB=CAPT===35?[['all','전체 가격'],...[0,1,2,3,4].map(k=>{const lo=300000+k*10000;return ['p'+(31+k),`${30+k}~${31+k}억`,lo,lo+10000];}),['p35plus','35억 초과',350000,Infinity]]:CAPT>=25?[['all','전체 가격'],...[0,1,2,3,4].map(k=>{ const lo=CAPLO+k*10000; return ['p'+(lo/10000+1),`${lo/10000}~${lo/10000+1}억`,lo,lo+10000]; })]   // 2026.11.3: 20~25억·25~30억 탭에 6억 탭 칩(3억 이하…)이 뜨던 문제
   :CAPT===20?[['all','전체 가격'],['p16','15~16억',150000,160000],['p17','16~17억',160000,170000],['p18','17~18억',170000,180000],['p19','18~19억',180000,190000],['p20','19~20억',190000,200000]]
@@ -1196,7 +1200,7 @@ const townOf=d=>{ const area=d.area.replace(/^(서울|경기|경기도|인천)\s
 const textMatches=(d,query=(state.q||'').trim().toLocaleLowerCase())=>
   !!query&&(d.n+' '+d.area+' '+(d.headline||'')+' '+townOf(d)).toLocaleLowerCase().includes(query);
 const visible=(d,withSearch=true)=>{
-  const f=state.f, ok=f==='all'||(f==='top'&&d.rank<=30)||(f==='mid'&&d.rank>30&&d.rank<=300)||(f==='interest'&&d.rank>300&&d.rank<=1000)||(f==='explore'&&d.rank>1000)||(f==='flat'&&isFlat(d))||(f==='job50'&&jobMin(d)!=null&&jobMin(d)<=50)||(f==='free'&&d.reg==='free')||hasFeature(d,f);
+  const f=state.f, ok=f==='all'||(f==='fav'&&FAV.has(d.cxKey))||(f==='top'&&d.rank<=30)||(f==='mid'&&d.rank>30&&d.rank<=300)||(f==='interest'&&d.rank>300&&d.rank<=1000)||(f==='explore'&&d.rank>1000)||(f==='flat'&&isFlat(d))||(f==='job50'&&jobMin(d)!=null&&jobMin(d)<=50)||(f==='free'&&d.reg==='free')||hasFeature(d,f);
   const pb=PB.find(x=>x[0]===state.pb); const okp=state.pb==='all'||!pb||(CAPT!==6?((d.p>pb[2]||(CAPT===35&&d.p===300000))&&d.p<=pb[3]):((cashOf(d)>pb[2]&&cashOf(d)<=pb[3])||(state.pb==='3'&&cashOf(d)<=30000)));
   const size=SIZES.find(x=>x[0]===state.size), oks=state.size==='all'||(d.py>=size[2]&&d.py<size[3]);
   const ag=AGES.find(x=>x[0]===state.age), ay=ageOf(d), oka=!state.age||state.age==='all'||!ag||(ay!=null&&ay>=ag[2]&&ay<=ag[3]);
@@ -1324,6 +1328,7 @@ function renderList(){
     ?matches.filter(d=>{ const key=complexRankKey(d); if(seen.has(key))return false; seen.add(key); return true; })
       .sort((a,b)=>a.rank-b.rank || b.score-a.score)
     :matches;
+  const sortF=(SORTS.find(x=>x[0]===state.sort)||SORTS[0])[2]; if(sortF) list.sort((a,b)=>sortF(a,b)||a.rank-b.rank);
   let h=`<section class="intro">
     <div class="eyebrow">6억 이하 · 오를 단지<i></i>${NCX.toLocaleString()}곳 · ${D.length.toLocaleString()}개 평형</div>
     <h1>예산 안에서 좋은 아파트 찾기</h1>
@@ -1336,7 +1341,7 @@ function renderList(){
   ${CAPT>6?`<div class="filters pb" role="group" aria-label="연식">${AGES.map(([k,l])=>`<button data-age="${k}" aria-pressed="${state.age===k}">${l}</button>`).join('')}</div>`:''}
   <div class="filters" role="group" aria-label="필터">${FILTERS.map(([k,l])=>`<button data-f="${k}" aria-pressed="${state.f===k}">${l}</button>`).join('')}</div>
   ${viewport?'<div class="region-mode">현재 지도 범위의 단지 <button type="button" id="browseReset">전체 순위 보기</button></div>':''}
-  <div class="count"><span>${singleComplex?list.length.toLocaleString()+'개 단지 · 전체 평형 표시':list.length.toLocaleString()+'개 평형'+(CAPT!==6?' ('+new Set(list.map(d=>complexRankKey(d))).size.toLocaleString()+'개 단지)':'')} · 종합 점수순</span><span>시세 리치고·국토부 실거래 · ${(CAPT>6||window.LIVE_ON)?(window.LIVEP_AT||'갱신일 확인 중'):('고정 자료 '+(ASOF||''))}</span></div>`;
+  <div class="count"><span>${singleComplex?list.length.toLocaleString()+'개 단지 · 전체 평형 표시':list.length.toLocaleString()+'개 평형'+(CAPT!==6?' ('+new Set(list.map(d=>complexRankKey(d))).size.toLocaleString()+'개 단지)':'')} · <select id="sortSel" aria-label="정렬" style="font:inherit;color:inherit;border:0;background:none">${SORTS.map(([k,l])=>`<option value="${k}"${state.sort===k?' selected':''}>${l}</option>`).join('')}</select></span><span>시세 리치고·국토부 실거래 · ${(CAPT>6||window.LIVE_ON)?(window.LIVEP_AT||'갱신일 확인 중'):('고정 자료 '+(ASOF||''))}</span></div>`;
   list.slice(0,state.lim).forEach(d=>{
     h+=`<article class="row" data-i="${D.indexOf(d)}" data-s="1" tabindex="0" role="button" aria-label="${esc(publicComplexName(d)+' '+d.py+'평 상세보기')}">
       <span class="rk tnum">${String(d.rank).padStart(2,'0')}</span>
@@ -1383,6 +1388,7 @@ function renderList(){
   b.querySelectorAll('.filters button[data-size]').forEach(x=>x.onclick=()=>{state.size=x.dataset.size;state.lim=50;render();b.scrollTop=0;});
   b.querySelectorAll('.filters button[data-age]').forEach(x=>x.onclick=()=>{state.age=x.dataset.age;state.lim=50;render();b.scrollTop=0;});
   const no=b.querySelector('#noticeOpen'); if(no) no.onclick=()=>{ noticeCheck.checked=false; noticeAgree.disabled=true; noticeError.textContent=''; noticeGate.hidden=false; noticeCheck.focus(); };
+  const ss=b.querySelector('#sortSel'); if(ss) ss.onchange=()=>{state.sort=ss.value;state.lim=50;renderList();b.scrollTop=b.querySelector('.count').offsetTop;};
   const mb=b.querySelector('#more'); if(mb) mb.onclick=()=>{ const y=b.scrollTop; state.lim+=100; renderList(); b.scrollTop=y; };
   b.querySelectorAll('.row').forEach(x=>{
     x.onclick=()=>select(+x.dataset.i,true);
@@ -1598,7 +1604,7 @@ function renderDetail(i){
   const d=D[i], m=money(d), nd=need(d), tags=[d.tier.k,...cardFeatures(d).map(k=>FEATURE_META[k].label)].join(' · ');
   const bar=(v,max)=>`<div class="t"><b style="width:${Math.min(100,Math.round(v/(Number.isFinite(max)?max:700000)*100))}%"></b></div>`;
   const src=RATE_SRC[d.rate.src];
-  let h=`<div class="phead"><button id="back"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M15 18 9 12l6-6"/></svg>목록</button><span class="tnum">${d.rank}위 / ${d.m3?NCX:D.length}</span></div>
+  let h=`<div class="phead"><button id="back"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M15 18 9 12l6-6"/></svg>목록</button><button id="favBtn" aria-pressed="${FAV.has(d.cxKey)}" style="margin-left:auto;color:${FAV.has(d.cxKey)?'#e5484d':'inherit'}">${FAV.has(d.cxKey)?'♥ 저장됨':'♡ 저장'}</button><span class="tnum">${d.rank}위 / ${d.m3?NCX:D.length}</span></div>
   <section class="identity"><div class="cat">${esc(tags)}${d.u?' · 전체 단지 자동 수집':d.auto?' · 점수식 자동 선별':' · 직접 분석'}</div><h2>${esc(publicComplexName(d))}</h2>
     <div class="meta tnum">${d.masterComplexKey?`<span>선택 평형 · ${esc(d.n.replace(publicComplexName(d),'')||d.n)} ${d.py}평</span>`:''}<span>${esc(d.area)}</span><span>${d.year}년 입주</span><span>${unitN(d).toLocaleString()}세대${d.masterComplexKey?` <small>(통합 관리단지 · 해당 구분 블록 ${d.masterBlockUnits.toLocaleString()}세대)</small>`:d.unitsBlockVerified?` <small>(분리 단지 기준 · 통합 세대수 중복 제외)</small>`:d.unitsOwn?` <small>(임대단지 제외 매매 대상)</small>`:d.unitsRaw?` <small>(같은 마을 ${d.unitsN}개 단지 합계 ${d.unitsRaw.toLocaleString()}세대를 나눈 추정)</small>`:''}</span></div></section>
   ${redevelopmentEvidencePanel(d)}${m3DensityNote(d)}${m3PriceWarning(d)}<div class="lede"><strong>${esc(d.headline)}</strong><p>${esc(d.sub)}</p>${d.s4&&(!d.simple||d.s4.peakR!=null||d.s4.peakPeer)?`<p class="why"><b>순위 근거</b> ${esc(whyLine(d))}</p>`:''}${!d.simple&&hasNew(d)?`<p class="why"><b>신설역 주의</b> 입지 점수에 개통 예정 역·노선을 넣어 순위가 올라간 단지예요${d.locParts.fut?` — ${esc(d.locParts.fut.n)}역(${esc(d.locParts.fut.line)}) 도보 약 ${Math.round(d.locParts.wf)}분`:''}${/예정/.test(d.locParts.lpl||'')?` · 노선 프리미엄 ${esc(d.locParts.lpl)} +${Math.round(d.locParts.lp*100)}%(가정)`:''}. 철도는 지연이 잦고 역 위치는 공사·계획 기준(OpenStreetMap)이에요. 개통 전까지 1년당 5%(최대 20%) 할인해서 반영했고, 예정 역을 빼면 입지 상위 ${Math.max(1,Math.round(100-d.loc0))}%예요. 지금 쓰는 역은 ${esc((d.cur&&d.cur.n)||'없음')}${d.cur&&d.cur.m<99999?` 도보 약 ${Math.round(walkMin(d.cur.m))}분`:''}.</p>`:''}</div>
@@ -1654,6 +1660,7 @@ function renderDetail(i){
   if(CAPT>6&&window.APT_TRANSPORT)h=h.replace('<section class="sec">',APT_TRANSPORT.panel(d)+'<section class="sec">');
   const b=$('#body'); b.innerHTML=h; publicDetailSummary(b,d); b.scrollTop=0;
   $('#back').onclick=backToList;
+  $('#favBtn').onclick=()=>{ const k=d.cxKey, on=!FAV.has(k); on?FAV.add(k):FAV.delete(k); favSave(); const fb=$('#favBtn'); fb.textContent=on?'♥ 저장됨':'♡ 저장'; fb.style.color=on?'#e5484d':'inherit'; fb.setAttribute('aria-pressed',on); };
   b.querySelectorAll('[data-sib]').forEach(x=>x.onclick=()=>{ const j=+x.dataset.sib; if(j!==i) select(j,false); });
 }
 
@@ -1957,6 +1964,13 @@ function init(){
     level:savedMapView?.level??9
   });
   map.addControl(new kakao.maps.ZoomControl(),kakao.maps.ControlPosition.RIGHT);
+  /* 2026.11.15 UX: 내 위치 — 자동 이동 없이 버튼을 눌렀을 때만(탐색하던 지도 유지) */
+  if(navigator.geolocation){ const gb=document.createElement('button'); gb.type='button'; gb.textContent='◎ 내 위치'; gb.setAttribute('aria-label','현재 위치로 이동');
+    gb.style.cssText='position:absolute;z-index:3;right:12px;top:12px;padding:8px 12px;border-radius:20px;background:#fff;color:#171719;border:1px solid rgba(112,115,124,.28);box-shadow:0 2px 8px rgba(0,0,0,.12);font-size:13px;font-weight:700';
+    let me=null; gb.onclick=()=>{ gb.textContent='위치 확인 중…'; navigator.geolocation.getCurrentPosition(p=>{ gb.textContent='◎ 내 위치'; const ll=new kakao.maps.LatLng(p.coords.latitude,p.coords.longitude);
+      if(!me) me=new kakao.maps.CustomOverlay({content:'<div style="width:14px;height:14px;border-radius:50%;background:#0066ff;border:3px solid #fff;box-shadow:0 0 0 1px rgba(0,0,0,.2)"></div>',zIndex:4}); me.setPosition(ll); me.setMap(map);
+      map.setLevel(Math.min(map.getLevel(),6)); map.setCenter(ll); browseMap(); },()=>{ gb.textContent='위치 권한 필요'; setTimeout(()=>gb.textContent='◎ 내 위치',2500); },{enableHighAccuracy:false,timeout:8000,maximumAge:60000}); };
+    $('#map').parentNode.appendChild(gb); }
   $('#map').addEventListener('pointerdown',e=>{
     if(document.activeElement===$('#q'))$('#q').blur();
     // 핀을 누른 뒤 select()가 확대하는 것은 사용자 수동 줌으로 보지 않는다.
