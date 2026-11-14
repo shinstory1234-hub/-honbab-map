@@ -31,6 +31,7 @@ export function buildAptAssets(root, output = path.join(root, 'public')) {
   const consent = app.slice(0, consentEnd).replace("u.pathname.split('/').pop()+u.search", "u.pathname+u.search");
   const main = writeAsset("if(window.__aptLoadFailed) throw new Error('Apartment data failed to load');\n"+app.slice(consentEnd), ['apt-map.html:application']);
   const isolated = /^apt-(?:invest\d+|s4q\d*)\.js$/;
+  const peak6 = peakLoForCap6(sourceDir);
   for (const cap of [6, 10, 15, 20, 25, 30, 35]) {
     const files = [];
     const context = {URLSearchParams, location: {search: `?cap=${cap}`}, document: {
@@ -49,6 +50,7 @@ export function buildAptAssets(root, output = path.join(root, 'public')) {
       if (file === 'apt-live.js' || file === 'apt-live6.js' || file === 'apt-geo.js') { flush(); urls.push(file); continue; }
       let code = fs.readFileSync(path.join(sourceDir, file), 'utf8');
       if (file === 'apt-picks10.js') code = code.replace(/^if\(document\.write\).*$/m, '');
+      if (cap === 6 && file === 'apt-s4.js' && peak6) code = code.replace(peak6.from, peak6.to);
       if (/document\.write\s*\(/.test(code)) throw new Error(`Unexpanded script dependency: ${file}`);
       if (isolated.test(file)) flush();
       chunk.push(`/* ${file} */\n${code}`); names.push(file);
@@ -70,6 +72,26 @@ export function buildAptAssets(root, output = path.join(root, 'public')) {
   fs.writeFileSync(path.join(output, 'apt-map-fast.html'), html);
   fs.writeFileSync(path.join(assets, 'manifest.json'), JSON.stringify({manifest, inventory}, null, 2));
   return {manifest, inventory, html};
+}
+
+/* 1원칙(2026.11.15): 전고점 미회복 표(PEAKLO_PACK, 전 탭 합집합 2,500여 단지·gzip 약 15KB)를 6억 탭에는 그 탭 단지(apt-picks·auto3·univ, 6억 탭 로더 순서)분만 남겨 보냄.
+   키·해시는 apt-s4.js peakLoRatio와 같은 식 → 6억 탭 결과 동일. 6억 초과 탭은 실시간 시세로 가격대를 다시 나눠(apt-livefix) 미리 자를 수 없어 그대로 */
+function peakLoForCap6(sourceDir) {
+  const s4 = fs.readFileSync(path.join(sourceDir, 'apt-s4.js'), 'utf8');
+  const m = /const PEAKLO_PACK="([0-9a-z]*)"/.exec(s4);
+  if (!m) return null;
+  const c = {console, CAPT: 6, CAPLO: 0, CAPHI: 60000, location: {search: ''}, document: {getElementById: () => null, querySelectorAll: () => []}};
+  c.window = c; vm.createContext(c);
+  for (const f of ['apt-unitfix.js', 'apt-sd.js', 'apt-picks.js', 'apt-auto3.js', 'apt-gj.js', 'apt-loc.js', 'apt-cx.js', 'apt-fard.js', 'apt-hak.js', 'apt-univ.js']) vm.runInContext(fs.readFileSync(path.join(sourceDir, f), 'utf8'), c, {filename: f});
+  const want = new Set();
+  for (const d of c.PICKS || []) {
+    const k = d.n + '|' + String(d.area || '').trim().split(/\s+/).pop(); let x = 5381;
+    for (let i = 0; i < k.length; i++) x = ((x * 33) ^ k.charCodeAt(i)) >>> 0;
+    want.add(x.toString(36).padStart(7, '0').slice(-5));
+  }
+  let kept = '';
+  for (let i = 0; i + 7 <= m[1].length; i += 7) if (want.has(m[1].slice(i, i + 5))) kept += m[1].slice(i, i + 7);
+  return {from: m[0], to: `const PEAKLO_PACK="${kept}"`};
 }
 
 // 1원칙(2026.11.14): 절대 느려지면 안 된다. 탭별 전송량·요청 수·런타임 파일이 scripts/perf-budget.json을 넘으면 빌드 실패.
