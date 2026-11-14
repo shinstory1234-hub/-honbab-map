@@ -31,7 +31,7 @@ export function buildAptAssets(root, output = path.join(root, 'public')) {
   const consent = app.slice(0, consentEnd).replace("u.pathname.split('/').pop()+u.search", "u.pathname+u.search");
   const main = writeAsset("if(window.__aptLoadFailed) throw new Error('Apartment data failed to load');\n"+app.slice(consentEnd), ['apt-map.html:application']);
   const isolated = /^apt-(?:invest\d+|s4q\d*)\.js$/;
-  for (const cap of [6, 10, 15, 20, 25, 30]) {
+  for (const cap of [6, 10, 15, 20, 25, 30, 35]) {
     const files = [];
     const context = {URLSearchParams, location: {search: `?cap=${cap}`}, document: {
       write(html) { files.push(...[...html.matchAll(/src="([^"]+)"/g)].map(m => m[1])); },
@@ -40,7 +40,7 @@ export function buildAptAssets(root, output = path.join(root, 'public')) {
     context.window = context;
     vm.runInNewContext(bootstrap[1], context);
     const ordered = files.flatMap(file => file === 'apt-picks10.js'
-      ? [file, `apt-invest${cap}.js`, 'apt-research-over6-top100.js', 'apt-invest-ui.js']
+      ? [file, `apt-invest${cap === 35 ? 30 : cap}.js`, 'apt-research-over6-top100.js', 'apt-invest-ui.js']
       : file === 'apt-first.js' ? [] : [file]);
     const urls = []; let chunk = [], names = [];
     const flush = () => { if (chunk.length) urls.push(writeAsset(chunk.join('\n;\n'), names)); chunk = []; names = []; };

@@ -6,7 +6,7 @@ import { previewHTML, previewScript } from '../../../lib/apt-preview.mjs';
 export const maxDuration = 60;
 
 const UP = 'https://realestate-media.vercel.app/api/backtest';
-const CAPS = new Set([6, 10, 15, 20, 25, 30]);
+const CAPS = new Set([6, 10, 15, 20, 25, 30, 35]);
 
 async function text(url) {
   const r = await fetch(url, { cache: 'no-store', signal: AbortSignal.timeout(25_000) });

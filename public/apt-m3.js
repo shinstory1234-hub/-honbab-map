@@ -1,4 +1,4 @@
-/* Apartment Map M3 — provisional scoring for 6억 초과~30억 이하.
+/* Apartment Map M3 — provisional scoring for 6억 초과 및 30억 이상.
  * Cap 6 retains the legacy model. Cap 30 uses M3 without transaction-volume penalty.
  * Weights need historical backtesting. Results are experimental.
  */
@@ -31,7 +31,7 @@
   return operating>0?clamp(operating+.25*Math.max(0,planned-operating)):Math.min(35,planned);
  }
  function active(d,cap=root.CAPT){
-  return [10,15,20,25,30].includes(cap)&&Number(d?.p)>60000&&Number(d?.p)<=300000;
+  return [10,15,20,25,30,35].includes(cap)&&Number(d?.p)>60000&&(cap===35?Number(d?.p)>=300000:Number(d?.p)<=300000);
  }
  // 가격의 불확실성은 '아파트 품질'이 아니라 예산 내 실매수 가능성에 대한 위험이다.
  // 검증 전 정책값: 준공 2년 이내는 거래량 부족만으로 감점하지 않는다.
@@ -112,7 +112,7 @@
   // 직주 점수도 급지에 연동: 급지 약한 외곽 단지가 업무지구 거리만으로 오르지 않게 급지 45 이하 ×0.5 → 70 이상 ×1
   // 과천 급지 보정(2026.11.14, 경승 결정): 실거래상 위치가치는 높지만(2017~2026 평균이 가락·마포 수준)
   // '서울 > 경기' 원칙에 따라 15억 이상 탭(15~20·20~25·25~30억)에서만 장기 급지 −3점. 6억 이하·6~15억 탭 불변.
-  if([20,25,30].includes(cap)&&/^과천/.test(String(d.area||'')))raw.G=Math.max(0,raw.G-3);
+  if([20,25,30,35].includes(cap)&&/^과천/.test(String(d.area||'')))raw.G=Math.max(0,raw.G-3);
   if(!integratedSite){ const jg=clamp((raw.G-45)/25,0,1); raw.J=raw.J*(.5+.5*jg); }
   const baseRaw={...raw};
   if(cap===15&&integratedSite){
@@ -146,7 +146,7 @@
     && !nearUnverifiedCeiling;
   const maxPricePenalty=(price.ageDays!=null && price.ageDays>270)?7:
     (price.ageDays!=null && price.ageDays>180)?5:3;
-  const pricePenalty=cap===30?0:
+  const pricePenalty=cap>=30?0:
     reliableVolume?Math.min(price.penalty,maxPricePenalty):price.penalty;
   // 실제 고시 또는 공람 공고로 소속 단지와 단계가 확인된 정비사업만 인정한다.
   // 공람은 정비구역 지정이나 사업시행인가가 아니며, 계획 신축 세대수를 현재 세대수로 대체하지 않는다.

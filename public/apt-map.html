@@ -314,7 +314,7 @@ aside{order:-1;width:408px;flex:none;border-right:1px solid var(--border);backgr
 </div>
 <header class="masthead">
   <a class="wordmark" id="home" href="apt-map.html" aria-label="아파트맵 처음 화면으로">아파트맵<i></i></a>
-  <nav class="captab" aria-label="가격대"><a href="apt-map.html" id="cap6">6억 이하</a><a href="apt-map.html?cap=10" id="cap10">6~10억</a><a href="apt-map.html?cap=15" id="cap15">10~15억</a><a href="apt-map.html?cap=20" id="cap20">15~20억</a><a href="apt-map.html?cap=25" id="cap25">20~25억</a><a href="apt-map.html?cap=30" id="cap30">25~30억</a></nav>
+  <nav class="captab" aria-label="가격대"><a href="apt-map.html" id="cap6">6억 이하</a><a href="apt-map.html?cap=10" id="cap10">6~10억</a><a href="apt-map.html?cap=15" id="cap15">10~15억</a><a href="apt-map.html?cap=20" id="cap20">15~20억</a><a href="apt-map.html?cap=25" id="cap25">20~25억</a><a href="apt-map.html?cap=30" id="cap30">25~30억</a><a href="apt-map.html?cap=35" id="cap35">30억 이상</a></nav>
   <span class="caption" id="asof">서울·경기·인천</span>
   <div class="search"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg><input id="q" placeholder="단지명, 동네로 찾기" autocomplete="off" enterkeyhint="search"><button type="button" id="clearSearch" aria-label="검색어 지우기" hidden>×</button></div>
 </header>
@@ -333,15 +333,15 @@ aside{order:-1;width:408px;flex:none;border-right:1px solid var(--border);backgr
   var f=function(){ if(arguments.length===0){ var v=+this; if(Number.isInteger(v)&&Math.abs(v)<1e15){ var t=String(Math.abs(v)).replace(/\B(?=(\d{3})+(?!\d))/g,','); return v<0?'-'+t:t; } } return orig.apply(this,arguments); };
   f.__fast=true; Number.prototype.toLocaleString=f; }catch(e){} })();
 /* 가격대 탭(2026.11.1): ?cap=10 → 6~10억 탭. 2026.11.3: 6억 초과 탭은 세 탭 단지를 모두 읽고 매일 계산되는 현재 시세(apt-live.js)로 가격대를 다시 나눔(apt-livefix.js). 탭마다 대상 단지·분위수(백분위 기준)·주변 시세 커널이 다르고, 점수는 탭 안에서만 비교 */
-(function(){ var v=new URLSearchParams(location.search).get('cap'), c=v==='30'?30:v==='25'?25:v==='20'?20:v==='15'?15:v==='10'?10:6;
-  window.CAPT=c; window.CAPLO=c===30?250000:c===25?200000:c===20?150000:c===15?100000:c===10?60000:0; window.CAPHI=c===30?300000:c===25?250000:c===20?200000:c===15?150000:c===10?100000:60000; window.CAPTXT=c===30?'25~30억':c===25?'20~25억':c===20?'15~20억':c===15?'10~15억':c===10?'6~10억':'6억 이하';
-  window.inBand=function(p){ return p>CAPLO&&p<=CAPHI; };
-  var T=c!==6, x=String(c);
+(function(){ var v=new URLSearchParams(location.search).get('cap'), c=v==='35'?35:v==='30'?30:v==='25'?25:v==='20'?20:v==='15'?15:v==='10'?10:6;
+  window.CAPT=c; window.CAPLO=c===35?300000:c===30?250000:c===25?200000:c===20?150000:c===15?100000:c===10?60000:0; window.CAPHI=c===35?Infinity:c===30?300000:c===25?250000:c===20?200000:c===15?150000:c===10?100000:60000; window.CAPTXT=c===35?'30억 이상':c===30?'25~30억':c===25?'20~25억':c===20?'15~20억':c===15?'10~15억':c===10?'6~10억':'6억 이하';
+  window.inBand=function(p){ return c===35?p>=CAPLO:p>CAPLO&&p<=CAPHI; };
+  var T=c!==6, x=String(c), dataCap=String(c===35?30:c);
   /* 첫 화면 미리보기(2026.11.11): 서버가 미리 계산한 기본 목록을 무거운 자료보다 먼저 받아 바로 보여 줌(async — 자료 로딩을 막지 않음) */
   try{ var ps=document.createElement('script'); ps.async=true; ps.src='/api/apt-first?cap='+x; document.head.appendChild(ps); }catch(e){}
   /* 주변 시세 커널(apt-loc10·cx10)은 가격과 무관한 전체 단지 자료라 6~10억·10~15억 탭이 같이 씀 */
   var F=[T?'':'apt-first.js','apt-unitfix.js',T?'apt-stsfix.js':'','apt-sd.js','apt-picks.js', T?'apt-picks10.js':'apt-auto3.js','apt-gj.js', T?'apt-loc10.js':'apt-loc.js', T?'apt-cx10.js':'apt-cx.js','apt-fard.js','apt-hak.js', T?'apt-univ10.js':'apt-univ.js', T?'apt-univ15.js':'', T?'apt-univ20.js':'', T?'apt-univ30.js':'', T?'apt-univadd.js':'', T?'apt-live.js':'apt-live6.js',
-    'apt-farplan.js','apt-mixhi.js','apt-cur.js',T?'apt-livefix.js':'apt-curlive.js','apt-trn.js','apt-small.js', T?'apt-s4q'+x+'.js':'apt-s4q.js','apt-peak.js','apt-gjl.js', T?'apt-gjc.js':'',T?'apt-transport.js':'','apt-s4.js',T?'apt-redevelopment-evidence.js':'',T?'apt-m3.js':'','apt-band.js','apt-plat.js','apt-farfix.js','apt-dem.js', T?'apt-dem10.js':'', T?'apt-dem15.js':'', T?'apt-dem20.js':'', T?'apt-dem30.js':'', T?'apt-demadd.js':'','apt-walk.js','apt-geo.js', T?'':'apt-deep6-100.js', T?'':'apt-deep6-200.js', T?'':'apt-research6-600.js', T?'':'apt-invest-ui.js'];
+    'apt-farplan.js','apt-mixhi.js','apt-cur.js',T?'apt-livefix.js':'apt-curlive.js','apt-trn.js','apt-small.js', T?'apt-s4q'+dataCap+'.js':'apt-s4q.js','apt-peak.js','apt-gjl.js', T?'apt-gjc.js':'',T?'apt-transport.js':'','apt-s4.js',T?'apt-redevelopment-evidence.js':'',T?'apt-m3.js':'','apt-band.js','apt-plat.js','apt-farfix.js','apt-dem.js', T?'apt-dem10.js':'', T?'apt-dem15.js':'', T?'apt-dem20.js':'', T?'apt-dem30.js':'', T?'apt-demadd.js':'','apt-walk.js','apt-geo.js', T?'':'apt-deep6-100.js', T?'':'apt-deep6-200.js', T?'':'apt-research6-600.js', T?'':'apt-invest-ui.js'];
   for(var i=0;i<F.length;i++) if(F[i]) document.write('<script src="'+F[i]+'"><\/script>');
   if(T) document.title='아파트맵 · '+CAPTXT+' 아파트';
   var t6=document.getElementById('cap'+x); if(t6){ t6.setAttribute('aria-current','page'); try{ t6.scrollIntoView({block:'nearest',inline:'center'}); }catch(e){} } var hm=document.getElementById('home'); if(hm&&T) hm.href='apt-map.html?cap='+x;
@@ -1176,7 +1176,7 @@ const savedMapView=(()=>{
 })();
 const state={f:'all',pb:'all',size:'all',age:'all',q:'',sel:null,lim:50,browse:!!(savedMapView&&new URLSearchParams(location.search).get('browse')==='1')};
 // 6억 탭: 대출 끼고 필요한 현금 기준 / 6~10억 탭: 시세(가격) 기준 — 10억 탭에서 현금 구간은 '3억 이하'가 가격처럼 읽혀 헷갈림(2026.11.1)
-const PB=CAPT>=25?[['all','전체 가격'],...[0,1,2,3,4].map(k=>{ const lo=CAPLO+k*10000; return ['p'+(lo/10000+1),`${lo/10000}~${lo/10000+1}억`,lo,lo+10000]; })]   // 2026.11.3: 20~25억·25~30억 탭에 6억 탭 칩(3억 이하…)이 뜨던 문제
+const PB=CAPT===35?[['all','전체 가격'],...[0,1,2,3,4].map(k=>{const lo=300000+k*10000;return ['p'+(31+k),`${30+k}~${31+k}억`,lo,lo+10000];}),['p35plus','35억 초과',350000,Infinity]]:CAPT>=25?[['all','전체 가격'],...[0,1,2,3,4].map(k=>{ const lo=CAPLO+k*10000; return ['p'+(lo/10000+1),`${lo/10000}~${lo/10000+1}억`,lo,lo+10000]; })]   // 2026.11.3: 20~25억·25~30억 탭에 6억 탭 칩(3억 이하…)이 뜨던 문제
   :CAPT===20?[['all','전체 가격'],['p16','15~16억',150000,160000],['p17','16~17억',160000,170000],['p18','17~18억',170000,180000],['p19','18~19억',180000,190000],['p20','19~20억',190000,200000]]
   :CAPT===15?[['all','전체 가격'],['p11','10~11억',100000,110000],['p12','11~12억',110000,120000],['p13','12~13억',120000,130000],['p14','13~14억',130000,140000],['p15','14~15억',140000,150000]]
   :CAPT===10?[['all','전체 가격'],['p7','6~7억',60000,70000],['p8','7~8억',70000,80000],['p9','8~9억',80000,90000],['p10','9~10억',90000,100000]]
@@ -1197,7 +1197,7 @@ const textMatches=(d,query=(state.q||'').trim().toLocaleLowerCase())=>
   !!query&&(d.n+' '+d.area+' '+(d.headline||'')+' '+townOf(d)).toLocaleLowerCase().includes(query);
 const visible=(d,withSearch=true)=>{
   const f=state.f, ok=f==='all'||(f==='top'&&d.rank<=30)||(f==='mid'&&d.rank>30&&d.rank<=300)||(f==='interest'&&d.rank>300&&d.rank<=1000)||(f==='explore'&&d.rank>1000)||(f==='flat'&&isFlat(d))||(f==='job50'&&jobMin(d)!=null&&jobMin(d)<=50)||(f==='free'&&d.reg==='free')||hasFeature(d,f);
-  const pb=PB.find(x=>x[0]===state.pb); const okp=state.pb==='all'||!pb||(CAPT!==6?(d.p>pb[2]&&d.p<=pb[3]):((cashOf(d)>pb[2]&&cashOf(d)<=pb[3])||(state.pb==='3'&&cashOf(d)<=30000)));
+  const pb=PB.find(x=>x[0]===state.pb); const okp=state.pb==='all'||!pb||(CAPT!==6?((d.p>pb[2]||(CAPT===35&&d.p===300000))&&d.p<=pb[3]):((cashOf(d)>pb[2]&&cashOf(d)<=pb[3])||(state.pb==='3'&&cashOf(d)<=30000)));
   const size=SIZES.find(x=>x[0]===state.size), oks=state.size==='all'||(d.py>=size[2]&&d.py<size[3]);
   const ag=AGES.find(x=>x[0]===state.age), ay=ageOf(d), oka=!state.age||state.age==='all'||!ag||(ay!=null&&ay>=ag[2]&&ay<=ag[3]);
   return ok&&okp&&oks&&oka&&(!withSearch||!state.q||textMatches(d));
@@ -1214,7 +1214,9 @@ const CAPINFO={
   25:{lo:'20억 초과 25억 이하',cap:'25억',bt:['−','−','−'],old:['−','−','−'],g:['−','−','−'],snap:'#',snap3:'#',
       extra:'2026.11.3 신설 탭 — 6~20억 탭과 같은 산식을 그대로 쓰며, 이 가격대만 따로 과거 성과를 검증하지는 않음. 주담대 한도 4억(15억 초과 25억 이하).'},
   30:{lo:'25억 초과 30억 이하',cap:'30억',bt:['−','−','−'],old:['−','−','−'],g:['−','−','−'],snap:'#',snap3:'#',
-      extra:'2026.11.3 신설 탭 — 6~20억 탭과 같은 산식을 그대로 쓰며, 이 가격대만 따로 과거 성과를 검증하지는 않음. 주담대 한도 2억(25억 초과).'}};
+      extra:'2026.11.3 신설 탭 — 6~20억 탭과 같은 산식을 그대로 쓰며, 이 가격대만 따로 과거 성과를 검증하지는 않음. 주담대 한도 2억(25억 초과).'},
+  35:{lo:'30억 이상',cap:'30억',bt:['−','−','−'],old:['−','−','−'],g:['−','−','−'],snap:'#',snap3:'#',
+      extra:'2026.11.15 신설 탭 — 25~30억과 동일한 M3 산식 적용. 현재 수집된 단지 자료의 30억 이상 평형만 평가하며, 이 가격대만 따로 과거 성과를 검증하지는 않음. 30억 이상 전용 단지는 일부 누락될 수 있음.'}};
 const NOUP=()=>(window.S4CFG||{}).model==='m2';   // 6억 초과 통합 모델: 적정가 대비 숨김
 /* m2(6억 초과): 재건축 사업성 위험 표시(순위 미반영) — 대지지분·용적률 → 1:1 분담금 ÷ 신축가 → 사업성 */
 function rbRiskPanel(d){ const m=d.m; if(!m||!m.fz||m.fz.x==null) return '';
@@ -1244,7 +1246,7 @@ function cap10Text(h){
     .replace(/6억 이하인 평형/g,I.lo+'인 평형')
     .replace(/6억 이하 평형/g,CAPTXT+' 평형')
     .replace(/6억 이하 거래/g,CAPTXT+' 거래')
-    .replace(/6억으로 살 수 있는/g,I.cap+'으로 살 수 있는')
+    .replace(/6억으로 살 수 있는/g,CAPT===35?'30억 이상에 해당하는':I.cap+'으로 살 수 있는')
     .replace(/6억 이하/g,CAPTXT);
   return (window.S4CFG||{}).model==='m2'?
     (window.APT_M3&&CAPT<30?m3Text(h,I):m2Text(h,I)):h;
@@ -1594,7 +1596,7 @@ function redevelopmentEvidencePanel(d){
 }
 function renderDetail(i){
   const d=D[i], m=money(d), nd=need(d), tags=[d.tier.k,...cardFeatures(d).map(k=>FEATURE_META[k].label)].join(' · ');
-  const bar=(v,max)=>`<div class="t"><b style="width:${Math.round(v/max*100)}%"></b></div>`;
+  const bar=(v,max)=>`<div class="t"><b style="width:${Math.min(100,Math.round(v/(Number.isFinite(max)?max:700000)*100))}%"></b></div>`;
   const src=RATE_SRC[d.rate.src];
   let h=`<div class="phead"><button id="back"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M15 18 9 12l6-6"/></svg>목록</button><span class="tnum">${d.rank}위 / ${d.m3?NCX:D.length}</span></div>
   <section class="identity"><div class="cat">${esc(tags)}${d.u?' · 전체 단지 자동 수집':d.auto?' · 점수식 자동 선별':' · 직접 분석'}</div><h2>${esc(publicComplexName(d))}</h2>
