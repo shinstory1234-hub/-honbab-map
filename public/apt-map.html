@@ -104,7 +104,7 @@ aside{order:-1;width:408px;flex:none;border-right:1px solid var(--border);backgr
 .count{align-items:center}
 .sortsel{font:inherit;font-size:13px;font-weight:700;color:var(--text);background:var(--bg);border:1px solid var(--border);border-radius:6px;padding:7px 12px;cursor:pointer}
 .psheet-bg{position:fixed;inset:0;z-index:1000;background:rgba(0,0,0,0);transition:background .2s}.psheet-bg.in{background:rgba(0,0,0,.4)}
-.psheet{position:absolute;left:0;right:0;bottom:0;max-width:480px;margin:0 auto;background:var(--bg);border-radius:22px 22px 0 0;padding:8px 0 calc(14px + env(safe-area-inset-bottom));transform:translateY(100%);transition:transform .22s cubic-bezier(.2,.8,.2,1);box-shadow:0 -8px 30px rgba(0,0,0,.12)}
+.psheet{position:absolute;left:0;right:0;bottom:0;max-height:82dvh;overflow-y:auto;overscroll-behavior:contain;max-width:480px;margin:0 auto;background:var(--bg);border-radius:22px 22px 0 0;padding:8px 0 calc(14px + env(safe-area-inset-bottom));transform:translateY(100%);transition:transform .22s cubic-bezier(.2,.8,.2,1);box-shadow:0 -8px 30px rgba(0,0,0,.12)}
 .psheet-bg.in .psheet{transform:none}
 .psheet i{display:block;width:36px;height:4px;border-radius:4px;background:var(--border);margin:2px auto 10px}
 .psheet h4{font-size:18px;font-weight:800;letter-spacing:-.03em;padding:6px 24px 10px}
@@ -1182,7 +1182,7 @@ const badgeHTML=d=>[{label:d.tier.k,color:d.tier.c},...cardFeatures(d).map(k=>FE
 const FAV=(()=>{ try{ return new Set(JSON.parse(localStorage.getItem('aptFav')||'[]')); }catch(e){ return new Set(); } })();
 const favSave=()=>{ try{ localStorage.setItem('aptFav',JSON.stringify([...FAV])); }catch(e){} };
 const SORTS=[['rank','추천순',null],['price','가격 낮은순',(a,b)=>a.p-b.p],['new','신축순',(a,b)=>b.year-a.year],['units','세대수 많은순',(a,b)=>unitN(b)-unitN(a)],['station','역 가까운순',(a,b)=>((a.cur&&a.cur.m)??1e9)-((b.cur&&b.cur.m)??1e9)]];
-const PICKMENU={pb:['가격대',()=>PB],size:['평형',()=>SIZES],age:['연식',()=>AGES],sort:['정렬',()=>SORTS]};
+const PICKMENU={f:['유형·순위',()=>[['all','전체 유형'],...FILTERS.filter(x=>x[0]!=='all'&&x[0]!=='fav')]],pb:['가격대',()=>PB],size:['평형',()=>SIZES],age:['연식',()=>AGES],sort:['정렬',()=>SORTS]};
 /* 2026.11.15 UX: 선택 목록을 휴대폰 기본 창 대신 아래에서 올라오는 시트로 */
 function pickSheet(title,list,cur,cb){
   const bg=document.createElement('div'); bg.className='psheet-bg';
@@ -1352,12 +1352,11 @@ function renderList(){
   let h=`<section class="intro">
     <div class="eyebrow">6억 이하 · 오를 단지<i></i>${NCX.toLocaleString()}곳 · ${D.length.toLocaleString()}개 평형</div>
     <h1>예산 안에서 좋은 아파트 찾기</h1>
-    <p>서울·경기·인천 아파트를 입지, 교통, 단지 경쟁력 등으로 종합 비교했습니다. 같은 가격대에서 좋은 아파트를 찾아보세요.<br><small>같은 단지의 평형별 시세는 목록과 상세 화면에서 모두 확인할 수 있습니다.</small></p>
+    <p>서울·경기·인천 아파트를 입지, 교통, 단지 경쟁력 등으로 종합 비교했습니다. 같은 가격대에서 좋은 아파트를 찾아보세요.</p>
     ${pend?`<div class="inline-note tnum" style="margin-top:12px">역·초등학교·경사를 지도 데이터로 계산하는 중 · ${D.length-pend}/${D.length}<br><small>처음 한 번만 걸리고, 끝나면 순위가 확정됩니다.</small></div>`:''}
     <details class="method"><summary>평가 기준 안내 ${CHEV}</summary><div style="padding:14px 16px;font-size:13px;line-height:1.8;color:var(--text-secondary)">아파트맵은 교통, 입지 경쟁력, 단지 규모, 주거 상품성 및 가격 신뢰도를 종합 비교합니다. 각 항목의 정확한 가중치, 보정식, 학습 기준 및 예측 모델은 공개하지 않습니다. 단지별 점수와 순위는 투자수익이나 매매 가능가격을 보장하지 않습니다.</div></details>
   </section>
-  <div class="filters pb" role="group" aria-label="조건">${['pb','size',...(CAPT>6?['age']:[])].map(k=>{ const v=state[k]||'all', L=PICKMENU[k]; return `<button type="button" class="sortsel fsel${v!=='all'?' on':''}" data-k="${k}" aria-haspopup="dialog" aria-label="${L[0]}">${(L[1]().find(x=>x[0]===v)||L[1]()[0])[1]}</button>`; }).join('')}</div>
-  <div class="filters" role="group" aria-label="필터">${FILTERS.map(([k,l])=>`<button data-f="${k}" aria-pressed="${state.f===k}">${l}</button>`).join('')}</div>
+  <div class="filters" role="group" aria-label="조건"><button data-f="fav" aria-pressed="${state.f==='fav'}">♥ 저장</button>${['pb','size','age','f'].map(k=>{ const v=state[k]||'all', L=PICKMENU[k], o=L[1]().find(x=>x[0]===v); return `<button type="button" class="sortsel fsel${o&&v!=='all'?' on':''}" data-k="${k}" aria-haspopup="dialog" aria-label="${L[0]}">${(o||L[1]()[0])[1]}</button>`; }).join('')}</div>
   ${viewport?'<div class="region-mode">현재 지도 범위의 단지 <button type="button" id="browseReset">전체 순위 보기</button></div>':''}
   <div class="count"><span>${singleComplex?list.length.toLocaleString()+'개 단지 · 전체 평형 표시':list.length.toLocaleString()+'개 평형'+(CAPT!==6?' ('+new Set(list.map(d=>complexRankKey(d))).size.toLocaleString()+'개 단지)':'')}</span><button type="button" class="sortsel fsel" data-k="sort" aria-haspopup="dialog" aria-label="정렬">${(SORTS.find(x=>x[0]===state.sort)||SORTS[0])[1]}</button></div>`;
   list.slice(0,state.lim).forEach(d=>{
@@ -1401,7 +1400,7 @@ function renderList(){
     else state.browse=false;
     render();b.scrollTop=0;syncMapViewUrl();
   };
-  b.querySelectorAll('.filters button[data-f]').forEach(x=>x.onclick=()=>{state.f=x.dataset.f;state.lim=50;render();b.scrollTop=0;});
+  b.querySelectorAll('.filters button[data-f]').forEach(x=>x.onclick=()=>{state.f=state.f===x.dataset.f?'all':x.dataset.f;state.lim=50;render();b.scrollTop=0;});
   b.querySelectorAll('.fsel').forEach(x=>x.onclick=()=>{ const k=x.dataset.k, L=PICKMENU[k]; pickSheet(L[0],L[1](),state[k]||'all',v=>{ state[k]=v; state.lim=50; if(k==='sort'){ renderList(); b.scrollTop=b.querySelector('.count').offsetTop; } else { render(); b.scrollTop=0; } }); });
   b.querySelectorAll('.filters button[data-pb]').forEach(x=>x.onclick=()=>{state.pb=x.dataset.pb;state.lim=50;render();b.scrollTop=0;});
   b.querySelectorAll('.filters button[data-size]').forEach(x=>x.onclick=()=>{state.size=x.dataset.size;state.lim=50;render();b.scrollTop=0;});
