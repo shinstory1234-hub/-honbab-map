@@ -49,6 +49,7 @@ export function buildAptAssets(root, output = path.join(root, 'public')) {
       // These URLs are rewritten to live upstream data. Never freeze them at build time.
       if (file === 'apt-live.js' || file === 'apt-live6.js' || file === 'apt-geo.js') { flush(); urls.push(file); continue; }
       let code = fs.readFileSync(path.join(sourceDir, file), 'utf8');
+      code = stripComments(code);   // 전송량: 줄 전체 주석·블록 주석 제거(소스 파일 주석은 그대로 둠)
       if (file === 'apt-picks10.js') code = code.replace(/^if\(document\.write\).*$/m, '');
       if (cap === 6 && file === 'apt-s4.js' && peak6) code = code.replace(peak6.from, peak6.to);
       if (/document\.write\s*\(/.test(code)) throw new Error(`Unexpanded script dependency: ${file}`);
@@ -76,6 +77,22 @@ export function buildAptAssets(root, output = path.join(root, 'public')) {
 
 /* 1원칙(2026.11.15): 전고점 미회복 표(PEAKLO_PACK, 전 탭 합집합 2,500여 단지·gzip 약 15KB)를 6억 탭에는 그 탭 단지(apt-picks·auto3·univ, 6억 탭 로더 순서)분만 남겨 보냄.
    키·해시는 apt-s4.js peakLoRatio와 같은 식 → 6억 탭 결과 동일. 6억 초과 탭은 실시간 시세로 가격대를 다시 나눠(apt-livefix) 미리 자를 수 없어 그대로 */
+// 줄 단위 주석만 제거 — 코드 줄 안의 주석·문자열은 건드리지 않는다(안전 우선).
+// 줄이 '/*'로 시작하면 '*/'로 끝나는 줄까지, 줄이 '//'로 시작하면 그 줄만 지운다. 결과는 vm.Script로 문법 검사.
+export function stripComments(code) {
+  const out = []; let inBlock = false;
+  for (const line of code.split('\n')) {
+    const t = line.trim();
+    if (inBlock) { if (t.endsWith('*/')) inBlock = false; continue; }
+    if (t.startsWith('/*')) { if (!t.endsWith('*/')) inBlock = true; continue; }
+    if (t.startsWith('//')) continue;
+    out.push(line);
+  }
+  const res = out.join('\n');
+  new vm.Script(res);   // 문법이 깨지면 빌드 실패
+  return res;
+}
+
 function peakLoForCap6(sourceDir) {
   const s4 = fs.readFileSync(path.join(sourceDir, 'apt-s4.js'), 'utf8');
   const m = /const PEAKLO_PACK="([0-9a-z]*)"/.exec(s4);

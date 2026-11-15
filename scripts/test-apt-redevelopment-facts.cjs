@@ -30,7 +30,11 @@ for(const name of ['G','J','T','U','Q','S'])assert.equal(exact.raw[name],control
 assert.equal(direct.units,952,'Planned units must never overwrite current units');
 assert.equal(exact.penalties.price,control.penalties.price,'Price confidence protection unchanged');
 const designated=flat('꿈마을한신','안양 동안구 평촌동');
-assert.equal(M.compute(designated,10).bonuses.verifiedProgress,2.5);
+assert.equal(M.compute(designated,10).bonuses.verifiedProgress,3,'사업시행자 지정 = 조합설립급(2026.11.15)');
+// 재건축 추진 단계: 조합설립 3 · 사업시행 4 · 관리처분 5, 상품성 바닥 45
+const stageMap=win.APT_REDEV_STAGE||{};
+assert.equal(stageMap['주공13|광명시 철산동'],1,'철산주공13 조합설립인가');
+{ const d=flat('주공13','광명시 철산동'); d.year=1986; const m=M.compute(d,15); assert.equal(m.bonuses.verifiedProgress,3); assert.ok(m.raw.Q>=45,'재건축 단지 상품성 바닥 45'); }
 assert.equal(M.compute(flat('한가람(한양)','다른시 관양동'),10).bonuses.verifiedProgress,0,
  'Same-name apartment in different area must not receive bonus');
 assert.equal(M.compute(direct,6),null,'<=6억 uses legacy scorer');
