@@ -24,6 +24,16 @@ for(const [key,far,source] of [
  ['한신잠실코아|서울 송파구 신천동',390,'리치고'],
  ['일산요진와이시티|고양 일산동구 백석동',510,'KB부동산']
 ]){assert.equal(a.FARD[key][0],far,key+' FAR');assert.equal(a.FARD[key][1],source,key+' source');}
+assert.equal(a.APT_FAR_RICHGO_PREFERRED_N,82,'리치고 우선 채택 82개');
+for(const [key,far] of [
+ ['현대아파트|서울 서초구 서초동',196],
+ ['현대|서울 송파구 잠실동',257],
+ ['당산현대3차|서울 영등포구 당산동4가',248],
+ ['올림픽훼밀리타운|서울 송파구 문정동',194],
+ ['삼호1동~3동|서울 서초구 방배동',510],
+ ['동아(1차)|인천 부평구 부평동',181]
+]){assert.equal(a.FARD[key][0],far,key+' 리치고 수치');assert.equal(a.FARD[key][1],'리치고(단지 일치 미검증)');}
+assert.notEqual(a.FARD['삼익|서울 영등포구 여의도동'][1],'리치고(단지 일치 미검증)','리치고 공란 단지 미변경');
 assert.notEqual(a.FARD['삼익|서울 영등포구 여의도동'][1],'리치고','리치고 공란 8곳 값 임의 대입 금지');
 const after=JSON.stringify(a.FARD);load(a,'apt-far-normalize.js');assert.equal(JSON.stringify(a.FARD),after,'idempotence');
 const b=ctx(6),b0=JSON.stringify(b.FARD);load(b,'apt-far-normalize.js');assert.equal(JSON.stringify(b.FARD),b0,'6억 이하 불변');
