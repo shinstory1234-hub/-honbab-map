@@ -1553,7 +1553,7 @@ function publicDetailSummary(b,d){
     }
   }
   // 원본 위치가치 회귀, 평형 보정, 재건축 수익환원 및 상세 가중치 패널 제외.
-  const keep=/^(재건축 단계|일정|자금|이 단지 |이런 사람에게|사기 전에 확인|가격 비교|[0-9]+억.*평형)/;
+  const keep=/^(재건축 단계|일정|자금|이 단지 |같은 .* 단지 비교|이런 사람에게|사기 전에 확인|가격 비교|[0-9]+억.*평형)/;
   b.querySelectorAll('section.sec').forEach(sec=>{
     const h=sec.querySelector(':scope > h3');
     const label=h?.textContent?.trim()||'';
