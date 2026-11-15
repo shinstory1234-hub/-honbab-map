@@ -1185,7 +1185,8 @@ const badgeHTML=d=>[{label:d.tier.k,color:d.tier.c},...cardFeatures(d).map(k=>FE
 /* 2026.11.15 UX: 저장한 단지(♥, 이 기기에만 저장)·정렬. 정렬을 바꿔도 순위 숫자는 추천 순위 그대로 */
 const FAV=(()=>{ try{ return new Set(JSON.parse(localStorage.getItem('aptFav')||'[]')); }catch(e){ return new Set(); } })();
 const favSave=()=>{ try{ localStorage.setItem('aptFav',JSON.stringify([...FAV])); }catch(e){} };
-const SORTS=[['rank','추천순',null],['price','가격 낮은순',(a,b)=>a.p-b.p],['new','신축순',(a,b)=>b.year-a.year],['units','세대수 많은순',(a,b)=>unitN(b)-unitN(a)],['station','역 가까운순',(a,b)=>((a.cur&&a.cur.m)??1e9)-((b.cur&&b.cur.m)??1e9)],['ppp','평당가 낮은순',(a,b)=>a.p/a.py-b.p/b.py]];
+const SORTS=[['rank','추천순',null],['price','가격 낮은순',(a,b)=>a.p-b.p],['new','신축순',(a,b)=>b.year-a.year],['units','세대수 많은순',(a,b)=>unitN(b)-unitN(a)],['station','역 가까운순',(a,b)=>((a.cur&&a.cur.m)??1e9)-((b.cur&&b.cur.m)??1e9)],['ppp','평당가 낮은순',(a,b)=>a.p/a.py-b.p/b.py],['deal','거래 많은순',(a,b)=>dealN(b)-dealN(a)],['peak','전고점 회복 높은순',(a,b)=>(pkR(b)??-1)-(pkR(a)??-1)]];
+const dealN=d=>(priceEv(d)||{n:0}).n||0, pkR=d=>d.s4&&d.s4.peakR!=null?d.s4.peakR:typeof peakLoRatio==='function'?peakLoRatio(d):null;
 const PICKMENU={f:['유형·순위',()=>[['all','전체 유형'],...FILTERS.filter(x=>x[0]!=='all'&&x[0]!=='fav')]],pb:['가격대',()=>PB],size:['평형',()=>SIZES],age:['연식',()=>AGES],sort:['정렬',()=>SORTS]};
 /* 2026.11.15 UX: 선택 목록을 휴대폰 기본 창 대신 아래에서 올라오는 시트로 */
 function pickSheet(title,list,cur,cb){
@@ -1553,7 +1554,7 @@ function publicDetailSummary(b,d){
     }
   }
   // 원본 위치가치 회귀, 평형 보정, 재건축 수익환원 및 상세 가중치 패널 제외.
-  const keep=/^(재건축 단계|일정|자금|이 단지 |같은 .* 단지 비교|이런 사람에게|사기 전에 확인|가격 비교|[0-9]+억.*평형)/;
+  const keep=/^(재건축 단계|일정|자금|이 단지 |같은 .* 단지 비교|시세 흐름|사면 드는 돈|이런 사람에게|사기 전에 확인|가격 비교|[0-9]+억.*평형)/;
   b.querySelectorAll('section.sec').forEach(sec=>{
     const h=sec.querySelector(':scope > h3');
     const label=h?.textContent?.trim()||'';
@@ -1621,12 +1622,23 @@ function redevelopmentEvidencePanel(d){
     <p class="note"><a href="${esc(info.url)}" target="_blank" rel="noopener noreferrer">공고 및 근거 자료 확인 ↗</a></p></section>`;
 }
 /* 2026.11.16 리치고 차용: 같은 동 단지 비교(이 가격대 안). 상세 열 때 D 한 번만 훑음 — recompute에는 안 들어감 */
+/* 2026.11.16 리치고 차용: 전고점 대비(최고 대비) + 사면 드는 돈(취득세·중개보수). 상세 열 때만 계산 */
+function costPanel(d){ const p=d.p*1e4, eo=d.p/1e4, big=d.py>=35;
+  const r=eo<=6?1:eo<=9?eo*2/3-3:3, acq=p*r/100, edu=acq*.1, farm=big?p*.002:0;
+  const br=eo<.5?[.6,25e4]:eo<2?[.5,80e4]:eo<9?[.4]:eo<12?[.5]:eo<15?[.6]:[.7], fee=Math.min(p*br[0]/100,br[1]||Infinity);
+  const w=v=>eok(Math.round(v/1e4)), e=pkR(d), n=priceEv(d);
+  const pk=e!=null?`<div><dt>21~22년 전고점 대비<small>${e>=1?'전고점 회복':'전고점 미회복'} · 국토부 실거래</small></dt><dd style="color:${e>=1?'#0a7d3e':'#e5484d'}">${e>=1?'+':''}${((e-1)*100).toFixed(1)}%</dd></div>`:'';
+  const tv=n?`<div><dt>이 평형 거래<small>최근 12개월 · 3개월${n.last?' · 마지막 '+esc(n.last):''}</small></dt><dd>${n.n}건 · ${n.n3}건</dd></div>`:'';
+  return `${pk||tv?`<section class="sec"><h3>시세 흐름 <small>리치고식 요약</small></h3><dl class="facts tnum">${pk}${tv}</dl></section>`:''}<section class="sec"><h3>사면 드는 돈 <small>${d.py}평 ${eok(d.p)} · 무주택 1주택 기준</small></h3><dl class="facts tnum">
+  <div><dt>취득세<small>세율 ${r.toFixed(2)}%</small></dt><dd>${w(acq)}</dd></div><div><dt>지방교육세${big?'·농특세':''}<small>${big?'전용 85㎡ 초과 추정 · 농특세 0.2%':'취득세의 10%'}</small></dt><dd>${w(edu+farm)}</dd></div>
+  <div><dt>중개보수 상한<small>요율 ${br[0]}% · 부가세 별도</small></dt><dd>${w(fee)}</dd></div><div class="em"><dt>합계(법무비 제외)</dt><dd>${w(acq+edu+farm+fee)}</dd></div></dl>
+  <p class="note">면적은 평형으로 추정(35평 이상=전용 85㎡ 초과). 생애최초 감면·다주택 중과·법무사 비용은 빠져 있어요. 정확한 금액은 위택스·중개사무소에서 확인.</p></section>`; }
 function nbrPanel(d){ const ck=complexRankKey(d), best=new Map();
   for(const x of D){ if(x.area!==d.area) continue; const k=complexRankKey(x), o=best.get(k); if(!o||x.rank<o.rank||(k===ck&&x===d)) best.set(k,k===ck?d:x); }
   if(best.size<2) return ''; const L=[...best.values()].sort((a,b)=>a.rank-b.rank), me=L.indexOf(d), dong=d.area.split(' ').pop();
   const show=L.slice(0,8); if(me>=8) show.push(d);
   const pp=x=>Math.round(x.p/x.py).toLocaleString();
-  return `<section class="sec"><h3>같은 ${esc(dong)} 단지 비교 <small>${CAPTXT} · ${L.length}곳 중 ${me+1}번째</small></h3><div class="cmp tnum">${show.map(x=>`<div${x===d?' class="me"':''} data-sib="${D.indexOf(x)}" style="cursor:pointer"><span class="n">${x.rank.toLocaleString()}위 · ${esc(publicComplexName(x))} ${x.py}평 · ${x.year}년 · 평당 ${pp(x)}만</span><span class="v">${eok(x.p)}</span>${`<div class="t"><b style="width:${Math.min(100,Math.round(x.p/(Number.isFinite(CAPHI)?CAPHI:700000)*100))}%"></b></div>`}</div>`).join('')}</div><p class="note">같은 동, 이 가격대 안에서 단지마다 순위가 가장 높은 평형 한 줄씩. 누르면 그 단지로 이동. 작은 평형은 원래 평당가가 높아요.</p></section>`; }
+  return `<section class="sec"><h3>같은 ${esc(dong)} 단지 비교 <small>${CAPTXT} · ${L.length}곳 중 ${me+1}번째</small></h3><div class="cmp tnum">${show.map(x=>`<div${x===d?' class="me"':''} data-sib="${D.indexOf(x)}" style="cursor:pointer"><span class="n">${x.rank.toLocaleString()}위 · ${esc(publicComplexName(x))} ${x.py}평 · ${x.year}년 · 평당 ${pp(x)}만 · 12개월 ${dealN(x)}건</span><span class="v">${eok(x.p)}</span>${`<div class="t"><b style="width:${Math.min(100,Math.round(x.p/(Number.isFinite(CAPHI)?CAPHI:700000)*100))}%"></b></div>`}</div>`).join('')}</div><p class="note">같은 동, 이 가격대 안에서 단지마다 순위가 가장 높은 평형 한 줄씩. 누르면 그 단지로 이동. 작은 평형은 원래 평당가가 높아요.</p></section>`; }
 function renderDetail(i){
   const d=D[i], m=money(d), nd=need(d), tags=[d.tier.k,...cardFeatures(d).map(k=>FEATURE_META[k].label)].join(' · ');
   const bar=(v,max)=>`<div class="t"><b style="width:${Math.min(100,Math.round(v/(Number.isFinite(max)?max:700000)*100))}%"></b></div>`;
@@ -1679,7 +1691,7 @@ function renderDetail(i){
     <div><dt>규제</dt><dd>${d.reg==='free'?'비규제 · 전세 끼고 매수 가능':'토지거래허가 · 실거주 2년'}</dd></div></dl></section>`;
   const S=sibs(d);
   if(S.length>1) h+=`<section class="sec"><h3>이 단지 ${CAPTXT} 평형 <small>${d.m3?"단지 순위 공유 · 평형별 점수 비교":"평형마다 따로 채점한 순위"}</small></h3><div class="cmp tnum">${S.map(x=>`<div${x===d?' class="me"':''} data-sib="${D.indexOf(x)}" style="cursor:pointer"><span class="n">${x.py}평 · ${d.m3?'단지 '+x.rank.toLocaleString()+'위 · ':x.rank.toLocaleString()+'위 · '}${x.score.toFixed(1)}점${NOUP()?'':` · 적정가 대비 ${x.up>=0?'+':''}${Math.round(x.up*100)}%`}</span><span class="v">${eok(x.p)}</span>${bar(x.p,CAPHI)}</div>`).join('')}</div>${d.alt&&d.sub?`<p class="note">위 단지 소개 원고는 ${d.basePy}평 기준입니다.</p>`:''}</section>`;
-  h+=nbrPanel(d);
+  h+=costPanel(d)+nbrPanel(d);
   if(d.fit&&d.fit.length) h+=`<section class="sec"><h3>이런 사람에게</h3><div class="fit">${d.fit.map(f=>`<span>${esc(f)}</span>`).join('')}</div></section>`;
   if(d.check&&d.check.length) h+=`<section class="sec"><h3>사기 전에 확인</h3><ul class="checks">${d.check.map(f=>`<li>${esc(String(f).replace(/^자동 수집 단지 · /,''))}</li>`).join('')}</ul></section>`;
   h+=`<p class="fine">필요한 돈은 주담대 한도(시가 15억 이하 6억, 15억 초과 4억)와 LTV만 반영한 계산입니다. 실제 대출은 소득(DSR)에 따라 줄어듭니다. ${d.u||d.p0?'시세는 국토부 실거래 기준 최근 시세(3개월 중위 또는 시세지수 환산)로 매물 호가와 다를 수 있습니다.':'시세는 리치고 추정치로 매물 호가와 다를 수 있습니다.'} 상승률 출처: ${esc(src)}.</p>
