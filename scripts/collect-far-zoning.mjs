@@ -45,11 +45,15 @@ async function loadInventory() {
   const context = { window: { PICKS: [] } }
   context.window.window = context.window
   vm.createContext(context)
-  for (const path of ['public/apt-picks.js', 'public/apt-auto3.js', 'public/apt-fard.js', 'public/apt-univ.js']) {
-    vm.runInContext(await readFile(new URL(path, ROOT), 'utf8'), context, { filename: path })
+  // 6억 초과 탭(apt-univ10~35) 단지도 함께 조사(2026.11.16: 6억 초과 단지 용도지역 미조사로 '사업성 낮음' 오표시)
+  for (const path of ['public/apt-picks.js', 'public/apt-auto3.js', 'public/apt-fard.js', 'public/apt-univ.js',
+    'public/apt-univ10.js', 'public/apt-univ15.js', 'public/apt-univ20.js', 'public/apt-univ30.js', 'public/apt-univadd.js', 'public/apt-univ35.js']) {
+    try { vm.runInContext(await readFile(new URL(path, ROOT), 'utf8'), context, { filename: path }) }
+    catch (error) { console.error(`${path} 읽기 실패: ${error.message}`) }
   }
   const { PICKS, UGEO = {}, FARD = {} } = context.window
-  return PICKS.map(item => {
+  const seen = new Set()
+  return PICKS.filter(item => { const k = `${item.n}|${item.area}`; if (seen.has(k)) return false; seen.add(k); return true }).map(item => {
     const key = `${item.n}|${item.area}`
     const geo = UGEO[key] || {}
     return {
@@ -333,6 +337,20 @@ async function writeOutput(cache, rules, inventory) {
 await mkdir(new URL('../data/', import.meta.url), { recursive: true })
 let cache = {}
 try { cache = JSON.parse(await readFile(CACHE_FILE, 'utf8')) } catch {}
+// 캐시가 없으면(새 PC) 이미 배포된 apt-farplan.js에서 확정 결과를 복원해 다시 조사하지 않고, 출력에서 빠지지도 않게 한다.
+if (!Object.keys(cache).length) {
+  try {
+    const ctx = { window: {} }; ctx.window.window = ctx.window; vm.createContext(ctx)
+    vm.runInContext(await readFile(OUT, 'utf8'), ctx)
+    for (const [key, v] of Object.entries(ctx.window.FARPLAN || {})) {
+      const near = /인근 확정 단지 (\d+)m/.exec(v[6] || ''), adj = /인접 필지 (\d+)m/.exec(v[6] || '')
+      cache[key] = { zones: v[8] || [v[0]], pnu: v[4], checkedAt: v[5], source: v[7],
+        nearbyComplexMeters: near ? +near[1] : undefined, nearbyMeters: adj ? +adj[1] : undefined,
+        nearbyComplexKey: v[11] || undefined, parcelZones: v[12] || undefined, restored: true }
+    }
+    console.log(`기존 apt-farplan.js에서 ${Object.keys(cache).length}곳 복원`)
+  } catch (error) { console.error(`기존 결과 복원 실패: ${error.message}`) }
+}
 let rules = { authorities: {} }
 try { rules = JSON.parse(await readFile(RULES_FILE, 'utf8')) } catch {
   console.error('먼저 npm run apt:far-rules를 실행해 지자체 조례표를 만드세요.')
