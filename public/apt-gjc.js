@@ -36,6 +36,8 @@ window.S4GJC={"11110|익선동|현대뜨레비앙":0.3038,"11110|숭인동|종�
       var w=Math.exp(-m*m/(2*600*600)); sw+=w; sv+=w*b[3]; });
     if(sw>0) out[a[0]]=.5*a[3]+.5*sv/sw; });
   for(var k in out) C[k]=Math.round(out[k]*1e4)/1e4; window.GJC_SMOOTH=Object.keys(out).length; })();
+/* 초고가 급지 하한(2026.11.15): 자체 시세 위치값(3배+)이 급지보다 0.3 넘게 높으면 −0.25까지 올림 */
+(function(){ var C=window.S4GJC; if(!C) return; var F={"11170|이촌동|LG한강자이":1.13,"11590|흑석동|아크로리버하임":0.96,"11170|보광동|신동아1":1.13,"11170|이촌동|래미안첼리투스":1.18,"11170|한남동|나인원한남":2.33,"11170|한남동|한남더힐":1.4,"11200|성수동1가|갤러리아포레":1.5,"11200|성수동1가|아크로서울포레스트":1.89,"11560|여의도동|브라이튼여의도":1.17,"11560|여의도동|여의도자이":0.92,"11650|반포동|래미안원베일리":1.47,"11650|반포동|래미안원펜타스":1.55,"11650|서초동|래미안 리더스원":1.0,"11650|서초동|서초그랑자이":1.06,"11680|삼성동|아이파크":1.49,"11680|청담동|에테르노청담":2.21,"41135|백현동|판교푸르지오그랑블":1.01}; for(var k in F){ if(C[k]==null||C[k]<F[k]) C[k]=F[k]; } })();
 /* 6억 초과 탭: 백분위 기준표(S4Q.G)를 실제 표시 단지(세 탭 합집합, 평형 수 가중)의 새 급지 분포로 다시 만듦 */
 (function(){ if(!(window.CAPT>6)||!window.PICKS||!window.S4Q) return; var F=window.FARD||{}, L=window.S4GJL||{}, C=window.S4GJC, v=[], hit=0;
   window.PICKS.forEach(function(d){ var f=F[d.n+'|'+d.area], k=typeof window.aptSourceKey==='function'?window.aptSourceKey(d):f&&f[6]?f[6]+'|'+d.area.split(' ').pop()+'|'+d.n:null, g=k?C[k]:null, x=g!=null?g:(L[d.area]||[])[0];
