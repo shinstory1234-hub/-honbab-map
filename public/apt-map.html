@@ -4,6 +4,8 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#ffffff">
+<link rel="icon" href="/icon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
 <title>아파트맵 · 수도권 아파트 단지 순위</title>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable.min.css">
 <style>
@@ -52,10 +54,10 @@ a{color:inherit;text-decoration:none}
 
 /* ── masthead ── */
 .masthead{display:flex;align-items:center;gap:24px;height:72px;padding:0 28px;border-bottom:1px solid var(--text);flex:none;z-index:21;background:var(--bg)}
-.wordmark{display:inline-flex;align-items:baseline;font-size:31px;font-weight:950;line-height:1;letter-spacing:-.095em;white-space:nowrap}
+.wordmark{display:inline-flex;align-items:center;font-size:31px;font-weight:950;line-height:1;letter-spacing:-.095em;white-space:nowrap}
 .wordmark{color:inherit;text-decoration:none;cursor:pointer;-webkit-tap-highlight-color:transparent}
 .wordmark:active{opacity:.6}
-.wordmark i{display:inline-block;width:7px;height:7px;margin-left:6px;background:var(--primary)}
+.wordmark .mark{width:.9em;height:.9em;margin-right:8px;align-self:center;flex:none}
 .caption{font-size:12px;color:var(--text-tertiary);padding-left:20px;border-left:1px solid var(--border);white-space:nowrap}
 .captab{display:inline-flex;border:1px solid var(--border);border-radius:4px;overflow-x:auto;overflow-y:hidden;flex:none;max-width:100%;scrollbar-width:none;-webkit-overflow-scrolling:touch}.captab::-webkit-scrollbar{display:none}
 .captab a{display:inline-flex;align-items:center;min-height:36px;padding:0 14px;font-size:14px;font-weight:700;color:var(--text-secondary,inherit);text-decoration:none;white-space:nowrap;-webkit-tap-highlight-color:transparent}
@@ -324,7 +326,7 @@ aside{order:-1;width:408px;flex:none;border-right:1px solid var(--border);backgr
   </section>
 </div>
 <header class="masthead">
-  <a class="wordmark" id="home" href="apt-map.html" aria-label="아파트맵 처음 화면으로">아파트맵<i></i></a>
+  <a class="wordmark" id="home" href="apt-map.html" aria-label="아파트맵 처음 화면으로"><svg class="mark" viewBox="0 0 200 200" aria-hidden="true"><rect width="200" height="200" rx="46" fill="#0066FF"/><path fill="#fff" d="M44 52h112v20H44zM72 72h20v60H72zM108 72h20v60h-20zM36 132h128v20H36z"/></svg>아파트맵</a>
   <nav class="captab" aria-label="가격대"><a href="apt-map.html" id="cap6">6억 이하</a><a href="apt-map.html?cap=10" id="cap10">6~10억</a><a href="apt-map.html?cap=15" id="cap15">10~15억</a><a href="apt-map.html?cap=20" id="cap20">15~20억</a><a href="apt-map.html?cap=25" id="cap25">20~25억</a><a href="apt-map.html?cap=30" id="cap30">25~30억</a><a href="apt-map.html?cap=35" id="cap35">30억 이상</a></nav>
   <span class="caption" id="asof">서울·경기·인천</span>
   <div class="search"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg><input id="q" placeholder="단지명, 동네로 찾기" autocomplete="off" enterkeyhint="search"><button type="button" id="clearSearch" aria-label="검색어 지우기" hidden>×</button></div>
