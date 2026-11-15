@@ -979,6 +979,7 @@ function* recomputeSteps(){
       d.ugRaw=ug; d.urRaw=ur; d.upSrc=d.rbw>=.5?'rb':'now';
       const fz=d.m&&d.m.fz; d.dead=(!fz||d.m.rm||stOf(d)>=35)?0:clamp01((age-27)/3)*(1-fz.f);
       if(d.dead>0&&/추정/.test(d.m.fol)) d.dead*=.5;   // 기존 용적률이 추정치면 사업성 차이가 노이즈(분담금 비율 0.28 vs 0.31에 사업성 92% vs 75%) — 막힘 판정 절반
+      if(d.m&&/자동조사 미완료/.test(d.m.fnl||'')) d.dead=0;   // 용도지역 미조사(6억 초과 단지 대부분)면 신규 용적률이 임시값이라 사업성 판정 안 함(2026.11.16, 하계 미성 '사업성 낮음' 오표시)
     }
     yield;
   }
