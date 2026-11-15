@@ -142,6 +142,7 @@
 
   window.APTDX=function(d,body){
     var k=lkey(d); if(!k||!body) return;
+    body.querySelectorAll('.dxbox').forEach(function(x){ x.remove(); });
     var box=document.createElement('div'); box.className='dxbox';
     box.innerHTML='<section class="sec" data-dx="1"><h3>실거래가</h3><p class="note">실거래 불러오는 중…</p></section>';
     var anchor=null; body.querySelectorAll('section.sec > h3').forEach(function(h){ if(!anchor&&/^(시세 흐름|사면 드는 돈)/.test(h.textContent.trim())) anchor=h.parentNode; });
