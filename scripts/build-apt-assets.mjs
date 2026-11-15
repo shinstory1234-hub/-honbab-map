@@ -53,6 +53,12 @@ export function buildAptAssets(root, output = path.join(root, 'public')) {
       let code = fs.readFileSync(path.join(sourceDir, file), 'utf8');
       if (file === 'apt-picks10.js') code = code.replace(/^if\(document\.write\).*$/m, '');
       if (cap === 6 && file === 'apt-s4.js' && peak6) { code = code.replace(peak6.from, peak6.to); if (peak6.estFrom) code = code.replace(peak6.estFrom, peak6.estTo); }
+      // 6억 이하 탭에서는 고밀도 감점 함수가 항상 0이다. 높은 가격대 전용 코드는 6억 탭 번들에서 제외(순위 불변).
+      if (cap === 6 && file === 'apt-s4.js') {
+        const a = code.indexOf('function s4DensityAdj(d){'), b = code.indexOf('/* 상품성(', a);
+        if (a < 0 || b <= a) throw new Error('Cannot isolate over-6억 density scoring for legacy tab');
+        code = code.slice(0, a) + 'function s4DensityAdj(d){return {pen:0,far:null,src:null};}' + code.slice(b);
+      }
       if (/document\.write\s*\(/.test(code)) throw new Error(`Unexpanded script dependency: ${file}`);
       code = minifyKeep(code, file);   // 전송량: terser로 주석·공백만 제거(이름·식은 그대로, compress·mangle 끔)
       if (isolated.test(file)) flush();
