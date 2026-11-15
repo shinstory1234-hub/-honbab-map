@@ -1185,7 +1185,10 @@ const badgeHTML=d=>[{label:d.tier.k,color:d.tier.c},...cardFeatures(d).map(k=>FE
 /* 2026.11.15 UX: 저장한 단지(♥, 이 기기에만 저장)·정렬. 정렬을 바꿔도 순위 숫자는 추천 순위 그대로 */
 const FAV=(()=>{ try{ return new Set(JSON.parse(localStorage.getItem('aptFav')||'[]')); }catch(e){ return new Set(); } })();
 const favSave=()=>{ try{ localStorage.setItem('aptFav',JSON.stringify([...FAV])); }catch(e){} };
-const SORTS=[['rank','추천순',null],['price','가격 낮은순',(a,b)=>a.p-b.p],['new','신축순',(a,b)=>b.year-a.year],['units','세대수 많은순',(a,b)=>unitN(b)-unitN(a)],['station','역 가까운순',(a,b)=>((a.cur&&a.cur.m)??1e9)-((b.cur&&b.cur.m)??1e9)],['ppp','평당가 낮은순',(a,b)=>a.p/a.py-b.p/b.py],['deal','거래 많은순',(a,b)=>dealN(b)-dealN(a)],['peak','전고점 회복 높은순',(a,b)=>(pkR(b)??-1)-(pkR(a)??-1)]];
+const SORTS=[['rank','추천순',null],['price','가격 낮은순',(a,b)=>a.p-b.p],['new','신축순',(a,b)=>b.year-a.year],['units','세대수 많은순',(a,b)=>unitN(b)-unitN(a)],['station','역 가까운순',(a,b)=>((a.cur&&a.cur.m)??1e9)-((b.cur&&b.cur.m)??1e9)],['ppp','평당가 낮은순',(a,b)=>a.p/a.py-b.p/b.py],['deal','거래 많은순',(a,b)=>dealN(b)-dealN(a)],['peak','전고점 회복 높은순',(a,b)=>(pkR(b)??-1)-(pkR(a)??-1)],['race','최고가 대비 하락순',(a,b)=>(a.rc??9)-(b.rc??9)]];
+/* 2026.11.16 리치고 차용 상세(실거래 차트 등)·하락 레이스: apt-dx.js를 처음 필요할 때만 받음(첫 화면 번들 밖) */
+const loadDx=cb=>{ if(window.APTDX) return cb(); const q=window._dxq=window._dxq||[]; q.push(cb); if(q.length>1) return; const s=document.createElement('script'); s.src='/apt-dx.js?v=1'; s.onload=()=>{ q.splice(0).forEach(f=>{ try{f();}catch(e){} }); }; document.head.appendChild(s); };
+window.aptRerender=()=>render();
 const dealN=d=>(priceEv(d)||{n:0}).n||0, pkR=d=>d.s4&&d.s4.peakR!=null?d.s4.peakR:typeof peakLoRatio==='function'?peakLoRatio(d):null;
 const PICKMENU={f:['유형·순위',()=>[['all','전체 유형'],...FILTERS.filter(x=>x[0]!=='all'&&x[0]!=='fav')]],pb:['가격대',()=>PB],size:['평형',()=>SIZES],age:['연식',()=>AGES],sort:['정렬',()=>SORTS]};
 /* 2026.11.15 UX: 선택 목록을 휴대폰 기본 창 대신 아래에서 올라오는 시트로 */
@@ -1369,7 +1372,7 @@ function renderList(){
     h+=`<article class="row" data-i="${D.indexOf(d)}" data-s="1" tabindex="0" role="button" aria-label="${esc(publicComplexName(d)+' '+d.py+'평 상세보기')}">
       <span class="rk tnum">${String(d.rank).padStart(2,'0')}</span>
       <div style="min-width:0"><div class="kicker">${badgeHTML(d)}<span>${esc(d.area)}</span></div>
-        <h3>${esc(publicComplexName(d))}${sibs(d).length>1?` <small class="tp">${d.py}평</small>`:''}</h3><p>${NOUP()?`급지 ${Math.round((d.s4&&d.s4.pG)??50)} · ${unitN(d).toLocaleString()}세대${d.unitsOwn?'(매매 대상)':''}${d.unitsN>1?'(추정)':''}`:`입지 ${d.loc.toFixed(1)}`} · ${d.cur&&d.cur.n?esc(d.cur.n)+' '+fmtM(d.cur.m):'역 계산 중'}${NOUP()?'':` · 적정가 대비 ${d.up>=0?'+':''}${Math.round(d.up*100)}%`}</p>
+        <h3>${esc(publicComplexName(d))}${sibs(d).length>1?` <small class="tp">${d.py}평</small>`:''}</h3><p>${NOUP()?`급지 ${Math.round((d.s4&&d.s4.pG)??50)} · ${unitN(d).toLocaleString()}세대${d.unitsOwn?'(매매 대상)':''}${d.unitsN>1?'(추정)':''}`:`입지 ${d.loc.toFixed(1)}`} · ${d.cur&&d.cur.n?esc(d.cur.n)+' '+fmtM(d.cur.m):'역 계산 중'}${NOUP()?'':` · 적정가 대비 ${d.up>=0?'+':''}${Math.round(d.up*100)}%`}${state.sort==='race'&&d.rc!=null?` · <b style="color:#e5484d">최고가 대비 ${(d.rc*100).toFixed(1)}%</b>`:state.sort==='peak'&&pkR(d)!=null?` · 전고점 대비 ${((pkR(d)-1)*100).toFixed(1)}%`:''}</p>
       ${singleComplex?'':CAPT!==6&&sibs(d).length>1?`<p class="sibl">같은 단지 ${sibs(d).filter(x=>x!==d).sort((x,y)=>x.py-y.py).map(x=>`${x.py}평 ${short(x.p)}${x.m3?.price?.warn?' ⚠':''}`).join(' · ')}</p>`:''}</div>
       <div class="px tnum"><strong${d.m3?.price?.warn?' style="color:#b91c1c"':''}>${d.m3?.price?.warn?'추정 ':''}${short(cashOf(d))}</strong><span>${d.py}평 · ${d.opt?esc(d.opt.kind):d.reg==='free'?'비규제':'토허'}</span><b>${d.score.toFixed(1)}점</b></div>
       ${singleComplex?m3FlatOptions(d):''}
@@ -1705,9 +1708,10 @@ function renderDetail(i){
     setTimeout(()=>{ if(sb.isConnected) sb.textContent='공유'; },2000); };
   $('#favBtn').onclick=()=>{ const k=d.cxKey, on=!FAV.has(k); on?FAV.add(k):FAV.delete(k); favSave(); const fb=$('#favBtn'); fb.textContent=on?'♥ 저장됨':'♡ 저장'; fb.style.color=on?'#e5484d':'inherit'; fb.setAttribute('aria-pressed',on); };
   b.querySelectorAll('[data-sib]').forEach(x=>x.onclick=()=>{ const j=+x.dataset.sib; if(j!==i) select(j,false); });
+  loadDx(()=>APTDX(d,b));
 }
 
-function render(){ const pb=document.getElementById('body'); if(pb&&pb.hasAttribute('data-pre')){ pb.removeAttribute('data-pre'); pb.style.cursor=''; }   // 첫 화면 미리보기(apt-first*.js) 표시 해제
+function render(){ if(state.sort==='race'&&!window.RACE) loadDx(()=>APTRACE()); const pb=document.getElementById('body'); if(pb&&pb.hasAttribute('data-pre')){ pb.removeAttribute('data-pre'); pb.style.cursor=''; }   // 첫 화면 미리보기(apt-first*.js) 표시 해제
   $('#clearSearch').hidden=!state.q;
   { const rb=document.getElementById('resetBtn'); if(rb) rb.hidden=!(state.q||state.browse||state.sel!=null||state.f!=='all'||state.pb!=='all'||state.size!=='all'||(state.age&&state.age!=='all')||state.sort!=='rank'); }
   state.sel==null?renderList():renderDetail(state.sel); if(map) queueMap(); }
