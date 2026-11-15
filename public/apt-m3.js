@@ -184,7 +184,9 @@
   const flatPy=Number(d.py)||0, flatAge=Number.isFinite(years)?2026-years:0;
   // 2026.11.14 전수 재점검: 8/4점으로는 의도가 안 지켜졌음 — 파크리오 14평이 10~15억 1위, 6~10억 상위 30위 중 9곳이
   // 25년 이상 구축 16~18평(거여1·강변·가양6·현대리버빌 16~18평 등). 14평 이하 18점, 25년 이상 구축 18평 이하 +9점으로 강화.
-  const tiny=(flatPy>0&&flatPy<=14?18:0)+(flatPy>0&&flatPy<=18&&flatAge>=25?9:0);
+  // 2026.11.16(경승 "미미삼 14평 1098위는 말이 안 됨"): 공식 정비절차(추진위·입안 0.5 이상) 단지의 소형은 '재건축 기대'가 아니라
+  //   실제 입주권 진입 평형 → 15~18평 구축 감점 면제, 13~14평은 18+9 → 9, 12평 이하(원룸급)는 18 유지.
+  const tiny=redevStage>=.5?(flatPy>0&&flatPy<=12?18:flatPy>0&&flatPy<=14?9:0):(flatPy>0&&flatPy<=14?18:0)+(flatPy>0&&flatPy<=18&&flatAge>=25?9:0);
   const peakR=typeof peakLoRatio==='function'?peakLoRatio(d):null;
   const peakEst=Number.isFinite(peakR)&&typeof peakLoIsEst==='function'&&peakLoIsEst(d);
   const peakPen=Number.isFinite(peakR)?25*clamp((100-peakR)/25,0,1):0;
