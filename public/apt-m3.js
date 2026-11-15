@@ -164,9 +164,12 @@
   const tiny=(flatPy>0&&flatPy<=14?18:0)+(flatPy>0&&flatPy<=18&&flatAge>=25?9:0);
   const peakR=typeof peakLoRatio==='function'?peakLoRatio(d):null;
   const peakPen=Number.isFinite(peakR)?25*clamp((100-peakR)/25,0,1):0;
-  const score=clamp(Object.values(parts).reduce((sum,v)=>sum+v,0)-density-hill-jubok-pricePenalty-tiny-peakPen+verifiedProgress);
+  // 20억 이상 권역 위계(2026.11.15, 경승 결정): 같은 점수대면 강남·서초·송파·용산 우선(+3), 마포·서대문은 −2.
+  //   실거래 급지만으로는 마포 아현(평당가 수도권 중위의 2.24배)이 세곡·가락과 같은 급으로 잡히고, 도심 직주·교통·대단지가 겹쳐 20~25억 1~3위를 독식했다.
+  const ar=String(d.area||''), region=cap>=25?(/^서울 (강남구|서초구|송파구|용산구)/.test(ar)?3:/^서울 (마포구|서대문구)/.test(ar)?-2:0):0;
+  const score=clamp(Object.values(parts).reduce((sum,v)=>sum+v,0)-density-hill-jubok-pricePenalty-tiny-peakPen+verifiedProgress+region);
   return {score,raw,baseRaw,parts,price,penalties:{density,hill,jubok,price:pricePenalty,tiny,peak:peakPen},peakRatio:Number.isFinite(peakR)?peakR/100:null,
-    bonuses:{verifiedProgress},verifiedProject:project?{zone:project.zone,phase:project.phase,date:project.date}:null,
+    bonuses:{verifiedProgress,region},verifiedProject:project?{zone:project.zone,phase:project.phase,date:project.date}:null,
     far:s.density?.far??null,farSrc:s.density?.src??'',
     model:'M3 (공식 정비 진행 단계·가격 근거 감점 백테스트 전)'};
  }
@@ -182,7 +185,7 @@
   const f=x=>Number(x??0).toFixed(1);
   const w=root.CAPT===15?weights:baselineWeights;
   const parts=[['장기 급지','G'],['직주','J'],['교통','T'],['세대수','U'],['상품성','Q'],['평형 효용','S']].map(([label,key])=>[label,key,w[key]*100]);
-  return 'M3 종합 '+f(m.score)+'점 = '+parts.map(([label,key,w])=>label+' '+f(m.raw[key])+' × '+w+'%').join(' + ')+(m.penalties.density?' − 고밀도 '+f(m.penalties.density):'')+(m.penalties.hill?' − 언덕 '+f(m.penalties.hill):'')+(m.penalties.jubok?' − 주상복합 '+f(m.penalties.jubok):'')+(m.penalties.price?' − 가격 신뢰도 '+f(m.penalties.price):'')+(m.penalties.tiny?' − 초소형 평형 '+f(m.penalties.tiny):'')+(m.penalties.peak?' − 전고점 미회복 '+f(m.penalties.peak)+'(22년 고점 대비 '+Math.round(m.peakRatio*100)+'%)':'')+(m.bonuses?.verifiedProgress?' + 공고 검증 정비진행 '+f(m.bonuses.verifiedProgress):'')+' · 검증 전 잠정 산식';
+  return 'M3 종합 '+f(m.score)+'점 = '+parts.map(([label,key,w])=>label+' '+f(m.raw[key])+' × '+w+'%').join(' + ')+(m.penalties.density?' − 고밀도 '+f(m.penalties.density):'')+(m.penalties.hill?' − 언덕 '+f(m.penalties.hill):'')+(m.penalties.jubok?' − 주상복합 '+f(m.penalties.jubok):'')+(m.penalties.price?' − 가격 신뢰도 '+f(m.penalties.price):'')+(m.penalties.tiny?' − 초소형 평형 '+f(m.penalties.tiny):'')+(m.penalties.peak?' − 전고점 미회복 '+f(m.penalties.peak)+'(22년 고점 대비 '+Math.round(m.peakRatio*100)+'%)':'')+(m.bonuses?.verifiedProgress?' + 공고 검증 정비진행 '+f(m.bonuses.verifiedProgress):'')+(m.bonuses?.region>0?' + 권역(강남3구·용산) '+f(m.bonuses.region):m.bonuses?.region<0?' − 권역(마포·서대문) '+f(-m.bonuses.region):'')+' · 검증 전 잠정 산식';
  }
  function why(d){
   const m=d.m3;if(!m)return '';
