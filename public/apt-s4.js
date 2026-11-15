@@ -195,7 +195,7 @@ function s4DensityAdj(d){
   if(!(window.CAPT>6))return {pen:0,far:null,src:null};
   const key=d.cxKey||(d.n+'|'+d.area),f=((window.FARD||{})[key]||[]),src=String(f[1]||''),raw=Number(f[0]),
     mix=!!(window.MIXHI&&window.MIXHI.has((d.area||'').split(' ').pop()+'|'+d.n)),
-    measured=src==='F'||src==='L'||/건축물대장|정비계획|실측/.test(src);
+    measured=src==='F'||src==='L'||/건축물대장|정비계획|실측|KB부동산|리치고/.test(src);
   // 인근 CXP(최대 300m) 무검증 재사용 금지: 30m·세대수 완전일치의 검증된 매칭만 허용.
   const exact=(window.APT_CXP_MATCH||{})[key],cxFar=exact?exact[0]:null,
     verified=measured&&Number.isFinite(raw)&&raw>0?raw:null,

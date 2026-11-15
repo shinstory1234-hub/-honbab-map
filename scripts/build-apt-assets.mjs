@@ -31,7 +31,7 @@ export function buildAptAssets(root, output = path.join(root, 'public')) {
   const consentEnd = app.indexOf('const KAKAO_JS_KEY=');
   if (consentEnd < 0) throw new Error('Consent script boundary changed');
   const consent = app.slice(0, consentEnd).replace("u.pathname.split('/').pop()+u.search", "u.pathname+u.search");
-  const main = writeAsset("if(window.__aptLoadFailed) throw new Error('Apartment data failed to load');\n"+app.slice(consentEnd), ['apt-map.html:application']);
+  const main = writeAsset(minifyKeep("if(window.__aptLoadFailed) throw new Error('Apartment data failed to load');\n"+app.slice(consentEnd), 'apt-map-app'), ['apt-map.html:application']);
   const isolated = /^apt-(?:invest\d+|s4q\d*)\.js$/;
   const peak6 = peakLoForCap6(sourceDir);
   for (const cap of [6, 10, 15, 20, 25, 30, 35]) {

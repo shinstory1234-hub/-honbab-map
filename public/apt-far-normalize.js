@@ -45,3 +45,17 @@
  }
  W.APT_FAR_PASS2_N=count;
 })(window);
+
+/* 3차 공개 단지정보 교차검증: KB부동산 51개, 리치고 120개.
+   근거: docs/apt-far-kb-crosscheck-51-2026-11-16.csv, docs/apt-far-richgo-252-compact-2026-11-16.csv.
+   4자리 충돌검증 해시 + 출처 1비트 포함 용적률(%) 3자리. 공식값(F/L) 유지. */
+(function(W){
+ if(!(W.CAPT>6)||!W.FARD)return;
+ const h=k=>{let z=5381;for(let i=0;i<k.length;i++)z=((z*33)^k.charCodeAt(i))>>>0;return z.toString(36).slice(-4).padStart(4,'0');};
+ const p='dv8q0b437kl0dqip8v09y6mvx082yok00c0gn0x08o16yg07mdm6z07m25dm07ms75l09o4tkg0a8p0l90ccjbt009yclrp06ggl6d0boqb9g0da4b0o0co1rbh0du9ywd0c6om4s0eie0bo0dcnkbu0eewaer06sk51006wpgja07qy2lz06yc2ht0d6jegp0digslw09y481u0b2hpvp0kco9vt0ds9zks0duq59l0dsk27x0duql0g0sc95ht0agk8hl0bocm3g0fc1joh0au3g6l0caevr90ay0bj50omzkl10bssbmn0aixqy0056cip90c4fpzo0c6477l0fcsafi0dks0cs0cokr1n08rj6m70ett0yk09xxio00cly5hx08rwfj909zu7ce0cfi30g0b14z280a1tos80efirob081cp680adytw108nsbch0lpv44j0blx1ch0bn5izh0cpuleu0dv0vxm09xy4b509xustc08r6xfj0a1bu0u09n77260d1rt1o0cpmgmo0bh6hl80axapnp0hvnhjn0chyimt0bhgta50j1p78d0dd11es0d9isww0enbko108tmbnc0bna9680d18e340bl3ird0bv31ig0jnwdx50a3y1mk09t7zlz07b5gxp0c1tcyu0cfe2cw08jcfnl09fjpoe09tvba80d1lcll0d1tnzd0cxsuan0a9tlc00bf7mos0dz1sh40a14f110cxc68j08p8tmi0dpseqw0drhgsl07byro907bi5eh0bpa6lg06pbtb50cppk290cjdryl0a9lii00bx0gdw0el5ph50a5fq4d0efraf10e7vbpk0b9igya0dhs2op0crzc9l07lwq240d1vqqo08r2ump0g9w22g07dk0do09l0jl107fb6do0b3pxko0c3343x05ha9ld08fx7140ad583n0cvrvya0dvtl910dzafk408pdrj00ez2xjg0fhdcps0db7mw20f5fdo50bd3ebn0d1s7ls0apddw80c3zev00959p8t0azslz50hf4ekc0dxp6340h1nl1w0bjn1o70e5rrro0ah0xws09by0aw0dh3mes0dbey9t07t93hh0cv60fd0cvt61k08v7fth0ahrisk0anckph06fev580d3pso10a7ib730bbilc80kr',m=new Map();
+ for(let i=0;i<p.length;i+=7){const v=parseInt(p.slice(i+4,i+7),36);m.set(p.slice(i,i+4),[v>>1,v&1?'리치고':'KB부동산']);}
+ let n=0;for(const k in W.FARD){const f=W.FARD[k];if(!f||Number(f[0])>0&&!/^(E|T)/.test(String(f[1]||'')))continue;
+  const v=m.get(h(k));if(!v)continue;f[0]=v[0];f[1]=v[1];n++;
+ }
+ W.APT_FAR_WEB_N=n;
+})(window);

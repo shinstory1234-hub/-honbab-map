@@ -506,7 +506,7 @@ const TINY=13;   // 2026.10.24: 전용 약 32.5㎡ 미만(5㎡ 묶음 30㎡ 이�
    직접 고른 단지도 같은 기준으로 덮어씀 — 지금 시세가 6억을 넘는 평형은 빼고, 남는 평형이 없으면 단지를 뺌 */
 const curSrc=t=>window.LIVE_ON?`최근 12개월 실거래 ${t.n}건(3개월 ${t.n3}건, 직거래 제외)을 오늘 기준으로 환산해 최근 거래에 무게를 둔 시세`:t.n3>=5?`최근 3개월 실거래 ${t.n3}건 중위`:t.n3>0?`최근 3개월 ${t.n3}건 중위와 12개월 ${t.n}건 환산 중위를 ${t.n3}:2로 섞음`:`최근 12개월 실거래 ${t.n}건을 시세 변동만큼 오늘 기준으로 환산한 중위`;   // 2026.10.26: 3개월 거래가 1~4건이면 버리지 않고 건수만큼 반영(급등 단지 과소평가 방지)
 const isSmallOnly=d=>!!(window.SMALLONLY&&SMALLONLY.has(d.area.split(' ').pop()+'|'+d.n));
-const farOf=d=>{ if(CAPT>6){const k=gkey(d),f=((window.FARD||{})[k]||[]),s=String(f[1]||'');const a=s==='L'||s==='F'||/건축물대장|정비계획|실측/.test(s)?Number(f[0])||0:0;return Math.max(a,(window.APT_CXP_MATCH||{})[k]?.[0]||0);} const a=((window.FARD||{})[gkey(d)]||[])[0]||0, c=nearCx(d.g&&d.g.lat?d:{...d,g:(typeof GEO!=='undefined'&&GEO[gkey(d)])||{}}), b=c?c[4]:0; return Math.max(a<2000?a:0,b<2000?b:0); };
+const farOf=d=>{ if(CAPT>6){const k=gkey(d),f=((window.FARD||{})[k]||[]),s=String(f[1]||'');const a=s==='L'||s==='F'||/건축물대장|정비계획|실측|KB부동산|리치고/.test(s)?Number(f[0])||0:0;return Math.max(a,(window.APT_CXP_MATCH||{})[k]?.[0]||0);} const a=((window.FARD||{})[gkey(d)]||[])[0]||0, c=nearCx(d.g&&d.g.lat?d:{...d,g:(typeof GEO!=='undefined'&&GEO[gkey(d)])||{}}), b=c?c[4]:0; return Math.max(a<2000?a:0,b<2000?b:0); };
 const isOfficeType=d=>{ const so=window.SMALLONLY&&SMALLONLY.has(d.area.split(' ').pop()+'|'+d.n), ts=(d.types||[{py:d.py}]), small=so||ts.every(t=>t.py<=20), f=farOf(d);
   // 2026.11.3: 용적률 600% 이상 + 업무시설·오피스텔 겸용 주상복합(apt-mixhi.js)은 가장 큰 평형이 25평 이하면 오피스텔형으로 봄 — 24평 하나 섞여 있다고 빠져나가던 단지(대우디오빌 967%·래미안서초유니빌 977%)
   return (small&&f>=350)||(window.MIXHI&&MIXHI.has(d.area.split(' ').pop()+'|'+d.n)&&ts.every(t=>t.py<=25)); };
@@ -863,7 +863,7 @@ function anchorOf(d,fw){ const b=d.bench||{}, n=b.name||'';
 /* ---- 대지지분(s11): window.PLAT[gkey] = [이 평형 대지지분㎡, 출처, 실측 용적률%] ---- */
 /* 대지지분(추정): 등기 대지권이 아니라 건축물대장 실측 용적률로 '이 평형 공급면적 ÷ 용적률'. PLAT[0]은 수집 당시 어떤 평형 기준인지 기록이 없어
    (대표 평형이 바뀐 단지는 13~50% 부풀려짐 — 예: 하안 주공1 14평 10.3평 → 8.2평) 평형 면적에서 바로 계산하고 PLAT은 용적률·출처만 씀 */
-const landOf=d=>{ if(CAPT>6){const f=FD(d),v=Number(f&&f[0]),src=String(f&&f[1]||'');if(!(v>=100&&v<=1800&&(src==='L'||src==='F'||/건축물대장|정비계획|실측|공동주택 확인자료|KB부동산/.test(src))))return null;return [d.py*3.3058*100/v,fsrc(src),v];} const v=(window.PLAT||{})[gkey(d)]; if(!(v&&v[0]>0&&v[2]>0)) return null; return [d.py*3.3058/(v[2]/100),v[1],v[2]]; };
+const landOf=d=>{ if(CAPT>6){const f=FD(d),v=Number(f&&f[0]),src=String(f&&f[1]||'');if(!(v>=100&&v<=1800&&(src==='L'||src==='F'||/건축물대장|정비계획|실측|공동주택 확인자료|KB부동산|리치고/.test(src))))return null;return [d.py*3.3058*100/v,fsrc(src),v];} const v=(window.PLAT||{})[gkey(d)]; if(!(v&&v[0]>0&&v[2]>0)) return null; return [d.py*3.3058/(v[2]/100),v[1],v[2]]; };
 /* ---- 사업성 → 실현가능성(s11, 가정 · 횡단면 근거) ----
    x = 같은 평형으로 1:1 재건축할 때 분담금 ÷ 그 평형 신축 분양가 = (사업비 − (받는면적/현재면적 − 1) × (분양가 − 사업비)) ÷ 분양가
    30년+ 노후 892곳 중 x ≤ .3 은 22%(12/54)가 안전진단 통과 이상(st≥40), .3~.6 은 1%(2/201), .6 초과는 0.2%(1/637).
