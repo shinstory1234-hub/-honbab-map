@@ -1,6 +1,8 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import vm from 'node:vm';
+import {createRequire} from 'node:module';
+const terser = createRequire(import.meta.url)('next/dist/compiled/terser');
 import {createHash} from 'node:crypto';
 import {fileURLToPath} from 'node:url';
 import zlib from 'node:zlib';
@@ -49,10 +51,10 @@ export function buildAptAssets(root, output = path.join(root, 'public')) {
       // These URLs are rewritten to live upstream data. Never freeze them at build time.
       if (file === 'apt-live.js' || file === 'apt-live6.js' || file === 'apt-geo.js') { flush(); urls.push(file); continue; }
       let code = fs.readFileSync(path.join(sourceDir, file), 'utf8');
-      code = stripComments(code);   // 전송량: 줄 전체 주석·블록 주석 제거(소스 파일 주석은 그대로 둠)
       if (file === 'apt-picks10.js') code = code.replace(/^if\(document\.write\).*$/m, '');
-      if (cap === 6 && file === 'apt-s4.js' && peak6) code = code.replace(peak6.from, peak6.to);
+      if (cap === 6 && file === 'apt-s4.js' && peak6) { code = code.replace(peak6.from, peak6.to); if (peak6.estFrom) code = code.replace(peak6.estFrom, peak6.estTo); }
       if (/document\.write\s*\(/.test(code)) throw new Error(`Unexpanded script dependency: ${file}`);
+      code = minifyKeep(code, file);   // 전송량: terser로 주석·공백만 제거(이름·식은 그대로, compress·mangle 끔)
       if (isolated.test(file)) flush();
       chunk.push(`/* ${file} */\n${code}`); names.push(file);
       if (isolated.test(file)) flush();
@@ -79,6 +81,13 @@ export function buildAptAssets(root, output = path.join(root, 'public')) {
    키·해시는 apt-s4.js peakLoRatio와 같은 식 → 6억 탭 결과 동일. 6억 초과 탭은 실시간 시세로 가격대를 다시 나눠(apt-livefix) 미리 자를 수 없어 그대로 */
 // 줄 단위 주석만 제거 — 코드 줄 안의 주석·문자열은 건드리지 않는다(안전 우선).
 // 줄이 '/*'로 시작하면 '*/'로 끝나는 줄까지, 줄이 '//'로 시작하면 그 줄만 지운다. 결과는 vm.Script로 문법 검사.
+export function minifyKeep(code, file) {
+  const r = terser.minify_sync({[file]: code}, {compress: false, mangle: false, format: {comments: false, ascii_only: false}});
+  if (!r || typeof r.code !== 'string') throw new Error('minify failed: ' + file);
+  new vm.Script(r.code);
+  return r.code;
+}
+
 export function stripComments(code) {
   const out = []; let inBlock = false;
   for (const line of code.split('\n')) {
@@ -106,9 +115,9 @@ function peakLoForCap6(sourceDir) {
     for (let i = 0; i < k.length; i++) x = ((x * 33) ^ k.charCodeAt(i)) >>> 0;
     want.add(x.toString(36).padStart(7, '0').slice(-5));
   }
-  let kept = '';
-  for (let i = 0; i + 7 <= m[1].length; i += 7) if (want.has(m[1].slice(i, i + 5))) kept += m[1].slice(i, i + 7);
-  return {from: m[0], to: `const PEAKLO_PACK="${kept}"`};
+  const cut = pack => { let kept = ''; for (let i = 0; i + 7 <= pack.length; i += 7) if (want.has(pack.slice(i, i + 5))) kept += pack.slice(i, i + 7); return kept; };
+  const e = /const PEAKEST_PACK="([0-9a-z]*)"/.exec(s4);
+  return {from: m[0], to: `const PEAKLO_PACK="${cut(m[1])}"`, estFrom: e ? e[0] : null, estTo: e ? `const PEAKEST_PACK="${cut(e[1])}"` : null};
 }
 
 // 1원칙(2026.11.14): 절대 느려지면 안 된다. 탭별 전송량·요청 수·런타임 파일이 scripts/perf-budget.json을 넘으면 빌드 실패.

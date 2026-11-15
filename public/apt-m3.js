@@ -37,7 +37,7 @@
   return [10,15,20,25,30,35].includes(cap)&&Number(d?.p)>60000&&(cap===35?Number(d?.p)>=300000:Number(d?.p)<=300000);
  }
  // 가격의 불확실성은 '아파트 품질'이 아니라 예산 내 실매수 가능성에 대한 위험이다.
- // 검증 전 정책값: 준공 2년 이내는 거래량 부족만으로 감점하지 않는다.
+ // 검증 전 정책값: 준공 3년 이내는 거래량 부족만으로 감점하지 않는다.
  function priceConfidence(d,now=new Date()){
   const t=(d.types||[]).find(x=>Number(x.py)===Number(d.py));
   if(!t || !Number.isFinite(Number(t.n))) return {known:false,penalty:0,warn:false,level:'unknown'};
@@ -46,8 +46,11 @@
   const date=String(t.last||'').replace(/\./g,'-').slice(0,10);
   const parsed=/^20\d\d-\d\d-\d\d$/.test(date)?Date.parse(date+'T00:00:00Z'):NaN;
   const ageDays=Number.isFinite(parsed)?Math.max(0,Math.floor((now.getTime()-parsed)/86400000)):null;
-  const newborn=Number.isFinite(Number(d.year)) && Number(d.year)>=now.getUTCFullYear()-2;
-  const volume=newborn?0:n12===0?14:n12===1?11:n12===2?9:n12<=4?6:n12<=9?2:0;
+  // 입주 3년 이내(2026.11.15, 경승: "신축은 등기 안 나와서 거래 적음" — 입주 초기 등기 지연·전매제한·실거주의무로 거래가 적게 잡힘): 거래량 감점 없음, 경과 감점 최대 3
+  const newborn=Number.isFinite(Number(d.year)) && Number(d.year)>=now.getUTCFullYear()-3;
+  // 단, 거래 1건 이하인데 그마저 반년 넘은 평형은 신축이어도 가격 근거가 없다고 봄(힐스테이트신촌 16평 1건·11개월 전 → 10~15억 1위로 튀던 문제)
+  const thinOld=n12<=1&&(ageDays==null||ageDays>180), newbornEff=newborn&&!thinOld;
+  const volume=newbornEff?0:n12===0?14:n12===1?11:n12===2?9:n12<=4?6:n12<=9?2:0;
   const stale=ageDays==null?3:ageDays>270?8:ageDays>180?7:ageDays>90?3:0;
   const inversion=Number.isFinite(Number(t.pBeforeGuard))&&t.pBeforeGuard>0;
   const latestRaised=!!(t.latestPriceFloor&&t.lastSale>0&&t.pBeforeLatest>0);
@@ -69,7 +72,7 @@
       if(r>=need) corroborated={py:liquid.py,ratio:r}; }
   }
   const volEff=corroborated?volume*.3:volume, staleEff=corroborated?stale*.5:stale;
-  const penalty=clamp(volEff+(newborn?Math.min(3,staleEff):staleEff)+(inversion?3:0)+(latestRaised?2:0)+(latestBeyondBand?12:0),0,20);
+  const penalty=clamp(volEff+(newbornEff?Math.min(3,staleEff):staleEff)+(inversion?3:0)+(latestRaised?2:0)+(latestBeyondBand?12:0),0,20);
   const warn=inversion||latestRaised||latestBeyondBand||penalty>=4||(n12<5&&!newborn)||(n3===0&&ageDays!=null&&ageDays>90)||(ageDays!=null&&ageDays>180);
   const level=penalty>=8?'high':warn?'medium':'ok';
   return {known:true,n12,n3,last:date,ageDays,newborn,volume,stale,penalty,warn,level,corroborated,
@@ -171,12 +174,13 @@
   // 25년 이상 구축 16~18평(거여1·강변·가양6·현대리버빌 16~18평 등). 14평 이하 18점, 25년 이상 구축 18평 이하 +9점으로 강화.
   const tiny=(flatPy>0&&flatPy<=14?18:0)+(flatPy>0&&flatPy<=18&&flatAge>=25?9:0);
   const peakR=typeof peakLoRatio==='function'?peakLoRatio(d):null;
+  const peakEst=Number.isFinite(peakR)&&typeof peakLoIsEst==='function'&&peakLoIsEst(d);
   const peakPen=Number.isFinite(peakR)?25*clamp((100-peakR)/25,0,1):0;
   // 20억 이상 권역 위계(2026.11.15, 경승 결정): 같은 점수대면 강남·서초·송파·용산 우선(+3), 마포·서대문은 −2.
   //   실거래 급지만으로는 마포 아현(평당가 수도권 중위의 2.24배)이 세곡·가락과 같은 급으로 잡히고, 도심 직주·교통·대단지가 겹쳐 20~25억 1~3위를 독식했다.
   const ar=String(d.area||''), region=cap>=25?(/^서울 (강남구|서초구|송파구|용산구)/.test(ar)?3:/^서울 (마포구|서대문구)/.test(ar)?-2:0):0;
   const score=clamp(Object.values(parts).reduce((sum,v)=>sum+v,0)-density-hill-jubok-pricePenalty-tiny-peakPen+verifiedProgress+region);
-  return {score,raw,baseRaw,parts,price,penalties:{density,hill,jubok,price:pricePenalty,tiny,peak:peakPen},peakRatio:Number.isFinite(peakR)?peakR/100:null,
+  return {score,raw,baseRaw,parts,price,penalties:{density,hill,jubok,price:pricePenalty,tiny,peak:peakPen},peakRatio:Number.isFinite(peakR)?peakR/100:null,peakEst,
     bonuses:{verifiedProgress,region},redevStage,verifiedProject:project?{zone:project.zone,phase:project.phase,date:project.date}:null,
     far:s.density?.far??null,farSrc:s.density?.src??'',
     model:'M3 (공식 정비 진행 단계·가격 근거 감점 백테스트 전)'};
@@ -193,7 +197,7 @@
   const f=x=>Number(x??0).toFixed(1);
   const w=root.CAPT===10?loWeights:root.CAPT===15?weights:baselineWeights;
   const parts=[['장기 급지','G'],['직주','J'],['교통','T'],['세대수','U'],['상품성','Q'],['평형 효용','S'],['신축 가점(입지 연동)','X']].filter(([,key])=>w[key]).map(([label,key])=>[label,key,w[key]*100]);
-  return 'M3 종합 '+f(m.score)+'점 = '+parts.map(([label,key,w])=>label+' '+f(m.raw[key])+' × '+w+'%').join(' + ')+(m.penalties.density?' − 고밀도 '+f(m.penalties.density):'')+(m.penalties.hill?' − 언덕 '+f(m.penalties.hill):'')+(m.penalties.jubok?' − 주상복합 '+f(m.penalties.jubok):'')+(m.penalties.price?' − 가격 신뢰도 '+f(m.penalties.price):'')+(m.penalties.tiny?' − 초소형 평형 '+f(m.penalties.tiny):'')+(m.penalties.peak?' − 전고점 미회복 '+f(m.penalties.peak)+'(22년 고점 대비 '+Math.round(m.peakRatio*100)+'%)':'')+(m.bonuses?.verifiedProgress?' + 재건축 '+(['','조합설립','사업시행인가','관리처분인가'][m.redevStage]||'공람')+' '+f(m.bonuses.verifiedProgress):'')+(m.bonuses?.region>0?' + 권역(강남3구·용산) '+f(m.bonuses.region):m.bonuses?.region<0?' − 권역(마포·서대문) '+f(-m.bonuses.region):'')+' · 검증 전 잠정 산식';
+  return 'M3 종합 '+f(m.score)+'점 = '+parts.map(([label,key,w])=>label+' '+f(m.raw[key])+' × '+w+'%').join(' + ')+(m.penalties.density?' − 고밀도 '+f(m.penalties.density):'')+(m.penalties.hill?' − 언덕 '+f(m.penalties.hill):'')+(m.penalties.jubok?' − 주상복합 '+f(m.penalties.jubok):'')+(m.penalties.price?' − 가격 신뢰도 '+f(m.penalties.price):'')+(m.penalties.tiny?' − 초소형 평형 '+f(m.penalties.tiny):'')+(m.penalties.peak?' − 전고점 미회복 '+f(m.penalties.peak)+'(22년 고점 대비 '+Math.round(m.peakRatio*100)+'%'+(m.peakEst?', 고점 거래 없어 주변 단지로 추정':'')+')':'')+(m.bonuses?.verifiedProgress?' + 재건축 '+(['','조합설립','사업시행인가','관리처분인가'][m.redevStage]||'공람')+' '+f(m.bonuses.verifiedProgress):'')+(m.bonuses?.region>0?' + 권역(강남3구·용산) '+f(m.bonuses.region):m.bonuses?.region<0?' − 권역(마포·서대문) '+f(-m.bonuses.region):'')+' · 검증 전 잠정 산식';
  }
  function why(d){
   const m=d.m3;if(!m)return '';
