@@ -8,6 +8,9 @@
  // 구간을 전수 검증하여 균형을 보정한다. 다른 가격대의 검증된 순위는 유지한다.
  const weights=Object.freeze({G:.38,J:.08,T:.14,U:.17,Q:.20,S:.03});
  const baselineWeights=Object.freeze({G:.35,J:.10,T:.15,U:.20,Q:.15,S:.05});
+ // 6~10억(2026.11.15, 경승 "지축 29위는 말이 안 됨"): 상품성 7%를 '신축 가점'으로 떼어 급지나 직주(게이트 전)가 50→75일 때만 0→100% 인정.
+ //   입지 약한 외곽 신축(지축·수원 매교)은 가점이 없고, 서울·광명 준신축은 그대로 받는다.
+ const loWeights=Object.freeze({G:.35,J:.10,T:.12,U:.16,Q:.15,S:.05,X:.07});
  const unitCurve=[[100,0],[200,15],[300,27],[500,43],[700,55],[1000,66],[1500,78],[2000,87],[3000,95],[5000,100]];
  const ageCurve=[[0,100],[5,100],[10,85],[15,72],[20,60],[25,45],[30,30],[40,20]];
  const sizeCurve=[[10,0],[16,20],[20,48],[24,76],[30,93],[34,100]];
@@ -113,14 +116,16 @@
   // 과천 급지 보정(2026.11.14, 경승 결정): 실거래상 위치가치는 높지만(2017~2026 평균이 가락·마포 수준)
   // '서울 > 경기' 원칙에 따라 15억 이상 탭(15~20·20~25·25~30억)에서만 장기 급지 −3점. 6억 이하·6~15억 탭 불변.
   if([20,25,30,35].includes(cap)&&/^과천/.test(String(d.area||'')))raw.G=Math.max(0,raw.G-3);
+  const Jraw=raw.J;
   if(!integratedSite){ const jg=clamp((raw.G-45)/25,0,1); raw.J=raw.J*(.5+.5*jg); }
+  if(cap===10){const L=Math.max(raw.G,Jraw);raw.X=raw.Q*clamp((L-50)/(75-50),0,1);}
   const baseRaw={...raw};
   if(cap===15&&integratedSite){
     const gg=Array.isArray(root.S4CFG?.gGate)?root.S4CFG.gGate:[45,70];
     const gate=clamp((raw.G-gg[0])/(gg[1]-gg[0]),0,1);
     if(raw.U>50)raw.U=50+(raw.U-50)*gate;
   }
-  const effectiveWeights=cap===15?weights:baselineWeights;
+  const effectiveWeights=cap===10?loWeights:cap===15?weights:baselineWeights;
   // 재건축 추진 단계(2026.11.15, 경승 결정 "철주 12·13은 재건축 대장단지"): 조합설립인가 이상이 공식 자료로 확인된 단지는
   //   상품성이 45 아래로 떨어지지 않게(감가 멈춤) 하고, 아래에서 단계별 가점(조합설립 3 · 사업시행 4 · 관리처분 5)을 준다.
   const redevStage=root.APT_REDEV_STAGE?.[d.n+'|'+d.area]||(root.APT_REDEV_FACTS?.[d.n+'|'+d.area]?.phase==='operator_designated'?1:0);
@@ -186,8 +191,8 @@
  function detail(d){
   const m=d.m3;if(!m)return '';
   const f=x=>Number(x??0).toFixed(1);
-  const w=root.CAPT===15?weights:baselineWeights;
-  const parts=[['장기 급지','G'],['직주','J'],['교통','T'],['세대수','U'],['상품성','Q'],['평형 효용','S']].map(([label,key])=>[label,key,w[key]*100]);
+  const w=root.CAPT===10?loWeights:root.CAPT===15?weights:baselineWeights;
+  const parts=[['장기 급지','G'],['직주','J'],['교통','T'],['세대수','U'],['상품성','Q'],['평형 효용','S'],['신축 가점(입지 연동)','X']].filter(([,key])=>w[key]).map(([label,key])=>[label,key,w[key]*100]);
   return 'M3 종합 '+f(m.score)+'점 = '+parts.map(([label,key,w])=>label+' '+f(m.raw[key])+' × '+w+'%').join(' + ')+(m.penalties.density?' − 고밀도 '+f(m.penalties.density):'')+(m.penalties.hill?' − 언덕 '+f(m.penalties.hill):'')+(m.penalties.jubok?' − 주상복합 '+f(m.penalties.jubok):'')+(m.penalties.price?' − 가격 신뢰도 '+f(m.penalties.price):'')+(m.penalties.tiny?' − 초소형 평형 '+f(m.penalties.tiny):'')+(m.penalties.peak?' − 전고점 미회복 '+f(m.penalties.peak)+'(22년 고점 대비 '+Math.round(m.peakRatio*100)+'%)':'')+(m.bonuses?.verifiedProgress?' + 재건축 '+(['','조합설립','사업시행인가','관리처분인가'][m.redevStage]||'공람')+' '+f(m.bonuses.verifiedProgress):'')+(m.bonuses?.region>0?' + 권역(강남3구·용산) '+f(m.bonuses.region):m.bonuses?.region<0?' − 권역(마포·서대문) '+f(-m.bonuses.region):'')+' · 검증 전 잠정 산식';
  }
  function why(d){

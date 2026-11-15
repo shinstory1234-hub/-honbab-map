@@ -57,7 +57,8 @@ for(const cap of [10,15,20,25,30]){
   const d=flat(9,35); d.p=cap*10000-5000;
   d.s4.transport.candidates=[{minutes:5,lineFactor:1,future:false}];
   const result=M3.compute(d,cap);
-  const planned=cap===15?{G:.38,J:.08,T:.14,U:.17,Q:.20,S:.03}   // 2026.11.15 A안: 10~15억 구축 쏠림 완화
+  const planned=cap===10?{G:.35,J:.10,T:.12,U:.16,Q:.15,S:.05,X:.07}   // 2026.11.15: 6~10억 입지 연동 신축 가점
+                :cap===15?{G:.38,J:.08,T:.14,U:.17,Q:.20,S:.03}   // 2026.11.15 A안: 10~15억 구축 쏠림 완화
                         :{G:.35,J:.10,T:.15,U:.20,Q:.15,S:.05};
   for(const [key,weight] of Object.entries(planned)){
     assert.ok(Math.abs(result.parts[key]-result.raw[key]*weight)<1e-8,
