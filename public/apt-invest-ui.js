@@ -221,6 +221,7 @@
     if(age>=20)checks.push('주차·배관·승강기·장기수선계획과 내부 수리비');
     if(age>=27)checks.push('정비사업 고시·등기 대지권·조합원 지위·추가분담금');
     if(d.rent)checks.push('일반분양/임대·분양전환 구분과 매수 가능한 소유권 여부');
+    if((window.APT_RIGHTS_WARN||{})[d.n+'|'+d.area])checks.unshift('투기과열지구 사업시행자 지정(조합설립) 이후 — 조합원 지위 양도 예외(10년 보유·5년 거주 1주택자 등) 매도인 매물이어야 입주권, 아니면 현금청산');
     return {
       title:`${leadBits.join(' · ')}, ${ageText}의 현재 가치와 다음 매수자를 함께 볼 단지`,
       sections:[
@@ -392,6 +393,7 @@
     if(age>=20)checks.push('주차·배관·승강기·장기수선계획과 내부 수리비');
     if(age>=27)checks.push(rm?'리모델링 조합의 인허가 단계·증축면적·분담금·이주비':'정비사업 고시·등기 대지권·조합원 지위·추가분담금');
     if(special&&special.checks)checks.push(...special.checks);
+    if((window.APT_RIGHTS_WARN||{})[d.n+'|'+d.area])checks.unshift('투기과열지구 사업시행자 지정(조합설립) 이후 — 조합원 지위 양도 예외(10년 보유·5년 거주 1주택자 등) 매도인 매물이어야 입주권, 아니면 현금청산');
     if(special&&special.sources){const seen=new Set(sources.map(s=>s[1]));for(const s of special.sources)if(!seen.has(s[1])){sources.push(s);seen.add(s[1]);}}
     return {title,sections,byPy:{[d.py]:`${d.py}평은 ${size} 수요가 핵심이며 같은 단지의 다른 평형과 매수층을 같다고 가정하지 않았다.`},checks,sources,mode:special?'researched':'derived'};
   }

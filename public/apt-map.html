@@ -448,7 +448,7 @@ const STFIX={'상계주공2단지|서울 노원구 상계동':45,
   '주공6|광명시 하안동':70,                // 2025.10 정비구역 지정(하안 6·7·9·10·11·12단지)
   '주공1|광명시 하안동':40,'주공2|광명시 하안동':40};   // 1·2단지 통합 추진위 구성 중(동의율 45%)
 const RST={.25:40,.5:50,.75:65,1:75,2:85,3:90};   // 2026.11.16 공식 정비 단계표(apt-redevelopment-evidence.js) → 0~100
-const stOf=d=>STFIX[d.n+'|'+d.area]??Math.max(d.st!=null?d.st:(MST[d.n]||0),RST[(window.APT_REDEV_STAGE||{})[d.n+'|'+d.area]]||0);
+const stOf=d=>{let v=d._stv;if(v===undefined||d._sts!==d.st){const k=d.n+'|'+d.area;v=STFIX[k]??Math.max(d.st!=null?d.st:(MST[d.n]||0),RST[(window.APT_REDEV_STAGE||{})[k]]||0);d._stv=v;d._sts=d.st;}return v;};   // 단지별 1회 계산 후 재사용(키 문자열 반복 생성 제거)
 const RGEN=[[0,20],[5,20],[10,17],[15,12],[20,7],[25,4],[29,2]];
 function rbScore(d){ const age=2026-d.year, rm=typeof isRemodel==='function'&&isRemodel(d), w=rm?0:rbW(d), g=lerp(RGEN,age), v=(1-w)*g+w*12;
   const l=rm?`${age}년차 · 리모델링 추진`:w>=1?`${age}년차 · 재건축 대상(단계 가치는 상승 여력에 반영)`:w>0?`${age}년차 · 재건축 경로 ${Math.round(w*100)}% 반영`:age<=10?`${age}년차 신축급`:age<=15?`${age}년차 준신축`:`${age}년차 구축`;
@@ -514,10 +514,7 @@ const CUROUT=[], SMALLOUT=[];
 /* 조합원 지위 양도 제한을 실거래 원천에서 판별할 수 없는 정비사업 단지.
    국토부 실거래에는 매도인의 법정 예외 충족 여부가 없으므로, 싼 현금청산 위험 거래를 정상 입주권 가격으로 간주하지 않는다.
    개별 매물의 지위 양도 가능 여부가 별도 확인되기 전에는 가격·상승여력·순위 계산에서 통째로 제외한다. */
-const RIGHTS_BLOCK=new Map([
-  ['하안주공3단지|광명시 하안동',{date:'2025.10.16',why:'신탁방식 사업시행자 지정 뒤 투기과열지구 지정 · 매도인별 법정 예외 확인 필요'}],
-  ['하안주공4단지|광명시 하안동',{date:'2025.10.16',why:'신탁방식 사업시행자 지정 뒤 투기과열지구 지정 · 매도인별 법정 예외 확인 필요'}]
-]);
+const RIGHTS_BLOCK=new Map();   // 2026.11.16 경승: 하안 3·4단지 실거래는 물딱지 할인 없이 정상 상승 → 순위 제외 해제, 상세 '사기 전에 확인'에 지위 양도 경고만(APT_RIGHTS_WARN)
 const RIGHTSOUT=[];
 /* 평형별 순위(2026.10.25): 한 단지에 6억 이하 평형이 여럿이면 평형마다 따로 채점·순위. 위치·세대수 등 단지 값은 같고
    가격·평당가·여력·재건축 분담금이 평형마다 달라짐. 대표 평형(원고 기준)이 먼저, 나머지는 평형 순. 임대 후 확정가(opt)는 계약 평형 하나만 */
@@ -835,7 +832,10 @@ function stage(d){ const st=stOf(d), age=2026-d.year;
 /* 주상복합 판정: 건축물대장 용적률 400% 이상(이름으로 정하지 않음) */
 const isJubok=d=>{ if(CAPT>6){const k=gkey(d);return !!((window.MIXHI&&window.MIXHI.has(d.area.split(' ').pop()+'|'+d.n))||(window.APT_CXP_MATCH||{})[k]?.[1]===1);} const c=d.cx; return c?c[3]===1:/주상복합/.test((d.g&&d.g.cat)||''); };
 /* 단지 고유 보정(전부 회귀 추정치): 역 도보 · 세대수 · 브랜드 · 주상복합. 평지만 데이터가 없어 손으로 둔 값 */
-function microAdj(d,mode){ const F=d.F??2.5, parts=[], rb=mode==='rb';
+function microAdj(d,mode){ const ck=d._ma||(d._ma={}), sv=stOf(d), hit=ck[mode];   // 단지·모드별 결과 재사용(입력 바뀌면 다시 계산) — 재건축 단계 전수 반영 후 늘어난 계산 상쇄
+  if(hit&&hit.c===d.cur&&hit.f===d.fut&&hit.u===d.units&&hit.F===d.F&&hit.s===sv&&hit.n===d.n) return hit.r;
+  const r=microAdj0(d,mode); ck[mode]={c:d.cur,f:d.fut,u:d.units,F:d.F,s:sv,n:d.n,r}; return r; }
+function microAdj0(d,mode){ const F=d.F??2.5, parts=[], rb=mode==='rb';
   if(d.cur&&d.cur.m<99999){ const wc=walkMin(d.cur.m); let w=WALK(wc), lab=`역 도보 ${Math.round(wc)}분`;
     // 개통 예정 역: 지금 적정가(gen)에는 넣지 않음 — 입지 점수에서 이미 반영했고, 시장이 미리 가격에 넣었으면 여력이 낮아져 이중 계산을 막음. 재건축 완공가(rb)는 개통 뒤라 반영
     if(rb&&d.fut&&d.fut.m<d.cur.m-80){ const wf=walkMin(d.fut.m), g=(WALK(wf)-w)*d.fut.disc; if(g>.005){ w+=g; lab+=` → 개통 예정 ${Math.round(wf)}분`; } }
