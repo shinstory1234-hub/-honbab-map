@@ -127,13 +127,12 @@ aside{order:-1;width:408px;flex:none;border-right:1px solid var(--border);backgr
 .chip::before{content:"";width:6px;height:6px;border-radius:50%;background:var(--chip)}
 .row h3{font-size:16.5px;font-weight:700;letter-spacing:-.035em;line-height:1.4;margin-top:6px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .row p.sibl{font-size:12.5px;color:var(--text-tertiary);margin-top:2px;-webkit-line-clamp:1}
-.m3-flat-options{grid-column:2 / -1;display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}
-.m3-flat-item{display:inline-flex;align-items:baseline;gap:5px;border:1px solid var(--border-soft);background:transparent;padding:6px 10px;border-radius:8px;color:var(--text);font:inherit;cursor:pointer;white-space:nowrap}
+.m3-flat-options{grid-column:2 / -1;display:flex;flex-wrap:nowrap;gap:6px;margin-top:8px;overflow-x:auto;scrollbar-width:none;-webkit-overflow-scrolling:touch;overscroll-behavior-x:contain}.m3-flat-options::-webkit-scrollbar{display:none}
+.m3-flat-item{flex:none;display:inline-flex;align-items:baseline;gap:4px;border:1px solid var(--border-soft);background:transparent;padding:5px 9px;border-radius:999px;color:var(--text);font:inherit;cursor:pointer;white-space:nowrap}
 .m3-flat-item:hover,.m3-flat-item:focus-visible{background:var(--bg-subtle)}
 .m3-flat-item.representative{border-color:rgba(30,110,205,.45);background:rgba(30,110,205,.055)}
-.m3-flat-item .flat-size{font-size:12.5px;font-weight:750}
-.m3-flat-item .flat-price{font-size:13px;font-weight:700}
-.m3-flat-item .flat-score{font-size:11px;color:var(--primary-soft-fg)}
+.m3-flat-item .flat-size{font-size:12px;font-weight:600;color:var(--text-secondary)}
+.m3-flat-item .flat-price{font-size:12.5px;font-weight:700}
 .m3-flat-item .flat-warning{font-size:11px;color:#b91c1c}
 @media(max-width:700px){.m3-flat-options{grid-column:1 / -1}}
 .row h3 .tp{font-size:12.5px;font-weight:600;color:var(--text-tertiary);margin-left:4px;letter-spacing:-.02em}
@@ -1328,13 +1327,13 @@ setTimeout(refreshAptLiveHealth,1200);
 setInterval(()=>{if(!document.hidden)refreshAptLiveHealth();},10*60*1000);
 
 function m3FlatOptions(d){
-  const peers=sibs(d).filter(x=>visible(x)).sort((a,b)=>a.py-b.py||b.score-a.score);
-  if(peers.length<=1)return '';
+  const peers=sibs(d).filter(x=>visible(x)&&x!==d).sort((a,b)=>a.py-b.py||b.score-a.score);   // 대표 평형은 위 제목·가격에 이미 있으므로 다른 평형만, 한 줄 가로 스크롤
+  if(!peers.length)return '';
   return '<div class="m3-flat-options" aria-label="같은 단지 전체 평형">'+peers.map(x=>
     '<button type="button" class="m3-flat-item'+(x===d?' representative':'')+'" data-flat-index="'+D.indexOf(x)+'" aria-label="'+esc(x.n+' '+x.py+'평 '+short(x.p))+' 상세보기">'
     +'<span class="flat-size">'+(d.masterComplexKey?esc((x.n.match(/([1-9][0-9]*단지)$/)||[])[1]||'구분단지')+' · ':'')+x.py+'평</span>'
     +'<span class="flat-price">'+short(x.p)+'</span>'
-    +'<span class="flat-score">'+x.score.toFixed(1)+(x.m3?.price?.level==='high'?' <span class="flat-warning" title="가격 확인 필요">⚠</span>':'')+'</span></button>').join('')+'</div>';
+    +(x.m3?.price?.level==='high'?'<span class="flat-warning" title="가격 확인 필요">⚠</span>':'')+'</button>').join('')+'</div>';
 }
 function renderList(){
   const b=$('#body'), previousScroll=b.querySelector('.intro')?b.scrollTop:0;
