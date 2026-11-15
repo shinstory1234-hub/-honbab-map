@@ -1352,9 +1352,10 @@ function renderList(){
   let h=`<section class="intro">
     <div class="eyebrow">6억 이하 · 오를 단지<i></i>${NCX.toLocaleString()}곳 · ${D.length.toLocaleString()}개 평형</div>
     <h1>예산 안에서 좋은 아파트 찾기</h1>
-    <p>서울·경기·인천 아파트를 입지, 교통, 단지 경쟁력 등으로 종합 비교했습니다. 같은 가격대에서 좋은 아파트를 찾아보세요.</p>
+    <p>서울·경기·인천 아파트를 입지, 교통, 학군, 단지 경쟁력 등으로 종합 비교했습니다. 같은 가격대에서 좋은 아파트를 찾아보세요.</p>
+    <p style="margin-top:6px;font-size:12px;color:var(--text-tertiary,#8a8f98)">국토부 실거래·공공데이터로 계산한 참고 지표이며 투자 권유가 아닙니다. 순위는 계속 개선 중입니다.</p>
     ${pend?`<div class="inline-note tnum" style="margin-top:12px">역·초등학교·경사를 지도 데이터로 계산하는 중 · ${D.length-pend}/${D.length}<br><small>처음 한 번만 걸리고, 끝나면 순위가 확정됩니다.</small></div>`:''}
-    <details class="method"><summary>평가 기준 안내 ${CHEV}</summary><div style="padding:14px 16px;font-size:13px;line-height:1.8;color:var(--text-secondary)">아파트맵은 교통, 입지 경쟁력, 단지 규모, 주거 상품성 및 가격 신뢰도를 종합 비교합니다. 각 항목의 정확한 가중치, 보정식, 학습 기준 및 예측 모델은 공개하지 않습니다. 단지별 점수와 순위는 투자수익이나 매매 가능가격을 보장하지 않습니다.</div></details>
+    <details class="method"><summary>평가 기준 안내 ${CHEV}</summary><div style="padding:14px 16px;font-size:13px;line-height:1.8;color:var(--text-secondary)">아파트맵은 교통, 입지 경쟁력, 학군, 단지 규모, 주거 상품성 및 가격 신뢰도를 종합 비교합니다. 각 항목의 정확한 가중치, 보정식, 학습 기준 및 예측 모델은 공개하지 않습니다. 단지별 점수와 순위는 투자수익이나 매매 가능가격을 보장하지 않습니다.</div></details>
   </section>
   <div class="filters" role="group" aria-label="조건"><button data-f="fav" aria-pressed="${state.f==='fav'}">♥ 저장</button>${['pb','size','age','f'].map(k=>{ const v=state[k]||'all', L=PICKMENU[k], o=L[1]().find(x=>x[0]===v); return `<button type="button" class="sortsel fsel${o&&v!=='all'?' on':''}" data-k="${k}" aria-haspopup="dialog" aria-label="${L[0]}">${(o||L[1]()[0])[1]}</button>`; }).join('')}</div>
   ${state.q&&!viewport?`<div class="region-mode">‘${esc(state.q)}’ 검색 결과 <button type="button" id="searchReset">전체 순위 보기</button></div>`:''}${viewport?'<div class="region-mode">현재 지도 범위의 단지 <button type="button" id="browseReset">전체 순위 보기</button></div>':''}

@@ -11,6 +11,10 @@
  // 6~10억(2026.11.15, 경승 "지축 29위는 말이 안 됨"): 상품성 7%를 '신축 가점'으로 떼어 급지나 직주(게이트 전)가 50→75일 때만 0→100% 인정.
  //   입지 약한 외곽 신축(지축·수원 매교)은 가점이 없고, 서울·광명 준신축은 그대로 받는다.
  const loWeights=Object.freeze({G:.38,J:.07,T:.10,U:.18,Q:.15,S:.05,X:.07});
+ // 학군(2026.11.15, 경승 "센텀>어바인 — 귀인중 배정"): 6억 탭과 같은 식(학원가 접근값 HAK, 없으면 1km 전체 학원 수)을
+ //   0~100으로 환산해 30억 이하 탭에 8% 넣고(30억 이상은 학군보다 희소성 — 넣으면 나인원한남 40→69위), 나머지 항목은 같은 비율(×0.92)로 줄인다.
+ const HW=.08, withH=w=>Object.freeze(Object.fromEntries(Object.entries(w).map(([k,v])=>[k,v*(1-HW)]).concat([['H',HW]])));
+ const weightsH=withH(weights), baselineWeightsH=withH(baselineWeights), loWeightsH=withH(loWeights);
  const unitCurve=[[100,0],[200,15],[300,27],[500,43],[700,55],[1000,66],[1500,78],[2000,87],[3000,95],[5000,100]];
  const ageCurve=[[0,100],[5,100],[10,85],[15,72],[20,60],[25,45],[30,30],[40,20]];
  const sizeCurve=[[10,0],[16,20],[20,48],[24,76],[30,93],[34,100]];
@@ -98,6 +102,13 @@
   const top=Object.keys(near).sort((x,y)=>near[y]-near[x])[0], rest=Object.keys(far).filter(k=>k!==top).map(k=>far[k]).sort((x,y)=>y-x);
   return clamp(near[top]*(.75+.25*Math.min(1,((rest[0]||0)+.5*(rest[1]||0))/100)));
  }
+ function hakScore(d){
+  const k=d.n+'|'+d.area;
+  if(root.HAK?.[k]&&typeof hakA==='function'){const a=hakA(d);if(Number.isFinite(a))return a*10;}
+  const ac=root.UGEO?.[k]?.ac;
+  if(Number.isFinite(ac)&&typeof acS==='function')return acS(ac)*10;
+  return 30;
+ }
  function compute(d,cap=root.CAPT,integratedSite=null){
   if(!active(d,cap))return null;
   const s=d.s4||{};
@@ -109,6 +120,7 @@
    U:integratedSite?.U??interp(Number(d.unitsOwn??d.units)||0,unitCurve),
    Q:integratedSite?.Q??(Number.isFinite(years)&&years>=1950?interp(Math.max(0,2026-years),ageCurve):50),
    S:interp(Number(d.py)||0,sizeCurve),
+   H:hakScore(d),
   };
   // 공식 K-apt 통합 관리단지의 단지 규모는 전체 공식 세대수를 유지한다.
   // 다만 여러 구분 블록에 분산된 규모의 추가 프리미엄을 해당 단지의
@@ -128,7 +140,7 @@
     const gate=clamp((raw.G-gg[0])/(gg[1]-gg[0]),0,1);
     if(raw.U>50)raw.U=50+(raw.U-50)*gate;
   }
-  const effectiveWeights=cap===10?loWeights:cap===15?weights:baselineWeights;
+  const effectiveWeights=cap===10?loWeightsH:cap===15?weightsH:cap===35?baselineWeights:baselineWeightsH;
   // 재건축 추진 단계(2026.11.15, 경승 결정 "철주 12·13은 재건축 대장단지"): 조합설립인가 이상이 공식 자료로 확인된 단지는
   //   상품성이 45 아래로 떨어지지 않게(감가 멈춤) 하고, 아래에서 단계별 가점(조합설립 3 · 사업시행 4 · 관리처분 5)을 준다.
   const redevStage=root.APT_REDEV_STAGE?.[d.n+'|'+d.area]||(root.APT_REDEV_FACTS?.[d.n+'|'+d.area]?.phase==='operator_designated'?1:0);
@@ -195,13 +207,13 @@
  function detail(d){
   const m=d.m3;if(!m)return '';
   const f=x=>Number(x??0).toFixed(1);
-  const w=root.CAPT===10?loWeights:root.CAPT===15?weights:baselineWeights;
-  const parts=[['장기 급지','G'],['직주','J'],['교통','T'],['세대수','U'],['상품성','Q'],['평형 효용','S'],['신축 가점(입지 연동)','X']].filter(([,key])=>w[key]).map(([label,key])=>[label,key,w[key]*100]);
-  return 'M3 종합 '+f(m.score)+'점 = '+parts.map(([label,key,w])=>label+' '+f(m.raw[key])+' × '+w+'%').join(' + ')+(m.penalties.density?' − 고밀도 '+f(m.penalties.density):'')+(m.penalties.hill?' − 언덕 '+f(m.penalties.hill):'')+(m.penalties.jubok?' − 주상복합 '+f(m.penalties.jubok):'')+(m.penalties.price?' − 가격 신뢰도 '+f(m.penalties.price):'')+(m.penalties.tiny?' − 초소형 평형 '+f(m.penalties.tiny):'')+(m.penalties.peak?' − 전고점 미회복 '+f(m.penalties.peak)+'(22년 고점 대비 '+Math.round(m.peakRatio*100)+'%'+(m.peakEst?', 고점 거래 없어 주변 단지로 추정':'')+')':'')+(m.bonuses?.verifiedProgress?' + 재건축 '+(['','조합설립','사업시행인가','관리처분인가'][m.redevStage]||'공람')+' '+f(m.bonuses.verifiedProgress):'')+(m.bonuses?.region>0?' + 권역(강남3구·용산) '+f(m.bonuses.region):m.bonuses?.region<0?' − 권역(마포·서대문) '+f(-m.bonuses.region):'')+' · 검증 전 잠정 산식';
+  const w=root.CAPT===10?loWeightsH:root.CAPT===15?weightsH:root.CAPT===35?baselineWeights:baselineWeightsH;
+  const parts=[['장기 급지','G'],['직주','J'],['교통','T'],['세대수','U'],['상품성','Q'],['평형 효용','S'],['신축 가점(입지 연동)','X'],['학군','H']].filter(([,key])=>w[key]).map(([label,key])=>[label,key,w[key]*100]);
+  return 'M3 종합 '+f(m.score)+'점 = '+parts.map(([label,key,w])=>label+' '+f(m.raw[key])+' × '+(+w.toFixed(1))+'%').join(' + ')+(m.penalties.density?' − 고밀도 '+f(m.penalties.density):'')+(m.penalties.hill?' − 언덕 '+f(m.penalties.hill):'')+(m.penalties.jubok?' − 주상복합 '+f(m.penalties.jubok):'')+(m.penalties.price?' − 가격 신뢰도 '+f(m.penalties.price):'')+(m.penalties.tiny?' − 초소형 평형 '+f(m.penalties.tiny):'')+(m.penalties.peak?' − 전고점 미회복 '+f(m.penalties.peak)+'(22년 고점 대비 '+Math.round(m.peakRatio*100)+'%'+(m.peakEst?', 고점 거래 없어 주변 단지로 추정':'')+')':'')+(m.bonuses?.verifiedProgress?' + 재건축 '+(['','조합설립','사업시행인가','관리처분인가'][m.redevStage]||'공람')+' '+f(m.bonuses.verifiedProgress):'')+(m.bonuses?.region>0?' + 권역(강남3구·용산) '+f(m.bonuses.region):m.bonuses?.region<0?' − 권역(마포·서대문) '+f(-m.bonuses.region):'')+' · 검증 전 잠정 산식';
  }
  function why(d){
   const m=d.m3;if(!m)return '';
-  return 'M3 급지 '+m.raw.G.toFixed(0)+' · 직주 '+m.raw.J.toFixed(0)+' · 교통 '+m.raw.T.toFixed(0)+' · '+(d.unitsOwn??d.units).toLocaleString()+'세대 · 상품성 '+m.raw.Q.toFixed(0)+' · 평형 '+m.raw.S.toFixed(0)+(m.penalties.price?' · 시세 신뢰도 감점 −'+m.penalties.price.toFixed(0)+'점':'')+(m.penalties.density?' · 용적률 감점 −'+m.penalties.density.toFixed(0)+'점':'')+(m.penalties.jubok?' · 주상복합 감점 −'+m.penalties.jubok+'점':'')+(m.penalties.peak?' · 22년 전고점 '+Math.round(m.peakRatio*100)+'% 회복(−'+m.penalties.peak.toFixed(0)+'점)':'')+(m.verifiedProject?' · 정비사업 확인':'')+' (가중치 검증 전)';
+  return 'M3 급지 '+m.raw.G.toFixed(0)+' · 직주 '+m.raw.J.toFixed(0)+' · 교통 '+m.raw.T.toFixed(0)+' · '+(d.unitsOwn??d.units).toLocaleString()+'세대 · 상품성 '+m.raw.Q.toFixed(0)+' · 평형 '+m.raw.S.toFixed(0)+' · 학군 '+m.raw.H.toFixed(0)+(m.penalties.price?' · 시세 신뢰도 감점 −'+m.penalties.price.toFixed(0)+'점':'')+(m.penalties.density?' · 용적률 감점 −'+m.penalties.density.toFixed(0)+'점':'')+(m.penalties.jubok?' · 주상복합 감점 −'+m.penalties.jubok+'점':'')+(m.penalties.peak?' · 22년 전고점 '+Math.round(m.peakRatio*100)+'% 회복(−'+m.penalties.peak.toFixed(0)+'점)':'')+(m.verifiedProject?' · 정비사업 확인':'')+' (가중치 검증 전)';
  }
  const oldPanel=root.APT_TRANSPORT?.panel;
  if(oldPanel){
@@ -210,9 +222,9 @@
    if(!m)return oldPanel(d);
    const t=d.s4?.transport,b=t?.best;
    const safe=x=>String(x??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
-   return '<section class="sec"><h3>M3 교통 접근성 <small>종합의 15%</small></h3><p>'
+   return '<section class="sec"><h3>M3 교통 접근성 <small>종합의 '+(m.parts.T/Math.max(m.raw.T,1e-9)*100).toFixed(0)+'%</small></h3><p>'
        +(b?safe(b.station+' '+b.line+' '+b.grade+'등급 / '+b.walking+' '+(b.minutes??0).toFixed(1)+'분'):'확인된 역 자료 없음')
-       +'</p><p>교통 '+m.raw.T.toFixed(1)+'점 × 15% = <b>'+m.parts.T.toFixed(2)+'점</b></p>'
+       +'</p><p>교통 '+m.raw.T.toFixed(1)+'점 × '+(m.parts.T/Math.max(m.raw.T,1e-9)*100).toFixed(0)+'% = <b>'+m.parts.T.toFixed(2)+'점</b></p>'
        +'<p class="note">운행 중인 역 우선, 도보 0~25분 연속 평가. 미개통 노선은 할인 반영. M3 가중치는 과거 시점 검증 전 잠정값입니다.</p></section>';
   };
  }

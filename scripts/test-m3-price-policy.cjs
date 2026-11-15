@@ -60,6 +60,8 @@ for(const cap of [10,15,20,25,30]){
   const planned=cap===10?{G:.38,J:.07,T:.10,U:.18,Q:.15,S:.05,X:.07}   // 2026.11.15: 6~10억 입지 연동 신축 가점
                 :cap===15?{G:.38,J:.08,T:.14,U:.17,Q:.20,S:.03}   // 2026.11.15 A안: 10~15억 구축 쏠림 완화
                         :{G:.35,J:.10,T:.15,U:.20,Q:.15,S:.05};
+  // 2026.11.15 학군 8%: 30억 이하 탭은 나머지 ×0.92 + H .08
+  for(const k of Object.keys(planned)) planned[k]*=.92; planned.H=.08;
   for(const [key,weight] of Object.entries(planned)){
     assert.ok(Math.abs(result.parts[key]-result.raw[key]*weight)<1e-8,
       `${cap}억 구간 ${key} 평가 가중치 보호`);
