@@ -192,25 +192,19 @@ function s4RawPPR(d){ const me=d.p/d.py;
    건축물대장·정비계획 실측(F/L)만 일반 단지에 사용하고, MIXHI는 건축물대장에서 용적률 600% 이상과 업무·오피스텔 혼용을 확인한 표라 600%로 보완한다.
    추정 용적률(E/T)은 감점하지 않아 추정 오차가 순위를 크게 바꾸지 않게 한다. */
 function s4DensityAdj(d){
-  if(!(window.CAPT>6)) return {pen:0,far:null,src:null};
-  const key=d.cxKey||(d.n+'|'+d.area), f=((window.FARD||{})[key]||[]), src=String(f[1]||''), raw=Number(f[0]),
-    mix=!!(window.MIXHI&&MIXHI.has((d.area||'').split(' ').pop()+'|'+d.n)), measured=src==='F'||src==='L'||/건축물대장|정비계획|실측/.test(src);
-  /* M3 보완: FARD 누락 단지도 이미 구축한 단지 좌표·건축정보 CXP의
-     실제 용적률 열([4])을 재사용한다. 좌표/세대수 일치 여부를 함께 검사해
-     이웃 건물의 초고밀도 용적률을 잘못 빌려오는 위험을 제한한다.
-     25억 이상 기존 모델은 변경하지 않는다. */
-  const c=d.cx, g=d.g||{}, k=Number(c&&c[4]), units=Number(d.units)||0,
-    near=Array.isArray(c)&&Number.isFinite(Number(g.lat))&&Number.isFinite(Number(g.lng))?
-      Math.hypot((Number(c[0])-Number(g.lat))*111000,
-        (Number(c[1])-Number(g.lng))*111000*Math.cos(Number(g.lat)*Math.PI/180)):Infinity,
-    similar=!units||!Number(c&&c[2])||(Number(c[2])/units>=.55&&Number(c[2])/units<=1.8),
-    cxFar=window.CAPT<30&&window.APT_M3&&near<=135&&similar&&Number.isFinite(k)&&k>=120&&k<=1800?k:null,
+  if(!(window.CAPT>6))return {pen:0,far:null,src:null};
+  const key=d.cxKey||(d.n+'|'+d.area),f=((window.FARD||{})[key]||[]),src=String(f[1]||''),raw=Number(f[0]),
+    mix=!!(window.MIXHI&&window.MIXHI.has((d.area||'').split(' ').pop()+'|'+d.n)),
+    measured=src==='F'||src==='L'||/건축물대장|정비계획|실측/.test(src);
+  // 인근 CXP(최대 300m) 무검증 재사용 금지: 30m·세대수 완전일치의 검증된 매칭만 허용.
+  const exact=(window.APT_CXP_MATCH||{})[key],cxFar=exact?exact[0]:null,
     verified=measured&&Number.isFinite(raw)&&raw>0?raw:null,
     far=mix?Math.max(verified||0,cxFar||0,600):(verified!=null?verified:cxFar),
-    farSrc=mix?'MIXHI'+(cxFar!=null?'+CXP':''):verified!=null?src:cxFar!=null?'CXP(단지 건축정보)':src;
-  if(far==null||far<=400) return {pen:0,far,src:farSrc};
+    farSrc=mix?'MIXHI':verified!=null?src:cxFar!=null?'건축물대장·세대수 일치':src;
+  if(far==null||far<=400)return {pen:0,far,src:farSrc};
   const densityW=(window.S4CFG||{}).model==='m2'?(window.CAPT<=10?12:window.CAPT<=15?10:DENSITYW):DENSITYW;
-  return {pen:densityW*clamp01((far-400)/200),far,src:farSrc}; }
+  return {pen:densityW*clamp01((far-400)/200),far,src:farSrc};
+}
 /* 상품성(2026.11.3, 판단, S4CFG.qW) — m2(세대수 + 급지)만으로는 연식이 0점 처리돼 '좋은 자리의 늙은 대단지'가 자동으로 상위에 오던 문제.
    연식 곡선: 0~5년 100 → 10년 85 → 15년 72 → 20년 60 → 25년 45 → 30년 30 → 40년 20.
    재건축 대상(정비 단계 35+ 또는 27년차+ 용적률 250% 이하 추정, 리모델링 아님)이고 사업성 막힘이 아니면 최소 55 — 가치가 건물이 아니라 대지지분이라 감가를 멈춤.

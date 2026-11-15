@@ -150,7 +150,7 @@
   const hill=Number.isFinite(s.ta?.h)?s.ta.h*.5:0;
   // 용적률과 별개로 혼합용도 건축물의 주거 상품성/전용률 위험을 평가한다.
   // 미확인 단지는 감점하지 않고, CXP 건물용도 또는 공식 단지정보로 확인된 곳만 적용.
-  const mixed=typeof isJubok==='function'&&isJubok(d) || (Array.isArray(d.cx)&&Number(d.cx[3])===1);
+  const mixed=typeof isJubok==='function'&&isJubok(d);
   const jubok=mixed?6:0;
   const price=priceConfidence(d);
   // 고가 아파트는 회전율이 낮아 거래량 부족을 품질 점수에 반영하지 않는다.
