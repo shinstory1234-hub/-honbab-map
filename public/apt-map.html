@@ -1626,10 +1626,10 @@ function redevelopmentEvidencePanel(d){
 function costPanel(d){ const p=d.p*1e4, eo=d.p/1e4, big=d.py>=35;
   const r=eo<=6?1:eo<=9?eo*2/3-3:3, acq=p*r/100, edu=acq*.1, farm=big?p*.002:0;
   const br=eo<.5?[.6,25e4]:eo<2?[.5,80e4]:eo<9?[.4]:eo<12?[.5]:eo<15?[.6]:[.7], fee=Math.min(p*br[0]/100,br[1]||Infinity);
-  const w=v=>eok(Math.round(v/1e4)), e=pkR(d), n=priceEv(d);
+  const w=v=>v>=1e8?eok(Math.round(v/1e4)):Math.round(v/1e4).toLocaleString()+'만', e=pkR(d), n=priceEv(d);
   const pk=e!=null?`<div><dt>21~22년 전고점 대비<small>${e>=1?'전고점 회복':'전고점 미회복'} · 국토부 실거래</small></dt><dd style="color:${e>=1?'#0a7d3e':'#e5484d'}">${e>=1?'+':''}${((e-1)*100).toFixed(1)}%</dd></div>`:'';
   const tv=n?`<div><dt>이 평형 거래<small>최근 12개월 · 3개월${n.last?' · 마지막 '+esc(n.last):''}</small></dt><dd>${n.n}건 · ${n.n3}건</dd></div>`:'';
-  return `${pk||tv?`<section class="sec"><h3>시세 흐름 <small>리치고식 요약</small></h3><dl class="facts tnum">${pk}${tv}</dl></section>`:''}<section class="sec"><h3>사면 드는 돈 <small>${d.py}평 ${eok(d.p)} · 무주택 1주택 기준</small></h3><dl class="facts tnum">
+  return `${pk||tv?`<section class="sec"><h3>시세 흐름 <small>국토부 실거래 기준</small></h3><dl class="facts tnum">${pk}${tv}</dl></section>`:''}<section class="sec"><h3>사면 드는 돈 <small>${d.py}평 ${eok(d.p)} · 무주택 1주택 기준</small></h3><dl class="facts tnum">
   <div><dt>취득세<small>세율 ${r.toFixed(2)}%</small></dt><dd>${w(acq)}</dd></div><div><dt>지방교육세${big?'·농특세':''}<small>${big?'전용 85㎡ 초과 추정 · 농특세 0.2%':'취득세의 10%'}</small></dt><dd>${w(edu+farm)}</dd></div>
   <div><dt>중개보수 상한<small>요율 ${br[0]}% · 부가세 별도</small></dt><dd>${w(fee)}</dd></div><div class="em"><dt>합계(법무비 제외)</dt><dd>${w(acq+edu+farm+fee)}</dd></div></dl>
   <p class="note">면적은 평형으로 추정(35평 이상=전용 85㎡ 초과). 생애최초 감면·다주택 중과·법무사 비용은 빠져 있어요. 정확한 금액은 위택스·중개사무소에서 확인.</p></section>`; }
