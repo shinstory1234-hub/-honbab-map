@@ -14,10 +14,12 @@
   }).filter(l=>l.name);
  }
  const access=min=>Number.isFinite(min)&&min>=0?clamp((20-min)/10):0;
- const bestLineCache=new Map();
+ const bestLineCache=new Map(), BRANCH2=/^(도림천|양천구청|신정네거리|까치산|용답|신답|용두|신설동)$/;
  function candidate(station,line,m,route,future=false,year=null){
-  if(!bestLineCache.has(line))bestLineCache.set(line,lines(line).sort((a,b)=>b.v-a.v)[0]||{name:'노선 미확인',v:0,t:'미확인'});
-  const best=bestLineCache.get(line);
+  // 2호선 지선(신정지선 신도림↔까치산, 성수지선 성수↔신설동)은 본선 환승이 필요한 셔틀 → 1·4·6호선급 B(2026.11.15, 신트리 1위 점검)
+  const br=BRANCH2.test(String(station||'').replace(/역$/,'')), ck=(br?'b|':'')+line;
+  if(!bestLineCache.has(ck))bestLineCache.set(ck,lines(line).map(l=>br&&l.name==='2호선'?{name:'2호선 지선',v:.7,t:'B'}:l).sort((a,b)=>b.v-a.v)[0]||{name:'노선 미확인',v:0,t:'미확인'});
+  const best=bestLineCache.get(ck);
   const measured=route&&Number.isFinite(route.minutes)&&route.minutes>=0&&route.source&&route.checkedAt;
   const minutes=measured?route.minutes:Number.isFinite(m)&&m>=0?m*1.25/80:null;
   const discount=future?(Number.isFinite(year)?Math.max(.8,1-.05*Math.max(0,year-2026)):0):1;
