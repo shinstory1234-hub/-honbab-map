@@ -354,7 +354,7 @@ aside{order:-1;width:408px;flex:none;border-right:1px solid var(--border);backgr
   try{ var ps=document.createElement('script'); ps.async=true; ps.src='/api/apt-first?cap='+x; document.head.appendChild(ps); }catch(e){}
   /* 주변 시세 커널(apt-loc10·cx10)은 가격과 무관한 전체 단지 자료라 6~10억·10~15억 탭이 같이 씀 */
   var F=[T?'':'apt-first.js','apt-unitfix.js',T?'apt-stsfix.js':'','apt-sd.js','apt-picks.js', T?'apt-picks10.js':'apt-auto3.js','apt-gj.js', T?'apt-loc10.js':'apt-loc.js', T?'apt-cx10.js':'apt-cx.js','apt-fard.js','apt-hak.js', T&&c!==35?'apt-univ10.js':T?'':'apt-univ.js', T&&c!==35?'apt-univ15.js':'', T&&c!==35?'apt-univ20.js':'', T&&c!==35?'apt-univ30.js':'', T&&c!==35?'apt-univadd.js':'', T?'apt-live.js':'apt-live6.js', c===35?'apt-univ35.js':'',
-    'apt-farplan.js','apt-mixhi.js','apt-cur.js',T?'apt-livefix.js':'apt-curlive.js','apt-trn.js','apt-small.js', T?'apt-s4q'+dataCap+'.js':'apt-s4q.js','apt-peak.js','apt-gjl.js', T?'apt-gjc.js':'',T?'apt-transport.js':'','apt-s4.js',T?'apt-redevelopment-evidence.js':'',T?'apt-m3.js':'','apt-band.js','apt-plat.js','apt-farfix.js',T?'apt-far-normalize.js':'','apt-dem.js', T?'apt-dem10.js':'', T?'apt-dem15.js':'', T?'apt-dem20.js':'', T?'apt-dem30.js':'', T?'apt-demadd.js':'','apt-walk.js','apt-geo.js', T?'':'apt-deep6-100.js', T?'':'apt-deep6-200.js', T?'':'apt-research6-600.js', T?'':'apt-invest-ui.js'];
+    'apt-farplan.js','apt-mixhi.js','apt-cur.js',T?'apt-livefix.js':'apt-curlive.js','apt-trn.js','apt-small.js', T?'apt-s4q'+dataCap+'.js':'apt-s4q.js','apt-peak.js','apt-gjl.js', T?'apt-gjc.js':'',T?'apt-transport.js':'','apt-s4.js','apt-redevelopment-evidence.js',T?'apt-m3.js':'','apt-band.js','apt-plat.js','apt-farfix.js',T?'apt-far-normalize.js':'','apt-dem.js', T?'apt-dem10.js':'', T?'apt-dem15.js':'', T?'apt-dem20.js':'', T?'apt-dem30.js':'', T?'apt-demadd.js':'','apt-walk.js','apt-geo.js', T?'':'apt-deep6-100.js', T?'':'apt-deep6-200.js', T?'':'apt-research6-600.js', T?'':'apt-invest-ui.js'];
   for(var i=0;i<F.length;i++) if(F[i]) document.write('<script src="'+F[i]+'"><\/script>');
   if(T) document.title='아파트맵 · '+CAPTXT+' 아파트';
   var t6=document.getElementById('cap'+x); if(t6){ t6.setAttribute('aria-current','page'); try{ t6.scrollIntoView({block:'nearest',inline:'center'}); }catch(e){} } var hm=document.getElementById('home'); if(hm&&T) hm.href='apt-map.html?cap='+x;
@@ -447,7 +447,8 @@ const STFIX={'상계주공2단지|서울 노원구 상계동':45,
   '주공2|서울 구로구 구로동':70,           // 구로주공2차 726세대: 안전진단 D, 서울시 위원회 3,289세대 정비계획 통과
   '주공6|광명시 하안동':70,                // 2025.10 정비구역 지정(하안 6·7·9·10·11·12단지)
   '주공1|광명시 하안동':40,'주공2|광명시 하안동':40};   // 1·2단지 통합 추진위 구성 중(동의율 45%)
-const stOf=d=>STFIX[d.n+'|'+d.area]??(d.st!=null?d.st:(MST[d.n]||0));
+const RST={.25:40,.5:50,.75:65,1:75,2:85,3:90};   // 2026.11.16 공식 정비 단계표(apt-redevelopment-evidence.js) → 0~100
+const stOf=d=>STFIX[d.n+'|'+d.area]??Math.max(d.st!=null?d.st:(MST[d.n]||0),RST[(window.APT_REDEV_STAGE||{})[d.n+'|'+d.area]]||0);
 const RGEN=[[0,20],[5,20],[10,17],[15,12],[20,7],[25,4],[29,2]];
 function rbScore(d){ const age=2026-d.year, rm=typeof isRemodel==='function'&&isRemodel(d), w=rm?0:rbW(d), g=lerp(RGEN,age), v=(1-w)*g+w*12;
   const l=rm?`${age}년차 · 리모델링 추진`:w>=1?`${age}년차 · 재건축 대상(단계 가치는 상승 여력에 반영)`:w>0?`${age}년차 · 재건축 경로 ${Math.round(w*100)}% 반영`:age<=10?`${age}년차 신축급`:age<=15?`${age}년차 준신축`:`${age}년차 구축`;

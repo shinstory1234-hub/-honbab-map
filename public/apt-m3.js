@@ -144,7 +144,7 @@
   // 재건축 추진 단계(2026.11.15, 경승 결정 "철주 12·13은 재건축 대장단지"): 조합설립인가 이상이 공식 자료로 확인된 단지는
   //   상품성이 45 아래로 떨어지지 않게(감가 멈춤) 하고, 아래에서 단계별 가점(조합설립 3 · 사업시행 4 · 관리처분 5)을 준다.
   const redevStage=root.APT_REDEV_STAGE?.[d.n+'|'+d.area]||(root.APT_REDEV_FACTS?.[d.n+'|'+d.area]?.phase==='operator_designated'?1:0);
-  if(redevStage&&raw.Q<45)raw.Q=45;
+  if(redevStage>=.5&&raw.Q<45)raw.Q=45;   // 2026.11.16: 추진위·정비계획 입안(0.5)·구역지정(0.75)도 법정 절차라 감가 멈춤. 신통 자문(0.25)은 가점만
   const parts=Object.fromEntries(Object.entries(effectiveWeights).map(([k,w])=>[k,raw[k]*w]));
   const density=Number.isFinite(s.density?.pen)?s.density.pen:0;
   const hill=Number.isFinite(s.ta?.h)?s.ta.h*.5:0;
@@ -176,7 +176,7 @@
   // 공람은 정비구역 지정이나 사업시행인가가 아니며, 계획 신축 세대수를 현재 세대수로 대체하지 않는다.
   // 상품성 Q는 현재 주택의 연식으로 그대로 평가하고, 추진 단계는 별도의 소폭 보정으로 구분한다.
   const project=root.APT_REDEV_FACTS?.[d.n+'|'+d.area]||null;
-  const verifiedProgress=redevStage?[0,3,4,5][redevStage]:project?.phase==='public_review'?1.25:0;
+  const verifiedProgress=redevStage>=1?[0,3,4,5][redevStage]:redevStage?redevStage*3:project?.phase==='public_review'?1.25:0;
   // 초소형 보정(2026.11.12 전수조사): 14평 이하(전용 약 35㎡ 이하, 원룸·1.5룸)는 가족 실거주 평형이 아니어서
   // 상급지 입지·대단지 점수만으로 탭 1~5위를 차지하던 문제(파크리오·수서 신동아·성원대치2 14평 등)를 막는다.
   // 25년 이상 구축의 15~18평은 재건축 기대 소형으로 같은 문제가 생겨(가양·강변 16평 등) 추가로 낮춘다.
@@ -209,7 +209,7 @@
   const f=x=>Number(x??0).toFixed(1);
   const w=root.CAPT===10?loWeightsH:root.CAPT===15?weightsH:root.CAPT===35?baselineWeights:baselineWeightsH;
   const parts=[['장기 급지','G'],['직주','J'],['교통','T'],['세대수','U'],['상품성','Q'],['평형 효용','S'],['신축 가점(입지 연동)','X'],['학군','H']].filter(([,key])=>w[key]).map(([label,key])=>[label,key,w[key]*100]);
-  return 'M3 종합 '+f(m.score)+'점 = '+parts.map(([label,key,w])=>label+' '+f(m.raw[key])+' × '+(+w.toFixed(1))+'%').join(' + ')+(m.penalties.density?' − 고밀도 '+f(m.penalties.density):'')+(m.penalties.hill?' − 언덕 '+f(m.penalties.hill):'')+(m.penalties.jubok?' − 주상복합 '+f(m.penalties.jubok):'')+(m.penalties.price?' − 가격 신뢰도 '+f(m.penalties.price):'')+(m.penalties.tiny?' − 초소형 평형 '+f(m.penalties.tiny):'')+(m.penalties.peak?' − 전고점 미회복 '+f(m.penalties.peak)+'(22년 고점 대비 '+Math.round(m.peakRatio*100)+'%'+(m.peakEst?', 고점 거래 없어 주변 단지로 추정':'')+')':'')+(m.bonuses?.verifiedProgress?' + 재건축 '+(['','조합설립','사업시행인가','관리처분인가'][m.redevStage]||'공람')+' '+f(m.bonuses.verifiedProgress):'')+(m.bonuses?.region>0?' + 권역(강남3구·용산) '+f(m.bonuses.region):m.bonuses?.region<0?' − 권역(마포·서대문) '+f(-m.bonuses.region):'')+' · 검증 전 잠정 산식';
+  return 'M3 종합 '+f(m.score)+'점 = '+parts.map(([label,key,w])=>label+' '+f(m.raw[key])+' × '+(+w.toFixed(1))+'%').join(' + ')+(m.penalties.density?' − 고밀도 '+f(m.penalties.density):'')+(m.penalties.hill?' − 언덕 '+f(m.penalties.hill):'')+(m.penalties.jubok?' − 주상복합 '+f(m.penalties.jubok):'')+(m.penalties.price?' − 가격 신뢰도 '+f(m.penalties.price):'')+(m.penalties.tiny?' − 초소형 평형 '+f(m.penalties.tiny):'')+(m.penalties.peak?' − 전고점 미회복 '+f(m.penalties.peak)+'(22년 고점 대비 '+Math.round(m.peakRatio*100)+'%'+(m.peakEst?', 고점 거래 없어 주변 단지로 추정':'')+')':'')+(m.bonuses?.verifiedProgress?' + 재건축 '+(m.redevStage<1?{.25:'신통 자문',.5:'추진위·입안',.75:'구역지정'}[m.redevStage]:['','조합설립','사업시행인가','관리처분인가'][m.redevStage]||'공람')+' '+f(m.bonuses.verifiedProgress):'')+(m.bonuses?.region>0?' + 권역(강남3구·용산) '+f(m.bonuses.region):m.bonuses?.region<0?' − 권역(마포·서대문) '+f(-m.bonuses.region):'')+' · 검증 전 잠정 산식';
  }
  function why(d){
   const m=d.m3;if(!m)return '';
