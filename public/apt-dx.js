@@ -158,7 +158,7 @@
     fetch('/api/apt-race').then(function(r){ if(!r.ok) throw 0; return r.json(); }).then(function(m){ if(!m||!Object.keys(m).length) throw 0;
       window.RACE=m||{};
       D.forEach(function(d){ var r=m[lkey(d)]; d.rc=r&&r[1]>0?r[2]/r[1]-1:null; d.rcab=r?r[0]:null; });
-      if(window.aptRerender) window.aptRerender();
+      if(window.aptRerenderList) window.aptRerenderList();
     }).catch(function(){ window.RACE_LOADING=0; });
   };
 })();
