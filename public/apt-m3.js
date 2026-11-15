@@ -132,7 +132,7 @@
   // '서울 > 경기' 원칙에 따라 15억 이상 탭(15~20·20~25·25~30억)에서만 장기 급지 −3점. 6억 이하·6~15억 탭 불변.
   if([20,25,30,35].includes(cap)&&/^과천/.test(String(d.area||'')))raw.G=Math.max(0,raw.G-3);
   const Jraw=raw.J;
-  if(!integratedSite){ const jg=clamp((raw.G-45)/25,0,1); raw.J=raw.J*(.5+.5*jg); }
+  if(!integratedSite){ const jg=clamp((raw.G-45)/25,0,1); raw.J=raw.J*(.5+.5*jg); raw.H=raw.H*(.5+.5*jg); }   // 학군도 직주와 같은 급지 연동(경승 "어바인 11위 과함": 급지 약한 곳은 학원가 점수 절반 → 6~10억 26위)
   if(cap===10){const L=Math.max(raw.G,Jraw);raw.X=raw.Q*clamp((L-50)/(75-50),0,1);}
   const baseRaw={...raw};
   if(cap===15&&integratedSite){
