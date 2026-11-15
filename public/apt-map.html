@@ -593,7 +593,7 @@ function fixUnits(A){
   // 2026.11.1: 네 탭 합집합 기준으로 계산한 전역 표(apt-unitfix.js)가 있으면 그것만 씀 — 탭마다 같은 단지 세대수가 달라지던 오류 수정
   if(window.UNITFIX){ const M3X=CAPT>6;   // 2026.11.12 전수조사 정정표(*_M3)는 6억 초과 탭에만 — 6억 이하 기존 결과 보존
     const UF=M3X?Object.assign({},UNITFIX,window.UNITFIX_M3||{}):UNITFIX;
-    const DR=new Set([...(window.UNITDROP||[]),...(M3X?window.UNITDROP_M3||[]:[])]), RT=new Set([...(window.UNITRENT||[]),...(M3X?window.UNITRENT_M3||[]:[])]);
+    const DR=new Set([...(window.UNITDROP||[]),...(window.UNITDROP_M3||[])])   /* 2026.11.15 전수조사: 임대(NHF)·중복(중계그린1단지) 제외는 6억 이하에도 */, RT=new Set([...(window.UNITRENT||[]),...(M3X?window.UNITRENT_M3||[]:[])]);
     A.forEach(d=>{ const key=gkey(d),f=UF[key]; if(f){ d.unitsRaw=f[1]; d.unitsN=f[2]; d.units=f[0]; d.unitsK=f[3]==='k'; }
       // 1~4단지를 따로 잘라 규모가 작은 단지로 점수화하면 실제로
       // 공유하는 3,045세대 규모의 거주 편익을 잘못 무시한다.
@@ -606,7 +606,7 @@ function fixUnits(A){
         d.unitsBlockVerified=0;
       }
       if(RT.has(key)) d.rent=1; if(DR.has(key)) DUPOUT.push([d.n,d.area]); });
-    return A.filter(d=>!DR.has(gkey(d))); }
+    return A.filter(d=>!DR.has(gkey(d))&&!/엔에이치에프|NHF/.test(d.n)); }   // 공공지원민간임대(NHF)는 매매 대상 아님
   const g={}; A.forEach(d=>{ const k=d.area+'|'+d.units+'|'+d.year; (g[k]=g[k]||[]).push(d); });
   const drop=new Set();
   Object.values(g).filter(a=>a.length>1).forEach(a=>{
