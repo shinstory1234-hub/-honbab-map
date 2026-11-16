@@ -114,8 +114,8 @@ function savedTab(){
 }
 function rivalsTab(){
  var pool=[],keys=new Set();
- [...recent,...D.filter(d=>FAV.has(d.cxKey)).slice(0,12).map(key),...inBounds().slice(0,12).map(key)].forEach(k=>{if(keys.has(k))return;keys.add(k);var d=D.find(x=>key(x)===k);if(d)pool.push(d);});
- var select=k=>'<select data-rival="'+k+'"><option value="">단지 선택</option>'+pool.slice(0,25).map(d=>'<option value="'+esc(key(d))+'"'+(rivals[k]===key(d)?' selected':'')+'>'+esc(name(d))+'</option>').join('')+'</select>';
+ [...recent,...D.filter(d=>FAV.has(d.cxKey)).slice(0,12).map(key),...(inBounds().length?inBounds().slice(0,12):D.slice().sort((a,b)=>a.rank-b.rank).slice(0,16)).map(key)].forEach(k=>{if(keys.has(k))return;keys.add(k);var d=D.find(x=>key(x)===k);if(d)pool.push(d);});
+ var select=k=>'<input data-rival-query="'+k+'" type="search" autocomplete="off" placeholder="단지명·동네 검색"><select data-rival="'+k+'"><option value="">단지 선택</option>'+pool.slice(0,25).map(d=>'<option value="'+esc(key(d))+'"'+(rivals[k]===key(d)?' selected':'')+'>'+esc(name(d))+'</option>').join('')+'</select>';
  return '<h3>라이벌 실거래 비교</h3><p>비슷한 전용면적의 두 단지를 골라 최근 분기별 국토부 중위 실거래를 비교합니다.</p>'
  +'<div class="s2-cols"><label>단지 1'+select(0)+'</label><label>단지 2'+select(1)+'</label></div>'
  +'<div class="s2-flex"><button class="s2-btn on" id="s2RaceRun">비교하기</button></div>'
@@ -153,6 +153,14 @@ function paint(){
  }
  if(tab==='rivals'){
   body.querySelectorAll('[data-rival]').forEach(s=>s.onchange=e=>{rivals[+s.dataset.rival]=e.target.value||null;});
+  body.querySelectorAll('[data-rival-query]').forEach(input=>input.oninput=()=>{
+   const k=+input.dataset.rivalQuery,q=input.value.trim();
+   const choices=q?searchIndex(q):D.slice().sort((a,b)=>a.rank-b.rank).slice(0,20);
+   const select=body.querySelector('[data-rival="'+k+'"]');
+   select.innerHTML='<option value="">단지 선택</option>'+choices.map(d=>'<option value="'+esc(key(d))+'">'+esc(name(d))+' · '+esc(d.area)+'</option>').join('');
+   if(rivals[k]&&choices.some(d=>key(d)===rivals[k]))select.value=rivals[k];
+   else rivals[k]=null;
+  });
   body.querySelector('#s2RaceRun').onclick=race;
  }
 }
