@@ -6,7 +6,7 @@ import { buildDx } from '../../../lib/aptdx.mjs';
 export const preferredRegion = 'icn1';
 export const maxDuration = 30;
 
-const cached = unstable_cache(buildDx, ['apt-dx-v1'], { revalidate: 21600 });
+const cached = unstable_cache(buildDx, ['apt-dx-v2'], { revalidate: 21600 });
 
 export async function GET(req) {
   const k = new URL(req.url).searchParams.get('k') || '';

@@ -1189,14 +1189,14 @@ const FAV=(()=>{ try{ return new Set(JSON.parse(localStorage.getItem('aptFav')||
 const favSave=()=>{ try{ localStorage.setItem('aptFav',JSON.stringify([...FAV])); }catch(e){} };
 const SORTS=[['rank','추천순',null],['price','가격 낮은순',(a,b)=>a.p-b.p],['new','신축순',(a,b)=>b.year-a.year],['units','세대수 많은순',(a,b)=>unitN(b)-unitN(a)],['station','역 가까운순',(a,b)=>((a.cur&&a.cur.m)??1e9)-((b.cur&&b.cur.m)??1e9)],['ppp','평당가 낮은순',(a,b)=>a.p/a.py-b.p/b.py],['deal','거래 많은순',(a,b)=>dealN(b)-dealN(a)],['cash','필요 현금 낮은순',(a,b)=>money(a).cash-money(b).cash],['commute','통근 예상 짧은순',(a,b)=>(jobMin(a)??1e9)-(jobMin(b)??1e9)],['latest','최근 거래순',(a,b)=>String(priceEv(b)?.last||'').replace(/\D/g,'').localeCompare(String(priceEv(a)?.last||'').replace(/\D/g,''))],['peak','전고점 회복 높은순',(a,b)=>(pkR(b)??-1)-(pkR(a)??-1)],['race','최고가 대비 하락률순',(a,b)=>(a.rc??9)-(b.rc??9)],['raceAmt','최고가 대비 하락액순',(a,b)=>(a.rcAmt??1e9)-(b.rcAmt??1e9)]];
 /* 2026.11.16 리치고 차용 상세(실거래 차트 등)·하락 레이스: apt-dx.js를 처음 필요할 때만 받음(첫 화면 번들 밖) */
-const loadDx=cb=>{ if(window.APTDX) return cb(); const q=window._dxq=window._dxq||[]; q.push(cb); if(q.length>1) return; const s=document.createElement('script'); s.src='/apt-dx.js?v=9'; s.onload=()=>{ q.splice(0).forEach(f=>{ try{f();}catch(e){} }); }; document.head.appendChild(s); };
-const loadExtra=cb=>{if(window.AP1X)return cb();const q=window._ap1xq=window._ap1xq||[];q.push(cb);if(q.length>1)return;const s=document.createElement('script');s.src='/apt-stage1-extra.js?v=3';s.onload=()=>q.splice(0).forEach(f=>{try{f();}catch(e){console.error('extra',e);}});s.onerror=()=>{q.length=0;console.error('extra load failed');};document.head.appendChild(s);};
+const loadDx=cb=>{ if(window.APTDX) return cb(); const q=window._dxq=window._dxq||[]; q.push(cb); if(q.length>1) return; const s=document.createElement('script'); s.src='/apt-dx.js?v=10'; s.onload=()=>{ q.splice(0).forEach(f=>{ try{f();}catch(e){} }); }; document.head.appendChild(s); };
+const loadExtra=cb=>{if(window.AP1X)return cb();const q=window._ap1xq=window._ap1xq||[];q.push(cb);if(q.length>1)return;const s=document.createElement('script');s.src='/apt-stage1-extra.js?v=4';s.onload=()=>q.splice(0).forEach(f=>{try{f();}catch(e){console.error('extra',e);}});s.onerror=()=>{q.length=0;console.error('extra load failed');};document.head.appendChild(s);};
 const mapStage1Loader=document.getElementById('ap1xMapLazy');if(mapStage1Loader)mapStage1Loader.onclick=()=>loadExtra(()=>{mapStage1Loader.remove();window.AP1X.installLayer();document.getElementById('ap1xMapBtn')?.click();});
 const loadStage2=cb=>{if(window.APT2)return cb();const q=window._ap2q=window._ap2q||[];q.push(cb);if(q.length>1)return;const s=document.createElement('script');s.src='/apt-stage2.js?v=1';s.onload=()=>q.splice(0).forEach(fn=>{try{fn();}catch(e){console.error('stage2 callback',e);}});s.onerror=()=>{q.length=0;console.error('stage2 load failed');};document.head.appendChild(s);};
 const stage2MapLazy=document.getElementById('apt2MapLazy');if(stage2MapLazy)stage2MapLazy.onclick=()=>loadStage2(()=>window.APT2.open('view'));
 document.getElementById('q')?.addEventListener('input',()=>{if(!window.APT2)loadStage2(()=>{});});
 if(new URLSearchParams(location.search).has('s2'))loadStage2(()=>window.APT2.importShare());
-const loadStage1=cb=>{ if(window.AP1)return cb();const q=window._ap1q=window._ap1q||[];q.push(cb);if(q.length>1)return;const s=document.createElement('script');s.src='/apt-stage1.js?v=1';s.onload=()=>q.splice(0).forEach(f=>{try{f();}catch(e){console.error('stage1 callback',e);}});s.onerror=()=>{q.length=0;console.error('stage1 load failed');};document.head.appendChild(s); };
+const loadStage1=cb=>{ if(window.AP1)return cb();const q=window._ap1q=window._ap1q||[];q.push(cb);if(q.length>1)return;const s=document.createElement('script');s.src='/apt-stage1.js?v=2';s.onload=()=>q.splice(0).forEach(f=>{try{f();}catch(e){console.error('stage1 callback',e);}});s.onerror=()=>{q.length=0;console.error('stage1 load failed');};document.head.appendChild(s); };
 window.aptRerenderList=()=>{ if(state.sel==null) renderList(); };
 const dealN=d=>(priceEv(d)||{n:0}).n||0, pkR=d=>d.s4&&d.s4.peakR!=null?d.s4.peakR:typeof peakLoRatio==='function'&&Number.isFinite(peakLoRatio(d))?peakLoRatio(d)/100:null;
 const PICKMENU={f:['유형·순위',()=>[['all','전체 유형'],...FILTERS.filter(x=>x[0]!=='all'&&x[0]!=='fav')]],pb:['가격대',()=>PB],size:['평형',()=>SIZES],age:['연식',()=>AGES],sort:['정렬',()=>SORTS]};
@@ -1613,7 +1613,7 @@ function publicDetailSummary(b,d){
     +'<dl class="facts"><div><dt>입지와 교통</dt><dd>'+esc(d.area)+' · '+transport+'</dd></div>'
     +'<div><dt>단지 규모와 연식</dt><dd>'+unitN(d).toLocaleString()+'세대 · '+esc(String(d.year))+'년 입주</dd></div>'
     +'<div><dt>시세 근거</dt><dd>'+trade+'</dd></div></dl>'
-    +'<p class="note">전체 단지를 동일한 기준으로 평가하며, 구체적인 가중치와 내부 보정식 대신 핵심 사실과 최종 평가 결과를 제공합니다. 과거 실거래 환산 시세는 실제 구매 가능가격과 다를 수 있습니다.</p>';
+    +'';
   (kpis||b.querySelector('.lede')||b).insertAdjacentElement('afterend',sec);
   // 세부 가중치·계산식은 비공개로 유지하고, 각 단지의 관찰 가능한
   // 신축/연식·학군·세대수·브랜드·역세권·초등학교 점수는 복원한다.
@@ -1635,7 +1635,7 @@ function publicDetailSummary(b,d){
     return `<div class="factor-row"><div class="factor-top"><div><strong>${esc(x.label)}</strong><small>${x.desc}</small></div><span class="factor-num tnum">${ok?x.score.toFixed(1):'—'}<i> / ${x.max}</i></span></div><div class="factor-track"><b style="width:${pct.toFixed(1)}%"></b></div></div>`;
   }).join('');
   factor.innerHTML='<h3>항목별 평가 점수 <small>세부 산식 비공개</small></h3><div class="factor-grid">'+factorRows+'</div>'
-    +'<p class="note">항목별 점수는 단지 특성에 대한 비교 지표입니다. 학군, 브랜드, 초등학교 접근성은 별도 참고 점수이며 위 숫자를 단순히 더해 종합점수를 만들지는 않습니다.</p>';
+    +'<p class="note">학군·브랜드·초등학교 점수는 참고용이며 종합점수에 그대로 더하지 않습니다.</p>';
   sec.insertAdjacentElement('afterend',factor);
   // 같은 단지 투자포인트는 별도 확장 스크립트가 삽입하며, 해석 요약을 유지한다.
 }
@@ -1652,6 +1652,25 @@ function redevelopmentEvidencePanel(d){
 /* 2026.11.16 리치고 차용: 전고점 대비(최고 대비) + 사면 드는 돈(취득세·중개보수). 상세 열 때만 계산 */
 function costPanel(d){ const e=pkR(d); if(e==null) return '';
   return `<section class="sec"><h3>시세 흐름 <small>국토부 실거래 기준</small></h3><dl class="facts tnum"><div><dt>21~22년 전고점 대비<small>${e>=1?'전고점 회복':'전고점 미회복'}</small></dt><dd style="color:${e>=1?'#0a7d3e':'#e5484d'}">${e>=1?'+':''}${((e-1)*100).toFixed(1)}%</dd></div></dl></section>`; }
+/* 2026.11.16 상세 가독성: 핵심(시세·실거래)을 위로, 긴 원고는 접고, 보조 정보는 아래로. 비동기로 붙는 섹션마다 다시 호출 */
+window.aptLayout=function(b){ if(!b||!b.isConnected) return;
+  const top=b.querySelector('.identity'), kp=b.querySelector('dl.kpis'); if(!top) return;
+  let at=top; if(kp){ top.after(kp); at=kp; }
+  const H=x=>((x.querySelector('h3')||{}).textContent||'').trim();
+  const secs=[...b.querySelectorAll('section')].filter(x=>!x.parentElement.closest('section'));
+  [/^실거래가/,/^한눈에 보기/,/^핵심 투자포인트/,/^함께 비교할/,/^배정 학교/,/^도보 생활권/,/^전체 평형별/,/^정비사업/,/^재건축 단계/,/^대지지분/,/평당 시세 순위/,/^시세 흐름/,/^항목별 평가/,/^핵심 평가 요약/,/^단지 기본정보/].forEach(re=>{
+    let s=secs.find(x=>re.test(H(x))); if(!s) return;
+    if(re.source==='^실거래가'){ s=s.closest('.dxbox')||s; }
+    at.after(s); at=s; });
+  secs.forEach(x=>{ if(/^핵심 평가 요약/.test(H(x))) x.hidden=true; });
+  const inv=b.querySelector('section.invest .invest-essay');
+  if(inv&&!inv.dataset.fold){ const hs=[...inv.querySelectorAll('h4')]; if(hs.length>2){ inv.dataset.fold=1;
+    const hide=[]; hs.slice(2).forEach(h=>{ let n=h; do{ hide.push(n); n=n.nextElementSibling; }while(n&&n.tagName!=='H4'); });
+    hide.forEach(n=>n.hidden=true); inv.parentElement.querySelectorAll('.invest-mini,.invest-source').forEach(n=>n.hidden=true);
+    const bt=document.createElement('button'); bt.type='button'; bt.className='dxmore'; bt.textContent='전체 분석 '+(hs.length-2)+'개 더 보기';
+    bt.onclick=()=>{ hide.forEach(n=>n.hidden=false); inv.parentElement.querySelectorAll('.invest-mini,.invest-source').forEach(n=>n.hidden=false); bt.remove(); };
+    inv.after(bt); } }
+};
 function renderDetail(i){
   const d=D[i], m=money(d), nd=need(d), tags=[d.tier.k,...cardFeatures(d).map(k=>FEATURE_META[k].label)].join(' · ');
   const bar=(v,max)=>`<div class="t"><b style="width:${Math.min(100,Math.round(v/(Number.isFinite(max)?max:700000)*100))}%"></b></div>`;
@@ -1707,7 +1726,7 @@ function renderDetail(i){
   h+=costPanel(d);
   if(d.fit&&d.fit.length) h+=`<section class="sec"><h3>이런 사람에게</h3><div class="fit">${d.fit.map(f=>`<span>${esc(f)}</span>`).join('')}</div></section>`;
   if(d.check&&d.check.length) h+=`<section class="sec"><h3>사기 전에 확인</h3><ul class="checks">${d.check.map(f=>`<li>${esc(String(f).replace(/^자동 수집 단지 · /,''))}</li>`).join('')}</ul></section>`;
-  h+=`<p class="fine">필요한 돈은 주담대 한도(시가 15억 이하 6억, 15억 초과 4억)와 LTV만 반영한 계산입니다. 실제 대출은 소득(DSR)에 따라 줄어듭니다. ${d.u||d.p0?'시세는 국토부 실거래 기준 최근 시세(3개월 중위 또는 시세지수 환산)로 매물 호가와 다를 수 있습니다.':'시세는 리치고 추정치로 매물 호가와 다를 수 있습니다.'} 상승률 출처: ${esc(src)}.</p>
+  h+=`<p class="fine">${d.u||d.p0?'시세는 국토부 실거래 기준 최근 시세(3개월 중위 또는 시세지수 환산)로 매물 호가와 다를 수 있습니다.':'시세는 리치고 추정치로 매물 호가와 다를 수 있습니다.'} 상승률 출처: ${esc(src)}.</p>
   <div class="pfoot"><a class="btn" target="_blank" rel="noopener" href="https://map.kakao.com/link/search/${encodeURIComponent(d.q)}">카카오맵에서 보기 ${ARROW}</a><a class="btn ghost" target="_blank" rel="noopener" href="https://m.land.naver.com/search/result/${encodeURIComponent(d.q)}">매물</a></div>`;
    if(NOUP()) h=h.replace(/<div><dt>(?:주변 대비 가격 차이|적정가 대비)<\/dt>[\s\S]*?<\/small><\/div>/,'').replace(/<section class="sec"><h3>적정가 대비 [\s\S]*?<\/section>/,rbRiskPanel(d)+sdPanel(d));
   if(CAPT>6&&window.APT_TRANSPORT)h=h.replace('<section class="sec">',APT_TRANSPORT.panel(d)+'<section class="sec">');
@@ -1718,13 +1737,13 @@ function renderDetail(i){
     setTimeout(()=>{ if(sb.isConnected) sb.textContent='공유'; },2000); };
   $('#favBtn').onclick=()=>{ const k=d.cxKey, on=!FAV.has(k); on?FAV.add(k):FAV.delete(k); favSave(); const fb=$('#favBtn'); fb.textContent=on?'♥ 저장됨':'♡ 저장'; fb.style.color=on?'#e5484d':'inherit'; fb.setAttribute('aria-pressed',on); };
   b.querySelectorAll('[data-sib]').forEach(x=>x.onclick=()=>{ const j=+x.dataset.sib; if(j!==i) select(j,false); });
-  loadDx(()=>APTDX(d,b));
+  aptLayout(b);loadDx(()=>APTDX(d,b));
   $('#ap1DetailCompare').onclick=()=>loadStage1(()=>window.AP1.add(i));
   loadStage1(()=>{if(state.sel===i&&b.isConnected){
     // 본문 자동 정리 과정에서 lede가 생략된 단지는 앵커를 재생성한 뒤 기능 카드를 붙인다.
     const ensureLede=()=>{if(!b.querySelector('.lede')){const anchor=document.createElement('div');anchor.className='lede';anchor.hidden=true;(b.querySelector('.identity')||b.querySelector('.phead'))?.after(anchor);}};
-    ensureLede();window.AP1.detail(d,b);
-    loadExtra(()=>{if(state.sel===i&&b.isConnected){ensureLede();window.AP1X.detail(d,b);}});
+    ensureLede();window.AP1.detail(d,b);aptLayout(b);
+    loadExtra(()=>{if(state.sel===i&&b.isConnected){ensureLede();window.AP1X.detail(d,b);aptLayout(b);}});
   }});
 }
 

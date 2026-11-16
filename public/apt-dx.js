@@ -67,7 +67,16 @@
     var best=null; for(var b in c) if(best==null||c[b]>c[best]) best=b; return best!=null?+best:null;
   }
 
+  // 직거래 표시가 없는 옛 거래(2026.8 이전) 중 같은 면적대 ±6개월 중위의 80% 미만 = 특수관계·이상 거래 의심(t[5]=1)
+  function markOdd(all){ if(all._odd) return; all._odd=1; var by={};
+    all.forEach(function(t){ if(!t[4]) (by[ab(t[1])]=by[ab(t[1])]||[]).push(t); });
+    Object.keys(by).forEach(function(k){ var a=by[k]; a.forEach(function(t){ var ms=tms(t[0]), nb=[];
+      a.forEach(function(u){ if(u!==t&&Math.abs(tms(u[0])-ms)<=183*864e5) nb.push(u[3]); });
+      if(nb.length>=3&&t[3]<med(nb)*.8) t[5]=1; }); });
+  }
+  function bad(t){ return t[4]||t[5]; }
   function chart(rows,period){
+    rows=rows.filter(function(t){return !bad(t);});
     var now=Date.now(), from=period==='all'?0:now-period*365.25*864e5;
     var R=rows.filter(function(t){return tms(t[0])>=from;});
     if(R.length<2) return '<p class="note">이 기간 거래가 부족해요.</p>';
@@ -78,8 +87,8 @@
     var X=function(ms){return PL+(ms-x0)/(x1-x0)*(W-PL-PR);}, Y=function(v){return PT+(hi-v)/(hi-lo)*(H-PT-PB);};
     var dots='', mon={}, vol={};
     R.forEach(function(t){ var ms=tms(t[0]);
-      dots+='<circle cx="'+X(ms).toFixed(1)+'" cy="'+Y(t[3]).toFixed(1)+'" r="2.2" fill="#94a3b8" fill-opacity="'+(t[4]?'.35':'.75')+'"/>';
-      var mk=String(t[0]).slice(0,6); if(!t[4]) (mon[mk]=mon[mk]||[]).push(t[3]); vol[mk]=(vol[mk]||0)+1; });
+      dots+='<circle cx="'+X(ms).toFixed(1)+'" cy="'+Y(t[3]).toFixed(1)+'" r="2.2" fill="#94a3b8" fill-opacity=".75"/>';
+      var mk=String(t[0]).slice(0,6); (mon[mk]=mon[mk]||[]).push(t[3]); vol[mk]=(vol[mk]||0)+1; });
     var keys=Object.keys(mon).sort(), line='';
     keys.forEach(function(k,i){ var ms=Date.UTC(+k.slice(0,4),+k.slice(4,6)-1,15); line+=(i?'L':'M')+X(ms).toFixed(1)+' '+Y(med(mon[k])).toFixed(1); });
     var vmax=0; for(var k in vol) vmax=Math.max(vmax,vol[k]);
@@ -95,16 +104,16 @@
       +'<path d="'+line+'" fill="none" stroke="#2563eb" stroke-width="1.8" stroke-linejoin="round"/>'
       +'<circle cx="'+tx.toFixed(1)+'" cy="'+ty.toFixed(1)+'" r="3.2" fill="#e5484d"/><text x="'+Math.min(W-PR,Math.max(PL+20,tx)).toFixed(1)+'" y="'+Math.max(10,ty-6).toFixed(1)+'" font-size="9.5" font-weight="700" text-anchor="middle" fill="#e5484d">최고 '+eo(top[3])+'</text>'
       +'<text x="'+(W-PR)+'" y="'+(H-PB+12)+'" font-size="8.5" text-anchor="end" fill="#94a3b8">거래량</text></svg>'
-      +'<p class="note" style="margin-top:4px">점=실거래(흐린 점은 직거래) · 파란 선=월 중위(직거래 제외) · 회색 막대=월 거래량</p>';
+      +'<p class="note" style="margin-top:4px">점=실거래 · 파란 선=월 중위 · 회색 막대=월 거래량 · 직거래·이상 거래 제외</p>';
   }
 
   function drawDx(d,j,box,selectedArea,floorMode,omitDirect){
-    var all=j.t||[],A=selectedArea==null?pickAb(d,j):+selectedArea;
+    var all=j.t||[];markOdd(all);var A=selectedArea==null?pickAb(d,j):+selectedArea;
     floorMode=floorMode||'all';omitDirect=!!omitDirect;
     var areaRows=all.filter(function(t){return ab(t[1])===A;});
     var maxFloor=areaRows.reduce(function(n,t){return Math.max(n,t[2]);},0);
     var floor1=Math.max(1,Math.floor(maxFloor/3)),floor2=Math.max(floor1,Math.floor(maxFloor*2/3));
-    var rows=areaRows.filter(function(t){return (floorMode==='all'||(floorMode==='low'&&t[2]<=floor1)||(floorMode==='mid'&&t[2]>floor1&&t[2]<=floor2)||(floorMode==='high'&&t[2]>floor2))&&(!omitDirect||!t[4]);});
+    var rows=areaRows.filter(function(t){return (floorMode==='all'||(floorMode==='low'&&t[2]<=floor1)||(floorMode==='mid'&&t[2]>floor1&&t[2]<=floor2)||(floorMode==='high'&&t[2]>floor2))&&(!omitDirect||!bad(t));});
     var areaOptions=Array.from(new Set(all.map(function(t){return ab(t[1]);}))).sort(function(a,b){return a-b;});
     var now=Date.now(), lcPy={}; (j.lc||[]).forEach(function(x){ lcPy[x[0]]=x[1]; });
     var chip=function(cls,val,on,label,sub){ return '<button type="button" class="dxc1 '+cls+(on?' on':'')+'" data-v="'+val+'" aria-pressed="'+on+'">'+label+(sub?'<small>'+sub+'</small>':'')+'</button>'; };
@@ -112,8 +121,8 @@
     if(areaOptions.length>1) h+='<div class="dxrow" role="group" aria-label="평형">'+areaOptions.map(function(v){ return chip('dxa',v,v===A,lcPy[v]?lcPy[v]+'평':v+'㎡대',lcPy[v]?'전용 '+v+'㎡':''); }).join('')+'</div>';
     if(!rows.length) h+='<p class="note">선택 조건에 맞는 실거래가 없습니다.</p>';
     if(rows.length){
-      var last=rows[rows.length-1], peak=rows.reduce(function(a,t){return t[3]>a[3]?t:a;},rows[0]);
-      var nd=rows.filter(function(t){return !t[4];});
+      var nd=rows.filter(function(t){return !bad(t);}); if(!nd.length) nd=rows;
+      var last=nd[nd.length-1], peak=nd.reduce(function(a,t){return t[3]>a[3]?t:a;},nd[0]);
       var r3=nd.filter(function(t){return tms(t[0])>=now-91*864e5;}).map(function(t){return t[3];});
       var y3=nd.filter(function(t){var m=tms(t[0]);return m>=now-456*864e5&&m<now-365*864e5;}).map(function(t){return t[3];});
       var m3=med(r3), my=med(y3), cur=m3!=null?m3:last[3];
@@ -126,7 +135,7 @@
         +'<div class="dxseg dxp" role="group" aria-label="기간">'+['3','5','all'].map(function(p,i){return '<button type="button" data-p="'+p+'" aria-pressed="'+(i===0)+'"'+(i===0?' class="on"':'')+'>'+(p==='all'?'전체':p+'년')+'</button>';}).join('')+'</div>'
         +'<div class="dxc">'+chart(rows,3)+'</div>';
       // 층별: 누르면 그 층만(다시 누르면 전체)
-      var aNd=areaRows.filter(function(t){return !t[4]&&tms(t[0])>=now-365*864e5;});
+      var aNd=areaRows.filter(function(t){return !bad(t)&&tms(t[0])>=now-365*864e5;});
       if(maxFloor>=3&&aNd.length>=3){
         var G=[['low','저층','1~'+floor1+'층'],['mid','중층',(floor1+1)+'~'+floor2+'층'],['high','고층',(floor2+1)+'층~']];
         h+='<h4 class="dxh">층별 가격 <small>최근 12개월 중위 · 누르면 그 층만</small></h4><div class="dxtiles tnum">'
@@ -134,10 +143,10 @@
             return '<button type="button" class="dxtile dxf'+(floorMode===g[0]?' on':'')+'" data-v="'+g[0]+'"><span>'+g[1]+' <small>'+g[2]+'</small></span><b>'+(v.length?won(med(v)):'—')+'</b><small>'+v.length+'건</small></button>'; }).join('')+'</div>';
       }
       // 최근 실거래 3건 + 더보기
-      var mx=0, flag=rows.map(function(t){ var n=t[3]>mx&&!t[4]; if(!t[4]) mx=Math.max(mx,t[3]); return n; });
+      var mx=0, flag=rows.map(function(t){ var n=t[3]>mx&&!bad(t); if(!bad(t)) mx=Math.max(mx,t[3]); return n; });
       var list=rows.map(function(t,i){return [t,flag[i]];}).reverse();
-      var tr=function(n){ return list.slice(0,n).map(function(x){ var t=x[0]; return '<div class="dxr"><div class="l"><b>'+won(t[3])+(x[1]?'<i class="nw">신고가</i>':'')+(t[4]?'<i class="dg">직거래</i>':'')+'</b><span>'+ymd(t[0])+' · '+t[2]+'층 · 전용 '+t[1]+'㎡</span></div></div>'; }).join(''); };
-      h+='<div class="dxh dxhrow"><span>최근 실거래 <small>'+rows.length.toLocaleString()+'건</small></span><label class="dxtg"><input class="dxndirect" type="checkbox" '+(omitDirect?'checked':'')+'>직거래 빼기</label></div>'
+      var tr=function(n){ return list.slice(0,n).map(function(x){ var t=x[0]; return '<div class="dxr"><div class="l"><b>'+won(t[3])+(x[1]?'<i class="nw">신고가</i>':'')+(t[4]?'<i class="dg">직거래</i>':t[5]?'<i class="dg">이상 거래 의심</i>':'')+'</b><span>'+ymd(t[0])+' · '+t[2]+'층 · 전용 '+t[1]+'㎡</span></div></div>'; }).join(''); };
+      h+='<div class="dxh dxhrow"><span>최근 실거래 <small>'+rows.length.toLocaleString()+'건</small></span><label class="dxtg"><input class="dxndirect" type="checkbox" '+(omitDirect?'checked':'')+'>직거래·이상거래 빼기</label></div>'
         +'<div class="dxl dxt tnum">'+tr(3)+'</div>'
         +(list.length>3?'<button type="button" class="dxmore dxm">실거래 '+(list.length-3).toLocaleString()+'건 더보기</button>':'');
     }
@@ -178,15 +187,15 @@
     box.innerHTML='<section class="sec" data-dx="1"><h3>실거래가</h3><p class="note">실거래 불러오는 중…</p></section>';
     var anchor=null; body.querySelectorAll('section.sec > h3').forEach(function(h){ if(!anchor&&/^(시세 흐름|사면 드는 돈)/.test(h.textContent.trim())) anchor=h.parentNode; });
     if(anchor) anchor.parentNode.insertBefore(box,anchor); else { var id=body.querySelector('.identity'); (id&&id.nextSibling)?id.parentNode.insertBefore(box,id.nextSibling):body.appendChild(box); }
-    var done=function(j){ if(box.isConnected){ drawDx(d,j,box);window.APT_DX_INFO=window.APT_DX_INFO||{};window.APT_DX_INFO[k]=j;if(window.AP1X)window.AP1X.onDx(d,j,body); } };
+    var done=function(j){ if(box.isConnected){ drawDx(d,j,box);window.APT_DX_INFO=window.APT_DX_INFO||{};window.APT_DX_INFO[k]=j;if(window.AP1X)window.AP1X.onDx(d,j,body); if(window.aptLayout)aptLayout(body); } };
     if(CACHE[k]) return done(CACHE[k]);
-    fetch('/api/apt-dx?k='+encodeURIComponent(k)).then(function(r){ if(!r.ok) throw 0; return r.json(); })
+    fetch('/api/apt-dx?v=2&k='+encodeURIComponent(k)).then(function(r){ if(!r.ok) throw 0; return r.json(); })
       .then(function(j){ CACHE[k]=j; done(j); }).catch(function(){ if(box.isConnected) box.innerHTML=''; });
   };
 
   window.APTRACE=function(){
     if(window.RACE_LOADING) return; window.RACE_LOADING=1;
-    fetch('/api/apt-race?v=2').then(function(r){ if(!r.ok) throw 0; return r.json(); }).then(function(m){ if(!m||!Object.keys(m).length) throw 0;
+    fetch('/api/apt-race?v=3').then(function(r){ if(!r.ok) throw 0; return r.json(); }).then(function(m){ if(!m||!Object.keys(m).length) throw 0;
       window.RACE=m||{};
       D.forEach(function(d){ var a=m[lkey(d)]||[], r=null; for(var i=0;i<a.length;i++){ if(Math.abs(a[i][0]-d.py)<=1&&(!r||Math.abs(a[i][0]-d.py)<Math.abs(r[0]-d.py))) r=a[i]; } d.rc=r?r[2]/r[1]-1:null; d.rcAmt=r?r[2]-r[1]:null; d.rcN=r?r[3]:null; });
       if(window.aptRerenderList) window.aptRerenderList();
