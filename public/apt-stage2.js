@@ -16,7 +16,8 @@ var name=d=>publicComplexName(d)+' '+d.py+'평';
 var rent=d=>Number(d.jeon)>0?+d.jeon:null;
 var ratio=d=>rent(d)!=null&&d.p>0?rent(d)/d.p*100:null;
 var gap=d=>rent(d)!=null?d.p-rent(d):null;
-var rentAvailable=D.some(d=>rent(d)!=null);
+var rentCoverage=D.filter(d=>rent(d)!=null).length;
+var rentAvailable=rentCoverage>=Math.max(50,Math.ceil(D.length*.6));
 var date=d=>(priceEv(d)?.last||'').replace(/\D/g,'').slice(0,8);
 var inUse=()=>Object.values(filter).some(x=>x>0);
 var css=document.createElement('style');
@@ -47,6 +48,7 @@ css.textContent=[
 '.s2-measure{position:absolute;left:12px;bottom:20px;z-index:30;background:var(--bg);color:var(--text);border:1px solid var(--border);padding:9px 11px;border-radius:5px;font-weight:750;font-size:12px}',
 '@media(max-width:767px){.s2-shade{padding:0;align-items:flex-end}.s2-dialog{max-height:81dvh;border-radius:14px 14px 0 0}.s2-tabs{top:49px}#apt2Launcher{top:147px}}'
 ].join('');
+css.textContent+='.search{position:relative}.s2-suggest{position:absolute;top:calc(100% + 5px);left:0;right:0;z-index:300;background:var(--bg);border:1px solid var(--border);border-radius:7px;box-shadow:0 7px 20px #0003;max-height:330px;overflow:auto;padding:5px}.s2-suggest[hidden]{display:none}.s2-suggest button{display:block;border:0;width:100%;text-align:left;padding:10px 11px;background:var(--bg);color:var(--text);cursor:pointer;border-radius:4px}.s2-suggest button:hover,.s2-suggest button:focus-visible{background:var(--bg-subtle);outline:1px solid var(--border)}.s2-suggest b{font-size:13px;display:block}.s2-suggest small{font-size:11px;color:var(--text-tertiary);display:block;margin-top:3px}';
 document.head.appendChild(css);
 function note(t){var o=document.getElementById('s2Toast');if(!o){o=document.createElement('div');o.id='s2Toast';o.className='s2-toast';o.setAttribute('role','status');document.body.appendChild(o);}o.textContent=t;o.hidden=false;clearTimeout(note.t);note.t=setTimeout(()=>{o.hidden=true;},2900);}
 function remember(d){var k=key(d);recent=[k,...recent.filter(x=>x!==k)].slice(0,12);try{localStorage.setItem(recKey,JSON.stringify(recent));}catch(e){}}
@@ -72,7 +74,7 @@ function rank(arr,by){
  units:(a,b)=>unitN(b)-unitN(a),age:(a,b)=>b.year-a.year,rent:(a,b)=>(ratio(b)??-1)-(ratio(a)??-1),deal:(a,b)=>dealN(b)-dealN(a)};
  return arr.sort((a,b)=>(fs[by]||fs.rank)(a,b)||a.rank-b.rank);
 }
-function rows(arr){if(!arr.length)return '<p>표시할 단지가 없습니다.</p>';return '<ul class="s2-rows">'+arr.map(d=>'<li><div style="min-width:0"><b>'+esc(name(d))+(bestInGu.get(d.area.split(' ').slice(0,2).join(' '))===d?' <span style="font-size:10px;color:var(--primary-soft-fg)">구 추천 1위</span>':'')+'</b><small>'+esc(d.area)+' · 추천 '+d.rank+'위 · '+eokSafe(d.p)+(rent(d)!=null?' · 전세 참고 '+eokSafe(rent(d)):'')+'</small></div><button class="s2-btn" data-s2go="'+D.indexOf(d)+'">보기</button></li>').join('')+'</ul>';}
+function rows(arr){if(!arr.length)return '<p>표시할 단지가 없습니다.</p>';return '<ul class="s2-rows">'+arr.map(d=>'<li><div style="min-width:0"><b>'+esc(name(d))+(bestInGu.get(d.area.split(' ').slice(0,2).join(' '))===d?' <span style="font-size:10px;color:var(--primary-soft-fg)">현 예산 구 1위</span>':'')+'</b><small>'+esc(d.area)+' · 추천 '+d.rank+'위 · '+eokSafe(d.p)+(rent(d)!=null?' · 전세 참고 '+eokSafe(rent(d)):'')+'</small></div><button class="s2-btn" data-s2go="'+D.indexOf(d)+'">보기</button></li>').join('')+'</ul>';}
 function searchOptions(arr,selected){return arr.map(([k,label])=>'<option value="'+esc(k)+'"'+(selected===k?' selected':'')+'>'+esc(label)+'</option>').join('');}
 var rankTypes=[['rank','추천순'],['price','매수가 낮은순'],['ppp','평당가 낮은순'],['cash','필요 현금 낮은순'],['units','세대수 많은순'],['age','준공 최신순'],['rent','전세가율 높은순'],['deal','거래 많은순']];
 function viewTab(){
@@ -107,7 +109,7 @@ function savedTab(){
  var arr=recent.map(k=>D.find(d=>key(d)===k)).filter(Boolean);
  var seen=new Set(),fav=D.filter(d=>FAV.has(d.cxKey)&&!seen.has(complexRankKey(d))&&seen.add(complexRankKey(d))).sort((a,b)=>a.rank-b.rank);
  return '<h3>최근 본 단지 · 이 기기</h3>'+rows(arr.slice(0,8))+'<h3>관심 단지 · ♥ 저장</h3>'+rows(fav.slice(0,12))
- +'<div class="s2-flex"><button id="s2Share" class="s2-btn">현재 지도 주소 복사</button><button id="s2ClearHistory" class="s2-btn">최근 기록 지우기</button></div>'
+ +'<div class="s2-flex"><button id="s2Share" class="s2-btn">조건 포함 링크 복사</button><button id="s2ClearHistory" class="s2-btn">최근 기록 지우기</button></div>'
  +'<p>최근 본 기록과 관심 단지는 이 브라우저에만 저장됩니다. 로그인 없이 기기 간 동기화하지 않습니다.</p>';
 }
 function rivalsTab(){
@@ -140,7 +142,13 @@ function paint(){
  }
  if(tab==='nav')bindNav(body);
  if(tab==='saved'){
-  body.querySelector('#s2Share').onclick=async()=>{try{await navigator.clipboard.writeText(location.href);note('지도 주소를 복사했습니다. 추가 필터는 공유되지 않습니다.');}catch(e){prompt('링크 복사',location.href);}};
+  body.querySelector('#s2Share').onclick=async()=>{
+   const u=new URL(location.href);
+   const f={v:1,filter,sort:state.sort,fav:state.f,pb:state.pb,size:state.size,age:state.age,q:state.q,rank:rankSort};
+   u.searchParams.set('s2',JSON.stringify(f));
+   if(map){const c=map.getCenter();u.searchParams.set('vlat',c.getLat().toFixed(5));u.searchParams.set('vlng',c.getLng().toFixed(5));u.searchParams.set('vlevel',String(map.getLevel()));}
+   try{await navigator.clipboard.writeText(u.href);note('조건과 지도 위치를 포함한 링크를 복사했습니다.');}catch(e){prompt('링크 복사',u.href);}
+  };
   body.querySelector('#s2ClearHistory').onclick=()=>{recent=[];try{localStorage.removeItem(recKey);}catch(e){}paint();};
  }
  if(tab==='rivals'){
@@ -202,40 +210,122 @@ function measureMapClick(e){
  else if(measureMode==='area')note(measurePoints.length+'점 선택됨 · 완료 버튼으로 측정');
 }
 function mapReady(){if(!map||mapReady.bound===map)return;mapReady.bound=map;kakao.maps.event.addListener(map,'click',measureMapClick);kakao.maps.event.addListener(map,'idle',()=>{if(indicator!=='base')setTimeout(applyPins,50);});}
+
+function searchIndex(query){
+ const q=query.trim().toLocaleLowerCase();if(!q)return [];
+ const found=[],used=new Set();
+ for(const d of D){
+  const group=complexRankKey(d);if(used.has(group)||!visible(d,false))continue;
+  const full=(d.n||'').toLocaleLowerCase(),region=(d.area||'').toLocaleLowerCase();
+  const station=(d.cur?.n||'').toLocaleLowerCase(),school=(d.g?.scn||'').toLocaleLowerCase();
+  const nick=townOf(d).toLocaleLowerCase();
+  const score=full===q?0:full.startsWith(q)?1:full.includes(q)?2:region.includes(q)?3:station.includes(q)?4:school.includes(q)?5:nick.includes(q)?6:99;
+  if(score===99)continue;used.add(group);found.push({d,score});
+ }
+ found.sort((a,b)=>a.score-b.score||a.d.rank-b.d.rank);
+ return found.slice(0,7).map(x=>x.d);
+}
+function bindSearch(){
+ const input=document.getElementById('q'),wrap=input?.closest('.search');
+ if(!input||!wrap||wrap.querySelector('#s2Suggest'))return;
+ const pop=document.createElement('div');pop.id='s2Suggest';pop.className='s2-suggest';pop.setAttribute('role','listbox');pop.hidden=true;wrap.appendChild(pop);
+ let timer;
+ const paint=()=>{
+  if(!input.isConnected)return;
+  const q=input.value.trim();
+  if(!q||document.activeElement!==input){pop.hidden=true;return;}
+  const matches=searchIndex(q);
+  pop.innerHTML=matches.map(d=>'<button type="button" data-s2match="'+D.indexOf(d)+'" role="option"><b>'+esc(name(d))+'</b><small>'+esc(d.area)+' · 추천 '+d.rank+'위'+(d.cur?.n?' · 인근역 '+esc(d.cur.n):'')+'</small></button>').join('');
+  pop.hidden=!matches.length;
+ };
+ input.addEventListener('input',()=>{clearTimeout(timer);timer=setTimeout(paint,65);});
+ input.addEventListener('focus',paint);
+ input.addEventListener('blur',()=>{clearTimeout(timer);setTimeout(()=>pop.hidden=true,170);});
+ input.addEventListener('keydown',e=>{if(!pop.hidden&&e.key==='ArrowDown'){e.preventDefault();pop.querySelector('button')?.focus();}if(e.key==='Escape')pop.hidden=true;},true);
+ pop.addEventListener('keydown',e=>{
+  const buttons=[...pop.querySelectorAll('button')],idx=buttons.indexOf(document.activeElement);
+  if(e.key==='ArrowDown'||e.key==='ArrowUp'){e.preventDefault();buttons[Math.max(0,Math.min(buttons.length-1,idx+(e.key==='ArrowDown'?1:-1)))]?.focus();}
+  if(e.key==='Escape'){e.preventDefault();pop.hidden=true;input.focus();}
+ });
+ pop.addEventListener('click',e=>{
+  const button=e.target.closest('[data-s2match]');if(!button)return;
+  const i=+button.dataset.s2match;if(!D[i])return;
+  pop.hidden=true;input.blur();select(i,false);
+ });
+ paint();
+}
+function importShare(){
+ const raw=new URL(location.href).searchParams.get('s2');if(!raw||raw.length>1800)return;
+ try{
+  const data=JSON.parse(raw);if(!data||data.v!==1||!data.filter||typeof data.filter!=='object')return;
+  const next={};
+  for(const k of ['rentMin','gapMax','ratioMin','ratioMax','tradeMin','days']){
+   const v=Number(data.filter[k]);next[k]=Number.isFinite(v)&&v>=0&&v<=1e7?v:0;
+  }
+  if(!rentAvailable)next.rentMin=next.gapMax=next.ratioMin=next.ratioMax=0;
+  filter=next;
+  if(SORTS.some(row=>row[0]===data.sort))state.sort=data.sort;
+  if(['all','fav','top','mid','interest','explore','flat','job50','free'].includes(data.fav))state.f=data.fav;
+  if(PB.some(row=>row[0]===data.pb))state.pb=data.pb;
+  if(SIZES.some(row=>row[0]===data.size))state.size=data.size;
+  if(AGES.some(row=>row[0]===data.age))state.age=data.age;
+  if(rankTypes.some(row=>row[0]===data.rank))rankSort=data.rank;
+  if(typeof data.q==='string'){state.q=data.q.slice(0,60);document.getElementById('q').value=state.q;}
+  state.lim=50;render();note('공유된 탐색 조건을 적용했습니다.');
+ }catch(e){console.warn('stage2 shared query invalid',e);}
+}
+
 function install(){
  document.getElementById('apt2MapLazy')?.remove();
  if(!document.getElementById('apt2Launcher')){var wrap=document.querySelector('.mapwrap');if(wrap){var btn=document.createElement('button');btn.id='apt2Launcher';btn.textContent='지도 도구';btn.type='button';btn.onclick=()=>open('view');wrap.appendChild(btn);}}
  document.querySelectorAll('[data-ap2]').forEach(b=>b.onclick=()=>open(b.dataset.ap2||'view'));
- mapReady();applyPins();
+ mapReady();bindSearch();applyPins();
 }
 function median(a){if(!a.length)return null;a=a.slice().sort((x,y)=>x-y);return a.length%2?a[(a.length-1)/2]:(a[a.length/2-1]+a[a.length/2])/2;}
 async function race(){
  var dest=panel?.querySelector('#s2RaceOutput');if(!dest)return;
  var pair=rivals.map(k=>D.find(d=>key(d)===k));
  if(pair.some(x=>!x)||key(pair[0])===key(pair[1])){dest.innerHTML='<p>서로 다른 두 단지를 선택하세요.</p>';return;}
- dest.textContent='실거래 자료 조회 중…';
+ if(Math.abs(pair[0].py-pair[1].py)>Math.max(2,pair[0].py*.12)){dest.innerHTML='<p>평형 차이가 큽니다. ±12% 이내의 유사 평형을 선택하세요.</p>';return;}
+ dest.textContent='공통 전용면적대의 실거래를 조회하고 있습니다…';
  try{
   if(!window.aptLkey){await new Promise((yes,no)=>{var s=document.createElement('script');s.src='/apt-dx.js?v=9';s.onload=yes;s.onerror=no;document.head.appendChild(s);});}
-  var data=await Promise.all(pair.map(async d=>{
-   var k=window.aptLkey(d);if(!k)return null;
-   var res=await fetch('/api/apt-dx?k='+encodeURIComponent(k));if(!res.ok)return null;
-   var j=await res.json(),a={};
-   for(var t of j.t||[]){
-    if(!t||t[4]||t[2]<=2||Math.abs(t[1]/3.3058/.76-d.py)>4||t[3]<=0)continue;
-    var day=String(t[0]),quarter=day.slice(0,4)+' '+Math.ceil(+day.slice(4,6)/3)+'분기';(a[quarter]=a[quarter]||[]).push(t[3]);
-   }
-   return a;
+  const api=await Promise.all(pair.map(async d=>{
+   const k=window.aptLkey(d);if(!k)return null;
+   const res=await fetch('/api/apt-dx?k='+encodeURIComponent(k));if(!res.ok)return null;
+   const j=await res.json();return j?.t||[];
   }));
+  if(api.some(x=>!x)){dest.innerHTML='<p>해당 단지의 실거래를 확보하지 못했습니다.</p>';return;}
+  const bucket=t=>Math.round(t[1]/5)*5;
+  const good=(rows,d)=>rows.filter(t=>Array.isArray(t)&&!t[4]&&t[2]>2&&t[3]>0&&Math.abs(t[1]-d.py*3.3058*.76)<=9);
+  const pools=api.map((rows,i)=>good(rows,pair[i]));
+  const common=[...new Set(pools[0].map(bucket))].filter(x=>pools[1].some(t=>bucket(t)===x));
+  if(!common.length){dest.innerHTML='<p>두 단지의 공통 실거래 전용면적대가 없습니다.</p>';return;}
+  const target=pair.reduce((sum,d)=>sum+d.py*3.3058*.76,0)/2;
+  common.sort((a,b)=>Math.abs(a-target)-Math.abs(b-target));
+  const selectedArea=common[0],minDate=Date.now()-548*864e5;
+  const data=pools.map(rows=>{
+   const result={};
+   for(const t of rows){
+    if(bucket(t)!==selectedArea)continue;
+    const dt=String(t[0]);if(!/^\d{8}$/.test(dt))continue;
+    const day=Date.UTC(+dt.slice(0,4),+dt.slice(4,6)-1,+dt.slice(6,8));
+    if(day<minDate||day>Date.now())continue;
+    const quarter=dt.slice(0,4)+' '+Math.ceil(+dt.slice(4,6)/3)+'분기';
+    (result[quarter]=result[quarter]||[]).push(t[3]);
+   }
+   return result;
+  });
   if(!dest.isConnected)return;
   if(data.some(x=>!x)){dest.innerHTML='<p>해당 단지의 실거래 자료가 부족합니다.</p>';return;}
   var quarters=Object.keys(data[0]).filter(k=>data.every(d=>(d[k]||[]).length>=2)).sort().reverse().slice(0,6).reverse();
-  if(!quarters.length){dest.innerHTML='<p>같은 분기, 양쪽 각 2건 이상 실거래가 없어 비교를 보류합니다.</p>';return;}
-  dest.innerHTML='<table style="width:100%;font-size:12px;text-align:left"><thead><tr><th>분기</th><th>'+esc(name(pair[0]))+'</th><th>'+esc(name(pair[1]))+'</th></tr></thead><tbody>'
+  if(!quarters.length){dest.innerHTML='<p>최근 18개월 동안 같은 면적대·같은 분기에 양쪽 각각 2건 이상의 거래가 없어 비교를 보류합니다.</p>';return;}
+  dest.innerHTML='<p><b>공통 전용 '+selectedArea+'㎡대 · 최근 18개월</b></p><table style="width:100%;font-size:12px;text-align:left"><thead><tr><th>분기</th><th>'+esc(name(pair[0]))+'</th><th>'+esc(name(pair[1]))+'</th></tr></thead><tbody>'
     +quarters.map(k=>'<tr><td>'+k+'</td>'+data.map(d=>'<td>'+eokSafe(median(d[k]))+' <small>('+d[k].length+'건)</small></td>').join('')+'</tr>').join('')+'</tbody></table>'
-    +'<p>전용면적 근사치와 분기 중위값 비교이며 서로 다른 동·층·향 보정은 하지 않았습니다.</p>';
+    +'<p>공통 5㎡ 면적대의 분기별 중위값입니다. 동·층·향 차이는 보정하지 않았습니다.</p>';
  }catch(e){if(dest.isConnected)dest.innerHTML='<p>실거래 자료를 확인하지 못했습니다.</p>';}
 }
 function reset(){filter={rentMin:0,gapMax:0,ratioMin:0,ratioMax:0,tradeMin:0,days:0};indicator='base';resetMeasure();applyPins();}
-window.APT2={install,open,passes,inUse,remember,mapReady,applyPins,reset};
+window.APT2={install,open,passes,inUse,remember,mapReady,applyPins,reset,importShare,searchIndex};
 install();
 })();

@@ -1194,6 +1194,8 @@ const loadExtra=cb=>{if(window.AP1X)return cb();const q=window._ap1xq=window._ap
 const mapStage1Loader=document.getElementById('ap1xMapLazy');if(mapStage1Loader)mapStage1Loader.onclick=()=>loadExtra(()=>{mapStage1Loader.remove();window.AP1X.installLayer();document.getElementById('ap1xMapBtn')?.click();});
 const loadStage2=cb=>{if(window.APT2)return cb();const q=window._ap2q=window._ap2q||[];q.push(cb);if(q.length>1)return;const s=document.createElement('script');s.src='/apt-stage2.js?v=1';s.onload=()=>q.splice(0).forEach(fn=>{try{fn();}catch(e){console.error('stage2 callback',e);}});s.onerror=()=>{q.length=0;console.error('stage2 load failed');};document.head.appendChild(s);};
 const stage2MapLazy=document.getElementById('apt2MapLazy');if(stage2MapLazy)stage2MapLazy.onclick=()=>loadStage2(()=>window.APT2.open('view'));
+document.getElementById('q')?.addEventListener('input',()=>{if(!window.APT2)loadStage2(()=>{});});
+if(new URLSearchParams(location.search).has('s2'))loadStage2(()=>window.APT2.importShare());
 const loadStage1=cb=>{ if(window.AP1)return cb();const q=window._ap1q=window._ap1q||[];q.push(cb);if(q.length>1)return;const s=document.createElement('script');s.src='/apt-stage1.js?v=1';s.onload=()=>q.splice(0).forEach(f=>{try{f();}catch(e){console.error('stage1 callback',e);}});s.onerror=()=>{q.length=0;console.error('stage1 load failed');};document.head.appendChild(s); };
 window.aptRerenderList=()=>{ if(state.sel==null) renderList(); };
 const dealN=d=>(priceEv(d)||{n:0}).n||0, pkR=d=>d.s4&&d.s4.peakR!=null?d.s4.peakR:typeof peakLoRatio==='function'&&Number.isFinite(peakLoRatio(d))?peakLoRatio(d)/100:null;
@@ -1372,10 +1374,10 @@ function renderList(){
   const sortF=(SORTS.find(x=>x[0]===state.sort)||SORTS[0])[2]; if(sortF) list.sort((a,b)=>sortF(a,b)||a.rank-b.rank);
   let h=`<section class="intro">
     <h1>예산 안에서 좋은 아파트 찾기</h1>
-    <p>서울·경기·인천 아파트를 입지, 교통, 학군, 단지 경쟁력 등으로 종합 비교했습니다. 같은 가격대에서 좋은 아파트를 찾아보세요.</p>
-    <p style="margin-top:6px;font-size:12px;color:var(--text-tertiary,#8a8f98)">국토부 실거래·공공데이터로 계산한 참고 지표이며 투자 권유가 아닙니다. 순위는 계속 개선 중입니다.</p>
+    <p>서울·경기·인천 아파트를 교통, 학군, 단지 경쟁력과 가격대로 비교해 추천합니다.</p>
+    <p style="margin-top:6px;font-size:12px;color:var(--text-tertiary,#8a8f98)">실거래와 공공데이터 기반 참고 지표이며 투자 권유가 아닙니다.</p>
     ${pend?`<div class="inline-note tnum" style="margin-top:12px">역·초등학교·경사를 지도 데이터로 계산하는 중 · ${D.length-pend}/${D.length}<br><small>처음 한 번만 걸리고, 끝나면 순위가 확정됩니다.</small></div>`:''}
-    <details class="method"><summary>평가 기준 안내 ${CHEV}</summary><div style="padding:14px 16px;font-size:13px;line-height:1.8;color:var(--text-secondary)">아파트맵은 교통, 입지 경쟁력, 학군, 단지 규모, 주거 상품성 및 가격 신뢰도를 종합 비교합니다. 각 항목의 정확한 가중치, 보정식, 학습 기준 및 예측 모델은 공개하지 않습니다. 단지별 점수와 순위는 투자수익이나 매매 가능가격을 보장하지 않습니다.</div></details>
+    <details class="method"><summary>평가 기준 안내 ${CHEV}</summary><div style="padding:14px 16px;font-size:13px;line-height:1.8;color:var(--text-secondary)">교통, 학군, 단지 규모, 주거 상품성 및 가격 신뢰도를 비교합니다. 세부 가중치와 모델은 비공개이며 추천순위는 실제 수익이나 거래가격을 보장하지 않습니다.</div></details>
   </section>
   <div class="filters" role="group" aria-label="조건"><button data-f="fav" aria-pressed="${state.f==='fav'}">♥ 저장</button><button type="button" data-ap1="filter">상세 조건</button><button type="button" data-ap2="filters">추가 조건</button><button type="button" data-ap2="saved">저장함</button><button type="button" data-ap1="open">비교표 0/3</button>${['pb','size','age','f'].map(k=>{ const v=state[k]||'all', L=PICKMENU[k], o=L[1]().find(x=>x[0]===v); return `<button type="button" class="sortsel fsel${o&&v!=='all'?' on':''}" data-k="${k}" aria-haspopup="dialog" aria-label="${L[0]}">${(o||L[1]()[0])[1]}</button>`; }).join('')}</div>
   ${state.q&&!viewport?`<div class="region-mode">‘${esc(state.q)}’ 검색 결과 <button type="button" id="searchReset">전체 순위 보기</button></div>`:''}${viewport?'<div class="region-mode">현재 지도 범위의 단지 <button type="button" id="browseReset">전체 순위 보기</button></div>':''}
