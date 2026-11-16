@@ -9,7 +9,7 @@
     "30": 1521589,
     "35": 1206800
   },
-  "htmlGzipBytes": 11800,
+  "htmlGzipBytes": 11062,
   "maxRequestsPerTab": 9,
   "runtimeFiles": [
     "apt-live.js",
