@@ -138,7 +138,6 @@ aside{order:-1;width:408px;flex:none;border-right:1px solid var(--border);backgr
 .m3-flat-item .flat-warning{font-size:11px;color:#b91c1c}
 @media(max-width:700px){.m3-flat-options{grid-column:1 / -1}}
 .row h3 .tp{font-size:12.5px;font-weight:600;color:var(--text-tertiary);margin-left:4px;letter-spacing:-.02em}
-.rmet{display:flex;flex-wrap:wrap;gap:0 9px;font-size:13px}.rmet b{color:#e5484d}
 .row p{font-size:13px;line-height:1.6;color:var(--text-secondary);margin-top:3px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;word-break:keep-all}
 .row .px{text-align:right;padding-top:22px}
 .row .px strong{display:block;font-size:19px;font-weight:750;letter-spacing:-.035em;white-space:nowrap}
@@ -379,7 +378,7 @@ noticeAgree.addEventListener('click',()=>{if(!noticeCheck.checked)return;try{loc
   window.name=((window.name||'')+' apt6notice=yes').trim(); try{ if(window.parent!==window) window.parent.postMessage({apt6notice:'yes'},'*'); }catch(e){}
   noticeLinks(); noticeGate.hidden=true;});
 document.getElementById('noticeDecline').addEventListener('click',()=>{noticeCheck.checked=false;noticeAgree.disabled=true;noticeError.textContent='동의해야 지도를 볼 수 있습니다.';noticeCheck.focus();});
-const KAKAO_JS_KEY='106bb734e8600621686fade2de7f8afb';
+const KAKAO_JS_KEY='106bb734e8600621686fade2de7f8afb';document.head.insertAdjacentHTML('beforeend','<style>.rmet{display:flex;flex-wrap:wrap;gap:0 9px;font-size:13px}.rmet b{color:#e5484d}.row h3{white-space:normal;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;word-break:keep-all}.m3-flat-options{-webkit-mask-image:linear-gradient(90deg,#000 88%,transparent);mask-image:linear-gradient(90deg,#000 88%,transparent);padding-right:24px}</style>');
 const $=s=>document.querySelector(s);
 const mobile=()=>matchMedia('(max-width:767px)').matches;
 const esc=s=>String(s??'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
@@ -1190,7 +1189,7 @@ const FAV=(()=>{ try{ return new Set(JSON.parse(localStorage.getItem('aptFav')||
 const favSave=()=>{ try{ localStorage.setItem('aptFav',JSON.stringify([...FAV])); }catch(e){} };
 const SORTS=[['rank','추천순',null],['price','가격 낮은순',(a,b)=>a.p-b.p],['new','신축순',(a,b)=>b.year-a.year],['units','세대수 많은순',(a,b)=>unitN(b)-unitN(a)],['station','역 가까운순',(a,b)=>((a.cur&&a.cur.m)??1e9)-((b.cur&&b.cur.m)??1e9)],['ppp','평당가 낮은순',(a,b)=>a.p/a.py-b.p/b.py],['deal','거래 많은순',(a,b)=>dealN(b)-dealN(a)],['peak','전고점 회복 높은순',(a,b)=>(pkR(b)??-1)-(pkR(a)??-1)],['race','최고가 대비 하락률순',(a,b)=>(a.rc??9)-(b.rc??9)],['raceAmt','최고가 대비 하락액순',(a,b)=>(a.rcAmt??1e9)-(b.rcAmt??1e9)]];
 /* 2026.11.16 리치고 차용 상세(실거래 차트 등)·하락 레이스: apt-dx.js를 처음 필요할 때만 받음(첫 화면 번들 밖) */
-const loadDx=cb=>{ if(window.APTDX) return cb(); const q=window._dxq=window._dxq||[]; q.push(cb); if(q.length>1) return; const s=document.createElement('script'); s.src='/apt-dx.js?v=7'; s.onload=()=>{ q.splice(0).forEach(f=>{ try{f();}catch(e){} }); }; document.head.appendChild(s); };
+const loadDx=cb=>{ if(window.APTDX) return cb(); const q=window._dxq=window._dxq||[]; q.push(cb); if(q.length>1) return; const s=document.createElement('script'); s.src='/apt-dx.js?v=8'; s.onload=()=>{ q.splice(0).forEach(f=>{ try{f();}catch(e){} }); }; document.head.appendChild(s); };
 const loadExtra=cb=>{if(window.AP1X)return cb();const q=window._ap1xq=window._ap1xq||[];q.push(cb);if(q.length>1)return;const s=document.createElement('script');s.src='/apt-stage1-extra.js?v=2';s.onload=()=>q.splice(0).forEach(f=>{try{f();}catch(e){console.error('extra',e);}});s.onerror=()=>{q.length=0;console.error('extra load failed');};document.head.appendChild(s);};
 const mapStage1Loader=document.getElementById('ap1xMapLazy');if(mapStage1Loader)mapStage1Loader.onclick=()=>loadExtra(()=>{mapStage1Loader.remove();window.AP1X.installLayer();document.getElementById('ap1xMapBtn')?.click();});
 const loadStage1=cb=>{ if(window.AP1)return cb();const q=window._ap1q=window._ap1q||[];q.push(cb);if(q.length>1)return;const s=document.createElement('script');s.src='/apt-stage1.js?v=1';s.onload=()=>q.splice(0).forEach(f=>{try{f();}catch(e){console.error('stage1 callback',e);}});s.onerror=()=>{q.length=0;console.error('stage1 load failed');};document.head.appendChild(s); };
@@ -1356,10 +1355,7 @@ function renderList(){
   const viewport=state.browse&&map?map.getBounds():null;
   const matches=ORDER.filter(d=>{
     if(!visible(d)||(viewport&&!(d._pos&&viewport.contain(d._pos))))return false;
-    if((state.sort==='race'||state.sort==='raceAmt')&&window.RACE){
-      if(state.raceArea&&d.rcab!==+state.raceArea)return false;
-      if(Number(d.rcN||0)<Number(state.raceMin||3))return false;
-    }
+    if((state.sort==='race'||state.sort==='raceAmt')&&window.RACE&&Number(d.rcN||0)<Number(state.raceMin||3))return false;
     return true;
   });
   const pend=D.filter(d=>d.pending).length;
@@ -1382,9 +1378,9 @@ function renderList(){
   <div class="filters" role="group" aria-label="조건"><button data-f="fav" aria-pressed="${state.f==='fav'}">♥ 저장</button><button type="button" data-ap1="filter">상세 조건</button><button type="button" data-ap1="open">비교표 0/3</button>${['pb','size','age','f'].map(k=>{ const v=state[k]||'all', L=PICKMENU[k], o=L[1]().find(x=>x[0]===v); return `<button type="button" class="sortsel fsel${o&&v!=='all'?' on':''}" data-k="${k}" aria-haspopup="dialog" aria-label="${L[0]}">${(o||L[1]()[0])[1]}</button>`; }).join('')}</div>
   ${state.q&&!viewport?`<div class="region-mode">‘${esc(state.q)}’ 검색 결과 <button type="button" id="searchReset">전체 순위 보기</button></div>`:''}${viewport?'<div class="region-mode">현재 지도 범위의 단지 <button type="button" id="browseReset">전체 순위 보기</button></div>':''}
   <div class="count"><span>${singleComplex?list.length.toLocaleString()+'개 단지 · 전체 평형 표시':list.length.toLocaleString()+'개 평형'+(CAPT!==6?' ('+new Set(list.map(d=>complexRankKey(d))).size.toLocaleString()+'개 단지)':'')}</span><button type="button" class="sortsel fsel" data-k="sort" aria-haspopup="dialog" aria-label="정렬">${(SORTS.find(x=>x[0]===state.sort)||SORTS[0])[1]}</button></div>`;
-  list.slice(0,state.lim).forEach(d=>{
+  list.slice(0,state.lim).forEach((d,li)=>{
     h+=`<article class="row" data-i="${D.indexOf(d)}" data-s="1" tabindex="0" role="button" aria-label="${esc(publicComplexName(d)+' '+d.py+'평 상세보기')}">
-      <span class="rk tnum">${String(d.rank).padStart(2,'0')}</span>
+      <span class="rk tnum"${state.sort!=='rank'?` title="추천 ${d.rank}위"`:''}>${String(state.sort==='rank'?d.rank:li+1).padStart(2,'0')}</span>
       <div style="min-width:0"><div class="kicker">${badgeHTML(d)}<span>${esc(d.area)}</span></div>
         <h3>${esc(publicComplexName(d))}${sibs(d).length>1?` <small class="tp">${d.py}평</small>`:''}</h3><p>${NOUP()?`급지 ${Math.round((d.s4&&d.s4.pG)??50)} · ${unitN(d).toLocaleString()}세대${d.unitsOwn?'(매매 대상)':''}${d.unitsN>1?'(추정)':''}`:`입지 ${d.loc.toFixed(1)}`} · ${d.cur&&d.cur.n?esc(d.cur.n)+' '+fmtM(d.cur.m):'역 계산 중'}${NOUP()?'':` · 적정가 대비 ${d.up>=0?'+':''}${Math.round(d.up*100)}%`}</p>${(state.sort==='race'||state.sort==='raceAmt')&&d.rc!=null?`<div class="rmet"><b>최고가 대비 ${(d.rc*100).toFixed(1)}%</b>${d.rcAmt?`<b>−${eok(Math.abs(d.rcAmt))}</b>`:''}<span>최근 3개월 ${d.rcN??'—'}건</span></div>`:state.sort==='peak'&&pkR(d)!=null?`<div class="rmet"><b${pkR(d)>=1?' style="color:#0b7a4b"':''}>전고점 대비 ${pkR(d)>=1?'+':''}${((pkR(d)-1)*100).toFixed(1)}%</b></div>`:''}
       ${singleComplex?'':CAPT!==6&&sibs(d).length>1?`<p class="sibl">같은 단지 ${sibs(d).filter(x=>x!==d).sort((x,y)=>x.py-y.py).map(x=>`${x.py}평 ${short(x.p)}${x.m3?.price?.warn?' ⚠':''}`).join(' · ')}</p>`:''}</div>
@@ -1414,12 +1410,11 @@ function renderList(){
   h=publicMethodSummary(cap10Text(h));
   b.innerHTML=h;
   if(state.sort==='race'||state.sort==='raceAmt'){
-    const vals=[...new Set(D.map(d=>d.rcab).filter(Number.isFinite))].sort((a,b)=>a-b);
     const pane=document.createElement('div');
     pane.className='region-mode';
-    pane.innerHTML='<label for="raceArea" style="white-space:nowrap">전용면적대</label><select id="raceArea" class="sortsel" style="max-width:145px"><option value="">전체</option>'+vals.map(v=>'<option value="'+v+'"'+(state.raceArea===String(v)?' selected':'')+'>'+v+'㎡대</option>').join('')+'</select><label for="raceMin" style="white-space:nowrap">최근 3개월 거래</label><select id="raceMin" class="sortsel"><option value="1"'+(state.raceMin==='1'?' selected':'')+'>1건 이상</option><option value="3"'+(!state.raceMin||state.raceMin==='3'?' selected':'')+'>3건 이상</option><option value="5"'+(state.raceMin==='5'?' selected':'')+'>5건 이상</option><option value="10"'+(state.raceMin==='10'?' selected':'')+'>10건 이상</option></select><small>최근 3개월 중위값 ÷ 직전 2년 최고가 · 직거래·1~2층 제외 · 표본이 적으면 변동성이 큽니다.</small>';
+    pane.innerHTML='<label for="raceMin" style="white-space:nowrap">최근 3개월 거래</label><select id="raceMin" class="sortsel">'+[2,3,5,10].map(v=>'<option value="'+v+'"'+(String(state.raceMin||3)===String(v)?' selected':'')+'>'+v+'건 이상</option>').join('')+'</select><small>평형별 최근 3개월 중위값 ÷ 직전 2년 최고가 · 직거래·1~2층 제외</small>';
     const cnt=b.querySelector('.count');if(cnt)cnt.before(pane);
-    pane.querySelector('#raceArea').onchange=e=>{state.raceArea=e.target.value;state.lim=50;renderList();};pane.querySelector('#raceMin').onchange=e=>{state.raceMin=e.target.value;state.lim=50;renderList();};
+    pane.querySelector('#raceMin').onchange=e=>{state.raceMin=e.target.value;state.lim=50;renderList();};
   }
   b.scrollTop=previousScroll;
   b.querySelectorAll('.filters').forEach((el,i)=>{el.scrollLeft=filterScroll[i]||0;});

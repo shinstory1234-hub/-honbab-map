@@ -201,9 +201,9 @@
 
   window.APTRACE=function(){
     if(window.RACE_LOADING) return; window.RACE_LOADING=1;
-    fetch('/api/apt-race').then(function(r){ if(!r.ok) throw 0; return r.json(); }).then(function(m){ if(!m||!Object.keys(m).length) throw 0;
+    fetch('/api/apt-race?v=2').then(function(r){ if(!r.ok) throw 0; return r.json(); }).then(function(m){ if(!m||!Object.keys(m).length) throw 0;
       window.RACE=m||{};
-      D.forEach(function(d){ var r=m[lkey(d)]; d.rc=r&&r[1]>0?r[2]/r[1]-1:null; d.rcab=r?r[0]:null; d.rcAmt=r&&r[1]>0?r[2]-r[1]:null; d.rcN=r?r[3]:null; });
+      D.forEach(function(d){ var a=m[lkey(d)]||[], r=null; for(var i=0;i<a.length;i++){ if(Math.abs(a[i][0]-d.py)<=1&&(!r||Math.abs(a[i][0]-d.py)<Math.abs(r[0]-d.py))) r=a[i]; } d.rc=r?r[2]/r[1]-1:null; d.rcAmt=r?r[2]-r[1]:null; d.rcN=r?r[3]:null; });
       if(window.aptRerenderList) window.aptRerenderList();
     }).catch(function(){ window.RACE_LOADING=0; });
   };

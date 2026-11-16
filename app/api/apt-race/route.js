@@ -6,7 +6,7 @@ import { buildRace } from '../../../lib/aptdx.mjs';
 export const preferredRegion = 'icn1';
 export const maxDuration = 60;
 
-const cached = unstable_cache(buildRace, ['apt-race-v1'], { revalidate: 21600 });
+const cached = unstable_cache(buildRace, ['apt-race-v2'], { revalidate: 21600 });
 
 export async function GET() {
   const json = (body, status, cache) => new Response(JSON.stringify(body), { status, headers: {
