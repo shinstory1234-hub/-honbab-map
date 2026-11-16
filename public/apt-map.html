@@ -1187,7 +1187,7 @@ const badgeHTML=d=>[{label:d.tier.k,color:d.tier.c},...cardFeatures(d).map(k=>FE
 /* 2026.11.15 UX: 저장한 단지(♥, 이 기기에만 저장)·정렬. 정렬을 바꿔도 순위 숫자는 추천 순위 그대로 */
 const FAV=(()=>{ try{ return new Set(JSON.parse(localStorage.getItem('aptFav')||'[]')); }catch(e){ return new Set(); } })();
 const favSave=()=>{ try{ localStorage.setItem('aptFav',JSON.stringify([...FAV])); }catch(e){} };
-const SORTS=[['rank','추천순',null],['price','가격 낮은순',(a,b)=>a.p-b.p],['new','신축순',(a,b)=>b.year-a.year],['units','세대수 많은순',(a,b)=>unitN(b)-unitN(a)],['station','역 가까운순',(a,b)=>((a.cur&&a.cur.m)??1e9)-((b.cur&&b.cur.m)??1e9)],['ppp','평당가 낮은순',(a,b)=>a.p/a.py-b.p/b.py],['deal','거래 많은순',(a,b)=>dealN(b)-dealN(a)],['cash','필요 현금 낮은순',(a,b)=>money(a).cash-money(b).cash],['commute','통근 예상 짧은순',(a,b)=>(jobMin(a)??1e9)-(jobMin(b)??1e9)],['latest','최근 거래순',(a,b)=>String(priceEv(b)?.last||'').replace(/\D/g,'').localeCompare(String(priceEv(a)?.last||'').replace(/\D/g,''))],['rent','전세가율 높은순',(a,b)=>(b.jeon?b.jeon/b.p:0)-(a.jeon?a.jeon/a.p:0)],['peak','전고점 회복 높은순',(a,b)=>(pkR(b)??-1)-(pkR(a)??-1)],['race','최고가 대비 하락률순',(a,b)=>(a.rc??9)-(b.rc??9)],['raceAmt','최고가 대비 하락액순',(a,b)=>(a.rcAmt??1e9)-(b.rcAmt??1e9)]];
+const SORTS=[['rank','추천순',null],['price','가격 낮은순',(a,b)=>a.p-b.p],['new','신축순',(a,b)=>b.year-a.year],['units','세대수 많은순',(a,b)=>unitN(b)-unitN(a)],['station','역 가까운순',(a,b)=>((a.cur&&a.cur.m)??1e9)-((b.cur&&b.cur.m)??1e9)],['ppp','평당가 낮은순',(a,b)=>a.p/a.py-b.p/b.py],['deal','거래 많은순',(a,b)=>dealN(b)-dealN(a)],['cash','필요 현금 낮은순',(a,b)=>money(a).cash-money(b).cash],['commute','통근 예상 짧은순',(a,b)=>(jobMin(a)??1e9)-(jobMin(b)??1e9)],['latest','최근 거래순',(a,b)=>String(priceEv(b)?.last||'').replace(/\D/g,'').localeCompare(String(priceEv(a)?.last||'').replace(/\D/g,''))],['peak','전고점 회복 높은순',(a,b)=>(pkR(b)??-1)-(pkR(a)??-1)],['race','최고가 대비 하락률순',(a,b)=>(a.rc??9)-(b.rc??9)],['raceAmt','최고가 대비 하락액순',(a,b)=>(a.rcAmt??1e9)-(b.rcAmt??1e9)]];
 /* 2026.11.16 리치고 차용 상세(실거래 차트 등)·하락 레이스: apt-dx.js를 처음 필요할 때만 받음(첫 화면 번들 밖) */
 const loadDx=cb=>{ if(window.APTDX) return cb(); const q=window._dxq=window._dxq||[]; q.push(cb); if(q.length>1) return; const s=document.createElement('script'); s.src='/apt-dx.js?v=9'; s.onload=()=>{ q.splice(0).forEach(f=>{ try{f();}catch(e){} }); }; document.head.appendChild(s); };
 const loadExtra=cb=>{if(window.AP1X)return cb();const q=window._ap1xq=window._ap1xq||[];q.push(cb);if(q.length>1)return;const s=document.createElement('script');s.src='/apt-stage1-extra.js?v=3';s.onload=()=>q.splice(0).forEach(f=>{try{f();}catch(e){console.error('extra',e);}});s.onerror=()=>{q.length=0;console.error('extra load failed');};document.head.appendChild(s);};
@@ -1908,6 +1908,7 @@ function select(i,fromList,noPush){
   if(state.q&&!textMatches(D[i])){state.q='';$('#q').value='';clearTimeout(qT);}
   $('#q').blur();
   const d0=D[i];if(d0){try{const k='aptRecent_'+CAPT,v=d0.cxKey+'|'+d0.py,old=JSON.parse(localStorage.getItem(k)||'[]');localStorage.setItem(k,JSON.stringify([v,...(Array.isArray(old)?old.filter(x=>x!==v):[])].slice(0,12)));}catch(e){}}
+  if(d0&&window.APT2)window.APT2.remember(d0);
   if(!noPush&&d0){ const st={apt:1}; if(history.state&&history.state.apt) history.replaceState(st,'',hashOf(d0)); else history.pushState(st,'',hashOf(d0)); }
   state.sel=i; render();
   if(mobile()) snapTo(fromList?'half':'half');

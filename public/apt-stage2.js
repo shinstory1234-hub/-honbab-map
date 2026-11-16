@@ -16,6 +16,7 @@ var name=d=>publicComplexName(d)+' '+d.py+'평';
 var rent=d=>Number(d.jeon)>0?+d.jeon:null;
 var ratio=d=>rent(d)!=null&&d.p>0?rent(d)/d.p*100:null;
 var gap=d=>rent(d)!=null?d.p-rent(d):null;
+var rentAvailable=D.some(d=>rent(d)!=null);
 var date=d=>(priceEv(d)?.last||'').replace(/\D/g,'').slice(0,8);
 var inUse=()=>Object.values(filter).some(x=>x>0);
 var css=document.createElement('style');
@@ -76,22 +77,22 @@ function searchOptions(arr,selected){return arr.map(([k,label])=>'<option value=
 var rankTypes=[['rank','추천순'],['price','매수가 낮은순'],['ppp','평당가 낮은순'],['cash','필요 현금 낮은순'],['units','세대수 많은순'],['age','준공 최신순'],['rent','전세가율 높은순'],['deal','거래 많은순']];
 function viewTab(){
  var all=inBounds();
- return '<h3>현재 지도 범위</h3><div class="s2-chip">필터에 맞는 <b>'+all.length.toLocaleString()+'개 단지</b> 중 상위 10곳</div>'
- +'<div class="s2-cols"><label class="s2-wide">정렬 기준<select id="s2Rank">'+searchOptions(rankTypes,rankSort)+'</select></label></div><div id="s2RankRows">'+rows(rank(all,rankSort).slice(0,10))+'</div>'
+ return '<h3>현재 지도 범위</h3><div class="s2-chip">'+(map?'필터에 맞는 <b>'+all.length.toLocaleString()+'개 단지</b> 중 상위 10곳':'지도가 준비되지 않았습니다. 지도 로딩 후 다시 열어주세요.')+'</div>'
+ +'<div class="s2-cols"><label class="s2-wide">정렬 기준<select id="s2Rank">'+searchOptions(rankTypes.filter(x=>rentAvailable||x[0]!=='rent'),rankSort)+'</select></label></div><div id="s2RankRows">'+rows(rank(all,rankSort).slice(0,10))+'</div>'
  +'<h3>핀 숫자 변경</h3><div class="s2-flex">'+[
- ['base','원래 표시'],['rank','추천 순위'],['ppp','평당가'],['far','용적률'],['units','세대수'],['age','준공연도'],['rent','전세가율'],['gap','갭']
+ ['base','원래 표시'],['rank','추천 순위'],['ppp','평당가'],['far','용적률'],['units','세대수'],['age','준공연도'],...(rentAvailable?[['rent','전세가율'],['gap','갭']]:[])
  ].map(([k,t])=>'<button class="s2-btn'+(indicator===k?' on':'')+'" data-s2pin="'+k+'">'+t+'</button>').join('')+'</div>'
  +'<p>화면에 보이는 핀만 지표를 바꿔 표시합니다. 정렬은 기본 추천 순위에 영향을 주지 않습니다. 전세금은 동일 평형 실거래 확인값이 아닙니다.</p>';
 }
 function filtersTab(){
  var fld=(key,label,factor)=>'<label>'+label+'<input name="'+key+'" type="number" min="0" step=".1" placeholder="조건 없음" value="'+(filter[key]?(filter[key]/(factor||1)):'')+'"></label>';
+ var has=rentAvailable;
  return '<h3>전세·거래 조건</h3><div class="s2-cols">'
- +fld('rentMin','전세 참고금 최소 (억원)',10000)+fld('gapMax','전세 갭 최대 (억원)',10000)
- +fld('ratioMin','전세가율 최소 (%)')+fld('ratioMax','전세가율 최대 (%)')
+ +(has?fld('rentMin','전세 참고금 최소 (억원)',10000)+fld('gapMax','전세 갭 최대 (억원)',10000)+fld('ratioMin','전세가율 최소 (%)')+fld('ratioMax','전세가율 최대 (%)'):'')
  +fld('tradeMin','최근 3개월 거래 최소 (건)')
  +'<label>마지막 거래<select name="days">'+searchOptions([['0','제한 없음'],['90','90일 이내'],['180','180일 이내'],['365','1년 이내']],String(filter.days))+'</select></label></div>'
  +'<div class="s2-flex"><button class="s2-btn on" id="s2Apply">필터 적용</button><button class="s2-btn" id="s2Clear">초기화</button></div>'
- +'<p>단지 참고 전세금은 같은 전용면적의 계약으로 검증되지 않았습니다. 월세, 공시가격, 매물 소화기간 및 호가 변화는 공식 데이터가 없어 제외합니다.</p>';
+ +'<p>'+(has?'단지 참고 전세금은 동일 전용면적 계약과 일치하지 않을 수 있습니다. ':'현재 가격대에 검증 가능한 전세·갭 자료가 없어 해당 조건은 숨겼습니다. ')+'월세, 공시가격, 매물 소화기간 및 호가 변화는 자료가 없어 제외합니다.</p>';
 }
 function navTab(){
  var areas=new Set();D.forEach(d=>{var a=d.area.split(' ');if(a.length>=3)areas.add(a.slice(0,2).join(' '));});
@@ -106,7 +107,7 @@ function savedTab(){
  var arr=recent.map(k=>D.find(d=>key(d)===k)).filter(Boolean);
  var seen=new Set(),fav=D.filter(d=>FAV.has(d.cxKey)&&!seen.has(complexRankKey(d))&&seen.add(complexRankKey(d))).sort((a,b)=>a.rank-b.rank);
  return '<h3>최근 본 단지 · 이 기기</h3>'+rows(arr.slice(0,8))+'<h3>관심 단지 · ♥ 저장</h3>'+rows(fav.slice(0,12))
- +'<div class="s2-flex"><button id="s2Share" class="s2-btn">탐색 링크 공유</button><button id="s2ClearHistory" class="s2-btn">최근 기록 지우기</button></div>'
+ +'<div class="s2-flex"><button id="s2Share" class="s2-btn">현재 지도 주소 복사</button><button id="s2ClearHistory" class="s2-btn">최근 기록 지우기</button></div>'
  +'<p>최근 본 기록과 관심 단지는 이 브라우저에만 저장됩니다. 로그인 없이 기기 간 동기화하지 않습니다.</p>';
 }
 function rivalsTab(){
@@ -119,7 +120,7 @@ function rivalsTab(){
  +'<div id="s2RaceOutput" role="status"></div><p>같은 분기 양쪽 각각 2건 이상의 거래만 표시합니다. 다른 전용면적·동·향에 따른 가격차이는 별도 보정하지 않습니다.</p>';
 }
 var contents={view:viewTab,filters:filtersTab,nav:navTab,saved:savedTab,rivals:rivalsTab},tabnames=[['view','현재 화면'],['filters','추가 조건'],['nav','지도'],['saved','저장함'],['rivals','라이벌']];
-function open(t){if(t)tab=t;if(!panel){panel=document.createElement('div');panel.className='s2-shade';panel.id='s2Shade';panel.innerHTML='<section class="s2-dialog" role="dialog" aria-modal="true" aria-label="탐색 도구"><header class="s2-top"><h2>탐색 도구</h2><button class="s2-btn" id="s2Close">닫기 ×</button></header><nav class="s2-tabs" role="tablist"></nav><div class="s2-body"></div></section>';document.body.appendChild(panel);panel.addEventListener('click',e=>{if(e.target===panel)close();});document.addEventListener('keydown',escClose);}paint();}
+function open(t){mapReady();if(t)tab=t;if(!panel){panel=document.createElement('div');panel.className='s2-shade';panel.id='s2Shade';panel.innerHTML='<section class="s2-dialog" role="dialog" aria-modal="true" aria-label="탐색 도구"><header class="s2-top"><h2>탐색 도구</h2><button class="s2-btn" id="s2Close">닫기 ×</button></header><nav class="s2-tabs" role="tablist"></nav><div class="s2-body"></div></section>';document.body.appendChild(panel);panel.addEventListener('click',e=>{if(e.target===panel)close();});document.addEventListener('keydown',escClose);}paint();}
 function escClose(e){if(e.key==='Escape')close();}
 function close(){if(panel){panel.remove();panel=null;document.removeEventListener('keydown',escClose);}}
 function bindRows(){panel?.querySelectorAll('[data-s2go]').forEach(b=>b.onclick=()=>{var i=+b.dataset.s2go;close();select(i,false);});}
@@ -134,12 +135,12 @@ function paint(){
   body.querySelectorAll('[data-s2pin]').forEach(b=>b.onclick=()=>{indicator=b.dataset.s2pin;close();applyPins();note('핀 지표: '+b.textContent);});
  }
  if(tab==='filters'){
-  body.querySelector('#s2Apply').onclick=()=>{var next={};for(var k of ['rentMin','gapMax','ratioMin','ratioMax','tradeMin','days']){var v=+body.querySelector('[name='+k+']').value;if(v<0||!Number.isFinite(v)){note('입력값을 확인하세요');return;}next[k]=k==='rentMin'||k==='gapMax'?Math.round(v*10000):v;}if(next.ratioMin&&next.ratioMax&&next.ratioMin>next.ratioMax){note('전세가율 최소가 최대보다 높습니다.');return;}filter=next;state.sel=null;state.lim=50;close();render();note('추가 조건을 적용했습니다.');};
+  body.querySelector('#s2Apply').onclick=()=>{var next={};for(var k of ['rentMin','gapMax','ratioMin','ratioMax','tradeMin','days']){var field=body.querySelector('[name='+k+']'),v=field?+field.value:0;if(v<0||!Number.isFinite(v)){note('입력값을 확인하세요');return;}next[k]=k==='rentMin'||k==='gapMax'?Math.round(v*10000):v;}if(next.ratioMin&&next.ratioMax&&next.ratioMin>next.ratioMax){note('전세가율 최소가 최대보다 높습니다.');return;}filter=next;state.sel=null;state.lim=50;close();render();note('추가 조건을 적용했습니다.');};
   body.querySelector('#s2Clear').onclick=()=>{filter={rentMin:0,gapMax:0,ratioMin:0,ratioMax:0,tradeMin:0,days:0};state.sel=null;close();render();note('추가 조건을 초기화했습니다.');};
  }
  if(tab==='nav')bindNav(body);
  if(tab==='saved'){
-  body.querySelector('#s2Share').onclick=async()=>{try{await navigator.clipboard.writeText(location.href);note('탐색 링크를 복사했습니다.');}catch(e){prompt('링크 복사',location.href);}};
+  body.querySelector('#s2Share').onclick=async()=>{try{await navigator.clipboard.writeText(location.href);note('지도 주소를 복사했습니다. 추가 필터는 공유되지 않습니다.');}catch(e){prompt('링크 복사',location.href);}};
   body.querySelector('#s2ClearHistory').onclick=()=>{recent=[];try{localStorage.removeItem(recKey);}catch(e){}paint();};
  }
  if(tab==='rivals'){
