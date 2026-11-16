@@ -138,6 +138,7 @@ aside{order:-1;width:408px;flex:none;border-right:1px solid var(--border);backgr
 .m3-flat-item .flat-warning{font-size:11px;color:#b91c1c}
 @media(max-width:700px){.m3-flat-options{grid-column:1 / -1}}
 .row h3 .tp{font-size:12.5px;font-weight:600;color:var(--text-tertiary);margin-left:4px;letter-spacing:-.02em}
+.rmet{display:flex;flex-wrap:wrap;gap:0 9px;font-size:13px}.rmet b{color:#e5484d}
 .row p{font-size:13px;line-height:1.6;color:var(--text-secondary);margin-top:3px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;word-break:keep-all}
 .row .px{text-align:right;padding-top:22px}
 .row .px strong{display:block;font-size:19px;font-weight:750;letter-spacing:-.035em;white-space:nowrap}
@@ -1385,7 +1386,7 @@ function renderList(){
     h+=`<article class="row" data-i="${D.indexOf(d)}" data-s="1" tabindex="0" role="button" aria-label="${esc(publicComplexName(d)+' '+d.py+'평 상세보기')}">
       <span class="rk tnum">${String(d.rank).padStart(2,'0')}</span>
       <div style="min-width:0"><div class="kicker">${badgeHTML(d)}<span>${esc(d.area)}</span></div>
-        <h3>${esc(publicComplexName(d))}${sibs(d).length>1?` <small class="tp">${d.py}평</small>`:''}</h3><p>${NOUP()?`급지 ${Math.round((d.s4&&d.s4.pG)??50)} · ${unitN(d).toLocaleString()}세대${d.unitsOwn?'(매매 대상)':''}${d.unitsN>1?'(추정)':''}`:`입지 ${d.loc.toFixed(1)}`} · ${d.cur&&d.cur.n?esc(d.cur.n)+' '+fmtM(d.cur.m):'역 계산 중'}${NOUP()?'':` · 적정가 대비 ${d.up>=0?'+':''}${Math.round(d.up*100)}%`}${(state.sort==='race'||state.sort==='raceAmt')&&d.rc!=null?` · <b style="color:#e5484d">하락률 ${(d.rc*100).toFixed(1)}% · 하락액 ${eok(Math.abs(d.rcAmt||0))}</b> · 최근 3개월 ${d.rcN??'—'}건`:state.sort==='peak'&&pkR(d)!=null?` · 전고점 대비 ${((pkR(d)-1)*100).toFixed(1)}%`:''}</p>
+        <h3>${esc(publicComplexName(d))}${sibs(d).length>1?` <small class="tp">${d.py}평</small>`:''}</h3><p>${NOUP()?`급지 ${Math.round((d.s4&&d.s4.pG)??50)} · ${unitN(d).toLocaleString()}세대${d.unitsOwn?'(매매 대상)':''}${d.unitsN>1?'(추정)':''}`:`입지 ${d.loc.toFixed(1)}`} · ${d.cur&&d.cur.n?esc(d.cur.n)+' '+fmtM(d.cur.m):'역 계산 중'}${NOUP()?'':` · 적정가 대비 ${d.up>=0?'+':''}${Math.round(d.up*100)}%`}</p>${(state.sort==='race'||state.sort==='raceAmt')&&d.rc!=null?`<div class="rmet"><b>최고가 대비 ${(d.rc*100).toFixed(1)}%</b>${d.rcAmt?`<b>−${eok(Math.abs(d.rcAmt))}</b>`:''}<span>최근 3개월 ${d.rcN??'—'}건</span></div>`:state.sort==='peak'&&pkR(d)!=null?`<div class="rmet"><b${pkR(d)>=1?' style="color:#0b7a4b"':''}>전고점 대비 ${pkR(d)>=1?'+':''}${((pkR(d)-1)*100).toFixed(1)}%</b></div>`:''}
       ${singleComplex?'':CAPT!==6&&sibs(d).length>1?`<p class="sibl">같은 단지 ${sibs(d).filter(x=>x!==d).sort((x,y)=>x.py-y.py).map(x=>`${x.py}평 ${short(x.p)}${x.m3?.price?.warn?' ⚠':''}`).join(' · ')}</p>`:''}</div>
       <div class="px tnum"><strong${d.m3?.price?.warn?' style="color:#b91c1c"':''}>${d.m3?.price?.warn?'추정 ':''}${short(cashOf(d))}</strong><span>${d.py}평 · ${d.opt?esc(d.opt.kind):d.reg==='free'?'비규제':'토허'}</span><b>${d.score.toFixed(1)}점</b><button type="button" class="ap1-picker" data-ap1="compare" data-i="${D.indexOf(d)}" aria-label="${esc(publicComplexName(d)+' '+d.py+'평')} 비교에 담기">+ 비교</button></div>
       ${singleComplex?m3FlatOptions(d):''}
