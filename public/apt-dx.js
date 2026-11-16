@@ -150,7 +150,7 @@
       var dong=String(d.area).split(' ').pop(), show=nb.slice(0,10); if(at>=10) show.push(nb[at]);
       h+='<section class="sec" data-dx="1"><h3>'+E(dong)+' 평당 시세 순위 <small>가격대 무관 · 100세대 이상</small></h3>'
         +(at>=0?'<p class="dxk"><b>'+nb.length+'곳 중 '+(at+1)+'위</b></p>':'')
-        +'<div class="dxl tnum">'+show.map(function(x){ var i=nb.indexOf(x), sub=[x[4]?Number(x[4]).toLocaleString()+'세대':'',x[5]?x[5]+'년 입주':''].filter(Boolean).join(' · ');
+        +'<div class="dxl tnum">'+show.map(function(x){ var i=nb.indexOf(x), sub=[x[4]?Number(x[4]).toLocaleString()+'세대':'',/^\d{4}$/.test(String(x[5]||'').trim())?String(x[5]).trim()+'년 입주':''].filter(Boolean).join(' · ');
           return '<div class="dxr'+(x[0]===me?' me':'')+'"><em class="no">'+(i+1)+'</em><div class="l"><b>'+E(x[0])+(x[0]===me?'<i class="tag">이 단지</i>':'')+'</b>'+(sub?'<span>'+sub+'</span>':'')+'</div><div class="r">'+Math.round(x[2]/x[1]).toLocaleString()+'만<small>평당</small></div></div>'; }).join('')
         +'</div><p class="note">단지마다 거래가 가장 많은 평형의 실거래 환산 시세 ÷ 평. 작은 평형 위주 단지는 평당가가 높게 나와요.</p></section>';
     }
