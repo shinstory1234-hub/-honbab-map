@@ -143,6 +143,8 @@ aside{order:-1;width:408px;flex:none;border-right:1px solid var(--border);backgr
 .row .px strong{display:block;font-size:19px;font-weight:750;letter-spacing:-.035em;white-space:nowrap}
 .row .px span{display:block;font-size:11.5px;color:var(--text-tertiary);margin-top:2px;white-space:nowrap}
 .row .px b{display:block;font-size:12px;font-weight:700;color:var(--primary-soft-fg);margin-top:6px}
+.row .px button.ap1-picker{display:inline-block;padding:5px 8px;margin-top:7px;border:1px solid var(--border);border-radius:4px;font-size:11px;font-weight:750;color:var(--primary-soft-fg);white-space:nowrap}
+.row .px button.ap1-picker[aria-pressed=true]{background:var(--primary-soft-bg);border-color:var(--primary)}
 .live-source-status{border-top:1px solid var(--border-soft);padding:14px 24px 5px;color:var(--text-secondary);font-size:12.5px;line-height:1.65}.live-source-status.stale{color:#9a3412;background:#fff7ed;border-left:3px solid #fb923c}.live-source-status .live-refresh{display:inline-block;margin-left:7px;border:0;background:transparent;color:var(--primary-soft-fg);font-weight:700;text-decoration:underline;font-size:12px;cursor:pointer}
 .m3-price-warning{box-sizing:border-box;width:calc(100% - 48px);margin:10px 24px 4px;padding:8px 12px;border:1px solid #fed7aa;border-radius:8px;background:#fff7ed;color:#9a3412;font-size:12.5px;line-height:1.5;word-break:keep-all}
 .m3-price-warning.severe{border-color:#fca5a5;background:#fff5f5;color:#991b1b}
@@ -1188,6 +1190,7 @@ const favSave=()=>{ try{ localStorage.setItem('aptFav',JSON.stringify([...FAV]))
 const SORTS=[['rank','추천순',null],['price','가격 낮은순',(a,b)=>a.p-b.p],['new','신축순',(a,b)=>b.year-a.year],['units','세대수 많은순',(a,b)=>unitN(b)-unitN(a)],['station','역 가까운순',(a,b)=>((a.cur&&a.cur.m)??1e9)-((b.cur&&b.cur.m)??1e9)],['ppp','평당가 낮은순',(a,b)=>a.p/a.py-b.p/b.py],['deal','거래 많은순',(a,b)=>dealN(b)-dealN(a)],['peak','전고점 회복 높은순',(a,b)=>(pkR(b)??-1)-(pkR(a)??-1)],['race','최고가 대비 하락순',(a,b)=>(a.rc??9)-(b.rc??9)]];
 /* 2026.11.16 리치고 차용 상세(실거래 차트 등)·하락 레이스: apt-dx.js를 처음 필요할 때만 받음(첫 화면 번들 밖) */
 const loadDx=cb=>{ if(window.APTDX) return cb(); const q=window._dxq=window._dxq||[]; q.push(cb); if(q.length>1) return; const s=document.createElement('script'); s.src='/apt-dx.js?v=4'; s.onload=()=>{ q.splice(0).forEach(f=>{ try{f();}catch(e){} }); }; document.head.appendChild(s); };
+const loadStage1=cb=>{ if(window.AP1)return cb();const q=window._ap1q=window._ap1q||[];q.push(cb);if(q.length>1)return;const s=document.createElement('script');s.src='/apt-stage1.js?v=1';s.onload=()=>q.splice(0).forEach(f=>{try{f();}catch(e){console.error('stage1 callback',e);}});s.onerror=()=>{q.length=0;console.error('stage1 load failed');};document.head.appendChild(s); };
 window.aptRerenderList=()=>{ if(state.sel==null) renderList(); };
 const dealN=d=>(priceEv(d)||{n:0}).n||0, pkR=d=>d.s4&&d.s4.peakR!=null?d.s4.peakR:typeof peakLoRatio==='function'?peakLoRatio(d):null;
 const PICKMENU={f:['유형·순위',()=>[['all','전체 유형'],...FILTERS.filter(x=>x[0]!=='all'&&x[0]!=='fav')]],pb:['가격대',()=>PB],size:['평형',()=>SIZES],age:['연식',()=>AGES],sort:['정렬',()=>SORTS]};
@@ -1232,7 +1235,7 @@ const visible=(d,withSearch=true)=>{
   const pb=PB.find(x=>x[0]===state.pb); const okp=state.pb==='all'||!pb||(CAPT!==6?((d.p>pb[2]||(CAPT===35&&d.p===300000))&&d.p<=pb[3]):((cashOf(d)>pb[2]&&cashOf(d)<=pb[3])||(state.pb==='3'&&cashOf(d)<=30000)));
   const size=SIZES.find(x=>x[0]===state.size), oks=state.size==='all'||(d.py>=size[2]&&d.py<size[3]);
   const ag=AGES.find(x=>x[0]===state.age), ay=ageOf(d), oka=!state.age||state.age==='all'||!ag||(ay!=null&&ay>=ag[2]&&ay<=ag[3]);
-  return ok&&okp&&oks&&oka&&(!withSearch||!state.q||textMatches(d));
+  return ok&&okp&&oks&&oka&&(!window.AP1||window.AP1.passes(d))&&(!withSearch||!state.q||textMatches(d));
 };
 
 /* 탭별 '종합' 설명(s14, 2026.11.1 개편): 6억 외 탭은 가격대 표현을 바꾸고, 네 탭 모두 종합 점수 설명을 그 탭의 비중·백테스트 결과로 교체.
@@ -1366,7 +1369,7 @@ function renderList(){
     ${pend?`<div class="inline-note tnum" style="margin-top:12px">역·초등학교·경사를 지도 데이터로 계산하는 중 · ${D.length-pend}/${D.length}<br><small>처음 한 번만 걸리고, 끝나면 순위가 확정됩니다.</small></div>`:''}
     <details class="method"><summary>평가 기준 안내 ${CHEV}</summary><div style="padding:14px 16px;font-size:13px;line-height:1.8;color:var(--text-secondary)">아파트맵은 교통, 입지 경쟁력, 학군, 단지 규모, 주거 상품성 및 가격 신뢰도를 종합 비교합니다. 각 항목의 정확한 가중치, 보정식, 학습 기준 및 예측 모델은 공개하지 않습니다. 단지별 점수와 순위는 투자수익이나 매매 가능가격을 보장하지 않습니다.</div></details>
   </section>
-  <div class="filters" role="group" aria-label="조건"><button data-f="fav" aria-pressed="${state.f==='fav'}">♥ 저장</button>${['pb','size','age','f'].map(k=>{ const v=state[k]||'all', L=PICKMENU[k], o=L[1]().find(x=>x[0]===v); return `<button type="button" class="sortsel fsel${o&&v!=='all'?' on':''}" data-k="${k}" aria-haspopup="dialog" aria-label="${L[0]}">${(o||L[1]()[0])[1]}</button>`; }).join('')}</div>
+  <div class="filters" role="group" aria-label="조건"><button data-f="fav" aria-pressed="${state.f==='fav'}">♥ 저장</button><button type="button" data-ap1="filter">상세 조건</button><button type="button" data-ap1="open">비교표 0/3</button>${['pb','size','age','f'].map(k=>{ const v=state[k]||'all', L=PICKMENU[k], o=L[1]().find(x=>x[0]===v); return `<button type="button" class="sortsel fsel${o&&v!=='all'?' on':''}" data-k="${k}" aria-haspopup="dialog" aria-label="${L[0]}">${(o||L[1]()[0])[1]}</button>`; }).join('')}</div>
   ${state.q&&!viewport?`<div class="region-mode">‘${esc(state.q)}’ 검색 결과 <button type="button" id="searchReset">전체 순위 보기</button></div>`:''}${viewport?'<div class="region-mode">현재 지도 범위의 단지 <button type="button" id="browseReset">전체 순위 보기</button></div>':''}
   <div class="count"><span>${singleComplex?list.length.toLocaleString()+'개 단지 · 전체 평형 표시':list.length.toLocaleString()+'개 평형'+(CAPT!==6?' ('+new Set(list.map(d=>complexRankKey(d))).size.toLocaleString()+'개 단지)':'')}</span><button type="button" class="sortsel fsel" data-k="sort" aria-haspopup="dialog" aria-label="정렬">${(SORTS.find(x=>x[0]===state.sort)||SORTS[0])[1]}</button></div>`;
   list.slice(0,state.lim).forEach(d=>{
@@ -1375,7 +1378,7 @@ function renderList(){
       <div style="min-width:0"><div class="kicker">${badgeHTML(d)}<span>${esc(d.area)}</span></div>
         <h3>${esc(publicComplexName(d))}${sibs(d).length>1?` <small class="tp">${d.py}평</small>`:''}</h3><p>${NOUP()?`급지 ${Math.round((d.s4&&d.s4.pG)??50)} · ${unitN(d).toLocaleString()}세대${d.unitsOwn?'(매매 대상)':''}${d.unitsN>1?'(추정)':''}`:`입지 ${d.loc.toFixed(1)}`} · ${d.cur&&d.cur.n?esc(d.cur.n)+' '+fmtM(d.cur.m):'역 계산 중'}${NOUP()?'':` · 적정가 대비 ${d.up>=0?'+':''}${Math.round(d.up*100)}%`}${state.sort==='race'&&d.rc!=null?` · <b style="color:#e5484d">최고가 대비 ${(d.rc*100).toFixed(1)}%</b>`:state.sort==='peak'&&pkR(d)!=null?` · 전고점 대비 ${((pkR(d)-1)*100).toFixed(1)}%`:''}</p>
       ${singleComplex?'':CAPT!==6&&sibs(d).length>1?`<p class="sibl">같은 단지 ${sibs(d).filter(x=>x!==d).sort((x,y)=>x.py-y.py).map(x=>`${x.py}평 ${short(x.p)}${x.m3?.price?.warn?' ⚠':''}`).join(' · ')}</p>`:''}</div>
-      <div class="px tnum"><strong${d.m3?.price?.warn?' style="color:#b91c1c"':''}>${d.m3?.price?.warn?'추정 ':''}${short(cashOf(d))}</strong><span>${d.py}평 · ${d.opt?esc(d.opt.kind):d.reg==='free'?'비규제':'토허'}</span><b>${d.score.toFixed(1)}점</b></div>
+      <div class="px tnum"><strong${d.m3?.price?.warn?' style="color:#b91c1c"':''}>${d.m3?.price?.warn?'추정 ':''}${short(cashOf(d))}</strong><span>${d.py}평 · ${d.opt?esc(d.opt.kind):d.reg==='free'?'비규제':'토허'}</span><b>${d.score.toFixed(1)}점</b><button type="button" class="ap1-picker" data-ap1="compare" data-i="${D.indexOf(d)}" aria-label="${esc(publicComplexName(d)+' '+d.py+'평')} 비교에 담기">+ 비교</button></div>
       ${singleComplex?m3FlatOptions(d):''}
       ${m3PriceWarning(d,true)}
     </article>`;
@@ -1383,7 +1386,7 @@ function renderList(){
   if(list.length>state.lim) h+=`<button class="btn ghost more" id="more" style="display:block;margin:12px auto;width:calc(100% - 32px)">${Math.min(100,list.length-state.lim)}개 더 보기 · 남은 ${(list.length-state.lim).toLocaleString()}개</button>`;
   if(!list.length){
     const reason=state.browse?'현재 지도 범위에 조건에 맞는 단지가 없습니다.':state.q?'검색 결과가 없습니다.':'선택한 조건에 맞는 단지가 없습니다.';
-    const reset=state.q?'검색어 지우기':state.f!=='all'||state.pb!=='all'||state.size!=='all'||state.age!=='all'?'필터 초기화':state.browse?'전체 지역 보기':'';
+    const reset=state.q?'검색어 지우기':state.f!=='all'||state.pb!=='all'||state.size!=='all'||state.age!=='all'||(window.AP1&&window.AP1.isFiltered())?'필터 초기화':state.browse?'전체 지역 보기':'';
     h+=`<div class="empty-results" role="status"><strong>${reason}</strong><p>${state.browse?'지도 위치를 옮기거나 확대 범위를 조정해 보세요.':'다른 단지나 조건을 검색해 보세요.'}</p>${reset?'<button type="button" id="emptyReset">'+reset+'</button>':''}</div>`;
   }
   if(state.q&&(window.LIVE_PRICE_REVIEW||[]).length){
@@ -1407,7 +1410,7 @@ function renderList(){
   const browseReset=b.querySelector('#browseReset'); if(browseReset) browseReset.onclick=()=>{state.browse=false;render();b.scrollTop=0;syncMapViewUrl();};
   const emptyReset=b.querySelector('#emptyReset');if(emptyReset)emptyReset.onclick=()=>{
     if(state.q){clearSearchToMap();return;}
-    if(state.f!=='all'||state.pb!=='all'||state.size!=='all'||state.age!=='all'){Object.assign(state,{f:'all',pb:'all',size:'all',age:'all'});}
+    if(state.f!=='all'||state.pb!=='all'||state.size!=='all'||state.age!=='all'||(window.AP1&&window.AP1.isFiltered())){Object.assign(state,{f:'all',pb:'all',size:'all',age:'all'});if(window.AP1)window.AP1.reset();}
     else state.browse=false;
     render();b.scrollTop=0;syncMapViewUrl();
   };
@@ -1426,6 +1429,8 @@ function renderList(){
     };
   });
   b.querySelectorAll('[data-flat-index]').forEach(x=>x.onclick=e=>{e.stopPropagation();select(+x.dataset.flatIndex,true);});
+  b.querySelectorAll('[data-ap1]').forEach(x=>x.onclick=e=>{e.stopPropagation();loadStage1(()=>window.AP1.action(x.dataset.ap1,+x.dataset.i));});
+  if(window.AP1)window.AP1.updateLabels(b);
 }
 
 function transitTxt(d){
@@ -1649,7 +1654,7 @@ function renderDetail(i){
   const src=RATE_SRC[d.rate.src];
   let h=`<div class="phead"><button id="back"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M15 18 9 12l6-6"/></svg>목록</button><button id="favBtn" aria-pressed="${FAV.has(d.cxKey)}" style="margin-left:auto;color:${FAV.has(d.cxKey)?'#e5484d':'inherit'}">${FAV.has(d.cxKey)?'♥ 저장됨':'♡ 저장'}</button><button id="shareBtn" aria-label="이 단지 링크 공유">공유</button><span class="tnum">${d.rank}위 / ${d.m3?NCX:D.length}</span></div>
   <section class="identity"><div class="cat">${esc(tags)}</div><h2>${esc(publicComplexName(d))}</h2>
-    <div class="meta tnum">${d.masterComplexKey?`<span>선택 평형 · ${esc(d.n.replace(publicComplexName(d),'')||d.n)} ${d.py}평</span>`:''}<span>${esc(d.area)}</span><span>${d.year}년 입주</span><span>${unitN(d).toLocaleString()}세대${d.masterComplexKey?` <small>(통합 관리단지 · 해당 구분 블록 ${d.masterBlockUnits.toLocaleString()}세대)</small>`:d.unitsBlockVerified?` <small>(분리 단지 기준 · 통합 세대수 중복 제외)</small>`:d.unitsOwn?` <small>(임대단지 제외 매매 대상)</small>`:d.unitsN>1?` <small>(같은 마을 ${d.unitsN}개 단지 합계 ${d.unitsRaw.toLocaleString()}세대를 나눈 추정)</small>`:''}</span></div></section>
+    <div class="meta tnum">${d.masterComplexKey?`<span>선택 평형 · ${esc(d.n.replace(publicComplexName(d),'')||d.n)} ${d.py}평</span>`:''}<span>${esc(d.area)}</span><span>${d.year}년 입주</span><span>${unitN(d).toLocaleString()}세대${d.masterComplexKey?` <small>(통합 관리단지 · 해당 구분 블록 ${d.masterBlockUnits.toLocaleString()}세대)</small>`:d.unitsBlockVerified?` <small>(분리 단지 기준 · 통합 세대수 중복 제외)</small>`:d.unitsOwn?` <small>(임대단지 제외 매매 대상)</small>`:d.unitsN>1?` <small>(같은 마을 ${d.unitsN}개 단지 합계 ${d.unitsRaw.toLocaleString()}세대를 나눈 추정)</small>`:''}</span></div><button id="ap1DetailCompare" type="button" data-ap1="compare" data-i="${i}" class="ap1-picker" style="margin-top:10px;padding:7px 12px;border:1px solid var(--border);border-radius:5px;color:var(--primary-soft-fg);font-size:12px;font-weight:700">+ 비교에 담기</button></section>
   ${redevelopmentEvidencePanel(d)}${m3DensityNote(d)}${m3PriceWarning(d)}<div class="lede"><strong>${esc(d.headline)}</strong><p>${esc(d.sub)}</p>${d.s4&&(!d.simple||d.s4.peakR!=null||d.s4.peakPeer)?`<p class="why"><b>순위 근거</b> ${esc(whyLine(d))}</p>`:''}${!d.simple&&hasNew(d)?`<p class="why"><b>신설역 주의</b> 입지 점수에 개통 예정 역·노선을 넣어 순위가 올라간 단지예요${d.locParts.fut?` — ${esc(d.locParts.fut.n)}역(${esc(d.locParts.fut.line)}) 도보 약 ${Math.round(d.locParts.wf)}분`:''}${/예정/.test(d.locParts.lpl||'')?` · 노선 프리미엄 ${esc(d.locParts.lpl)} +${Math.round(d.locParts.lp*100)}%(가정)`:''}. 철도는 지연이 잦고 역 위치는 공사·계획 기준(OpenStreetMap)이에요. 개통 전까지 1년당 5%(최대 20%) 할인해서 반영했고, 예정 역을 빼면 입지 상위 ${Math.max(1,Math.round(100-d.loc0))}%예요. 지금 쓰는 역은 ${esc((d.cur&&d.cur.n)||'없음')}${d.cur&&d.cur.m<99999?` 도보 약 ${Math.round(walkMin(d.cur.m))}분`:''}.</p>`:''}</div>
   <dl class="kpis tnum">
     ${d.opt?`<div><dt>지금 필요한 돈</dt><dd>${eokH(d.opt.dep)}</dd><small>${esc(d.opt.kind)} · ${d.opt.Y}년 ${eok(d.opt.K)} 매수권 · 시세 ${eok(d.p)}</small></div>`:`<div><dt>${d.py}평 시세</dt><dd>${eokH(d.p)}</dd><small>${d.reg==='free'?'비규제':'토허·실거주 2년'}${priceEv(d)?`<br>${esc(priceEvTxt(d))}`:''}</small></div>`}
@@ -1710,6 +1715,8 @@ function renderDetail(i){
   $('#favBtn').onclick=()=>{ const k=d.cxKey, on=!FAV.has(k); on?FAV.add(k):FAV.delete(k); favSave(); const fb=$('#favBtn'); fb.textContent=on?'♥ 저장됨':'♡ 저장'; fb.style.color=on?'#e5484d':'inherit'; fb.setAttribute('aria-pressed',on); };
   b.querySelectorAll('[data-sib]').forEach(x=>x.onclick=()=>{ const j=+x.dataset.sib; if(j!==i) select(j,false); });
   loadDx(()=>APTDX(d,b));
+  $('#ap1DetailCompare').onclick=()=>loadStage1(()=>window.AP1.add(i));
+  loadStage1(()=>{if(state.sel===i&&b.isConnected)window.AP1.detail(d,b);});
 }
 
 function render(){ const pb=document.getElementById('body'); if(pb&&pb.hasAttribute('data-pre')){ pb.removeAttribute('data-pre'); pb.style.cursor=''; }   // 첫 화면 미리보기(apt-first*.js) 표시 해제
@@ -1877,7 +1884,7 @@ function backToList(){ if(history.state&&history.state.apt) history.back(); else
 let homeB=null;
 function goHome(){                                                     // 로고: 필터·검색·선택을 모두 지우고 처음 화면(전체 목록·수도권 전체 지도)으로
   clearTimeout(qT);$('#q').blur();
-  Object.assign(state,{f:'all',pb:'all',size:'all',age:'all',sort:'rank',q:'',sel:null,lim:50,browse:false}); $('#q').value='';
+  Object.assign(state,{f:'all',pb:'all',size:'all',age:'all',sort:'rank',q:'',sel:null,lim:50,browse:false}); if(window.AP1)window.AP1.reset(); $('#q').value='';
   const url=new URL(location.href);
   ['vlat','vlng','vlevel','browse'].forEach(k=>url.searchParams.delete(k));
   history.replaceState(null,'',url.pathname+url.search);

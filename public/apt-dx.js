@@ -67,19 +67,26 @@
       +'<p class="note" style="margin-top:4px">점=실거래(흐린 점은 직거래) · 파란 선=월 중위(직거래 제외) · 회색 막대=월 거래량</p>';
   }
 
-  function drawDx(d,j,box){
-    var A=pickAb(d,j), all=(j.t||[]), rows=all.filter(function(t){return ab(t[1])===A;});
-    var h='';
+  function drawDx(d,j,box,selectedArea,floorMode,omitDirect){
+    var all=j.t||[],A=selectedArea==null?pickAb(d,j):+selectedArea;
+    floorMode=floorMode||'all';omitDirect=!!omitDirect;
+    var areaRows=all.filter(function(t){return ab(t[1])===A;});
+    var maxFloor=areaRows.reduce(function(n,t){return Math.max(n,t[2]);},0);
+    var floor1=Math.max(1,Math.floor(maxFloor/3)),floor2=Math.max(floor1,Math.floor(maxFloor*2/3));
+    var rows=areaRows.filter(function(t){return (floorMode==='all'||(floorMode==='low'&&t[2]<=floor1)||(floorMode==='mid'&&t[2]>floor1&&t[2]<=floor2)||(floorMode==='high'&&t[2]>floor2))&&(!omitDirect||!t[4]);});
+    var areaOptions=Array.from(new Set(all.map(function(t){return ab(t[1]);}))).sort(function(a,b){return a-b;});
+    var h='<section class="sec" data-dx="1"><h3>실거래 상세 조건 <small>선택 평형 · 층 · 직거래</small></h3><div style="display:grid;grid-template-columns:1fr 1fr;gap:9px;margin:10px 0"><label style="font-size:12px">전용면적대<select class="dxarea" aria-label="전용면적대 선택" style="display:block;width:100%;padding:9px;border:1px solid #cbd5e1;border-radius:5px;background:var(--bg);color:var(--text)">'+areaOptions.map(function(v){return '<option value="'+v+'"'+(v===A?' selected':'')+'>'+v+'㎡대</option>';}).join('')+'</select></label><label style="font-size:12px">층 구간<select class="dxfloor" aria-label="층 구간 선택" style="display:block;width:100%;padding:9px;border:1px solid #cbd5e1;border-radius:5px;background:var(--bg);color:var(--text)">'+[['all','전체 층'],['low','저층(1~'+floor1+'층)'],['mid','중층('+(floor1+1)+'~'+floor2+'층)'],['high','고층('+(floor2+1)+'층~)']].map(function(t){return '<option value="'+t[0]+'"'+(floorMode===t[0]?' selected':'')+'>'+t[1]+'</option>';}).join('')+'</select></label></div><label style="display:inline-flex;align-items:center;gap:8px;font-size:13px"><input class="dxndirect" type="checkbox" '+(omitDirect?'checked':'')+'>직거래 제외</label><p class="note">정확한 타입 자료가 없어 전용면적을 5㎡ 단위로 묶어 표시합니다. 층 구간은 해당 면적대 거래의 최고층 기준으로 나눕니다. 현재 '+rows.length+'건.</p></section>';
+    if(!rows.length)h+='<section class="sec" data-dx="1"><p class="note">선택 조건에 맞는 실거래가 없습니다.</p></section>';
     if(rows.length){
       var now=Date.now(), last=rows[rows.length-1], peak=rows.reduce(function(a,t){return t[3]>a[3]?t:a;},rows[0]);
       var nd=rows.filter(function(t){return !t[4];});
       var r3=nd.filter(function(t){return tms(t[0])>=now-91*864e5;}).map(function(t){return t[3];});
       var y3=nd.filter(function(t){var m=tms(t[0]);return m>=now-456*864e5&&m<now-365*864e5;}).map(function(t){return t[3];});
       var m3=med(r3), my=med(y3), cur=m3!=null?m3:last[3];
-      h+='<section class="sec" data-dx="1"><h3>실거래가 <small>전용 '+A+'㎡대 · 국토부 신고 · '+rows.length.toLocaleString()+'건(2017.7~)</small></h3>'
+      h+='<section class="sec" data-dx="1"><h3>실거래가 <small>전용 '+A+'㎡대 · 선택 조건 '+rows.length.toLocaleString()+'건(2017.7~)</small></h3>'
         +'<dl class="facts tnum">'
         +'<div><dt>최근 실거래<small>'+ymd(last[0])+' · '+last[2]+'층'+(last[4]?' · 직거래':'')+'</small></dt><dd>'+won(last[3])+'</dd></div>'
-        +'<div><dt>역대 최고가<small>'+ymd(peak[0])+' · '+peak[2]+'층</small></dt><dd>'+won(peak[3])+'</dd></div>'
+        +'<div><dt>'+(floorMode!=='all'||omitDirect?'선택 거래 최고가':'역대 최고가')+'<small>'+ymd(peak[0])+' · '+peak[2]+'층</small></dt><dd>'+won(peak[3])+'</dd></div>'
         +'<div><dt>최고가 대비<small>최근 3개월 중위'+(m3!=null?' ('+r3.length+'건)':' 없음 → 마지막 거래')+'</small></dt><dd style="color:'+(cur>=peak[3]?'#0a7d3e':'#e5484d')+'">'+(cur>=peak[3]?'신고가 수준':pct(cur/peak[3]-1))+'</dd></div>'
         +(my!=null&&m3!=null?'<div><dt>1년 전 대비<small>최근 3개월 중위 vs 1년 전 같은 기간</small></dt><dd style="color:'+(m3>=my?'#0a7d3e':'#e5484d')+'">'+pct(m3/my-1)+'</dd></div>':'')
         +'</dl><div class="dxp" role="group" aria-label="기간" style="display:flex;gap:6px;margin:12px 0 6px">'
@@ -132,6 +139,8 @@
     }
     if(!h){ box.innerHTML=''; return; }
     box.innerHTML=h;
+    var applyFilters=function(){var a=box.querySelector('.dxarea'),f=box.querySelector('.dxfloor'),v=box.querySelector('.dxndirect');drawDx(d,j,box,a?+a.value:A,f?f.value:'all',v&&v.checked);};
+    ['.dxarea','.dxfloor','.dxndirect'].forEach(function(sel){var el=box.querySelector(sel);if(el)el.onchange=applyFilters;});
     box.querySelectorAll('.dxp button').forEach(function(b){ b.onclick=function(){
       box.querySelectorAll('.dxp button').forEach(function(o){ o.setAttribute('aria-pressed','false'); o.style.background='#fff'; o.style.color=''; });
       b.setAttribute('aria-pressed','true'); b.style.background='#0f172a'; b.style.color='#fff';
