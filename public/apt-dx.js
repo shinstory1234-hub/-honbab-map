@@ -1,7 +1,7 @@
 /* 아파트맵 단지 상세 — 리치고 차용 기능(2026.11.16)
    첫 화면 번들에 안 들어감: 단지를 처음 눌렀을 때만 이 파일을 받고, 단지마다 /api/apt-dx 로 실거래를 받아 그림.
    - 실거래 차트(3년·5년·전체, 월 중위선·거래량·최고가 표시), 최근 실거래 목록(신고가 N·직거래 표시)
-   - 최근 실거래·최고가 대비·1년 전 대비 요약, 층별 가격(최근 12개월), 평형별 시세 전체, 단지 정보(세대·용적률·사용승인)
+   - 최근 실거래·최고가 대비·1년 전 대비 요약, 층별 가격(최근 12개월), 동 평당 순위
    - 같은 동 전체 단지 평당 시세 순위(가격대 무관)
    - 하락 레이스: 정렬 '최고가 대비 하락순'(직전 2년 최고가 → 최근 3개월 중위, 직거래·1~2층 제외) */
 (function(){
@@ -118,7 +118,7 @@
       var y3=nd.filter(function(t){var m=tms(t[0]);return m>=now-456*864e5&&m<now-365*864e5;}).map(function(t){return t[3];});
       var m3=med(r3), my=med(y3), cur=m3!=null?m3:last[3];
       var pill=function(txt,v){ return '<span class="dxpill '+(v>=0?'up':'dn')+'">'+txt+' <b>'+(v>=0?'▲':'▼')+' '+Math.abs(v*100).toFixed(1)+'%</b></span>'; };
-      h+='<div class="dxhero"><div class="lbl">'+(m3!=null?'최근 3개월 실거래 중위 · '+r3.length+'건':'마지막 실거래 · '+ymd(last[0]))+(floorMode!=='all'||omitDirect?' · 필터 적용':'')+'</div>'
+      h+='<div class="dxhero"><div class="lbl">'+(m3!=null?(r3.length>=3?'최근 3개월 실거래 중위 · '+r3.length+'건':'최근 3개월 실거래 '+r3.length+'건'+(r3.length>1?' 중위':'')):'마지막 실거래 · '+ymd(last[0]))+(floorMode!=='all'||omitDirect?' · 필터 적용':'')+'</div>'
         +'<div class="big tnum">'+won(cur)+'</div><div class="pills">'
         +(cur>=peak[3]?'<span class="dxpill up"><b>신고가 수준</b></span>':pill('최고가 대비',cur/peak[3]-1))
         +(my!=null&&m3!=null?pill('1년 전 대비',m3/my-1):'')+'</div>'
@@ -142,22 +142,7 @@
         +(list.length>3?'<button type="button" class="dxmore dxm">실거래 '+(list.length-3).toLocaleString()+'건 더보기</button>':'');
     }
     h+='</section>';
-    // 평형별 시세(가격대 무관 전체)
-    var lc=(j.lc||[]).filter(function(x){return x[2]>0;});
-    if(lc.length){
-      h+='<section class="sec" data-dx="1"><h3>평형별 시세 <small>전체 평형 · 실거래 환산 · 누르면 실거래 전환</small></h3><div class="dxl tnum">'
-        +lc.map(function(x){return '<div role="button" tabindex="0" data-dx-unit="'+x[0]+'" style="cursor:pointer" class="dxr'+(x[0]===A?' me':'')+'"><div class="l"><b>'+x[1]+'평'+(x[0]===A?'<i class="tag">보는 중</i>':'')+'</b><span>전용 '+x[0]+'㎡대 · 12개월 '+(x[3]||0)+'건 · 평당 '+Math.round(x[2]/x[1]).toLocaleString()+'만</span></div><div class="r">'+won(Math.round(x[2]/100)*100)+'</div></div>';}).join('')+'</div></section>';
-    }
-    // 단지 정보
-    var cx=j.cx;
-    if(cx){
-      var ud=cx[2]?String(cx[2]):'';
-      h+='<section class="sec" data-dx="1"><h3>단지 정보 <small>건축물대장</small></h3><dl class="facts tnum">'
-        +(cx[0]?'<div><dt>세대수</dt><dd>'+Number(cx[0]).toLocaleString()+'세대</dd></div>':'')
-        +(cx[1]?'<div><dt>용적률</dt><dd>'+Math.round(cx[1])+'%</dd></div>':'')
-        +(ud.length>=6?'<div><dt>사용승인</dt><dd>'+ud.slice(0,4)+'.'+ud.slice(4,6)+'</dd></div>':'')
-        +'</dl></section>';
-    }
+    // 평형별 시세·단지 정보는 상세의 '전체 평형별 시세'·'단지 기본정보'와 겹쳐서 뺌
     // 같은 동 전체 평당 시세 순위
     var me=(lkey(d)||'').split('|').slice(2).join('|');
     var nb=(j.nb||[]).filter(function(x){return x[4]==null||x[4]>=100||x[0]===me;});
