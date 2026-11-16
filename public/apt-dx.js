@@ -32,7 +32,21 @@
    +'.dxr .no{flex:none;width:22px;font-style:normal;font-size:13px;font-weight:700;color:var(--text-faint,#94a3b8);text-align:center}'
    +'.dxr.me{background:#f3f7ff;margin:0 -8px;padding-left:10px;padding-right:10px;border-radius:8px}.dxr.me .no{color:#2563eb}'
    +'.dxh{margin:22px 0 8px;font-size:15px;font-weight:700}.dxh small{margin-left:6px;font-size:12px;font-weight:500;color:var(--text-tertiary,#64748b)}'
-   +'.dxk{margin:2px 0 10px;font-size:14px}';
+   +'.dxk{margin:2px 0 10px;font-size:14px}'
+   +'.dxrow{display:flex;gap:6px;overflow-x:auto;margin:6px 0 12px;scrollbar-width:none}.dxrow::-webkit-scrollbar{display:none}'
+   +'.dxc1{flex:none;border:1px solid var(--border,#e2e8f0);background:var(--bg,#fff);color:var(--text,#0f172a);border-radius:999px;padding:7px 14px;font-size:13.5px;font-weight:650;line-height:1.2}'
+   +'.dxc1 small{display:block;font-size:10.5px;font-weight:500;color:var(--text-faint,#94a3b8)}.dxc1.on{background:#0f172a;color:#fff;border-color:#0f172a}.dxc1.on small{color:#cbd5e1}'
+   +'.dxhero{background:var(--surface-2,#f6f8fb);border-radius:14px;padding:16px 16px 14px;margin:4px 0 12px}'
+   +'.dxhero .lbl{font-size:12.5px;color:var(--text-tertiary,#64748b)}.dxhero .big{font-size:28px;font-weight:800;letter-spacing:-.02em;margin:2px 0 8px;color:var(--text,#0f172a)}'
+   +'.dxhero .pills{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:8px}.dxhero .mini{font-size:12.5px;color:var(--text-tertiary,#64748b)}.dxhero .mini b{color:var(--text,#0f172a)}'
+   +'.dxpill{font-size:12.5px;border-radius:999px;padding:4px 10px;background:#fff;border:1px solid var(--border,#e2e8f0);color:var(--text-secondary,#334155)}.dxpill.up b{color:#d6342c}.dxpill.dn b{color:#2563eb}'
+   +'.dxseg{display:flex;background:var(--surface-2,#f1f5f9);border-radius:10px;padding:3px;margin:0 0 6px}.dxseg button{flex:1;border:0;background:none;padding:7px 0;border-radius:8px;font-size:13px;font-weight:600;color:var(--text-tertiary,#64748b)}.dxseg button.on{background:#fff;color:var(--text,#0f172a);box-shadow:0 1px 2px rgba(15,23,42,.12)}'
+   +'.dxtiles{display:grid;grid-template-columns:repeat(3,1fr);gap:6px}.dxtile{border:1px solid var(--border,#e2e8f0);background:var(--bg,#fff);border-radius:12px;padding:10px 8px;text-align:left;display:flex;flex-direction:column;gap:2px;min-width:0}'
+   +'.dxtile span{font-size:12.5px;font-weight:650;color:var(--text-secondary,#334155)}.dxtile span small{font-weight:500;color:var(--text-faint,#94a3b8);font-size:11px}.dxtile b{font-size:15px;font-weight:750;color:var(--text,#0f172a);white-space:nowrap}.dxtile>small{font-size:11px;color:var(--text-faint,#94a3b8)}'
+   +'.dxtile.on{border-color:#2563eb;background:#f3f7ff;box-shadow:inset 0 0 0 1px #2563eb}'
+   +'.dxhrow{display:flex;justify-content:space-between;align-items:center}.dxtg{font-size:12.5px;font-weight:500;color:var(--text-tertiary,#64748b);display:inline-flex;gap:5px;align-items:center}'
+   +'.dxr .dg{font-style:normal;font-size:11px;font-weight:600;color:#64748b;background:#f1f5f9;border-radius:4px;padding:1px 6px;margin-left:6px;vertical-align:2px}.dxr .l b .nw{margin-left:6px;vertical-align:2px}'
+   +'.dxmore{width:100%;margin-top:8px;padding:11px 0;border:1px solid var(--border,#e2e8f0);background:var(--bg,#fff);border-radius:10px;font-size:13.5px;font-weight:650;color:var(--text,#0f172a)}';
     document.head.appendChild(st); })();
   var CACHE={};
   function E(s){ return String(s==null?'':s).replace(/[&<>"]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c];}); }
@@ -92,40 +106,42 @@
     var floor1=Math.max(1,Math.floor(maxFloor/3)),floor2=Math.max(floor1,Math.floor(maxFloor*2/3));
     var rows=areaRows.filter(function(t){return (floorMode==='all'||(floorMode==='low'&&t[2]<=floor1)||(floorMode==='mid'&&t[2]>floor1&&t[2]<=floor2)||(floorMode==='high'&&t[2]>floor2))&&(!omitDirect||!t[4]);});
     var areaOptions=Array.from(new Set(all.map(function(t){return ab(t[1]);}))).sort(function(a,b){return a-b;});
-    var h='<section class="sec" data-dx="1"><h3>실거래 상세 조건 <small>선택 평형 · 층 · 직거래</small></h3><div style="display:grid;grid-template-columns:1fr 1fr;gap:9px;margin:10px 0"><label style="font-size:12px">전용면적대<select class="dxarea" aria-label="전용면적대 선택" style="display:block;width:100%;padding:9px;border:1px solid #cbd5e1;border-radius:5px;background:var(--bg);color:var(--text)">'+areaOptions.map(function(v){return '<option value="'+v+'"'+(v===A?' selected':'')+'>'+v+'㎡대</option>';}).join('')+'</select></label><label style="font-size:12px">층 구간<select class="dxfloor" aria-label="층 구간 선택" style="display:block;width:100%;padding:9px;border:1px solid #cbd5e1;border-radius:5px;background:var(--bg);color:var(--text)">'+[['all','전체 층'],['low','저층(1~'+floor1+'층)'],['mid','중층('+(floor1+1)+'~'+floor2+'층)'],['high','고층('+(floor2+1)+'층~)']].map(function(t){return '<option value="'+t[0]+'"'+(floorMode===t[0]?' selected':'')+'>'+t[1]+'</option>';}).join('')+'</select></label></div><label style="display:inline-flex;align-items:center;gap:8px;font-size:13px"><input class="dxndirect" type="checkbox" '+(omitDirect?'checked':'')+'>직거래 제외</label><p class="note">정확한 타입 자료가 없어 전용면적을 5㎡ 단위로 묶어 표시합니다. 층 구간은 해당 면적대 거래의 최고층 기준으로 나눕니다. 현재 '+rows.length+'건.</p></section>';
-    if(!rows.length)h+='<section class="sec" data-dx="1"><p class="note">선택 조건에 맞는 실거래가 없습니다.</p></section>';
+    var now=Date.now(), lcPy={}; (j.lc||[]).forEach(function(x){ lcPy[x[0]]=x[1]; });
+    var chip=function(cls,val,on,label,sub){ return '<button type="button" class="dxc1 '+cls+(on?' on':'')+'" data-v="'+val+'" aria-pressed="'+on+'">'+label+(sub?'<small>'+sub+'</small>':'')+'</button>'; };
+    var h='<section class="sec" data-dx="1"><h3>실거래가 <small>국토부 신고 · 해제 제외</small></h3>';
+    if(areaOptions.length>1) h+='<div class="dxrow" role="group" aria-label="평형">'+areaOptions.map(function(v){ return chip('dxa',v,v===A,lcPy[v]?lcPy[v]+'평':v+'㎡대',lcPy[v]?'전용 '+v+'㎡':''); }).join('')+'</div>';
+    if(!rows.length) h+='<p class="note">선택 조건에 맞는 실거래가 없습니다.</p>';
     if(rows.length){
-      var now=Date.now(), last=rows[rows.length-1], peak=rows.reduce(function(a,t){return t[3]>a[3]?t:a;},rows[0]);
+      var last=rows[rows.length-1], peak=rows.reduce(function(a,t){return t[3]>a[3]?t:a;},rows[0]);
       var nd=rows.filter(function(t){return !t[4];});
       var r3=nd.filter(function(t){return tms(t[0])>=now-91*864e5;}).map(function(t){return t[3];});
       var y3=nd.filter(function(t){var m=tms(t[0]);return m>=now-456*864e5&&m<now-365*864e5;}).map(function(t){return t[3];});
       var m3=med(r3), my=med(y3), cur=m3!=null?m3:last[3];
-      h+='<section class="sec" data-dx="1"><h3>실거래가 <small>전용 '+A+'㎡대 · 선택 조건 '+rows.length.toLocaleString()+'건(2017.7~)</small></h3>'
-        +'<dl class="facts tnum">'
-        +'<div><dt>최근 실거래<small>'+ymd(last[0])+' · '+last[2]+'층'+(last[4]?' · 직거래':'')+'</small></dt><dd>'+won(last[3])+'</dd></div>'
-        +'<div><dt>'+(floorMode!=='all'||omitDirect?'선택 거래 최고가':'역대 최고가')+'<small>'+ymd(peak[0])+' · '+peak[2]+'층</small></dt><dd>'+won(peak[3])+'</dd></div>'
-        +'<div><dt>최고가 대비<small>최근 3개월 중위'+(m3!=null?' ('+r3.length+'건)':' 없음 → 마지막 거래')+'</small></dt><dd style="color:'+(cur>=peak[3]?'#0a7d3e':'#e5484d')+'">'+(cur>=peak[3]?'신고가 수준':pct(cur/peak[3]-1))+'</dd></div>'
-        +(my!=null&&m3!=null?'<div><dt>1년 전 대비<small>최근 3개월 중위 vs 1년 전 같은 기간</small></dt><dd style="color:'+(m3>=my?'#0a7d3e':'#e5484d')+'">'+pct(m3/my-1)+'</dd></div>':'')
-        +'</dl><div class="dxp" role="group" aria-label="기간" style="display:flex;gap:6px;margin:12px 0 6px">'
-        +['3','5','all'].map(function(p,i){return '<button type="button" data-p="'+p+'" aria-pressed="'+(i===0)+'" style="flex:1;padding:6px 0;border-radius:8px;border:1px solid #e2e8f0;background:'+(i===0?'#0f172a;color:#fff':'#fff')+';font-weight:600">'+(p==='all'?'전체':p+'년')+'</button>';}).join('')
-        +'</div><div class="dxc">'+chart(rows,3)+'</div>';
-      // 층별(최근 12개월, 직거래 제외)
-      var y12=nd.filter(function(t){return tms(t[0])>=now-365*864e5;}), mf=0;
-      rows.forEach(function(t){ if(t[2]>mf) mf=t[2]; });
-      if(y12.length>=3&&mf>=3){
-        var g=[[],[],[]], c1=Math.floor(mf/3), c2=Math.floor(mf*2/3);
-        y12.forEach(function(t){ g[t[2]<=c1?0:t[2]<=c2?1:2].push(t[3]); });
-        h+='<h4 class="dxh">층별 가격 <small>최근 12개월 · 직거래 제외 · 중위</small></h4><dl class="facts tnum">'
-          +['저층(1~'+c1+'층)','중층('+(c1+1)+'~'+c2+'층)','고층('+(c2+1)+'층~)'].map(function(l,i){return '<div><dt>'+l+'<small>'+g[i].length+'건</small></dt><dd>'+(g[i].length?won(med(g[i])):'—')+'</dd></div>';}).join('')+'</dl>';
+      var pill=function(txt,v){ return '<span class="dxpill '+(v>=0?'up':'dn')+'">'+txt+' <b>'+(v>=0?'▲':'▼')+' '+Math.abs(v*100).toFixed(1)+'%</b></span>'; };
+      h+='<div class="dxhero"><div class="lbl">'+(m3!=null?'최근 3개월 실거래 중위 · '+r3.length+'건':'마지막 실거래 · '+ymd(last[0]))+(floorMode!=='all'||omitDirect?' · 필터 적용':'')+'</div>'
+        +'<div class="big tnum">'+won(cur)+'</div><div class="pills">'
+        +(cur>=peak[3]?'<span class="dxpill up"><b>신고가 수준</b></span>':pill('최고가 대비',cur/peak[3]-1))
+        +(my!=null&&m3!=null?pill('1년 전 대비',m3/my-1):'')+'</div>'
+        +'<div class="mini tnum">최고 <b>'+won(peak[3])+'</b> '+ymd(peak[0])+' · '+peak[2]+'층</div></div>'
+        +'<div class="dxseg dxp" role="group" aria-label="기간">'+['3','5','all'].map(function(p,i){return '<button type="button" data-p="'+p+'" aria-pressed="'+(i===0)+'"'+(i===0?' class="on"':'')+'>'+(p==='all'?'전체':p+'년')+'</button>';}).join('')+'</div>'
+        +'<div class="dxc">'+chart(rows,3)+'</div>';
+      // 층별: 누르면 그 층만(다시 누르면 전체)
+      var aNd=areaRows.filter(function(t){return !t[4]&&tms(t[0])>=now-365*864e5;});
+      if(maxFloor>=3&&aNd.length>=3){
+        var G=[['low','저층','1~'+floor1+'층'],['mid','중층',(floor1+1)+'~'+floor2+'층'],['high','고층',(floor2+1)+'층~']];
+        h+='<h4 class="dxh">층별 가격 <small>최근 12개월 중위 · 누르면 그 층만</small></h4><div class="dxtiles tnum">'
+          +G.map(function(g){ var v=aNd.filter(function(t){return g[0]==='low'?t[2]<=floor1:g[0]==='mid'?t[2]>floor1&&t[2]<=floor2:t[2]>floor2;}).map(function(t){return t[3];});
+            return '<button type="button" class="dxtile dxf'+(floorMode===g[0]?' on':'')+'" data-v="'+g[0]+'"><span>'+g[1]+' <small>'+g[2]+'</small></span><b>'+(v.length?won(med(v)):'—')+'</b><small>'+v.length+'건</small></button>'; }).join('')+'</div>';
       }
-      // 거래 목록(신고가 = 그때까지 같은 면적대 최고가 갱신)
+      // 최근 실거래 3건 + 더보기
       var mx=0, flag=rows.map(function(t){ var n=t[3]>mx&&!t[4]; if(!t[4]) mx=Math.max(mx,t[3]); return n; });
       var list=rows.map(function(t,i){return [t,flag[i]];}).reverse();
-      var tr=function(n){ return list.slice(0,n).map(function(x){ var t=x[0]; return '<div class="dxr"><div class="l"><b>'+ymd(t[0])+'</b><span>'+t[2]+'층 · 전용 '+t[1]+'㎡'+(t[4]?' · 직거래':'')+'</span></div><div class="r'+(t[4]?' dim':'')+'">'+won(t[3])+(x[1]?'<i class="nw">신고가</i>':'')+'</div></div>'; }).join(''); };
-      h+='<h4 class="dxh">최근 실거래 <small>최신순</small></h4><div class="dxl dxt tnum">'+tr(10)+'</div>'
-        +(list.length>10?'<button type="button" class="btn ghost dxm" style="width:100%;margin-top:8px">실거래 더보기 ('+list.length.toLocaleString()+'건)</button>':'')
-        +'<p class="note">해제 거래 제외. 신고가 = 그 시점까지 같은 면적대(직거래 제외) 최고가를 넘은 거래.</p></section>';
+      var tr=function(n){ return list.slice(0,n).map(function(x){ var t=x[0]; return '<div class="dxr"><div class="l"><b>'+won(t[3])+(x[1]?'<i class="nw">신고가</i>':'')+(t[4]?'<i class="dg">직거래</i>':'')+'</b><span>'+ymd(t[0])+' · '+t[2]+'층 · 전용 '+t[1]+'㎡</span></div></div>'; }).join(''); };
+      h+='<div class="dxh dxhrow"><span>최근 실거래 <small>'+rows.length.toLocaleString()+'건</small></span><label class="dxtg"><input class="dxndirect" type="checkbox" '+(omitDirect?'checked':'')+'>직거래 빼기</label></div>'
+        +'<div class="dxl dxt tnum">'+tr(3)+'</div>'
+        +(list.length>3?'<button type="button" class="dxmore dxm">실거래 '+(list.length-3).toLocaleString()+'건 더보기</button>':'');
     }
+    h+='</section>';
     // 평형별 시세(가격대 무관 전체)
     var lc=(j.lc||[]).filter(function(x){return x[2]>0;});
     if(lc.length){
@@ -147,24 +163,27 @@
     var nb=(j.nb||[]).filter(function(x){return x[4]==null||x[4]>=100||x[0]===me;});
     if(nb.length>1){
       var at=-1; nb.forEach(function(x,i){ if(x[0]===me) at=i; });
-      var dong=String(d.area).split(' ').pop(), show=nb.slice(0,10); if(at>=10) show.push(nb[at]);
+      var dong=String(d.area).split(' ').pop(), show=nb.slice(0,5); if(at>=5) show.push(nb[at]);
+      var NBROW=function(x){ var i=nb.indexOf(x), sub=[x[4]?Number(x[4]).toLocaleString()+'세대':'',/^\d{4}$/.test(String(x[5]||'').trim())?String(x[5]).trim()+'년 입주':''].filter(Boolean).join(' · ');
+          return '<div class="dxr'+(x[0]===me?' me':'')+'"><em class="no">'+(i+1)+'</em><div class="l"><b>'+E(x[0])+(x[0]===me?'<i class="tag">이 단지</i>':'')+'</b>'+(sub?'<span>'+sub+'</span>':'')+'</div><div class="r">'+Math.round(x[2]/x[1]).toLocaleString()+'만<small>평당</small></div></div>'; };
       h+='<section class="sec" data-dx="1"><h3>'+E(dong)+' 평당 시세 순위 <small>가격대 무관 · 100세대 이상</small></h3>'
         +(at>=0?'<p class="dxk"><b>'+nb.length+'곳 중 '+(at+1)+'위</b></p>':'')
-        +'<div class="dxl tnum">'+show.map(function(x){ var i=nb.indexOf(x), sub=[x[4]?Number(x[4]).toLocaleString()+'세대':'',/^\d{4}$/.test(String(x[5]||'').trim())?String(x[5]).trim()+'년 입주':''].filter(Boolean).join(' · ');
-          return '<div class="dxr'+(x[0]===me?' me':'')+'"><em class="no">'+(i+1)+'</em><div class="l"><b>'+E(x[0])+(x[0]===me?'<i class="tag">이 단지</i>':'')+'</b>'+(sub?'<span>'+sub+'</span>':'')+'</div><div class="r">'+Math.round(x[2]/x[1]).toLocaleString()+'만<small>평당</small></div></div>'; }).join('')
-        +'</div><p class="note">단지마다 거래가 가장 많은 평형의 실거래 환산 시세 ÷ 평. 작은 평형 위주 단지는 평당가가 높게 나와요.</p></section>';
+        +'<div class="dxl dxnb tnum">'+show.map(NBROW).join('')        +'</div>'+(nb.length>show.length?'<button type="button" class="dxmore dxnbm">'+E(dong)+' '+nb.length+'곳 전체 보기</button>':'')+'<p class="note">단지마다 거래가 가장 많은 평형의 실거래 환산 시세 ÷ 평. 작은 평형 위주 단지는 평당가가 높게 나와요.</p></section>';
     }
     if(!h){ box.innerHTML=''; return; }
     box.innerHTML=h;
-    var applyFilters=function(){var a=box.querySelector('.dxarea'),f=box.querySelector('.dxfloor'),v=box.querySelector('.dxndirect');drawDx(d,j,box,a?+a.value:A,f?f.value:'all',v&&v.checked);};
-    ['.dxarea','.dxfloor','.dxndirect'].forEach(function(sel){var el=box.querySelector(sel);if(el)el.onchange=applyFilters;});
+    var redraw=function(area,fm,od){ drawDx(d,j,box,area,fm,od); };
+    box.querySelectorAll('.dxa').forEach(function(b){ b.onclick=function(){ redraw(+b.dataset.v,'all',omitDirect); }; });
+    box.querySelectorAll('.dxf').forEach(function(b){ b.onclick=function(){ redraw(A,floorMode===b.dataset.v?'all':b.dataset.v,omitDirect); }; });
+    var nd0=box.querySelector('.dxndirect'); if(nd0) nd0.onchange=function(){ redraw(A,floorMode,nd0.checked); };
     box.querySelectorAll('[data-dx-unit]').forEach(function(b){var go=function(){drawDx(d,j,box,+b.dataset.dxUnit,'all',false);};b.onclick=go;b.onkeydown=function(e){if(e.key==='Enter'||e.key===' '){e.preventDefault();go();}};});
     box.querySelectorAll('.dxp button').forEach(function(b){ b.onclick=function(){
-      box.querySelectorAll('.dxp button').forEach(function(o){ o.setAttribute('aria-pressed','false'); o.style.background='#fff'; o.style.color=''; });
-      b.setAttribute('aria-pressed','true'); b.style.background='#0f172a'; b.style.color='#fff';
+      box.querySelectorAll('.dxp button').forEach(function(o){ o.setAttribute('aria-pressed','false'); o.classList.remove('on'); });
+      b.setAttribute('aria-pressed','true'); b.classList.add('on');
       box.querySelector('.dxc').innerHTML=chart(rows,b.dataset.p==='all'?'all':+b.dataset.p); }; });
-    var more=box.querySelector('.dxm'), n=10;
-    if(more) more.onclick=function(){ n+=30; box.querySelector('.dxt').innerHTML=tr(n); if(n>=list.length) more.remove(); };
+    var nbm=box.querySelector('.dxnbm'); if(nbm) nbm.onclick=function(){ box.querySelector('.dxnb').innerHTML=nb.map(NBROW).join(''); nbm.remove(); };
+    var more=box.querySelector('.dxm'), n=3;
+    if(more) more.onclick=function(){ n+=20; more.textContent='실거래 '+Math.max(0,list.length-n).toLocaleString()+'건 더보기'; box.querySelector('.dxt').innerHTML=tr(n); if(n>=list.length) more.remove(); };
   }
 
   window.APTDX=function(d,body){
