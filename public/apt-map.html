@@ -334,7 +334,7 @@ aside{order:-1;width:408px;flex:none;border-right:1px solid var(--border);backgr
   <div class="search"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg><input id="q" placeholder="단지명, 동네로 찾기" autocomplete="off" enterkeyhint="search"><button type="button" id="clearSearch" aria-label="검색어 지우기" hidden>×</button></div>
 </header>
 <main>
-  <div class="mapwrap"><div id="mapcount" class="mapcount"></div><div id="map"></div><div id="keymsg"></div></div>
+  <div class="mapwrap"><button type="button" id="ap1xMapLazy" style="position:absolute;z-index:6;right:12px;top:104px;background:var(--bg);color:var(--text);border:1px solid var(--border);border-radius:5px;padding:8px 12px;font-size:13px;font-weight:750">호재 지도</button><div id="mapcount" class="mapcount"></div><div id="map"></div><div id="keymsg"></div></div>
   <aside id="sheet">
     <div class="sheet-head" id="head"><div class="grab"><span></span></div></div>
     <div class="body" id="body"></div>
@@ -1187,9 +1187,11 @@ const badgeHTML=d=>[{label:d.tier.k,color:d.tier.c},...cardFeatures(d).map(k=>FE
 /* 2026.11.15 UX: 저장한 단지(♥, 이 기기에만 저장)·정렬. 정렬을 바꿔도 순위 숫자는 추천 순위 그대로 */
 const FAV=(()=>{ try{ return new Set(JSON.parse(localStorage.getItem('aptFav')||'[]')); }catch(e){ return new Set(); } })();
 const favSave=()=>{ try{ localStorage.setItem('aptFav',JSON.stringify([...FAV])); }catch(e){} };
-const SORTS=[['rank','추천순',null],['price','가격 낮은순',(a,b)=>a.p-b.p],['new','신축순',(a,b)=>b.year-a.year],['units','세대수 많은순',(a,b)=>unitN(b)-unitN(a)],['station','역 가까운순',(a,b)=>((a.cur&&a.cur.m)??1e9)-((b.cur&&b.cur.m)??1e9)],['ppp','평당가 낮은순',(a,b)=>a.p/a.py-b.p/b.py],['deal','거래 많은순',(a,b)=>dealN(b)-dealN(a)],['peak','전고점 회복 높은순',(a,b)=>(pkR(b)??-1)-(pkR(a)??-1)],['race','최고가 대비 하락순',(a,b)=>(a.rc??9)-(b.rc??9)]];
+const SORTS=[['rank','추천순',null],['price','가격 낮은순',(a,b)=>a.p-b.p],['new','신축순',(a,b)=>b.year-a.year],['units','세대수 많은순',(a,b)=>unitN(b)-unitN(a)],['station','역 가까운순',(a,b)=>((a.cur&&a.cur.m)??1e9)-((b.cur&&b.cur.m)??1e9)],['ppp','평당가 낮은순',(a,b)=>a.p/a.py-b.p/b.py],['deal','거래 많은순',(a,b)=>dealN(b)-dealN(a)],['peak','전고점 회복 높은순',(a,b)=>(pkR(b)??-1)-(pkR(a)??-1)],['race','최고가 대비 하락률순',(a,b)=>(a.rc??9)-(b.rc??9)],['raceAmt','최고가 대비 하락액순',(a,b)=>(a.rcAmt??1e9)-(b.rcAmt??1e9)]];
 /* 2026.11.16 리치고 차용 상세(실거래 차트 등)·하락 레이스: apt-dx.js를 처음 필요할 때만 받음(첫 화면 번들 밖) */
 const loadDx=cb=>{ if(window.APTDX) return cb(); const q=window._dxq=window._dxq||[]; q.push(cb); if(q.length>1) return; const s=document.createElement('script'); s.src='/apt-dx.js?v=4'; s.onload=()=>{ q.splice(0).forEach(f=>{ try{f();}catch(e){} }); }; document.head.appendChild(s); };
+const loadExtra=cb=>{if(window.AP1X)return cb();const q=window._ap1xq=window._ap1xq||[];q.push(cb);if(q.length>1)return;const s=document.createElement('script');s.src='/apt-stage1-extra.js?v=1';s.onload=()=>q.splice(0).forEach(f=>{try{f();}catch(e){console.error('extra',e);}});s.onerror=()=>{q.length=0;console.error('extra load failed');};document.head.appendChild(s);};
+const mapStage1Loader=document.getElementById('ap1xMapLazy');if(mapStage1Loader)mapStage1Loader.onclick=()=>loadExtra(()=>{mapStage1Loader.remove();window.AP1X.installLayer();document.getElementById('ap1xMapBtn')?.click();});
 const loadStage1=cb=>{ if(window.AP1)return cb();const q=window._ap1q=window._ap1q||[];q.push(cb);if(q.length>1)return;const s=document.createElement('script');s.src='/apt-stage1.js?v=1';s.onload=()=>q.splice(0).forEach(f=>{try{f();}catch(e){console.error('stage1 callback',e);}});s.onerror=()=>{q.length=0;console.error('stage1 load failed');};document.head.appendChild(s); };
 window.aptRerenderList=()=>{ if(state.sel==null) renderList(); };
 const dealN=d=>(priceEv(d)||{n:0}).n||0, pkR=d=>d.s4&&d.s4.peakR!=null?d.s4.peakR:typeof peakLoRatio==='function'?peakLoRatio(d):null;
@@ -1351,7 +1353,7 @@ function renderList(){
   const b=$('#body'), previousScroll=b.querySelector('.intro')?b.scrollTop:0;
   const filterScroll=[...b.querySelectorAll('.filters')].map(el=>el.scrollLeft);
   const viewport=state.browse&&map?map.getBounds():null;
-  const matches=ORDER.filter(d=>visible(d)&&(!viewport||(d._pos&&viewport.contain(d._pos))));
+  const matches=ORDER.filter(d=>visible(d)&&(!viewport||(d._pos&&viewport.contain(d._pos)))&&(!(state.sort==='race'||state.sort==='raceAmt')||!state.raceArea||d.rcab===+state.raceArea));
   const pend=D.filter(d=>d.pending).length;
   // 평형 필터를 먼저 적용하므로 필터에 해당하는 평형이 있는 단지는 항상 표시된다.
   const singleComplex=!!(window.APT_M3 && CAPT>6);
@@ -1360,7 +1362,7 @@ function renderList(){
     ?matches.filter(d=>{ const key=complexRankKey(d); if(seen.has(key))return false; seen.add(key); return true; })
       .sort((a,b)=>a.rank-b.rank || b.score-a.score)
     :matches;
-  if(state.sort==='race'&&!window.RACE) loadDx(()=>APTRACE());
+  if((state.sort==='race'||state.sort==='raceAmt')&&!window.RACE) loadDx(()=>APTRACE());
   const sortF=(SORTS.find(x=>x[0]===state.sort)||SORTS[0])[2]; if(sortF) list.sort((a,b)=>sortF(a,b)||a.rank-b.rank);
   let h=`<section class="intro">
     <h1>예산 안에서 좋은 아파트 찾기</h1>
@@ -1376,7 +1378,7 @@ function renderList(){
     h+=`<article class="row" data-i="${D.indexOf(d)}" data-s="1" tabindex="0" role="button" aria-label="${esc(publicComplexName(d)+' '+d.py+'평 상세보기')}">
       <span class="rk tnum">${String(d.rank).padStart(2,'0')}</span>
       <div style="min-width:0"><div class="kicker">${badgeHTML(d)}<span>${esc(d.area)}</span></div>
-        <h3>${esc(publicComplexName(d))}${sibs(d).length>1?` <small class="tp">${d.py}평</small>`:''}</h3><p>${NOUP()?`급지 ${Math.round((d.s4&&d.s4.pG)??50)} · ${unitN(d).toLocaleString()}세대${d.unitsOwn?'(매매 대상)':''}${d.unitsN>1?'(추정)':''}`:`입지 ${d.loc.toFixed(1)}`} · ${d.cur&&d.cur.n?esc(d.cur.n)+' '+fmtM(d.cur.m):'역 계산 중'}${NOUP()?'':` · 적정가 대비 ${d.up>=0?'+':''}${Math.round(d.up*100)}%`}${state.sort==='race'&&d.rc!=null?` · <b style="color:#e5484d">최고가 대비 ${(d.rc*100).toFixed(1)}%</b>`:state.sort==='peak'&&pkR(d)!=null?` · 전고점 대비 ${((pkR(d)-1)*100).toFixed(1)}%`:''}</p>
+        <h3>${esc(publicComplexName(d))}${sibs(d).length>1?` <small class="tp">${d.py}평</small>`:''}</h3><p>${NOUP()?`급지 ${Math.round((d.s4&&d.s4.pG)??50)} · ${unitN(d).toLocaleString()}세대${d.unitsOwn?'(매매 대상)':''}${d.unitsN>1?'(추정)':''}`:`입지 ${d.loc.toFixed(1)}`} · ${d.cur&&d.cur.n?esc(d.cur.n)+' '+fmtM(d.cur.m):'역 계산 중'}${NOUP()?'':` · 적정가 대비 ${d.up>=0?'+':''}${Math.round(d.up*100)}%`}${(state.sort==='race'||state.sort==='raceAmt')&&d.rc!=null?` · <b style="color:#e5484d">하락률 ${(d.rc*100).toFixed(1)}% · 하락액 ${eok(Math.abs(d.rcAmt||0))}</b> · 최근 3개월 ${d.rcN??'—'}건`:state.sort==='peak'&&pkR(d)!=null?` · 전고점 대비 ${((pkR(d)-1)*100).toFixed(1)}%`:''}</p>
       ${singleComplex?'':CAPT!==6&&sibs(d).length>1?`<p class="sibl">같은 단지 ${sibs(d).filter(x=>x!==d).sort((x,y)=>x.py-y.py).map(x=>`${x.py}평 ${short(x.p)}${x.m3?.price?.warn?' ⚠':''}`).join(' · ')}</p>`:''}</div>
       <div class="px tnum"><strong${d.m3?.price?.warn?' style="color:#b91c1c"':''}>${d.m3?.price?.warn?'추정 ':''}${short(cashOf(d))}</strong><span>${d.py}평 · ${d.opt?esc(d.opt.kind):d.reg==='free'?'비규제':'토허'}</span><b>${d.score.toFixed(1)}점</b><button type="button" class="ap1-picker" data-ap1="compare" data-i="${D.indexOf(d)}" aria-label="${esc(publicComplexName(d)+' '+d.py+'평')} 비교에 담기">+ 비교</button></div>
       ${singleComplex?m3FlatOptions(d):''}
@@ -1403,6 +1405,14 @@ function renderList(){
   <p class="source">지역별 최신 아파트 가격동향은 <a href="https://www.reb.or.kr/r-one/portal/main/indexPage.do" target="_blank" rel="noopener noreferrer">한국부동산원 공식 통계</a>에서 확인하세요. 과거 하락률은 현재 수치가 아니므로 제외했습니다. <button type="button" class="linkbtn" id="noticeOpen">이용 유의사항</button></p>`;
   h=publicMethodSummary(cap10Text(h));
   b.innerHTML=h;
+  if(state.sort==='race'||state.sort==='raceAmt'){
+    const vals=[...new Set(D.map(d=>d.rcab).filter(Number.isFinite))].sort((a,b)=>a-b);
+    const pane=document.createElement('div');
+    pane.className='region-mode';
+    pane.innerHTML='<label for="raceArea" style="white-space:nowrap">하락 비교 전용면적대</label><select id="raceArea" class="sortsel" style="max-width:145px"><option value="">전체</option>'+vals.map(v=>'<option value="'+v+'"'+(state.raceArea===String(v)?' selected':'')+'>'+v+'㎡대</option>').join('')+'</select><small>최근 3개월 중위값 ÷ 직전 2년 최고가 · 직거래·1~2층 제외</small>';
+    const cnt=b.querySelector('.count');if(cnt)cnt.before(pane);
+    pane.querySelector('select').onchange=e=>{state.raceArea=e.target.value;state.lim=50;renderList();};
+  }
   b.scrollTop=previousScroll;
   b.querySelectorAll('.filters').forEach((el,i)=>{el.scrollLeft=filterScroll[i]||0;});
   updateSourceStatus();
@@ -1716,7 +1726,7 @@ function renderDetail(i){
   b.querySelectorAll('[data-sib]').forEach(x=>x.onclick=()=>{ const j=+x.dataset.sib; if(j!==i) select(j,false); });
   loadDx(()=>APTDX(d,b));
   $('#ap1DetailCompare').onclick=()=>loadStage1(()=>window.AP1.add(i));
-  loadStage1(()=>{if(state.sel===i&&b.isConnected)window.AP1.detail(d,b);});
+  loadStage1(()=>{if(state.sel===i&&b.isConnected){window.AP1.detail(d,b);loadExtra(()=>{if(state.sel===i&&b.isConnected)window.AP1X.detail(d,b);});}});
 }
 
 function render(){ const pb=document.getElementById('body'); if(pb&&pb.hasAttribute('data-pre')){ pb.removeAttribute('data-pre'); pb.style.cursor=''; }   // 첫 화면 미리보기(apt-first*.js) 표시 해제
@@ -1884,7 +1894,7 @@ function backToList(){ if(history.state&&history.state.apt) history.back(); else
 let homeB=null;
 function goHome(){                                                     // 로고: 필터·검색·선택을 모두 지우고 처음 화면(전체 목록·수도권 전체 지도)으로
   clearTimeout(qT);$('#q').blur();
-  Object.assign(state,{f:'all',pb:'all',size:'all',age:'all',sort:'rank',q:'',sel:null,lim:50,browse:false}); if(window.AP1)window.AP1.reset(); $('#q').value='';
+  Object.assign(state,{f:'all',pb:'all',size:'all',age:'all',sort:'rank',raceArea:'',q:'',sel:null,lim:50,browse:false}); if(window.AP1)window.AP1.reset(); $('#q').value='';
   const url=new URL(location.href);
   ['vlat','vlng','vlevel','browse'].forEach(k=>url.searchParams.delete(k));
   history.replaceState(null,'',url.pathname+url.search);

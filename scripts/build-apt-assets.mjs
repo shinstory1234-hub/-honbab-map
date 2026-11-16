@@ -10,6 +10,11 @@ import zlib from 'node:zlib';
 // Keep apt-map.html as the editable source. Production serves the generated page.
 export function buildAptAssets(root, output = path.join(root, 'public')) {
   const sourceDir = path.join(root, 'public');
+  // Build the lazy-loaded Stage 1 source only after reading its versioned Brotli parts.
+  // It is never included in the first-page cap bundles or initial gzip budget.
+  const stageParts = [0, 1].map(i => fs.readFileSync(path.join(root, 'lib', 'apt-stage1-extra.br.part' + i)));
+  const stageJs = zlib.brotliDecompressSync(Buffer.concat(stageParts));
+  fs.writeFileSync(path.join(output, 'apt-stage1-extra.js'), stageJs);
   const source = fs.readFileSync(path.join(sourceDir, 'apt-map.html'), 'utf8');
   const scripts = [...source.matchAll(/<script>([\s\S]*?)<\/script>/g)];
   const bootstrap = scripts.find(m => m[1].includes('var F='));

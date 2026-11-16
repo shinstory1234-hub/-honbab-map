@@ -113,7 +113,7 @@
     var lc=(j.lc||[]).filter(function(x){return x[2]>0;});
     if(lc.length){
       h+='<section class="sec" data-dx="1"><h3>평형별 시세 <small>전체 평형 · 실거래 환산</small></h3><div class="cmp tnum">'
-        +lc.map(function(x){return '<div'+(x[1]===d.py?' class="me"':'')+'><span class="n">'+x[1]+'평(전용 '+x[0]+'㎡대) · 12개월 '+(x[3]||0)+'건 · 평당 '+Math.round(x[2]/x[1]).toLocaleString()+'만</span><span class="v">'+won(x[2])+'</span></div>';}).join('')+'</div></section>';
+        +lc.map(function(x){return '<div role="button" tabindex="0" data-dx-unit="'+x[0]+'" style="cursor:pointer"'+(x[0]===A?' class="me"':'')+'><span class="n">'+x[1]+'평(전용 '+x[0]+'㎡대) · 12개월 '+(x[3]||0)+'건 · 평당 '+Math.round(x[2]/x[1]).toLocaleString()+'만</span><span class="v">'+won(x[2])+'</span></div>';}).join('')+'</div></section>';
     }
     // 단지 정보
     var cx=j.cx;
@@ -141,6 +141,7 @@
     box.innerHTML=h;
     var applyFilters=function(){var a=box.querySelector('.dxarea'),f=box.querySelector('.dxfloor'),v=box.querySelector('.dxndirect');drawDx(d,j,box,a?+a.value:A,f?f.value:'all',v&&v.checked);};
     ['.dxarea','.dxfloor','.dxndirect'].forEach(function(sel){var el=box.querySelector(sel);if(el)el.onchange=applyFilters;});
+    box.querySelectorAll('[data-dx-unit]').forEach(function(b){var go=function(){drawDx(d,j,box,+b.dataset.dxUnit,'all',false);};b.onclick=go;b.onkeydown=function(e){if(e.key==='Enter'||e.key===' '){e.preventDefault();go();}};});
     box.querySelectorAll('.dxp button').forEach(function(b){ b.onclick=function(){
       box.querySelectorAll('.dxp button').forEach(function(o){ o.setAttribute('aria-pressed','false'); o.style.background='#fff'; o.style.color=''; });
       b.setAttribute('aria-pressed','true'); b.style.background='#0f172a'; b.style.color='#fff';
@@ -156,7 +157,7 @@
     box.innerHTML='<section class="sec" data-dx="1"><h3>실거래가</h3><p class="note">실거래 불러오는 중…</p></section>';
     var anchor=null; body.querySelectorAll('section.sec > h3').forEach(function(h){ if(!anchor&&/^(시세 흐름|사면 드는 돈)/.test(h.textContent.trim())) anchor=h.parentNode; });
     if(anchor) anchor.parentNode.insertBefore(box,anchor); else { var id=body.querySelector('.identity'); (id&&id.nextSibling)?id.parentNode.insertBefore(box,id.nextSibling):body.appendChild(box); }
-    var done=function(j){ if(box.isConnected) drawDx(d,j,box); };
+    var done=function(j){ if(box.isConnected){ drawDx(d,j,box);window.APT_DX_INFO=window.APT_DX_INFO||{};window.APT_DX_INFO[k]=j;if(window.AP1X)window.AP1X.onDx(d,j,body); } };
     if(CACHE[k]) return done(CACHE[k]);
     fetch('/api/apt-dx?k='+encodeURIComponent(k)).then(function(r){ if(!r.ok) throw 0; return r.json(); })
       .then(function(j){ CACHE[k]=j; done(j); }).catch(function(){ if(box.isConnected) box.innerHTML=''; });
@@ -166,7 +167,7 @@
     if(window.RACE_LOADING) return; window.RACE_LOADING=1;
     fetch('/api/apt-race').then(function(r){ if(!r.ok) throw 0; return r.json(); }).then(function(m){ if(!m||!Object.keys(m).length) throw 0;
       window.RACE=m||{};
-      D.forEach(function(d){ var r=m[lkey(d)]; d.rc=r&&r[1]>0?r[2]/r[1]-1:null; d.rcab=r?r[0]:null; });
+      D.forEach(function(d){ var r=m[lkey(d)]; d.rc=r&&r[1]>0?r[2]/r[1]-1:null; d.rcab=r?r[0]:null; d.rcAmt=r&&r[1]>0?r[2]-r[1]:null; d.rcN=r?r[3]:null; });
       if(window.aptRerenderList) window.aptRerenderList();
     }).catch(function(){ window.RACE_LOADING=0; });
   };
