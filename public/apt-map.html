@@ -1726,7 +1726,12 @@ function renderDetail(i){
   b.querySelectorAll('[data-sib]').forEach(x=>x.onclick=()=>{ const j=+x.dataset.sib; if(j!==i) select(j,false); });
   loadDx(()=>APTDX(d,b));
   $('#ap1DetailCompare').onclick=()=>loadStage1(()=>window.AP1.add(i));
-  loadStage1(()=>{if(state.sel===i&&b.isConnected){window.AP1.detail(d,b);loadExtra(()=>{if(state.sel===i&&b.isConnected)window.AP1X.detail(d,b);});}});
+  loadStage1(()=>{if(state.sel===i&&b.isConnected){
+    // 본문 자동 정리 과정에서 lede가 생략된 단지는 앵커를 재생성한 뒤 기능 카드를 붙인다.
+    const ensureLede=()=>{if(!b.querySelector('.lede')){const anchor=document.createElement('div');anchor.className='lede';anchor.hidden=true;(b.querySelector('.identity')||b.querySelector('.phead'))?.after(anchor);}};
+    ensureLede();window.AP1.detail(d,b);
+    loadExtra(()=>{if(state.sel===i&&b.isConnected){ensureLede();window.AP1X.detail(d,b);}});
+  }});
 }
 
 function render(){ const pb=document.getElementById('body'); if(pb&&pb.hasAttribute('data-pre')){ pb.removeAttribute('data-pre'); pb.style.cursor=''; }   // 첫 화면 미리보기(apt-first*.js) 표시 해제
