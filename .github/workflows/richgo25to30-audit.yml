@@ -52,7 +52,7 @@ jobs:
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git config user.name "github-actions[bot]"
           git add docs/richgo-25to30-direct-audit-20261118.csv docs/richgo-25to30-direct-summary-20261118.json || true
-          if ! git diff --cached --quiet; then git commit -m "audit: complete full cap30 direct page attempts and save evidence"; git push origin HEAD:audit/richgo-25to30-top300-20261118; fi
+          if ! git diff --cached --quiet; then git commit -m "audit: complete full cap30 direct page attempts and save evidence"; git pull --rebase origin audit/richgo-25to30-top300-20261118; git push origin HEAD:audit/richgo-25to30-top300-20261118; fi
       - name: Upload current top300 extraction for review
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
         with:
