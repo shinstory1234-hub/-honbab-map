@@ -3,6 +3,8 @@ on:
   push:
     branches: [integration/richgo-allbands-20261118]
   workflow_dispatch:
+  pull_request:
+    branches: [master]
 permissions:
   contents: read
 jobs:
