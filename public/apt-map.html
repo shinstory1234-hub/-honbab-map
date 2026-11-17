@@ -1207,6 +1207,7 @@ const loadStage2=cb=>{if(window.APT2)return cb();const q=window._ap2q=window._ap
 const stage2MapLazy=document.getElementById('apt2MapLazy');if(stage2MapLazy)stage2MapLazy.onclick=()=>loadStage2(()=>window.APT2.open('view'));
 document.getElementById('q')?.addEventListener('input',()=>{if(!window.APT2)loadStage2(()=>{});});
 if(new URLSearchParams(location.search).has('s2'))loadStage2(()=>window.APT2.importShare());
+const loadRichgo=cb=>{if(window.APT_RICHGO)return cb();const q=window._ruQ=window._ruQ||[];q.push(cb);if(q.length>1)return;const script=document.createElement('script');script.src='/apt-richgo-upgrade.js?v=1';script.onload=()=>q.splice(0).forEach(fn=>{try{fn();}catch(e){console.error('richgo',e);}});script.onerror=()=>{q.length=0;console.error('richgo upgrade load failed');};document.head.appendChild(script);};
 const loadStage1=cb=>{ if(window.AP1)return cb();const q=window._ap1q=window._ap1q||[];q.push(cb);if(q.length>1)return;const s=document.createElement('script');s.src='/apt-stage1.js?v=2';s.onload=()=>q.splice(0).forEach(f=>{try{f();}catch(e){console.error('stage1 callback',e);}});s.onerror=()=>{q.length=0;console.error('stage1 load failed');};document.head.appendChild(s); };
 window.aptRerenderList=()=>{ if(state.sel==null) renderList(); };
 const dealN=d=>(priceEv(d)||{n:0}).n||0, pkR=d=>d.s4&&d.s4.peakR!=null?d.s4.peakR:typeof peakLoRatio==='function'&&Number.isFinite(peakLoRatio(d))?peakLoRatio(d)/100:null;
@@ -1742,6 +1743,7 @@ function renderDetail(i){
     // 본문 자동 정리 과정에서 lede가 생략된 단지는 앵커를 재생성한 뒤 기능 카드를 붙인다.
     const ensureLede=()=>{if(!b.querySelector('.lede')){const anchor=document.createElement('div');anchor.className='lede';anchor.hidden=true;(b.querySelector('.identity')||b.querySelector('.phead'))?.after(anchor);}};
     ensureLede();window.AP1.detail(d,b);aptLayout(b);
+    loadRichgo(()=>{if(state.sel===i&&b.isConnected)window.APT_RICHGO.attach(d,b,i);});
     loadExtra(()=>{if(state.sel===i&&b.isConnected){ensureLede();window.AP1X.detail(d,b);aptLayout(b);}});
   }});
 }
