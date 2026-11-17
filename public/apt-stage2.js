@@ -13,11 +13,21 @@ var panel=null,tab='home',indicator='base',rankSort='rank';
 var bestInGu=new Map();for(const item of D){const gu=item.area.split(' ').slice(0,2).join(' '),old=bestInGu.get(gu);if(!old||item.rank<old.rank)bestInGu.set(gu,item);}
 var lineOverlays=[],measureMode='',measurePoints=[],measureBtn=null,overlayState={land:false,road:false},rivals=[null,null];
 var name=d=>publicComplexName(d)+' '+d.py+'평';
-var rent=d=>Number(d.jeon)>0?+d.jeon:null;
+var verifiedRent=new Map();
+var rent=d=>verifiedRent.get(key(d))??null;
 var ratio=d=>rent(d)!=null&&d.p>0?rent(d)/d.p*100:null;
 var gap=d=>rent(d)!=null?d.p-rent(d):null;
 var rentCoverage=D.filter(d=>rent(d)!=null).length;
-var rentAvailable=rentCoverage>=Math.max(50,Math.ceil(D.length*.6));
+var rentAvailable=true;
+window.addEventListener('apt:verified-rent',function(ev){
+ var detail=ev.detail||{},d=detail.d,amount=Number(detail.deposit);
+ if(!d||!D.includes(d))return;
+ if(detail.complete===true&&Number(detail.count)>=3&&Number.isFinite(amount)&&amount>0){verifiedRent.set(key(d),amount);}
+ else verifiedRent.delete(key(d));
+ if(panel&&tab==='filters')paint();
+ if(indicator==='rent'||indicator==='gap')applyPins();
+ if(inUse()){state.sel=null;render();}
+});
 var date=d=>(priceEv(d)?.last||'').replace(/\D/g,'').slice(0,8);
 var inUse=()=>Object.values(filter).some(x=>x>0);
 var css=document.createElement('style');
@@ -89,17 +99,17 @@ function viewTab(){
  +'<h3>핀 숫자 변경</h3><div class="s2-flex">'+[
  ['base','원래 표시'],['rank','추천 순위'],['ppp','평당가'],['far','용적률'],['units','세대수'],['age','준공연도'],...(rentAvailable?[['rent','전세가율'],['gap','갭']]:[])
  ].map(([k,t])=>'<button class="s2-btn'+(indicator===k?' on':'')+'" data-s2pin="'+k+'">'+t+'</button>').join('')+'</div>'
- +'<p>화면에 보이는 핀만 지표를 바꿔 표시합니다. 정렬은 기본 추천 순위에 영향을 주지 않습니다. 전세금은 동일 평형 실거래 확인값이 아닙니다.</p>';
+ +'<p>화면에 보이는 핀만 지표를 바꿔 표시합니다. 정렬은 기본 추천 순위에 영향을 주지 않습니다. 전세·월세 탭에서 확인된 동일 평형 전세 3건 이상만 표시합니다.</p>';
 }
 function filtersTab(){
  var fld=(key,label,factor)=>'<label>'+label+'<input name="'+key+'" type="number" min="0" step=".1" placeholder="조건 없음" value="'+(filter[key]?(filter[key]/(factor||1)):'')+'"></label>';
  var has=rentAvailable;
  return '<h3>전세·거래 조건</h3><div class="s2-cols">'
- +(has?fld('rentMin','전세 참고금 최소 (억원)',10000)+fld('gapMax','전세 갭 최대 (억원)',10000)+fld('ratioMin','전세가율 최소 (%)')+fld('ratioMax','전세가율 최대 (%)'):'')
+ +(has?fld('rentMin','검증된 전세금 최소 (억원)',10000)+fld('gapMax','전세 갭 최대 (억원)',10000)+fld('ratioMin','전세가율 최소 (%)')+fld('ratioMax','전세가율 최대 (%)'):'')
  +fld('tradeMin','최근 3개월 거래 최소 (건)')
  +'<label>마지막 거래<select name="days">'+searchOptions([['0','제한 없음'],['90','90일 이내'],['180','180일 이내'],['365','1년 이내']],String(filter.days))+'</select></label></div>'
  +'<div class="s2-actionbar"><button class="s2-btn on" id="s2Apply">필터 적용</button><button class="s2-btn" id="s2Clear">초기화</button></div>'
- +'<p>'+(has?'단지 참고 전세금은 동일 전용면적 계약과 일치하지 않을 수 있습니다. ':'현재 가격대에 검증 가능한 전세·갭 자료가 없어 해당 조건은 숨겼습니다. ')+'월세, 공시가격, 매물 소화기간 및 호가 변화는 자료가 없어 제외합니다.</p>';
+ +'<p>'+(has?'전세·월세 탭에서 조회한 최근 6개월 동일 평형 전세 실거래가 3건 이상인 단지만 계산합니다. 조회하지 않은 단지, 일부 월 실패, 표본 부족 단지는 전세 필터에서 제외됩니다. ':'검증된 전세 실거래가 없습니다. ')+'월세, 공시가격, 매물 소화기간 및 호가 변화는 자료가 없어 제외합니다.</p>';
 }
 function navTab(){
  var areas=new Set();D.forEach(d=>{var a=d.area.split(' ');if(a.length>=3)areas.add(a.slice(0,2).join(' '));});

@@ -268,6 +268,7 @@ function rentView(d,box){
       var sorted=prices.slice().sort(function(a,b){return a-b;});
       var med=sorted.length?sorted[Math.floor(sorted.length/2)]:null;
       var sale=n(d.p),ratio=med>0&&sale>0?med/sale*100:null;
+      window.dispatchEvent(new CustomEvent('apt:verified-rent',{detail:{d:d,deposit:med,count:lease.length,complete:v.complete===true}}));
       out.innerHTML='<ul class="ru-list">'+chip('최근 6개월 해당 평형 전세',fmt(lease.length)+'건','전세보증금 중위가격은 거래 3건 이상일 때 표시')
         +chip('전세 실거래 중위가격',lease.length>=3?money(med):'표본 부족','보증금 단위: 만원')
         +chip('매매 시세 대비 전세가율',lease.length>=3&&ratio!=null?ratio.toFixed(1)+'%':'계산 불가','전세 실거래 중위 ÷ 기존 아파트맵 산출 매매 시세 · 서로 다른 기준')
