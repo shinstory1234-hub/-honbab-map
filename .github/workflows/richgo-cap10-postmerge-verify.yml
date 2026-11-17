@@ -6,6 +6,7 @@ on:
     paths:
       - .github/workflows/richgo-cap10-postmerge-verify.yml
       - scripts/test-richgo-6to10-crossband.cjs
+      - scripts/apply-richgo-band10.mjs
   workflow_dispatch:
 permissions:
   contents: read
