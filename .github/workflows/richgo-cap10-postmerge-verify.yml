@@ -1,0 +1,32 @@
+name: Verify completed Richgo 6to10 full 1822 source audit
+on:
+  push:
+    branches:
+      - audit/richgo-6to10-top300-20261118
+    paths:
+      - .github/workflows/richgo-cap10-postmerge-verify.yml
+      - scripts/test-richgo-6to10-crossband.cjs
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  tests-and-build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 40
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: audit/richgo-6to10-top300-20261118
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Confirm all 1822 identities and 1108 detailed crawl results
+        run: |
+          node scripts/test-richgo-cap10-final.cjs
+          node scripts/test-richgo-6to10-crossband.cjs
+          node scripts/test-richgo-band10-audit.cjs
+      - name: Build rank assets with cap10-only FAR corrections
+        run: |
+          npm ci --ignore-scripts
+          npm run build
