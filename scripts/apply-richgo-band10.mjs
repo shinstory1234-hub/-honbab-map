@@ -47,6 +47,9 @@ export function patchRichgoCap10Source(code,root){
     if(Number.isFinite(change.far)&&change.far>=60&&change.far<=1500){
       const fd=splitRawArray(row.at(-1));fd[0]=String(change.far);fd[1]='"리치고"';
       row[row.length-1]='['+fd.join(',')+']';
+    }else if(change.clearFar===true){
+      const fd=splitRawArray(row.at(-1));fd[0]='null';fd[1]='"리치고_공란"';
+      row[row.length-1]='['+fd.join(',')+']';
     }
     code=code.slice(0,p)+'['+row.join(',')+']'+code.slice(q);updated++;
   }
@@ -92,7 +95,7 @@ export function appendRichgoCap10FinalOverrides(code,root){
   });
   const ids=override.map(x=>hash(x.name+'|'+x.area));
   if(new Set(ids).size!==ids.length)throw new Error('Cap10 source hash collision');
-  const packed=override.map((x,i)=>ids[i]+slot(x.far)+slot(x.year)+slot(x.units)).join('');
+  const packed=override.map((x,i)=>ids[i]+slot(x.clearFar===true?1:x.far)+slot(x.year)+slot(x.units)).join('');
   if(packed.length!==override.length*16)throw new Error('Cap10 packed length mismatch');
   const post=[
     ';(function(W){',
@@ -102,7 +105,7 @@ export function appendRichgoCap10FinalOverrides(code,root){
     'for(let i=0;i<P.length;i+=16){',
     'const h=P.slice(i,i+7),far=parseInt(P.slice(i+7,i+10),36)||null,year=parseInt(P.slice(i+10,i+13),36)||null,units=parseInt(P.slice(i+13,i+16),36)||null;',
     'const d=D.get(h);if(!d)throw Error("Missing verified cap10 apartment "+h);const k=d.n+"|"+d.area;',
-    'if(far!=null){const f=(W.FARD||{})[k];if(f){f[0]=far;f[1]="리치고";}const p=(W.PLAT||{})[k];if(p&&p.length>2)p[2]=far;}',
+    'if(far===1){const f=(W.FARD||{})[k];if(f){f[0]=null;f[1]="리치고_공란";}const p=(W.PLAT||{})[k];if(p&&p.length>2)p[2]=null;}else if(far!=null){const f=(W.FARD||{})[k];if(f){f[0]=far;f[1]="리치고";}const p=(W.PLAT||{})[k];if(p&&p.length>2)p[2]=far;}',
     'if(year!=null)d.year=year;',
     'if(units!=null){d.units=units;const uf=(W.UNITFIX||{})[k];if(uf)uf[0]=units;const um=(W.UNITFIX_M3||{})[k];if(um)um[0]=units;}',
     '}',
