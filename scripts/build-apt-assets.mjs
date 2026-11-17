@@ -29,10 +29,16 @@ function applyRichgo15AtBuild(code,file,root) {
    }
    if(nFar!==Object.keys(far).length||nYear!==Object.keys(year).length||nUnits!==Object.keys(units).length)
      throw new Error('Richgo15 unmatched: '+nFar+' FAR, '+nYear+' year, '+nUnits+' units');
+   // Store cap15 completion years as a compact offset from 2000; the decoding
+   // restores the exact original value before any apartment is instantiated.
+   for(const row of rows)row[4]-=2000;
    const packed=code.slice(0,start+3)+JSON.stringify(rows)+code.slice(end+1);
    const marker='  F[k]=fd;';
    if(!packed.includes(marker))throw new Error('Richgo15 source decoder anchor missing');
-   return packed.replace(marker,"  if(fd[0]!=null&&fd[1]==='')fd[1]='리치고';\n"+marker);
+   const coded=packed.replace(marker,"  if(fd[0]!=null&&fd[1]==='')fd[1]='리치고';\n"+marker);
+   const loop='for(const r of R){';
+   if(!coded.includes(loop))throw new Error('Richgo15 completion year decoder anchor missing');
+   return coded.replace(loop,'for(const r of R){r[4]+=2000;');
  }
  if(file==='apt-farfix.js'){
    let patched=0;
