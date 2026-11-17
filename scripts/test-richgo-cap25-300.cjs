@@ -33,7 +33,8 @@ for(const d of verified){
    noncomparable++;
    assert.equal(x.units,b.units,'do not overwrite distinct block units with whole-site total '+k);
  } else if(d.richgoUnits!==null){
-   assert.equal(x.units,d.richgoUnits,'Richgo units '+k);
+   const effective=(live.UNITFIX_M3||{})[k]?.[0]??(live.UNITFIX||{})[k]?.[0]??x.units;
+   assert.equal(effective,d.richgoUnits,'Richgo effective site units '+k);
    if(d.richgoUnits!==d.mapUnits)changes.units++;
  }
  if(d.richgoYear!==null){
