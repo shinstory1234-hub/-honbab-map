@@ -47,7 +47,7 @@ const lookups=ranks.map(d=>{const reg=region(d.area).join('|');let candidates=[.
 /* Individually discovered Richgo identifiers for apartment-map aliases not indexed by full map name.
  * Each still MUST pass separate webpage, same neighborhood and build-year validation.
  */
-const manualIds={"16":"a4zNlwE","27":"a3CqoEd","30":"a3KxKuI","36":"a2ghzUo","48":"a0nZRUj","56":"a9nssjt","68":"a9jHYxD","73":"a5lsJGI","83":"a3KxKuI","92":"a0iVqsU","103":"a3RBRXn","107":"a4CROLe","109":"a4hvXCP","119":"a9jZylw","120":"a7vARIh","121":"a2hzIsC","132":"a1uHXaN","133":"a5wAWOZ","137":"a3oKyNG","141":"a2hzIsC","142":"a8ROoNo","144":"a0QzMTf","149":"a3XWhbx","153":"a6JwGAa","165":"a7eSaZa","167":"a6FDFaH","168":"a3cyHeE","173":"a3lBAzz","177":"a0wAXPz","178":"a0HyWdm","182":"a5rFSzF","185":"a1WeUGw","189":"a5kgMtS","190":"a2uaIaS","193":"a6BlShb","200":"a0fSWss","205":"a2pHsiG","217":"a0SrMTu","227":"a5fodBX","231":"a8TAcGb","232":"a0fEnfa","238":"a3XaqcU","248":"a4fMvVE","255":"a8TAcGb","259":"a1NxsGO","260":"a4YlOBx","265":"a4suMIg","268":"a6ttktz","279":"a4jUpCZ","280":"a8HtIMC"};
+const manualIds={"16":"a4zNlwE","27":"a3CqoEd","30":"a3KxKuI","36":"a2ghzUo","48":"a0nZRUj","51":"a5Hvcsn","56":"a9nssjt","68":"a9jHYxD","73":"a5lsJGI","83":"a3KxKuI","92":"a0iVqsU","103":"a3RBRXn","107":"a4CROLe","109":"a4hvXCP","119":"a9jZylw","120":"a7vARIh","121":"a2hzIsC","132":"a1uHXaN","133":"a5wAWOZ","137":"a3oKyNG","138":"a4TFclQ","141":"a2hzIsC","142":"a8ROoNo","144":"a0QzMTf","149":"a3XWhbx","153":"a6JwGAa","165":"a7eSaZa","167":"a6FDFaH","168":"a3cyHeE","173":"a3lBAzz","177":"a0wAXPz","178":"a0HyWdm","182":"a5rFSzF","185":"a1WeUGw","189":"a5kgMtS","190":"a2uaIaS","193":"a6BlShb","200":"a0fSWss","205":"a2pHsiG","217":"a0SrMTu","227":"a5fodBX","231":"a8TAcGb","232":"a0fEnfa","238":"a3XaqcU","248":"a4fMvVE","255":"a8TAcGb","259":"a1NxsGO","260":"a4YlOBx","265":"a4suMIg","268":"a6ttktz","279":"a4jUpCZ","280":"a8HtIMC"};
 const mergedSourceRanks=new Set([30,83,265]); // Richgo combines both Oksoo Park Hills blocks as one K-apt complex.
 for(const d of lookups){const id=manualIds[d.rank];if(!id)continue;
  d.candidates=[{id,name:d.name,sim:1,manual:true},...d.candidates.filter(x=>x.id!==id)].slice(0,6);
@@ -58,6 +58,8 @@ const esc=s=>String(s||'').replace(/<[^>]*>/g,'').replace(/&#(\d+);/g,(_,n)=>Str
 const factsResult=await pool(idList,5,async id=>{
  const url='https://m.richgo.ai/realty/danji/'+id;const r=await get(url);
  if(r.status!==200)return {id,url,status:r.status,error:r.error||'HTTP '+r.status};
+ const geoMatch=r.html.match(/"geo":\{"@type":"GeoCoordinates","latitude":([0-9.]+),"longitude":([0-9.]+)\}/);
+ const geo=geoMatch?{lat:+geoMatch[1],lng:+geoMatch[2]}:null;
  const tag=r.html.match(/<h2>([^<]*)(?:<!-- -->)? 단지 정보<\/h2><dl class="facts">([\s\S]*?)<\/dl>/);
  if(!tag){
   // Older Richgo detail pages use a prose SEO intro rather than the current facts <dl>.
@@ -71,11 +73,11 @@ const factsResult=await pool(idList,5,async id=>{
   const coverage=summary.match(/건폐율\s*(\d+(?:\.\d+)?)%/)?.[1]||'';
   const name=title.match(/'?(?:[^' ]+동)\s+(.+?)'?\s*(?:아파트|실거래가)/)?.[1]||title.split(' 아파트')[0].split(' ').slice(1).join(' ');
   if(!units||!year||!far)return {id,url,status:r.status,error:'legacy facts missing: '+summary.slice(0,500),title};
-  return {id,url,status:r.status,name:name.replace(/^'|'$/g,''),title,year,units,far,coverage:coverage?coverage+'%':'',floors:'',parking:'',heating:'',builder:'',sizes:''};
+  return {id,url,status:r.status,name:name.replace(/^'|'$/g,''),title,year,units,far,geo,coverage:coverage?coverage+'%':'',floors:'',parking:'',heating:'',builder:'',sizes:''};
  }
  const found={};for(const m of tag[2].matchAll(/<dt>([^<]+)<\/dt><dd>([\s\S]*?)<\/dd>/g))found[esc(m[1])]=esc(m[2]);
  const title=esc(r.html.match(/<title>([\s\S]*?)<\/title>/)?.[1]);
- return {id,url,status:r.status,name:esc(tag[1]),title,year:+(found['입주']||'').slice(0,4)||null,units:Number((found['세대수']||'').replace(/[^0-9]/g,''))||null,
+ return {id,url,status:r.status,name:esc(tag[1]),title,geo,year:+(found['입주']||'').slice(0,4)||null,units:Number((found['세대수']||'').replace(/[^0-9]/g,''))||null,
  far:found['용적률']?Number(found['용적률'].replace(/[^0-9.]/g,''))||null:null,
  coverage:found['건폐율']||'',floors:found['층수']||'',parking:found['주차']||'',heating:found['난방']||'',builder:found['시공사']||'',sizes:found['평형']||''};
 });
@@ -89,14 +91,21 @@ const audited=lookups.map(x=>{
  const alternatives=x.candidates.map(z=>{const d=details.get(z.id)||{};const dongOk=d.title?.includes(areaDong)||false;
    const yearDiff=d.year===null?99:Math.abs(d.year-x.year);
    const nameSim=similarity(x.name,d.name||z.name);
+   const mapGeo=p&&Number.isFinite(p.lat)&&Number.isFinite(p.lng)?{lat:p.lat,lng:p.lng}:null;
+   const metres=d.geo&&mapGeo?(()=>{
+      const rad=Math.PI/180,x=(d.geo.lat-mapGeo.lat)*rad,y=(d.geo.lng-mapGeo.lng)*rad;
+      const h=Math.sin(x/2)**2+Math.cos(mapGeo.lat*rad)*Math.cos(d.geo.lat*rad)*Math.sin(y/2)**2;
+      return Math.round(12742000*Math.asin(Math.min(1,Math.sqrt(h))));
+   })():null;
    const unitsRatio=d.units&&x.units?Math.min(d.units,x.units)/Math.max(d.units,x.units):0;
    const confidence=(dongOk?2:0)+(yearDiff<=2?2:yearDiff<=5?1:0)+(nameSim>=.88?3:nameSim>=.75?2:nameSim>=.56?1:0)+(unitsRatio>=.95?2:unitsRatio>=.5?1:0)+(z.manual?4:0);
-   return {...d,conf:confidence,dongOk,yearDiff,nameSim,unitsRatio,manual:!!z.manual};}).sort((a,b)=>b.conf-a.conf||b.nameSim-a.nameSim);
- const best=alternatives[0];const second=alternatives[1];const manualSafe=best?.manual&&best.status===200&&best.dongOk&&best.yearDiff<=3&&best.unitsRatio>=(mergedSourceRanks.has(x.rank)?0.3:0.75);
- const safe=manualSafe||(best&&best.status===200&&best.dongOk&&best.nameSim>=.56&&best.yearDiff<=5&&(best.conf>=5)&&(!second||best.conf>=second.conf+1||best.nameSim>second.nameSim+.12));
+   return {...d,conf:confidence,dongOk,yearDiff,nameSim,unitsRatio,metres,manual:!!z.manual};}).sort((a,b)=>b.conf-a.conf||b.nameSim-a.nameSim);
+ const best=alternatives[0];const second=alternatives[1];const geoSafe=best?.metres!==null&&best?.metres!==undefined&&best.metres<=500;
+ const manualSafe=geoSafe&&best?.manual&&best.status===200&&best.dongOk&&best.yearDiff<=3&&best.unitsRatio>=(mergedSourceRanks.has(x.rank)?0.3:0.75);
+ const safe=manualSafe||(geoSafe&&best&&best.status===200&&best.dongOk&&best.nameSim>=.56&&best.yearDiff<=5&&(best.conf>=5)&&(!second||best.conf>=second.conf+1||best.nameSim>second.nameSim+.12));
  const status=safe?'직접대조':best?'매칭불확실':'리치고미매칭';
  const source=safe?best:{};
- return {rank:x.rank,name:x.name,area:x.area,py:x.py,price:x.price,score:x.score,mapYear:x.year,mapUnits:x.units,mapFar:oldF[0]??null,mapFarSource:oldF[1]||'',mapYearRaw:p?.year??null,mapUnitsRaw:p?.units??null,status,manualVerified:!!(safe&&best.manual),unitsComparable:!mergedSourceRanks.has(x.rank),richgoName:source.name||best?.name||'',richgoId:source.id||best?.id||'',richgoUrl:source.url||best?.url||'',richgoYear:source.year??null,richgoUnits:source.units??null,richgoFar:source.far??null,richgoCoverage:source.coverage||'',richgoFloors:source.floors||'',richgoHeating:source.heating||'',richgoParking:source.parking||'',richgoBuilder:source.builder||'',richgoSizes:source.sizes||'',nameSimilarity:best?.nameSim??0,dongMatched:best?.dongOk??false,confidence:best?.conf??0,alternatives:alternatives.slice(0,3).map(z=>({id:z.id,name:z.name,conf:z.conf,url:z.url})),error:best?.error||'',mapFound:!!p};
+ return {rank:x.rank,name:x.name,area:x.area,py:x.py,price:x.price,score:x.score,mapYear:x.year,mapUnits:x.units,mapFar:oldF[0]??null,mapFarSource:oldF[1]||'',mapYearRaw:p?.year??null,mapUnitsRaw:p?.units??null,status,coordinateDistanceM:best?.metres??null,richgoLatitude:source.geo?.lat??null,richgoLongitude:source.geo?.lng??null,manualVerified:!!(safe&&best.manual),unitsComparable:!mergedSourceRanks.has(x.rank),richgoName:source.name||best?.name||'',richgoId:source.id||best?.id||'',richgoUrl:source.url||best?.url||'',richgoYear:source.year??null,richgoUnits:source.units??null,richgoFar:source.far??null,richgoCoverage:source.coverage||'',richgoFloors:source.floors||'',richgoHeating:source.heating||'',richgoParking:source.parking||'',richgoBuilder:source.builder||'',richgoSizes:source.sizes||'',nameSimilarity:best?.nameSim??0,dongMatched:best?.dongOk??false,confidence:best?.conf??0,alternatives:alternatives.slice(0,3).map(z=>({id:z.id,name:z.name,conf:z.conf,url:z.url})),error:best?.error||'',mapFound:!!p};
 });
 const headers=['rank','name','area','py','price','mapYear','mapUnits','mapFar','mapFarSource','status','richgoName','richgoId','richgoYear','richgoUnits','richgoFar','richgoCoverage','richgoFloors','richgoHeating','richgoParking','richgoBuilder','richgoSizes','richgoUrl','confidence','error'];
 const csv=v=>{const z=String(v??'');return /[,"\r\n]/.test(z)?'"'+z.replace(/"/g,'""')+'"':z};
@@ -106,6 +115,7 @@ const verified=audited.filter(x=>x.status==='직접대조'),stats={total:audited
  farKnown:verified.filter(x=>x.richgoFar!==null).length,farChanged:verified.filter(x=>x.richgoFar!==null&&x.richgoFar!==x.mapFar).length,
  unitsChanged:verified.filter(x=>x.unitsComparable&&x.richgoUnits!==null&&x.richgoUnits!==x.mapUnits).length,
  yearChanged:verified.filter(x=>x.richgoYear!==null&&x.richgoYear!==x.mapYear).length,
+ geoVerified:verified.filter(x=>x.coordinateDistanceM!==null&&x.coordinateDistanceM<=500).length,geoOver500:audited.filter(x=>x.coordinateDistanceM!==null&&x.coordinateDistanceM>500).map(x=>({rank:x.rank,name:x.name,metres:x.coordinateDistanceM})),
  hubsAttempted:hubs.length,hubsFailed:hubs.filter(x=>x.status!==200).length,detailsFetched:idList.length,detailErrors:factsResult.filter(x=>x.status!==200||x.error).length,
  pending:audited.filter(x=>x.status!=='직접대조').map(x=>({rank:x.rank,name:x.name,area:x.area,alternatives:x.alternatives}))};
 fs.writeFileSync('docs/richgo-cap25-lookup-diagnostics.json',JSON.stringify(stats,null,2)+'\n');
