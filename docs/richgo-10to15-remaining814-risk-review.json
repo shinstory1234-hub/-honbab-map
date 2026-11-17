@@ -1,0 +1,116 @@
+{
+  "classification": {
+    "checked": 814,
+    "verified": 783,
+    "notMatch": 31,
+    "missingURLs": 23,
+    "riskyDirect": 7
+  },
+  "risk": [
+    {
+      "name": "롯데캐슬천지인",
+      "area": "서울 종로구 숭인동",
+      "id": "a0oMqFE",
+      "origUnits": 714,
+      "richgoUnits": 220,
+      "origYear": 2004,
+      "richgoYear": 2004,
+      "matchedName": "롯데캐슬천지인",
+      "score": "1.000",
+      "reasons": [
+        "generic name has >2.5x household mismatch"
+      ],
+      "related": []
+    },
+    {
+      "name": "미주",
+      "area": "서울 동대문구 청량리동",
+      "id": "a8OwKTo",
+      "origUnits": 423,
+      "richgoUnits": 1089,
+      "origYear": 1978,
+      "richgoYear": 1978,
+      "matchedName": "미주",
+      "score": "1.000",
+      "reasons": [
+        "generic name has >2.5x household mismatch"
+      ],
+      "related": []
+    },
+    {
+      "name": "현대코아",
+      "area": "서울 동대문구 청량리동",
+      "id": "a3efPSH",
+      "origUnits": 663,
+      "richgoUnits": 88,
+      "origYear": 1997,
+      "richgoYear": 1997,
+      "matchedName": "청량리현대코아",
+      "score": "1.000",
+      "reasons": [
+        "generic name has >2.5x household mismatch"
+      ],
+      "related": []
+    },
+    {
+      "name": "현대",
+      "area": "서울 노원구 하계동",
+      "id": "a6qGywr",
+      "origUnits": 1320,
+      "richgoUnits": 730,
+      "origYear": 1988,
+      "richgoYear": 1997,
+      "matchedName": "하계현대",
+      "score": "1.000",
+      "reasons": [
+        "year and household mismatch"
+      ],
+      "related": []
+    },
+    {
+      "name": "신구로자이",
+      "area": "서울 구로구 구로동",
+      "id": "a6BoLnr",
+      "origUnits": 3515,
+      "richgoUnits": 299,
+      "origYear": 2007,
+      "richgoYear": 2007,
+      "matchedName": "신구로자이",
+      "score": "1.000",
+      "reasons": [
+        "generic name has >2.5x household mismatch"
+      ],
+      "related": []
+    },
+    {
+      "name": "플루리움1단지",
+      "area": "남양주시 다산동",
+      "id": "a3XSEbH",
+      "origUnits": 5877,
+      "richgoUnits": 1086,
+      "origYear": 2001,
+      "richgoYear": 2001,
+      "matchedName": "플루리움1단지",
+      "score": "1.000",
+      "reasons": [
+        "generic name has >2.5x household mismatch"
+      ],
+      "related": []
+    },
+    {
+      "name": "플루리움4,5단지",
+      "area": "남양주시 다산동",
+      "id": "a6outEh",
+      "origUnits": 5877,
+      "richgoUnits": 2042,
+      "origYear": 2000,
+      "richgoYear": 2000,
+      "matchedName": "플루리움4,5단지",
+      "score": "1.000",
+      "reasons": [
+        "generic name has >2.5x household mismatch"
+      ],
+      "related": []
+    }
+  ]
+}
