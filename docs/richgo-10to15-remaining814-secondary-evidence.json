@@ -1,13 +1,13 @@
 {
   "counts": {
     "checked": 814,
-    "direct": 783,
+    "direct": 782,
     "exceptions": 8,
-    "unidentified": 23,
+    "unidentified": 24,
     "fromSecondPass": 20,
-    "far": 914,
-    "year": 54,
-    "units": 111
+    "far": 913,
+    "year": 53,
+    "units": 110
   },
   "review": [
     {
@@ -540,6 +540,17 @@
       "siteUnits": 90,
       "origUnits": 617,
       "yearMatch": true
+    }
+  ],
+  "independentlyDisprovedMatches": [
+    {
+      "seq": 445,
+      "name": "현대",
+      "area": "서울 노원구 하계동",
+      "old": "1988년 1,320세대",
+      "wrongRichgo": "1997년 730세대",
+      "decision": "same-dong name collision, original preserved",
+      "officialKapt": "https://www.k-apt.go.kr/cmmn/introMmentPop.do?bjdCode=11350&searchOccuDate=201806&upYn=Y"
     }
   ]
 }
