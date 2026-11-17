@@ -5,6 +5,8 @@ on:
       - audit/richgo-20to25-top300-20261118
     paths:
       - 'public/apt-richgo25.js'
+      - 'public/apt-invest25.js'
+      - 'scripts/build-apt-assets.mjs'
       - 'public/apt-map.html'
       - 'scripts/test-richgo-20to25-verified.cjs'
       - 'scripts/test-richgo-cap25-300.cjs'
