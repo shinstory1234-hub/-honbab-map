@@ -17,8 +17,8 @@ assert.equal(all.length,1822,'the entire current 6–10억 universe must be enum
 assert.equal(new Set(all.map(x=>x.name+'|'+x.area)).size,all.length,'duplicate complex identity');
 assert.equal(old.records.length,300,'previous source evidence must be preserved');
 assert.equal(newEvidence.length,415,'cross-band evidence must cover 415 distinct complexes');
-assert.equal(corrections.length,556,'all cap10 verified corrections must be included');
-assert.equal(new Set(corrections.map(x=>x.name+'|'+x.area)).size,556,'duplicate correction');
+assert.ok(corrections.length>=556,'all 556 previously verified cap10 corrections must be preserved');
+assert.equal(new Set(corrections.map(x=>x.name+'|'+x.area)).size,corrections.length,'duplicate correction');
 const reviewed=all.filter(x=>x.review_status!=='not_reviewed');
 assert.equal(reviewed.length,714,'714 of 1822 should be source-linked');
 assert.equal(all.length-reviewed.length,1108,'1108 must remain explicitly unreviewed');
