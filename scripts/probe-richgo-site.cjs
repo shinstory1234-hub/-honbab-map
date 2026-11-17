@@ -1,14 +1,1 @@
-// User-initiated audit, public sitemap + specific apartment page only.
-(async()=>{
- for(const url of ["https://m.richgo.ai/realty/danji/a7YZWFo","https://m.richgo.ai/realty/danji/a0tgTNQ","https://m.richgo.ai/region.xml"]){
-  try{
-   const r=await fetch(url,{headers:{"User-Agent":"ChatGPT-User","Accept":"text/html,application/xml"},signal:AbortSignal.timeout(30000)});const t=await r.text();
-   const urls=[...t.matchAll(/href=["']([^"']*\/realty\/danji\/a[A-Za-z0-9]{6}[^"']*)["']/g)].map(x=>x[1]);const seen=[...new Set(urls)];
-   console.log("SOURCE",url,"HTTP",r.status,"SIZE",t.length,"PROPERTIES",seen.length,"SAMPLE",seen.slice(0,15));
-   for(const word of ["용적률","세대수","2019.11","%","danjiName","올림픽선수기자촌"]){
-    const pos=t.indexOf(word);console.log("SNIP",word,pos,pos<0?"":t.slice(Math.max(0,pos-350),pos+650));
-   }
-   if(url.endsWith(".xml"))console.log("REGIONS",[...t.matchAll(/<loc>([^<]+)<\/loc>/g)].map(x=>x[1]).slice(0,25));
-  }catch(e){console.log("ERR",url,String(e));}
- }
-})().catch(e=>{console.error(e);process.exitCode=1});
+(async()=>{for(const url of ["https://m.richgo.ai/realty/apt-hub/%EC%84%9C%EC%9A%B8/%EC%86%A1%ED%8C%8C%EA%B5%AC/10%EC%96%B5-20%EC%96%B5","https://m.richgo.ai/realty/apt-hub/%EA%B2%BD%EA%B8%B0/%EC%84%B1%EB%82%A8%EC%8B%9C%20%EB%B6%84%EB%8B%B9%EA%B5%AC/30%ED%8F%89%EB%8C%80"]){const x=await fetch(url,{headers:{"User-Agent":"ChatGPT-User"},signal:AbortSignal.timeout(10000)});const t=await x.text();let h=[...t.matchAll(/href="[^"]*\/realty\/danji\/a[A-Za-z0-9]{6}[^"]*"/g)].slice(0,5);console.log("HUB",url,"status",x.status,"length",t.length,"hits",h.length);for(const v of h)console.log("HUB SAMPLE",t.slice(Math.max(0,v.index-250),v.index+430));}})().catch(console.error);
