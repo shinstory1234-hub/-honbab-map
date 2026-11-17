@@ -18,9 +18,9 @@ function csvParse(src) {
 const audit=csvParse(fs.readFileSync(root+'/docs/richgo-15to20-top300-audit-20261118.csv','utf8'));
 assert.equal(audit.length,300,'the top 300 are unique apartment complexes, not 300 floorplan rows');
 assert.equal(new Set(audit.map(r=>r.name+'|'+r.area)).size,300);
-assert.equal(audit.filter(r=>r.status==='2026-11-18_공개상세직접대조').length,10);
+assert.equal(audit.filter(r=>r.status==='2026-11-18_공개상세직접대조').length,13);
 assert.equal(audit.filter(r=>r.status==='2026-11-16_기존검증재사용').length,14);
-assert.equal(audit.filter(r=>r.status==='미조회'||r.status.startsWith('검증보류_')).length,276);
+assert.equal(audit.filter(r=>r.status==='미조회'||r.status.startsWith('검증보류_')).length,273);
 const inv=fs.readFileSync(root+'/public/apt-invest20.js','utf8');
 const ranked=JSON.parse(inv.match(/window\.APT_INV_RANK\[20\]=(\{.*?\});/s)[1]);
 const sorted=Object.entries(ranked).sort((a,b)=>a[1]-b[1]),distinct=new Map();
@@ -68,4 +68,4 @@ assert.equal(actual.UNITFIX['래미안슈르|과천시 원문동'][0],3143,'exis
 assert.equal(actual.UNITFIX['행당한진타운|서울 성동구 행당동'][0],2123,'existing K-apt correction retained');
 assert.equal(actual.PICKS.filter(d=>audit.some(a=>a.name===d.n&&a.area===d.area)).length,300);
 assert.ok(!fs.readFileSync(root+'/public/apt-far-normalize.js','utf8').includes('RICHGO20_AUDIT'),'no redundant runtime override');
-console.log('Richgo 15-20억 audit: 300 source records, 24 existing/verifiable FARs, 6 newly restored, 1 new raw units correction; no extra runtime payload');
+console.log('Richgo 15-20억 audit: 300 source records, 27 verified FARs, 6 newly restored, 1 new raw units correction; no extra runtime payload');
