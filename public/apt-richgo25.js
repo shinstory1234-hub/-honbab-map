@@ -9,8 +9,12 @@ const f=read('v053o77hdq6c6yxdbts7vfltkt7l3jnww7xpat688o7j2oo6xg357165uy2t86xty6
 for(const k of ['파크타운(롯데)|성남 분당구 수내동','파크타운(삼익)|성남 분당구 수내동','DMCSKVIEW|서울 은평구 수색동'])u.delete(h(k));
 /* 2023-08-24 사용승인: DMC SK VIEW는 리치고의 2021 연도도 미적용. */
 y.delete(h('DMCSKVIEW|서울 은평구 수색동'));
+const protectedUnits=new Map([['파크타운(롯데)|성남 분당구 수내동',841],['파크타운(삼익)|성남 분당구 수내동',638],['DMCSKVIEW|서울 은평구 수색동',644]]);
 const done=new Set();let a=0,b=0,c=0;
 for(const d of w.PICKS||[]){let k=d.n+'|'+d.area,j=h(k),first=!done.has(k);
+/* 과거 보정 스크립트가 이미 적용한 753 등 통합값도 명시적으로 복구 */
+if(protectedUnits.has(k)){const n=protectedUnits.get(k),old=d.units;d.units=n;U[k]=[n,old,0,'reverified-individual-block'];}
+
 if(f.has(j)){let v=F[k]||(F[k]=[null,'',null,null,null,null,null]);v[0]=f.get(j);v[1]='리치고(전체372 직접확인)';if(first)a++;const p=w.PLAT?.[k];if(p&&p.length>2)p[2]=v[0]}
 if(u.has(j)){let n=u.get(j),old=d.units;d.units=n;U[k]=[n,old,0,'richgo'];if(n<300&&!D.includes(k))D.push(k);if(first)b++}
 if(y.has(j)){d.year=y.get(j);if(first)c++}
