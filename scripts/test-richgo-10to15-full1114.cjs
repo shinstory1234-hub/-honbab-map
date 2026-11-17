@@ -32,6 +32,40 @@ for(const [k,v] of Object.entries(spec.farFallbackKB||{})){
  assert.equal(Number(row.fallback_far),Number(v));
  assert.ok(/^https:\/\/kbland\.kr\/se\/c\//.test(row.fallback_source_url));
 }
+/* 2026-11-18 independent revalidation: explicit identity proof, not merely shared dong/name */
+for(const [n,id] of [[279,'a6rNDte'],[462,'a3YPzVc'],[927,'a4FYnXO'],[1110,'a1wiFrS']]){
+ const r=rows.find(x=>Number(x.seq)===n);
+ assert.ok(r&&r.verification==='직접확인','corrected row must be validated '+n);
+ assert.equal(r.richgo_id,id,'wrong Richgo phase linked to '+r.name);
+ assert.equal(r.source_url,'https://m.richgo.ai/realty/danji/'+id,'corrected source link '+n);
+}
+const gm=rows.find(x=>Number(x.seq)===845);
+assert.equal(gm.verification,'리치고후보불일치','5th phase is NOT 4th phase');
+assert.ok(!Object.hasOwn(spec.far,key(gm))&&!Object.hasOwn(spec.year,key(gm))&&!Object.hasOwn(spec.units,key(gm)),'no wrong 4th-block changes');
+const remodel=rows.find(x=>Number(x.seq)===642);
+assert.equal(Number(remodel.map_year),2024);
+assert.equal(Number(remodel.richgo_year),1992);
+assert.ok(!Object.hasOwn(spec.year,key(remodel)),'do not substitute old construction year for 2024 remodeling completion');
+/* Development overlay must be bit-exact with the cap15 build corrections, and must
+ * not silently alter any of the other six price bands. */
+const vm=require('node:vm'),overlay=fs.readFileSync(file('public/apt-richgo15.js'),'utf8');
+for(const cap of [6,10,15,20,25,30,35]){
+ const FARD=Object.fromEntries(rows.map(x=>[key(x),[x.map_far?Number(x.map_far):null,x.map_far_source||'']]));
+ const PICKS=rows.map(x=>({n:x.name,area:x.area,year:Number(x.map_year),units:Number(x.map_units)}));
+ const W={CAPT:cap,FARD,PICKS};vm.runInNewContext(overlay,{window:W},{timeout:10000});
+ for(const x of rows){const k=key(x),v=FARD[k],correct=cap===15;
+  const siteFar=spec.far[k],kb=spec.farFallbackKB?.[k];
+  const expected=correct?(siteFar??kb??(x.map_far?Number(x.map_far):null)):(x.map_far?Number(x.map_far):null);
+  assert.equal(v[0],expected,'FAR in cap '+cap+': '+k);
+  if(correct&&siteFar!=null)assert.equal(v[1],'리치고','FAR provenance '+k);
+  if(correct&&kb!=null)assert.equal(v[1],'KB부동산','KB provenance '+k);
+ }
+ for(const x of PICKS){const k=x.n+'|'+x.area,r=byKey.get(k);
+  assert.equal(x.year,cap===15?(spec.year[k]??Number(r.map_year)):Number(r.map_year),'year price-band isolation '+cap+': '+k);
+  assert.equal(x.units,cap===15?(spec.units[k]??Number(r.map_units)):Number(r.map_units),'units price-band isolation '+cap+': '+k);
+ }
+}
+
 const direct=rows.filter(x=>x.verification==='직접확인'),exceptions=rows.filter(x=>x.verification!=='직접확인');
 assert.ok(b.every(x=>x.checked_at&&x.audit_discovery),'every remaining row must have had a check');
 const report={total:rows.length,first300:a.length,remaining814:b.length,remainingVerified:b.filter(x=>x.verification==='직접확인').length,
