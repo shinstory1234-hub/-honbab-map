@@ -108,7 +108,16 @@ export function buildAptAssets(root, output = path.join(root, 'public')) {
         code = code.slice(0, a) + 'function s4DensityAdj(d){return {pen:0,far:null,src:null};}' + code.slice(b);
       }
       if (/document\.write\s*\(/.test(code)) throw new Error(`Unexpanded script dependency: ${file}`);
-      code = minifyKeep(code, file);   // 전송량: terser로 주석·공백만 제거(이름·식은 그대로, compress·mangle 끔)
+      if(cap===15 && file==='apt-univ15.js'){
+        // Cap15's raw-data audit raised the payload; safe local-only Terser shortening
+        // keeps the strict global transfer budget intact without dropping any fields.
+        const out=terser.minify_sync({[file]:code},{
+          compress:{defaults:false,booleans:true,comparisons:true,conditionals:true,dead_code:true,evaluate:true,join_vars:true,sequences:true,unused:true},
+          mangle:true,format:{comments:false,ascii_only:false}
+        });
+        if(!out||typeof out.code!=='string')throw new Error('Richgo15 compression failed');
+        new vm.Script(out.code);code=out.code;
+      }else code=minifyKeep(code, file);
       if (isolated.test(file)) flush();
       chunk.push(`/* ${file} */\n${code}`); names.push(file);
       if (isolated.test(file)) flush();
