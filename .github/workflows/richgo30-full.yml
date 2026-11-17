@@ -1,0 +1,48 @@
+name: Richgo cap30 full public-source regional audit (273)
+on:
+  push:
+    branches:
+      - audit/richgo-25to30-top300-20261118
+    paths:
+      - '.github/workflows/richgo30-full.yml'
+      - 'scripts/collect-richgo30-full.cjs'
+      - 'docs/richgo30-known-links-20261118.json'
+permissions:
+  contents: write
+jobs:
+  audit:
+    runs-on: ubuntu-latest
+    timeout-minutes: 40
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+        with:
+          persist-credentials: true
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
+        with:
+          node-version: '22'
+      - name: Read 273 apartment candidates and check regional Richgo public pages in parallel
+        run: |
+          node --check scripts/collect-richgo30-full.cjs
+          node scripts/collect-richgo30-full.cjs
+      - name: Save evidence with source IDs, coordinates, FAR, construction date and units
+        if: always()
+        run: |
+          if [ -s docs/richgo30-full-audit-20261118.json ]; then
+            git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+            git config user.name "github-actions[bot]"
+            git add -f docs/richgo30-full-audit-20261118.json docs/richgo30-full-audit-20261118.csv
+            if ! git diff --cached --quiet; then
+              git commit -m "audit: store all 273 apartment Richgo source comparisons"
+              git pull --rebase origin audit/richgo-25to30-top300-20261118
+              git push origin HEAD:audit/richgo-25to30-top300-20261118
+            fi
+          fi
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        if: always()
+        with:
+          name: richgo30-273-full-audit-20261118
+          path: |
+            docs/richgo30-full-audit-20261118.json
+            docs/richgo30-full-audit-20261118.csv
+          retention-days: 2
+          if-no-files-found: warn
