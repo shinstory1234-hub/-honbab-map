@@ -1,0 +1,42 @@
+name: Import verified Richgo 30plus audit
+on:
+  push:
+    branches:
+      - audit/richgo-30plus-top300-20261118
+    paths:
+      - .github/workflows/richgo35-import.yml
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  import:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: audit/richgo-30plus-top300-20261118
+          persist-credentials: true
+      - name: Fetch verified 300 snapshot and tested corrections
+        shell: bash
+        run: |
+          set -euo pipefail
+          BASE="https://sb-y2sgh6alo49l.vercel.run"
+          curl --retry 3 -fLsS --max-time 55 "$BASE/public/apt-univ35.js" -o public/apt-univ35.js
+          curl --retry 3 -fLsS --max-time 55 "$BASE/public/apt-map.html" -o public/apt-map.html
+          curl --retry 3 -fLsS --max-time 55 "$BASE/public/apt-picks10.js" -o public/apt-picks10.js
+          curl --retry 3 -fLsS --max-time 55 "$BASE/public/apt-invest35.js" -o public/apt-invest35.js
+          curl --retry 3 -fLsS --max-time 55 "$BASE/public/apt-r35.js" -o public/apt-r35.js
+          curl --retry 3 -fLsS --max-time 55 "$BASE/scripts/build-apt-assets.mjs" -o scripts/build-apt-assets.mjs
+          curl --retry 3 -fLsS --max-time 55 "$BASE/scripts/test-richgo35-top300.cjs" -o scripts/test-richgo35-top300.cjs
+          curl --retry 3 -fLsS --max-time 55 "$BASE/docs/richgo-over30-current-top300-20261118.csv" -o docs/richgo-over30-current-top300-20261118.csv
+          test "$(wc -l < docs/richgo-over30-current-top300-20261118.csv)" -eq 301
+          test "$(wc -c < public/apt-invest35.js)" -gt 8000
+          test "$(wc -c < public/apt-r35.js)" -gt 3000
+          node scripts/test-richgo35-top300.cjs
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git config user.name "github-actions[bot]"
+          git add public/apt-univ35.js public/apt-map.html public/apt-picks10.js public/apt-invest35.js public/apt-r35.js scripts/build-apt-assets.mjs scripts/test-richgo35-top300.cjs docs/richgo-over30-current-top300-20261118.csv
+          git commit -m "feat(30plus): audit 300 ranked complexes, restore 74, apply 196 verified FARs" || exit 0
+          git push origin HEAD:audit/richgo-30plus-top300-20261118
