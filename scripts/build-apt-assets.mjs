@@ -252,7 +252,15 @@ export function buildAptAssets(root, output = path.join(root, 'public')) {
   // 전송량: 첫 HTML의 <style> 안 CSS 주석·들여쓰기만 제거(규칙은 그대로)
   html = html.replace(/<style>([\s\S]*?)<\/style>/g, (m, c) => '<style>' + c.replace(/\/\*[\s\S]*?\*\//g, '').replace(/\n\s*/g, '\n').replace(/([;{}])\n/g, '$1').replace(/[ \t]+([;{}])/g, '$1').replace(/([;{}])[ \t]+/g, '$1').replace(/,\s+/g, ',').replace(/;}/g, '}') + '</style>');
   // 전송량: 첫 HTML 안 인라인 스크립트도 주석·공백만 제거(이름·식 그대로)
-  html = html.replace(/<script>([\s\S]*?)<\/script>/g, (m, c) => '<script>' + minifyKeep(c, 'inline.js') + '</script>');
+  html = html.replace(/<script>([\s\S]*?)<\/script>/g, (m, c) => {
+    if(!c.includes('window.CAPT='))return '<script>'+minifyKeep(c,'inline.js')+'</script>';
+    const out=terser.minify_sync({'inline.js':c},{
+      compress:{defaults:false,booleans:true,comparisons:true,conditionals:true,dead_code:true,evaluate:true,join_vars:true,sequences:true,unused:true},
+      mangle:true,format:{comments:false,ascii_only:false}
+    });
+    if(!out||typeof out.code!=='string')throw Error('inline bootstrap compression failure');
+    new vm.Script(out.code);return '<script>'+out.code+'</script>';
+  });
   // Drop the only nonfunctional HTML comment in the production artifact (not source).
   html = html.replace(/<!--[\s\S]*?-->/g, '');
   // Lossless indentation cleanup before HTML tags; preserve strict first-page gzip budget.
