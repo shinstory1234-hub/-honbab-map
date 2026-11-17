@@ -310,6 +310,17 @@ aside{order:-1;width:408px;flex:none;border-right:1px solid var(--border);backgr
   .pfoot{padding:18px 20px calc(24px + env(safe-area-inset-bottom))}
 }
 .thm{flex:none;width:36px;height:36px;border-radius:50%;border:1px solid var(--border);display:grid;place-items:center;color:var(--text);order:5}.thm svg{width:18px;height:18px}@media (max-width:767px){.thm{order:0;margin-left:auto;width:34px;height:34px}}.dk #map{background:#1b1c1e}.dk #map img{filter:invert(.92) hue-rotate(180deg) saturate(.7) brightness(.95)}.dk .mapcount{background:rgba(30,31,34,.94);color:#d4d4d8;border-color:rgba(255,255,255,.12)}.dk .ap1x-rail,.dk .ap1x-pop,.dk .ap1x-mark{background:#232427;color:#f4f4f5}.dk .ap1x-pop small{color:#a1a1aa}.dk .ap1x-pop a{color:#7aa7ff}.dk .mk>div{background:#26272b;border-color:rgba(255,255,255,.16)}.dk .mk b{color:#f4f4f5}.dk .mk.sel>div{background:#0066ff;border-color:#0066ff}.dk .mk.sel::after{border-top-color:#0066ff}.dk .ap1x-orange{background:#2a2117;color:#f5b25b}.dk .m3-price-warning,.dk .live-source-status.stale{background:#2a2117;color:#f5b25b;border-color:#5c3d16}.dk .m3-price-warning.severe{background:#2a1717;color:#ff8a8a}.dk .m3-density-note{background:#232427;color:#c9c9cf}.dk .m3-density-note strong{color:#f4f4f5}.dk .dxpill,.dk .dxseg button.on{background:#2c2d31;color:#f4f4f5}.dk .dxr.me,.dk .dxtile.on{background:#1b2a44}.dk .dxr .dg{background:#2c2d31;color:#a1a1aa}.dk .dxr .nw{background:#3a1f21}.dk .dxr .tag{background:#1b2a44;color:#7aa7ff}
+
+/* UI preview: information-first, restrained radius, fewer ornamental surfaces */
+:root{--shadow-card:none;--shadow-float:0 4px 18px rgba(0,0,0,.09)}
+.captab,.search,.sortsel,.filters button{border-radius:5px}
+.psheet{border-radius:12px 12px 0 0}
+.notice-card{border-radius:8px}
+.notice-check,.notice-actions button{border-radius:5px}
+.s2-dialog{border-radius:8px!important}
+.s2-btn,.s2-chip,.s2-cols input,.s2-cols select{border-radius:4px!important}
+.s2-shade .s2-chip{background:transparent;border-color:var(--border-soft)}
+@media(max-width:767px){.psheet{border-radius:12px 12px 0 0}.s2-dialog{border-radius:10px 10px 0 0!important}}
 </style>
 <script>window.va=window.va||function(){(window.vaq=window.vaq||[]).push(arguments)};</script>
 <script defer src="/_vercel/insights/script.js"></script>   <!-- Vercel Web Analytics(방문자 수) -->

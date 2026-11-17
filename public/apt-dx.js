@@ -47,7 +47,7 @@
    +'.dxhrow{display:flex;justify-content:space-between;align-items:center}.dxtg{font-size:12.5px;font-weight:500;color:var(--text-tertiary,#64748b);display:inline-flex;gap:5px;align-items:center}'
    +'.dxr .dg{font-style:normal;font-size:11px;font-weight:600;color:#64748b;background:#f1f5f9;border-radius:4px;padding:1px 6px;margin-left:6px;vertical-align:2px}.dxr .l b .nw{margin-left:6px;vertical-align:2px}'
    +'.dxmore{width:100%;margin-top:8px;padding:11px 0;border:1px solid var(--border,#e2e8f0);background:var(--bg,#fff);border-radius:10px;font-size:13.5px;font-weight:650;color:var(--text,#0f172a)}';
-    document.head.appendChild(st); })();
+    st.textContent+="\n/* Preview: transaction detail, tabs instead of pill buttons */\n.dxbox .dxrow{gap:0;margin:4px 0 16px;border-bottom:1px solid var(--border-soft,#e5e7eb);overflow-x:auto}\n.dxbox .dxc1{border:0;border-bottom:2px solid transparent;border-radius:0;background:transparent!important;color:var(--text-tertiary,#71717a);padding:10px 13px 9px;min-width:65px;box-shadow:none!important}\n.dxbox .dxc1.on{color:var(--text,#171719);border-color:var(--text,#171719)}\n.dxbox .dxc1 small{font-size:11px;margin-top:3px}.dxbox .dxc1.on small{color:var(--text-secondary,#555)}\n.dxbox .dxhero{background:transparent;border:0;border-radius:0;padding:12px 0 15px;margin:2px 0 10px;border-bottom:1px solid var(--border-soft,#e5e7eb)}\n.dxbox .dxhero .big{font-size:32px;letter-spacing:-.045em;margin:4px 0 10px}\n.dxbox .dxpill{border:0;background:transparent;padding:2px 0;border-radius:0}\n.dxbox .dxhero .pills{gap:14px;margin-bottom:8px}\n.dxbox .dxseg{background:transparent;padding:0;border-radius:0;border-bottom:1px solid var(--border-soft,#e5e7eb);margin:0 0 12px}\n.dxbox .dxseg button{border-radius:0;padding:10px 0;border-bottom:2px solid transparent}\n.dxbox .dxseg button.on{background:transparent;box-shadow:none;border-color:var(--text,#171719)}\n.dxbox .dxtiles{gap:0;border-top:1px solid var(--border-soft,#e5e7eb)}\n.dxbox .dxtile{border:0;border-bottom:1px solid var(--border-soft,#e5e7eb);border-radius:0;background:transparent;padding:12px 6px}\n.dxbox .dxtile.on{box-shadow:none;border-bottom:2px solid var(--primary,#0066ff);background:transparent}\n.dxbox .dxmore{border-radius:5px}\n.dxbox .dxr.me{border-radius:4px}\n.dxbox .dxlegend{display:flex;flex-wrap:wrap;align-items:center;gap:8px 14px;font-size:11px;color:var(--text-tertiary,#71717a);margin:2px 0 8px}\n.dxbox .dxlegend span{display:inline-flex;align-items:center;gap:5px;white-space:nowrap}\n.dxbox .dxlegend i{width:8px;height:8px;border-radius:50%;background:#94a3b8}\n.dxbox .dxlegend .line{width:14px;height:2px;background:#2563eb}\n.dxbox .dxlegend .bar{width:8px;height:9px;border-radius:0;background:#cbd5e1}\n.dxbox .dxlegend .source{flex-basis:100%;font-size:10px;color:var(--text-faint,#999)}\n";document.head.appendChild(st); })();
   var CACHE={};
   function E(s){ return String(s==null?'':s).replace(/[&<>"]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c];}); }
   function won(v){ if(v==null||!isFinite(v)) return '—'; v=Math.round(v); var e=Math.floor(v/10000), m=v%10000; return (e?e+'억'+(m?' ':''):'')+(m?m.toLocaleString()+(e?'':'만'):''); }
@@ -104,7 +104,7 @@
       +'<path d="'+line+'" fill="none" stroke="#2563eb" stroke-width="1.8" stroke-linejoin="round"/>'
       +'<circle cx="'+tx.toFixed(1)+'" cy="'+ty.toFixed(1)+'" r="3.2" fill="#e5484d"/><text x="'+Math.min(W-PR,Math.max(PL+20,tx)).toFixed(1)+'" y="'+Math.max(10,ty-6).toFixed(1)+'" font-size="9.5" font-weight="700" text-anchor="middle" fill="#e5484d">최고 '+eo(top[3])+'</text>'
       +'<text x="'+(W-PR)+'" y="'+(H-PB+12)+'" font-size="8.5" text-anchor="end" fill="#94a3b8">거래량</text></svg>'
-      +'<p class="note" style="margin-top:4px">점=실거래 · 파란 선=월 중위 · 회색 막대=월 거래량 · 직거래·이상 거래 제외</p>';
+      +'<div class="dxlegend"><span><i></i>실거래</span><span><i class="line"></i>월별 중위가격</span><span><i class="bar"></i>거래량</span><span class="source">직거래 및 이상거래 제외</span></div>';
   }
 
   function drawDx(d,j,box,selectedArea,floorMode,omitDirect){
@@ -129,7 +129,7 @@
       var pill=function(txt,v){ return '<span class="dxpill '+(v>=0?'up':'dn')+'">'+txt+' <b>'+(v>=0?'▲':'▼')+' '+Math.abs(v*100).toFixed(1)+'%</b></span>'; };
       h+='<div class="dxhero"><div class="lbl">'+(m3!=null?(r3.length>=3?'최근 3개월 실거래 중위 · '+r3.length+'건':'최근 3개월 실거래 '+r3.length+'건'+(r3.length>1?' 중위':'')):'마지막 실거래 · '+ymd(last[0]))+(floorMode!=='all'||omitDirect?' · 필터 적용':'')+'</div>'
         +'<div class="big tnum">'+won(cur)+'</div><div class="pills">'
-        +(cur>=peak[3]?'<span class="dxpill up"><b>신고가 수준</b></span>':pill('최고가 대비',cur/peak[3]-1))
+        +(cur>=peak[3]?'<span class="dxpill up"><b>최고가와 동일</b></span>':pill('최고가 대비',cur/peak[3]-1))
         +(my!=null&&m3!=null?pill('1년 전 대비',m3/my-1):'')+'</div>'
         +'<div class="mini tnum">최고 <b>'+won(peak[3])+'</b> '+ymd(peak[0])+' · '+peak[2]+'층</div></div>'
         +'<div class="dxseg dxp" role="group" aria-label="기간">'+['3','5','all'].map(function(p,i){return '<button type="button" data-p="'+p+'" aria-pressed="'+(i===0)+'"'+(i===0?' class="on"':'')+'>'+(p==='all'?'전체':p+'년')+'</button>';}).join('')+'</div>'
