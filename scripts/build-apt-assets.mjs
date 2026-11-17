@@ -8,6 +8,38 @@ import {fileURLToPath} from 'node:url';
 import zlib from 'node:zlib';
 
 // Keep apt-map.html as the editable source. Production serves the generated page.
+/* 10~15억 리치고 검증 수치: 배포 때 해당 가격대 데이터 자체를 갱신한다.
+   사용자 요청에 따라 다른 구간의 공유 원자료와 순위는 그대로 둔다.
+   한 번 더 로드되는 교정 스크립트를 만들지 않아 gzip·요청 수 예산을 지킨다. */
+function applyRichgo15AtBuild(code,file,root) {
+ const spec=JSON.parse(fs.readFileSync(path.join(root,'docs','richgo-10to15-verified-corrections.json'),'utf8'));
+ if(file==='apt-univ15.js'){
+   const start=code.indexOf(',R=['),end=code.indexOf('];\nconst TB=',start);
+   const areaStart=code.indexOf('const A=['),areaEnd=code.indexOf('],',areaStart);
+   if(start<0||end<0||areaStart<0||areaEnd<0)throw new Error('Richgo15: cannot locate packed apartment universe');
+   const areas=JSON.parse(code.slice(areaStart+8,areaEnd+1));
+   const rows=JSON.parse(code.slice(start+3,end+1));
+   let matched=0,yearFixed=0;
+   for(const row of rows){
+     const key=row[0]+'|'+areas[row[1]];
+     if(Object.hasOwn(spec.far,key)){
+       row[22][0]=spec.far[key];row[22][1]='리치고';matched++;
+     }
+     if(Object.hasOwn(spec.year,key)){row[4]=spec.year[key];yearFixed++;}
+   }
+   if(matched!==Object.keys(spec.far).length||yearFixed!==Object.keys(spec.year).length)
+     throw new Error('Richgo15 unmatched complex: '+matched+' FAR, '+yearFixed+' year');
+   return code.slice(0,start+3)+JSON.stringify(rows)+code.slice(end+1);
+ }
+ if(file==='apt-farfix.js'){
+   const key='시범한양|성남 분당구 서현동';
+   const token='"'+key+'": [217, "건축물대장 대지면적·연면적으로 계산"]';
+   if(!code.includes(token))throw new Error('Richgo15 farfix override anchor missing');
+   return code.replace(token,'"'+key+'": ['+spec.far[key]+', "리치고"]');
+ }
+ return code;
+}
+
 export function buildAptAssets(root, output = path.join(root, 'public')) {
   const sourceDir = path.join(root, 'public');
   // Build the lazy-loaded Stage 1 source only after reading its versioned Brotli parts.
@@ -47,7 +79,7 @@ export function buildAptAssets(root, output = path.join(root, 'public')) {
     }};
     context.window = context;
     vm.runInNewContext(bootstrap[1], context);
-    const ordered = files.flatMap(file => file === 'apt-picks10.js'
+    const ordered = files.flatMap(file => file === 'apt-richgo15.js' ? [] : file === 'apt-picks10.js'
       ? [file, `apt-invest${cap === 35 ? 30 : cap}.js`, 'apt-research-over6-top100.js', 'apt-invest-ui.js']
       : file === 'apt-first.js' ? [] : [file]);
     const urls = []; let chunk = [], names = [];
@@ -56,6 +88,7 @@ export function buildAptAssets(root, output = path.join(root, 'public')) {
       // These URLs are rewritten to live upstream data. Never freeze them at build time.
       if (file === 'apt-live.js' || file === 'apt-live6.js' || file === 'apt-geo.js') { flush(); urls.push(file); continue; }
       let code = fs.readFileSync(path.join(sourceDir, file), 'utf8');
+      if(cap===15&&(file==='apt-univ15.js'||file==='apt-farfix.js'))code=applyRichgo15AtBuild(code,file,root);
       if (file === 'apt-picks10.js') code = code.replace(/^if\(document\.write\).*$/m, '');
       if (cap === 6 && file === 'apt-s4.js' && peak6) { code = code.replace(peak6.from, peak6.to); if (peak6.estFrom) code = code.replace(peak6.estFrom, peak6.estTo); }
       // 6억 이하 탭에서는 고밀도 감점 함수가 항상 0이다. 높은 가격대 전용 코드는 6억 탭 번들에서 제외(순위 불변).
@@ -75,10 +108,12 @@ export function buildAptAssets(root, output = path.join(root, 'public')) {
   const loop = /  for\(var i=0;i<F\.length;i\+\+\) if\(F\[i\]\) document\.write\([^\n]+\);/;
   if (!loop.test(bootstrap[1])) throw new Error('Source loader changed');
   const loader = bootstrap[1].replace(loop, `  F=${JSON.stringify(manifest)}[c];\n  window.__APT_LOAD_START=performance.now();\n  window.aptLoadError=function(){window.__aptLoadFailed=true;var el=document.getElementById('aptLoading');if(el)el.textContent='자료를 불러오지 못했습니다. 새로고침해 주세요.';};\n  for(var i=0;i<F.length;i++) document.write('<script defer src="'+F[i]+'" onerror="aptLoadError()"><\\/script>');`);
+  // Dev-only cap15 Richgo overlay is packed into the cap15 universe at build time.
+  const packagedLoader = loader.replace(",c===15?'apt-richgo15.js':''",'');
   // Show consent and loading state before network data. Keep the global app scope intact.
   const loading = '<div id="aptLoading" role="status" class="inline-note" style="margin:24px">아파트 자료를 불러오고 있습니다…</div>';
   let html = source.replace('<div class="body" id="body"></div>', `<div class="body" id="body">${loading}</div>`);
-  html = html.replace(bootstrap[0], `<script>\n${consent}\n${loader}\n</script>`).replace(application[0], '');
+  html = html.replace(bootstrap[0], `<script>\n${consent}\n${packagedLoader}\n</script>`).replace(application[0], '');
   html = html.replaceAll('apt-map.html', '/');
   html = html.replace('<link rel="stylesheet" href=', '<link rel="stylesheet" media="print" onload="this.media=\'all\'" href=');
   const key = /const KAKAO_JS_KEY='([^']+)'/.exec(app)?.[1];
