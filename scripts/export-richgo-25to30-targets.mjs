@@ -12,8 +12,8 @@ const get=async u=>{
  // Reconstruct the same published aggregate from bt_livecur through read-only SQL,
  // without the optional latest-trade 6th field (not used in the cap30 model).
 const dataDir=path.join(process.cwd(),'docs/richgo25to30-live-parts');
-const live=fs.readdirSync(dataDir).filter(x=>/part\\d+\\.js/.test(x)).sort()
-  .map(x=>fs.readFileSync(path.join(dataDir,x),'utf8')).join('\\n');
+const live=fs.readdirSync(dataDir).filter(x=>x.startsWith('part')&&x.endsWith('.js')).sort()
+  .map(x=>fs.readFileSync(path.join(dataDir,x),'utf8')).join('\n');
 const geo=await get(UP+'/aptgeo?export=js');
 console.log('SOURCE_SNAPSHOT',geo.length,live.length);
 const data=previewHTML(path.join(process.cwd(),'public'),30,{geo,live,withAuditRows:true});
