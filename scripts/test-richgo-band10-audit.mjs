@@ -1,6 +1,7 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import vm from 'node:vm';
+import zlib from 'node:zlib';
 import assert from 'node:assert/strict';
 import {patchRichgoCap10Source} from './apply-richgo-band10.mjs';
 
@@ -8,10 +9,10 @@ const root=path.resolve('.');
 const input=fs.readFileSync('public/apt-univ10.js','utf8');
 const patched=patchRichgoCap10Source(input,root);
 const records=JSON.parse(fs.readFileSync('scripts/richgo-band10-corrections.json','utf8'));
-const audited=JSON.parse(fs.readFileSync('docs/richgo-band10-current300-verified.json','utf8'));
+const audited=JSON.parse(zlib.gunzipSync(fs.readFileSync('docs/richgo-band10-current300-verified.json.gz')).toString('utf8'));
 assert.equal(audited.scope,300);
 assert.equal(audited.records.length,300,'all 300 complexes must be audited');
-const inputCsv=fs.readFileSync('docs/richgo-band10-current300-input.csv','utf8').replace(/^\ufeff/,'').split(/\r?\n/);
+const inputCsv=zlib.gunzipSync(fs.readFileSync('docs/richgo-band10-current300-input.csv.gz')).toString('utf8').replace(/^\ufeff/,'').split(/\r?\n/);
 assert.equal(inputCsv.filter(x=>x.trim()).length,301,'exactly 300 current-rank candidates');
 const apply=code=>{
  const c={PICKS:[],FARD:{},UGEO:{},HAK:{},CAPT:10,console}; c.window=c;
