@@ -17,11 +17,11 @@
   "finalReview": {
     "date": "2026-11-18",
     "checked": 300,
-    "direct": 283,
-    "aggregateExceptions": 17,
-    "far": 206,
+    "direct": 281,
+    "aggregateExceptions": 19,
+    "far": 204,
     "year": 15,
-    "units": 56
+    "units": 54
   },
   "remainingUnreviewed": 0
 }
