@@ -1,0 +1,27 @@
+name: Verify cap30 live-overlaid Richgo facts without other-band speed changes
+on:
+  push:
+    branches:
+      - audit/richgo-25to30-top300-20261118
+    paths:
+      - '.github/workflows/richgo30-live-check.yml'
+      - 'scripts/test-richgo30-live.cjs'
+permissions:
+  contents: read
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
+        with:
+          node-version: '22'
+      - name: Check 55 external-source complexes and protect cap25 behavior
+        run: |
+          node scripts/test-richgo30-live.cjs
+          node scripts/test-richgo30-full.cjs
+          node scripts/test-richgo25to30-verified.cjs
+      - run: npm ci --ignore-scripts
+      - name: Full build under unchanged per-tab performance budgets
+        run: npm run build
