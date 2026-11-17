@@ -54,8 +54,16 @@ function applyRichgo15AtBuild(code,file,root) {
      const existing=regional[area]?.[name];
      if(existing&&existing[0]!==value){existing[0]=value;corrected++;}
    }
-   // The flat UNITFIX_M3 is unchanged: its audited entries already match Richgo.
-   return code.slice(0,start+3)+JSON.stringify(regional)+code.slice(end+1);
+   let out=code.slice(0,start+3)+JSON.stringify(regional)+code.slice(end+1);
+   // M3 is applied *after* UNITFIX in fixUnits(): keep its highest precedence
+   // strictly source-consistent for cap15 while leaving all other tabs intact.
+   const m3tag='window.UNITFIX_M3=',m3a=out.indexOf(m3tag),m3b=out.indexOf(';\nwindow.UNITDROP_M3=',m3a);
+   if(m3a<0||m3b<0)throw new Error('Richgo15 missing downstream M3 unitfix');
+   const m3=JSON.parse(out.slice(m3a+m3tag.length,m3b));
+   for(const [key,value] of Object.entries(units))
+     if(Object.hasOwn(m3,key)&&m3[key][0]!==value)m3[key][0]=value;
+   out=out.slice(0,m3a+m3tag.length)+JSON.stringify(m3)+out.slice(m3b);
+   return out;
  }
  if(file==='apt-farfix.js'){
    let patched=0;
