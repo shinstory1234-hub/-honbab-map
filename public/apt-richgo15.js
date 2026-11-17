@@ -1,21 +1,8 @@
-/* 2026-11-18 10~15억 상위 300 리치고 검증: docs/richgo-10to15-top300-20261118.csv */
-(function(W){
-  if(W.CAPT!==15||!W.FARD)return;
-  const verified=[["파크리오|서울 송파구 신천동",283],["시범한양|성남 분당구 서현동",201],["시범우성|성남 분당구 서현동",191],["센트라스|서울 성동구 하왕십리동",312],["위례24단지(꿈에그린)|서울 송파구 장지동",194],["과천위버필드|과천시 원문동",227],["강남자곡 힐스테이트|서울 강남구 자곡동",177],["DMC파크뷰자이3단지|서울 서대문구 남가좌동",233],["고덕리엔파크3단지|서울 강동구 상일동",177],["관악드림(동아)|서울 관악구 봉천동",267],["관악드림(삼성)|서울 관악구 봉천동",267],["DMC래미안e편한세상|서울 서대문구 북가좌동",229],["롯데캐슬위너|서울 양천구 목동",290],["래미안에스티움|서울 영등포구 신길동",252],["힐스테이트신촌|서울 서대문구 북아현동",220],["포레나송파|서울 송파구 거여동",212],["송파더센트레|서울 송파구 장지동",203],["우장산힐스테이트|서울 강서구 내발산동",267],["관악푸르지오|서울 관악구 봉천동",294],["등촌동아이파크|서울 강서구 등촌동",268],["힐스테이트클래시안|서울 영등포구 신길동",251],["평촌센텀퍼스트|안양 동안구 호계동",282]];
-  let applied=0;
-  for(const [key,far] of verified){
-    const f=W.FARD[key];
-    if(!f)continue;
-    f[0]=far;
-    f[1]='리치고(직접대조)';
-    applied++;
-  }
-  let yearFixed=0;
-  for(const d of W.PICKS||[]){
-    if(d.n==='힐스테이트신촌'&&d.area==='서울 서대문구 북아현동'&&d.year===2023){
-      d.year=2020;
-      yearFixed++;
-    }
-  }
-  W.RICHGO15_APPLIED={verified:verified.length,applied,yearFixed};
+/* Richgo 10~15억 top300 cap15-only audit: docs/richgo-10to15-top300-20261118.csv */
+(function(W){if(W.CAPT!==15)return;
+const h=k=>{let z=5381;for(let i=0;i<k.length;i++)z=((z*33)^k.charCodeAt(i))>>>0;return z.toString(36).padStart(7,'0')};
+const s='0mohqr507v1g18nw505l01kcozd05b15pat6808o0h30l0b05e12ty67g06b18cw6n004x0bvp9zh06h0odwb3j04x0qve6qp07f07789e907f1g2ojdn06d1pezpab0821fi11og070030sm2d0641bckjuw05w01z4lv905n0yks5xk07f0s8go390860k6gzfs07g0t6586806z0mzebk107u',m=new Map();for(let i=0;i<s.length;i+=10)m.set(s.slice(i,i+7),parseInt(s.slice(i+7,i+10),36));
+let n=0;for(const k in W.FARD){const f=W.FARD[k],v=m.get(h(k));if(v==null||!f)continue;f[0]=v;f[1]='리치고(직접대조)';n++}
+let y=0;for(const d of W.PICKS||[])if(d.n==='힐스테이트신촌'&&d.area==='서울 서대문구 북아현동'&&d.year===2023){d.year=2020;y++}
+W.RICHGO15_APPLIED={verified:m.size,applied:n,yearFixed:y};
 })(window);
