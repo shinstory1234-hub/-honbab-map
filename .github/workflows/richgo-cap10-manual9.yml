@@ -1,0 +1,40 @@
+name: Complete cap10 Richgo 9 manually identified legacy aliases
+on:
+  push:
+    branches:
+      - audit/richgo-6to10-top300-20261118
+    paths:
+      - .github/workflows/richgo-cap10-manual9.yml
+      - scripts/apply-richgo-cap10-manual9.cjs
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  reconcile:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    env:
+      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: audit/richgo-6to10-top300-20261118
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Match nine old apartment aliases to public Richgo detailed pages
+        run: |
+          node --check scripts/apply-richgo-cap10-manual9.cjs
+          node scripts/apply-richgo-cap10-manual9.cjs
+      - name: Refresh latest branch and verify original source locks
+        run: |
+          git fetch origin audit/richgo-6to10-top300-20261118
+          git checkout -f FETCH_HEAD
+          node scripts/test-richgo-cap10-final.cjs
+          node scripts/test-richgo-6to10-crossband.cjs
+          node scripts/test-richgo-band10-audit.cjs
+      - name: Build and enforce unchanged tab network budget
+        run: |
+          npm ci --ignore-scripts
+          npm run build
