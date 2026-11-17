@@ -1,0 +1,45 @@
+name: Richgo 10-to-15 full 300 parallel public-page audit
+on:
+  push:
+    branches:
+      - audit/richgo-10to15-top300-20261118
+    paths:
+      - .github/workflows/richgo15-parallel-crawl.yml
+      - scripts/richgo15-public-audit.cjs
+permissions:
+  contents: write
+jobs:
+  audit:
+    runs-on: ubuntu-latest
+    timeout-minutes: 35
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+        with:
+          persist-credentials: true
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
+        with:
+          node-version: '22'
+      - name: Run parallel Richgo/Naver/Daum full 300 audit
+        id: crawl
+        run: |
+          set +e
+          node scripts/richgo15-public-audit.cjs --concurrency=6 --limit=300
+          status=$?
+          echo "audit_status=$status" >> "$GITHUB_OUTPUT"
+          exit 0
+      - name: Commit audited rows, source evidence, and correction maps
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add docs/richgo-10to15-top300-20261118.csv docs/richgo-10to15-verified-corrections.json docs/richgo-10to15-crawl-status.json
+          if ! git diff --staged --quiet; then
+            git commit -m "audit: preserve full top300 public-page checks and Richgo source parity [skip ci]"
+            git push origin "HEAD:audit/richgo-10to15-top300-20261118"
+          fi
+      - name: Report crawl outcome
+        run: |
+          cat docs/richgo-10to15-crawl-status.json
+          if [ "${{ steps.crawl.outputs.audit_status }}" != "0" ]; then
+            echo "Audit reported website access restrictions or critical failures."
+            exit 1
+          fi
