@@ -51,7 +51,7 @@ a{color:inherit;text-decoration:none}
 .linkbtn{color:var(--primary-soft-fg);text-decoration:underline;font-size:inherit;padding:0}
 @media(max-width:520px){.notice-gate{padding:0;align-items:flex-end}.notice-card{max-height:94dvh;padding:24px 20px calc(20px + env(safe-area-inset-bottom));border-radius:5px 12px 0 0}.notice-actions{grid-template-columns:1fr}.notice-actions .agree{order:-1}}
 
-/* ── masthead ── */
+
 .masthead{display:flex;align-items:center;gap:24px;height:72px;padding:0 28px;border-bottom:1px solid var(--text);flex:none;z-index:21;background:var(--bg)}
 .wordmark{display:inline-flex;align-items:center;font-size:31px;font-weight:950;line-height:1;letter-spacing:-.095em;white-space:nowrap}
 .wordmark{color:inherit;text-decoration:none;cursor:pointer;-webkit-tap-highlight-color:transparent}
@@ -75,7 +75,7 @@ main{flex:1;display:flex;min-height:0;position:relative}
 #map{position:absolute;inset:0}
 #keymsg{display:none;position:absolute;inset:0;align-items:center;justify-content:center;text-align:center;font-size:14px;line-height:1.7;padding:24px;color:var(--text-tertiary);z-index:2;background:var(--bg-subtle)}
 
-/* ── panel ── */
+
 aside{order:-1;width:408px;flex:none;border-right:1px solid var(--border);background:var(--bg);display:flex;flex-direction:column;min-height:0;z-index:20}
 .grab{display:none}
 .sheet-head{flex:none}
@@ -164,7 +164,7 @@ aside{order:-1;width:408px;flex:none;border-right:1px solid var(--border);backgr
 .excluded li span{grid-column:1/-1;font-size:12px;color:var(--text-tertiary)}
 .source{padding:16px 24px 40px;font-size:11.5px;line-height:1.8;color:var(--text-tertiary);word-break:keep-all}
 
-/* ── detail ── */
+
 .phead{display:flex;align-items:center;justify-content:space-between;min-height:50px;padding:3px 14px 3px 16px;border-bottom:1px solid var(--border-soft)}
 .phead button{display:flex;align-items:center;gap:6px;min-height:44px;padding:0 8px;border-radius:4px;font-size:13px;font-weight:600;color:var(--text-secondary)}
 .phead button:hover{background:var(--bg-muted)}
@@ -262,7 +262,7 @@ aside{order:-1;width:408px;flex:none;border-right:1px solid var(--border);backgr
 .btn.ghost{flex:none;background:var(--bg);color:var(--text-secondary);border:1px solid var(--border)}
 .btn.ghost:hover{background:var(--bg-subtle)}
 
-/* ── map markers (판단 chip) ── */
+
 .mk{transform:translate(-50%,-100%) translateY(-6px);cursor:pointer;white-space:nowrap;font-family:"Pretendard Variable",Pretendard,sans-serif;letter-spacing:-.02em;position:relative}
 .mk>div{display:flex;align-items:center;gap:6px;background:#fff;border:1px solid rgba(112,115,124,.28);border-radius:8px;box-shadow:0 2px 8px rgba(23,23,23,.12);padding:4px 8px 4px 4px;line-height:1.25}
 .mk::after{content:"";position:absolute;left:50%;bottom:-5px;margin-left:-5px;border:5px solid transparent;border-top-color:#fff;border-bottom:0;filter:drop-shadow(0 1px 0 rgba(112,115,124,.28))}
