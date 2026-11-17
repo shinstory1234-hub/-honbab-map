@@ -1,0 +1,40 @@
+name: Final cap10 restore 20 exact-name grouped-source errors
+on:
+  push:
+    branches:
+      - audit/richgo-6to10-top300-20261118
+    paths:
+      - .github/workflows/richgo-cap10-source20.yml
+      - scripts/resolve-richgo-cap10-final343-source20.cjs
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  restore-and-build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 40
+    env:
+      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: audit/richgo-6to10-top300-20261118
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Verify and correct 20 incorrectly aggregated units from Richgo details
+        run: |
+          node --check scripts/resolve-richgo-cap10-final343-source20.cjs
+          node scripts/resolve-richgo-cap10-final343-source20.cjs
+      - name: Refresh and verify all cap10 changes
+        run: |
+          git fetch origin audit/richgo-6to10-top300-20261118
+          git checkout -f FETCH_HEAD
+          node scripts/test-richgo-cap10-final.cjs
+          node scripts/test-richgo-6to10-crossband.cjs
+          node scripts/test-richgo-band10-audit.cjs
+      - name: Verify build and fixed network transfer ceiling
+        run: |
+          npm ci --ignore-scripts
+          npm run build
