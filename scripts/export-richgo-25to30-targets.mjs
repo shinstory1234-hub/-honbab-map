@@ -16,7 +16,9 @@ const live=fs.readdirSync(dataDir).filter(x=>x.startsWith('part')&&x.endsWith('.
   .map(x=>fs.readFileSync(path.join(dataDir,x),'utf8')).join('\n');
 const geo=await get(UP+'/aptgeo?export=js');
 console.log('SOURCE_SNAPSHOT',geo.length,live.length);
-const data=previewHTML(path.join(process.cwd(),'public'),30,{geo,live,withAuditRows:true});
+let data;
+try { data=previewHTML(path.join(process.cwd(),'public'),30,{geo,live,withAuditRows:true}); }
+catch(e){ console.error('PREVIEW_ERROR',e?.message||String(e)); process.exit(2); }
 if(!data||!Array.isArray(data.rows)||!data.rows.length)throw new Error('No visible data');
 fs.mkdirSync('docs',{recursive:true});
 fs.writeFileSync('/tmp/richgo25to30-rank-targets.json',JSON.stringify(data,null,2));
