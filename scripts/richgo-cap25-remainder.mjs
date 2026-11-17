@@ -45,7 +45,7 @@ const lookups=ranks.map(d=>{const reg=region(d.area).join('|');let candidates=[.
  const best=candidates[0]?.sim||0;let chosen=candidates.filter(x=>x.sim>=Math.max(.56,best-.13)).slice(0,5);
  return {...d,region:reg,candidates:chosen,candidateCount:candidates.length};});
 // Reuse independently verified IDs from the first 300 whenever the same complex appears in a different flat size.
-const previous=JSON.parse(fs.readFileSync('docs/richgo-20to25-rank301-372-audit-20261118.json','utf8')).audited;
+const previous=JSON.parse(fs.readFileSync('docs/richgo-20to25-top300-audit-20261118.json','utf8')).audited;
 const previouslyVerified=new Map(previous.filter(x=>x.status==='직접대조').map(x=>[x.name+'|'+x.area,x.richgoId]));
 const manualIds={};for(const d of lookups){const id=previouslyVerified.get(d.name+'|'+d.area);if(id)manualIds[d.rank]=id;}
 const mergedSourceRanks=new Set();
