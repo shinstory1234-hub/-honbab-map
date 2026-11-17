@@ -7,19 +7,19 @@
 <meta name="theme-color" content="#ffffff">
 <link rel="icon" href="/icon.svg" type="image/svg+xml">
 <link rel="apple-touch-icon" href="/apple-touch-icon.png">
-<title>아파트맵 · 수도권 아파트 단지 순위</title>
+<title>아파트맵 · 아파트 순위</title>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable.min.css">
 <style>
 :root{
-  --bg:#fff;--bg-subtle:rgb(247,247,248);--bg-muted:rgb(244,244,245);
+  --bg:#fff;--bg-subtle:#f7f7f8;--bg-muted:#f4f4f5;
   --border:rgba(112,115,124,.22);--border-soft:rgba(112,115,124,.14);
-  --text:#171719;--text-secondary:rgb(55,56,60);--text-tertiary:rgba(112,115,124,.95);--text-faint:rgba(112,115,124,.7);
-  --primary:#0066ff;--primary-hover:rgb(0,94,235);--primary-soft-bg:rgb(234,242,254);--primary-soft-fg:#0055d1;
+  --text:#171719;--text-secondary:#37383c;--text-tertiary:rgba(112,115,124,.95);--text-faint:rgba(112,115,124,.7);
+  --primary:#0066ff;--primary-hover:#005eeb;--primary-soft-bg:#eaf2fe;--primary-soft-fg:#0055d1;
   --up:#ff4242;--warning-fg:#b26a00;--success:#00a35c;--track-off:rgba(112,115,124,.16);
   --shadow-card:0 1px 4px rgba(23,23,23,.06);--shadow-float:0 8px 24px rgba(0,0,0,.12);
 }
-:root.dk{color-scheme:dark;--surface-2:rgb(38,39,42);
-  --bg:rgb(23,23,25);--bg-subtle:rgb(27,28,30);--bg-muted:rgb(38,39,42);
+:root.dk{color-scheme:dark;--surface-2:#26272a;
+  --bg:#171719;--bg-subtle:#1b1c1e;--bg-muted:#26272a;
   --border:rgba(255,255,255,.12);--border-soft:rgba(255,255,255,.08);
   --text:#fff;--text-secondary:rgba(255,255,255,.82);--text-tertiary:rgba(255,255,255,.62);--text-faint:rgba(255,255,255,.45);
   --primary-soft-bg:rgba(0,102,255,.16);--primary-soft-fg:#5a9dff;--up:#ff6b6b;--warning-fg:#ffb238;--success:#00d64c;--track-off:rgba(255,255,255,.14);
@@ -351,14 +351,14 @@ aside{order:-1;width:408px;flex:none;border-right:1px solid var(--border);backgr
   f.__fast=true; Number.prototype.toLocaleString=f; }catch(e){} })();
 /* 가격대 탭(2026.11.1): ?cap=10 → 6~10억 탭. 2026.11.3: 6억 초과 탭은 세 탭 단지를 모두 읽고 매일 계산되는 현재 시세(apt-live.js)로 가격대를 다시 나눔(apt-livefix.js). 탭마다 대상 단지·분위수(백분위 기준)·주변 시세 커널이 다르고, 점수는 탭 안에서만 비교 */
 (function(){ var v=new URLSearchParams(location.search).get('cap'), c=v==='35'?35:v==='30'?30:v==='25'?25:v==='20'?20:v==='15'?15:v==='10'?10:6;
-  window.CAPT=c; window.CAPLO=c===35?300000:c===30?250000:c===25?200000:c===20?150000:c===15?100000:c===10?60000:0; window.CAPHI=c===35?Infinity:c===30?300000:c===25?250000:c===20?200000:c===15?150000:c===10?100000:60000; window.CAPTXT=c===35?'30억 이상':c===30?'25~30억':c===25?'20~25억':c===20?'15~20억':c===15?'10~15억':c===10?'6~10억':'6억 이하';
-  window.inBand=function(p){ return c===35?p>=CAPLO:p>CAPLO&&p<=CAPHI; };
-  var T=c!==6, x=String(c), dataCap=String(c===35?30:c);
+  window.CAPT=c; window.CAPLO=c>30?300000:c===30?250000:c===25?200000:c===20?150000:c===15?100000:c===10?60000:0; window.CAPHI=c>30?1/0:c===30?300000:c===25?250000:c===20?200000:c===15?150000:c===10?100000:60000; window.CAPTXT=c>30?'30억 이상':c===30?'25~30억':c===25?'20~25억':c===20?'15~20억':c===15?'10~15억':c===10?'6~10억':'6억 이하';
+  window.inBand=p=>c>30?p>=CAPLO:p>CAPLO&&p<=CAPHI;
+  var T=c>6, x=''+c, dataCap=''+(c>30?30:c);
   /* 첫 화면 미리보기(2026.11.11): 서버가 미리 계산한 기본 목록을 무거운 자료보다 먼저 받아 바로 보여 줌(async — 자료 로딩을 막지 않음) */
   try{ var ps=document.createElement('script'); ps.async=true; ps.src='/api/apt-first?cap='+x; document.head.appendChild(ps); }catch(e){}
   /* 주변 시세 커널(apt-loc10·cx10)은 가격과 무관한 전체 단지 자료라 6~10억·10~15억 탭이 같이 씀 */
-  var F=[T?'':'apt-first.js','apt-unitfix.js',T?'apt-stsfix.js':'','apt-sd.js','apt-picks.js', T?'apt-picks10.js':'apt-auto3.js','apt-gj.js', T?'apt-loc10.js':'apt-loc.js', T?'apt-cx10.js':'apt-cx.js','apt-fard.js','apt-hak.js', T&&c!==35?'apt-univ10.js':T?'':'apt-univ.js', T&&c!==35?'apt-univ15.js':'', T&&c!==35?'apt-univ20.js':'', T&&c!==35?'apt-univ30.js':'', T&&c!==35?'apt-univadd.js':'', T?'apt-live.js':'apt-live6.js', c===35?'apt-univ35.js':'',
-    'apt-farplan.js','apt-mixhi.js','apt-cur.js',T?'apt-livefix.js':'apt-curlive.js','apt-trn.js','apt-small.js', T?'apt-s4q'+dataCap+'.js':'apt-s4q.js','apt-peak.js','apt-gjl.js', T?'apt-gjc.js':'',T?'apt-transport.js':'','apt-s4.js','apt-redevelopment-evidence.js',T?'apt-m3.js':'','apt-band.js','apt-plat.js','apt-farfix.js',T?'apt-far-normalize.js':'',c===35?'apt-richgo35-corrections.js':'','apt-dem.js', T?'apt-dem10.js':'', T?'apt-dem15.js':'', T?'apt-dem20.js':'', T?'apt-dem30.js':'', T?'apt-demadd.js':'','apt-walk.js','apt-geo.js', T?'':'apt-deep6-100.js', T?'':'apt-deep6-200.js', T?'':'apt-research6-600.js', T?'':'apt-invest-ui.js'];
+  var F=[T?'':'apt-first.js','apt-unitfix.js',T?'apt-stsfix.js':'','apt-sd.js','apt-picks.js', T?'apt-picks10.js':'apt-auto3.js','apt-gj.js', T?'apt-loc10.js':'apt-loc.js', T?'apt-cx10.js':'apt-cx.js','apt-fard.js','apt-hak.js', T&&c<35?'apt-univ10.js':T?'':'apt-univ.js', T&&c<35?'apt-univ15.js':'', T&&c<35?'apt-univ20.js':'', T&&c<35?'apt-univ30.js':'', T&&c<35?'apt-univadd.js':'', T?'apt-live.js':'apt-live6.js', c>30?'apt-univ35.js':'',
+    'apt-farplan.js','apt-mixhi.js','apt-cur.js',T?'apt-livefix.js':'apt-curlive.js','apt-trn.js','apt-small.js', T?'apt-s4q'+dataCap+'.js':'apt-s4q.js','apt-peak.js','apt-gjl.js', T?'apt-gjc.js':'',T?'apt-transport.js':'','apt-s4.js','apt-redevelopment-evidence.js',T?'apt-m3.js':'','apt-band.js','apt-plat.js','apt-farfix.js',T?'apt-far-normalize.js':'',c>30?'apt-r35.js':'','apt-dem.js', T?'apt-dem10.js':'', T?'apt-dem15.js':'', T?'apt-dem20.js':'', T?'apt-dem30.js':'', T?'apt-demadd.js':'','apt-walk.js','apt-geo.js', T?'':'apt-deep6-100.js', T?'':'apt-deep6-200.js', T?'':'apt-research6-600.js', T?'':'apt-invest-ui.js'];
   for(var i=0;i<F.length;i++) if(F[i]) document.write('<script src="'+F[i]+'"><\/script>');
   if(T) document.title='아파트맵 · '+CAPTXT+' 아파트';
   var t6=document.getElementById('cap'+x); if(t6){ t6.setAttribute('aria-current','page'); try{ t6.scrollIntoView({block:'nearest',inline:'center'}); }catch(e){} } var hm=document.getElementById('home'); if(hm&&T) hm.href='apt-map.html?cap='+x;

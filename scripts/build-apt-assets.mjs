@@ -48,7 +48,7 @@ export function buildAptAssets(root, output = path.join(root, 'public')) {
     context.window = context;
     vm.runInNewContext(bootstrap[1], context);
     const ordered = files.flatMap(file => file === 'apt-picks10.js'
-      ? [file, `apt-invest${cap === 35 ? 30 : cap}.js`, 'apt-research-over6-top100.js', 'apt-invest-ui.js']
+      ? [file, `apt-invest${cap}.js`, 'apt-research-over6-top100.js', 'apt-invest-ui.js']
       : file === 'apt-first.js' ? [] : [file]);
     const urls = []; let chunk = [], names = [];
     const flush = () => { if (chunk.length) urls.push(writeAsset(chunk.join('\n;\n'), names)); chunk = []; names = []; };
