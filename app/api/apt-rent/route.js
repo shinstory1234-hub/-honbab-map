@@ -20,7 +20,7 @@ const getMonth=unstable_cache(async (sgg,ym)=>{
   return rows;
 },['apt-rent-district-month-v1'],{revalidate:86400});
 
-function number(v){const n=Number(String(v||'').replace(/,/g,''));return Number.isFinite(n)?n:null;}
+function number(v){if(v==null||String(v).trim()==='')return null;const n=Number(String(v).replace(/,/g,''));return Number.isFinite(n)?n:null;}
 function makeRows(items,dong,apt){
   const wanted=nameKey(apt);
   const result=[];
