@@ -1,12 +1,12 @@
 {
   "metadata": {
     "target": 273,
-    "verified": 272,
+    "verified": 273,
     "farVerified": 260,
-    "farBlank": 12,
-    "remaining": 1,
-    "lastPassAdded": 21,
-    "sourcePages": 32,
+    "farBlank": 13,
+    "remaining": 0,
+    "lastPassAdded": 22,
+    "sourcePages": 33,
     "officialMcpQueries": 10
   },
   "added": [
@@ -69,6 +69,16 @@
       "units": 644,
       "year": 1999,
       "rule": "방배현대1차 개별 단지명 별칭"
+    },
+    {
+      "seq": 93,
+      "key": "방배신삼호|서울 서초구 방배동",
+      "id": "a5YsLrc",
+      "far": null,
+      "distance": 33,
+      "units": 481,
+      "year": 1983,
+      "rule": "삼호4차=방배신삼호; 리치고 재건축사업 r3raNkK 동일 단지"
     },
     {
       "seq": 107,
@@ -5637,9 +5647,31 @@
         "py": 42,
         "price": 300000
       },
-      "status": "review_needed",
-      "richgo": null,
-      "match": null,
+      "status": "direct_verified",
+      "richgo": {
+        "id": "a5YsLrc",
+        "name": "삼호4차",
+        "year": 1983,
+        "units": 481,
+        "far": null,
+        "coverage": null,
+        "parking": null,
+        "floor": "12~13층",
+        "heating": "지역난방 · 열병합",
+        "builder": "삼호주택",
+        "pyeongs": "34·54·61평",
+        "lat": 37.497434,
+        "lng": 126.989672,
+        "url": "https://m.richgo.ai/realty/danji/a5YsLrc"
+      },
+      "match": {
+        "method": "curated_legacy_alias_verified_by_public_geo",
+        "distance_m": 33,
+        "yearDiff": 0,
+        "unitRatio": 0,
+        "sourceId": "a5YsLrc",
+        "rule": "삼호4차=방배신삼호; 리치고 재건축사업 r3raNkK 동일 단지"
+      },
       "rejected": [
         {
           "id": "a4AMByF",
@@ -5661,7 +5693,8 @@
       "candidates": [
         "a4AMByF",
         "a4UAHXo"
-      ]
+      ],
+      "integrated": false
     },
     {
       "seq": 94,
