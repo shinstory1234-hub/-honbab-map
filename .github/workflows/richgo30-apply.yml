@@ -1,0 +1,52 @@
+name: Apply fully verified Richgo cap30 facts with build gate
+on:
+  push:
+    branches:
+      - audit/richgo-25to30-top300-20261118
+    paths:
+      - '.github/workflows/richgo30-apply.yml'
+      - 'scripts/apply-richgo30-full.cjs'
+      - 'scripts/test-richgo30-full.cjs'
+permissions:
+  contents: write
+jobs:
+  apply:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+        with:
+          persist-credentials: true
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
+        with:
+          node-version: '22'
+      - name: Apply evidence-matched Richgo source data without changing reference prices
+        run: |
+          node --check scripts/apply-richgo30-full.cjs
+          node scripts/apply-richgo30-full.cjs
+      - name: Verify all 273 identities and runtime FAR, plus legacy regressions
+        run: |
+          node scripts/test-richgo30-full.cjs
+          node scripts/test-richgo25to30-verified.cjs
+      - name: Install project dependencies
+        run: npm ci --ignore-scripts
+      - name: Build and enforce original per-cap gzip performance budgets
+        run: npm run build
+      - name: Commit corrections only after all tests and original speed budget pass
+        run: |
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git config user.name "github-actions[bot]"
+          git add -f public/apt-univ30.js docs/richgo30-applied-20261118.json
+          if ! git diff --cached --quiet; then
+            git commit -m "audit: apply 25-30b full Richgo source facts after build verification"
+            git pull --rebase origin audit/richgo-25to30-top300-20261118
+            git push origin HEAD:audit/richgo-25to30-top300-20261118
+          fi
+      - name: Keep application evidence available even when build fails
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: richgo30-applied-diagnostics
+          path: docs/richgo30-applied-20261118.json
+          retention-days: 3
+          if-no-files-found: warn
