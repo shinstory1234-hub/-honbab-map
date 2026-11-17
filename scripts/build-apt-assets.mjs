@@ -165,6 +165,8 @@ export function buildAptAssets(root, output = path.join(root, 'public')) {
   html = html.replace(/<style>([\s\S]*?)<\/style>/g, (m, c) => '<style>' + c.replace(/\/\*[\s\S]*?\*\//g, '').replace(/\n\s*/g, '\n') + '</style>');
   // 전송량: 첫 HTML 안 인라인 스크립트도 주석·공백만 제거(이름·식 그대로)
   html = html.replace(/<script>([\s\S]*?)<\/script>/g, (m, c) => '<script>' + minifyKeep(c, 'inline.js') + '</script>');
+  // Drop the only nonfunctional HTML comment in the production artifact (not source).
+  html = html.replace(/<!--[\s\S]*?-->/g, '');
   fs.writeFileSync(path.join(output, 'apt-map-fast.html'), html);
   fs.writeFileSync(path.join(assets, 'manifest.json'), JSON.stringify({manifest, inventory}, null, 2));
   return {manifest, inventory, html};
