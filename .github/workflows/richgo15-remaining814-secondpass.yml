@@ -5,6 +5,7 @@ on:
       - audit/richgo-10to15-top300-20261118
     paths:
       - .github/workflows/richgo15-remaining814-secondpass.yml
+      - scripts/richgo15-remaining814-secondpass.cjs
 permissions:
   contents: write
 jobs:
