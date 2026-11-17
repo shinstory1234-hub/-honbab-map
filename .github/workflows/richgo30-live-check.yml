@@ -1,4 +1,4 @@
-name: Verify cap30 live-overlaid Richgo facts without other-band speed changes
+name: Verify all 273 cap30 Richgo raw facts within original speed limits
 on:
   push:
     branches:
@@ -6,6 +6,12 @@ on:
     paths:
       - '.github/workflows/richgo30-live-check.yml'
       - 'scripts/test-richgo30-live.cjs'
+      - 'public/apt-farfix.js'
+      - 'public/apt-far-normalize.js'
+      - 'public/apt-univ10.js'
+      - 'public/apt-univ15.js'
+      - 'public/apt-univ20.js'
+      - 'public/apt-univadd.js'
 permissions:
   contents: read
 jobs:
