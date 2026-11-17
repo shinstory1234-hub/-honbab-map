@@ -76,15 +76,3 @@
  }
  W.APT_FAR_RICHGO_PREFERRED_N=n;
 })(window);
-
-/* Verified Richgo cap30-only overlay: 53 FAR, 7 unit, 4 year facts from 2026-11-18 public-source 273-case audit. No other band affected. */
-(function(W){if(W.CAPT!==30||!W.FARD)return;
-const h=k=>{let v=5381;for(let i=0;i<k.length;i++)v=((v*33)^k.charCodeAt(i))>>>0;return v.toString(36).padStart(7,'0')};
-const f='0ufltkt07l0mohqr507v0o7j2oo06x15pat6808o1g18nw505l1h4w2u604f0hx5qil03f12ty67g06b0wnxooh03f01kcozd05b0cn66d909v1p9evr905h06ngx9x05b1s1lo9w05b0cfghbg0620yf3eos0680qj74kc05e15hdq6c06y188dgq90b21lw3l950m70966rvo04c1drt7ln05v18mbpmc08212ccm3g07p1m1ripi0610n23k590631oo75fy0ex1qb6nz005s0yol9ay06c08y22nt06w15szqgy0540o65bcx08b1w876rx08b08pylpg04u02q0enk05w1ihz1rl06t0t3b9at0b10qywm2t05v0xdn5wo0gh1mwmbxp05v1lroe9g0ig1u8sc0c06r0nw9z5k05t1czxpzs04t12nsk3a06t1tj0dm705a06fyb5105a1ybkm6l02y07ekcmb0qr027y4b504y05vfzkt05w1hw03na0ig0szvm7u06c',u='0cn66d91et18mbpmc0wt0n23k590p01qb6nz00nr1ihz1rl0hw103ftn40fe1ybkm6l0b4',y='0cfghbg2n12ccm3g3c0yol9ay2z0szvm7u2w',F=new Map(),U=new Map(),Y=new Map();
-for(let i=0;i<f.length;i+=10)F.set(f.slice(i,i+7),parseInt(f.slice(i+7,i+10),36));
-for(let i=0;i<u.length;i+=10)U.set(u.slice(i,i+7),parseInt(u.slice(i+7,i+10),36));
-for(let i=0;i<y.length;i+=9)Y.set(y.slice(i,i+7),1900+parseInt(y.slice(i+7,i+9),36));
-let n=0;for(const k in W.FARD){const value=F.get(h(k)),a=W.FARD[k];if(value==null||!a)continue;a[0]=value;a[1]='R';n++}
-for(const d of W.PICKS||[]){const k=h(d.n+'|'+d.area),units=U.get(k),year=Y.get(k);if(units)d.units=units;if(year)d.year=year}
-W.RICHGO30_LIVE_N=n;
-})(window);
