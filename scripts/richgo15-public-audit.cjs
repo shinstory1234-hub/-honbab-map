@@ -224,10 +224,10 @@ async function processRecord(i){
  if(done%25===0)console.log('PROGRESS',JSON.stringify({done,count,confirmed,different,notFound,ambiguous,searchCalls,pageCalls,errors}));
 }
 let next=0;
-const workers=Array.from({length:concurrency},async()=>{while(!blocked){const i=next++;if(i>=count)break;try{await processRecord(i)}catch(e){errors++;done++;console.log('AUDIT-ERROR',i,String(e).slice(0,220));}}});
+const workers=Array.from({length:concurrency},()=>async()=>{while(!blocked){const i=next++;if(i>=count)break;try{await processRecord(i)}catch(e){errors++;done++;console.log('AUDIT-ERROR',i,String(e).slice(0,220));}}});
 (async()=>{
  await buildCatalog(records.slice(0,count));
- await Promise.all(workers);
+ await Promise.all(workers.map(w=>w()));
  // Keep previously verified corrections if fewer than 300 reviewed due connectivity.
  const existing=JSON.parse(fs.readFileSync(corrections,'utf8')),spec={...existing,asOf:today,far:{...existing.far},year:{...existing.year},units:{...(existing.units||{})}};
  for(const row of records){
