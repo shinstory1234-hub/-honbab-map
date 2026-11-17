@@ -44,6 +44,14 @@ const catalogs=new Map();for(const h of hubs){const id=h.city+'|'+h.gu;if(!catal
 const lookups=ranks.map(d=>{const reg=region(d.area).join('|');let candidates=[...(catalogs.get(reg)||new Map()).values()].map(x=>({...x,sim:similarity(d.name,x.name)})).filter(x=>x.sim>.48).sort((a,b)=>b.sim-a.sim);
  const best=candidates[0]?.sim||0;let chosen=candidates.filter(x=>x.sim>=Math.max(.56,best-.13)).slice(0,5);
  return {...d,region:reg,candidates:chosen,candidateCount:candidates.length};});
+/* Individually discovered Richgo identifiers for apartment-map aliases not indexed by full map name.
+ * Each still MUST pass separate webpage, same neighborhood and build-year validation.
+ */
+const manualIds={"16":"a4zNlwE","27":"a3CqoEd","30":"a3KxKuI","36":"a2ghzUo","48":"a0nZRUj","56":"a9nssjt","68":"a9jHYxD","73":"a5lsJGI","83":"a3KxKuI","92":"a0iVqsU","103":"a3RBRXn","107":"a4CROLe","109":"a4hvXCP","119":"a9jZylw","120":"a7vARIh","121":"a2hzIsC","132":"a1uHXaN","133":"a5wAWOZ","137":"a3oKyNG","141":"a2hzIsC","142":"a8ROoNo","144":"a0QzMTf","149":"a3XWhbx","153":"a6JwGAa","165":"a7eSaZa","167":"a6FDFaH","168":"a3cyHeE","173":"a3lBAzz","177":"a0wAXPz","178":"a0HyWdm","182":"a5rFSzF","185":"a1WeUGw","189":"a5kgMtS","190":"a2uaIaS","193":"a6BlShb","200":"a0fSWss","205":"a2pHsiG","217":"a0SrMTu","227":"a5fodBX","231":"a8TAcGb","232":"a0fEnfa","238":"a2IGSDI","248":"a4fMvVE","255":"a8TAcGb","259":"a1NxsGO","265":"a4suMIg","268":"a6ttktz","279":"a4jUpCZ","280":"a8HtIMC"};
+const mergedSourceRanks=new Set([30,83]); // Richgo combines both Oksoo Park Hills blocks as one K-apt complex.
+for(const d of lookups){const id=manualIds[d.rank];if(!id)continue;
+ d.candidates=[{id,name:d.name,sim:1,manual:true},...d.candidates.filter(x=>x.id!==id)].slice(0,6);
+}
 const idList=[...new Set(lookups.flatMap(x=>x.candidates.map(y=>y.id)))];
 console.log('Matched candidate names '+lookups.filter(x=>x.candidates.length>0).length+'/'+ranks.length+', reading '+idList.length+' unique detail pages.');
 const esc=s=>String(s||'').replace(/<[^>]*>/g,'').replace(/&#(\d+);/g,(_,n)=>String.fromCharCode(+n)).replace(/&#x([a-f0-9]+);/gi,(_,n)=>String.fromCharCode(parseInt(n,16))).replace(/&amp;/g,'&').replace(/&nbsp;/g,' ').replace(/&lt;/g,'<').replace(/&gt;/g,'>').trim();
@@ -69,12 +77,13 @@ const audited=lookups.map(x=>{
    const yearDiff=d.year===null?99:Math.abs(d.year-x.year);
    const nameSim=similarity(x.name,d.name||z.name);
    const unitsRatio=d.units&&x.units?Math.min(d.units,x.units)/Math.max(d.units,x.units):0;
-   const confidence=(dongOk?2:0)+(yearDiff<=2?2:yearDiff<=5?1:0)+(nameSim>=.88?3:nameSim>=.75?2:nameSim>=.56?1:0)+(unitsRatio>=.95?2:unitsRatio>=.5?1:0);
-   return {...d,conf:confidence,dongOk,yearDiff,nameSim,unitsRatio};}).sort((a,b)=>b.conf-a.conf||b.nameSim-a.nameSim);
- const best=alternatives[0];const second=alternatives[1];const safe=best&&best.status===200&&best.dongOk&&best.nameSim>=.56&&best.yearDiff<=5&&(best.conf>=5)&&(!second||best.conf>=second.conf+1||best.nameSim>second.nameSim+.12);
+   const confidence=(dongOk?2:0)+(yearDiff<=2?2:yearDiff<=5?1:0)+(nameSim>=.88?3:nameSim>=.75?2:nameSim>=.56?1:0)+(unitsRatio>=.95?2:unitsRatio>=.5?1:0)+(z.manual?4:0);
+   return {...d,conf:confidence,dongOk,yearDiff,nameSim,unitsRatio,manual:!!z.manual};}).sort((a,b)=>b.conf-a.conf||b.nameSim-a.nameSim);
+ const best=alternatives[0];const second=alternatives[1];const manualSafe=best?.manual&&best.status===200&&best.dongOk&&best.yearDiff<=3&&best.unitsRatio>=(mergedSourceRanks.has(x.rank)?0.3:0.75);
+ const safe=manualSafe||(best&&best.status===200&&best.dongOk&&best.nameSim>=.56&&best.yearDiff<=5&&(best.conf>=5)&&(!second||best.conf>=second.conf+1||best.nameSim>second.nameSim+.12));
  const status=safe?'직접대조':best?'매칭불확실':'리치고미매칭';
  const source=safe?best:{};
- return {rank:x.rank,name:x.name,area:x.area,py:x.py,price:x.price,score:x.score,mapYear:x.year,mapUnits:x.units,mapFar:oldF[0]??null,mapFarSource:oldF[1]||'',mapYearRaw:p?.year??null,mapUnitsRaw:p?.units??null,status,richgoName:source.name||best?.name||'',richgoId:source.id||best?.id||'',richgoUrl:source.url||best?.url||'',richgoYear:source.year??null,richgoUnits:source.units??null,richgoFar:source.far??null,richgoCoverage:source.coverage||'',richgoFloors:source.floors||'',richgoHeating:source.heating||'',richgoParking:source.parking||'',richgoBuilder:source.builder||'',richgoSizes:source.sizes||'',nameSimilarity:best?.nameSim??0,dongMatched:best?.dongOk??false,confidence:best?.conf??0,alternatives:alternatives.slice(0,3).map(z=>({id:z.id,name:z.name,conf:z.conf,url:z.url})),error:best?.error||'',mapFound:!!p};
+ return {rank:x.rank,name:x.name,area:x.area,py:x.py,price:x.price,score:x.score,mapYear:x.year,mapUnits:x.units,mapFar:oldF[0]??null,mapFarSource:oldF[1]||'',mapYearRaw:p?.year??null,mapUnitsRaw:p?.units??null,status,manualVerified:!!(safe&&best.manual),unitsComparable:!mergedSourceRanks.has(x.rank),richgoName:source.name||best?.name||'',richgoId:source.id||best?.id||'',richgoUrl:source.url||best?.url||'',richgoYear:source.year??null,richgoUnits:source.units??null,richgoFar:source.far??null,richgoCoverage:source.coverage||'',richgoFloors:source.floors||'',richgoHeating:source.heating||'',richgoParking:source.parking||'',richgoBuilder:source.builder||'',richgoSizes:source.sizes||'',nameSimilarity:best?.nameSim??0,dongMatched:best?.dongOk??false,confidence:best?.conf??0,alternatives:alternatives.slice(0,3).map(z=>({id:z.id,name:z.name,conf:z.conf,url:z.url})),error:best?.error||'',mapFound:!!p};
 });
 const headers=['rank','name','area','py','price','mapYear','mapUnits','mapFar','mapFarSource','status','richgoName','richgoId','richgoYear','richgoUnits','richgoFar','richgoCoverage','richgoFloors','richgoHeating','richgoParking','richgoBuilder','richgoSizes','richgoUrl','confidence','error'];
 const csv=v=>{const z=String(v??'');return /[,"\r\n]/.test(z)?'"'+z.replace(/"/g,'""')+'"':z};
@@ -82,7 +91,7 @@ fs.writeFileSync('docs/richgo-20to25-top300-audit-20261118.csv',[headers,...audi
 fs.writeFileSync('docs/richgo-20to25-top300-audit-20261118.json',JSON.stringify({source:'Richgo public complex pages',sourceRanking:'2026-11-14 exported 300 unique ranked complexes',audited},null,2)+'\n');
 const verified=audited.filter(x=>x.status==='직접대조'),stats={total:audited.length,verified:verified.length,ambiguous:audited.filter(x=>x.status==='매칭불확실').length,unmatched:audited.filter(x=>x.status==='리치고미매칭').length,
  farKnown:verified.filter(x=>x.richgoFar!==null).length,farChanged:verified.filter(x=>x.richgoFar!==null&&x.richgoFar!==x.mapFar).length,
- unitsChanged:verified.filter(x=>x.richgoUnits!==null&&x.richgoUnits!==x.mapUnits).length,
+ unitsChanged:verified.filter(x=>x.unitsComparable&&x.richgoUnits!==null&&x.richgoUnits!==x.mapUnits).length,
  yearChanged:verified.filter(x=>x.richgoYear!==null&&x.richgoYear!==x.mapYear).length,
  hubsAttempted:hubs.length,hubsFailed:hubs.filter(x=>x.status!==200).length,detailsFetched:idList.length,detailErrors:factsResult.filter(x=>x.status!==200||x.error).length,
  pending:audited.filter(x=>x.status!=='직접대조').map(x=>({rank:x.rank,name:x.name,area:x.area,alternatives:x.alternatives}))};
