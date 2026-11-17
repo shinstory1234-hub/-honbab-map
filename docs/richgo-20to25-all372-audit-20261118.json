@@ -12749,7 +12749,7 @@
       "richgoLatitude": 37.373994,
       "richgoLongitude": 127.12238,
       "manualVerified": false,
-      "unitsComparable": true,
+      "unitsComparable": false,
       "richgoName": "파크타운",
       "richgoId": "a2onybk",
       "richgoUrl": "https://m.richgo.ai/realty/danji/a2onybk",
@@ -12774,7 +12774,9 @@
         }
       ],
       "error": "",
-      "mapFound": true
+      "mapFound": true,
+      "unitBoundaryReason": "파크타운 4개 단지 통합 3028세대와 개별 롯데 841세대를 혼동. https://statnorth.kr/apt/경기/성남시-분당구/수내동-파크타운롯데-14a574bee8a6",
+      "unitsReverifiedAt": "2026-11-18"
     },
     {
       "rank": 272,
@@ -14201,7 +14203,7 @@
       "richgoLatitude": 37.373994,
       "richgoLongitude": 127.12238,
       "manualVerified": false,
-      "unitsComparable": true,
+      "unitsComparable": false,
       "richgoName": "파크타운",
       "richgoId": "a2onybk",
       "richgoUrl": "https://m.richgo.ai/realty/danji/a2onybk",
@@ -14226,7 +14228,9 @@
         }
       ],
       "error": "",
-      "mapFound": true
+      "mapFound": true,
+      "unitBoundaryReason": "파크타운 4개 단지 통합 3028세대와 개별 삼익 638세대를 혼동. https://statnorth.kr/apt/경기/성남시-분당구/수내동-파크타운삼익-3a81d348a644",
+      "unitsReverifiedAt": "2026-11-18"
     },
     {
       "rank": 302,
@@ -14810,7 +14814,7 @@
       "richgoLatitude": 37.581003,
       "richgoLongitude": 126.899946,
       "manualVerified": false,
-      "unitsComparable": true,
+      "unitsComparable": false,
       "richgoName": "DMC SK뷰",
       "richgoId": "a6QRKbr",
       "richgoUrl": "https://m.richgo.ai/realty/danji/a6QRKbr",
@@ -14835,7 +14839,11 @@
         }
       ],
       "error": "",
-      "mapFound": true
+      "mapFound": true,
+      "unitBoundaryReason": "DMC SK VIEW 1블록 644세대, 2블록 109세대 분리. 통합 753세대를 개별 644세대에 적용하지 않음. https://www.k-apt.go.kr/cmmn/introMmentPop.do?bjdCode=11&searchOccuDate=202609&upYn=Y",
+      "unitsReverifiedAt": "2026-11-18",
+      "yearComparable": false,
+      "yearBoundaryReason": "K-apt 사용승인 2023-08-24. 리치고 2021 연도 오표기를 적용하지 않음."
     },
     {
       "rank": 315,
@@ -17627,5 +17635,19 @@
       "error": "",
       "mapFound": true
     }
-  ]
+  ],
+  "reverification": {
+    "date": "2026-11-18",
+    "unitMismatchRaw": 51,
+    "unitNoncomparable": 9,
+    "unitChangesApplied": 42,
+    "yearChangesApplied": 20,
+    "farChangesApplied": 257,
+    "scope": "파크타운 롯데·삼익 통합 단지 세대수 오류 및 DMC SK VIEW 1/2블록 오류 수정. 리치고 원시 조회값은 그대로 보존.",
+    "sourceUrls": [
+      "https://statnorth.kr/apt/경기/성남시-분당구/수내동-파크타운롯데-14a574bee8a6",
+      "https://statnorth.kr/apt/경기/성남시-분당구/수내동-파크타운삼익-3a81d348a644",
+      "https://www.k-apt.go.kr/cmmn/introMmentPop.do?bjdCode=11&searchOccuDate=202609&upYn=Y"
+    ]
+  }
 }
