@@ -20,6 +20,7 @@ function applyRichgo15AtBuild(code,file,root) {
    if(start<0||end<0||areaStart<0||areaEnd<0)throw new Error('Richgo15: cannot locate packed apartment universe');
    const areas=JSON.parse(code.slice(areaStart+8,areaEnd+1));
    const rows=JSON.parse(code.slice(start+3,end+1));
+   if(rows.some(r=>!Number.isInteger(r[3])||r[3]<100000||r[3]>150000))throw new Error('Richgo15: price delta encoding outside 10-15억 range');
    let nFar=0,nYear=0,nUnits=0;
    for(const row of rows){
      const key=row[0]+'|'+areas[row[1]];
@@ -29,10 +30,16 @@ function applyRichgo15AtBuild(code,file,root) {
    }
    if(nFar!==Object.keys(far).length||nYear!==Object.keys(year).length||nUnits!==Object.keys(units).length)
      throw new Error('Richgo15 unmatched: '+nFar+' FAR, '+nYear+' year, '+nUnits+' units');
+   // Every representative price in this universe lies in [100000,150000] 만원.
+   // Subtracting 10억 saves a decimal digit per record; restore exactly before destructuring.
+   for(const row of rows)row[3]-=100000;
    const packed=code.slice(0,start+3)+JSON.stringify(rows)+code.slice(end+1);
    const marker='  F[k]=fd;';
    if(!packed.includes(marker))throw new Error('Richgo15 source decoder anchor missing');
-   return packed.replace(marker,"  if(fd[1]==='R')fd[1]='리치고';\n"+marker);
+   const coded=packed.replace(marker,"  if(fd[1]==='R')fd[1]='리치고';\\n"+marker);
+   const loop='for(const r of R){';
+   if(!coded.includes(loop))throw new Error('Richgo15 price restore anchor missing');
+   return coded.replace(loop,'for(const r of R){r[3]+=100000;');
  }
  if(file==='apt-farfix.js'){
    let patched=0;
