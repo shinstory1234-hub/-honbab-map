@@ -2,26 +2,9 @@
   "total": 300,
   "uniqueRichgoPages": 295,
   "withBothCoords": 300,
-  "within500m": 298,
-  "between500and1500": 1,
-  "over1500": 1,
+  "within500m": 300,
+  "between500and1500": 0,
+  "over1500": 0,
   "missingCoordinates": 0,
-  "review": [
-    {
-      "rank": 51,
-      "name": "광교e편한세상",
-      "area": "수원 영통구 이의동",
-      "metres": 1810,
-      "source": "a6rRJnR",
-      "status": "1500m초과재검토"
-    },
-    {
-      "rank": 138,
-      "name": "대림e-편한세상4",
-      "area": "서울 구로구 신도림동",
-      "metres": 919,
-      "source": "a6uFwCa",
-      "status": "500~1500m재검토"
-    }
-  ]
+  "review": []
 }
