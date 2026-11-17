@@ -12,4 +12,12 @@
  }
  for(const d of W.PICKS||[]){const k=h(d.n+'|'+d.area),y=year.get(k),u=units.get(k);if(y!=null){d.year=y;ny++}if(u!=null){d.units=u;nu++}}
  W.RICHGO15_APPLIED={far:nf,year:ny,units:nu,kbFallback:nk};
+
+ // user-requested-richgo-39-20261118: prefer verified Richgo public facts even for aggregate/site identity differences.
+ // Compact hash-keyed overrides apply only when CAPT===15.
+ const tail={"far":{"1mwmbxp":211,"0qywm2t":211,"1y99afs":179,"1gsyn7s":196,"012o73s":276,"1cyh21q":276,"1a43os4":230,"0pvintj":230,"1v8lcv1":177,"05vfzkt":212,"06cyd1x":159,"0czrw2g":159,"0kg43rg":159,"0if5xds":159,"013l0a1":208,"0rqz8m0":910,"0sxewrf":938,"04e3bs1":535,"07i1s9h":222,"0x719zq":222,"072x621":149,"14pn6my":291,"1dtedso":162,"0rd972w":191,"1ko7fd4":208,"1tq4cho":159,"1l3n92x":503},"year":{"1y99afs":1993,"18k8qge":1999,"16met3w":1993,"1tq4cho":2009},"units":{"1mwmbxp":3028,"0qywm2t":3028,"1y99afs":2598,"0ks00dt":2136,"18k8qge":2298,"1gsyn7s":1162,"012o73s":4509,"12j4qmw":2134,"1cyh21q":4509,"1o78p56":2634,"1a43os4":1531,"0pvintj":1531,"1v8lcv1":720,"05vfzkt":884,"06cyd1x":1774,"0czrw2g":1774,"0kg43rg":1774,"0if5xds":1774,"013l0a1":1482,"0rqz8m0":208,"0sxewrf":279,"04e3bs1":342,"0gt7ned":463,"07i1s9h":782,"0x719zq":782,"072x621":486,"14pn6my":511,"1dtedso":1688,"0rd972w":240,"1ko7fd4":1482,"1tq4cho":731,"1l3n92x":1266}};
+ let af=0,ay=0,au=0;
+ for(const [key,farEntry] of Object.entries(W.FARD)){const id=h(key),value=tail.far[id];if(value!=null){farEntry[0]=value;farEntry[1]='리치고';af++}}
+ for(const p of W.PICKS||[]){const id=h(p.n+'|'+p.area),y=tail.year[id],u=tail.units[id];if(y!=null){p.year=y;ay++}if(u!=null){p.units=u;au++}}
+ W.RICHGO15_APPLIED.userRequestedFollowUp={far:af,year:ay,units:au};
 })(window);
