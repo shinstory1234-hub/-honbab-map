@@ -13,29 +13,30 @@ import zlib from 'node:zlib';
    한 번 더 로드되는 교정 스크립트를 만들지 않아 gzip·요청 수 예산을 지킨다. */
 function applyRichgo15AtBuild(code,file,root) {
  const spec=JSON.parse(fs.readFileSync(path.join(root,'docs','richgo-10to15-verified-corrections.json'),'utf8'));
- const far=spec.far||{}, year=spec.year||{}, units=spec.units||{};
+ const far=spec.far||{}, kbFar=spec.farFallbackKB||{}, year=spec.year||{}, units=spec.units||{};
  if(file==='apt-univ15.js'){
    const start=code.indexOf(',R=['),end=code.indexOf('];\nconst TB=',start);
    const areaStart=code.indexOf('const A=['),areaEnd=code.indexOf('],',areaStart);
    if(start<0||end<0||areaStart<0||areaEnd<0)throw new Error('Richgo15: cannot locate packed apartment universe');
    const areas=JSON.parse(code.slice(areaStart+8,areaEnd+1));
    const rows=JSON.parse(code.slice(start+3,end+1));
-   let nFar=0,nYear=0,nUnits=0;
+   let nFar=0,nKb=0,nYear=0,nUnits=0;
    for(const row of rows){
      const key=row[0]+'|'+areas[row[1]];
      if(Object.hasOwn(far,key)){row[22][0]=far[key];row[22][1]='';nFar++;}
+     if(Object.hasOwn(kbFar,key)){if(Object.hasOwn(far,key))throw new Error('Richgo and KB FAR conflict '+key);row[22][0]=kbFar[key];row[22][1]='K';nKb++;}
      if(Object.hasOwn(year,key)){row[4]=year[key];nYear++;}
      if(Object.hasOwn(units,key)){row[5]=units[key];nUnits++;}
    }
-   if(nFar!==Object.keys(far).length||nYear!==Object.keys(year).length||nUnits!==Object.keys(units).length)
-     throw new Error('Richgo15 unmatched: '+nFar+' FAR, '+nYear+' year, '+nUnits+' units');
+   if(nFar!==Object.keys(far).length||nKb!==Object.keys(kbFar).length||nYear!==Object.keys(year).length||nUnits!==Object.keys(units).length)
+     throw new Error('Richgo15 unmatched: '+nFar+' FAR, '+nKb+' KB fallback, '+nYear+' year, '+nUnits+' units');
    // Store cap15 completion years as a compact offset from 2000; the decoding
    // restores the exact original value before any apartment is instantiated.
    for(const row of rows)row[4]-=2000;
    const packed=code.slice(0,start+3)+JSON.stringify(rows)+code.slice(end+1);
    const marker='  F[k]=fd;';
    if(!packed.includes(marker))throw new Error('Richgo15 source decoder anchor missing');
-   const coded=packed.replace(marker,"  if(fd[0]!=null&&fd[1]==='')fd[1]='리치고';\n"+marker);
+   const coded=packed.replace(marker,"  if(fd[0]!=null&&fd[1]==='')fd[1]='리치고';if(fd[1]==='K')fd[1]='KB부동산';\n"+marker);
    const loop='for(const r of R){';
    if(!coded.includes(loop))throw new Error('Richgo15 completion year decoder anchor missing');
    return coded.replace(loop,'for(const r of R){r[4]+=2000;');
