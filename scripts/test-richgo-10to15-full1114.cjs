@@ -21,7 +21,7 @@ for(const field of ['far','units','year']){
  for(const [k,v] of Object.entries(spec[field]||{})){
   const row=byKey.get(k);
   assert.ok(row,'correction outside cap15 inventory '+k);
-  assert.equal(row.verification,'직접확인','not identity-verified '+k);
+  assert.ok(['직접확인','리치고집계기준적용','리치고명칭기준적용'].includes(row.verification),'not Richgo-evidenced '+k);
   assert.equal(Number(row['richgo_'+field]),Number(v),'value differs from stored Richgo evidence '+k);
   assert.ok(/^https:\/\/m\.richgo\.ai\/realty\/danji\/a[A-Za-z0-9]{6}$/.test(row.source_url),'source page missing '+k);
  }
@@ -40,8 +40,9 @@ for(const [n,id] of [[279,'a6rNDte'],[462,'a3YPzVc'],[927,'a4FYnXO'],[1110,'a1wi
  assert.equal(r.source_url,'https://m.richgo.ai/realty/danji/'+id,'corrected source link '+n);
 }
 const gm=rows.find(x=>Number(x.seq)===845);
-assert.equal(gm.verification,'리치고후보불일치','5th phase is NOT 4th phase');
-assert.ok(!Object.hasOwn(spec.far,key(gm))&&!Object.hasOwn(spec.year,key(gm))&&!Object.hasOwn(spec.units,key(gm)),'no wrong 4th-block changes');
+assert.equal(gm.verification,'리치고명칭기준적용','5th phase must follow the actual Richgo 5th page');
+assert.equal(gm.richgo_id,'a6yOdDi','5th phase must NOT reuse the 4th phase');
+assert.equal(spec.units[key(gm)],731);assert.equal(spec.year[key(gm)],2009);assert.equal(spec.far[key(gm)],159);
 const remodel=rows.find(x=>Number(x.seq)===642);
 assert.equal(Number(remodel.map_year),2024);
 assert.equal(Number(remodel.richgo_year),1992);
@@ -74,3 +75,8 @@ const report={total:rows.length,first300:a.length,remaining814:b.length,remainin
  yearCorrections:Object.keys(spec.year).length,unitCorrections:Object.keys(spec.units).length,
  kbFallback:Object.keys(spec.farFallbackKB||{}).length,exceptions:exceptions.length};
 console.log('Richgo full-band identity audit OK',JSON.stringify(report));
+
+/* 2026-11-18 user-requested Richgo precedence across 31 merged/segmented + 2 identified cases */
+assert.equal(rows.filter(x=>x.verification==='리치고집계기준적용').length,31);
+assert.equal(rows.filter(x=>x.verification==='리치고명칭기준적용').length,2);
+assert.equal(rows.filter(x=>!['직접확인','리치고집계기준적용','리치고명칭기준적용'].includes(x.verification)).length,6);
