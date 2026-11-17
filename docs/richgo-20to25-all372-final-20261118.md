@@ -66,7 +66,7 @@
 | 314 | DMCSKVIEW | 644 | 753 | DMC SK VIEW 1단지 644세대 및 2단지 109세대의 합계를 1단지에 적용하면 안 됨 |
 
 - 파크타운 통합 범위: [파크타운 3,028세대 4개 단지](https://realty.chosun.com/site/data/html_dir/2026/07/13/2026071302464.html), [롯데 개별 841세대](https://statnorth.kr/apt/%EA%B2%BD%EA%B8%B0/%EC%84%B1%EB%82%A8%EC%8B%9C-%EB%B6%84%EB%8B%B9%EA%B5%AC/%EC%88%98%EB%82%B4%EB%8F%99-%ED%8C%8C%ED%81%AC%ED%83%80%EC%9A%B4%EB%A1%AF%EB%8D%B0-14a574bee8a6), [삼익 개별 638세대](https://statnorth.kr/apt/%EA%B2%BD%EA%B8%B0/%EC%84%B1%EB%82%A8%EC%8B%9C-%EB%B6%84%EB%8B%B9%EA%B5%AC/%EC%88%98%EB%82%B4%EB%8F%99-%ED%8C%8C%ED%81%AC%ED%83%80%EC%9A%B4%EC%82%BC%EC%9D%B5-3a81d348a644).
-- [K-apt DMC SK VIEW 644세대 / DMC SK VIEW 2단지 109세대, 사용승인 2023-08-24](https://www.k-apt.go.kr/cmmn/introMmentPop.do?bjdCode=11&searchOccuDate=202609&upYn=Y): 리치고의 잘못된 연도 2021 대신 원자료의 **2023년을 유지**한다. 따라서 연도 보정은 21건에서 20건으로 줄어든다.
+- [K-apt DMC SK VIEW 644세대 / DMC SK VIEW 2단지 109세대, 사용승인 2023-08-24](https://www.k-apt.go.kr/cmmn/introMmentPop.do?bjdCode=11&searchOccuDate=202609&upYn=Y): 이전 통합 보정 파일이 이미 덮어쓴 753세대도 **644세대로 복구**하고, 리치고의 잘못된 연도 2021 대신 원자료의 **2023년을 유지**한다. 따라서 연도 보정은 21건에서 20건으로 줄어든다.
 - 임대세대를 포함해 **같은 사업 단지 전체의 수치**로 집계하는 공덕자이, 텐즈힐 등은 통합 범위 차이를 확인한 후 리치고 전체 수치를 유지했다. 이는 독립 사업 블록의 값을 덮어쓰는 파크타운 및 DMC SK VIEW의 사례와 다르다.
 - 단지명과 세대수의 동일성에 관한 차이만 재검증한 것이며, 리치고 이외 전 항목에 대한 독립적인 전수 검증을 뜻하지 않는다.
 
