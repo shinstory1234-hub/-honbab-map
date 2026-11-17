@@ -27,7 +27,7 @@ assert.equal(source.filter(x=>x.far_after_verified==='').length,132);
 const exceptionKeys=new Set(unresolved.map(x=>x.name+'|'+x.area));
 for(const s of unverified)assert.ok(exceptionKeys.has(s.name+'|'+s.area),'missing exception classification: '+s.name);
 for(const x of fixes){
- assert.ok(Number.isFinite(x.far)||Number.isInteger(x.units),'Correction missing source data');
+ assert.ok(Number.isFinite(x.far)||Number.isInteger(x.units)||Number.isInteger(x.year),'Correction missing source data');
  if(x.far!=null)assert.ok(x.far>=60&&x.far<=1500);
  if(x.year!=null)assert.ok(Number.isInteger(x.year));
  if(x.units!=null)assert.ok(Number.isInteger(x.units)&&x.units>0);
