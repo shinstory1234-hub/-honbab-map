@@ -2,13 +2,15 @@
   "targets": 197,
   "source_kind": "exact-rank-bt-livecur-20261118",
   "source_visible": 197,
-  "hub_match": 105,
+  "hub_match": 106,
+  "mcp_named_lookup_count": 92,
+  "mcp_named_hits": 1,
   "statuses": {
-    "미매칭": 92,
-    "원문 조회 실패": 8,
-    "직접대조": 87,
-    "동일단지 추가확인": 10
+    "미매칭": 91,
+    "직접대조": 93,
+    "원문 조회 실패": 2,
+    "동일단지 추가확인": 11
   },
-  "direct_comparison": 87,
+  "direct_comparison": 93,
   "file": "docs/richgo-25to30-direct-audit-20261118.csv"
 }
