@@ -1,0 +1,2330 @@
+{
+  "meta": {
+    "shard": 1,
+    "targets": 73,
+    "additionalVerified": 16,
+    "farKnown": 16,
+    "farBlank": 0,
+    "remaining": 57,
+    "stats": {
+      "requests": 132,
+      "failures": 0,
+      "blocked": 0,
+      "limited": 0,
+      "regions": 9,
+      "dongs": 29,
+      "details": 94
+    }
+  },
+  "rows": [
+    {
+      "key": "장미마을(현대)|성남 분당구 야탑동",
+      "name": "장미마을(현대)",
+      "area": "성남 분당구 야탑동",
+      "oldStatus": "unmatched",
+      "thirdStatus": "still_unresolved",
+      "richgo": null,
+      "match": null,
+      "dongCatalog": "https://m.richgo.ai/realty/region/4113510700",
+      "candidates": [
+        {
+          "id": "a5yIHnd",
+          "name": "장미8단지현대",
+          "far": 214,
+          "units": 2136,
+          "year": 1993,
+          "distance": 134,
+          "nameSimilarity": 0.6666666666666667,
+          "accepted": false
+        },
+        {
+          "id": "a4TRuAn",
+          "name": "매화마을현대벽산",
+          "far": 99,
+          "units": 252,
+          "year": 1994,
+          "distance": 1090,
+          "nameSimilarity": 0.5,
+          "accepted": false
+        }
+      ]
+    },
+    {
+      "key": "쌍용|서울 동대문구 이문동",
+      "name": "쌍용",
+      "area": "서울 동대문구 이문동",
+      "oldStatus": "review_needed",
+      "thirdStatus": "still_unresolved",
+      "richgo": null,
+      "match": null,
+      "dongCatalog": "https://m.richgo.ai/realty/region/1123011000",
+      "candidates": [
+        {
+          "id": "a3LcViZ",
+          "name": "쌍용",
+          "far": 343,
+          "units": 1318,
+          "year": 2000,
+          "distance": 113,
+          "nameSimilarity": 1,
+          "accepted": false
+        }
+      ]
+    },
+    {
+      "key": "답십리청솔우성|서울 동대문구 답십리동",
+      "name": "답십리청솔우성",
+      "area": "서울 동대문구 답십리동",
+      "oldStatus": "review_needed",
+      "thirdStatus": "still_unresolved",
+      "richgo": null,
+      "match": null,
+      "dongCatalog": "https://m.richgo.ai/realty/region/1123010500",
+      "candidates": [
+        {
+          "id": "a7NggsV",
+          "name": "답십리청솔우성",
+          "far": 258,
+          "units": 1542,
+          "year": 2000,
+          "distance": 50,
+          "nameSimilarity": 1,
+          "accepted": false
+        },
+        {
+          "id": "a7SEvvI",
+          "name": "답십리대우",
+          "far": 301,
+          "units": 319,
+          "year": 2002,
+          "distance": 564,
+          "nameSimilarity": 0.5714285714285714,
+          "accepted": false
+        },
+        {
+          "id": "a4oCbPH",
+          "name": "답십리한화",
+          "far": 451,
+          "units": 146,
+          "year": 2001,
+          "distance": 979,
+          "nameSimilarity": 0.4285714285714286,
+          "accepted": false
+        },
+        {
+          "id": "a1tejPq",
+          "name": "답십리파크자이",
+          "far": 245,
+          "units": 802,
+          "year": 2019,
+          "distance": 733,
+          "nameSimilarity": 0.4285714285714286,
+          "accepted": false
+        }
+      ]
+    },
+    {
+      "key": "샛별마을한양4-1|안양 동안구 비산동",
+      "name": "샛별마을한양4-1",
+      "area": "안양 동안구 비산동",
+      "oldStatus": "unmatched",
+      "thirdStatus": "still_unresolved",
+      "richgo": null,
+      "match": null,
+      "dongCatalog": "https://m.richgo.ai/realty/region/4117310100",
+      "candidates": [
+        {
+          "id": "a2VNrus",
+          "name": "샛별한양1단지",
+          "far": 204,
+          "units": 1262,
+          "year": 1993,
+          "distance": 40,
+          "nameSimilarity": 0.625,
+          "accepted": false
+        },
+        {
+          "id": "a3MLtkM",
+          "name": "샛별한양2",
+          "far": 208,
+          "units": 1482,
+          "year": 1993,
+          "distance": 319,
+          "nameSimilarity": 0.5,
+          "accepted": false
+        }
+      ]
+    },
+    {
+      "key": "하얀마을(5단지)(주공)|성남 분당구 구미동",
+      "name": "하얀마을(5단지)(주공)",
+      "area": "성남 분당구 구미동",
+      "oldStatus": "review_needed",
+      "thirdStatus": "still_unresolved",
+      "richgo": null,
+      "match": null,
+      "dongCatalog": "https://m.richgo.ai/realty/region/4113511400",
+      "candidates": [
+        {
+          "id": "a1UmGpM",
+          "name": "하얀주공5단지",
+          "far": 131,
+          "units": 779,
+          "year": 1995,
+          "distance": 49,
+          "nameSimilarity": 0.4285714285714286,
+          "accepted": false
+        },
+        {
+          "id": "a4pPOUT",
+          "name": "하얀마을그랜드빌",
+          "far": 89,
+          "units": 324,
+          "year": 1995,
+          "distance": 163,
+          "nameSimilarity": 0.5,
+          "accepted": false
+        }
+      ]
+    },
+    {
+      "key": "효자촌(동아)|성남 분당구 서현동",
+      "name": "효자촌(동아)",
+      "area": "성남 분당구 서현동",
+      "oldStatus": "review_needed",
+      "thirdStatus": "still_unresolved",
+      "richgo": null,
+      "match": null,
+      "dongCatalog": "https://m.richgo.ai/realty/region/4113510500",
+      "candidates": [
+        {
+          "id": "a1NTVgq",
+          "name": "효자촌동아",
+          "far": 187,
+          "units": 648,
+          "year": 1992,
+          "distance": 16,
+          "nameSimilarity": 1,
+          "accepted": false
+        },
+        {
+          "id": "a8ksQhv",
+          "name": "효자촌임광",
+          "far": 186,
+          "units": 732,
+          "year": 1992,
+          "distance": 256,
+          "nameSimilarity": 0.6,
+          "accepted": false
+        },
+        {
+          "id": "a8fUUYY",
+          "name": "효자촌현대",
+          "far": 185,
+          "units": 710,
+          "year": 1992,
+          "distance": 364,
+          "nameSimilarity": 0.6,
+          "accepted": false
+        },
+        {
+          "id": "a9CCzHC",
+          "name": "효자촌삼환",
+          "far": 174,
+          "units": 632,
+          "year": 1992,
+          "distance": 517,
+          "nameSimilarity": 0.6,
+          "accepted": false
+        }
+      ]
+    },
+    {
+      "key": "휘경리오포레아파트(1단지)|서울 동대문구 휘경동",
+      "name": "휘경리오포레아파트(1단지)",
+      "area": "서울 동대문구 휘경동",
+      "oldStatus": "review_needed",
+      "thirdStatus": "still_unresolved",
+      "richgo": null,
+      "match": null,
+      "dongCatalog": "https://m.richgo.ai/realty/region/1123010900",
+      "candidates": [
+        {
+          "id": "a7usPGi",
+          "name": "휘경리오포레1단지",
+          "far": 257,
+          "units": 1224,
+          "year": 2001,
+          "distance": 25,
+          "nameSimilarity": 1,
+          "accepted": false
+        },
+        {
+          "id": "a2yGETD",
+          "name": "휘경리오포레2단지",
+          "far": 257,
+          "units": 800,
+          "year": 2001,
+          "distance": 91,
+          "nameSimilarity": 0.8571428571428572,
+          "accepted": false
+        },
+        {
+          "id": "a4eWkaU",
+          "name": "휘경센트레빌",
+          "far": 251,
+          "units": 297,
+          "year": 2011,
+          "distance": 976,
+          "nameSimilarity": 0.4285714285714286,
+          "accepted": false
+        }
+      ]
+    },
+    {
+      "key": "동아|서울 동대문구 답십리동",
+      "name": "동아",
+      "area": "서울 동대문구 답십리동",
+      "oldStatus": "review_needed",
+      "thirdStatus": "still_unresolved",
+      "richgo": null,
+      "match": null,
+      "dongCatalog": "https://m.richgo.ai/realty/region/1123010500",
+      "candidates": [
+        {
+          "id": "a8yaytW",
+          "name": "동아",
+          "far": 328,
+          "units": 741,
+          "year": 2001,
+          "distance": 16,
+          "nameSimilarity": 1,
+          "accepted": false
+        }
+      ]
+    },
+    {
+      "key": "현대코아|서울 동대문구 청량리동",
+      "name": "현대코아",
+      "area": "서울 동대문구 청량리동",
+      "oldStatus": "unmatched",
+      "thirdStatus": "still_unresolved",
+      "richgo": null,
+      "match": null,
+      "dongCatalog": "https://m.richgo.ai/realty/region/1123010700",
+      "candidates": [
+        {
+          "id": "a3efPSH",
+          "name": "청량리현대코아",
+          "far": 471,
+          "units": 88,
+          "year": 1997,
+          "distance": 30,
+          "nameSimilarity": 0.5714285714285714,
+          "accepted": false
+        },
+        {
+          "id": "a1XyKDG",
+          "name": "현대",
+          "far": 248,
+          "units": 241,
+          "year": 1987,
+          "distance": 387,
+          "nameSimilarity": 0.5,
+          "accepted": false
+        }
+      ]
+    },
+    {
+      "key": "동아|서울 동대문구 전농동",
+      "name": "동아",
+      "area": "서울 동대문구 전농동",
+      "oldStatus": "review_needed",
+      "thirdStatus": "still_unresolved",
+      "richgo": null,
+      "match": null,
+      "dongCatalog": "https://m.richgo.ai/realty/region/1123010400",
+      "candidates": [
+        {
+          "id": "a3VFltk",
+          "name": "동아",
+          "far": null,
+          "units": 360,
+          "year": 1997,
+          "distance": 28,
+          "nameSimilarity": 1,
+          "accepted": false
+        }
+      ]
+    },
+    {
+      "key": "박석고개1단지힐스테이트(116~131동)BL2-1|서울 은평구 진관동",
+      "name": "박석고개1단지힐스테이트(116~131동)BL2-1",
+      "area": "서울 은평구 진관동",
+      "oldStatus": "unmatched",
+      "thirdStatus": "still_unresolved",
+      "richgo": null,
+      "match": null,
+      "dongCatalog": "https://m.richgo.ai/realty/region/1138011400",
+      "candidates": []
+    },
+    {
+      "key": "휘경리오포레아파트(2단지)|서울 동대문구 휘경동",
+      "name": "휘경리오포레아파트(2단지)",
+      "area": "서울 동대문구 휘경동",
+      "oldStatus": "review_needed",
+      "thirdStatus": "still_unresolved",
+      "richgo": null,
+      "match": null,
+      "dongCatalog": "https://m.richgo.ai/realty/region/1123010900",
+      "candidates": [
+        {
+          "id": "a2yGETD",
+          "name": "휘경리오포레2단지",
+          "far": 257,
+          "units": 800,
+          "year": 2001,
+          "distance": 91,
+          "nameSimilarity": 1,
+          "accepted": false
+        },
+        {
+          "id": "a7usPGi",
+          "name": "휘경리오포레1단지",
+          "far": 257,
+          "units": 1224,
+          "year": 2001,
+          "distance": 25,
+          "nameSimilarity": 0.8571428571428572,
+          "accepted": false
+        },
+        {
+          "id": "a4eWkaU",
+          "name": "휘경센트레빌",
+          "far": 251,
+          "units": 297,
+          "year": 2011,
+          "distance": 976,
+          "nameSimilarity": 0.4285714285714286,
+          "accepted": false
+        }
+      ]
+    },
+    {
+      "key": "DMC아트포레자이|서울 은평구 수색동",
+      "name": "DMC아트포레자이",
+      "area": "서울 은평구 수색동",
+      "oldStatus": "review_needed",
+      "thirdStatus": "still_unresolved",
+      "richgo": null,
+      "match": null,
+      "dongCatalog": "https://m.richgo.ai/realty/region/1138010100",
+      "candidates": [
+        {
+          "id": "a7zdlRO",
+          "name": "DMC아트포레자이",
+          "far": 249,
+          "units": 672,
+          "year": 2023,
+          "distance": 14,
+          "nameSimilarity": 1,
+          "accepted": false
+        },
+        {
+          "id": "a5NVVNo",
+          "name": "DMC파인시티자이",
+          "far": 268,
+          "units": 1223,
+          "year": 2023,
+          "distance": 298,
+          "nameSimilarity": 0.5555555555555556,
+          "accepted": false
+        }
+      ]
+    },
+    {
+      "key": "백련산힐스테이트4차|서울 은평구 응암동",
+      "name": "백련산힐스테이트4차",
+      "area": "서울 은평구 응암동",
+      "oldStatus": "review_needed",
+      "thirdStatus": "still_unresolved",
+      "richgo": null,
+      "match": null,
+      "dongCatalog": "https://m.richgo.ai/realty/region/1138010700",
+      "candidates": [
+        {
+          "id": "a9PDpNd",
+          "name": "백련산힐스테이트2차",
+          "far": 215,
+          "units": 1148,
+          "year": 2011,
+          "distance": 227,
+          "nameSimilarity": 0.9,
+          "accepted": false
+        },
+        {
+          "id": "a6GmWpZ",
+          "name": "백련산힐스테이트3차",
+          "far": 213,
+          "units": 967,
+          "year": 2011,
+          "distance": 329,
+          "nameSimilarity": 0.9,
+          "accepted": false
+        },
+        {
+          "id": "a7yVPZE",
+          "name": "백련산힐스테이트1차",
+          "far": 191,
+          "units": 1106,
+          "year": 2011,
+          "distance": 407,
+          "nameSimilarity": 0.9,
+          "accepted": false
+        }
+      ]
+    },
+    {
+      "key": "백련산힐스테이트2차|서울 은평구 응암동",
+      "name": "백련산힐스테이트2차",
+      "area": "서울 은평구 응암동",
+      "oldStatus": "review_needed",
+      "thirdStatus": "still_unresolved",
+      "richgo": null,
+      "match": null,
+      "dongCatalog": "https://m.richgo.ai/realty/region/1138010700",
+      "candidates": [
+        {
+          "id": "a9PDpNd",
+          "name": "백련산힐스테이트2차",
+          "far": 215,
+          "units": 1148,
+          "year": 2011,
+          "distance": 36,
+          "nameSimilarity": 1,
+          "accepted": false
+        },
+        {
+          "id": "a7yVPZE",
+          "name": "백련산힐스테이트1차",
+          "far": 191,
+          "units": 1106,
+          "year": 2011,
+          "distance": 206,
+          "nameSimilarity": 0.9,
+          "accepted": false
+        },
+        {
+          "id": "a6GmWpZ",
+          "name": "백련산힐스테이트3차",
+          "far": 213,
+          "units": 967,
+          "year": 2011,
+          "distance": 293,
+          "nameSimilarity": 0.9,
+          "accepted": false
+        }
+      ]
+    },
+    {
+      "key": "광교상떼빌파크뷰|용인 수지구 상현동",
+      "name": "광교상떼빌파크뷰",
+      "area": "용인 수지구 상현동",
+      "oldStatus": "unmatched",
+      "thirdStatus": "still_unresolved",
+      "richgo": null,
+      "match": null,
+      "dongCatalog": "https://m.richgo.ai/realty/region/4146510700",
+      "candidates": [
+        {
+          "id": "a2dtmUS",
+          "name": "광교상떼빌파크뷰",
+          "far": 199,
+          "units": 968,
+          "year": 2002,
+          "distance": 40,
+          "nameSimilarity": 1,
+          "accepted": false
+        }
+      ]
+    },
+    {
+      "key": "상림마을8단지롯데캐슬(810~820동)BL1-1|서울 은평구 진관동",
+      "name": "상림마을8단지롯데캐슬(810~820동)BL1-1",
+      "area": "서울 은평구 진관동",
+      "oldStatus": "unmatched",
+      "thirdStatus": "still_unresolved",
+      "richgo": null,
+      "match": null,
+      "dongCatalog": "https://m.richgo.ai/realty/region/1138011400",
+      "candidates": []
+    },
+    {
+      "key": "우성그린|서울 동대문구 답십리동",
+      "name": "우성그린",
+      "area": "서울 동대문구 답십리동",
+      "oldStatus": "review_needed",
+      "thirdStatus": "still_unresolved",
+      "richgo": null,
+      "match": null,
+      "dongCatalog": "https://m.richgo.ai/realty/region/1123010500",
+      "candidates": [
+        {
+          "id": "a4tJVtf",
+          "name": "우성그린",
+          "far": 275,
+          "units": 496,
+          "year": 1997,
+          "distance": 19,
+          "nameSimilarity": 1,
+          "accepted": false
+        }
+      ]
+    },
+    {
+      "key": "에스케이뷰파크|화성 병점구 반월동",
+      "name": "에스케이뷰파크",
+      "area": "화성 병점구 반월동",
+      "oldStatus": "review_needed",
+      "thirdStatus": "still_unresolved",
+      "richgo": null,
+      "match": null,
+      "dongCatalog": "https://m.richgo.ai/realty/region/4159510500",
+      "candidates": [
+        {
+          "id": "a3LFTUi",
+          "name": "SK뷰파크",
+          "far": 197,
+          "units": 1967,
+          "year": 2015,
+          "distance": 42,
+          "nameSimilarity": 0.4285714285714286,
+          "accepted": false
+        },
+        {
+          "id": "a2piQfa",
+          "name": "반월자이더파크",
+          "far": 199,
+          "units": 468,
+          "year": 2016,
+          "distance": 956,
+          "nameSimilarity": 0.4285714285714286,
+          "accepted": false
+        }
+      ]
+    },
+    {
+      "key": "벽산첼시빌2차|용인 수지구 성복동",
+      "name": "벽산첼시빌2차",
+      "area": "용인 수지구 성복동",
+      "oldStatus": "unmatched",
+      "thirdStatus": "still_unresolved",
+      "richgo": null,
+      "match": null,
+      "dongCatalog": "https://m.richgo.ai/realty/region/4146510600",
+      "candidates": []
+    },
+    {
+      "key": "백련산힐스테이트3차|서울 은평구 응암동",
+      "name": "백련산힐스테이트3차",
+      "area": "서울 은평구 응암동",
+      "oldStatus": "review_needed",
+      "thirdStatus": "still_unresolved",
+      "richgo": null,
+      "match": null,
+      "dongCatalog": "https://m.richgo.ai/realty/region/1138010700",
+      "candidates": [
+        {
+          "id": "a6GmWpZ",
+          "name": "백련산힐스테이트3차",
+          "far": 213,
+          "units": 967,
+          "year": 2011,
+          "distance": 42,
+          "nameSimilarity": 1,
+          "accepted": false
+        },
+        {
+          "id": "a9PDpNd",
+          "name": "백련산힐스테이트2차",
+          "far": 215,
+          "units": 1148,
+          "year": 2011,
+          "distance": 361,
+          "nameSimilarity": 0.9,
+          "accepted": false
+        },
+        {
+          "id": "a7yVPZE",
+          "name": "백련산힐스테이트1차",
+          "far": 191,
+          "units": 1106,
+          "year": 2011,
+          "distance": 468,
+          "nameSimilarity": 0.9,
+          "accepted": false
+        }
+      ]
+    },
+    {
+      "key": "동아아파트|용인 수지구 풍덕천동",
+      "name": "동아아파트",
+      "area": "용인 수지구 풍덕천동",
+      "oldStatus": "review_needed",
+      "thirdStatus": "still_unresolved",
+      "richgo": null,
+      "match": null,
+      "dongCatalog": "https://m.richgo.ai/realty/region/4146510100",
+      "candidates": [
+        {
+          "id": "a7kExFR",
+          "name": "동부",
+          "far": 210,
+          "units": 612,
+          "year": 1995,
+          "distance": 494,
+          "nameSimilarity": 0.5,
+          "accepted": false
+        },
+        {
+          "id": "a1UkQUM",
+          "name": "동문",
+          "far": 209,
+          "units": 368,
+          "year": 1994,
+          "distance": 573,
+          "nameSimilarity": 0.5,
+          "accepted": false
+        },
+        {
+          "id": "a7WxRYp",
+          "name": "동보",
+          "far": 209,
+          "units": 470,
+          "year": 1995,
+          "distance": 612,
+          "nameSimilarity": 0.5,
+          "accepted": false
+        }
+      ]
+    },
+    {
+      "key": "풍림아파트|용인 수지구 풍덕천동",
+      "name": "풍림아파트",
+      "area": "용인 수지구 풍덕천동",
+      "oldStatus": "review_needed",
+      "thirdStatus": "still_unresolved",
+      "richgo": null,
+      "match": null,
+      "dongCatalog": "https://m.richgo.ai/realty/region/4146510100",
+      "candidates": []
+    },
+    {
+      "key": "미륭|안양 동안구 비산동",
+      "name": "미륭",
+      "area": "안양 동안구 비산동",
+      "oldStatus": "review_needed",
+      "thirdStatus": "still_unresolved",
+      "richgo": null,
+      "match": null,
+      "dongCatalog": "https://m.richgo.ai/realty/region/4117310100",
+      "candidates": [
+        {
+          "id": "a5bGCkQ",
+          "name": "미륭",
+          "far": 257,
+          "units": 576,
+          "year": 1979,
+          "distance": 90,
+          "nameSimilarity": 1,
+          "accepted": false
+        }
+      ]
+    },
+    {
+      "key": "상림마을8단지롯데캐슬(821~830동)BL1-12|서울 은평구 진관동",
+      "name": "상림마을8단지롯데캐슬(821~830동)BL1-12",
+      "area": "서울 은평구 진관동",
+      "oldStatus": "unmatched",
+      "thirdStatus": "still_unresolved",
+      "richgo": null,
+      "match": null,
+      "dongCatalog": "https://m.richgo.ai/realty/region/1138011400",
+      "candidates": []
+    },
+    {
+      "key": "에스케이뷰파크2차|화성 병점구 기산동",
+      "name": "에스케이뷰파크2차",
+      "area": "화성 병점구 기산동",
+      "oldStatus": "review_needed",
+      "thirdStatus": "verified_third_pass",
+      "richgo": {
+        "id": "a8ZXJuX",
+        "name": "SK뷰파크2차",
+        "far": 196,
+        "year": 2017,
+        "units": 1196,
+        "lat": 37.217105,
+        "lng": 127.053283,
+        "floors": "16~24층",
+        "heating": "지역난방 · 열병합",
+        "pyeongs": "25·33평",
+        "parking": "1,410대 (세대당 1.17대)",
+        "street": "경기도 화성시 병점구 동탄지성로 256",
+        "url": "https://m.richgo.ai/realty/danji/a8ZXJuX"
+      },
+      "match": {
+        "distanceMeters": 19,
+        "yearDelta": 0,
+        "unitsRatio": 0,
+        "nameSimilarity": 0.5555555555555556,
+        "method": "official_dong_catalog"
+      },
+      "dongCatalog": "https://m.richgo.ai/realty/region/4159510400",
+      "candidates": [
+        {
+          "id": "a8ZXJuX",
+          "name": "SK뷰파크2차",
+          "far": 196,
+          "units": 1196,
+          "year": 2017,
+          "distance": 19,
+          "nameSimilarity": 0.5555555555555556,
+          "accepted": true
+        }
+      ]
+    },
+    {
+      "key": "홍릉동부|서울 동대문구 청량리동",
+      "name": "홍릉동부",
+      "area": "서울 동대문구 청량리동",
+      "oldStatus": "review_needed",
+      "thirdStatus": "still_unresolved",
+      "richgo": null,
+      "match": null,
+      "dongCatalog": "https://m.richgo.ai/realty/region/1123010700",
+      "candidates": [
+        {
+          "id": "a9FqYvX",
+          "name": "홍릉동부",
+          "far": 299,
+          "units": 371,
+          "year": 2001,
+          "distance": 19,
+          "nameSimilarity": 1,
+          "accepted": false
+        }
+      ]
+    },
+    {
+      "key": "구파발9단지래미안(916~928동)BL3-2|서울 은평구 진관동",
+      "name": "구파발9단지래미안(916~928동)BL3-2",
+      "area": "서울 은평구 진관동",
+      "oldStatus": "unmatched",
+      "thirdStatus": "still_unresolved",
+      "richgo": null,
+      "match": null,
+      "dongCatalog": "https://m.richgo.ai/realty/region/1138011400",
+      "candidates": []
+    },
+    {
+      "key": "낙성대현대아파트|서울 관악구 봉천동",
+      "name": "낙성대현대아파트",
+      "area": "서울 관악구 봉천동",
+      "oldStatus": "unmatched",
+      "thirdStatus": "still_unresolved",
+      "richgo": null,
+      "match": null,
+      "dongCatalog": "https://m.richgo.ai/realty/region/1162010100",
+      "candidates": [
+        {
+          "id": "a4McfUV",
+          "name": "낙성대현대1차",
+          "far": 223,
+          "units": 251,
+          "year": 1988,
+          "distance": 69,
+          "nameSimilarity": 0.7142857142857143,
+          "accepted": false
+        },
+        {
+          "id": "a6Cpxov",
+          "name": "낙성대현대2차",
+          "far": 317,
+          "units": 122,
+          "year": 1998,
+          "distance": 672,
+          "nameSimilarity": 0.7142857142857143,
+          "accepted": false
+        },
+        {
+          "id": "a9tofov",
+          "name": "낙성대현대홈타운",
+          "far": 301,
+          "units": 297,
+          "year": 2002,
+          "distance": 970,
+          "nameSimilarity": 0.625,
+          "accepted": false
+        }
+      ]
+    },
+    {
+      "key": "그대家|서울 관악구 신림동",
+      "name": "그대家",
+      "area": "서울 관악구 신림동",
+      "oldStatus": "unmatched",
+      "thirdStatus": "still_unresolved",
+      "richgo": null,
+      "match": null,
+      "dongCatalog": "https://m.richgo.ai/realty/region/1162010200",
+      "candidates": [
+        {
+          "id": "a0TRzfF",
+          "name": "현대",
+          "far": 269,
+          "units": 336,
+          "year": 1991,
+          "distance": 1748,
+          "nameSimilarity": 0.5,
+          "accepted": false
+        }
+      ]
+    },
+    {
+      "key": "삼익|서울 동대문구 이문동",
+      "name": "삼익",
+      "area": "서울 동대문구 이문동",
+      "oldStatus": "review_needed",
+      "thirdStatus": "still_unresolved",
+      "richgo": null,
+      "match": null,
+      "dongCatalog": "https://m.richgo.ai/realty/region/1123011000",
+      "candidates": [
+        {
+          "id": "a8CseBF",
+          "name": "이문삼익",
+          "far": 397,
+          "units": 353,
+          "year": 1997,
+          "distance": 31,
+          "nameSimilarity": 0.5,
+          "accepted": false
+        }
+      ]
+    },
+    {
+      "key": "우물골2단지두산위브(209~222동)BL2-8|서울 은평구 진관동",
+      "name": "우물골2단지두산위브(209~222동)BL2-8",
+      "area": "서울 은평구 진관동",
+      "oldStatus": "unmatched",
+      "thirdStatus": "still_unresolved",
+      "richgo": null,
+      "match": null,
+      "dongCatalog": "https://m.richgo.ai/realty/region/1138011400",
+      "candidates": []
+    },
+    {
+      "key": "마고정3단지센트레빌(323~335동)BL2-2|서울 은평구 진관동",
+      "name": "마고정3단지센트레빌(323~335동)BL2-2",
+      "area": "서울 은평구 진관동",
+      "oldStatus": "unmatched",
+      "thirdStatus": "still_unresolved",
+      "richgo": null,
+      "match": null,
+      "dongCatalog": "https://m.richgo.ai/realty/region/1138011400",
+      "candidates": []
+    },
+    {
+      "key": "휘경베스트빌현대|서울 동대문구 휘경동",
+      "name": "휘경베스트빌현대",
+      "area": "서울 동대문구 휘경동",
+      "oldStatus": "review_needed",
+      "thirdStatus": "still_unresolved",
+      "richgo": null,
+      "match": null,
+      "dongCatalog": "https://m.richgo.ai/realty/region/1123010900",
+      "candidates": [
+        {
+          "id": "a1ggbbU",
+          "name": "휘경베스트빌현대",
+          "far": 362,
+          "units": 372,
+          "year": 2000,
+          "distance": 15,
+          "nameSimilarity": 1,
+          "accepted": false
+        },
+        {
+          "id": "a3DisTX",
+          "name": "휘경현대",
+          "far": 273,
+          "units": 146,
+          "year": 1992,
+          "distance": 1728,
+          "nameSimilarity": 0.5,
+          "accepted": false
+        }
+      ]
+    },
+    {
+      "key": "은평뉴타운 제각말 푸르지오(5-4단지)|서울 은평구 진관동",
+      "name": "은평뉴타운 제각말 푸르지오(5-4단지)",
+      "area": "서울 은평구 진관동",
+      "oldStatus": "review_needed",
+      "thirdStatus": "still_unresolved",
+      "richgo": null,
+      "match": null,
+      "dongCatalog": "https://m.richgo.ai/realty/region/1138011400",
+      "candidates": [
+        {
+          "id": "a0jqPZb",
+          "name": "은평뉴타운제각말5-4단지",
+          "far": 146,
+          "units": 412,
+          "year": 2010,
+          "distance": 28,
+          "nameSimilarity": 0.7142857142857143,
+          "accepted": false
+        },
+        {
+          "id": "a1oWCGZ",
+          "name": "은평뉴타운제각말5-2단지",
+          "far": 131,
+          "units": 175,
+          "year": 2010,
+          "distance": 345,
+          "nameSimilarity": 0.6428571428571428,
+          "accepted": false
+        },
+        {
+          "id": "a0Uoamp",
+          "name": "은평뉴타운상림8단지푸르지오",
+          "far": 139,
+          "units": 208,
+          "year": 2008,
+          "distance": 1209,
+          "nameSimilarity": 0.6428571428571428,
+          "accepted": false
+        },
+        {
+          "id": "a5uSPWm",
+          "name": "은평뉴타운상림5단지푸르지오",
+          "far": 149,
+          "units": 318,
+          "year": 2008,
+          "distance": 1376,
+          "nameSimilarity": 0.6428571428571428,
+          "accepted": false
+        }
+      ]
+    },
+    {
+      "key": "무궁화건영캐스빌|안양 동안구 호계동",
+      "name": "무궁화건영캐스빌",
+      "area": "안양 동안구 호계동",
+      "oldStatus": "unmatched",
+      "thirdStatus": "still_unresolved",
+      "richgo": null,
+      "match": null,
+      "dongCatalog": "https://m.richgo.ai/realty/region/4117310400",
+      "candidates": [
+        {
+          "id": "a6eFykz",
+          "name": "무궁화건영",
+          "far": 214,
+          "units": 468,
+          "year": 1992,
+          "distance": 76,
+          "nameSimilarity": 0.625,
+          "accepted": false
+        },
+        {
+          "id": "a1JQLNt",
+          "name": "무궁화태영",
+          "far": 208,
+          "units": 654,
+          "year": 1992,
+          "distance": 258,
+          "nameSimilarity": 0.5,
+          "accepted": false
+        }
+      ]
+    },
+    {
+      "key": "신봉마을엘지빌리지5차(B)|용인 수지구 신봉동",
+      "name": "신봉마을엘지빌리지5차(B)",
+      "area": "용인 수지구 신봉동",
+      "oldStatus": "unmatched",
+      "thirdStatus": "verified_third_pass",
+      "richgo": {
+        "id": "a7HFZYU",
+        "name": "신봉마을엘지빌리지5차(B)",
+        "far": 199,
+        "year": 2002,
+        "units": 556,
+        "lat": 37.325733,
+        "lng": 127.073983,
+        "floors": "18~20층",
+        "heating": "지역난방 · 열병합",
+        "pyeongs": "53·64평",
+        "parking": "1,235대 (세대당 2.22대)",
+        "street": "경기도 용인시 수지구 신봉1로 110",
+        "url": "https://m.richgo.ai/realty/danji/a7HFZYU"
+      },
+      "match": {
+        "distanceMeters": 80,
+        "yearDelta": 0,
+        "unitsRatio": 0,
+        "nameSimilarity": 1,
+        "method": "official_dong_catalog"
+      },
+      "dongCatalog": "https://m.richgo.ai/realty/region/4146510500",
+      "candidates": [
+        {
+          "id": "a7HFZYU",
+          "name": "신봉마을엘지빌리지5차(B)",
+          "far": 199,
+          "units": 556,
+          "year": 2002,
+          "distance": 80,
+          "nameSimilarity": 1,
+          "accepted": true
+        },
+        {
+          "id": "a6eqEzb",
+          "name": "신봉마을엘지빌리지5차(A)",
+          "far": 199,
+          "units": 532,
+          "year": 2002,
+          "distance": 133,
+          "nameSimilarity": 0.9166666666666666,
+          "accepted": false
+        }
+      ]
+    },
+    {
+      "key": "벽산블루밍2단지|용인 수지구 죽전동",
+      "name": "벽산블루밍2단지",
+      "area": "용인 수지구 죽전동",
+      "oldStatus": "unmatched",
+      "thirdStatus": "still_unresolved",
+      "richgo": null,
+      "match": null,
+      "dongCatalog": "https://m.richgo.ai/realty/region/4146510200",
+      "candidates": []
+    },
+    {
+      "key": "무궁화코오롱|안양 동안구 호계동",
+      "name": "무궁화코오롱",
+      "area": "안양 동안구 호계동",
+      "oldStatus": "review_needed",
+      "thirdStatus": "still_unresolved",
+      "richgo": null,
+      "match": null,
+      "dongCatalog": "https://m.richgo.ai/realty/region/4117310400",
+      "candidates": [
+        {
+          "id": "a5tYXmA",
+          "name": "무궁화코오롱",
+          "far": 208,
+          "units": 458,
+          "year": 1992,
+          "distance": 65,
+          "nameSimilarity": 1,
+          "accepted": false
+        },
+        {
+          "id": "a6eFykz",
+          "name": "무궁화건영",
+          "far": 214,
+          "units": 468,
+          "year": 1992,
+          "distance": 76,
+          "nameSimilarity": 0.5,
+          "accepted": false
+        },
+        {
+          "id": "a6kIsQD",
+          "name": "무궁화진흥",
+          "far": 211,
+          "units": 321,
+          "year": 1992,
+          "distance": 170,
+          "nameSimilarity": 0.5,
+          "accepted": false
+        },
+        {
+          "id": "a1JQLNt",
+          "name": "무궁화태영",
+          "far": 208,
+          "units": 654,
+          "year": 1992,
+          "distance": 258,
+          "nameSimilarity": 0.5,
+          "accepted": false
+        }
+      ]
+    },
+    {
+      "key": "신봉마을엘지빌리지5차(A)|용인 수지구 신봉동",
+      "name": "신봉마을엘지빌리지5차(A)",
+      "area": "용인 수지구 신봉동",
+      "oldStatus": "unmatched",
+      "thirdStatus": "verified_third_pass",
+      "richgo": {
+        "id": "a6eqEzb",
+        "name": "신봉마을엘지빌리지5차(A)",
+        "far": 199,
+        "year": 2002,
+        "units": 532,
+        "lat": 37.32628,
+        "lng": 127.073683,
+        "floors": "12~20층",
+        "heating": "지역난방 · 열병합",
+        "pyeongs": "53·64·81평",
+        "parking": "1,199대 (세대당 2.25대)",
+        "street": "경기도 용인시 수지구 신봉1로 110",
+        "url": "https://m.richgo.ai/realty/danji/a6eqEzb"
+      },
+      "match": {
+        "distanceMeters": 103,
+        "yearDelta": 0,
+        "unitsRatio": 0,
+        "nameSimilarity": 1,
+        "method": "official_dong_catalog"
+      },
+      "dongCatalog": "https://m.richgo.ai/realty/region/4146510500",
+      "candidates": [
+        {
+          "id": "a6eqEzb",
+          "name": "신봉마을엘지빌리지5차(A)",
+          "far": 199,
+          "units": 532,
+          "year": 2002,
+          "distance": 103,
+          "nameSimilarity": 1,
+          "accepted": true
+        },
+        {
+          "id": "a7HFZYU",
+          "name": "신봉마을엘지빌리지5차(B)",
+          "far": 199,
+          "units": 556,
+          "year": 2002,
+          "distance": 150,
+          "nameSimilarity": 0.9166666666666666,
+          "accepted": false
+        }
+      ]
+    },
+    {
+      "key": "상림마을6단지푸르지오(615~621동)BL1-6|서울 은평구 진관동",
+      "name": "상림마을6단지푸르지오(615~621동)BL1-6",
+      "area": "서울 은평구 진관동",
+      "oldStatus": "unmatched",
+      "thirdStatus": "still_unresolved",
+      "richgo": null,
+      "match": null,
+      "dongCatalog": "https://m.richgo.ai/realty/region/1138011400",
+      "candidates": []
+    },
+    {
+      "key": "우물골2단지두산위브(204~208동)BL2-5|서울 은평구 진관동",
+      "name": "우물골2단지두산위브(204~208동)BL2-5",
+      "area": "서울 은평구 진관동",
+      "oldStatus": "unmatched",
+      "thirdStatus": "still_unresolved",
+      "richgo": null,
+      "match": null,
+      "dongCatalog": "https://m.richgo.ai/realty/region/1138011400",
+      "candidates": []
+    },
+    {
+      "key": "이문휘경지웰에스테이트|서울 동대문구 휘경동",
+      "name": "이문휘경지웰에스테이트",
+      "area": "서울 동대문구 휘경동",
+      "oldStatus": "review_needed",
+      "thirdStatus": "still_unresolved",
+      "richgo": null,
+      "match": null,
+      "dongCatalog": "https://m.richgo.ai/realty/region/1123010900",
+      "candidates": [
+        {
+          "id": "a3cYMoD",
+          "name": "이문휘경지웰에스테이트(도시형)",
+          "far": 399,
+          "units": 280,
+          "year": 2021,
+          "distance": 42,
+          "nameSimilarity": 0.7857142857142857,
+          "accepted": false
+        }
+      ]
+    },
+    {
+      "key": "상림마을6단지푸르지오(606~614동)BL1-7|서울 은평구 진관동",
+      "name": "상림마을6단지푸르지오(606~614동)BL1-7",
+      "area": "서울 은평구 진관동",
+      "oldStatus": "unmatched",
+      "thirdStatus": "still_unresolved",
+      "richgo": null,
+      "match": null,
+      "dongCatalog": "https://m.richgo.ai/realty/region/1138011400",
+      "candidates": []
+    },
+    {
+      "key": "현대1|서울 은평구 신사동",
+      "name": "현대1",
+      "area": "서울 은평구 신사동",
+      "oldStatus": "unmatched",
+      "thirdStatus": "still_unresolved",
+      "richgo": null,
+      "match": null,
+      "dongCatalog": "https://m.richgo.ai/realty/region/1138010900",
+      "candidates": [
+        {
+          "id": "a9nhRkY",
+          "name": "현대2차",
+          "far": 350,
+          "units": 380,
+          "year": 1994,
+          "distance": 549,
+          "nameSimilarity": 0.5,
+          "accepted": false
+        }
+      ]
+    },
+    {
+      "key": "서원마을현대홈타운|용인 수지구 상현동",
+      "name": "서원마을현대홈타운",
+      "area": "용인 수지구 상현동",
+      "oldStatus": "review_needed",
+      "thirdStatus": "verified_third_pass",
+      "richgo": {
+        "id": "a9GrxnE",
+        "name": "성복역현대홈타운",
+        "far": 247,
+        "year": 2001,
+        "units": 462,
+        "lat": 37.309312,
+        "lng": 127.08172,
+        "floors": "18~20층",
+        "heating": "지역난방 · 열병합",
+        "pyeongs": "24·32평",
+        "parking": "563대 (세대당 1.21대)",
+        "street": "경기도 용인시 수지구 포은대로 231",
+        "url": "https://m.richgo.ai/realty/danji/a9GrxnE"
+      },
+      "match": {
+        "distanceMeters": 19,
+        "yearDelta": 0,
+        "unitsRatio": 0,
+        "nameSimilarity": 0.5555555555555556,
+        "method": "official_dong_catalog"
+      },
+      "dongCatalog": "https://m.richgo.ai/realty/region/4146510700",
+      "candidates": [
+        {
+          "id": "a9GrxnE",
+          "name": "성복역현대홈타운",
+          "far": 247,
+          "units": 462,
+          "year": 2001,
+          "distance": 19,
+          "nameSimilarity": 0.5555555555555556,
+          "accepted": true
+        },
+        {
+          "id": "a0QlxBF",
+          "name": "서원마을3단지아이파크",
+          "far": 199,
+          "units": 438,
+          "year": 2002,
+          "distance": 165,
+          "nameSimilarity": 0.4444444444444444,
+          "accepted": false
+        }
+      ]
+    },
+    {
+      "key": "신림2차푸르지오|서울 관악구 신림동",
+      "name": "신림2차푸르지오",
+      "area": "서울 관악구 신림동",
+      "oldStatus": "review_needed",
+      "thirdStatus": "still_unresolved",
+      "richgo": null,
+      "match": null,
+      "dongCatalog": "https://m.richgo.ai/realty/region/1162010200",
+      "candidates": [
+        {
+          "id": "a2gnxqK",
+          "name": "신림푸르지오2차",
+          "far": 194,
+          "units": 349,
+          "year": 2007,
+          "distance": 46,
+          "nameSimilarity": 0.5,
+          "accepted": false
+        },
+        {
+          "id": "a0gteOI",
+          "name": "신림푸르지오1차",
+          "far": 297,
+          "units": 1456,
+          "year": 2005,
+          "distance": 2158,
+          "nameSimilarity": 0.5,
+          "accepted": false
+        }
+      ]
+    },
+    {
+      "key": "상림마을8단지롯데캐슬(801~809동)BL1-2|서울 은평구 진관동",
+      "name": "상림마을8단지롯데캐슬(801~809동)BL1-2",
+      "area": "서울 은평구 진관동",
+      "oldStatus": "unmatched",
+      "thirdStatus": "still_unresolved",
+      "richgo": null,
+      "match": null,
+      "dongCatalog": "https://m.richgo.ai/realty/region/1138011400",
+      "candidates": []
+    },
+    {
+      "key": "상림마을6단지푸르지오(622~629동)BL1-5|서울 은평구 진관동",
+      "name": "상림마을6단지푸르지오(622~629동)BL1-5",
+      "area": "서울 은평구 진관동",
+      "oldStatus": "unmatched",
+      "thirdStatus": "still_unresolved",
+      "richgo": null,
+      "match": null,
+      "dongCatalog": "https://m.richgo.ai/realty/region/1138011400",
+      "candidates": []
+    },
+    {
+      "key": "은평뉴타운 제각말 푸르지오(5-1단지)|서울 은평구 진관동",
+      "name": "은평뉴타운 제각말 푸르지오(5-1단지)",
+      "area": "서울 은평구 진관동",
+      "oldStatus": "review_needed",
+      "thirdStatus": "still_unresolved",
+      "richgo": null,
+      "match": null,
+      "dongCatalog": "https://m.richgo.ai/realty/region/1138011400",
+      "candidates": [
+        {
+          "id": "a8tTxhJ",
+          "name": "은평뉴타운제각말5-1단지",
+          "far": 131,
+          "units": 330,
+          "year": 2010,
+          "distance": 19,
+          "nameSimilarity": 0.7142857142857143,
+          "accepted": false
+        },
+        {
+          "id": "a1oWCGZ",
+          "name": "은평뉴타운제각말5-2단지",
+          "far": 131,
+          "units": 175,
+          "year": 2010,
+          "distance": 178,
+          "nameSimilarity": 0.6428571428571428,
+          "accepted": false
+        },
+        {
+          "id": "a0jqPZb",
+          "name": "은평뉴타운제각말5-4단지",
+          "far": 146,
+          "units": 412,
+          "year": 2010,
+          "distance": 219,
+          "nameSimilarity": 0.6428571428571428,
+          "accepted": false
+        },
+        {
+          "id": "a0Uoamp",
+          "name": "은평뉴타운상림8단지푸르지오",
+          "far": 139,
+          "units": 208,
+          "year": 2008,
+          "distance": 1264,
+          "nameSimilarity": 0.6428571428571428,
+          "accepted": false
+        }
+      ]
+    },
+    {
+      "key": "구파발10단지어울림(1011~1019동)BL3-1|서울 은평구 진관동",
+      "name": "구파발10단지어울림(1011~1019동)BL3-1",
+      "area": "서울 은평구 진관동",
+      "oldStatus": "unmatched",
+      "thirdStatus": "still_unresolved",
+      "richgo": null,
+      "match": null,
+      "dongCatalog": "https://m.richgo.ai/realty/region/1138011400",
+      "candidates": []
+    },
+    {
+      "key": "장안삼성쉐르빌|서울 동대문구 장안동",
+      "name": "장안삼성쉐르빌",
+      "area": "서울 동대문구 장안동",
+      "oldStatus": "review_needed",
+      "thirdStatus": "still_unresolved",
+      "richgo": null,
+      "match": null,
+      "dongCatalog": "https://m.richgo.ai/realty/region/1123010600",
+      "candidates": [
+        {
+          "id": "a6ztGuz",
+          "name": "장안삼성쉐르빌",
+          "far": 809,
+          "units": 254,
+          "year": 2002,
+          "distance": 70,
+          "nameSimilarity": 1,
+          "accepted": false
+        }
+      ]
+    },
+    {
+      "key": "상림마을7단지아이파크(730~742동)BL1-14|서울 은평구 진관동",
+      "name": "상림마을7단지아이파크(730~742동)BL1-14",
+      "area": "서울 은평구 진관동",
+      "oldStatus": "unmatched",
+      "thirdStatus": "still_unresolved",
+      "richgo": null,
+      "match": null,
+      "dongCatalog": "https://m.richgo.ai/realty/region/1138011400",
+      "candidates": []
+    },
+    {
+      "key": "꽃메마을아이파크|용인 수지구 죽전동",
+      "name": "꽃메마을아이파크",
+      "area": "용인 수지구 죽전동",
+      "oldStatus": "review_needed",
+      "thirdStatus": "verified_third_pass",
+      "richgo": {
+        "id": "a3FKIIj",
+        "name": "꽃메마을아이파크",
+        "far": 199,
+        "year": 2004,
+        "units": 374,
+        "lat": 37.323954,
+        "lng": 127.120818,
+        "floors": "17~21층",
+        "heating": "지역난방 · 열병합",
+        "pyeongs": "39·45·51평",
+        "parking": "624대 (세대당 1.66대)",
+        "street": "경기도 용인시 수지구 죽전로 121",
+        "url": "https://m.richgo.ai/realty/danji/a3FKIIj"
+      },
+      "match": {
+        "distanceMeters": 11,
+        "yearDelta": 0,
+        "unitsRatio": 0,
+        "nameSimilarity": 1,
+        "method": "official_dong_catalog"
+      },
+      "dongCatalog": "https://m.richgo.ai/realty/region/4146510200",
+      "candidates": [
+        {
+          "id": "a3FKIIj",
+          "name": "꽃메마을아이파크",
+          "far": 199,
+          "units": 374,
+          "year": 2004,
+          "distance": 11,
+          "nameSimilarity": 1,
+          "accepted": true
+        },
+        {
+          "id": "a8mNDdp",
+          "name": "꽃메마을금강",
+          "far": 149,
+          "units": 120,
+          "year": 2004,
+          "distance": 525,
+          "nameSimilarity": 0.5,
+          "accepted": false
+        },
+        {
+          "id": "a3WbRld",
+          "name": "도담마을아이파크",
+          "far": null,
+          "units": 360,
+          "year": 1998,
+          "distance": 612,
+          "nameSimilarity": 0.75,
+          "accepted": false
+        },
+        {
+          "id": "a3iseNd",
+          "name": "도담마을죽전파크빌",
+          "far": 251,
+          "units": 561,
+          "year": 1997,
+          "distance": 551,
+          "nameSimilarity": 0.4444444444444444,
+          "accepted": false
+        }
+      ]
+    },
+    {
+      "key": "상현마을금호베스트빌2단지|용인 수지구 상현동",
+      "name": "상현마을금호베스트빌2단지",
+      "area": "용인 수지구 상현동",
+      "oldStatus": "review_needed",
+      "thirdStatus": "verified_third_pass",
+      "richgo": {
+        "id": "a3ryTxB",
+        "name": "상현마을금호베스트빌2단지",
+        "far": 249,
+        "year": 2001,
+        "units": 407,
+        "lat": 37.302819,
+        "lng": 127.079881,
+        "floors": "18~19층",
+        "heating": "지역난방 · 열병합",
+        "pyeongs": "52·66평",
+        "parking": "950대 (세대당 2.33대)",
+        "street": "경기도 용인시 수지구 상현로 58",
+        "url": "https://m.richgo.ai/realty/danji/a3ryTxB"
+      },
+      "match": {
+        "distanceMeters": 35,
+        "yearDelta": 0,
+        "unitsRatio": 0,
+        "nameSimilarity": 1,
+        "method": "official_dong_catalog"
+      },
+      "dongCatalog": "https://m.richgo.ai/realty/region/4146510700",
+      "candidates": [
+        {
+          "id": "a3ryTxB",
+          "name": "상현마을금호베스트빌2단지",
+          "far": 249,
+          "units": 407,
+          "year": 2001,
+          "distance": 35,
+          "nameSimilarity": 1,
+          "accepted": true
+        },
+        {
+          "id": "a0yCldt",
+          "name": "상현마을금호베스트빌3단지",
+          "far": 246,
+          "units": 159,
+          "year": 2002,
+          "distance": 164,
+          "nameSimilarity": 0.9090909090909091,
+          "accepted": false
+        },
+        {
+          "id": "a9HgeTh",
+          "name": "상현마을금호베스트빌4단지",
+          "far": 247,
+          "units": 224,
+          "year": 2002,
+          "distance": 264,
+          "nameSimilarity": 0.9090909090909091,
+          "accepted": false
+        },
+        {
+          "id": "a6kgaIb",
+          "name": "성복역금호베스트빌",
+          "far": 192,
+          "units": 890,
+          "year": 2002,
+          "distance": 535,
+          "nameSimilarity": 0.5454545454545454,
+          "accepted": false
+        }
+      ]
+    },
+    {
+      "key": "만현마을2단지아이파크|용인 수지구 상현동",
+      "name": "만현마을2단지아이파크",
+      "area": "용인 수지구 상현동",
+      "oldStatus": "review_needed",
+      "thirdStatus": "verified_third_pass",
+      "richgo": {
+        "id": "a7HpMpK",
+        "name": "만현마을2단지아이파크",
+        "far": 197,
+        "year": 2002,
+        "units": 404,
+        "lat": 37.310119,
+        "lng": 127.08841,
+        "floors": "16~19층",
+        "heating": "지역난방 · 열병합",
+        "pyeongs": "39·50·67평",
+        "parking": "743대 (세대당 1.83대)",
+        "street": "경기도 용인시 수지구 만현로67번길 9",
+        "url": "https://m.richgo.ai/realty/danji/a7HpMpK"
+      },
+      "match": {
+        "distanceMeters": 37,
+        "yearDelta": 0,
+        "unitsRatio": 0,
+        "nameSimilarity": 1,
+        "method": "official_dong_catalog"
+      },
+      "dongCatalog": "https://m.richgo.ai/realty/region/4146510700",
+      "candidates": [
+        {
+          "id": "a7HpMpK",
+          "name": "만현마을2단지아이파크",
+          "far": 197,
+          "units": 404,
+          "year": 2002,
+          "distance": 37,
+          "nameSimilarity": 1,
+          "accepted": true
+        },
+        {
+          "id": "a7fyqjq",
+          "name": "만현마을5단지아이파크",
+          "far": 226,
+          "units": 528,
+          "year": 2002,
+          "distance": 214,
+          "nameSimilarity": 0.8888888888888888,
+          "accepted": false
+        },
+        {
+          "id": "a0epOkO",
+          "name": "만현마을1단지롯데캐슬",
+          "far": 227,
+          "units": 992,
+          "year": 2002,
+          "distance": 249,
+          "nameSimilarity": 0.4444444444444444,
+          "accepted": false
+        },
+        {
+          "id": "a0QlxBF",
+          "name": "서원마을3단지아이파크",
+          "far": 199,
+          "units": 438,
+          "year": 2002,
+          "distance": 711,
+          "nameSimilarity": 0.6666666666666667,
+          "accepted": false
+        }
+      ]
+    },
+    {
+      "key": "현대2|서울 은평구 신사동",
+      "name": "현대2",
+      "area": "서울 은평구 신사동",
+      "oldStatus": "unmatched",
+      "thirdStatus": "verified_third_pass",
+      "richgo": {
+        "id": "a9nhRkY",
+        "name": "현대2차",
+        "far": 350,
+        "year": 1994,
+        "units": 380,
+        "lat": 37.598227,
+        "lng": 126.907138,
+        "floors": "13~19층",
+        "heating": "개별난방 · 도시가스",
+        "pyeongs": "31평",
+        "parking": "272대 (세대당 0.71대)",
+        "street": "서울시 은평구 가좌로 344",
+        "url": "https://m.richgo.ai/realty/danji/a9nhRkY"
+      },
+      "match": {
+        "distanceMeters": 33,
+        "yearDelta": 0,
+        "unitsRatio": 0.0026246719160104987,
+        "nameSimilarity": 0.75,
+        "method": "official_dong_catalog"
+      },
+      "dongCatalog": "https://m.richgo.ai/realty/region/1138010900",
+      "candidates": [
+        {
+          "id": "a9nhRkY",
+          "name": "현대2차",
+          "far": 350,
+          "units": 380,
+          "year": 1994,
+          "distance": 33,
+          "nameSimilarity": 0.75,
+          "accepted": true
+        }
+      ]
+    },
+    {
+      "key": "도담마을힐스테이트4차1단지|용인 수지구 죽전동",
+      "name": "도담마을힐스테이트4차1단지",
+      "area": "용인 수지구 죽전동",
+      "oldStatus": "unmatched",
+      "thirdStatus": "verified_third_pass",
+      "richgo": {
+        "id": "a5AVclZ",
+        "name": "도담마을현대홈타운4차1단지",
+        "far": 196,
+        "year": 2003,
+        "units": 351,
+        "lat": 37.325642,
+        "lng": 127.116364,
+        "floors": "11~15층",
+        "heating": "지역난방 · 열병합",
+        "pyeongs": "38·45·50평",
+        "parking": "591대 (세대당 1.68대)",
+        "street": "경기도 용인시 수지구 푸른솔로 55",
+        "url": "https://m.richgo.ai/realty/danji/a5AVclZ"
+      },
+      "match": {
+        "distanceMeters": 14,
+        "yearDelta": 0,
+        "unitsRatio": 0,
+        "nameSimilarity": 0.5833333333333333,
+        "method": "official_dong_catalog"
+      },
+      "dongCatalog": "https://m.richgo.ai/realty/region/4146510200",
+      "candidates": [
+        {
+          "id": "a5AVclZ",
+          "name": "도담마을현대홈타운4차1단지",
+          "far": 196,
+          "units": 351,
+          "year": 2003,
+          "distance": 14,
+          "nameSimilarity": 0.5833333333333333,
+          "accepted": true
+        },
+        {
+          "id": "a2jWAKz",
+          "name": "내대지마을힐스테이트",
+          "far": 179,
+          "units": 120,
+          "year": 2004,
+          "distance": 1254,
+          "nameSimilarity": 0.5,
+          "accepted": false
+        }
+      ]
+    },
+    {
+      "key": "한신|용인 수지구 죽전동",
+      "name": "한신",
+      "area": "용인 수지구 죽전동",
+      "oldStatus": "review_needed",
+      "thirdStatus": "still_unresolved",
+      "richgo": null,
+      "match": null,
+      "dongCatalog": "https://m.richgo.ai/realty/region/4146510200",
+      "candidates": [
+        {
+          "id": "a3FdqPT",
+          "name": "대주한신",
+          "far": 310,
+          "units": 311,
+          "year": 1998,
+          "distance": 34,
+          "nameSimilarity": 0.5,
+          "accepted": false
+        }
+      ]
+    },
+    {
+      "key": "역촌센트레빌|서울 은평구 역촌동",
+      "name": "역촌센트레빌",
+      "area": "서울 은평구 역촌동",
+      "oldStatus": "unmatched",
+      "thirdStatus": "verified_third_pass",
+      "richgo": {
+        "id": "a3CaxEn",
+        "name": "역촌센트레빌",
+        "far": 223,
+        "year": 2011,
+        "units": 400,
+        "lat": 37.60338,
+        "lng": 126.906077,
+        "floors": "10~15층",
+        "heating": "개별난방 · 도시가스",
+        "pyeongs": "23·33·44평",
+        "parking": "477대 (세대당 1.19대)",
+        "street": "서울시 은평구 갈현로3나길 23",
+        "url": "https://m.richgo.ai/realty/danji/a3CaxEn"
+      },
+      "match": {
+        "distanceMeters": 31,
+        "yearDelta": 0,
+        "unitsRatio": 0,
+        "nameSimilarity": 1,
+        "method": "official_dong_catalog"
+      },
+      "dongCatalog": "https://m.richgo.ai/realty/region/1138010800",
+      "candidates": [
+        {
+          "id": "a3CaxEn",
+          "name": "역촌센트레빌",
+          "far": 223,
+          "units": 400,
+          "year": 2011,
+          "distance": 31,
+          "nameSimilarity": 1,
+          "accepted": true
+        }
+      ]
+    },
+    {
+      "key": "성복아이파크|용인 수지구 성복동",
+      "name": "성복아이파크",
+      "area": "용인 수지구 성복동",
+      "oldStatus": "unmatched",
+      "thirdStatus": "verified_third_pass",
+      "richgo": {
+        "id": "a1GHxZL",
+        "name": "용인성복아이파크",
+        "far": 193,
+        "year": 2012,
+        "units": 351,
+        "lat": 37.322515,
+        "lng": 127.06134,
+        "floors": "10~20층",
+        "heating": "지역난방 · 열병합",
+        "pyeongs": "34·41·47평",
+        "parking": "493대 (세대당 1.40대)",
+        "street": "경기도 용인시 수지구 성복1로 222",
+        "url": "https://m.richgo.ai/realty/danji/a1GHxZL"
+      },
+      "match": {
+        "distanceMeters": 26,
+        "yearDelta": 0,
+        "unitsRatio": 0,
+        "nameSimilarity": 0.75,
+        "method": "official_dong_catalog"
+      },
+      "dongCatalog": "https://m.richgo.ai/realty/region/4146510600",
+      "candidates": [
+        {
+          "id": "a1GHxZL",
+          "name": "용인성복아이파크",
+          "far": 193,
+          "units": 351,
+          "year": 2012,
+          "distance": 26,
+          "nameSimilarity": 0.75,
+          "accepted": true
+        }
+      ]
+    },
+    {
+      "key": "광교쌍용포레듀엔|용인 수지구 상현동",
+      "name": "광교쌍용포레듀엔",
+      "area": "용인 수지구 상현동",
+      "oldStatus": "unmatched",
+      "thirdStatus": "still_unresolved",
+      "richgo": null,
+      "match": null,
+      "dongCatalog": "https://m.richgo.ai/realty/region/4146510700",
+      "candidates": [
+        {
+          "id": "a0HGdml",
+          "name": "광교쌍용포레듀엔",
+          "far": 251,
+          "units": 987,
+          "year": 2001,
+          "distance": 132,
+          "nameSimilarity": 1,
+          "accepted": false
+        }
+      ]
+    },
+    {
+      "key": "광교쌍용포레듀엔(2-B)|용인 수지구 상현동",
+      "name": "광교쌍용포레듀엔(2-B)",
+      "area": "용인 수지구 상현동",
+      "oldStatus": "unmatched",
+      "thirdStatus": "still_unresolved",
+      "richgo": null,
+      "match": null,
+      "dongCatalog": "https://m.richgo.ai/realty/region/4146510700",
+      "candidates": [
+        {
+          "id": "a0HGdml",
+          "name": "광교쌍용포레듀엔",
+          "far": 251,
+          "units": 987,
+          "year": 2001,
+          "distance": 78,
+          "nameSimilarity": 0.8,
+          "accepted": false
+        }
+      ]
+    },
+    {
+      "key": "광교현대프레미오|용인 수지구 상현동",
+      "name": "광교현대프레미오",
+      "area": "용인 수지구 상현동",
+      "oldStatus": "unmatched",
+      "thirdStatus": "verified_third_pass",
+      "richgo": {
+        "id": "a1coSGH",
+        "name": "광교현대프레미오",
+        "far": 226,
+        "year": 2001,
+        "units": 300,
+        "lat": 37.307312,
+        "lng": 127.073522,
+        "floors": "11~20층",
+        "heating": "지역난방 · 열병합",
+        "pyeongs": "45·60·67·75평",
+        "parking": "672대 (세대당 2.24대)",
+        "street": "경기도 용인시 수지구 수지로 41",
+        "url": "https://m.richgo.ai/realty/danji/a1coSGH"
+      },
+      "match": {
+        "distanceMeters": 33,
+        "yearDelta": 0,
+        "unitsRatio": 0,
+        "nameSimilarity": 1,
+        "method": "official_dong_catalog"
+      },
+      "dongCatalog": "https://m.richgo.ai/realty/region/4146510700",
+      "candidates": [
+        {
+          "id": "a1coSGH",
+          "name": "광교현대프레미오",
+          "far": 226,
+          "units": 300,
+          "year": 2001,
+          "distance": 33,
+          "nameSimilarity": 1,
+          "accepted": true
+        }
+      ]
+    },
+    {
+      "key": "갈현1단지e-편한세상|서울 은평구 구산동",
+      "name": "갈현1단지e-편한세상",
+      "area": "서울 은평구 구산동",
+      "oldStatus": "unmatched",
+      "thirdStatus": "verified_third_pass",
+      "richgo": {
+        "id": "a8Tcyul",
+        "name": "갈현e-편한세상1단지",
+        "far": 300,
+        "year": 2004,
+        "units": 327,
+        "lat": 37.612159,
+        "lng": 126.906368,
+        "floors": "17~22층",
+        "heating": "개별난방 · 도시가스",
+        "pyeongs": "24·32·44평",
+        "parking": "399대 (세대당 1.22대)",
+        "street": "서울시 은평구 서오릉로21길 47",
+        "url": "https://m.richgo.ai/realty/danji/a8Tcyul"
+      },
+      "match": {
+        "distanceMeters": 34,
+        "yearDelta": 0,
+        "unitsRatio": 0,
+        "nameSimilarity": 0.75,
+        "method": "official_dong_catalog"
+      },
+      "dongCatalog": "https://m.richgo.ai/realty/region/1138010500",
+      "candidates": [
+        {
+          "id": "a8Tcyul",
+          "name": "갈현e-편한세상1단지",
+          "far": 300,
+          "units": 327,
+          "year": 2004,
+          "distance": 34,
+          "nameSimilarity": 0.75,
+          "accepted": true
+        },
+        {
+          "id": "a6BIXmS",
+          "name": "e-편한세상2단지",
+          "far": 237,
+          "units": 122,
+          "year": 2004,
+          "distance": 85,
+          "nameSimilarity": 0.5,
+          "accepted": false
+        }
+      ]
+    },
+    {
+      "key": "갈현동현대|서울 은평구 갈현동",
+      "name": "갈현동현대",
+      "area": "서울 은평구 갈현동",
+      "oldStatus": "review_needed",
+      "thirdStatus": "still_unresolved",
+      "richgo": null,
+      "match": null,
+      "dongCatalog": "https://m.richgo.ai/realty/region/1138010400",
+      "candidates": [
+        {
+          "id": "a9ARVOT",
+          "name": "갈현현대",
+          "far": 261,
+          "units": 278,
+          "year": 1997,
+          "distance": 40,
+          "nameSimilarity": 0.8,
+          "accepted": false
+        }
+      ]
+    },
+    {
+      "key": "경남아너스빌|서울 은평구 구산동",
+      "name": "경남아너스빌",
+      "area": "서울 은평구 구산동",
+      "oldStatus": "unmatched",
+      "thirdStatus": "verified_third_pass",
+      "richgo": {
+        "id": "a8puovn",
+        "name": "경남아너스빌",
+        "far": 268,
+        "year": 2004,
+        "units": 475,
+        "lat": 37.605754,
+        "lng": 126.905499,
+        "floors": "7~20층",
+        "heating": "개별난방 · 도시가스",
+        "pyeongs": "24·32·33·44평",
+        "parking": "627대 (세대당 1.32대)",
+        "street": "서울시 은평구 갈현로11길 46",
+        "url": "https://m.richgo.ai/realty/danji/a8puovn"
+      },
+      "match": {
+        "distanceMeters": 18,
+        "yearDelta": 0,
+        "unitsRatio": 0,
+        "nameSimilarity": 1,
+        "method": "official_dong_catalog"
+      },
+      "dongCatalog": "https://m.richgo.ai/realty/region/1138010500",
+      "candidates": [
+        {
+          "id": "a8puovn",
+          "name": "경남아너스빌",
+          "far": 268,
+          "units": 475,
+          "year": 2004,
+          "distance": 18,
+          "nameSimilarity": 1,
+          "accepted": true
+        }
+      ]
+    },
+    {
+      "key": "더샵서초|서울 서초구 서초동",
+      "name": "더샵서초",
+      "area": "서울 서초구 서초동",
+      "oldStatus": "unmatched",
+      "thirdStatus": "verified_third_pass",
+      "richgo": {
+        "id": "a8DcVIC",
+        "name": "더샵서초",
+        "far": 699,
+        "year": 2006,
+        "units": 329,
+        "lat": 37.484115,
+        "lng": 127.018345,
+        "floors": "20~32층",
+        "heating": "지역난방 · 열병합",
+        "pyeongs": "13·14·35·43·50·52·53·56·68·69·78·86평",
+        "parking": "1,127대 (세대당 3.42대)",
+        "street": "서울시 서초구 서초중앙로2길 21",
+        "url": "https://m.richgo.ai/realty/danji/a8DcVIC"
+      },
+      "match": {
+        "distanceMeters": 87,
+        "yearDelta": 0,
+        "unitsRatio": 0.006042296072507553,
+        "nameSimilarity": 1,
+        "method": "official_dong_catalog"
+      },
+      "dongCatalog": "https://m.richgo.ai/realty/region/1165010800",
+      "candidates": [
+        {
+          "id": "a8DcVIC",
+          "name": "더샵서초",
+          "far": 699,
+          "units": 329,
+          "year": 2006,
+          "distance": 87,
+          "nameSimilarity": 1,
+          "accepted": true
+        },
+        {
+          "id": "a0kEHoT",
+          "name": "유원서초",
+          "far": 265,
+          "units": 590,
+          "year": 1993,
+          "distance": 1404,
+          "nameSimilarity": 0.5,
+          "accepted": false
+        }
+      ]
+    },
+    {
+      "key": "샛별한양4-3|안양 동안구 비산동",
+      "name": "샛별한양4-3",
+      "area": "안양 동안구 비산동",
+      "oldStatus": "unmatched",
+      "thirdStatus": "still_unresolved",
+      "richgo": null,
+      "match": null,
+      "dongCatalog": "https://m.richgo.ai/realty/region/4117310100",
+      "candidates": [
+        {
+          "id": "a3MLtkM",
+          "name": "샛별한양2",
+          "far": 208,
+          "units": 1482,
+          "year": 1993,
+          "distance": 218,
+          "nameSimilarity": 0.8333333333333334,
+          "accepted": false
+        },
+        {
+          "id": "a2VNrus",
+          "name": "샛별한양1단지",
+          "far": 204,
+          "units": 1262,
+          "year": 1993,
+          "distance": 211,
+          "nameSimilarity": 0.6666666666666667,
+          "accepted": false
+        }
+      ]
+    },
+    {
+      "key": "은행주공|성남 중원구 은행동",
+      "name": "은행주공",
+      "area": "성남 중원구 은행동",
+      "oldStatus": "review_needed",
+      "thirdStatus": "still_unresolved",
+      "richgo": null,
+      "match": null,
+      "dongCatalog": "https://m.richgo.ai/realty/region/4113310400",
+      "candidates": [
+        {
+          "id": "a5SCpxE",
+          "name": "은행주공1",
+          "far": 116,
+          "units": 1900,
+          "year": 1987,
+          "distance": 128,
+          "nameSimilarity": 1,
+          "accepted": false
+        },
+        {
+          "id": "a7OmlkM",
+          "name": "은행주공2",
+          "far": null,
+          "units": 110,
+          "year": 1987,
+          "distance": 308,
+          "nameSimilarity": 1,
+          "accepted": false
+        },
+        {
+          "id": "a5uAdwE",
+          "name": "은행현대",
+          "far": 208,
+          "units": 1258,
+          "year": 1995,
+          "distance": 1021,
+          "nameSimilarity": 0.5,
+          "accepted": false
+        }
+      ]
+    },
+    {
+      "key": "은행주공2|성남 중원구 은행동",
+      "name": "은행주공2",
+      "area": "성남 중원구 은행동",
+      "oldStatus": "review_needed",
+      "thirdStatus": "still_unresolved",
+      "richgo": null,
+      "match": null,
+      "dongCatalog": "https://m.richgo.ai/realty/region/4113310400",
+      "candidates": [
+        {
+          "id": "a5SCpxE",
+          "name": "은행주공1",
+          "far": 116,
+          "units": 1900,
+          "year": 1987,
+          "distance": 128,
+          "nameSimilarity": 0.8,
+          "accepted": false
+        },
+        {
+          "id": "a7OmlkM",
+          "name": "은행주공2",
+          "far": null,
+          "units": 110,
+          "year": 1987,
+          "distance": 308,
+          "nameSimilarity": 1,
+          "accepted": false
+        }
+      ]
+    },
+    {
+      "key": "죽전현대1차|용인 수지구 죽전동",
+      "name": "죽전현대1차",
+      "area": "용인 수지구 죽전동",
+      "oldStatus": "unmatched",
+      "thirdStatus": "verified_third_pass",
+      "richgo": {
+        "id": "a3FVKzI",
+        "name": "현대1차",
+        "far": 243,
+        "year": 1999,
+        "units": 702,
+        "lat": 37.331929,
+        "lng": 127.129313,
+        "floors": "16~20층",
+        "heating": "지역난방 · 열병합",
+        "pyeongs": "23·33·45·53평",
+        "parking": "713대 (세대당 1.01대)",
+        "street": "경기도 용인시 수지구 죽전로 244",
+        "url": "https://m.richgo.ai/realty/danji/a3FVKzI"
+      },
+      "match": {
+        "distanceMeters": 32,
+        "yearDelta": 0,
+        "unitsRatio": 0,
+        "nameSimilarity": 0.6666666666666667,
+        "method": "official_dong_catalog"
+      },
+      "dongCatalog": "https://m.richgo.ai/realty/region/4146510200",
+      "candidates": [
+        {
+          "id": "a3FVKzI",
+          "name": "현대1차",
+          "far": 243,
+          "units": 702,
+          "year": 1999,
+          "distance": 32,
+          "nameSimilarity": 0.6666666666666667,
+          "accepted": true
+        }
+      ]
+    },
+    {
+      "key": "효성백년가약|안양 동안구 호계동",
+      "name": "효성백년가약",
+      "area": "안양 동안구 호계동",
+      "oldStatus": "unmatched",
+      "thirdStatus": "still_unresolved",
+      "richgo": null,
+      "match": null,
+      "dongCatalog": "https://m.richgo.ai/realty/region/4117310400",
+      "candidates": []
+    }
+  ]
+}
