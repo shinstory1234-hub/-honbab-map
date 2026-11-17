@@ -1,0 +1,40 @@
+name: Dryrun Richgo direct truth all 237 unresolved cap10
+on:
+  push:
+    branches: [audit/richgo-6to10-top300-20261118]
+    paths: [.github/workflows/richgo-cap10-force237-dryrun.yml]
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  preview:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: audit/richgo-6to10-top300-20261118
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Preview each public-page Richgo override; no GitHub commits
+        run: |
+          node --check scripts/apply-richgo-cap10-force237-final.cjs
+          unset GITHUB_TOKEN
+          node scripts/apply-richgo-cap10-force237-final.cjs
+          node - <<'NODE'
+          const fs=require('fs');
+          let rows=fs.readFileSync('docs/richgo-6to10-force237-final-20261118.csv','utf8').split('\n');
+          console.log('PREVIEW_APPLIED_EXAMPLES');
+          rows.filter(z=>z.includes('audit8_richgo_verified')).slice(0,50).forEach(z=>console.log(z.slice(0,270)));
+          console.log('PREVIEW_STILL_PENDING');
+          rows.filter(z=>z.includes('identity_mismatch')||z.includes('source_not_found')||z.includes('ambiguous_two')).slice(0,55).forEach(z=>console.log(z.slice(0,270)));
+          NODE
+      - uses: actions/upload-artifact@v4
+        with:
+          name: richgo-force237-dryrun
+          path: |
+            docs/richgo-6to10-force237-final-20261118.csv
+            docs/richgo-6to10-force237-no-source-20261118.csv
+            docs/richgo-6to10-force237-final-report-20261118.md
+          retention-days: 14
