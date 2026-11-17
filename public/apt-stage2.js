@@ -121,7 +121,24 @@ function rivalsTab(){
  +'<div class="s2-flex"><button class="s2-btn on" id="s2RaceRun">비교하기</button></div>'
  +'<div id="s2RaceOutput" role="status"></div><p>같은 분기 양쪽 각각 2건 이상의 거래만 표시합니다. 다른 전용면적·동·향에 따른 가격차이는 별도 보정하지 않습니다.</p>';
 }
-var contents={view:viewTab,filters:filtersTab,nav:navTab,saved:savedTab,rivals:rivalsTab},tabnames=[['view','현재 화면'],['filters','추가 조건'],['nav','지도'],['saved','저장함'],['rivals','라이벌']];
+function livingTab(){
+ const selected=D.find(d=>key(d)===livingPick);
+ const recentPool=recent.map(k=>D.find(d=>key(d)===k)).filter(Boolean);
+ const pool=[...(selected?[selected]:[]),...(recentPool.length?recentPool:D.slice().sort((a,b)=>a.rank-b.rank).slice(0,10))].filter((d,i,a)=>a.findIndex(x=>key(x)===key(d))===i);
+ const chosen=selected||pool[0];if(!chosen)return '<p>분석할 단지가 없습니다.</p>';
+ const g=chosen.g||{},cur=chosen.cur;
+ const fields=[
+ ['교통',cur&&Number.isFinite(cur.m)?cur.n+' · 역까지 직선거리 '+Math.round(cur.m)+'m':'확인된 역 정보 없음',cur&&Number.isFinite(cur.v)?cur.v.toFixed(1)+' / 23점':'평가값 없음'],
+ ['직주근접',Number.isFinite(chosen.tbe)?'기준 통근 '+Math.round(chosen.tbe)+'분':'기준 통근 자료 없음',Number.isFinite(chosen.J)?chosen.J.toFixed(1)+' / 9점':'평가값 없음'],
+ ['학군',g.scn?'인근 초등학교 '+g.scn:'학교명 자료 없음',Number.isFinite(chosen.E)?chosen.E.toFixed(1)+' / 6점':'평가값 없음'],
+ ['생활환경','기존 생활환경 평가',Number.isFinite(chosen.A)?chosen.A.toFixed(1)+'점':'평가값 없음'],
+ ['단지 규모',Number.isFinite(chosen.units)?chosen.units.toLocaleString()+'세대':'세대수 자료 없음',Number.isFinite(chosen.U7)?chosen.U7.toFixed(1)+'점':'평가값 없음'],
+ ['연식',chosen.year?chosen.year+'년 준공':'준공연도 자료 없음',Number.isFinite(chosen.B)?chosen.B.toFixed(1)+'점':'평가값 없음']
+ ];
+ return '<h3>실거주 요소별 평가</h3><div class="s2-cols"><label class="s2-wide">단지 선택<select id="s2LivingPick">'+pool.map(d=>'<option value="'+esc(key(d))+'"'+(chosen===d?' selected':'')+'>'+esc(name(d))+'</option>').join('')+'</select></label><label class="s2-wide">다른 단지 검색<input id="s2LivingSearch" type="search" placeholder="단지명 검색" autocomplete="off"></label></div><div id="s2LivingMatches"></div><div class="s2-chip"><b>'+esc(name(chosen))+'</b><br>'+esc(chosen.area)+' · 추천 '+chosen.rank+'위</div><ul class="s2-rows">'+fields.map(x=>'<li><div><b>'+esc(x[0])+'</b><small>'+esc(x[1])+'</small></div><b>'+esc(x[2])+'</b></li>').join('')+'</ul><p>기존 평가값을 실거주 관점에서 설명합니다. 항목마다 배점이 다르므로 합산한 별도 실거주 총점이나 순위가 아닙니다. 동호수별 일조·소음·조망은 평가하지 않았습니다.</p>';
+}
+var livingPick=null;
+var contents={view:viewTab,filters:filtersTab,nav:navTab,saved:savedTab,rivals:rivalsTab,living:livingTab},tabnames=[['view','현재 화면'],['filters','추가 조건'],['nav','지도'],['saved','저장함'],['rivals','라이벌'],['living','실거주']];
 function open(t){mapReady();if(t)tab=t;if(!panel){panel=document.createElement('div');panel.className='s2-shade';panel.id='s2Shade';panel.innerHTML='<section class="s2-dialog" role="dialog" aria-modal="true" aria-label="탐색 도구"><header class="s2-top"><h2>탐색 도구</h2><button class="s2-btn" id="s2Close">닫기 ×</button></header><nav class="s2-tabs" role="tablist"></nav><div class="s2-body"></div></section>';document.body.appendChild(panel);panel.addEventListener('click',e=>{if(e.target===panel)close();});document.addEventListener('keydown',escClose);}paint();}
 function escClose(e){if(e.key==='Escape')close();}
 function close(){if(panel){panel.remove();panel=null;document.removeEventListener('keydown',escClose);}}
@@ -150,6 +167,15 @@ function paint(){
    try{await navigator.clipboard.writeText(u.href);note('조건과 지도 위치를 포함한 링크를 복사했습니다.');}catch(e){prompt('링크 복사',u.href);}
   };
   body.querySelector('#s2ClearHistory').onclick=()=>{recent=[];try{localStorage.removeItem(recKey);}catch(e){}paint();};
+ }
+ if(tab==='living'){
+  const picker=body.querySelector('#s2LivingPick'),input=body.querySelector('#s2LivingSearch'),matches=body.querySelector('#s2LivingMatches');
+  picker.onchange=e=>{livingPick=e.target.value;paint();};
+  input.oninput=()=>{
+   const q=input.value.trim(),found=q?searchIndex(q):[];
+   matches.innerHTML=found.map(d=>'<button type="button" class="s2-btn" data-s2living="'+D.indexOf(d)+'">'+esc(name(d))+' · '+esc(d.area)+'</button>').join('');
+   matches.querySelectorAll('[data-s2living]').forEach(b=>b.onclick=()=>{livingPick=key(D[+b.dataset.s2living]);paint();});
+  };
  }
  if(tab==='rivals'){
   body.querySelectorAll('[data-rival]').forEach(s=>s.onchange=e=>{rivals[+s.dataset.rival]=e.target.value||null;});
