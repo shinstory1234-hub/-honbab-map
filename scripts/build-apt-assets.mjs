@@ -121,7 +121,7 @@ export function buildAptAssets(root, output = path.join(root, 'public')) {
     context.window = context;
     vm.runInNewContext(bootstrap[1], context);
     const ordered = files.flatMap(file => file === 'apt-richgo15.js' ? [] : file === 'apt-picks10.js'
-      ? [file, `apt-invest${cap === 35 ? 30 : cap}.js`, 'apt-research-over6-top100.js', 'apt-invest-ui.js']
+      ? [file, `apt-invest${cap}.js`, 'apt-research-over6-top100.js', 'apt-invest-ui.js']
       : file === 'apt-first.js' ? [] : [file]);
     const urls = []; let chunk = [], names = [];
     const flush = () => { if (chunk.length) urls.push(writeAsset(chunk.join('\n;\n'), names)); chunk = []; names = []; };
@@ -131,6 +131,9 @@ export function buildAptAssets(root, output = path.join(root, 'public')) {
       let code = fs.readFileSync(path.join(sourceDir, file), 'utf8');
       if(cap===15&&(file==='apt-univ15.js'||file==='apt-farfix.js'))code=applyRichgo15AtBuild(code,file,root);
       if(cap===15&&file==='apt-unitfix.js')code=applyRichgo15AtBuild(code,file,root);
+      if(cap===25&&file==='apt-far-normalize.js')code+='\n'+fs.readFileSync(path.join(sourceDir,'apt-richgo25.js'),'utf8');
+      if(cap===30&&file==='apt-far-normalize.js')code+='\n'+fs.readFileSync(path.join(sourceDir,'apt-richgo30-integrated.js'),'utf8');
+      if(cap===35&&file==='apt-r35.js')code+='\n'+fs.readFileSync(path.join(sourceDir,'apt-richgo35-corrections.js'),'utf8');
       if (file === 'apt-picks10.js') code = code.replace(/^if\(document\.write\).*$/m, '');
       if (cap === 6 && file === 'apt-s4.js' && peak6) { code = code.replace(peak6.from, peak6.to); if (peak6.estFrom) code = code.replace(peak6.estFrom, peak6.estTo); }
       // 6억 이하 탭에서는 고밀도 감점 함수가 항상 0이다. 높은 가격대 전용 코드는 6억 탭 번들에서 제외(순위 불변).
