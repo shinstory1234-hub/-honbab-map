@@ -84,6 +84,18 @@ function applyRichgo15AtBuild(code,file,root) {
 
 /* 6~10억 verified Richgo source substitution directly inside existing packed dataset.
    Loaded only for cap10, so it cannot alter older source tabs or live transaction prices. */
+/* Compact cap30-only packed record numeric coordinates (losslessly restored on hydration).
+   Same reversible offsets already deployed for cap15. Never alter other price tabs. */
+function compactCap30Universe(code,file){
+ const start=code.indexOf(',R=['),end=code.indexOf('];\nconst TB=',start);
+ const area=code.indexOf('const A=[');
+ if(start<0||end<0||area<0||!code.includes('for(const r of R){'))return code;
+ const rows=JSON.parse(code.slice(start+3,end+1));
+ for(const r of rows){if(!Array.isArray(r)||!Number.isFinite(r[4])||!Number.isFinite(r[6])||!Number.isFinite(r[7]))throw Error('Invalid packed universe '+file);r[4]-=2000;r[6]-=3700000;r[7]-=12600000;}
+ const packed=code.slice(0,start+3)+JSON.stringify(rows)+code.slice(end+1);
+ return packed.replace('for(const r of R){','for(const r of R){r[4]+=2000;r[6]+=3700000;r[7]+=12600000;');
+}
+
 function getRichgo10Rows(root){
  const s=fs.readFileSync(path.join(root,'docs','richgo-6to10-full-coverage-20261118.csv'),'utf8').replace(/^\uFEFF/,'');
  const out=[];let line=[],cell='',quote=false;
@@ -115,7 +127,11 @@ function applyRichgo10AtBuild(code,file,root){
    if(units!=null&&units>0)r[5]=units;
   }
   if(found.size!==by.size)throw new Error('Richgo10 missing packed rows '+(by.size-found.size));
-  return code.slice(0,start+3)+JSON.stringify(records)+code.slice(end+1);
+  for(const r of records){r[4]-=2000;r[6]-=3700000;r[7]-=12600000;}
+  const packed=code.slice(0,start+3)+JSON.stringify(records)+code.slice(end+1);
+  const anchor='for(const r of R){';
+  if(!packed.includes(anchor))throw new Error('Richgo10 coordinate restore anchor not found');
+  return packed.replace(anchor,'for(const r of R){r[4]+=2000;r[6]+=3700000;r[7]+=12600000;');
  }
  if(file==='apt-farfix.js'){
   for(const [k,s] of by){const n=v(s.richgo_far);if(!(n>0))continue;const a=JSON.stringify(k)+': [';const i=code.indexOf(a);if(i<0)continue;
@@ -189,6 +205,7 @@ export function buildAptAssets(root, output = path.join(root, 'public')) {
       if (file === 'apt-live.js' || file === 'apt-live6.js' || file === 'apt-geo.js') { flush(); urls.push(file); continue; }
       let code = fs.readFileSync(path.join(sourceDir, file), 'utf8');
       if(cap===10&&['apt-univ10.js','apt-farfix.js','apt-unitfix.js'].includes(file))code=applyRichgo10AtBuild(code,file,root);
+      if(cap===30&&/^apt-univ(?:10|15|20|30)\.js$/.test(file))code=compactCap30Universe(code,file);
       if(cap===15&&(file==='apt-univ15.js'||file==='apt-farfix.js'))code=applyRichgo15AtBuild(code,file,root);
       if(cap===15&&file==='apt-unitfix.js')code=applyRichgo15AtBuild(code,file,root);
       if(cap===25&&file==='apt-far-normalize.js')code+='\n'+fs.readFileSync(path.join(sourceDir,'apt-richgo25.js'),'utf8');
@@ -233,7 +250,7 @@ export function buildAptAssets(root, output = path.join(root, 'public')) {
   const key = /const KAKAO_JS_KEY='([^']+)'/.exec(app)?.[1];
   if (key) html = html.replace('</head>', `<link rel="preload" as="script" href="https://dapi.kakao.com/v2/maps/sdk.js?appkey=${key}&amp;libraries=services&amp;autoload=false">\n</head>`);
   // 전송량: 첫 HTML의 <style> 안 CSS 주석·들여쓰기만 제거(규칙은 그대로)
-  html = html.replace(/<style>([\s\S]*?)<\/style>/g, (m, c) => '<style>' + c.replace(/\/\*[\s\S]*?\*\//g, '').replace(/\n\s*/g, '\n').replace(/([;{}])\n/g, '$1').replace(/[ \t]+([;{}])/g, '$1').replace(/([;{}])[ \t]+/g, '$1') + '</style>');
+  html = html.replace(/<style>([\s\S]*?)<\/style>/g, (m, c) => '<style>' + c.replace(/\/\*[\s\S]*?\*\//g, '').replace(/\n\s*/g, '\n').replace(/([;{}])\n/g, '$1').replace(/[ \t]+([;{}])/g, '$1').replace(/([;{}])[ \t]+/g, '$1').replace(/,\s+/g, ',').replace(/;}/g, '}') + '</style>');
   // 전송량: 첫 HTML 안 인라인 스크립트도 주석·공백만 제거(이름·식 그대로)
   html = html.replace(/<script>([\s\S]*?)<\/script>/g, (m, c) => '<script>' + minifyKeep(c, 'inline.js') + '</script>');
   // Drop the only nonfunctional HTML comment in the production artifact (not source).
