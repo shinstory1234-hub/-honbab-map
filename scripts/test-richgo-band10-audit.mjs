@@ -3,7 +3,7 @@ import path from 'node:path';
 import vm from 'node:vm';
 import zlib from 'node:zlib';
 import assert from 'node:assert/strict';
-import {patchRichgoCap10Source} from './apply-richgo-band10.mjs';
+import {patchRichgoCap10Source,appendRichgoCap10FinalOverrides} from './apply-richgo-band10.mjs';
 
 const root=path.resolve('.');
 const input=fs.readFileSync('public/apt-univ10.js','utf8');
@@ -43,5 +43,19 @@ for(const x of records){
  if(x.year!==undefined)assert.equal(d.year,x.year,k);
  if(x.units!==undefined)assert.equal(d.units,x.units,k);
 }
+const ending=appendRichgoCap10FinalOverrides('',root);
+const finalCtx=apply(input);
+vm.runInContext(ending,finalCtx);
+assert.equal(finalCtx.RICHGO10_FINAL?.checked,records.length);
+const finalByKey=new Map(finalCtx.PICKS.map(d=>[toKey(d),d]));
+for(const row of records){
+ const k=row.name+'|'+row.area, d=finalByKey.get(k);
+ if('far' in row)assert.equal(finalCtx.FARD[k]?.[0],row.far,'final FAR precedence '+k);
+ if('year' in row)assert.equal(d?.year,row.year,'final year '+k);
+ if('units' in row)assert.equal(d?.units,row.units,'final unit '+k);
+}
+const noCapCtx=apply(input);noCapCtx.CAPT=6;
+vm.runInContext(ending,noCapCtx);
+assert.equal(noCapCtx.RICHGO10_FINAL,undefined,'6억 이하 must be untouched');
 const statuses=Object.groupBy(audited.records,r=>r.status);
 console.log('Richgo band10 300 audit PASS;',records.length,'unique corrected;',Object.fromEntries(Object.entries(statuses).map(([k,v])=>[k,v.length])));
