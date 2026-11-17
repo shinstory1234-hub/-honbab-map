@@ -47,8 +47,9 @@ const lookups=ranks.map(d=>{const reg=region(d.area).join('|');let candidates=[.
 // Reuse independently verified IDs from the first 300 whenever the same complex appears in a different flat size.
 const previous=JSON.parse(fs.readFileSync('docs/richgo-20to25-top300-audit-20261118.json','utf8')).audited;
 const previouslyVerified=new Map(previous.filter(x=>x.status==='직접대조').map(x=>[x.name+'|'+x.area,x.richgoId]));
-const manualIds={};for(const d of lookups){const id=previouslyVerified.get(d.name+'|'+d.area);if(id)manualIds[d.rank]=id;}
-const mergedSourceRanks=new Set();
+const manuallyFoundIds={"302":"a6kmGjM","303":"a8AXyDf","304":"a6aOjev","307":"a1jZSNG","317":"a4zbqFY","323":"a7TXBrD","331":"a1hIszJ","336":"a7TXBrD","342":"a8IlEcP","347":"a4XONIH","348":"a5pqmuN","356":"a5kycZx","359":"a4zRukm","363":"a9AQCxz","367":"a8DcVIC","368":"a3bHXBm","369":"a4FYnXO"};
+const manualIds={...manuallyFoundIds};for(const d of lookups){const id=previouslyVerified.get(d.name+'|'+d.area);if(id)manualIds[d.rank]=id;}
+const mergedSourceRanks=new Set([323,336,356]);
 for(const d of lookups){const id=manualIds[d.rank];if(!id)continue;d.candidates=[{id,name:d.name,sim:1,manual:true},...d.candidates.filter(x=>x.id!==id)].slice(0,6);}
 const idList=[...new Set(lookups.flatMap(x=>x.candidates.map(y=>y.id)))];
 console.log('Matched candidate names '+lookups.filter(x=>x.candidates.length>0).length+'/'+ranks.length+', reading '+idList.length+' unique detail pages.');
@@ -99,7 +100,7 @@ const audited=lookups.map(x=>{
    const confidence=(dongOk?2:0)+(yearDiff<=2?2:yearDiff<=5?1:0)+(nameSim>=.88?3:nameSim>=.75?2:nameSim>=.56?1:0)+(unitsRatio>=.95?2:unitsRatio>=.5?1:0)+(z.manual?4:0);
    return {...d,conf:confidence,dongOk,yearDiff,nameSim,unitsRatio,metres,manual:!!z.manual};}).sort((a,b)=>b.conf-a.conf||b.nameSim-a.nameSim);
  const best=alternatives[0];const second=alternatives[1];const geoSafe=best?.metres!==null&&best?.metres!==undefined&&best.metres<=500;
- const manualSafe=geoSafe&&best?.manual&&best.status===200&&best.dongOk&&best.yearDiff<=3&&best.unitsRatio>=(mergedSourceRanks.has(x.rank)?0.3:0.75);
+ const manualSafe=geoSafe&&best?.manual&&best.status===200&&best.dongOk&&best.yearDiff<=3&&best.unitsRatio>=(mergedSourceRanks.has(x.rank)?0.15:0.75);
  const safe=manualSafe||(geoSafe&&best&&best.status===200&&best.dongOk&&best.nameSim>=.56&&best.yearDiff<=5&&(best.conf>=5)&&(!second||best.conf>=second.conf+1||best.nameSim>second.nameSim+.12));
  const status=safe?'직접대조':best?'매칭불확실':'리치고미매칭';
  const source=safe?best:{};
