@@ -13,29 +13,36 @@ import zlib from 'node:zlib';
    한 번 더 로드되는 교정 스크립트를 만들지 않아 gzip·요청 수 예산을 지킨다. */
 function applyRichgo15AtBuild(code,file,root) {
  const spec=JSON.parse(fs.readFileSync(path.join(root,'docs','richgo-10to15-verified-corrections.json'),'utf8'));
+ const far=spec.far||{}, year=spec.year||{}, units=spec.units||{};
  if(file==='apt-univ15.js'){
    const start=code.indexOf(',R=['),end=code.indexOf('];\nconst TB=',start);
    const areaStart=code.indexOf('const A=['),areaEnd=code.indexOf('],',areaStart);
    if(start<0||end<0||areaStart<0||areaEnd<0)throw new Error('Richgo15: cannot locate packed apartment universe');
    const areas=JSON.parse(code.slice(areaStart+8,areaEnd+1));
    const rows=JSON.parse(code.slice(start+3,end+1));
-   let matched=0,yearFixed=0;
+   let nFar=0,nYear=0,nUnits=0;
    for(const row of rows){
      const key=row[0]+'|'+areas[row[1]];
-     if(Object.hasOwn(spec.far,key)){
-       row[22][0]=spec.far[key];row[22][1]='리치고';matched++;
-     }
-     if(Object.hasOwn(spec.year,key)){row[4]=spec.year[key];yearFixed++;}
+     if(Object.hasOwn(far,key)){row[22][0]=far[key];row[22][1]='리치고';nFar++;}
+     if(Object.hasOwn(year,key)){row[4]=year[key];nYear++;}
+     if(Object.hasOwn(units,key)){row[5]=units[key];nUnits++;}
    }
-   if(matched!==Object.keys(spec.far).length||yearFixed!==Object.keys(spec.year).length)
-     throw new Error('Richgo15 unmatched complex: '+matched+' FAR, '+yearFixed+' year');
+   if(nFar!==Object.keys(far).length||nYear!==Object.keys(year).length||nUnits!==Object.keys(units).length)
+     throw new Error('Richgo15 unmatched: '+nFar+' FAR, '+nYear+' year, '+nUnits+' units');
    return code.slice(0,start+3)+JSON.stringify(rows)+code.slice(end+1);
  }
  if(file==='apt-farfix.js'){
-   const key='시범한양|성남 분당구 서현동';
-   const token='"'+key+'": [217, "건축물대장 대지면적·연면적으로 계산"]';
-   if(!code.includes(token))throw new Error('Richgo15 farfix override anchor missing');
-   return code.replace(token,'"'+key+'": ['+spec.far[key]+', "리치고"]');
+   let patched=0;
+   for(const [key,value] of Object.entries(far)){
+     const prefix=JSON.stringify(key)+': [';
+     const i=code.indexOf(prefix);
+     if(i<0)continue;
+     const end=code.indexOf(']',i+prefix.length);
+     if(end<0)throw new Error('Richgo15 invalid farfix '+key);
+     code=code.slice(0,i)+JSON.stringify(key)+': ['+value+', "리치고"]'+code.slice(end+1);
+     patched++;
+   }
+   return code;
  }
  return code;
 }
