@@ -9,17 +9,17 @@ const rows=csv(read('docs/richgo-over30-current-top300-20261118.csv'));
 assert.equal(rows.length,300);
 assert.deepEqual(rows.map(x=>Number(x.rank)),Array.from({length:300},(_,i)=>i+1));
 const confirmed=rows.filter(x=>x.status==='직접대조');assert.equal(confirmed.length,210);
-const eligible=confirmed.filter(x=>Number(x.richgo_far)>0);assert.equal(eligible.length,196);
+const eligible=confirmed.filter(x=>Number(x.richgo_far)>0);assert.equal(eligible.length,197);
 const school={window:null};school.window=school;vm.runInNewContext(read('public/apt-invest35.js'),school);
-assert.equal(school.RICHGO35_RESTORED.length,74);
+assert.equal(school.RICHGO35_RESTORED.length,80);
 const apply=(cap)=>{
  const W={CAPT:cap,PICKS:rows.map(x=>({n:x.name,area:x.area,year:+x.map_year||+x.richgo_year,units:+x.map_units||+x.richgo_units,p:666666,types:[{py:34,p:666666}]})),FARD:{},PLAT:{}};
  for(const d of W.PICKS)W.FARD[d.n+'|'+d.area]=[0,''];
  W.window=W;vm.runInNewContext(read('public/apt-r35.js'),W);return W;
 };
 const W=apply(35);
-assert.equal(W.RICHGO35_APPLIED.verified,196);
-assert.equal(W.RICHGO35_APPLIED.matched,196);
+assert.equal(W.RICHGO35_APPLIED.verified,197);
+assert.equal(W.RICHGO35_APPLIED.matched,197);
 assert.equal(W.RICHGO35_APPLIED.conflict,0);
 for(const x of eligible){
  const k=x.name+'|'+x.area;
@@ -33,4 +33,4 @@ for(const cap of [6,10,15,20,25,30]){
 }
 assert.ok(read('public/apt-univ35.js').includes('O.push(...(root.RICHGO35_RESTORED||[]))'));
 assert.ok(read('public/apt-map.html').includes("c>30?'apt-r35.js':''"));
-console.log('30억 이상 순위 상위300, 직접확인 210, 용적률 196, 누락복원 74, 타 가격대 불변: PASS');
+console.log('30억 이상 순위 상위300, 직접확인 210, 용적률 197, 누락복원 80, 타 가격대 불변: PASS');
