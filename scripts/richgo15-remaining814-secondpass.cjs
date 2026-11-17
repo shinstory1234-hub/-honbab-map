@@ -2,7 +2,7 @@
 /* Independently recheck the 51 unresolved cap15 entries; protect split complexes. */
 const fs=require('node:fs'),path=require('node:path'),root=path.resolve(__dirname,'..');
 const pathOf=p=>path.join(root,p),csvFile='docs/richgo-10to15-remaining814-20261118.csv',specFile='docs/richgo-10to15-verified-corrections.json';
-function csv(s){let table=[],row=[],v='',q=false;for(let i=0;i<s.length;i++){const c=s[i];if(q){if(c==='"'&&s[i+1]==='"'){v+='"';i++}else if(c==='"')q=false;else v+=c;}else if(c==='\n'){row.push(v.replace(/\r$/,''));table.push(row);row=[];v=''}else if(c===','){row.push(v);v=''}else v+=c;}const header=table.shift();return {header,rows:table.filter(r=>r.length===header.length).map(r=>Object.fromEntries(header.map((k,j)=>[k,r[j]])))};}
+function csv(s){let table=[],row=[],v='',q=false;for(let i=0;i<s.length;i++){const c=s[i];if(q){if(c==='"'&&s[i+1]==='"'){v+='"';i++}else if(c==='"')q=false;else v+=c;}else if(c==='"')q=true;else if(c==='\n'){row.push(v.replace(/\r$/,''));table.push(row);row=[];v=''}else if(c===','){row.push(v);v=''}else v+=c;}const header=table.shift();return {header,rows:table.filter(r=>r.length===header.length).map(r=>Object.fromEntries(header.map((k,j)=>[k,r[j]])))};}
 const esc=x=>{x=String(x??'');return /[",\n\r]/.test(x)?'"'+x.replace(/"/g,'""')+'"':x};
 const num=x=>{if(x==null||String(x).trim()==='')return null;const v=Number(String(x).replaceAll(',','').replace(/[^\d.-]/g,''));return Number.isFinite(v)?v:null;};
 const clean=s=>String(s||'').replace(/<[^>]*>/g,'').replace(/&#x([0-9a-f]+);/ig,(_,x)=>String.fromCodePoint(parseInt(x,16))).replace(/&#(\d+);/g,(_,x)=>String.fromCodePoint(+x)).replace(/&amp;/g,'&').replace(/\s+/g,' ').trim();
