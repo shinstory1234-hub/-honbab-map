@@ -32,14 +32,14 @@ function applyRichgo15AtBuild(code,file,root) {
      throw new Error('Richgo15 unmatched: '+nFar+' FAR, '+nKb+' KB fallback, '+nYear+' year, '+nUnits+' units');
    // Store cap15 completion years as a compact offset from 2000; the decoding
    // restores the exact original value before any apartment is instantiated.
-   for(const row of rows)row[4]-=2000;
+   for(const row of rows){row[4]-=2000;row[6]-=3700000;row[7]-=12600000;}
    const packed=code.slice(0,start+3)+JSON.stringify(rows)+code.slice(end+1);
    const marker='  F[k]=fd;';
    if(!packed.includes(marker))throw new Error('Richgo15 source decoder anchor missing');
    const coded=packed.replace(marker,"  if(fd[0]!=null&&fd[1]==='')fd[1]='리치고';if(fd[1]==='K')fd[1]='KB부동산';\n"+marker);
    const loop='for(const r of R){';
    if(!coded.includes(loop))throw new Error('Richgo15 completion year decoder anchor missing');
-   return coded.replace(loop,'for(const r of R){r[4]+=2000;');
+   return coded.replace(loop,'for(const r of R){r[4]+=2000;r[6]+=3700000;r[7]+=12600000;');
  }
  if(file==='apt-unitfix.js'){
    // Source K-apt corrections are subsequently applied by fixUnits() and could
