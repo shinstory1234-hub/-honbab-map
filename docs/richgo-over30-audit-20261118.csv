@@ -1,0 +1,22 @@
+﻿seq,name,area,map_seed_units,richgo_units,units_match,map_seed_year,richgo_year,year_match,map_seed_far_pct,richgo_far_pct,seed_far_diff_pp,result,richgo_source_url
+1,래미안원베일리,서울 서초구 반포동,2990,2990,true,2023,2023,true,300,299,-1,개별 공개 단지정보 확인(브랜치 전용 보정),https://m.richgo.ai/realty/danji/a8ysXJE
+2,래미안원펜타스,서울 서초구 반포동,641,641,true,2024,2024,true,300,299,-1,개별 공개 단지정보 확인(브랜치 전용 보정),https://m.richgo.ai/realty/danji/a9YMOSF
+3,아크로리버파크,서울 서초구 반포동,1612,1612,true,2016,2016,true,300,299,-1,개별 공개 단지정보 확인(브랜치 전용 보정),https://m.richgo.ai/realty/danji/a3QuPzX
+4,반포자이,서울 서초구 반포동,3410,3410,true,2009,2009,true,270,270,0,개별 공개 단지정보 확인(브랜치 전용 보정),https://m.richgo.ai/realty/danji/a6jGQXZ
+5,래미안퍼스티지,서울 서초구 반포동,2444,2444,true,2009,2009,true,270,269,-1,개별 공개 단지정보 확인(브랜치 전용 보정),https://m.richgo.ai/realty/danji/a1GKgZM
+6,메이플자이,서울 서초구 잠원동,3307,3307,true,2025,2025,true,299,296,-3,개별 공개 단지정보 확인(브랜치 전용 보정),https://m.richgo.ai/realty/danji/a4qLSFI
+7,신반포르엘,서울 서초구 잠원동,330,330,true,2023,2023,true,,299,,개별 공개 단지정보 확인(브랜치 전용 보정),https://m.richgo.ai/realty/danji/a0Fhmcn
+8,잠실르엘,서울 송파구 신천동,1865,1865,true,2026,2026,true,,299,,개별 공개 단지정보 확인(브랜치 전용 보정),https://m.richgo.ai/realty/danji/a5YFxWm
+9,갤러리아포레,서울 성동구 성수동1가,230,230,true,2011,2011,true,400,399,-1,개별 공개 단지정보 확인(브랜치 전용 보정),https://m.richgo.ai/realty/danji/a9UzMBR
+10,아크로서울포레스트,서울 성동구 성수동1가,280,280,true,2020,2021,false,599,599,0,개별 공개 단지정보 확인(브랜치 전용 보정),https://m.richgo.ai/realty/danji/a8oncCj
+11,나인원한남,서울 용산구 한남동,341,341,true,2019,2019,true,147,147,0,개별 공개 단지정보 확인(브랜치 전용 보정),https://m.richgo.ai/realty/danji/a1fSGYw
+12,한남더힐,서울 용산구 한남동,600,600,true,2011,2011,true,120,120,0,개별 공개 단지정보 확인(브랜치 전용 보정),https://m.richgo.ai/realty/danji/a1HHjwH
+13,브라이튼N40,서울 강남구 논현동,148,148,true,2022,2022,true,199,199,0,개별 공개 단지정보 확인(브랜치 전용 보정),https://m.richgo.ai/realty/danji/a5pxwri
+14,목동신시가지3,서울 양천구 목동,1588,1588,true,1986,1986,true,,122,,개별 공개 단지정보 확인(브랜치 전용 보정),https://m.richgo.ai/realty/danji/a6bwQVq
+15,목동신시가지5,서울 양천구 목동,1848,1848,true,1986,1986,true,,116,,개별 공개 단지정보 확인(브랜치 전용 보정),https://m.richgo.ai/realty/danji/a2AEaaR
+16,목동신시가지7,서울 양천구 목동,2550,2550,true,1986,1986,true,,125,,개별 공개 단지정보 확인(브랜치 전용 보정),https://m.richgo.ai/realty/danji/a6OaHQh
+17,한양1차(영동한양),서울 강남구 압구정동,936,936,true,1977,1977,true,,211,,개별 공개 단지정보 확인(브랜치 전용 보정),https://m.richgo.ai/realty/danji/a1aWokz
+18,한양2,서울 강남구 압구정동,296,296,true,1978,1978,true,,143,,개별 공개 단지정보 확인(브랜치 전용 보정),https://m.richgo.ai/realty/danji/a5TvlRH
+19,한양3,서울 강남구 압구정동,312,312,true,1978,1978,true,,198,,개별 공개 단지정보 확인(브랜치 전용 보정),https://m.richgo.ai/realty/danji/a5sghGy
+20,청담르엘,서울 강남구 청담동,1261,1261,true,2025,2025,true,,,,"리치고 공개 페이지 용적률 공란, 보정 보류",https://m.richgo.ai/realty/danji/a5ZWnhV
+21,신현대11차,서울 강남구 압구정동,559,1924,false,1983,1982,false,,,,"리치고 신현대 9·11·12차 통합 단지와 불일치, 적용 보류",https://m.richgo.ai/realty/danji/a4SpHZT
