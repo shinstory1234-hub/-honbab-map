@@ -34,7 +34,10 @@ for(const d of verified){
  }
  if(d.unitsComparable===false) {
    noncomparable++;
-   assert.equal(x.units,b.units,'do not overwrite distinct block units with whole-site total '+k);
+   if([271,301,314].includes(d.rank)) {
+     assert.equal(x.units,d.mapUnits,'restore individual block even if old bundled patches already changed it '+k);
+     assert.equal((live.UNITFIX_M3||{})[k]?.[0],d.mapUnits,'individual block effective units '+k);
+   } else assert.equal(x.units,b.units,'do not overwrite distinct block units with whole-site total '+k);
  } else if(d.richgoUnits!==null){
    const effective=(live.UNITFIX_M3||{})[k]?.[0]??(live.UNITFIX||{})[k]?.[0]??x.units;
    assert.equal(effective,d.richgoUnits,'Richgo effective site units '+k);
