@@ -35,8 +35,13 @@ try:
         base=json.load(f)
     source_kind='exact-rank-bt-livecur-20261118'
 except (OSError,ValueError):
-    base=static_fallback()
-    source_kind='static-band-candidates-not-a-current-ranking'
+    try:
+        with open('docs/richgo25to30-fallback-targets-20261118.json',encoding='utf-8') as f:
+            base=json.load(f)
+        source_kind='map-complexes-from-static-and-20261118-bt_livecur-not-ranked'
+    except (OSError,ValueError):
+        base=static_fallback()
+        source_kind='static-band-candidates-not-a-current-ranking'
 targets=[dict(seq=i+1,rank=r.get('rank'),name=r['name'],area=r['area'],
               year=r['year'],units=r['units'],py=r['py'],price=r['price'],
               far=r.get('far'),far_source=r.get('far_source','')) for i,r in enumerate(base['rows'])]
