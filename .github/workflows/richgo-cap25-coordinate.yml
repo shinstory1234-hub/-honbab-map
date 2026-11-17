@@ -1,0 +1,38 @@
+name: Richgo cap25 coordinate crosscheck
+on:
+  push:
+    branches:
+      - audit/richgo-20to25-top300-20261118
+    paths:
+      - 'scripts/richgo-cap25-geocheck.mjs'
+      - '.github/workflows/richgo-cap25-coordinate.yml'
+permissions:
+  contents: write
+concurrency:
+  group: richgo-cap25-coordinate
+  cancel-in-progress: true
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
+        with:
+          node-version: '22'
+      - run: node scripts/richgo-cap25-geocheck.mjs
+      - name: Save coordinate evidence
+        run: |
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git config user.name "github-actions[bot]"
+          git add docs/richgo-20to25-top300-coordinate-summary-20261118.json
+          git add -f docs/richgo-20to25-top300-coordinate-audit-20261118.csv
+          if ! git diff --cached --quiet; then
+            git commit -m "audit: verify all 300 Richgo complex coordinates"
+            for attempt in 1 2 3 4; do
+              git pull --rebase origin "$GITHUB_REF_NAME"
+              if git push origin HEAD:"$GITHUB_REF_NAME"; then break; fi
+              if [ "$attempt" = "4" ]; then exit 1; fi
+              sleep 3
+            done
+          fi
