@@ -203,7 +203,7 @@ export function buildAptAssets(root, output = path.join(root, 'public')) {
         code = code.slice(0, a) + 'function s4DensityAdj(d){return {pen:0,far:null,src:null};}' + code.slice(b);
       }
       if (/document\.write\s*\(/.test(code)) throw new Error(`Unexpanded script dependency: ${file}`);
-      if((cap===15&&file==='apt-univ15.js')||(cap===10&&file==='apt-univ10.js')||(cap===30&&file==='apt-univ30.js')){
+      if((cap===15&&file==='apt-univ15.js')||((cap===10||cap===30)&&/^(?:apt-univ(?:10|15|20|30|add)|apt-farplan|apt-cur)\.js$/.test(file))){
         // Cap15's raw-data audit raised the payload; safe local-only Terser shortening
         // keeps the strict global transfer budget intact without dropping any fields.
         const out=terser.minify_sync({[file]:code},{
@@ -233,7 +233,7 @@ export function buildAptAssets(root, output = path.join(root, 'public')) {
   const key = /const KAKAO_JS_KEY='([^']+)'/.exec(app)?.[1];
   if (key) html = html.replace('</head>', `<link rel="preload" as="script" href="https://dapi.kakao.com/v2/maps/sdk.js?appkey=${key}&amp;libraries=services&amp;autoload=false">\n</head>`);
   // 전송량: 첫 HTML의 <style> 안 CSS 주석·들여쓰기만 제거(규칙은 그대로)
-  html = html.replace(/<style>([\s\S]*?)<\/style>/g, (m, c) => '<style>' + c.replace(/\/\*[\s\S]*?\*\//g, '').replace(/\n\s*/g, '\n') + '</style>');
+  html = html.replace(/<style>([\s\S]*?)<\/style>/g, (m, c) => '<style>' + c.replace(/\/\*[\s\S]*?\*\//g, '').replace(/\n\s*/g, '\n').replace(/([;{}])\n/g, '$1') + '</style>');
   // 전송량: 첫 HTML 안 인라인 스크립트도 주석·공백만 제거(이름·식 그대로)
   html = html.replace(/<script>([\s\S]*?)<\/script>/g, (m, c) => '<script>' + minifyKeep(c, 'inline.js') + '</script>');
   // Drop the only nonfunctional HTML comment in the production artifact (not source).
