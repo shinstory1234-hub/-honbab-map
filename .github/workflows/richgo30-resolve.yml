@@ -1,0 +1,38 @@
+name: Richgo cap30 second pass official search and coordinates
+on:
+  push:
+    branches:
+      - audit/richgo-25to30-top300-20261118
+    paths:
+      - 'scripts/resolve-richgo30-full.cjs'
+      - '.github/workflows/richgo30-resolve.yml'
+permissions:
+  contents: write
+jobs:
+  resolve:
+    runs-on: ubuntu-latest
+    timeout-minutes: 35
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+        with:
+          persist-credentials: true
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
+        with:
+          node-version: '22'
+      - name: Search only missing named complexes with Richgo documented MCP and verify detail coordinates
+        run: |
+          node --check scripts/resolve-richgo30-full.cjs
+          node scripts/resolve-richgo30-full.cjs
+      - name: Commit second-pass source evidence
+        if: always()
+        run: |
+          if [ -s docs/richgo30-resolved-20261118.json ]; then
+            git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+            git config user.name "github-actions[bot]"
+            git add -f docs/richgo30-resolved-20261118.json docs/richgo30-secondpass-20261118.json
+            if ! git diff --cached --quiet; then
+              git commit -m "audit: preserve second-pass cap30 official source identity data"
+              git pull --rebase origin audit/richgo-25to30-top300-20261118
+              git push origin HEAD:audit/richgo-25to30-top300-20261118
+            fi
+          fi
