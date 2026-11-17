@@ -12,7 +12,7 @@ const k=(n,area)=>n+'|'+area;
 const base25=make(25),pre1=base25.PICKS.find(d=>k(d.n,d.area)==='극동1|서울 광진구 광장동'),
   pre2=base25.PICKS.find(d=>k(d.n,d.area)==='극동2|서울 광진구 광장동');
 assert.equal(pre1.units,1344);assert.equal(pre2.units,1344);
-const baselinePrices=new Map(base25.PICKS.map(d=>[k(d.n,d.area),JSON.stringify(d.types)]));
+const baselinePrices=base25.PICKS.map(d=>JSON.stringify(d.types));
 vm.runInContext(load('apt-richgo25.js'),base25,{filename:'apt-richgo25.js'});
 assert.equal(base25.RICHGO25_APPLIED.verified,6);
 assert.equal(base25.RICHGO25_APPLIED.matched,6);
@@ -35,7 +35,7 @@ for(const [name,units] of [['극동1',448],['극동2',896]]){
  assert.equal(d.units,units);
  assert.equal(base25.UNITFIX_M3[key][0],units);
 }
-for(const d of base25.PICKS)assert.equal(JSON.stringify(d.types),baselinePrices.get(k(d.n,d.area)),'prices must be unchanged');
+for(let i=0;i<base25.PICKS.length;i++)assert.equal(JSON.stringify(base25.PICKS[i].types),baselinePrices[i],'prices must be unchanged');
 assert.equal(base25.FARD['극동2|서울 광진구 광장동'][0],null,'Richgo does not publish 2차 FAR');
 for(const cap of [6,10,15,20,30,35]){
  const c=make(cap),k1=k('극동1','서울 광진구 광장동'),k2=k('극동2','서울 광진구 광장동');
