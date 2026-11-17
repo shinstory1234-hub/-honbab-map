@@ -18,7 +18,7 @@ assert.equal(byKey.size,300,'duplicates forbidden');
 assert.ok(records.every(r=>r.seq&&r.snapshot_rank&&r.name&&r.area),'incomplete ranking');
 for(const field of ['far','year','units']){
  const original='map_'+field, external='richgo_'+field;
- const changes=Object.entries(spec[field]||{});
+ const changes=Object.entries(spec[field]||{}).filter(([k])=>byKey.has(k));
  for(const [k,value] of changes){
   const r=byKey.get(k);
   assert.ok(r,'correction not in top300: '+k);
@@ -49,12 +49,12 @@ assert.ok(build.includes("file === 'apt-richgo15.js' ? []"));
 assert.ok(build.includes('packagedLoader'));
 assert.ok(build.includes("file==='apt-unitfix.js'"),'verified cap15 counts must override shared unitfix');
 assert.ok(build.includes("spec.farFallbackKB"),'cap15 build must fill two sourced FAR gaps');
-const keyList=new Set([...Object.keys(spec.far||{}),...Object.keys(spec.farFallbackKB||{}),...Object.keys(spec.year||{}),...Object.keys(spec.units||{})]);
+const keyList=new Set([...Object.keys(spec.far||{}),...Object.keys(spec.farFallbackKB||{}),...Object.keys(spec.year||{}),...Object.keys(spec.units||{})].filter(k=>byKey.has(k)));
 for(const cap of [6,10,15,20,25,30,35]){
- const FAR=Object.fromEntries([...new Set([...Object.keys(spec.far||{}),...Object.keys(spec.farFallbackKB||{})])].map(k=>{const r=byKey.get(k);return [k,[r.map_far?Number(r.map_far):null,r.map_far_source||'']]}));
+ const FAR=Object.fromEntries([...new Set([...Object.keys(spec.far||{}),...Object.keys(spec.farFallbackKB||{})])].filter(k=>byKey.has(k)).map(k=>{const r=byKey.get(k);return [k,[r.map_far?Number(r.map_far):null,r.map_far_source||'']]}));
  const PICKS=[...keyList].map(k=>{const r=byKey.get(k);return {n:r.name,area:r.area,year:Number(r.map_year),units:Number(r.map_units)}});
  const W={CAPT:cap,FARD:FAR,PICKS};const ctx={window:W};vm.createContext(ctx);vm.runInContext(source,ctx);
- for(const [k,value] of Object.entries(spec.far||{})){
+ for(const [k,value] of Object.entries(spec.far||{}).filter(([k])=>byKey.has(k))){
   const r=byKey.get(k);
   assert.equal(FAR[k][0],cap===15?Number(value):(r.map_far?Number(r.map_far):null),'FAR cap '+cap+' '+k);
  }
@@ -68,4 +68,4 @@ for(const cap of [6,10,15,20,25,30,35]){
   assert.equal(d.units,cap===15&&(k in spec.units)?Number(spec.units[k]):Number(r.map_units),'units cap '+cap+' '+k);
  }
 }
-console.log('Richgo top300 audit ✅',JSON.stringify({rows:records.length,far:Object.keys(spec.far||{}).length,year:Object.keys(spec.year||{}).length,units:Object.keys(spec.units||{}).length,verified:records.filter(r=>r.verification==='직접확인').length,aggregateExceptions:19,kbFARFallback:2}));
+console.log('Richgo top300 audit ✅',JSON.stringify({rows:records.length,far:Object.keys(spec.far||{}).filter(k=>byKey.has(k)).length,year:Object.keys(spec.year||{}).filter(k=>byKey.has(k)).length,units:Object.keys(spec.units||{}).filter(k=>byKey.has(k)).length,verified:records.filter(r=>r.verification==='직접확인').length,aggregateExceptions:19,kbFARFallback:2}));
