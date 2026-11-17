@@ -27,3 +27,4 @@ fs.writeFileSync('docs/richgo-20to25-top300-coordinate-audit-20261118.csv',[head
 const summary={total:rows.length,uniqueRichgoPages:uniqueIds.length,withBothCoords:rows.filter(x=>x.metres!==null).length,within500m:rows.filter(x=>x.status==='500m이내').length,between500and1500:rows.filter(x=>x.status==='500~1500m재검토').length,over1500:rows.filter(x=>x.status==='1500m초과재검토').length,missingCoordinates:rows.filter(x=>x.metres===null).length,review:rows.filter(x=>x.metres===null||x.metres>500).map(x=>({rank:x.rank,name:x.name,area:x.area,metres:x.metres,source:x.richgoId,status:x.status}))};
 fs.writeFileSync('docs/richgo-20to25-top300-coordinate-summary-20261118.json',JSON.stringify(summary,null,2)+'\n');
 console.log('COORDINATES '+JSON.stringify(summary,null,2));
+if(summary.withBothCoords!==300||summary.within500m!==300)throw new Error('coordinate mismatch in ranked 300 complexes: '+JSON.stringify(summary.review));
