@@ -27,6 +27,7 @@ async function get(url){for(let attempt=0;attempt<2;attempt++){try{const r=await
 async function pool(items,n,fn){let cur=0,ret=new Array(items.length);await Promise.all(Array.from({length:n},async()=>{while(cur<items.length){let i=cur++;ret[i]=await fn(items[i],i);await SL(520);}}));return ret;}
 const dirs=new Map();for(const r of pending){const loc=district(r.area),id=loc.sd+'|'+loc.sgg;dirs.set(id,loc);r.__d=id;r.__dong=loc.dong;}
 const hubs=new Map();
+async function main(){
 await pool([...dirs.entries()],2,async([id,d])=>{stat.hub++;const u='https://m.richgo.ai/realty/apt-hub/'+encodeURIComponent(d.sd)+'/'+encodeURIComponent(d.sgg);const page=await get(u);if(!page)return;const map=new Map();
 for(const tr of page.match(/<tr\b[^>]*>[\s\S]*?<\/tr>/g)||[]){const m=tr.match(/<a\b[^>]*href=["']\/realty\/danji\/(a[A-Za-z0-9]{6})[^"']*["'][^>]*>([\s\S]*?)<\/a>/);
  if(!m)continue;const label=clean(m[2]).replace(/^\d+\.\s*/,'');
@@ -107,3 +108,6 @@ let done=false;for(let t=0;t<12;t++){const r=await fetch('https://api.github.com
  if(r.ok){done=true;console.log('ARCHIVED',file);break;}if(r.status!==409&&r.status!==422)throw Error('Cannot save '+r.status+' '+(await r.text()).slice(0,200));await SL(2000+t*850);}
  if(!done)throw Error('Cannot save 2nd pass shard '+shard);
 }
+
+}
+main().catch(e=>{console.error('SECOND_FAILED',e.stack||String(e));process.exitCode=1});
