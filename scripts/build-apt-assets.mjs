@@ -253,7 +253,6 @@ export function buildAptAssets(root, output = path.join(root, 'public')) {
   html = html.replace(/<style>([\s\S]*?)<\/style>/g, (m, c) => '<style>' + c.replace(/\/\*[\s\S]*?\*\//g, '').replace(/\n\s*/g, '\n').replace(/([;{}])\n/g, '$1').replace(/[ \t]+([;{}])/g, '$1').replace(/([;{}])[ \t]+/g, '$1').replace(/,\s+/g, ',').replace(/;}/g, '}') + '</style>');
   // 전송량: 첫 HTML 안 인라인 스크립트도 주석·공백만 제거(이름·식 그대로)
   html = html.replace(/<script>([\s\S]*?)<\/script>/g, (m, c) => {
-    if(!c.includes('window.CAPT='))return '<script>'+minifyKeep(c,'inline.js')+'</script>';
     const out=terser.minify_sync({'inline.js':c},{
       compress:{defaults:false,booleans:true,comparisons:true,conditionals:true,dead_code:true,evaluate:true,join_vars:true,sequences:true,unused:true},
       mangle:true,format:{comments:false,ascii_only:false}
