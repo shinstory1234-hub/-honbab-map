@@ -33,7 +33,7 @@ for(const r of records){
  assert.ok(d&&raw,'missing map complex '+r.k);
  if(r.far!=null){
    assert.equal(raw[22][0],r.far,'raw FAR '+r.k);
-   assert.equal(raw[22][1],'리치고','FAR source '+r.k);
+   assert.equal(raw[22][1],'R','losslessly packed Richgo FAR provenance '+r.k);
    assert.equal(W.FARD[r.k][0],r.far,'final active FAR '+r.k);
  }
  const snap=priceRows.find(x=>x.name+'|'+x.area===r.k);
