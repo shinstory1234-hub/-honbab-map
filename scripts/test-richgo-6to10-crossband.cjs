@@ -20,8 +20,9 @@ assert.equal(newEvidence.length,415,'cross-band evidence must cover 415 distinct
 assert.ok(corrections.length>=556,'all 556 previously verified cap10 corrections must be preserved');
 assert.equal(new Set(corrections.map(x=>x.name+'|'+x.area)).size,corrections.length,'duplicate correction');
 const reviewed=all.filter(x=>x.review_status!=='not_reviewed');
-assert.equal(reviewed.length,714,'714 of 1822 should be source-linked');
-assert.equal(all.length-reviewed.length,1108,'1108 must remain explicitly unreviewed');
+const finalized=fs.existsSync('docs/richgo-6to10-remaining1108-20261118.csv');
+assert.equal(reviewed.length,finalized?1822:714,'coverage differs from phase-specific source scope');
+assert.equal(all.length-reviewed.length,finalized?0:1108,'unexpected remaining review status');
 const original=new Map(all.map(x=>[x.name+'|'+x.area,x]));
 const corrected=new Map(corrections.map(x=>[x.name+'|'+x.area,x]));
 for(const row of newEvidence){
@@ -37,4 +38,4 @@ for(const row of newEvidence){
 const build=read('scripts/build-apt-assets.mjs');
 assert.match(build,/cap === 10 && file === 'apt-univ10.js'/,'corrections must only affect cap 10');
 assert.match(build,/cap === 10 && file === 'apt-farfix.js'/,'final FAR overlay must only affect cap 10');
-console.log('6–10억 Richgo PASS: 1822 total, 714 reviewed, 415 reused, 556 corrections, 1108 remaining');
+console.log('6–10억 Richgo PASS: 1822 total, '+reviewed.length+' reviewed, 415 reused, '+corrections.length+' corrections');
