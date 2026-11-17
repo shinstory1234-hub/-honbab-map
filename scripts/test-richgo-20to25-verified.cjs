@@ -1,52 +1,60 @@
-/* Cap25-only audit regression. Run: node scripts/test-richgo-20to25-verified.cjs */
-const assert=require('node:assert/strict'),fs=require('node:fs'),vm=require('node:vm'),path=require('node:path');
-const root=path.resolve(__dirname,'..');
-const load=n=>fs.readFileSync(path.join(root,'public',n),'utf8');
-const sources=['apt-unitfix.js','apt-fard.js','apt-univ10.js','apt-univ15.js','apt-univ20.js','apt-univ30.js','apt-univadd.js','apt-farfix.js','apt-far-normalize.js'];
-function make(cap){
-  const c={CAPT:cap,PICKS:[],UGEO:{},HAK:{},FARD:{},PLAT:{},console};c.window=c;vm.createContext(c);
-  for(const p of sources)vm.runInContext(load(p),c,{filename:p});
-  return c;
+/* cap25-only Richgo audit regression: node scripts/test-richgo-20to25-verified.cjs */
+const assert=require('node:assert/strict');
+const fs=require('node:fs'),vm=require('node:vm'),path=require('node:path');
+const root=path.resolve(__dirname,'..'),load=n=>fs.readFileSync(path.join(root,'public',n),'utf8');
+const src=['apt-unitfix.js','apt-fard.js','apt-univ10.js','apt-univ15.js','apt-univ20.js','apt-univ30.js','apt-univadd.js','apt-farfix.js','apt-far-normalize.js'];
+const key=d=>d.n+'|'+d.area;
+function make(cap,patch){
+ const c={CAPT:cap,PICKS:[],UGEO:{},HAK:{},FARD:{},PLAT:{},console};
+ c.window=c;vm.createContext(c);
+ for(const n of src)vm.runInContext(load(n),c,{filename:n});
+ if(patch)vm.runInContext(load('apt-richgo25.js'),c,{filename:'apt-richgo25.js'});
+ return c;
 }
-const k=(n,area)=>n+'|'+area;
-const base25=make(25),pre1=base25.PICKS.find(d=>k(d.n,d.area)==='극동1|서울 광진구 광장동'),
-  pre2=base25.PICKS.find(d=>k(d.n,d.area)==='극동2|서울 광진구 광장동');
-assert.equal(pre1.units,1344);assert.equal(pre2.units,1344);
-const baselinePrices=base25.PICKS.map(d=>JSON.stringify(d.types));
-vm.runInContext(load('apt-richgo25.js'),base25,{filename:'apt-richgo25.js'});
-assert.equal(base25.RICHGO25_APPLIED.verified,6);
-assert.equal(base25.RICHGO25_APPLIED.matched,6);
-assert.equal(base25.RICHGO25_APPLIED.skipped,0);
-assert.equal(base25.RICHGO25_APPLIED.unitChanges,2);
-const far={
- '양지마을(5단지)(한양515-529)|성남 분당구 수내동':157,
- '극동1|서울 광진구 광장동':204,
- '삼환|서울 송파구 가락동':178,
- '서울숲2차푸르지오|서울 성동구 금호동4가':226,
- '한양아파트|서울 송파구 송파동':157,
- '문정가락현대1차|서울 송파구 문정동':179
-};
-for(const [key,expected] of Object.entries(far)){
- assert.equal(base25.FARD[key][0],expected,key);
- assert.equal(base25.FARD[key][1],'리치고(단지 직접확인)',key);
+const b=make(25,false),originalTypes=b.PICKS.map(d=>JSON.stringify(d.types));
+const originalMap=new Map(b.PICKS.map(d=>[key(d),{units:d.units,year:d.year}]));
+const expected=[
+ ['경희궁의아침2단지|서울 종로구 내수동',658,90],
+ ['경희궁의아침3단지|서울 종로구 내수동',590,150],
+ ['경희궁자이(3단지)|서울 종로구 평동',241,589],
+ ['경희궁자이(2단지)|서울 종로구 홍파동',252,1148],
+ ['용산e편한세상|서울 용산구 신계동',250,867],
+ ['강촌|서울 용산구 이촌동',339,1001],
+ ['동부센트레빌|서울 용산구 이촌동',295,309],
+ ['북한강(성원)|서울 용산구 이촌동',376,340],
+ ['이촌코오롱(A)|서울 용산구 이촌동',317,834],
+ ['현대한강|서울 용산구 이촌동',383,516],
+ ['용산파크자이|서울 용산구 한강로1가',789,310],
+ ['양지마을(5단지)(한양515-529)|성남 분당구 수내동',157,1430],
+ ['극동1|서울 광진구 광장동',204,448],
+ ['극동2|서울 광진구 광장동',null,896],
+ ['삼환|서울 송파구 가락동',178,648],
+ ['서울숲2차푸르지오|서울 성동구 금호동4가',226,586],
+ ['한양아파트|서울 송파구 송파동',157,576],
+ ['문정가락현대1차|서울 송파구 문정동',179,514]
+];
+const patched=make(25,true);
+assert.deepEqual(JSON.parse(JSON.stringify(patched.RICHGO25_APPLIED)),{
+ verified:18,farVerified:17,farValueChanges:5,unitChanges:7,excludedBelow300:2,skipped:0
+});
+for(const [k,far,units] of expected){
+ const d=patched.PICKS.find(x=>key(x)===k);
+ assert.ok(d,'missing candidate '+k);
+ assert.equal(d.units,units,k+' units');
+ if(far!==null){assert.equal(patched.FARD[k][0],far,k+' FAR');assert.equal(patched.FARD[k][1],'리치고(단지 직접확인)',k+' source');}
+ else assert.equal(patched.FARD[k][0],null,k+' FAR stays missing');
+ if(originalMap.get(k).units!==units)assert.equal(patched.UNITFIX_M3[k][0],units,k+' fixUnits precedence');
 }
-for(const [name,units] of [['극동1',448],['극동2',896]]){
- const key=k(name,'서울 광진구 광장동'),d=base25.PICKS.find(d=>k(d.n,d.area)===key);
- assert.equal(d.units,units);
- assert.equal(base25.UNITFIX_M3[key][0],units);
-}
-for(let i=0;i<base25.PICKS.length;i++)assert.equal(JSON.stringify(base25.PICKS[i].types),baselinePrices[i],'prices must be unchanged');
-assert.equal(base25.FARD['극동2|서울 광진구 광장동'][0],null,'Richgo does not publish 2차 FAR');
+for(const name of ['경희궁의아침2단지','경희궁의아침3단지'])
+ assert.ok(patched.UNITDROP_M3.includes(name+'|서울 종로구 내수동'),'exclude below 300');
+for(let i=0;i<patched.PICKS.length;i++)assert.equal(JSON.stringify(patched.PICKS[i].types),originalTypes[i],'price unchanged index '+i);
 for(const cap of [6,10,15,20,30,35]){
- const c=make(cap),k1=k('극동1','서울 광진구 광장동'),k2=k('극동2','서울 광진구 광장동');
- const b1=c.PICKS.find(d=>k(d.n,d.area)===k1),b2=c.PICKS.find(d=>k(d.n,d.area)===k2);
- const units=[b1.units,b2.units],farBefore=JSON.stringify(c.FARD[k1]);
- vm.runInContext(load('apt-richgo25.js'),c);
- assert.deepEqual([b1.units,b2.units],units,'cap '+cap+' units');
- assert.equal(JSON.stringify(c.FARD[k1]),farBefore,'cap '+cap+' FAR');
- assert.equal(c.RICHGO25_APPLIED,undefined,'cap '+cap+' metadata');
+ const c=make(cap,false),p=make(cap,true);
+ assert.equal(p.RICHGO25_APPLIED,undefined);
+ assert.deepEqual(c.PICKS.map(d=>d.units),p.PICKS.map(d=>d.units),'other cap units '+cap);
+ assert.equal(JSON.stringify(c.FARD),JSON.stringify(p.FARD),'other cap FAR '+cap);
 }
 const html=load('apt-map.html');
-assert.match(html,/T&&c===25\?'apt-richgo25\.js'/);
-assert.ok(html.indexOf("T?'apt-far-normalize.js'")<html.indexOf("T&&c===25?'apt-richgo25.js'"));
-console.log('Richgo cap25 verified: 6 FAR records, 2 split-unit corrections, other bands unchanged ✅');
+assert.ok(html.includes("T&&c===25?'apt-richgo25.js'"),'25-only script');
+assert.ok(html.indexOf("T?'apt-far-normalize.js'")<html.indexOf("T&&c===25?'apt-richgo25.js'"),'Richgo override last');
+console.log('PASS: 18 audited, 5 FAR corrections, 7 household corrections, 2 under-300 excluded, other tabs unchanged');
