@@ -39,10 +39,10 @@ const newCorrections=[],reasons={};
 const evidenceColumns=['name','area','status','source_url','distance_m','name_similarity','year_before','richgo_year','units_before','richgo_units','far_before','richgo_far','corrected_far','reason','shard'];
 const evidence=[];
 for(const row of audits){
- const source=targets.get(row.key),r=row.richgo,m=row.match;let st='crawler_'+row.status,reason='';
+ const source=targets.get(row.key),r=row.richgo,m=row.match;const richYear=r?.year==null?null:Math.trunc(Number(r.year));let st='crawler_'+row.status,reason='';
  let acceptable=row.status==='verified'&&r&&m&&Number.isFinite(r.year)&&Number.isFinite(r.units)
  &&(!duplicateIds.has(r.id))&&Number.isFinite(Number(r.far))&&Number(r.far)>=60&&Number(r.far)<=1500
- &&Number(r.units)===Number(source.units_after_verified)&&Math.abs(Number(source.year_after_verified)-Number(r.year))<=2
+ &&Number(r.units)===Number(source.units_after_verified)&&Math.abs(Number(source.year_after_verified)-richYear)<=2
  &&typeof r.url==='string'&&r.url.startsWith('https://m.richgo.ai/realty/danji/');
  if(row.status==='verified'&&duplicateIds.has(r?.id)){st='crawler_shared_scope_review';reason='same Richgo ID points to multiple map entries';}
  else if(row.status==='verified'&&r?.far==null){st='crawler_far_blank';reason='Richgo FAR missing';}
@@ -52,7 +52,7 @@ for(const row of audits){
  if(acceptable){
    st='crawler_verified';
    const x={name:row.name,area:row.area,far:Number(r.far)};
-   if(Number(r.year)!==Number(source.year_after_verified))x.year=Number(r.year);
+   if(richYear!==Number(source.year_after_verified))x.year=richYear;
    if(fixKeys.has(row.key))throw Error('original correction conflict '+row.key);
    fixKeys.add(row.key);newCorrections.push(x);
    farAfter=String(x.far);
@@ -60,11 +60,11 @@ for(const row of audits){
  source.review_status=st;
  if(r?.url)source.richgo_url=r.url;
  if(r?.far!=null)source.richgo_far=String(r.far);
- if(r?.year!=null)source.richgo_year=String(r.year);
+ if(richYear!=null)source.richgo_year=String(richYear);
  if(r?.units!=null)source.richgo_units=String(r.units);
- if(acceptable){source.far_after_verified=farAfter;if(r.year!==Number(source.year_after_verified))source.year_after_verified=String(r.year);}
+ if(acceptable){source.far_after_verified=farAfter;if(richYear!==Number(source.year_after_verified))source.year_after_verified=String(richYear);}
  reasons[st]=(reasons[st]||0)+1;
- evidence.push({name:row.name,area:row.area,status:st,source_url:r?.url||'',distance_m:m?.distanceMeters??'',name_similarity:m?.nameSimilarity??'',year_before:row.map.year,richgo_year:r?.year??'',units_before:row.map.units,richgo_units:r?.units??'',far_before:row.map.far??'',richgo_far:r?.far??'',corrected_far:acceptable?farAfter:'',reason,shard:row.shard??''});
+ evidence.push({name:row.name,area:row.area,status:st,source_url:r?.url||'',distance_m:m?.distanceMeters??'',name_similarity:m?.nameSimilarity??'',year_before:row.map.year,richgo_year:richYear??'',units_before:row.map.units,richgo_units:r?.units??'',far_before:row.map.far??'',richgo_far:r?.far??'',corrected_far:acceptable?farAfter:'',reason,shard:row.shard??''});
 }
 if(Object.values(reasons).reduce((a,b)=>a+b,0)!==1108)throw Error('status accounting error');
 const fixes=[...oldCorrections,...newCorrections];
