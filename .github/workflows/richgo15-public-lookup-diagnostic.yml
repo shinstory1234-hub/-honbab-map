@@ -31,7 +31,7 @@ jobs:
                 const t=await r.text();
                 const match=t.match(/<loc>[^<]*<\/loc>|a2VEQie|용적률|robots|sitemap|<title[^>]*>[^<]*/i);
                 console.log(JSON.stringify({url:u,status:r.status,bytes:t.length,contentType:r.headers.get('content-type'),matched:match?.[0]?.slice(0,130),prefix:t.slice(0,u.includes('robots.txt')?3300:u.includes('danji_detail.xml')?900:170),count:(t.match(/<loc>/g)||[]).length}));
-                if(u.includes('google.com')){const ids=[...new Set((t.match(/(?:https?:|\\\\u003a|%3A)[^\"\\s<>]{0,180}richgo.ai(?:\\/|%2F)realty(?:\\/|%2F)danji(?:\\/|%2F)a[A-Za-z0-9]{6}/g)||[]))].slice(0,15);console.log('GOOGLE_RICHGO_IDS',JSON.stringify(ids).slice(0,2200));const k=t.indexOf('richgo.ai/realty/danji/');console.log('CONTEXT',t.slice(Math.max(0,k-130),k+200));}
+                if(u.includes('google.com')){const ids=[...new Set(t.match(new RegExp('m.richgo.ai/realty/danji/[a-zA-Z0-9]{7}','g'))||[])].slice(0,15);console.log('GOOGLE_RICHGO_IDS',JSON.stringify(ids).slice(0,2200));const k=t.indexOf('richgo.ai/realty/danji/');console.log('CONTEXT',t.slice(Math.max(0,k-130),k+200));}
                 if(u.includes('a2VEQie')&&r.status===200){const k=t.indexOf('용적률');console.log('PAGE_RATIO_HTML',t.slice(Math.max(0,k-350),k+480));}
                 if(u.includes('robots.txt'))console.log('ROBOTS_TAIL',t.slice(-600));
               }catch(e){console.log(JSON.stringify({url:u,error:String(e).slice(0,300)}))}
