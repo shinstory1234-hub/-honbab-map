@@ -12,7 +12,7 @@ const concurrency=Math.max(1,Math.min(8,Number((process.argv.find(x=>x.startsWit
 const limit=Number((process.argv.find(x=>x.startsWith('--limit='))||'--limit=300').split('=')[1]);
 const timeoutMs=18000;
 const delay=ms=>new Promise(r=>setTimeout(r,ms));
-const today=new Date().toISOString().slice(0,10);
+const today=new Intl.DateTimeFormat('en-CA',{timeZone:'Asia/Seoul',year:'numeric',month:'2-digit',day:'2-digit'}).format(new Date());
 const userAgent='Mozilla/5.0 (compatible; AptMapDataAudit/1.0; +https://github.com/shinstory1234-hub/-honbab-map)';
 let blocked=false,searchCalls=0,pageCalls=0,errors=0;
 function readCSV(s){const grid=[];let row=[],cell='',quote=false;
@@ -88,54 +88,103 @@ function identity(record,fact){
  const safe=!!(fact.year&&fact.units&&(direct||(score>=0.65&&dongMatch&&unitsMatch)));
  return {safe,score,dongMatch,unitsMatch,direct,quality:(score+Number(dongMatch)*0.25+Number(unitsMatch)*0.2)};
 }
-async function getById(id){if(!/^a[A-Za-z0-9]{6}$/.test(id))return null;pageCalls++;
- const html=await fetchPage('https://m.richgo.ai/realty/danji/'+id);
- return getSiteFacts(html,id);
+async function getById(id){
+ if(!/^a[A-Za-z0-9]{6}$/.test(id))return null;
+ if(detailCache.has(id))return detailCache.get(id);
+ const promise=(async()=>{pageCalls++;const html=await fetchPage('https://m.richgo.ai/realty/danji/'+id);return getSiteFacts(html,id);})();
+ detailCache.set(id,promise);
+ return promise;
+}
+
+/* Richgo's publicly-indexed district/dong pages include complete JSON-LD apartment lists.
+ * Site robots.txt explicitly allows realty/danji and region listings. This avoids search
+ * engines (Naver responded 403) and avoids the restricted high-volume partner/MCP APIs. */
+const regionCatalog=new Map(),districtAudit={};
+const detailCache=new Map();
+async function pool(items,n,fn){let next=0;const out=new Array(items.length);
+ await Promise.all(Array.from({length:Math.min(n,items.length)},async()=>{while(next<items.length){const i=next++;try{out[i]=await fn(items[i],i)}catch(e){errors++;console.log('POOL-ERROR',String(e).slice(0,150),items[i]);}}}));
+ return out;
+}
+function subregionLinks(html){
+ const list=[];
+ for(const m of (html||'').matchAll(/<a\b[^>]*href="(?:https:\/\/m\.richgo\.ai)?\/realty\/region\/(\d{10})"[^>]*>([\s\S]*?)<\/a>/gi)){
+   const name=clean(m[2]);if(name)list.push({code:m[1],label:name});
+ }
+ return list;
+}
+function jsonList(html){
+ const list=[];
+ for(const m of (html||'').matchAll(/<script\b[^>]*type="application\/ld\+json"[^>]*>([\s\S]*?)<\/script>/gi)){
+  try{const obj=JSON.parse(m[1]),group=[obj].flat();
+   for(const o of group){for(const el of o?.itemListElement||[]){
+    const id=String(el.url||'').match(/\/realty\/danji\/(a[A-Za-z0-9]{6})/);
+    if(id&&el.name)list.push({id:id[1],name:String(el.name)});
+   }}
+  }catch(e){/* other JSON-LD schema is unrelated */}
+ }
+ if(!list.length)for(const m of (html||'').matchAll(/<a\b[^>]*href="(?:https:\/\/m\.richgo\.ai)?\/realty\/danji\/(a[A-Za-z0-9]{6})"[^>]*>([\s\S]*?)<\/a>/gi)){
+  list.push({id:m[1],name:clean(m[2]).replace(/[\d·]+평.*$/,'')});
+ }
+ return [...new Map(list.map(x=>[x.id,x])).values()];
+}
+async function buildCatalog(records){
+ const w={PICKS:[],FARD:{},UGEO:{},HAK:{},CAPT:15};
+ new Function('window',fs.readFileSync(path.join(root,'public/apt-univ15.js'),'utf8'))(w);
+ const sggMap=new Map();
+ for(const row of records){
+  const fd=w.FARD[row.name+'|'+row.area],code=String(fd?.[6]||'');
+  if(/^\d{5}$/.test(code))sggMap.set(row.name+'|'+row.area,code);
+ }
+ const districts=[...new Set(sggMap.values())].sort();
+ console.log('CATALOG_DISTRICTS',districts.length,'distinct areas',new Set(records.map(x=>x.area)).size);
+ const pageMap=new Map();
+ await pool(districts,4,async code=>{
+  const html=await fetchPage('https://m.richgo.ai/realty/region/'+code+'00000');
+  const links=subregionLinks(html);
+  pageMap.set(code,links);
+  districtAudit[code]={links:links.length,status:html?'read':'no_public_page'};
+ });
+ const pages=new Map();
+ for(const row of records){
+  const code=sggMap.get(row.name+'|'+row.area),dong=row.area.split(' ').at(-1);
+  const links=pageMap.get(code)||[];
+  const match=links.filter(l=>l.label.startsWith(dong)||l.label===dong).sort((a,b)=>a.label.length-b.label.length)[0];
+  if(match){const url='https://m.richgo.ai/realty/region/'+match.code;if(!pages.has(url))pages.set(url,new Set());pages.get(url).add(row.area);}
+ }
+ console.log('CATALOG_DONG_PAGES',pages.size);
+ const entries=[...pages.entries()];
+ await pool(entries,4,async([url,areas])=>{
+  const html=await fetchPage(url),list=jsonList(html);
+  for(const area of areas)regionCatalog.set(area,list);
+  if(!list.length)console.log('DONG_EMPTY',url,Array.from(areas).join(';'));
+ });
+ console.log('CATALOG_READY',JSON.stringify({districts:districts.length,dongs:pages.size,catalogAreas:regionCatalog.size,withRows:records.filter(r=>regionCatalog.has(r.area)).length,
+  withComplex:records.filter(r=>(regionCatalog.get(r.area)||[]).some(x=>codeEquivalence(x.name,r.name)>.65)).length}));
 }
 async function lookup(record,index){
- const mapName=record.name,dong=record.area.split(' ').at(-1);
- const attempts=[
-  'site:m.richgo.ai/realty/danji/ '+mapName+' '+dong,
-  'site:m.richgo.ai/realty/danji/ '+mapName.replace(/\([^)]*\)|\d+단지/g,'').trim()+' '+dong,
-  mapName+' '+dong+' 리치고'
- ];
- const used=new Set,cache=new Set;
- if(record.richgo_id&&/^a[A-Za-z0-9]{6}$/.test(record.richgo_id))cache.add(record.richgo_id);
- if(record.source_url){let a=record.source_url.match(/\/danji\/(a[A-Za-z0-9]{6})/);if(a)cache.add(a[1]);}
- // Fast case: pre-established direct link.
+ const candidates=(regionCatalog.get(record.area)||[]).map(x=>({id:x.id,name:x.name,score:codeEquivalence(record.name,x.name)}))
+   .filter(x=>x.score>=0.43).sort((a,b)=>b.score-a.score).slice(0,12);
+ const fromOld=new Set();
+ for(const u of [record.richgo_id,record.source_url]){
+   const m=String(u||'').match(/a[A-Za-z0-9]{6}/);
+   if(m)fromOld.add(m[0]);
+ }
+ const ids=[...new Set([...candidates.map(x=>x.id),...fromOld])];
  let best=null;
- async function validate(ids){
-   for(const id of ids){
-     if(used.has(id)||blocked)continue;
-     used.add(id);
-     const fact=await getById(id);if(!fact)continue;
-     const match=identity(record,fact);
-     const candidate={fact,match};
-     if(!best||candidate.match.quality>best.match.quality)best=candidate;
-     if(match.safe)return candidate;
-   }
-   return null;
- }
- let found=await validate(cache);
- if(found)return {...found,discovery:'previous_link'};
- const searches=[...new Set(attempts.filter(x=>x.length<180))];
- const sources=['naver','daum','naver'];
- for(let j=0;j<searches.length&&!blocked;j++){
-   // Avoid flooding search engines or the target site.
-   await delay(180+(index%5)*65);
-   let url=sources[j]==='naver'
-    ?'https://search.naver.com/search.naver?query='+encodeURIComponent(searches[j])
-    :'https://search.daum.net/search?w=tot&q='+encodeURIComponent(searches[j]);
-   searchCalls++;
-   const html=await fetchPage(url);
-   const ids=urlCandidates(html);
-   if(index<5)console.log('SEARCH-SAMPLE',index,sources[j],searches[j],ids.slice(0,5));
-   if(ids.length){
-     found=await validate(ids.slice(0,8));if(found)return {...found,discovery:sources[j]};
+ for(const id of ids){
+   if(blocked)break;
+   const fact=await getById(id);
+   if(!fact)continue;
+   const match=identity(record,fact);
+   const candidate={fact,match};
+   if(!best||candidate.match.quality>best.match.quality)best=candidate;
+   if(match.safe){
+     return {...candidate,discovery:candidates.some(x=>x.id===id)?'richgo_dong_catalog':'previous_link'};
    }
  }
- return best?{...best,discovery:'partial_unverified'}:null;
+ return best?{...best,discovery:'richgo_dong_candidate_unverified'}:null;
 }
+
 function changed(record,field,source){const old=num(record['map_'+field]);return source!=null&&old!==source;}
 const {header,records}=readCSV(fs.readFileSync(input,'utf8'));
 if(records.length!==300||new Set(records.map(r=>r.name+'|'+r.area)).size!==300)throw Error('Expected 300 unique complexes');
@@ -177,6 +226,7 @@ async function processRecord(i){
 let next=0;
 const workers=Array.from({length:concurrency},async()=>{while(!blocked){const i=next++;if(i>=count)break;try{await processRecord(i)}catch(e){errors++;done++;console.log('AUDIT-ERROR',i,String(e).slice(0,220));}}});
 (async()=>{
+ await buildCatalog(records.slice(0,count));
  await Promise.all(workers);
  // Keep previously verified corrections if fewer than 300 reviewed due connectivity.
  const existing=JSON.parse(fs.readFileSync(corrections,'utf8')),spec={...existing,asOf:today,far:{...existing.far},year:{...existing.year},units:{...(existing.units||{})}};
