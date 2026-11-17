@@ -36,7 +36,7 @@ function applyRichgo15AtBuild(code,file,root) {
    const packed=code.slice(0,start+3)+JSON.stringify(rows)+code.slice(end+1);
    const marker='  F[k]=fd;';
    if(!packed.includes(marker))throw new Error('Richgo15 source decoder anchor missing');
-   const coded=packed.replace(marker,"  if(fd[1]==='R')fd[1]='리치고';\\n"+marker);
+   const coded=packed.replace(marker,"  if(fd[1]==='R')fd[1]='리치고';\n"+marker);
    const loop='for(const r of R){';
    if(!coded.includes(loop))throw new Error('Richgo15 price restore anchor missing');
    return coded.replace(loop,'for(const r of R){r[3]+=100000;');
