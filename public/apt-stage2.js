@@ -13,7 +13,8 @@ var panel=null,tab='home',indicator='base',rankSort='rank';
 var bestInGu=new Map();for(const item of D){const gu=item.area.split(' ').slice(0,2).join(' '),old=bestInGu.get(gu);if(!old||item.rank<old.rank)bestInGu.set(gu,item);}
 var lineOverlays=[],measureMode='',measurePoints=[],measureBtn=null,overlayState={land:false,road:false},rivals=[null,null];
 var name=d=>publicComplexName(d)+' '+d.py+'평';
-var rent=d=>Number(d.jeon)>0?+d.jeon:null;
+var rentalMatches=new Map();
+var rent=d=>rentalMatches.has(key(d))?rentalMatches.get(key(d)).deposit:(Number(d.jeon)>0?+d.jeon:null);
 var ratio=d=>rent(d)!=null&&d.p>0?rent(d)/d.p*100:null;
 var gap=d=>rent(d)!=null?d.p-rent(d):null;
 var rentCoverage=D.filter(d=>rent(d)!=null).length;
@@ -99,7 +100,7 @@ function filtersTab(){
  +fld('tradeMin','최근 3개월 거래 최소 (건)')
  +'<label>마지막 거래<select name="days">'+searchOptions([['0','제한 없음'],['90','90일 이내'],['180','180일 이내'],['365','1년 이내']],String(filter.days))+'</select></label></div>'
  +'<div class="s2-actionbar"><button class="s2-btn on" id="s2Apply">필터 적용</button><button class="s2-btn" id="s2Clear">초기화</button></div>'
- +'<p>'+(has?'단지 참고 전세금은 동일 전용면적 계약과 일치하지 않을 수 있습니다. ':'현재 가격대에 검증 가능한 전세·갭 자료가 없어 해당 조건은 숨겼습니다. ')+'월세, 공시가격, 매물 소화기간 및 호가 변화는 자료가 없어 제외합니다.</p>';
+ +'<p>'+(has?'전세가율과 갭은 매매 참고가격과 단지 기준 전세 보증금으로 계산한 추정치입니다. 동일 전용면적 계약이 확인된 값은 아닙니다. ':'전월세 실거래 메뉴에서 지역과 월을 조회하면 매칭된 단지의 전세 조건을 사용할 수 있습니다. ')+'공시가격과 매물 소화기간은 별도 자료가 필요합니다.</p>';
 }
 function navTab(){
  var areas=new Set();D.forEach(d=>{var a=d.area.split(' ');if(a.length>=3)areas.add(a.slice(0,2).join(' '));});
@@ -203,7 +204,19 @@ async function runRentLookup(body){
   const data=await res.json();
   if(!res.ok){out.textContent=data.error==='API_KEY_NOT_CONFIGURED'?'서버에 전월세 API 인증키를 연결해야 합니다.':'조회에 실패했습니다. 잠시 후 다시 시도하세요.';return;}
   const items=data.items||[];
-  out.innerHTML='<p>조회 결과 '+items.length.toLocaleString()+'건</p>'
+  const norm=v=>String(v||'').replace(/[^가-힣a-zA-Z0-9]/g,'').toLowerCase();
+  let matched=0;
+  for(const d of D){
+   const n=norm(publicComplexName(d)),dong=norm(d.area.split(' ').slice(-1)[0]);
+   const candidates=items.filter(x=>x.monthlyRent===0&&x.deposit>0&&norm(x.name)===n&&norm(x.dong)===dong);
+   if(!candidates.length)continue;
+   // 공급 평형과 전용면적을 임의 환산하지 않는다. 단지명과 법정동만 확인된 참고값.
+   const deposits=candidates.map(x=>x.deposit).sort((a,b)=>a-b);
+   rentalMatches.set(key(d),{deposit:deposits[Math.floor(deposits.length/2)],count:candidates.length,month,scope:'complex'});matched++;
+  }
+  if(matched){rentAvailable=true;render();}
+  out.innerHTML='<p>아파트맵 단지 자동 매칭 '+matched.toLocaleString()+'개 (단지 기준, 평형 미검증)</p>'+
+  '<p>조회 결과 '+items.length.toLocaleString()+'건</p>'
   +(items.length?'<div class="s2-rent-results"><table><thead><tr><th>단지</th><th>전용면적</th><th>층</th><th>보증금</th><th>월세</th></tr></thead><tbody>'+items.slice(0,300).map(x=>'<tr><td>'+esc(x.name)+'</td><td>'+esc(x.area)+'㎡</td><td>'+esc(x.floor)+'</td><td>'+Number(x.deposit||0).toLocaleString()+'</td><td>'+Number(x.monthlyRent||0).toLocaleString()+'</td></tr>').join('')+'</tbody></table></div>':'<p>해당 월에 신고된 거래가 없습니다.</p>');
  }catch(e){out.textContent='네트워크 오류로 조회하지 못했습니다.';}
 }
