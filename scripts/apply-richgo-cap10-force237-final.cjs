@@ -29,7 +29,7 @@ for(const s of coverage.rows)if(s.review_status.includes('verified')){
  if(id){const owners=sourceOwner.get(id)||new Set();owners.add(s.name+'|'+s.area);sourceOwner.set(id,owners);}
 }
 const isNumeric=n=>typeof n==='number'&&Number.isFinite(n);
-const BRANDS=['현대','한양','삼성','롯데','대림','동부','극동','신명','태영','풍림','동아','삼환','신안','금호','효성','코오롱','청구','한신','건영','벽산','쌍용','동양','삼보','한진','세경','주공','포스코','에스케이','호반','부영','두산','LG','대우','GS','진흥','럭키','성원','우성','아이파크','푸르지오','래미안','더샵','원일','한일','쌍용','SK','풍경채','위브','동성','서희','신일'];
+const BRANDS=['현대','한양','삼성','롯데','대림','동부','극동','신명','태영','풍림','동아','삼환','신안','금호','효성','코오롱','청구','한신','건영','벽산','쌍용','동양','삼보','한진','세경','주공','포스코','에스케이','호반','부영','두산','LG','대우','GS','진흥','럭키','성원','우성','아이파크','푸르지오','래미안','더샵','원일','한일','한라','경남','삼익','대한','대창','삼호','삼정','쌍용','SK','풍경채','위브','동성','서희','신일'];
 const brandTokens=s=>BRANDS.filter(k=>String(s||'').toLowerCase().includes(k.toLowerCase()));
 function brandMismatch(a,b){
  const aa=brandTokens(a),bb=brandTokens(b);
@@ -37,8 +37,11 @@ function brandMismatch(a,b){
 }
 function numberMismatch(a,b){
  const get=s=>{
-  const x=String(s||'').replace(/\([^)]*(?:~|동|bl|번지)[^)]*\)/gi,'').replace(/bl\d+[-\d]*/gi,'').replace(/\d{3,4}(?:~\d{3,4})?동/g,'');
-  return [...x.matchAll(/(\d{1,2})(?=(?:단지|차|블럭|블록|호|$|[-(]))/gi)].map(m=>+m[1]);
+  const raw=String(s||''),block=raw.match(/BL\d+-(\d+)/i);
+  const x=raw.replace(/\([^)]*(?:~|동|bl|번지)[^)]*\)/gi,'').replace(/bl\d+[-\d]*/gi,'').replace(/\d{3,4}(?:~\d{3,4})?동/g,'');
+  const nums=[...x.matchAll(/(\d{1,2})(?=(?:단지|차|블럭|블록|호|$|[-(]))/gi)].map(m=>+m[1]);
+  if(block)nums.push(+block[1]);
+  return nums;
  };
  const aNums=get(a),bNums=get(b);
  return aNums.length>0&&bNums.length>0&&!aNums.some(x=>bNums.includes(x));
@@ -60,6 +63,11 @@ function eligible(t,c){
  if(d<=100&&dy!=null&&dy<=2&&sharesBrand(t.name,c.name)&&units===0)return true;
  if(d<=55&&dy!=null&&dy<=2&&sharesBrand(t.name,c.name)&&(labelContains(t.name,c.name)||ss>=.14))return true;
  if(d<=100&&dy!=null&&dy<=2&&units!=null&&units<=.025&&labelContains(t.name,c.name))return true;
+ // The legacy source names a whole building block, while Richgo uses the terminal BL number.
+ const block=String(t.name).match(/BL\d+-(\d+)/i);
+ if(block&&String(c.name).includes(block[1]+'단지')&&d<=240&&dy!=null&&dy<=3)return true;
+ // Coordinates, identical household count and the same completion year establish renamed aliases.
+ if(d<=150&&dy!=null&&dy<=1&&units===0)return true;
  return false;
 }
 const resolved=[],pending=[],allOut=[],count={original:237,richgoConfirmed:0,sourceMissing:0,farUnavailable:0,ambiguous:0,nonMatching:0,sharedSourcePages:0,
