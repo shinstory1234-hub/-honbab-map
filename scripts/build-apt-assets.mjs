@@ -265,6 +265,12 @@ export function buildAptAssets(root, output = path.join(root, 'public')) {
   html = html.replace(/<!--[\s\S]*?-->/g, '');
   // Lossless indentation cleanup before HTML tags; preserve strict first-page gzip budget.
   html = html.replace(/\n[ \t]+(?=<)/g, '\n');
+  // Equivalent unquoted HTML attribute values are valid HTML and avoid expanding the transfer budget.
+  html=html.replace('<html lang="ko">','<html lang=ko>')
+    .replace('<meta charset="utf-8">','<meta charset=utf-8>')
+    .replace('<meta name="viewport"','<meta name=viewport')
+    .replace('<link rel="icon"','<link rel=icon')
+    .replace('<link rel="apple-touch-icon"','<link rel=apple-touch-icon');
   fs.writeFileSync(path.join(output, 'apt-map-fast.html'), html);
   fs.writeFileSync(path.join(assets, 'manifest.json'), JSON.stringify({manifest, inventory}, null, 2));
   return {manifest, inventory, html};
