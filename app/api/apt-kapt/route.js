@@ -19,7 +19,7 @@ const detailByCode=unstable_cache(async(code)=>{
   if(!basic||!detail)throw Error('KAPT_DETAILS_MISSING');
   return {basic,detail};
 },['apt-kapt-basic-details-v1'],{revalidate:604800});
-const num=x=>{const n=Number(String(x??'').replace(/,/g,''));return Number.isFinite(n)&&n>=0?n:null;};
+const num=x=>{if(x==null||String(x).trim()==='')return null;const n=Number(String(x).replace(/,/g,''));return Number.isFinite(n)&&n>=0?n:null;};
 function sameDong(v,dong){return String(v||'').replace(/\s/g,'').includes(String(dong||'').replace(/\s/g,''));}
 function selectCandidate(list,key){
   const target=nameKey(key.name);
