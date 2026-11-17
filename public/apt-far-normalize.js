@@ -68,11 +68,15 @@
 (function(W){
  if(!(W.CAPT>6)||!W.FARD)return;
  const h=k=>{let z=5381;for(let i=0;i<k.length;i++)z=((z*33)^k.charCodeAt(i))>>>0;return z.toString(36).padStart(7,'0');};
+ const extra=W.CAPT===15?'0mohqr507v1g18nw505l01kcozd05b15pat6808o0h30l0b05e12ty67g06b18cw6n004x0bvp9zh06h0odwb3j04x0qve6qp07f07789e907f1g2ojdn06d1pezpab0821fi11og070030sm2d0641bckjuw05w01z4lv905n0yks5xk07f0s8go390860k6gzfs07g0t6586806z0mzebk107u':'';
  const p='1cc5c5406r0njosg505u0leqmsl03z06f5msh05e1mmnx6s04w0f307v605z1rtxuhl05z0xkwrjs05o0ep9jh90e61wwp1jj04l18tt6ux06801lkjrt0aq1vu0lxo05x1e97m8v0de15syde10531ogxhy407z1ezdcxp06s11ohkx804w0y6qeqa05y0cpt8ek05w1tj0dm705a0uklgow05b1jslg5505k05yfaxx0750e1e9vg0801lq0zkc04y0gcmucm04r1k8v1wc05g1qb6nz005s1ktb8hd05l02e5vr306w0qboorv04u1lp6e6x05u0nir4d905y0rd972w05b0a9qzik05m10qacx105m0ks00dt05y1ogzic305l02klqec06o1f34s0m04u0bfkezl06w0pa2t0407b11kzxet0581jdgcn905w1knpl38067013l0a105o1kozne004k1ko7fd405o1492in106b12j4qmw06t12b6wot07n137q37m05d0595arh05y08csfpx08q1v5vtmg03616n7wdh0520mkqvnh0380gpyhop0571of4zma05o04r7uj405o191ssef09110fhkss09h07j13l306r1llybx204t0w4iq9c0751ob3ims06g0s76v3i06q0e7eqn907508mzjlw0971p9lhhl05l09g4ygo06y0if61ls05y1o5uf7p0381w2ehn505b00t704105v10g1wey05f066ic2w07m0y30qdk079159c1bf06b0kq8bch05y0b3ppal051',m=new Map();
  for(let i=0;i<p.length;i+=10)m.set(p.slice(i,i+7),parseInt(p.slice(i+7,i+10),36));
+ for(let i=0;i<extra.length;i+=10)m.set(extra.slice(i,i+7),parseInt(extra.slice(i+7,i+10),36));
  let n=0;for(const k in W.FARD){
-  const f=W.FARD[k];if(!f||Number(f[0])>0&&!/^(E|T)/.test(String(f[1]||'')))continue;
-  const v=m.get(h(k));if(v==null)continue;f[0]=v;f[1]='리치고(단지 일치 미검증)';n++;
+  const f=W.FARD[k],key=h(k),i=extra.indexOf(key),force=i>=0&&i%10===0;
+  if(!f||!force&&(Number(f[0])>0&&!/^(E|T)/.test(String(f[1]||''))))continue;
+  const v=m.get(key);if(v==null)continue;f[0]=v;f[1]=force?'리치고(직접대조)':'리치고(단지 일치 미검증)';n++;
  }
+ if(W.CAPT===15)for(const d of W.PICKS||[])if(d.n==='힐스테이트신촌'&&d.area==='서울 서대문구 북아현동'&&d.year===2023)d.year=2020;
  W.APT_FAR_RICHGO_PREFERRED_N=n;
 })(window);
