@@ -13,6 +13,19 @@ function findClosingArray(code,start){
   }
   throw new Error('Cannot parse a packed apartment tuple');
 }
+function splitRawArray(raw){
+  if(raw[0]!=='['||raw.at(-1)!==']')throw new Error('Expected a packed array');
+  let depth=0, quoted=false,escape=false,start=1;const out=[];
+  for(let i=1;i<raw.length-1;i++){
+    const c=raw[i];
+    if(quoted){if(escape)escape=false;else if(c==='\\\\')escape=true;else if(c==='"')quoted=false;continue;}
+    if(c==='"'){quoted=true;continue;}
+    if(c==='['||c==='{')depth++;
+    if(c===']'||c==='}')depth--;
+    if(c===','&&depth===0){out.push(raw.slice(start,i));start=i+1;}
+  }
+  out.push(raw.slice(start,-1));return out;
+}
 export function patchRichgoCap10Source(code,root){
   const filename=path.join(root,'scripts/richgo-band10-corrections.json');
   const fixes=JSON.parse(fs.readFileSync(filename,'utf8'));
@@ -27,12 +40,15 @@ export function patchRichgoCap10Source(code,root){
     const needle='['+JSON.stringify(change.name)+','+a+',';
     const p=code.indexOf(needle,end);
     if(p<0)throw new Error('Missing cap10 complex '+change.name+'|'+change.area);
-    const q=findClosingArray(code,p),r=JSON.parse(code.slice(p,q));
-    if(r[0]!==change.name||r[1]!==a||!Array.isArray(r.at(-1)))throw new Error('Tuple mismatch '+needle);
-    if(Number.isInteger(change.year))r[4]=change.year;
-    if(Number.isInteger(change.units)&&change.units>0)r[5]=change.units;
-    if(Number.isFinite(change.far)&&change.far>=60&&change.far<=1500){r.at(-1)[0]=change.far;r.at(-1)[1]='리치고';}
-    code=code.slice(0,p)+JSON.stringify(r)+code.slice(q);updated++;
+    const q=findClosingArray(code,p),row=splitRawArray(code.slice(p,q));
+    if(JSON.parse(row[0])!==change.name||Number(row[1])!==a)throw new Error('Tuple mismatch '+needle);
+    if(Number.isInteger(change.year))row[4]=String(change.year);
+    if(Number.isInteger(change.units)&&change.units>0)row[5]=String(change.units);
+    if(Number.isFinite(change.far)&&change.far>=60&&change.far<=1500){
+      const fd=splitRawArray(row.at(-1));fd[0]=String(change.far);fd[1]='"리치고"';
+      row[row.length-1]='['+fd.join(',')+']';
+    }
+    code=code.slice(0,p)+'['+row.join(',')+']'+code.slice(q);updated++;
   }
   if(updated!==fixes.length)throw new Error('Richgo cap10 count mismatch');
   return code;
