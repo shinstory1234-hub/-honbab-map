@@ -310,7 +310,7 @@
 225,상계주공9(고층),서울 노원구 상계동,,57,1988,1988,2830,2830,37.66298,127.05998,165,207,207,1988,2830,crawler_verified,https://m.richgo.ai/realty/danji/a7CuvKn,
 216,상계주공10,서울 노원구 상계동,,64,1988,1988,2654,2654,37.66294,127.05537,165,169,169,1988,2654,crawler_verified,https://m.richgo.ai/realty/danji/a1Uawtt,
 1034,철산한신,광명시 철산동,,75,1992,1992,1568,1568,37.47166,126.87692,292,292,292,1992,1568,crossband_verified_10to15-direct,https://m.richgo.ai/realty/danji/a0QRmnh,10to15-direct
-246,주공2,서울 노원구 월계동,,76,1992,1992,4300,4300,37.62774,127.05384,165,165,,,,audit4_candidate_review,,
+246,주공2,서울 노원구 월계동,,76,1992,1992,4300,2002,37.62774,127.05384,165,227,227,1992,2002,audit9_richgo_verified_manual_alias,https://m.richgo.ai/realty/danji/a2yQdLu,
 220,상계주공16(고층),서울 노원구 상계동,,80,1988,1988,4492,2392,37.66878,127.05372,184,184,184,1988,2392,audit8_richgo_verified_catalog,https://m.richgo.ai/realty/danji/a7ipCqb,
 336,신촌푸르지오,서울 서대문구 북아현동,,82,2015,2015,940,940,37.56014,126.95201,,244,244,2015,940,crossband_verified_20to25,https://m.richgo.ai/realty/danji/a9RpjTQ,20to25;15to20
 219,상계주공14,서울 노원구 상계동,,86,1989,1989,1635,2265,37.66916,127.05927,165,147,147,1989,2265,audit6_verified_source_scope_correction,https://m.richgo.ai/realty/danji/a3OCrAW,
@@ -337,7 +337,7 @@
 38,한신아파트,서울 동대문구 제기동,,183,2004,2004,1070,1070,37.58885,127.03912,,300,300,2004,1070,crossband_verified_10to15-direct,https://m.richgo.ai/realty/danji/a5lfYUZ,10to15-direct
 31,래미안장안2차,서울 동대문구 장안동,,187,2007,2007,1786,1786,37.57396,127.07539,,299,299,2007,1786,crossband_verified_10to15-direct,https://m.richgo.ai/realty/danji/a6ieiPJ,10to15-direct
 97,이수브라운스톤돈암,서울 성북구 돈암동,,191,2004,2004,1074,1074,37.59802,127.01758,,238,238,2004,1074,crossband_verified_10to15-direct,https://m.richgo.ai/realty/danji/a0mPFiq,10to15-direct
-7,진양상가,서울 중구 충무로4가,,192,1970,1970,850,850,37.5624,126.99594,183,183,,,,audit4_candidate_review,,
+7,진양상가,서울 중구 충무로4가,,192,1970,1970,850,280,37.5624,126.99594,183,147,147,1970,280,audit9_richgo_verified_manual_alias,https://m.richgo.ai/realty/danji/a9QcWYI,
 821,하얀마을(5단지)(주공),성남 분당구 구미동,,195,1995,1995,779,779,37.34561,127.11723,151,131,131,1995,779,audit4_verified_far,https://m.richgo.ai/realty/danji/a1UmGpM,
 820,무지개(1단지)(대림),성남 분당구 구미동,,197,1995,1995,778,778,37.33518,127.11677,245,209,209,1995,778,crossband_verified_10to15-direct,https://m.richgo.ai/realty/danji/a5AmISU,10to15-direct;15to20
 1460,꿈동산신안,하남시 창우동,,198,1994,1994,1704,1704,37.53694,127.22435,291,214,214,,1704,crossband_verified_252-confirmed,https://m.richgo.ai/realty/danji/a4xoLjx,252-confirmed
@@ -556,7 +556,7 @@
 1677,풍무센트럴푸르지오,김포시 풍무동,,903,2018,2018,2467,2467,37.60996,126.72798,,219,219,2018,2467,crawler_verified,https://m.richgo.ai/realty/danji/a8eJYzk,
 1221,한라비발디,구리시 갈매동,,909,2016,2016,1075,1075,37.6362,127.11946,,216,216,2016,1075,crawler_verified,https://m.richgo.ai/realty/danji/a9EmhVj,
 1148,은빛마을6단지,고양 덕양구 화정동,,911,1996,1996,1320,1320,37.63653,126.82967,200,199,199,1996,1320,crawler_verified,https://m.richgo.ai/realty/danji/a7vykeH,
-602,동아(1차),인천 부평구 부평동,,914,1986,1986,2475,2475,37.49386,126.71833,271,271,,,,audit4_candidate_review,,
+602,동아(1차),인천 부평구 부평동,,914,1986,1986,2475,2475,37.49386,126.71833,271,181,181,1986,2475,audit9_richgo_verified_manual_alias,https://m.richgo.ai/realty/danji/a3QBfAn,
 830,탑석센트럴자이,의정부시 용현동,,916,2021,2021,2571,2571,37.73409,127.08184,,290,290,2021,2571,crawler_verified,https://m.richgo.ai/realty/danji/a7pwdwA,
 1239,엘지원앙,구리시 수택동,,922,1995,1995,824,824,37.58918,127.13911,220,219,219,1995,824,audit4_verified_far,https://m.richgo.ai/realty/danji/a6YTBiz,
 1355,시흥센트럴푸르지오,시흥시 대야동,,924,2020,2020,2003,2003,37.44048,126.78985,,483,483,2020,2003,crawler_verified,https://m.richgo.ai/realty/danji/a2sNUIX,
@@ -589,9 +589,9 @@
 479,경남아너스빌1차,서울 동작구 사당동,,991,1997,1997,340,340,37.48825,126.96781,287,290,290,1997,340,crawler_verified,https://m.richgo.ai/realty/danji/a6cxFff,
 637,청라국제금융단지한양수자인레이크블루,인천 서해구 청라동,,992,2019,2019,1534,1534,37.53763,126.62988,,225,225,2019,1534,crawler_verified,https://m.richgo.ai/realty/danji/a2tgwVz,
 481,쌍용스윗닷홈,서울 동작구 상도동,,994,2003,2003,388,389,37.50155,126.93181,,188,188,2003,389,audit4_verified_far,https://m.richgo.ai/realty/danji/a8kfxvH,
-1054,더샵지제역센트럴파크1BL,평택시 동삭동,,995,2020,2020,2124,2124,37.01416,127.09028,,,,,,audit4_candidate_review,,
+1054,더샵지제역센트럴파크1BL,평택시 동삭동,,995,2020,2020,2124,2124,37.01416,127.09028,,193,193,2020,2124,audit9_richgo_verified_manual_alias,https://m.richgo.ai/realty/danji/a3DVJSm,
 1019,광명역세권휴먼시아3단지,광명시 소하동,,996,2011,2011,797,797,37.43285,126.88226,,166,166,2011,797,audit4_verified_far,https://m.richgo.ai/realty/danji/a6OhXGq,
-723,우만주공2단지,수원 팔달구 우만동,,998,1989,1989,1484,1484,37.28182,127.03841,219,219,,,,audit4_candidate_review,,
+723,우만주공2단지,수원 팔달구 우만동,,998,1989,1989,1484,984,37.28182,127.03841,219,,,1989,984,audit9_richgo_verified_manual_alias,https://m.richgo.ai/realty/danji/a0OGzUG,
 1650,운정신도시 센트럴 푸르지오,파주시 목동동,,999,2018,2018,1956,1956,37.71925,126.73431,,198,198,2018,1956,crossband_verified_under6-direct,https://m.richgo.ai/realty/danji/a6tnaYL,under6-direct
 1483,기흥역더샵,용인 기흥구 구갈동,,1000,2018,2018,1219,1219,37.27272,127.11819,,441,441,2018,1219,crawler_verified,https://m.richgo.ai/realty/danji/a5kmgLG,
 90,길음뉴타운3단지푸르지오,서울 성북구 길음동,,1002,2005,2005,434,434,37.61011,127.01644,,254,254,2005,434,crawler_verified,https://m.richgo.ai/realty/danji/a2ObPXb,
@@ -1168,7 +1168,7 @@
 1736,시범한빛마을금호어울림,화성 동탄구 반송동,,2314,2007,2007,548,548,37.20545,127.06699,,219,219,2007,548,crawler_verified,https://m.richgo.ai/realty/danji/a3jQuHC,
 1819,힐스테이트태전2차에듀포레C11BL,광주시 태전동,,2315,2019,2019,706,706,37.3784,127.23229,,199,199,2019,706,crawler_verified,https://m.richgo.ai/realty/danji/a9nloqv,
 932,백송마을(상록LG),부천 원미구 상동,,2316,2003,2003,476,476,37.5002,126.74868,,209,209,2003,476,audit4_verified_far,https://m.richgo.ai/realty/danji/a6myKtP,
-933,백송마을(엘지에스케이),부천 원미구 상동,,2317,2002,2002,496,496,37.49966,126.75063,,,,,,audit4_no_source,,
+933,백송마을(엘지에스케이),부천 원미구 상동,,2317,2002,2002,496,496,37.49966,126.75063,,207,207,2002,496,audit9_richgo_verified_manual_alias,https://m.richgo.ai/realty/danji/a3jMqAl,
 323,상림마을6단지푸르지오(622~629동)BL1-5,서울 은평구 진관동,,2318,2008,2008,335,318,37.64796,126.92885,,149,149,2008,318,audit8_richgo_verified_catalog,https://m.richgo.ai/realty/danji/a5uSPWm,
 330,은평뉴타운 제각말 푸르지오(5-1단지),서울 은평구 진관동,,2321,2010,2010,335,330,37.6364,126.93576,,131,131,2010,330,audit8_richgo_verified_catalog,https://m.richgo.ai/realty/danji/a8tTxhJ,
 1508,더샵보정애비뉴2단지,용인 기흥구 보정동,,2323,2004,2004,423,423,37.30867,127.10912,,199,199,2004,423,crawler_verified,https://m.richgo.ai/realty/danji/a1EfjsZ,
@@ -1249,7 +1249,7 @@
 1761,동탄역중흥에스클래스,화성 동탄구 여울동,,2475,2019,2019,436,436,37.18602,127.08686,,129,129,2019,436,crawler_verified,https://m.richgo.ai/realty/danji/a0QcgPf,
 748,망포역아이파크,수원 영통구 망포동,,2476,2002,2002,512,554,37.24398,127.057,,235,235,2002,554,audit6_verified_source_scope_correction,https://m.richgo.ai/realty/danji/a2ukvMq,
 344,홍은동풍림아이원,서울 서대문구 홍은동,,2480,2002,2002,340,333,37.60364,126.94838,,260,260,2002,333,audit8_richgo_verified_catalog,https://m.richgo.ai/realty/danji/a0oXpMB,
-1428,성원1차이화,의왕시 오전동,,2482,2000,2000,544,544,37.35847,126.96984,286,286,,,,audit4_no_source,,
+1428,성원1차이화,의왕시 오전동,,2482,2000,2000,544,520,37.35847,126.96984,286,286,286,2000,520,audit9_richgo_verified_manual_alias,https://m.richgo.ai/realty/danji/a5FZIKR,
 1132,행신3차SKVIEW,고양 덕양구 행신동,,2483,2009,2009,574,574,37.62001,126.8299,,269,269,2009,574,crossband_verified_under6-full,https://m.richgo.ai/realty/danji/a8FnbvT,under6-full
 54,중랑숲시티프라디움,서울 중랑구 망우동,,2486,2022,2022,403,403,37.60766,127.10838,,216,216,2022,403,crawler_verified,https://m.richgo.ai/realty/danji/a7GYQUw,
 1510,솔뫼마을현대홈타운,용인 기흥구 보정동,,2488,2001,2002,382,382,37.3095,127.09741,199,198,198,2002,382,crawler_verified,https://m.richgo.ai/realty/danji/a2jItrQ,
@@ -1536,7 +1536,7 @@
 520,e편한세상송도,인천 연수구 송도동,,,2018,2018,2708,2708,37.41139,126.61726,,233,233,2018,2708,crossband_verified_under6-direct,https://m.richgo.ai/realty/danji/a4xBgyU,under6-direct
 1084,e편한세상초지역센트럴포레,안산 단원구 원곡동,,,2021,2021,1450,1450,37.32533,126.80047,,249,249,2021,1450,crossband_verified_under6-direct,https://m.richgo.ai/realty/danji/a4aGoky,under6-direct
 1337,e편한세상평내메트로원,남양주시 평내동,,,2022,2022,1108,1108,37.64809,127.24049,,276,276,2022,1108,crossband_verified_under6-direct,https://m.richgo.ai/realty/danji/a4HvtxY,under6-direct
-1517,SK,용인 기흥구 서천동,,,2002,2002,826,826,37.24427,127.07185,,,,,,audit4_no_source,,
+1517,SK,용인 기흥구 서천동,,,2002,2002,826,807,37.24427,127.07185,,202,202,2002,807,audit9_richgo_verified_manual_alias,https://m.richgo.ai/realty/danji/a0UXjDH,
 1124,SK뷰1차,고양 덕양구 행신동,,,2005,2005,812,812,37.62073,126.83296,,299,299,2005,812,crossband_verified_under6-full,https://m.richgo.ai/realty/danji/a8uyjoa,under6-full
 281,갈현동현대,서울 은평구 갈현동,,,1997,1997,303,278,37.62222,126.91423,261,261,261,1997,278,audit8_richgo_verified_catalog,https://m.richgo.ai/realty/danji/a9ARVOT,
 1662,강변마을 월드메르디앙아파트,김포시 고촌읍,,,2010,2010,560,560,37.60765,126.77437,,193,193,2010,560,crossband_verified_under6-full,https://m.richgo.ai/realty/danji/a6oWzRg,under6-full
@@ -1752,7 +1752,7 @@
 266,중앙하이츠,서울 노원구 중계동,,,1998,1998,499,499,37.65985,127.07627,293,293,293,1998,499,crawler_verified,https://m.richgo.ai/realty/danji/a0qGARk,
 1013,중앙하이츠1,광명시 광명동,,,1993,1993,909,909,37.46875,126.85464,308,308,308,1993,909,crossband_verified_under6-full,https://m.richgo.ai/realty/danji/a0lYYnn,under6-full
 1516,지석마을그대가크레던스,용인 기흥구 상하동,,,2010,2010,554,554,37.26846,127.13635,,239,239,2010,554,crossband_verified_under6-full,https://m.richgo.ai/realty/danji/a3clFou,under6-full
-1322,진도,남양주시 와부읍,,,1998,1998,608,608,37.58338,127.21121,259,259,,,,audit4_no_source,,
+1322,진도,남양주시 와부읍,,,1998,1998,608,571,37.58338,127.21121,259,258,258,1998,571,audit9_richgo_verified_manual_alias,https://m.richgo.ai/realty/danji/a8hBBMb,
 179,창동주공1단지,서울 도봉구 창동,,,1990,1990,808,808,37.65354,127.0394,165,167,167,,808,crossband_verified_252-confirmed,https://m.richgo.ai/realty/danji/a3sLkWE,252-confirmed;under6-full
 180,창동주공2단지,서울 도봉구 창동,,,1990,1990,750,750,37.65274,127.0423,165,203,203,,750,crossband_verified_252-confirmed,https://m.richgo.ai/realty/danji/a8oCxGg,252-confirmed;under6-full
 338,천연뜨란채,서울 서대문구 천연동,,,2006,2006,1008,1008,37.56752,126.95827,,229,229,2006,1008,crossband_verified_10to15-direct,https://m.richgo.ai/realty/danji/a8KPtpe,10to15-direct
