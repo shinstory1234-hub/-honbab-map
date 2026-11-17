@@ -1712,9 +1712,7 @@ function renderDetail(i){
     <div class="me"><span class="n">${esc(d.n)} ${d.py}평</span><span class="v">${d.me.toLocaleString()}</span>${bar(d.me,Math.max(d.me,d.bench.ppp))}</div>
     <div><span class="n">${esc(d.bench.name)}</span><span class="v">${d.bench.ppp.toLocaleString()}</span>${bar(d.bench.ppp,Math.max(d.me,d.bench.ppp))}</div>
   </div><p class="note">${d.deal?esc(d.deal):''}</p></section>`:`<section class="sec"><h3>${CAPTXT} 평형 <small>최근 시세</small></h3><div class="cmp tnum">${(d.types||[{py:d.py,p:d.p,n:0}]).map(t=>`<div${t.py===d.py?' class="me"':''}><span class="n">${t.py}평${t.n?` · ${t.n3>=5?`3개월 ${t.n3}건`:`12개월 ${t.n}건 환산`}`:''}</span><span class="v">${eok(t.p)}</span>${bar(t.p,CAPHI)}</div>`).join('')}</div><p class="note">${d.deal?esc(d.deal):''}</p></section>`}</div>`;
-  if(d.stage){
-    h+=`<section class="sec"><h3>재건축 단계</h3><ol class="stage">`+d.stage.steps.map((s,k)=>`<li class="${k<d.stage.at?'done':k===d.stage.at?'now':''}"><span class="tnum">${String(k+1).padStart(2,'0')}</span>${esc(s)}</li>`).join('')+`</ol><div class="inline-note">${esc(d.stage.note)}</div></section>`;
-  }
+  // 정비사업 단계는 상세 정보의 공식 자료 확인 영역에서 한 번만 표시한다.
   if(d.timeline&&d.timeline.length) h+=`<section class="sec"><h3>일정</h3><ul class="tl">`+d.timeline.map(t=>`<li><time class="tnum">${esc(t[0])}</time><span>${esc(t[1])}</span></li>`).join('')+`</ul></section>`;
   h+=`<section class="sec"><h3>자금 <small>단순 계산</small></h3><dl class="facts tnum">`;
   if(m.gap!=null) h+=`<div class="em"><dt>전세 끼고 매수<small>전세 ${eok(d.jeon)} · 전세가율 ${Math.round(d.jeon/d.p*100)}%</small></dt><dd>${eok(m.gap)}</dd></div>`;
