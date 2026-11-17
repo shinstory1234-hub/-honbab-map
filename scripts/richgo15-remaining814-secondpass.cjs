@@ -21,7 +21,7 @@ function facts(html,id){const p=html.indexOf('<dl class="facts">');if(p<0)throw 
 async function main(){
  const {header,rows}=csv(fs.readFileSync(pathOf(csvFile),'utf8')),spec=JSON.parse(fs.readFileSync(pathOf(specFile),'utf8'));if(rows.length!==814)throw Error('Not 814 rows');
  const todo=rows.filter(r=>r.verification!=='직접확인');if(todo.length!==51)throw Error('Expected 51 unmatched, received '+todo.length);
- const entries=todo.map(r=>({row:r,id:idOverride[Number(r.seq)]||(r.notes.match(/a[A-Za-z0-9]{6}/g)||[]).at(-1)||''}));
+ const entries=todo.map(r=>({row:r,id:idOverride[Number(r.seq)]||([...r.notes.matchAll(/https:\/\/m\.richgo\.ai\/realty\/danji\/(a[A-Za-z0-9]{6})(?![A-Za-z0-9])/g)].map(m=>m[1])).at(-1)||''}));
  const ids=[...new Set(entries.map(e=>e.id).filter(x=>/^a[A-Za-z0-9]{6}$/.test(x)))],memo=new Map;let n=0;
  await Promise.all(Array.from({length:7},async()=>{while(n<ids.length){const id=ids[n++];memo.set(id,facts(await fetchText(id),id))}}));
  const review=[];
