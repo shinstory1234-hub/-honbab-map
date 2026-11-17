@@ -1,0 +1,28 @@
+name: Finalize all 626 Richgo apartment fact audits
+on:
+  push:
+    branches: [audit/richgo-15to20-top300-20261118]
+    paths: [scripts/finalize-richgo20-rest.cjs, .github/workflows/finalize-richgo20-rest.yml]
+  workflow_dispatch:
+permissions: {contents: write}
+jobs:
+  finalize:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+        with: {persist-credentials: true}
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
+        with: {node-version: '22'}
+      - name: Verify 326 remainder, 626 total, and update original source
+        run: node scripts/finalize-richgo20-rest.cjs
+      - name: Commit evidence and corrections without deploying
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -f docs/richgo-15to20-remaining326-audit-20261118.csv
+          git add docs/richgo20-verified-rest326-20261118.json docs/richgo20-verified-all626-20261118.json public/apt-univ20.js public/apt-far-normalize.js
+          if ! git diff --cached --quiet; then
+            git commit -m "data: verify all 626 Richgo apartments and reconcile remaining 326"
+            git push origin HEAD:audit/richgo-15to20-top300-20261118
+          fi
