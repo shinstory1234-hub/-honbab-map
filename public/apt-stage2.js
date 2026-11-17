@@ -49,6 +49,8 @@ css.textContent=[
 '@media(max-width:767px){.s2-shade{padding:0;align-items:flex-end}.s2-dialog{max-height:81dvh;border-radius:14px 14px 0 0}.s2-tabs{top:49px}#apt2Launcher{top:147px}}'
 ].join('');
 css.textContent+='.search{position:relative}.s2-suggest{position:absolute;top:calc(100% + 5px);left:0;right:0;z-index:300;background:var(--bg);border:1px solid var(--border);border-radius:7px;box-shadow:0 7px 20px #0003;max-height:330px;overflow:auto;padding:5px}.s2-suggest[hidden]{display:none}.s2-suggest button{display:block;border:0;width:100%;text-align:left;padding:10px 11px;background:var(--bg);color:var(--text);cursor:pointer;border-radius:4px}.s2-suggest button:hover,.s2-suggest button:focus-visible{background:var(--bg-subtle);outline:1px solid var(--border)}.s2-suggest b{font-size:13px;display:block}.s2-suggest small{font-size:11px;color:var(--text-tertiary);display:block;margin-top:3px}';
+css.textContent+="\n/* Clean UI preview: consistent text-first navigation and compact control density */\n.s2-dialog{border-radius:10px;box-shadow:0 14px 45px #0002}\n.s2-top{padding:17px 2px 12px}.s2-top h2{font-size:19px;letter-spacing:-.04em}\n.s2-tabs{gap:0;padding:0;top:55px;scrollbar-width:none}\n.s2-tabs .s2-btn{border:0;border-bottom:2px solid transparent;border-radius:0!important;padding:13px 14px 11px;background:transparent!important;color:var(--text-tertiary);font-size:13px;font-weight:600}\n.s2-tabs .s2-btn.on{color:var(--text);border-bottom-color:var(--text);font-weight:760}\n.s2-body{padding:12px 2px 10px}.s2-body h3{font-size:15px;letter-spacing:-.03em;margin:23px 0 10px}\n.s2-body h3:first-child{margin-top:7px}\n.s2-btn{border-radius:5px!important;box-shadow:none!important;font-weight:650}\n.s2-flex{gap:0;padding:0;align-items:stretch;flex-wrap:wrap;border-top:1px solid var(--border-soft)}\n.s2-flex .s2-btn{border:0;border-radius:0!important;background:transparent!important;color:var(--text-secondary);padding:12px 14px;border-bottom:1px solid var(--border-soft)}\n.s2-flex .s2-btn.on,.s2-flex .s2-btn[aria-pressed=true]{color:var(--primary-soft-fg);background:transparent!important}\n.s2-cols{gap:0 14px}.s2-cols label{font-size:12px;font-weight:600;padding:10px 0;color:var(--text-secondary)}\n.s2-cols input,.s2-cols select{border:0!important;border-radius:0!important;border-bottom:1px solid var(--border)!important;padding:8px 2px!important;min-height:38px;background:transparent!important;outline-offset:2px}\n.s2-chip{border:0;border-radius:0!important;background:transparent;padding:12px 0;border-bottom:1px solid var(--border-soft)}\n.s2-rows>li{padding:14px 0}.s2-rows>li>.s2-btn{border:0;border-radius:0!important;color:var(--primary-soft-fg);padding:8px 0 8px 12px}\n.s2-body p{line-height:1.65;margin:10px 0 16px}\n.s2-body table{border-collapse:collapse;table-layout:fixed}\n.s2-body th{font-weight:650;color:var(--text-tertiary);border-bottom:1px solid var(--border);padding:12px 6px;text-align:left}\n.s2-body td{border-bottom:1px solid var(--border-soft);padding:12px 6px;line-height:1.5;vertical-align:top}\n.s2-body [id$=Matches] .s2-btn{border:0;border-radius:0!important;border-bottom:1px solid var(--border-soft);width:100%;text-align:left;padding:12px 4px}\n.s2-body #s2Apply,.s2-body #s2RaceRun,.s2-body #s2WAdd{background:var(--text)!important;color:var(--bg)!important;border-radius:5px!important;padding:12px 20px;margin-top:12px}\n.s2-body #s2Clear,.s2-body #s2WClear,.s2-body #s2ClearHistory{color:var(--text-tertiary)}\n.s2-body #s2RaceOutput{overflow-x:auto}\n.s2-body #s2RaceOutput table{min-width:420px}\n.s2-body #s2RaceOutput td,.s2-body #s2RaceOutput th{overflow-wrap:anywhere}\n.s2-body #s2RankRows .s2-rows>li{align-items:baseline}\n.s2-body .s2-control-group{margin:15px 0 18px}\n.s2-body .s2-control-group>h3{margin:0;padding:0 0 9px;border-bottom:1px solid var(--border-soft)}\n.s2-body .s2-control-group .s2-flex{border-top:0}\n.s2-body .s2-control-group .s2-flex .s2-btn{flex:1 1 42%;text-align:left;min-width:0}\n.s2-body .s2-control-group .s2-flex .s2-btn:focus-visible{outline:2px solid var(--primary)}\n.s2-body .s2-actionbar{border-top:0;display:flex;gap:12px;align-items:center;flex-wrap:wrap}\n.s2-body .s2-actionbar .s2-btn{flex:none;border:0}\n.s2-body .s2-actionbar .s2-btn:not(.on){color:var(--text-tertiary)}\n@media(max-width:767px){.s2-dialog{border-radius:12px 12px 0 0!important}.s2-tabs .s2-btn{padding:13px 12px 11px}.s2-body .s2-control-group .s2-flex .s2-btn{flex:1 1 45%}}\n";
+css.textContent+="\n.s2-select-overlay{position:fixed;inset:0;z-index:1600;background:rgba(0,0,0,.42);display:flex;align-items:flex-end;justify-content:center}\n.s2-select-panel{width:min(480px,100%);max-height:min(75dvh,620px);overflow:hidden;background:var(--bg);color:var(--text);border-radius:14px 14px 0 0;display:flex;flex-direction:column;padding-bottom:env(safe-area-inset-bottom)}\n.s2-select-panel header{padding:19px 20px 13px;font-size:17px;font-weight:750;letter-spacing:-.025em;border-bottom:1px solid var(--border-soft)}\n.s2-select-options{overflow-y:auto;overscroll-behavior:contain;padding:4px 16px 12px}\n.s2-select-option{width:100%;min-height:48px;display:block;text-align:left;border:0;border-bottom:1px solid var(--border-soft);background:transparent;color:var(--text);font-size:15px;padding:12px 30px 12px 4px;position:relative}\n.s2-select-option.active{font-weight:750;color:var(--primary-soft-fg)}\n.s2-select-option.active:after{content:'✓';position:absolute;right:7px;top:50%;transform:translateY(-50%)}\n.s2-select-option:last-child{border-bottom:0}\n@media(min-width:768px){.s2-select-overlay{align-items:center;padding:24px}.s2-select-panel{border-radius:10px;max-height:75vh}}\n";
 document.head.appendChild(css);
 function note(t){var o=document.getElementById('s2Toast');if(!o){o=document.createElement('div');o.id='s2Toast';o.className='s2-toast';o.setAttribute('role','status');document.body.appendChild(o);}o.textContent=t;o.hidden=false;clearTimeout(note.t);note.t=setTimeout(()=>{o.hidden=true;},2900);}
 function remember(d){var k=key(d);recent=[k,...recent.filter(x=>x!==k)].slice(0,12);try{localStorage.setItem(recKey,JSON.stringify(recent));}catch(e){}}
@@ -93,23 +95,23 @@ function filtersTab(){
  +(has?fld('rentMin','전세 참고금 최소 (억원)',10000)+fld('gapMax','전세 갭 최대 (억원)',10000)+fld('ratioMin','전세가율 최소 (%)')+fld('ratioMax','전세가율 최대 (%)'):'')
  +fld('tradeMin','최근 3개월 거래 최소 (건)')
  +'<label>마지막 거래<select name="days">'+searchOptions([['0','제한 없음'],['90','90일 이내'],['180','180일 이내'],['365','1년 이내']],String(filter.days))+'</select></label></div>'
- +'<div class="s2-flex"><button class="s2-btn on" id="s2Apply">필터 적용</button><button class="s2-btn" id="s2Clear">초기화</button></div>'
+ +'<div class="s2-actionbar"><button class="s2-btn on" id="s2Apply">필터 적용</button><button class="s2-btn" id="s2Clear">초기화</button></div>'
  +'<p>'+(has?'단지 참고 전세금은 동일 전용면적 계약과 일치하지 않을 수 있습니다. ':'현재 가격대에 검증 가능한 전세·갭 자료가 없어 해당 조건은 숨겼습니다. ')+'월세, 공시가격, 매물 소화기간 및 호가 변화는 자료가 없어 제외합니다.</p>';
 }
 function navTab(){
  var areas=new Set();D.forEach(d=>{var a=d.area.split(' ');if(a.length>=3)areas.add(a.slice(0,2).join(' '));});
  var opts=[...areas].sort((a,b)=>a.localeCompare(b,'ko')).map(k=>[k,k]);
  return '<h3>지역 이동</h3><div class="s2-cols"><label class="s2-wide">시·구<select id="s2Region"><option value="">지역 선택</option>'+searchOptions(opts,'')+'</select></label></div>'
- +'<div class="s2-flex"><button class="s2-btn" data-s2action="where">◎ 내 위치</button><button class="s2-btn" data-s2action="home">전체 지도</button><button class="s2-btn" data-s2action="zoomIn">확대 +</button><button class="s2-btn" data-s2action="zoomOut">축소 −</button></div>'
- +'<h3>지도 보기</h3><div class="s2-flex"><button class="s2-btn" data-s2view="ROADMAP">일반</button><button class="s2-btn" data-s2view="HYBRID">위성·항공</button><button class="s2-btn" data-s2overlay="land">지적편집도</button><button class="s2-btn" data-s2overlay="road">로드뷰 위치</button></div>'
- +'<h3>거리·면적 측정</h3><div class="s2-flex"><button class="s2-btn" data-s2measure="distance">두 점 거리</button><button class="s2-btn" data-s2measure="area">다각형 면적</button><button class="s2-btn" data-s2measure="clear">표시 지우기</button></div>'
- +'<p>측정은 지도상의 직선거리·평면 면적입니다. 실제 보행 경로가 아닙니다. 역사 항공사진 연도 변경은 지원하지 않습니다.</p>';
+ +'<div class="s2-control-group"><h3>위치와 확대</h3><div class="s2-flex"><button class="s2-btn" data-s2action="where">◎ 내 위치</button><button class="s2-btn" data-s2action="home">전체 지도</button><button class="s2-btn" data-s2action="zoomIn">확대 +</button><button class="s2-btn" data-s2action="zoomOut">축소 −</button></div>'
+ +'</div><div class="s2-control-group"><h3>지도 보기</h3><div class="s2-flex"><button class="s2-btn" data-s2view="ROADMAP">일반</button><button class="s2-btn" data-s2view="HYBRID">위성·항공</button><button class="s2-btn" data-s2overlay="land">지적편집도</button><button class="s2-btn" data-s2overlay="road">로드뷰 위치</button></div>'
+ +'</div><div class="s2-control-group"><h3>거리와 면적</h3><div class="s2-flex"><button class="s2-btn" data-s2measure="distance">두 점 거리</button><button class="s2-btn" data-s2measure="area">다각형 면적</button><button class="s2-btn" data-s2measure="clear">표시 지우기</button></div>'
+ +'</div><p>측정은 지도상의 직선거리·평면 면적입니다. 실제 보행 경로가 아닙니다. 역사 항공사진 연도 변경은 지원하지 않습니다.</p>';
 }
 function savedTab(){
  var arr=recent.map(k=>D.find(d=>key(d)===k)).filter(Boolean);
  var seen=new Set(),fav=D.filter(d=>FAV.has(d.cxKey)&&!seen.has(complexRankKey(d))&&seen.add(complexRankKey(d))).sort((a,b)=>a.rank-b.rank);
  return '<h3>최근 본 단지 · 이 기기</h3>'+rows(arr.slice(0,8))+'<h3>관심 단지 · ♥ 저장</h3>'+rows(fav.slice(0,12))
- +'<div class="s2-flex"><button id="s2Share" class="s2-btn">조건 포함 링크 복사</button><button id="s2ClearHistory" class="s2-btn">최근 기록 지우기</button></div>'
+ +'<div class="s2-actionbar"><button id="s2Share" class="s2-btn">조건 포함 링크 복사</button><button id="s2ClearHistory" class="s2-btn">최근 기록 지우기</button></div>'
  +'<p>최근 본 기록과 관심 단지는 이 브라우저에만 저장됩니다. 로그인 없이 기기 간 동기화하지 않습니다.</p>';
 }
 function rivalsTab(){
@@ -118,7 +120,7 @@ function rivalsTab(){
  var select=k=>'<input data-rival-query="'+k+'" type="search" autocomplete="off" placeholder="단지명·동네 검색"><select data-rival="'+k+'"><option value="">단지 선택</option>'+pool.slice(0,25).map(d=>'<option value="'+esc(key(d))+'"'+(rivals[k]===key(d)?' selected':'')+'>'+esc(name(d))+'</option>').join('')+'</select>';
  return '<h3>라이벌 실거래 비교</h3><p>비슷한 전용면적의 두 단지를 골라 최근 분기별 국토부 중위 실거래를 비교합니다.</p>'
  +'<div class="s2-cols"><label>단지 1'+select(0)+'</label><label>단지 2'+select(1)+'</label></div>'
- +'<div class="s2-flex"><button class="s2-btn on" id="s2RaceRun">비교하기</button></div>'
+ +'<div class="s2-actionbar"><button class="s2-btn on" id="s2RaceRun">비교하기</button></div>'
  +'<div id="s2RaceOutput" role="status"></div><p>같은 분기 양쪽 각각 2건 이상의 거래만 표시합니다. 다른 전용면적·동·향에 따른 가격차이는 별도 보정하지 않습니다.</p>';
 }
 function livingTab(){
@@ -185,12 +187,37 @@ function open(t){mapReady();if(t)tab=t;if(!panel){panel=document.createElement('
 function escClose(e){if(e.key==='Escape')close();}
 function close(){if(panel){panel.remove();panel=null;document.removeEventListener('keydown',escClose);}}
 function bindRows(){panel?.querySelectorAll('[data-s2go]').forEach(b=>b.onclick=()=>{var i=+b.dataset.s2go;close();select(i,false);});}
+
+function s2SelectSheet(select){
+ if(!select||select.disabled||document.querySelector('.s2-select-overlay'))return;
+ const opts=[...select.options].filter(o=>!o.disabled&&!o.hidden);
+ if(!opts.length)return;
+ const overlay=document.createElement('div');overlay.className='s2-select-overlay';
+ const dialog=document.createElement('section');dialog.className='s2-select-panel';dialog.setAttribute('role','dialog');dialog.setAttribute('aria-modal','true');
+ const label=select.closest('label')?.childNodes[0]?.textContent?.trim()||select.getAttribute('aria-label')||'선택';
+ const head=document.createElement('header');head.textContent=label;dialog.appendChild(head);
+ const list=document.createElement('div');list.className='s2-select-options';
+ opts.forEach(o=>{const b=document.createElement('button');b.type='button';b.textContent=o.textContent;b.className='s2-select-option'+(o.value===select.value?' active':'');b.setAttribute('aria-pressed',String(o.value===select.value));b.onclick=()=>{const changed=select.value!==o.value;select.value=o.value;close();if(changed)select.dispatchEvent(new Event('change',{bubbles:true}));};list.appendChild(b);});
+ dialog.appendChild(list);overlay.appendChild(dialog);
+ const close=()=>{document.removeEventListener('keydown',esc);overlay.remove();};
+ const esc=e=>{if(e.key==='Escape')close();};
+ overlay.addEventListener('click',e=>{if(e.target===overlay)close();});
+ document.addEventListener('keydown',esc);document.body.appendChild(overlay);
+ list.querySelector('.active')?.scrollIntoView({block:'nearest'});
+}
+function bindS2Selects(){
+ if(!panel)return;
+ panel.querySelectorAll('.s2-body select').forEach(select=>{
+  select.addEventListener('pointerdown',e=>{if(e.pointerType==='mouse'||e.pointerType==='touch'||e.pointerType==='pen'){e.preventDefault();s2SelectSheet(select);}});
+  select.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();s2SelectSheet(select);}});
+ });
+}
 function paint(){
  if(!panel)return;
  var tabs=panel.querySelector('.s2-tabs'),body=panel.querySelector('.s2-body');
  tabs.innerHTML=tabnames.map(([k,v])=>'<button class="s2-btn'+(tab===k?' on':'')+'" data-s2tab="'+k+'" role="tab" aria-selected="'+(tab===k)+'">'+v+'</button>').join('');
  body.innerHTML=contents[tab]();panel.querySelector('#s2Close').onclick=close;
- tabs.querySelectorAll('[data-s2tab]').forEach(b=>b.onclick=()=>{tab=b.dataset.s2tab;paint();});bindRows();
+ tabs.querySelectorAll('[data-s2tab]').forEach(b=>b.onclick=()=>{tab=b.dataset.s2tab;paint();});bindRows();bindS2Selects();
  if(tab==='view'){
   body.querySelector('#s2Rank').onchange=e=>{rankSort=e.target.value;body.querySelector('#s2RankRows').innerHTML=rows(rank(inBounds(),rankSort).slice(0,10));bindRows();};
   body.querySelectorAll('[data-s2pin]').forEach(b=>b.onclick=()=>{indicator=b.dataset.s2pin;close();applyPins();note('핀 지표: '+b.textContent);});

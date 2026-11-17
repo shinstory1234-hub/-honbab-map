@@ -37,7 +37,7 @@ a{color:inherit;text-decoration:none}
 /* ── 이용 전 확인 ── */
 .notice-gate{position:fixed;inset:0;z-index:1000;display:flex;align-items:center;justify-content:center;padding:20px;background:rgba(10,12,16,.58);backdrop-filter:blur(5px)}
 .notice-gate[hidden]{display:none}
-.notice-card{width:min(560px,100%);max-height:calc(100dvh - 40px);overflow:auto;padding:28px;border-radius:10px;background:var(--bg);box-shadow:0 20px 60px rgba(0,0,0,.28)}
+.notice-card{width:min(560px,100%);max-height:calc(100dvh - 40px);overflow:auto;padding:28px;border-radius:5px;background:var(--bg);box-shadow:0 20px 60px rgba(0,0,0,.28)}
 .notice-card h2{font-size:22px;line-height:1.35;letter-spacing:-.045em}
 .notice-list{display:grid;gap:16px;margin-top:22px}
 .notice-item h3{font-size:15px;line-height:1.45}
@@ -51,7 +51,7 @@ a{color:inherit;text-decoration:none}
 .notice-actions .agree{background:var(--primary);color:#fff}
 .notice-actions .agree:disabled{cursor:not-allowed;opacity:.35}
 .linkbtn{color:var(--primary-soft-fg);text-decoration:underline;font-size:inherit;padding:0}
-@media(max-width:520px){.notice-gate{padding:0;align-items:flex-end}.notice-card{max-height:94dvh;padding:24px 20px calc(20px + env(safe-area-inset-bottom));border-radius:12px 12px 0 0}.notice-actions{grid-template-columns:1fr}.notice-actions .agree{order:-1}}
+@media(max-width:520px){.notice-gate{padding:0;align-items:flex-end}.notice-card{max-height:94dvh;padding:24px 20px calc(20px + env(safe-area-inset-bottom));border-radius:5px 12px 0 0}.notice-actions{grid-template-columns:1fr}.notice-actions .agree{order:-1}}
 
 /* ── masthead ── */
 .masthead{display:flex;align-items:center;gap:24px;height:72px;padding:0 28px;border-bottom:1px solid var(--text);flex:none;z-index:21;background:var(--bg)}
@@ -60,10 +60,10 @@ a{color:inherit;text-decoration:none}
 .wordmark:active{opacity:.6}
 .wordmark .mark{width:.9em;height:.9em;margin-right:8px;align-self:center;flex:none}
 .caption{font-size:12px;color:var(--text-tertiary);padding-left:20px;border-left:1px solid var(--border);white-space:nowrap}
-.captab{display:inline-flex;border:1px solid var(--border);border-radius:4px;overflow-x:auto;overflow-y:hidden;flex:none;max-width:100%;scrollbar-width:none;-webkit-overflow-scrolling:touch}.captab::-webkit-scrollbar{display:none}
+.captab{display:inline-flex;border:0;border-bottom:1px solid var(--border-soft);border-radius:0;overflow-x:auto;overflow-y:hidden;flex:none;max-width:100%;scrollbar-width:none;-webkit-overflow-scrolling:touch}.captab::-webkit-scrollbar{display:none}
 .captab a{display:inline-flex;align-items:center;min-height:36px;padding:0 14px;font-size:14px;font-weight:700;color:var(--text-secondary,inherit);text-decoration:none;white-space:nowrap;-webkit-tap-highlight-color:transparent}
-.captab a+a{border-left:1px solid var(--border)}
-.captab a[aria-current=page]{background:var(--text);color:var(--bg)}
+.captab a+a{border-left:0}
+.captab a[aria-current=page]{background:transparent;color:var(--text);box-shadow:inset 0 -3px 0 var(--text)}
 .search{display:flex;align-items:center;gap:10px;width:360px;max-width:100%;min-height:44px;border:1px solid var(--border);border-radius:4px;padding-left:14px;background:var(--bg-subtle);margin-left:auto}
 .search svg{flex:none;color:var(--text-tertiary)}
 .search input{flex:1;min-width:0;font-size:15px;padding:8px 12px 8px 0;outline:none}
@@ -107,7 +107,7 @@ aside{order:-1;width:408px;flex:none;border-right:1px solid var(--border);backgr
 .count{align-items:center}
 .sortsel{font:inherit;font-size:13px;font-weight:700;color:var(--text);background:var(--bg);border:1px solid var(--border);border-radius:6px;padding:7px 12px;cursor:pointer}
 .psheet-bg{position:fixed;inset:0;z-index:1000;background:rgba(0,0,0,0);transition:background .2s}.psheet-bg.in{background:rgba(0,0,0,.4)}
-.psheet{position:absolute;left:0;right:0;bottom:0;max-height:82dvh;overflow-y:auto;overscroll-behavior:contain;max-width:480px;margin:0 auto;background:var(--bg);border-radius:22px 22px 0 0;padding:8px 0 calc(14px + env(safe-area-inset-bottom));transform:translateY(100%);transition:transform .22s cubic-bezier(.2,.8,.2,1);box-shadow:0 -8px 30px rgba(0,0,0,.12)}
+.psheet{position:absolute;left:0;right:0;bottom:0;max-height:82dvh;overflow-y:auto;overscroll-behavior:contain;max-width:480px;margin:0 auto;background:var(--bg);border-radius:5px 10px 0 0;padding:8px 0 calc(14px + env(safe-area-inset-bottom));transform:translateY(100%);transition:transform .22s cubic-bezier(.2,.8,.2,1);box-shadow:0 -8px 30px rgba(0,0,0,.12)}
 .psheet-bg.in .psheet{transform:none}
 .psheet i{display:block;width:36px;height:4px;border-radius:4px;background:var(--border);margin:2px auto 10px}
 .psheet h4{font-size:18px;font-weight:800;letter-spacing:-.03em;padding:6px 24px 10px}
@@ -131,7 +131,7 @@ aside{order:-1;width:408px;flex:none;border-right:1px solid var(--border);backgr
 .row h3{font-size:16.5px;font-weight:700;letter-spacing:-.035em;line-height:1.4;margin-top:6px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .row p.sibl{font-size:12.5px;color:var(--text-tertiary);margin-top:2px;-webkit-line-clamp:1}
 .m3-flat-options{grid-column:2 / -1;display:flex;flex-wrap:nowrap;gap:6px;margin-top:8px;overflow-x:auto;scrollbar-width:none;-webkit-overflow-scrolling:touch;overscroll-behavior-x:contain}.m3-flat-options::-webkit-scrollbar{display:none}
-.m3-flat-item{flex:none;display:inline-flex;align-items:baseline;gap:4px;border:1px solid var(--border-soft);background:transparent;padding:5px 9px;border-radius:999px;color:var(--text);font:inherit;cursor:pointer;white-space:nowrap}
+.m3-flat-item{flex:none;display:inline-flex;align-items:baseline;gap:4px;border:1px solid var(--border-soft);background:transparent;padding:5px 9px;border-radius:4px;color:var(--text);font:inherit;cursor:pointer;white-space:nowrap}
 .m3-flat-item:hover,.m3-flat-item:focus-visible{background:var(--bg-subtle)}
 .m3-flat-item.representative{border-color:rgba(30,110,205,.45);background:rgba(30,110,205,.055)}
 .m3-flat-item .flat-size{font-size:12px;font-weight:600;color:var(--text-secondary)}
@@ -249,8 +249,8 @@ aside{order:-1;width:408px;flex:none;border-right:1px solid var(--border);backgr
 .public-factor-scores .factor-top small{display:block;font-size:11px;color:var(--text-tertiary);line-height:1.6;font-weight:400;margin-top:2px}
 .public-factor-scores .factor-num{font-size:16px;font-weight:800;white-space:nowrap;color:var(--primary-soft-fg)}
 .public-factor-scores .factor-num i{font-style:normal;font-size:11px;color:var(--text-tertiary);font-weight:600}
-.public-factor-scores .factor-track{height:5px;border-radius:10px;background:var(--border-soft);overflow:hidden}
-.public-factor-scores .factor-track b{display:block;height:100%;border-radius:10px;background:var(--primary-soft-fg)}
+.public-factor-scores .factor-track{height:5px;border-radius:5px;background:var(--border-soft);overflow:hidden}
+.public-factor-scores .factor-track b{display:block;height:100%;border-radius:5px;background:var(--primary-soft-fg)}
 .public-factor-scores p.note{margin-top:13px;font-size:11.5px;line-height:1.7}
 
 .fit{display:flex;flex-wrap:wrap;gap:6px}
@@ -659,7 +659,7 @@ const normDate=s=>String(s||'').replace(/\./g,'-');
 const ASOF=D.reduce((m,d)=>(d.types||[]).reduce((a,t)=>normDate(t.last)>a?normDate(t.last):a,m),'');
 { const e=document.getElementById('asof'); if(e) {
     if(window.LIVE_ON&&window.LIVEP_AT){
-      e.textContent=`서울·경기·인천 · 시세 계산 ${window.LIVEP_AT} · 마지막 계약 ${ASOF||'미확인'}`;
+      e.textContent=`시세 기준일 ${window.LIVEP_AT}`;
       e.title='국토부 신고 후 수집한 실거래입니다. 현재 호가와 실제 매수 가능가격은 아닙니다.';
     }else if(ASOF){
       e.textContent=`서울·경기·인천 · 기준 계약 ${ASOF} · 고정 자료`;
@@ -1314,25 +1314,25 @@ function updateSourceStatus(){
   if(!el)return;
   el.classList.remove('stale');
   if(CAPT===6&&!window.LIVE_ON){
-    el.textContent='6억 이하: 고정 기준 시세 자료 · 마지막 확인 계약 '+(ASOF||'미확인')+' · 자동 일일 갱신 대상 아님';
+    el.textContent='6억 이하 고정 시세 기준';
     return;
   }
   const h=aptLiveHealth;
   if(!h){
-    el.textContent='국토부 신고 실거래 기반 · 시세 계산 '+(window.LIVEP_AT||'확인 중')+' · 확인된 계약 '+(ASOF||'미확인')+'까지';
+    el.textContent='시세 기준일 '+(window.LIVEP_AT||'확인 중');
     return;
   }
   const date=window.LIVEP_AT||h.priceCalculatedAt||'미확인';
   if(h.stale){
     el.classList.add('stale');
     const days=Math.max(1,Math.floor((Number(h.ageHours)||0)/24));
-    el.textContent='⚠ 시세 갱신 지연 · 실제로 불러온 가격 자료 '+date+' ('+days+'일 전) · 최근 신고 계약 '+(h.lastContractDate||'미확인')+' · 최신 매수가격이 아닐 수 있습니다.';
+    el.textContent='시세 갱신 지연: '+date+' 기준 ('+days+'일 전)';
   }else{
-    el.textContent='국토부 신고 실거래 · 시세 계산 '+date+' · 최근 신고 계약 '+(h.lastContractDate||ASOF||'미확인')+' · 일별 수집 후 재계산';
+    el.textContent='시세 기준일 '+date;
   }
   // 열린 화면을 멋대로 새로고침하지 않는다. 더 최신의 가격 배치가 나오면 선택적으로 적용.
   if(h.priceCalculatedAt&&window.LIVEP_AT&&h.priceCalculatedAt>window.LIVEP_AT){
-    el.append(' · 새로운 자료가 나왔습니다.');
+    el.append(' 새 자료가 있습니다.');
     const btn=document.createElement('button');
     btn.type='button';btn.className='live-refresh';btn.textContent='새 자료 불러오기';
     btn.onclick=()=>location.reload();el.append(btn);
