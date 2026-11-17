@@ -36,7 +36,7 @@ css.textContent=[
 ].join('');
 document.head.appendChild(css);
 function esc(x){return String(x==null?'':x).replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];});}
-function n(x){var v=Number(x);return Number.isFinite(v)?v:null;}
+function n(x){if(x==null||String(x).trim()==='')return null;var v=Number(x);return Number.isFinite(v)?v:null;}
 function name(d){return typeof publicComplexName==='function'?publicComplexName(d):d.n;}
 function key(d){return d.n+'|'+d.area;}
 function money(x){return n(x)!=null?eok(Number(x)):'확인 불가';}
