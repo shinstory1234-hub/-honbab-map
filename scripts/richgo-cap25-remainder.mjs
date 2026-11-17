@@ -100,7 +100,7 @@ const audited=lookups.map(x=>{
    const confidence=(dongOk?2:0)+(yearDiff<=2?2:yearDiff<=5?1:0)+(nameSim>=.88?3:nameSim>=.75?2:nameSim>=.56?1:0)+(unitsRatio>=.95?2:unitsRatio>=.5?1:0)+(z.manual?4:0);
    return {...d,conf:confidence,dongOk,yearDiff,nameSim,unitsRatio,metres,manual:!!z.manual};}).sort((a,b)=>b.conf-a.conf||b.nameSim-a.nameSim);
  const best=alternatives[0];const second=alternatives[1];const geoSafe=best?.metres!==null&&best?.metres!==undefined&&best.metres<=500;
- const manualSafe=geoSafe&&best?.manual&&best.status===200&&best.dongOk&&best.yearDiff<=3&&best.unitsRatio>=(mergedSourceRanks.has(x.rank)?0.15:0.75);
+ const manualSafe=geoSafe&&best?.manual&&best.status===200&&best.dongOk&&best.yearDiff<=3&&best.unitsRatio>=(mergedSourceRanks.has(x.rank)?0.15:0.7);
  const safe=manualSafe||(geoSafe&&best&&best.status===200&&best.dongOk&&best.nameSim>=.56&&best.yearDiff<=5&&(best.conf>=5)&&(!second||best.conf>=second.conf+1||best.nameSim>second.nameSim+.12));
  const status=safe?'직접대조':best?'매칭불확실':'리치고미매칭';
  const source=safe?best:{};
