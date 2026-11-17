@@ -53,6 +53,7 @@ css.textContent+="\n/* Clean UI preview: consistent text-first navigation and co
 css.textContent+="\n.s2-select-overlay{position:fixed;inset:0;z-index:1600;background:rgba(0,0,0,.42);display:flex;align-items:flex-end;justify-content:center}\n.s2-select-panel{width:min(480px,100%);max-height:min(75dvh,620px);overflow:hidden;background:var(--bg);color:var(--text);border-radius:14px 14px 0 0;display:flex;flex-direction:column;padding-bottom:env(safe-area-inset-bottom)}\n.s2-select-panel header{padding:19px 20px 13px;font-size:17px;font-weight:750;letter-spacing:-.025em;border-bottom:1px solid var(--border-soft)}\n.s2-select-options{overflow-y:auto;overscroll-behavior:contain;padding:4px 16px 12px}\n.s2-select-option{width:100%;min-height:48px;display:block;text-align:left;border:0;border-bottom:1px solid var(--border-soft);background:transparent;color:var(--text);font-size:15px;padding:12px 30px 12px 4px;position:relative}\n.s2-select-option.active{font-weight:750;color:var(--primary-soft-fg)}\n.s2-select-option.active:after{content:'✓';position:absolute;right:7px;top:50%;transform:translateY(-50%)}\n.s2-select-option:last-child{border-bottom:0}\n@media(min-width:768px){.s2-select-overlay{align-items:center;padding:24px}.s2-select-panel{border-radius:10px;max-height:75vh}}\n";
 css.textContent+="\n.s2-sticky-sort{position:sticky;top:108px;z-index:3;background:var(--bg);padding:10px 0 12px;border-bottom:1px solid var(--border-soft)}\n.s2-sticky-sort label{display:flex!important;align-items:center;justify-content:space-between;gap:16px;font-size:13px!important}\n.s2-sticky-sort select{width:auto!important;min-width:148px;max-width:65%;margin:0!important;padding:7px 24px 7px 10px!important;border:1px solid var(--border)!important;border-radius:5px!important;background:var(--bg)!important;font-size:14px!important;font-weight:700;color:var(--text)!important}\n";
 css.textContent+="\n.s2-tabs[hidden],.s2-back[hidden]{display:none!important}\n.s2-top{gap:10px}.s2-top h2{flex:1;font-size:19px}.s2-back{border:0;background:transparent;color:var(--text);font-size:25px;line-height:1;padding:7px 9px 7px 0;cursor:pointer}\n.s2-home-intro{font-size:13px!important;color:var(--text-secondary)!important;margin:8px 0 14px!important}\n.s2-home-list{display:flex;flex-direction:column}.s2-home-item{width:100%;display:flex;align-items:center;gap:12px;text-align:left;background:transparent;color:var(--text);border:0;border-bottom:1px solid var(--border-soft);padding:17px 3px;cursor:pointer;min-height:78px}\n.s2-home-item:first-child{border-top:1px solid var(--border-soft)}.s2-home-text{flex:1;min-width:0}.s2-home-text strong{display:block;font-size:15px;font-weight:740;letter-spacing:-.02em;margin-bottom:5px}.s2-home-text small{display:block;font-size:12px;line-height:1.55;color:var(--text-tertiary);font-weight:400}.s2-home-arrow{font-size:23px;color:var(--text-tertiary);font-weight:300}.s2-home-item:focus-visible,.s2-back:focus-visible{outline:2px solid var(--primary)}\n";
+css.textContent+='\n.s2-sort-row{position:static!important;top:auto!important;z-index:auto!important;padding:10px 0 12px;border-bottom:1px solid var(--border-soft)}.s2-sort-row label{display:flex!important;align-items:center;justify-content:space-between;gap:12px;font-size:13px!important}.s2-sort-row select{width:auto!important;min-width:145px;max-width:65%;margin:0!important;padding:9px 28px 9px 12px!important;border:1px solid var(--border)!important;border-radius:5px!important;background:var(--bg)!important;font-size:14px!important;font-weight:700;color:var(--text)!important}\n';
 document.head.appendChild(css);
 function note(t){var o=document.getElementById('s2Toast');if(!o){o=document.createElement('div');o.id='s2Toast';o.className='s2-toast';o.setAttribute('role','status');document.body.appendChild(o);}o.textContent=t;o.hidden=false;clearTimeout(note.t);note.t=setTimeout(()=>{o.hidden=true;},2900);}
 function remember(d){var k=key(d);recent=[k,...recent.filter(x=>x!==k)].slice(0,12);try{localStorage.setItem(recKey,JSON.stringify(recent));}catch(e){}}
@@ -84,7 +85,7 @@ var rankTypes=[['rank','추천순'],['price','매수가 낮은순'],['ppp','평�
 function viewTab(){
  var all=inBounds();
  return '<h3>현재 지도 범위</h3><div class="s2-chip">'+(map?'필터에 맞는 <b>'+all.length.toLocaleString()+'개 단지</b> 중 상위 10곳':'지도가 준비되지 않았습니다. 지도 로딩 후 다시 열어주세요.')+'</div>'
- +'<div class="s2-cols s2-sticky-sort"><label class="s2-wide">정렬 기준<select id="s2Rank">'+searchOptions(rankTypes.filter(x=>rentAvailable||x[0]!=='rent'),rankSort)+'</select></label></div><div id="s2RankRows">'+rows(rank(all,rankSort).slice(0,10))+'</div>'
+ +'<div class="s2-cols s2-sort-row"><label class="s2-wide">정렬 기준<select id="s2Rank">'+searchOptions(rankTypes.filter(x=>rentAvailable||x[0]!=='rent'),rankSort)+'</select></label></div><div id="s2RankRows">'+rows(rank(all,rankSort).slice(0,10))+'</div>'
  +'<h3>핀 숫자 변경</h3><div class="s2-flex">'+[
  ['base','원래 표시'],['rank','추천 순위'],['ppp','평당가'],['far','용적률'],['units','세대수'],['age','준공연도'],...(rentAvailable?[['rent','전세가율'],['gap','갭']]:[])
  ].map(([k,t])=>'<button class="s2-btn'+(indicator===k?' on':'')+'" data-s2pin="'+k+'">'+t+'</button>').join('')+'</div>'
@@ -218,7 +219,8 @@ function s2SelectSheet(select){
  const esc=e=>{if(e.key==='Escape')close();};
  overlay.addEventListener('click',e=>{if(e.target===overlay)close();});
  document.addEventListener('keydown',esc);document.body.appendChild(overlay);
- list.querySelector('.active')?.scrollIntoView({block:'nearest'});
+ // Do not scroll the underlying dialog when opening the option sheet.
+ list.scrollTop=0;
 }
 function bindS2Selects(){
  if(!panel)return;
@@ -299,7 +301,7 @@ function bindNav(b){
   if(v==='where'){navigator.geolocation?.getCurrentPosition(p=>{map.setLevel(5);map.setCenter(new kakao.maps.LatLng(p.coords.latitude,p.coords.longitude));close();browseMap();},()=>note('위치 권한이 필요합니다.'),{timeout:10000});return;}
   if(map){map.setLevel(Math.max(1,Math.min(13,map.getLevel()+(v==='zoomIn'?-1:1))));close();}
  });
- b.querySelectorAll('[data-s2view]').forEach(btn=>btn.onclick=()=>{if(!map)return;map.setMapTypeId(kakao.maps.MapTypeId[btn.dataset.s2view]);close();});
+ b.querySelectorAll('[data-s2view]').forEach(btn=>btn.onclick=()=>{if(!map)return;map.setMapTypeId(kakao.maps.MapTypeId[btn.dataset.s2view]);if(btn.dataset.s2view==='ROADMAP'){for(const kind of ['land','road']){const id=kakao.maps.MapTypeId[kind==='land'?'USE_DISTRICT':'ROADVIEW'];map.removeOverlayMapTypeId(id);overlayState[kind]=false;}}close();note(btn.dataset.s2view==='ROADMAP'?'일반 지도로 변경했습니다.':'위성 지도로 변경했습니다.');});
  b.querySelectorAll('[data-s2overlay]').forEach(btn=>btn.onclick=()=>{if(!map)return;var kind=btn.dataset.s2overlay,k=kind==='land'?'USE_DISTRICT':'ROADVIEW',id=kakao.maps.MapTypeId[k];if(overlayState[kind])map.removeOverlayMapTypeId(id);else map.addOverlayMapTypeId(id);overlayState[kind]=!overlayState[kind];close();note(btn.textContent+(overlayState[kind]?' 켬':' 끔'));});
  b.querySelectorAll('[data-s2measure]').forEach(btn=>btn.onclick=()=>{close();startMeasure(btn.dataset.s2measure);});
 }
@@ -408,8 +410,8 @@ function importShare(){
 
 function install(){
  document.getElementById('apt2MapLazy')?.remove();
- if(!document.getElementById('apt2Launcher')){var wrap=document.querySelector('.mapwrap');if(wrap){var btn=document.createElement('button');btn.id='apt2Launcher';btn.textContent='지도 도구';btn.type='button';btn.onclick=()=>open('view');wrap.appendChild(btn);}}
- document.querySelectorAll('[data-ap2]').forEach(b=>b.onclick=()=>open(b.dataset.ap2||'view'));
+ if(!document.getElementById('apt2Launcher')){var wrap=document.querySelector('.mapwrap');if(wrap){var btn=document.createElement('button');btn.id='apt2Launcher';btn.textContent='지도 도구';btn.type='button';btn.onclick=()=>open();wrap.appendChild(btn);}}
+ document.querySelectorAll('[data-ap2]').forEach(b=>b.onclick=()=>open());
  mapReady();bindSearch();applyPins();
 }
 function median(a){if(!a.length)return null;a=a.slice().sort((x,y)=>x-y);return a.length%2?a[(a.length-1)/2]:(a[a.length/2-1]+a[a.length/2])/2;}
