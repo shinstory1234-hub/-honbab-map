@@ -8,6 +8,7 @@ assert.equal(new Set(data.map(d=>d.rank)).size,300,'rank unique');
 assert.equal(new Set(data.map(d=>d.name+'|'+d.area)).size,300,'complex key unique');
 const verified=data.filter(x=>x.status==='직접대조');
 assert.equal(verified.length,300,'do not declare full completion until all 300 have matching Richgo public pages');
+for(const d of verified)assert.ok(Number.isFinite(d.coordinateDistanceM)&&d.coordinateDistanceM<=500,`not the same apartment coordinates, rank ${d.rank}: ${d.name}: ${d.coordinateDistanceM}m`);
 const files=['apt-unitfix.js','apt-fard.js','apt-univ10.js','apt-univ15.js','apt-univ20.js','apt-univ30.js','apt-univadd.js','apt-farfix.js','apt-far-normalize.js'];
 function make(cap,patch){
  const c={CAPT:cap,PICKS:[],UGEO:{},HAK:{},FARD:{},PLAT:{},console};c.window=c;vm.createContext(c);
