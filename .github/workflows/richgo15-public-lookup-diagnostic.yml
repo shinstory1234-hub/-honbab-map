@@ -19,6 +19,7 @@ jobs:
             const urls=[
               "https://m.richgo.ai/robots.txt",
               "https://m.richgo.ai/sitemap.xml",
+              "https://m.richgo.ai/danji_detail.xml",
               "https://m.richgo.ai/realty/danji/a2VEQie",
               "https://www.google.com/search?q="+encodeURIComponent("site:m.richgo.ai/realty/danji/ 철산래미안자이"),
               "https://search.naver.com/search.naver?query="+encodeURIComponent("철산래미안자이 용적률 리치고")
@@ -27,7 +28,7 @@ jobs:
               try{const r=await fetch(u,{headers:{"user-agent":"Mozilla/5.0 (compatible; AptMapAudit/1.0; +https://github.com/shinstory1234-hub/-honbab-map)"}});
                 const t=await r.text();
                 const match=t.match(/<loc>[^<]*<\/loc>|a2VEQie|용적률|robots|sitemap|<title[^>]*>[^<]*/i);
-                console.log(JSON.stringify({url:u,status:r.status,bytes:t.length,contentType:r.headers.get('content-type'),matched:match?.[0]?.slice(0,130),prefix:t.slice(0,170)}));
+                console.log(JSON.stringify({url:u,status:r.status,bytes:t.length,contentType:r.headers.get('content-type'),matched:match?.[0]?.slice(0,130),prefix:t.slice(0,u.includes('robots.txt')?3300:u.includes('danji_detail.xml')?900:170),count:(t.match(/<loc>/g)||[]).length}));
               }catch(e){console.log(JSON.stringify({url:u,error:String(e).slice(0,300)}))}
             }
           })()
