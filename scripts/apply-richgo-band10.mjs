@@ -77,9 +77,12 @@ export function appendRichgoCap10FinalOverrides(code,root){
   // scripts that overwrite FARD later, and updated completion year / unit counts.
   // This avoids shipping duplicate values for 1110 unaffected apartments.
   const platText=fs.readFileSync(path.join(root,'public/apt-plat.js'),'utf8');
-  const platMatch=platText.match(/window\\.PLAT=(\\{[^\\n]*?\\});/);
-  if(!platMatch)throw new Error('Cannot inspect PLAT source');
-  const plat=JSON.parse(platMatch[1]);
+  const platStart=platText.indexOf('window.PLAT=');
+  if(platStart<0)throw new Error('Cannot inspect PLAT source');
+  const platCode=platText.slice(platStart+'window.PLAT='.length);
+  const platEnd=platCode.indexOf('};');
+  if(platEnd<0)throw new Error('PLAT source not terminated');
+  const plat=JSON.parse(platCode.slice(0,platEnd+1));
   const farfixText=fs.readFileSync(path.join(root,'public/apt-farfix.js'),'utf8');
   const s4Text=fs.readFileSync(path.join(root,'public/apt-s4.js'),'utf8');
   const override=fixes.filter(x=>{
