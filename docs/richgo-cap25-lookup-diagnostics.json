@@ -5,11 +5,13 @@
   "unmatched": 0,
   "farKnown": 297,
   "farChanged": 207,
-  "unitsChanged": 36,
-  "yearChanged": 20,
+  "unitsChanged": 34,
+  "yearChanged": 18,
+  "geoVerified": 300,
+  "geoOver500": [],
   "hubsAttempted": 250,
   "hubsFailed": 2,
-  "detailsFetched": 354,
+  "detailsFetched": 356,
   "detailErrors": 0,
   "pending": []
 }
