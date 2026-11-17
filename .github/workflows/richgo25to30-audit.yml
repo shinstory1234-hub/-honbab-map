@@ -28,3 +28,12 @@ jobs:
         run: npm ci --ignore-scripts
       - name: Build and enforce unchanged speed budgets
         run: npm run build
+      - name: Export exact live top300 apartment complexes (read-only)
+        run: node scripts/export-richgo-25to30-targets.mjs
+      - name: Upload current top300 extraction for review
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: richgo25to30-current-ranked-apartments
+          path: /tmp/richgo25to30-rank-targets.json
+          if-no-files-found: warn
+          retention-days: 2
