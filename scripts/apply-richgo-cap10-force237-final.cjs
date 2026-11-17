@@ -29,17 +29,37 @@ for(const s of coverage.rows)if(s.review_status.includes('verified')){
  if(id){const owners=sourceOwner.get(id)||new Set();owners.add(s.name+'|'+s.area);sourceOwner.set(id,owners);}
 }
 const isNumeric=n=>typeof n==='number'&&Number.isFinite(n);
+const BRANDS=['현대','한양','삼성','롯데','대림','동부','극동','신명','태영','풍림','동아','삼환','신안','금호','효성','코오롱','청구','한신','건영','벽산','쌍용','동양','삼보','한진','세경','주공','포스코','에스케이','호반','부영','두산','LG','대우','GS','진흥','럭키','성원','우성','아이파크','푸르지오','래미안','더샵','원일','한일','쌍용','SK','풍경채','위브','동성','서희','신일'];
+const brandTokens=s=>BRANDS.filter(k=>String(s||'').toLowerCase().includes(k.toLowerCase()));
+function brandMismatch(a,b){
+ const aa=brandTokens(a),bb=brandTokens(b);
+ return aa.length>0&&bb.length>0&&!aa.some(x=>bb.includes(x));
+}
+function numberMismatch(a,b){
+ const get=s=>{
+  const x=String(s||'').replace(/\([^)]*(?:~|동|bl|번지)[^)]*\)/gi,'').replace(/bl\d+[-\d]*/gi,'').replace(/\d{3,4}(?:~\d{3,4})?동/g,'');
+  return [...x.matchAll(/(\d{1,2})(?=(?:단지|차|블럭|블록|호|$|[-(]))/gi)].map(m=>+m[1]);
+ };
+ const aNums=get(a),bNums=get(b);
+ return aNums.length>0&&bNums.length>0&&!aNums.some(x=>bNums.includes(x));
+}
+function sharesBrand(a,b){const A=brandTokens(a),B=brandTokens(b);return A.length>0&&A.some(x=>B.includes(x));}
+function labelContains(a,b){const x=String(a||'').replace(/아파트|마을|뉴타운|서울|수원|남양주|인천|단지|은평|주공/g,''),y=String(b||'').replace(/아파트|마을|뉴타운|서울|수원|남양주|인천|단지|은평|주공/g,'');
+ return x.length>=3&&y.length>=3&&(x.includes(y)||y.includes(x));}
 function eligible(t,c){
  if(!c||!isNumeric(c.units)||c.units<1||!Number.isInteger(c.year)||c.year<1960||!/^https:\/\/m\.richgo\.ai\/realty\/danji\/a[A-Za-z0-9]{6}$/.test(c.url))return false;
  const d=c.distance_m,ss=c.similarity,dy=c.year_delta,units=c.unit_ratio;
- if(d==null||d<0)return false;
- // Deliberately ignore Richgo-vs-legacy household count differences for direct identity matches.
+ if(d==null||d<0||numberMismatch(t.name,c.name)||brandMismatch(t.name,c.name))return false;
+ // A physically identical complex can have very different old aggregate household counts.
  if(ss>=.97 && d<=650)return true;
  if(ss>=.83 && d<=380)return true;
  if(ss>=.61 && d<=240 && (dy==null||dy<=5))return true;
  if(ss>=.38 && d<=80 && dy!=null&&dy<=3 && units!=null&&units<=.35)return true;
  if(ss>=.24 && d<=75 && dy!=null&&dy<=2 && units===0)return true;
  if(ss>=.97 && d<=1200 && dy!=null&&dy<=2 && units===0)return true;
+ if(d<=100&&dy!=null&&dy<=2&&sharesBrand(t.name,c.name)&&units===0)return true;
+ if(d<=55&&dy!=null&&dy<=2&&sharesBrand(t.name,c.name)&&(labelContains(t.name,c.name)||ss>=.14))return true;
+ if(d<=100&&dy!=null&&dy<=2&&units!=null&&units<=.025&&labelContains(t.name,c.name))return true;
  return false;
 }
 const resolved=[],pending=[],allOut=[],count={original:237,richgoConfirmed:0,sourceMissing:0,farUnavailable:0,ambiguous:0,nonMatching:0,sharedSourcePages:0,
