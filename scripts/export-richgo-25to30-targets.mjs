@@ -8,8 +8,14 @@ const get=async u=>{
  if(!r.ok)throw new Error(u+' '+r.status);
  return r.text();
 };
-const [geo,live]=await Promise.all([get(UP+'/aptgeo?export=js'),get(UP+'/aptlive')]);
-console.log('UPSTREAM',geo.length,live.length);
+// Live price endpoint currently returns 503 on its last-trade lookup.
+ // Reconstruct the same published aggregate from bt_livecur through read-only SQL,
+ // without the optional latest-trade 6th field (not used in the cap30 model).
+const dataDir=path.join(process.cwd(),'docs/richgo25to30-live-parts');
+const live=fs.readdirSync(dataDir).filter(x=>/part\\d+\\.js/.test(x)).sort()
+  .map(x=>fs.readFileSync(path.join(dataDir,x),'utf8')).join('\\n');
+const geo=await get(UP+'/aptgeo?export=js');
+console.log('SOURCE_SNAPSHOT',geo.length,live.length);
 const data=previewHTML(path.join(process.cwd(),'public'),30,{geo,live,withAuditRows:true});
 if(!data||!Array.isArray(data.rows)||!data.rows.length)throw new Error('No visible data');
 fs.mkdirSync('docs',{recursive:true});
