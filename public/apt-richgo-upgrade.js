@@ -184,7 +184,7 @@ function makeMap(d,box,mode){
   var title=mode==='dong'?'단지 동 위치 확인':'단지 주변 1km 생활권';
   box.innerHTML='<h4>'+title+'</h4><p>'+(mode==='dong'?'지도 항공사진으로 건물 위치를 확인합니다. 동 번호·층수·세대수와 개별 동 거래는 검증된 원본 자료가 없어 자동으로 표시하지 않습니다.':'단지 중심 직선거리 1km 안의 시설을 지도에서 검색합니다. 실제 보행 시간과 다릅니다.')+'</p>'
     +(mode==='dong'?'<div class="ru-flex"><label style="flex:1;min-width:160px"><span class="ru-muted">동 번호 검색 (지도 업체 검색 결과)</span><input class="ru-input" data-ru-dong-input placeholder="예: 101동" maxlength="12"></label><button class="ru-action" data-ru-dong-search>검색</button></div>':
-    '<div class="ru-flex">'+[['SW8','지하철'],['SC4','학교'],['AC5','학원'],['HP8','병원'],['MT1','마트']].map(function(x,i){return '<button type="button" data-ru-poi="'+x[0]+'" aria-pressed="'+(i===0)+'">'+x[1]+'</button>';}).join('')+'</div>')
+    '<div class="ru-flex">'+[['SW8','지하철'],['SC4','학교'],['AC5','학원'],['HP8','병원'],['MT1','마트'],['FUT','예정 철도']].map(function(x,i){return '<button type="button" data-ru-poi="'+x[0]+'" aria-pressed="'+(i===0)+'">'+x[1]+'</button>';}).join('')+'</div>')
     +'<div class="ru-map" data-ru-map aria-label="'+title+'"></div><div data-ru-place-list aria-live="polite"></div>'
     +'<p class="ru-note">지도·시설 정보: 카카오 지도. 위성사진과 외부 검색 결과는 건축물대장이나 공식 동 배치도의 대체 자료가 아닙니다.</p>';
   var el=box.querySelector('[data-ru-map]'),list=box.querySelector('[data-ru-place-list]');
@@ -215,7 +215,13 @@ function makeMap(d,box,mode){
       },{location:pos,radius:1000,size:15});
     };
   }else{
-    function query(k){list.textContent='주변 시설을 검색하고 있습니다…';svc.categorySearch(k,function(data,status){
+    function query(k){list.textContent='주변 시설을 검색하고 있습니다…';
+      if(k==='FUT'){
+        var future=typeof FUT!=='undefined'&&Array.isArray(FUT)?FUT:[];
+        plot(future.filter(function(f){return f[3]&&distance(p[0],p[1],f[3][0],f[3][1])<=1000;}).map(function(f){return {place_name:f[0]+' · '+f[1],y:f[3][0],x:f[3][1],road_address_name:'예정 '+f[2]+'년 · 계획 변동 가능'};}));
+        return;
+      }
+      svc.categorySearch(k,function(data,status){
       if(!el.isConnected)return;
       if(status!==kakao.maps.services.Status.OK){list.textContent='검색 결과가 없거나 지도 서비스를 이용할 수 없습니다.';clear();return;}
       plot(data.filter(function(x){return distance(p[0],p[1],+x.y,+x.x)<=1000;}));
