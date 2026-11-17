@@ -17,6 +17,7 @@ const fixes=[
  [63,'a2ghzUo','목동한신청구 역순 표기',false],
  [89,'a8TEIry','방배래미안아트힐 역순 표기',false],
  [90,'a1uHXaN','방배현대1차 개별 단지명 별칭',false],
+ [93,'a5YsLrc','삼호4차=방배신삼호; 리치고 재건축사업 r3raNkK 동일 단지',false],
  [107,'a4jUpCZ','우면동 대림 동명이인 분리',false],
  [125,'a9qMtUf','역삼럭키=도곡동 럭키(963)',false],
  [127,'a5pqmuN','아카데미스위트 1단지 표기',false],
