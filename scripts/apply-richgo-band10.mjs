@@ -53,3 +53,33 @@ export function patchRichgoCap10Source(code,root){
   if(updated!==fixes.length)throw new Error('Richgo cap10 count mismatch');
   return code;
 }
+
+// The detailed apartment data may be normalized again by subsequent overlays.
+// Put Richgo's verified cap10 data last, before the app recomputes scores.
+export function appendRichgoCap10FinalOverrides(code,root){
+  const filename=path.join(root,'scripts/richgo-band10-corrections.json');
+  const fixes=JSON.parse(fs.readFileSync(filename,'utf8'));
+  if(!fixes.length)return code;
+  const rows=fixes.map(x=>[x.name+'|'+x.area,x.far??null,x.year??null,x.units??null]);
+  const post=[
+    ';(function(W){',
+    'if(W.CAPT!==10)return;',
+    'const X='+JSON.stringify(rows)+',D=new Map((W.PICKS||[]).map(d=>[d.n+"|"+d.area,d]));',
+    'for(const [k,far,year,units] of X){',
+    'if(far!=null){',
+    'const f=(W.FARD||{})[k];if(f){f[0]=far;f[1]="리치고";}',
+    'const p=(W.PLAT||{})[k];if(p&&p.length>2)p[2]=far;',
+    '}',
+    'if(year!=null||units!=null){const d=D.get(k);if(d){',
+    'if(year!=null)d.year=year;',
+    'if(units!=null){d.units=units;',
+    'const uf=(W.UNITFIX||{})[k];if(uf)uf[0]=units;',
+    'const um=(W.UNITFIX_M3||{})[k];if(um)um[0]=units;',
+    '}',
+    '}}',
+    '}',
+    'W.RICHGO10_FINAL={checked:X.length};',
+    '})(window);'
+  ].join('\n');
+  return code+'\n'+post;
+}
