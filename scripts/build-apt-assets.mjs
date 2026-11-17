@@ -23,13 +23,16 @@ function applyRichgo15AtBuild(code,file,root) {
    let nFar=0,nYear=0,nUnits=0;
    for(const row of rows){
      const key=row[0]+'|'+areas[row[1]];
-     if(Object.hasOwn(far,key)){row[22][0]=far[key];row[22][1]='리치고';nFar++;}
+     if(Object.hasOwn(far,key)){row[22][0]=far[key];row[22][1]='R';nFar++;}
      if(Object.hasOwn(year,key)){row[4]=year[key];nYear++;}
      if(Object.hasOwn(units,key)){row[5]=units[key];nUnits++;}
    }
    if(nFar!==Object.keys(far).length||nYear!==Object.keys(year).length||nUnits!==Object.keys(units).length)
      throw new Error('Richgo15 unmatched: '+nFar+' FAR, '+nYear+' year, '+nUnits+' units');
-   return code.slice(0,start+3)+JSON.stringify(rows)+code.slice(end+1);
+   const packed=code.slice(0,start+3)+JSON.stringify(rows)+code.slice(end+1);
+   const marker='  F[k]=fd;';
+   if(!packed.includes(marker))throw new Error('Richgo15 source decoder anchor missing');
+   return packed.replace(marker,"  if(fd[1]==='R')fd[1]='리치고';\n"+marker);
  }
  if(file==='apt-farfix.js'){
    let patched=0;
