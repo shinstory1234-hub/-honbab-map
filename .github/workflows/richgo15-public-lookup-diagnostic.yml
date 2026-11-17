@@ -20,6 +20,8 @@ jobs:
               "https://m.richgo.ai/robots.txt",
               "https://m.richgo.ai/sitemap.xml",
               "https://m.richgo.ai/danji_detail.xml",
+              "https://m.richgo.ai/realty/region/1141000000",
+              "https://m.richgo.ai/realty/region/1141012000",
               "https://m.richgo.ai/realty/danji/a2VEQie",
               "https://www.google.com/search?q="+encodeURIComponent("site:m.richgo.ai/realty/danji/ DMC파크뷰자이3단지 남가좌동"),
               "https://www.google.com/search?q="+encodeURIComponent("site:m.richgo.ai/realty/danji/ 한솔마을4단지 정자동"),
@@ -35,6 +37,7 @@ jobs:
                 console.log(JSON.stringify({url:u,status:r.status,bytes:t.length,contentType:r.headers.get('content-type'),matched:match?.[0]?.slice(0,130),prefix:t.slice(0,u.includes('robots.txt')?3300:u.includes('danji_detail.xml')?900:170),count:(t.match(/<loc>/g)||[]).length}));
                 if(u.includes('google.com')||u.includes('search.naver')||u.includes('bing.com')||u.includes('search.daum')){const ids=[...new Set(t.match(new RegExp('m.richgo.ai/realty/danji/[a-zA-Z0-9]{7}','g'))||[])].slice(0,15);console.log('GOOGLE_RICHGO_IDS',JSON.stringify(ids).slice(0,2200));const k=t.indexOf('richgo.ai/realty/danji/');console.log('CONTEXT',t.slice(Math.max(0,k-130),k+200));}
                 if(u.includes('a2VEQie')&&r.status===200){const k=t.indexOf('용적률');console.log('PAGE_RATIO_HTML',t.slice(Math.max(0,k-350),k+480));}
+                if(u.includes('/realty/region/'))console.log('REGION_LINKS',JSON.stringify([...t.matchAll(/href=\"([^\"]*\/realty\/(?:region|danji)\/[^\"]+)\"[^>]*>([\\s\\S]{0,140}?)<\\/a>/g)].slice(0,24).map(x=>({href:x[1],label:x[2].replace(/<[^>]*>/g,'').slice(0,65)}))).slice(0,3000));
                 if(u.includes('robots.txt'))console.log('ROBOTS_TAIL',t.slice(-600));
               }catch(e){console.log(JSON.stringify({url:u,error:String(e).slice(0,300)}))}
             }
