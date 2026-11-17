@@ -44,7 +44,7 @@ for(const x of records){
  if(x.units!==undefined)assert.equal(d.units,x.units,k);
 }
 const ending=appendRichgoCap10FinalOverrides('',root);
-const finalCtx=apply(input);
+const finalCtx=apply(patched);
 vm.runInContext(ending,finalCtx);
 assert.equal(finalCtx.RICHGO10_FINAL?.checked,records.length);
 const finalByKey=new Map(finalCtx.PICKS.map(d=>[toKey(d),d]));
