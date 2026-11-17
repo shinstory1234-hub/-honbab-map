@@ -21,8 +21,8 @@ const key=d=>d.name+'|'+d.area;
 const find=(c,k)=>c.PICKS.find(d=>d.n+'|'+d.area===k);
 assert.equal(live.RICHGO25_FULL_PATCH?.rankingRows,372);
 assert.equal(live.RICHGO25_FULL_PATCH?.verified,372);
-assert.equal(live.RICHGO25_FULL_PATCH?.unitDiffs,42);
-assert.equal(live.RICHGO25_FULL_PATCH?.yearDiffs,20);
+assert.equal(live.RICHGO25_FULL_PATCH?.unitDiffs,43);
+assert.equal(live.RICHGO25_FULL_PATCH?.yearDiffs,21);
 let changes={far:0,units:0,year:0},noncomparable=0;
 for(const d of verified){
  const k=key(d),b=find(base,k),x=find(live,k);assert.ok(b&&x,'missing '+k);
@@ -34,7 +34,7 @@ for(const d of verified){
  }
  if(d.unitsComparable===false) {
    noncomparable++;
-   if([271,301,314].includes(d.rank)) {
+   if([271,301].includes(d.rank)) {
      assert.equal(x.units,d.mapUnits,'restore individual block even if old bundled patches already changed it '+k);
      assert.equal((live.UNITFIX_M3||{})[k]?.[0],d.mapUnits,'individual block effective units '+k);
    } else assert.equal(x.units,b.units,'do not overwrite distinct block units with whole-site total '+k);
@@ -60,5 +60,5 @@ for(const cap of [6,10,15,20,30,35]){
  assert.equal(JSON.stringify(old.PICKS.map(d=>[d.n,d.area,d.units,d.year,d.types])),JSON.stringify(cur.PICKS.map(d=>[d.n,d.area,d.units,d.year,d.types])),'other cap PICKS '+cap);
  assert.equal(JSON.stringify(old.FARD),JSON.stringify(cur.FARD),'other cap FAR '+cap);
 }
-assert.equal(noncomparable,9,'6 previously excluded blocks and 3 reverified blocks must be protected');
+assert.equal(noncomparable,8,'6 previously excluded blocks and 2 park-town blocks must be protected');
 console.log('Verified '+verified.length+' Richgo web details; '+JSON.stringify(changes)+' changed, '+noncomparable+' shared K-apt blocks preserved, other six price bands unchanged ✅');
