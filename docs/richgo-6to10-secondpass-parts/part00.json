@@ -1,0 +1,1706 @@
+{
+  "meta": {
+    "shard": 0,
+    "originalPending": 72,
+    "additionalVerified": 17,
+    "additionalFarKnown": 17,
+    "farBlank": 0,
+    "stillPending": 55,
+    "collisions": 0,
+    "network": {
+      "attempted": 0,
+      "fetched": 83,
+      "error": 0,
+      "blocked": 0,
+      "limited": 0,
+      "bing": 31,
+      "hub": 9,
+      "detail": 43
+    },
+    "method": "region hub + named indexed pages + coordinates + year + units"
+  },
+  "rows": [
+    {
+      "name": "목동센트럴아이파크위브2단지",
+      "area": "서울 양천구 신월동",
+      "key": "목동센트럴아이파크위브2단지|서울 양천구 신월동",
+      "originalStatus": "review_needed",
+      "secondStatus": "still_unresolved",
+      "richgo": null,
+      "match": null,
+      "candidates": [
+        {
+          "id": "a3LjFTt",
+          "name": "목동센트럴아이파크위브",
+          "year": 2020,
+          "units": 3045,
+          "far": 264,
+          "distanceMeters": 185,
+          "accepted": false,
+          "score": 158
+        }
+      ]
+    },
+    {
+      "name": "목동센트럴아이파크위브3단지",
+      "area": "서울 양천구 신월동",
+      "key": "목동센트럴아이파크위브3단지|서울 양천구 신월동",
+      "originalStatus": "review_needed",
+      "secondStatus": "still_unresolved",
+      "richgo": null,
+      "match": null,
+      "candidates": [
+        {
+          "id": "a3LjFTt",
+          "name": "목동센트럴아이파크위브",
+          "year": 2020,
+          "units": 3045,
+          "far": 264,
+          "distanceMeters": 213,
+          "accepted": false,
+          "score": 154
+        }
+      ]
+    },
+    {
+      "name": "대우",
+      "area": "서울 구로구 고척동",
+      "key": "대우|서울 구로구 고척동",
+      "originalStatus": "review_needed",
+      "secondStatus": "still_unresolved",
+      "richgo": null,
+      "match": null,
+      "candidates": [
+        {
+          "id": "a5ORtDU",
+          "name": "고척대우",
+          "year": 1999,
+          "units": 987,
+          "far": 342,
+          "distanceMeters": 48,
+          "accepted": false,
+          "score": 134
+        }
+      ]
+    },
+    {
+      "name": "수원 SK SKY VIEW",
+      "area": "수원 장안구 정자동",
+      "key": "수원 SK SKY VIEW|수원 장안구 정자동",
+      "originalStatus": "review_needed",
+      "secondStatus": "still_unresolved",
+      "richgo": null,
+      "match": null,
+      "candidates": []
+    },
+    {
+      "name": "한일타운태영",
+      "area": "수원 장안구 조원동",
+      "key": "한일타운태영|수원 장안구 조원동",
+      "originalStatus": "review_needed",
+      "secondStatus": "still_unresolved",
+      "richgo": null,
+      "match": null,
+      "candidates": []
+    },
+    {
+      "name": "대우",
+      "area": "서울 성북구 정릉동",
+      "key": "대우|서울 성북구 정릉동",
+      "originalStatus": "review_needed",
+      "secondStatus": "verified_second_pass",
+      "richgo": {
+        "id": "a9oBLpx",
+        "name": "정릉대우",
+        "units": 791,
+        "year": 2001,
+        "far": 349,
+        "floors": "12~18층",
+        "coverage": 29,
+        "parking": 648,
+        "heating": "개별난방 · 도시가스",
+        "builder": "㈜대우",
+        "pyeongs": "18·24·25·32·42평",
+        "lat": 37.617739,
+        "lng": 127.003282,
+        "street": "서울시 성북구 보국문로30길 15",
+        "facts": true,
+        "url": "https://m.richgo.ai/realty/danji/a9oBLpx"
+      },
+      "match": {
+        "distanceMeters": 38,
+        "yearDelta": 0,
+        "unitsRatio": 0,
+        "method": "previous_candidate",
+        "score": 256
+      },
+      "candidates": [
+        {
+          "id": "a9oBLpx",
+          "name": "정릉대우",
+          "year": 2001,
+          "units": 791,
+          "far": 349,
+          "distanceMeters": 38,
+          "accepted": true,
+          "score": 256
+        }
+      ]
+    },
+    {
+      "name": "호수공원(대림1)",
+      "area": "안산 단원구 고잔동",
+      "key": "호수공원(대림1)|안산 단원구 고잔동",
+      "originalStatus": "review_needed",
+      "secondStatus": "still_unresolved",
+      "richgo": null,
+      "match": null,
+      "candidates": [
+        {
+          "id": "a9XXRyM",
+          "name": "호수공원대림",
+          "year": 2001,
+          "units": 2073,
+          "far": 190,
+          "distanceMeters": 69,
+          "accepted": false,
+          "score": 211
+        }
+      ]
+    },
+    {
+      "name": "호반베르디움센트럴포레",
+      "area": "화성 동탄구 목동",
+      "key": "호반베르디움센트럴포레|화성 동탄구 목동",
+      "originalStatus": "unmatched",
+      "secondStatus": "still_unresolved",
+      "richgo": null,
+      "match": null,
+      "candidates": []
+    },
+    {
+      "name": "동탄역신안인스빌리베라1차",
+      "area": "화성 동탄구 청계동",
+      "key": "동탄역신안인스빌리베라1차|화성 동탄구 청계동",
+      "originalStatus": "review_needed",
+      "secondStatus": "still_unresolved",
+      "richgo": null,
+      "match": null,
+      "candidates": [
+        {
+          "id": "a1cSCcg",
+          "name": "동탄역신안인스빌리베라2차",
+          "year": 2016,
+          "units": 644,
+          "far": 181,
+          "distanceMeters": 728,
+          "accepted": false,
+          "score": 49
+        }
+      ]
+    },
+    {
+      "name": "대림e-편한세상",
+      "area": "서울 양천구 신정동",
+      "key": "대림e-편한세상|서울 양천구 신정동",
+      "originalStatus": "unmatched",
+      "secondStatus": "still_unresolved",
+      "richgo": null,
+      "match": null,
+      "candidates": []
+    },
+    {
+      "name": "우미린제일풍경채",
+      "area": "화성 동탄구 석우동",
+      "key": "우미린제일풍경채|화성 동탄구 석우동",
+      "originalStatus": "review_needed",
+      "secondStatus": "verified_second_pass",
+      "richgo": {
+        "id": "a9YnRpC",
+        "name": "동탄예당마을우미린제일풍경채",
+        "units": 1316,
+        "year": 2008,
+        "far": 169,
+        "floors": "18~34층",
+        "coverage": 8,
+        "parking": 1984,
+        "heating": "지역난방 · 열병합",
+        "builder": "우미건설(주)",
+        "pyeongs": "31·37·39·45·56평",
+        "lat": 37.212623,
+        "lng": 127.077913,
+        "street": "경기도 화성시 동탄구 동탄반석로 277",
+        "facts": true,
+        "url": "https://m.richgo.ai/realty/danji/a9YnRpC"
+      },
+      "match": {
+        "distanceMeters": 90,
+        "yearDelta": 0,
+        "unitsRatio": 0,
+        "method": "previous_candidate",
+        "score": 256
+      },
+      "candidates": [
+        {
+          "id": "a9YnRpC",
+          "name": "동탄예당마을우미린제일풍경채",
+          "year": 2008,
+          "units": 1316,
+          "far": 169,
+          "distanceMeters": 90,
+          "accepted": true,
+          "score": 256
+        }
+      ]
+    },
+    {
+      "name": "화서주공4단지",
+      "area": "수원 팔달구 화서동",
+      "key": "화서주공4단지|수원 팔달구 화서동",
+      "originalStatus": "review_needed",
+      "secondStatus": "still_unresolved",
+      "richgo": null,
+      "match": null,
+      "candidates": [
+        {
+          "id": "a5afvkd",
+          "name": "화서주공4단지",
+          "year": 1997,
+          "units": 1314,
+          "far": 219,
+          "distanceMeters": 77,
+          "accepted": false,
+          "score": 217
+        }
+      ]
+    },
+    {
+      "name": "롯데캐슬",
+      "area": "화성 동탄구 석우동",
+      "key": "롯데캐슬|화성 동탄구 석우동",
+      "originalStatus": "review_needed",
+      "secondStatus": "verified_second_pass",
+      "richgo": {
+        "id": "a3qENlF",
+        "name": "동탄예당마을롯데캐슬",
+        "units": 1222,
+        "year": 2008,
+        "far": 179,
+        "floors": "18~31층",
+        "coverage": 11,
+        "parking": 2314,
+        "heating": "지역난방 · 열병합",
+        "builder": "롯데건설(주)",
+        "pyeongs": "35·37·40·43·50·59·68평",
+        "lat": 37.210163,
+        "lng": 127.073369,
+        "street": "경기도 화성시 동탄구 동탄반석로 231",
+        "facts": true,
+        "url": "https://m.richgo.ai/realty/danji/a3qENlF"
+      },
+      "match": {
+        "distanceMeters": 13,
+        "yearDelta": 0,
+        "unitsRatio": 0,
+        "method": "previous_candidate",
+        "score": 256
+      },
+      "candidates": [
+        {
+          "id": "a3qENlF",
+          "name": "동탄예당마을롯데캐슬",
+          "year": 2008,
+          "units": 1222,
+          "far": 179,
+          "distanceMeters": 13,
+          "accepted": true,
+          "score": 256
+        }
+      ]
+    },
+    {
+      "name": "우만주공2단지",
+      "area": "수원 팔달구 우만동",
+      "key": "우만주공2단지|수원 팔달구 우만동",
+      "originalStatus": "unmatched",
+      "secondStatus": "still_unresolved",
+      "richgo": null,
+      "match": null,
+      "candidates": []
+    },
+    {
+      "name": "상암월드컵파크12단지",
+      "area": "서울 마포구 상암동",
+      "key": "상암월드컵파크12단지|서울 마포구 상암동",
+      "originalStatus": "review_needed",
+      "secondStatus": "still_unresolved",
+      "richgo": null,
+      "match": null,
+      "candidates": [
+        {
+          "id": "a5rBgwG",
+          "name": "상암월드컵파크5단지",
+          "year": 2005,
+          "units": 436,
+          "far": 240,
+          "distanceMeters": 846,
+          "accepted": false,
+          "score": 91
+        },
+        {
+          "id": "a6hIHyT",
+          "name": "상암월드컵파크2단지",
+          "year": 2003,
+          "units": 657,
+          "far": 243,
+          "distanceMeters": 1623,
+          "accepted": false,
+          "score": 31
+        }
+      ]
+    },
+    {
+      "name": "동탄2신도시금강펜테리움센트럴파크Ⅰ",
+      "area": "화성 동탄구 여울동",
+      "key": "동탄2신도시금강펜테리움센트럴파크Ⅰ|화성 동탄구 여울동",
+      "originalStatus": "review_needed",
+      "secondStatus": "verified_second_pass",
+      "richgo": {
+        "id": "a1iIzyL",
+        "name": "금강펜테리움센트럴파크동탄",
+        "units": 827,
+        "year": 2016,
+        "far": 162,
+        "floors": "10~15층",
+        "coverage": 18,
+        "parking": 1025,
+        "heating": "지역난방 · 열병합",
+        "builder": "(주)금강주택",
+        "pyeongs": "27·33평",
+        "lat": 37.180848,
+        "lng": 127.108301,
+        "street": "경기도 화성시 동탄구 동탄대로12길 64",
+        "facts": true,
+        "url": "https://m.richgo.ai/realty/danji/a1iIzyL"
+      },
+      "match": {
+        "distanceMeters": 25,
+        "yearDelta": 0,
+        "unitsRatio": 0,
+        "method": "previous_candidate",
+        "score": 256
+      },
+      "candidates": [
+        {
+          "id": "a1iIzyL",
+          "name": "금강펜테리움센트럴파크동탄",
+          "year": 2016,
+          "units": 827,
+          "far": 162,
+          "distanceMeters": 25,
+          "accepted": true,
+          "score": 256
+        }
+      ]
+    },
+    {
+      "name": "푸르지오3차",
+      "area": "안산 단원구 고잔동",
+      "key": "푸르지오3차|안산 단원구 고잔동",
+      "originalStatus": "review_needed",
+      "secondStatus": "still_unresolved",
+      "richgo": null,
+      "match": null,
+      "candidates": [
+        {
+          "id": "a3HyxLC",
+          "name": "안산고잔푸르지오3차",
+          "year": 2003,
+          "units": 1134,
+          "far": 199,
+          "distanceMeters": 67,
+          "accepted": false,
+          "score": 211
+        },
+        {
+          "id": "a1UrBDI",
+          "name": "푸르지오1차",
+          "year": 2001,
+          "units": 1008,
+          "far": 184,
+          "distanceMeters": 752,
+          "accepted": false,
+          "score": 47
+        }
+      ]
+    },
+    {
+      "name": "포스코더샵2차",
+      "area": "화성 동탄구 능동",
+      "key": "포스코더샵2차|화성 동탄구 능동",
+      "originalStatus": "review_needed",
+      "secondStatus": "verified_second_pass",
+      "richgo": {
+        "id": "a1Boflb",
+        "name": "푸른마을포스코더샵2차",
+        "units": 1226,
+        "year": 2008,
+        "far": 195,
+        "floors": "4~33층",
+        "coverage": 13,
+        "parking": 1546,
+        "heating": "지역난방 · 열병합",
+        "builder": "(주)포스코건설",
+        "pyeongs": "30·33·37·42·58평",
+        "lat": 37.203129,
+        "lng": 127.057797,
+        "street": "경기도 화성시 동탄구 동탄공원로 21-12",
+        "facts": true,
+        "url": "https://m.richgo.ai/realty/danji/a1Boflb"
+      },
+      "match": {
+        "distanceMeters": 6,
+        "yearDelta": 0,
+        "unitsRatio": 0,
+        "method": "previous_candidate",
+        "score": 256
+      },
+      "candidates": [
+        {
+          "id": "a1Boflb",
+          "name": "푸른마을포스코더샵2차",
+          "year": 2008,
+          "units": 1226,
+          "far": 195,
+          "distanceMeters": 6,
+          "accepted": true,
+          "score": 256
+        }
+      ]
+    },
+    {
+      "name": "푸르지오",
+      "area": "화성 동탄구 석우동",
+      "key": "푸르지오|화성 동탄구 석우동",
+      "originalStatus": "review_needed",
+      "secondStatus": "verified_second_pass",
+      "richgo": {
+        "id": "a4liiQO",
+        "name": "동탄예당마을푸르지오",
+        "units": 978,
+        "year": 2008,
+        "far": 169,
+        "floors": "23~31층",
+        "coverage": 9,
+        "parking": 1029,
+        "heating": "지역난방 · 열병합",
+        "builder": "대우건설",
+        "pyeongs": "24·29·32평",
+        "lat": 37.209773,
+        "lng": 127.078759,
+        "street": "경기도 화성시 동탄구 동탄반석로 264",
+        "facts": true,
+        "url": "https://m.richgo.ai/realty/danji/a4liiQO"
+      },
+      "match": {
+        "distanceMeters": 14,
+        "yearDelta": 0,
+        "unitsRatio": 0,
+        "method": "region_hub",
+        "score": 211
+      },
+      "candidates": [
+        {
+          "id": "a4liiQO",
+          "name": "동탄예당마을푸르지오",
+          "year": 2008,
+          "units": 978,
+          "far": 169,
+          "distanceMeters": 14,
+          "accepted": true,
+          "score": 211
+        }
+      ]
+    },
+    {
+      "name": "중앙하이츠",
+      "area": "서울 구로구 구로동",
+      "key": "중앙하이츠|서울 구로구 구로동",
+      "originalStatus": "review_needed",
+      "secondStatus": "verified_second_pass",
+      "richgo": {
+        "id": "a8hlsIL",
+        "name": "중앙구로하이츠(685-124)",
+        "units": 579,
+        "year": 1987,
+        "far": 217,
+        "floors": "10~15층",
+        "coverage": 18,
+        "parking": 617,
+        "heating": "중앙난방 · 도시가스",
+        "builder": "중앙건설",
+        "pyeongs": "23·27·30평",
+        "lat": 37.497109,
+        "lng": 126.875931,
+        "street": "서울시 구로구 구일로8길 92",
+        "facts": true,
+        "url": "https://m.richgo.ai/realty/danji/a8hlsIL"
+      },
+      "match": {
+        "distanceMeters": 20,
+        "yearDelta": 0,
+        "unitsRatio": 0,
+        "method": "previous_candidate",
+        "score": 256
+      },
+      "candidates": [
+        {
+          "id": "a8hlsIL",
+          "name": "중앙구로하이츠(685-124)",
+          "year": 1987,
+          "units": 579,
+          "far": 217,
+          "distanceMeters": 20,
+          "accepted": true,
+          "score": 256
+        },
+        {
+          "id": "a1qmGhZ",
+          "name": "구로중앙하이츠(1269)",
+          "year": 2001,
+          "units": 597,
+          "far": 341,
+          "distanceMeters": 488,
+          "accepted": false,
+          "score": 103
+        }
+      ]
+    },
+    {
+      "name": "천왕이펜하우스6단지",
+      "area": "서울 구로구 천왕동",
+      "key": "천왕이펜하우스6단지|서울 구로구 천왕동",
+      "originalStatus": "review_needed",
+      "secondStatus": "still_unresolved",
+      "richgo": null,
+      "match": null,
+      "candidates": [
+        {
+          "id": "a4AovPk",
+          "name": "천왕이펜하우스3단지",
+          "year": 2011,
+          "units": 1044,
+          "far": 197,
+          "distanceMeters": 501,
+          "accepted": false,
+          "score": 118
+        },
+        {
+          "id": "a0aDRNF",
+          "name": "천왕이펜하우스2단지",
+          "year": 2011,
+          "units": 526,
+          "far": 193,
+          "distanceMeters": 734,
+          "accepted": false,
+          "score": 115
+        },
+        {
+          "id": "a4nUzDv",
+          "name": "천왕이펜하우스1단지",
+          "year": 2011,
+          "units": 314,
+          "far": 152,
+          "distanceMeters": 931,
+          "accepted": false,
+          "score": -1
+        }
+      ]
+    },
+    {
+      "name": "동탄파크푸르지오",
+      "area": "화성 동탄구 영천동",
+      "key": "동탄파크푸르지오|화성 동탄구 영천동",
+      "originalStatus": "review_needed",
+      "secondStatus": "still_unresolved",
+      "richgo": null,
+      "match": null,
+      "candidates": [
+        {
+          "id": "a1ZQmgw",
+          "name": "동탄파크자이",
+          "year": 2018,
+          "units": 979,
+          "far": 169,
+          "distanceMeters": 575,
+          "accepted": false,
+          "score": 162
+        },
+        {
+          "id": "a6DLjST",
+          "name": "동탄역푸르지오",
+          "year": 2017,
+          "units": 832,
+          "far": 174,
+          "distanceMeters": 2211,
+          "accepted": false,
+          "score": 5
+        }
+      ]
+    },
+    {
+      "name": "동탄2엘에이치26단지아파트(에이65블록)",
+      "area": "화성 동탄구 송동",
+      "key": "동탄2엘에이치26단지아파트(에이65블록)|화성 동탄구 송동",
+      "originalStatus": "review_needed",
+      "secondStatus": "verified_second_pass",
+      "richgo": {
+        "id": "a0KBrUV",
+        "name": "동탄2LH26단지",
+        "units": 917,
+        "year": 2016,
+        "far": 181,
+        "floors": "12~34층",
+        "coverage": 14,
+        "parking": 1134,
+        "heating": "지역난방 · 열병합",
+        "builder": "(주)파라다이스글로벌 외1",
+        "pyeongs": "29·33평",
+        "lat": 37.176361,
+        "lng": 127.103478,
+        "street": "경기도 화성시 동탄구 동탄대로9길 20",
+        "facts": true,
+        "url": "https://m.richgo.ai/realty/danji/a0KBrUV"
+      },
+      "match": {
+        "distanceMeters": 11,
+        "yearDelta": 0,
+        "unitsRatio": 0,
+        "method": "previous_candidate",
+        "score": 256
+      },
+      "candidates": [
+        {
+          "id": "a0KBrUV",
+          "name": "동탄2LH26단지",
+          "year": 2016,
+          "units": 917,
+          "far": 181,
+          "distanceMeters": 11,
+          "accepted": true,
+          "score": 256
+        }
+      ]
+    },
+    {
+      "name": "정릉2차e-편한세상",
+      "area": "서울 성북구 정릉동",
+      "key": "정릉2차e-편한세상|서울 성북구 정릉동",
+      "originalStatus": "review_needed",
+      "secondStatus": "verified_second_pass",
+      "richgo": {
+        "id": "a0jmQWI",
+        "name": "길음역e편한세상",
+        "units": 527,
+        "year": 2009,
+        "far": 235,
+        "floors": "6~15층",
+        "coverage": 23,
+        "parking": 638,
+        "heating": "개별난방 · 도시가스",
+        "builder": "대림산업(주)",
+        "pyeongs": "22·23·34·41·43평",
+        "lat": 37.599963,
+        "lng": 127.019577,
+        "street": "서울시 성북구 북악산로 851",
+        "facts": true,
+        "url": "https://m.richgo.ai/realty/danji/a0jmQWI"
+      },
+      "match": {
+        "distanceMeters": 16,
+        "yearDelta": 0,
+        "unitsRatio": 0,
+        "method": "previous_candidate",
+        "score": 256
+      },
+      "candidates": [
+        {
+          "id": "a0jmQWI",
+          "name": "길음역e편한세상",
+          "year": 2009,
+          "units": 527,
+          "far": 235,
+          "distanceMeters": 16,
+          "accepted": true,
+          "score": 256
+        }
+      ]
+    },
+    {
+      "name": "산척동,동탄호수공원금강펜테리움센트럴파크Ⅱ",
+      "area": "화성 동탄구 산척동",
+      "key": "산척동,동탄호수공원금강펜테리움센트럴파크Ⅱ|화성 동탄구 산척동",
+      "originalStatus": "unmatched",
+      "secondStatus": "still_unresolved",
+      "richgo": null,
+      "match": null,
+      "candidates": []
+    },
+    {
+      "name": "금강(343)",
+      "area": "서울 구로구 오류동",
+      "key": "금강(343)|서울 구로구 오류동",
+      "originalStatus": "review_needed",
+      "secondStatus": "still_unresolved",
+      "richgo": null,
+      "match": null,
+      "candidates": []
+    },
+    {
+      "name": "서희스타힐스엔에이치에프",
+      "area": "화성 동탄구 산척동",
+      "key": "서희스타힐스엔에이치에프|화성 동탄구 산척동",
+      "originalStatus": "unmatched",
+      "secondStatus": "still_unresolved",
+      "richgo": null,
+      "match": null,
+      "candidates": []
+    },
+    {
+      "name": "에코메트로5",
+      "area": "인천 남동구 논현동",
+      "key": "에코메트로5|인천 남동구 논현동",
+      "originalStatus": "review_needed",
+      "secondStatus": "verified_second_pass",
+      "richgo": {
+        "id": "a8EXNsO",
+        "name": "에코메트로5단지한화꿈에그린",
+        "units": 1052,
+        "year": 2010,
+        "far": 198,
+        "floors": "29~40층",
+        "coverage": 10,
+        "parking": 1608,
+        "heating": "지역난방 · 열병합",
+        "builder": "(주)한화건설",
+        "pyeongs": "34·40·46·56평",
+        "lat": 37.398146,
+        "lng": 126.731571,
+        "street": "인천시 남동구 소래역남로 39",
+        "facts": true,
+        "url": "https://m.richgo.ai/realty/danji/a8EXNsO"
+      },
+      "match": {
+        "distanceMeters": 25,
+        "yearDelta": 0,
+        "unitsRatio": 0,
+        "method": "region_hub",
+        "score": 211
+      },
+      "candidates": [
+        {
+          "id": "a8EXNsO",
+          "name": "에코메트로5단지한화꿈에그린",
+          "year": 2010,
+          "units": 1052,
+          "far": 198,
+          "distanceMeters": 25,
+          "accepted": true,
+          "score": 211
+        }
+      ]
+    },
+    {
+      "name": "더레이크시티부영5단지",
+      "area": "화성 동탄구 산척동",
+      "key": "더레이크시티부영5단지|화성 동탄구 산척동",
+      "originalStatus": "unmatched",
+      "secondStatus": "still_unresolved",
+      "richgo": null,
+      "match": null,
+      "candidates": []
+    },
+    {
+      "name": "꽃뫼버들마을진흥",
+      "area": "수원 팔달구 화서동",
+      "key": "꽃뫼버들마을진흥|수원 팔달구 화서동",
+      "originalStatus": "review_needed",
+      "secondStatus": "still_unresolved",
+      "richgo": null,
+      "match": null,
+      "candidates": [
+        {
+          "id": "a5tWuAU",
+          "name": "꽃뫼버들마을진흥",
+          "year": 2002,
+          "units": 824,
+          "far": 217,
+          "distanceMeters": 45,
+          "accepted": false,
+          "score": 256
+        }
+      ]
+    },
+    {
+      "name": "화성동탄2센트럴힐즈동탄아파트",
+      "area": "화성 동탄구 여울동",
+      "key": "화성동탄2센트럴힐즈동탄아파트|화성 동탄구 여울동",
+      "originalStatus": "unmatched",
+      "secondStatus": "still_unresolved",
+      "richgo": null,
+      "match": null,
+      "candidates": []
+    },
+    {
+      "name": "푸른마을두산위브",
+      "area": "화성 동탄구 능동",
+      "key": "푸른마을두산위브|화성 동탄구 능동",
+      "originalStatus": "review_needed",
+      "secondStatus": "still_unresolved",
+      "richgo": null,
+      "match": null,
+      "candidates": [
+        {
+          "id": "a1EiYWU",
+          "name": "동탄푸른마을모아미래도",
+          "year": 2008,
+          "units": 926,
+          "far": 144,
+          "distanceMeters": 410,
+          "accepted": false,
+          "score": 190
+        }
+      ]
+    },
+    {
+      "name": "시범한빛마을동탄아이파크",
+      "area": "화성 동탄구 반송동",
+      "key": "시범한빛마을동탄아이파크|화성 동탄구 반송동",
+      "originalStatus": "review_needed",
+      "secondStatus": "still_unresolved",
+      "richgo": null,
+      "match": null,
+      "candidates": [
+        {
+          "id": "a0Hvefi",
+          "name": "동탄시범한빛마을동탄아이파크",
+          "year": 2007,
+          "units": 748,
+          "far": 200,
+          "distanceMeters": 25,
+          "accepted": false,
+          "score": 211
+        }
+      ]
+    },
+    {
+      "name": "동탄숲속마을 모아미래도1단지",
+      "area": "화성 동탄구 능동",
+      "key": "동탄숲속마을 모아미래도1단지|화성 동탄구 능동",
+      "originalStatus": "review_needed",
+      "secondStatus": "still_unresolved",
+      "richgo": null,
+      "match": null,
+      "candidates": [
+        {
+          "id": "a1EiYWU",
+          "name": "동탄푸른마을모아미래도",
+          "year": 2008,
+          "units": 926,
+          "far": 144,
+          "distanceMeters": 621,
+          "accepted": false,
+          "score": 156
+        }
+      ]
+    },
+    {
+      "name": "더레이크시티부영6단지",
+      "area": "화성 동탄구 산척동",
+      "key": "더레이크시티부영6단지|화성 동탄구 산척동",
+      "originalStatus": "unmatched",
+      "secondStatus": "still_unresolved",
+      "richgo": null,
+      "match": null,
+      "candidates": []
+    },
+    {
+      "name": "나루마을월드메르디앙반도유보라",
+      "area": "화성 동탄구 반송동",
+      "key": "나루마을월드메르디앙반도유보라|화성 동탄구 반송동",
+      "originalStatus": "unmatched",
+      "secondStatus": "still_unresolved",
+      "richgo": null,
+      "match": null,
+      "candidates": []
+    },
+    {
+      "name": "금호어울림레이크",
+      "area": "화성 동탄구 장지동",
+      "key": "금호어울림레이크|화성 동탄구 장지동",
+      "originalStatus": "review_needed",
+      "secondStatus": "verified_second_pass",
+      "richgo": {
+        "id": "a0wcunl",
+        "name": "금호어울림레이크(A91블록)",
+        "units": 812,
+        "year": 2018,
+        "far": 174,
+        "floors": "14~25층",
+        "coverage": 14,
+        "parking": 882,
+        "heating": "지역난방 · 열병합",
+        "builder": "금호산업(주),우미건설(주)",
+        "pyeongs": "24·30·34평",
+        "lat": 37.163247,
+        "lng": 127.107664,
+        "street": "경기도 화성시 동탄구 동탄대로4길 17",
+        "facts": true,
+        "url": "https://m.richgo.ai/realty/danji/a0wcunl"
+      },
+      "match": {
+        "distanceMeters": 96,
+        "yearDelta": 0,
+        "unitsRatio": 0,
+        "method": "region_hub",
+        "score": 211
+      },
+      "candidates": [
+        {
+          "id": "a0wcunl",
+          "name": "금호어울림레이크(A91블록)",
+          "year": 2018,
+          "units": 812,
+          "far": 174,
+          "distanceMeters": 96,
+          "accepted": true,
+          "score": 211
+        },
+        {
+          "id": "a3UPGJW",
+          "name": "금호어울림레이크2차",
+          "year": 2019,
+          "units": 681,
+          "far": 159,
+          "distanceMeters": 609,
+          "accepted": false,
+          "score": 141
+        }
+      ]
+    },
+    {
+      "name": "천왕이펜하우스5단지",
+      "area": "서울 구로구 천왕동",
+      "key": "천왕이펜하우스5단지|서울 구로구 천왕동",
+      "originalStatus": "review_needed",
+      "secondStatus": "still_unresolved",
+      "richgo": null,
+      "match": null,
+      "candidates": [
+        {
+          "id": "a0aDRNF",
+          "name": "천왕이펜하우스2단지",
+          "year": 2011,
+          "units": 526,
+          "far": 193,
+          "distanceMeters": 551,
+          "accepted": false,
+          "score": 177
+        },
+        {
+          "id": "a4AovPk",
+          "name": "천왕이펜하우스3단지",
+          "year": 2011,
+          "units": 1044,
+          "far": 197,
+          "distanceMeters": 322,
+          "accepted": false,
+          "score": 141
+        },
+        {
+          "id": "a4nUzDv",
+          "name": "천왕이펜하우스1단지",
+          "year": 2011,
+          "units": 314,
+          "far": 152,
+          "distanceMeters": 764,
+          "accepted": false,
+          "score": 19
+        }
+      ]
+    },
+    {
+      "name": "동탄역 신미주",
+      "area": "화성 동탄구 여울동",
+      "key": "동탄역 신미주|화성 동탄구 여울동",
+      "originalStatus": "review_needed",
+      "secondStatus": "still_unresolved",
+      "richgo": null,
+      "match": null,
+      "candidates": []
+    },
+    {
+      "name": "천왕이펜하우스4단지",
+      "area": "서울 구로구 천왕동",
+      "key": "천왕이펜하우스4단지|서울 구로구 천왕동",
+      "originalStatus": "review_needed",
+      "secondStatus": "still_unresolved",
+      "richgo": null,
+      "match": null,
+      "candidates": [
+        {
+          "id": "a0aDRNF",
+          "name": "천왕이펜하우스2단지",
+          "year": 2011,
+          "units": 526,
+          "far": 193,
+          "distanceMeters": 489,
+          "accepted": false,
+          "score": 173
+        },
+        {
+          "id": "a4AovPk",
+          "name": "천왕이펜하우스3단지",
+          "year": 2011,
+          "units": 1044,
+          "far": 197,
+          "distanceMeters": 302,
+          "accepted": false,
+          "score": 143
+        },
+        {
+          "id": "a4nUzDv",
+          "name": "천왕이펜하우스1단지",
+          "year": 2011,
+          "units": 314,
+          "far": 152,
+          "distanceMeters": 618,
+          "accepted": false,
+          "score": 63
+        }
+      ]
+    },
+    {
+      "name": "에코메트로9",
+      "area": "인천 남동구 논현동",
+      "key": "에코메트로9|인천 남동구 논현동",
+      "originalStatus": "review_needed",
+      "secondStatus": "verified_second_pass",
+      "richgo": {
+        "id": "a1CpIoT",
+        "name": "에코메트로9단지한화꿈에그린",
+        "units": 810,
+        "year": 2011,
+        "far": 199,
+        "floors": "34~50층",
+        "coverage": 9,
+        "parking": 1876,
+        "heating": "지역난방 · 열병합",
+        "builder": "(주)한화건설",
+        "pyeongs": "48·59·66·75평",
+        "lat": 37.386491,
+        "lng": 126.722768,
+        "street": "인천시 남동구 에코중앙로 96",
+        "facts": true,
+        "url": "https://m.richgo.ai/realty/danji/a1CpIoT"
+      },
+      "match": {
+        "distanceMeters": 12,
+        "yearDelta": 0,
+        "unitsRatio": 0,
+        "method": "region_hub",
+        "score": 211
+      },
+      "candidates": [
+        {
+          "id": "a1CpIoT",
+          "name": "에코메트로9단지한화꿈에그린",
+          "year": 2011,
+          "units": 810,
+          "far": 199,
+          "distanceMeters": 12,
+          "accepted": true,
+          "score": 211
+        }
+      ]
+    },
+    {
+      "name": "신일유토빌",
+      "area": "화성 동탄구 석우동",
+      "key": "신일유토빌|화성 동탄구 석우동",
+      "originalStatus": "review_needed",
+      "secondStatus": "verified_second_pass",
+      "richgo": {
+        "id": "a7LIPMm",
+        "name": "동탄예당마을신일유토빌",
+        "units": 626,
+        "year": 2008,
+        "far": 179,
+        "floors": "22~33층",
+        "coverage": 10,
+        "parking": 1200,
+        "heating": "지역난방 · 열병합",
+        "builder": "주식회사신일건업",
+        "pyeongs": "38·48·63평",
+        "lat": 37.20857,
+        "lng": 127.075856,
+        "street": "경기도 화성시 동탄구 동탄반석로 232",
+        "facts": true,
+        "url": "https://m.richgo.ai/realty/danji/a7LIPMm"
+      },
+      "match": {
+        "distanceMeters": 39,
+        "yearDelta": 0,
+        "unitsRatio": 0,
+        "method": "previous_candidate",
+        "score": 256
+      },
+      "candidates": [
+        {
+          "id": "a7LIPMm",
+          "name": "동탄예당마을신일유토빌",
+          "year": 2008,
+          "units": 626,
+          "far": 179,
+          "distanceMeters": 39,
+          "accepted": true,
+          "score": 256
+        }
+      ]
+    },
+    {
+      "name": "동아에코빌",
+      "area": "서울 성북구 상월곡동",
+      "key": "동아에코빌|서울 성북구 상월곡동",
+      "originalStatus": "review_needed",
+      "secondStatus": "still_unresolved",
+      "richgo": null,
+      "match": null,
+      "candidates": [
+        {
+          "id": "a8efvSj",
+          "name": "동아에코빌",
+          "year": 2003,
+          "units": 1253,
+          "far": 281,
+          "distanceMeters": 16,
+          "accepted": false,
+          "score": 232
+        }
+      ]
+    },
+    {
+      "name": "레이크반도유보라아이비파크9.0",
+      "area": "화성 동탄구 장지동",
+      "key": "레이크반도유보라아이비파크9.0|화성 동탄구 장지동",
+      "originalStatus": "unmatched",
+      "secondStatus": "still_unresolved",
+      "richgo": null,
+      "match": null,
+      "candidates": []
+    },
+    {
+      "name": "더레이크시티부영1단지",
+      "area": "화성 동탄구 산척동",
+      "key": "더레이크시티부영1단지|화성 동탄구 산척동",
+      "originalStatus": "review_needed",
+      "secondStatus": "still_unresolved",
+      "richgo": null,
+      "match": null,
+      "candidates": []
+    },
+    {
+      "name": "한효",
+      "area": "서울 구로구 고척동",
+      "key": "한효|서울 구로구 고척동",
+      "originalStatus": "review_needed",
+      "secondStatus": "still_unresolved",
+      "richgo": null,
+      "match": null,
+      "candidates": [
+        {
+          "id": "a7srDnQ",
+          "name": "한효",
+          "year": 1985,
+          "units": 290,
+          "far": 175,
+          "distanceMeters": 56,
+          "accepted": false,
+          "score": 244
+        }
+      ]
+    },
+    {
+      "name": "동탄숲속마을자연앤경남아너스빌(1115-0)",
+      "area": "화성 동탄구 능동",
+      "key": "동탄숲속마을자연앤경남아너스빌(1115-0)|화성 동탄구 능동",
+      "originalStatus": "review_needed",
+      "secondStatus": "verified_second_pass",
+      "richgo": {
+        "id": "a4OdCdH",
+        "name": "능동역센트럴경남아너스빌",
+        "units": 641,
+        "year": 2008,
+        "far": 159,
+        "floors": "17~29층",
+        "coverage": 11,
+        "parking": 784,
+        "heating": "지역난방 · 열병합",
+        "builder": "경남건설",
+        "pyeongs": "30·33평",
+        "lat": 37.208098,
+        "lng": 127.059402,
+        "street": "경기도 화성시 동탄구 동탄숲속로 103",
+        "facts": true,
+        "url": "https://m.richgo.ai/realty/danji/a4OdCdH"
+      },
+      "match": {
+        "distanceMeters": 2,
+        "yearDelta": 0,
+        "unitsRatio": 0,
+        "method": "previous_candidate",
+        "score": 256
+      },
+      "candidates": [
+        {
+          "id": "a4OdCdH",
+          "name": "능동역센트럴경남아너스빌",
+          "year": 2008,
+          "units": 641,
+          "far": 159,
+          "distanceMeters": 2,
+          "accepted": true,
+          "score": 256
+        }
+      ]
+    },
+    {
+      "name": "백설마을성지동양고속아파트",
+      "area": "수원 장안구 정자동",
+      "key": "백설마을성지동양고속아파트|수원 장안구 정자동",
+      "originalStatus": "unmatched",
+      "secondStatus": "still_unresolved",
+      "richgo": null,
+      "match": null,
+      "candidates": []
+    },
+    {
+      "name": "동탄센트럴포레스트",
+      "area": "화성 동탄구 반송동",
+      "key": "동탄센트럴포레스트|화성 동탄구 반송동",
+      "originalStatus": "unmatched",
+      "secondStatus": "still_unresolved",
+      "richgo": null,
+      "match": null,
+      "candidates": []
+    },
+    {
+      "name": "신구로자이",
+      "area": "서울 구로구 구로동",
+      "key": "신구로자이|서울 구로구 구로동",
+      "originalStatus": "review_needed",
+      "secondStatus": "still_unresolved",
+      "richgo": null,
+      "match": null,
+      "candidates": [
+        {
+          "id": "a6BoLnr",
+          "name": "신구로자이",
+          "year": 2007,
+          "units": 299,
+          "far": 637,
+          "distanceMeters": 43,
+          "accepted": false,
+          "score": 191
+        }
+      ]
+    },
+    {
+      "name": "시범한빛마을케이씨씨스위첸",
+      "area": "화성 동탄구 반송동",
+      "key": "시범한빛마을케이씨씨스위첸|화성 동탄구 반송동",
+      "originalStatus": "review_needed",
+      "secondStatus": "verified_second_pass",
+      "richgo": {
+        "id": "a6cIUiX",
+        "name": "동탄시범한빛마을KCC스위첸",
+        "units": 484,
+        "year": 2007,
+        "far": 198,
+        "floors": "16~30층",
+        "coverage": 12,
+        "parking": 562,
+        "heating": "지역난방 · 열병합",
+        "builder": "(주)KCC건설",
+        "pyeongs": "32평",
+        "lat": 37.20957,
+        "lng": 127.068926,
+        "street": "경기도 화성시 동탄구 동탄시범한빛길 38",
+        "facts": true,
+        "url": "https://m.richgo.ai/realty/danji/a6cIUiX"
+      },
+      "match": {
+        "distanceMeters": 33,
+        "yearDelta": 0,
+        "unitsRatio": 0,
+        "method": "previous_candidate",
+        "score": 256
+      },
+      "candidates": [
+        {
+          "id": "a6cIUiX",
+          "name": "동탄시범한빛마을KCC스위첸",
+          "year": 2007,
+          "units": 484,
+          "far": 198,
+          "distanceMeters": 33,
+          "accepted": true,
+          "score": 256
+        }
+      ]
+    },
+    {
+      "name": "한진현대아파트",
+      "area": "수원 팔달구 화서동",
+      "key": "한진현대아파트|수원 팔달구 화서동",
+      "originalStatus": "review_needed",
+      "secondStatus": "still_unresolved",
+      "richgo": null,
+      "match": null,
+      "candidates": [
+        {
+          "id": "a1rJDaU",
+          "name": "한진",
+          "year": 1997,
+          "units": 516,
+          "far": 245,
+          "distanceMeters": 67,
+          "accepted": false,
+          "score": 244
+        }
+      ]
+    },
+    {
+      "name": "동탄숲속마을 능동역 리체 더 포레스트",
+      "area": "화성 동탄구 능동",
+      "key": "동탄숲속마을 능동역 리체 더 포레스트|화성 동탄구 능동",
+      "originalStatus": "unmatched",
+      "secondStatus": "still_unresolved",
+      "richgo": null,
+      "match": null,
+      "candidates": []
+    },
+    {
+      "name": "더레이크시티부영2단지",
+      "area": "화성 동탄구 산척동",
+      "key": "더레이크시티부영2단지|화성 동탄구 산척동",
+      "originalStatus": "review_needed",
+      "secondStatus": "still_unresolved",
+      "richgo": null,
+      "match": null,
+      "candidates": []
+    },
+    {
+      "name": "능동마을이지더원",
+      "area": "화성 동탄구 능동",
+      "key": "능동마을이지더원|화성 동탄구 능동",
+      "originalStatus": "unmatched",
+      "secondStatus": "still_unresolved",
+      "richgo": null,
+      "match": null,
+      "candidates": []
+    },
+    {
+      "name": "동탄시범다은마을센트럴파크뷰",
+      "area": "화성 동탄구 반송동",
+      "key": "동탄시범다은마을센트럴파크뷰|화성 동탄구 반송동",
+      "originalStatus": "review_needed",
+      "secondStatus": "still_unresolved",
+      "richgo": null,
+      "match": null,
+      "candidates": [
+        {
+          "id": "a7fwgoN",
+          "name": "동탄시범다은마을메타역롯데캐슬",
+          "year": 2007,
+          "units": 429,
+          "far": 199,
+          "distanceMeters": 609,
+          "accepted": false,
+          "score": 153
+        }
+      ]
+    },
+    {
+      "name": "동탄2아이파크1단지",
+      "area": "화성 동탄구 장지동",
+      "key": "동탄2아이파크1단지|화성 동탄구 장지동",
+      "originalStatus": "unmatched",
+      "secondStatus": "still_unresolved",
+      "richgo": null,
+      "match": null,
+      "candidates": []
+    },
+    {
+      "name": "에코메트로10",
+      "area": "인천 남동구 논현동",
+      "key": "에코메트로10|인천 남동구 논현동",
+      "originalStatus": "review_needed",
+      "secondStatus": "verified_second_pass",
+      "richgo": {
+        "id": "a0nWfTR",
+        "name": "에코메트로10단지한화꿈에그린",
+        "units": 556,
+        "year": 2010,
+        "far": 198,
+        "floors": "31~40층",
+        "coverage": 10,
+        "parking": 1264,
+        "heating": "지역난방 · 열병합",
+        "builder": "(주)한화건설",
+        "pyeongs": "46·56·67·75평",
+        "lat": 37.390969,
+        "lng": 126.728587,
+        "street": "인천시 남동구 아암대로1503번길 21",
+        "facts": true,
+        "url": "https://m.richgo.ai/realty/danji/a0nWfTR"
+      },
+      "match": {
+        "distanceMeters": 72,
+        "yearDelta": 0,
+        "unitsRatio": 0,
+        "method": "region_hub",
+        "score": 211
+      },
+      "candidates": [
+        {
+          "id": "a0nWfTR",
+          "name": "에코메트로10단지한화꿈에그린",
+          "year": 2010,
+          "units": 556,
+          "far": 198,
+          "distanceMeters": 72,
+          "accepted": true,
+          "score": 211
+        }
+      ]
+    },
+    {
+      "name": "신안한일",
+      "area": "수원 장안구 천천동",
+      "key": "신안한일|수원 장안구 천천동",
+      "originalStatus": "unmatched",
+      "secondStatus": "still_unresolved",
+      "richgo": null,
+      "match": null,
+      "candidates": []
+    },
+    {
+      "name": "동탄숲속마을자연앤경남아너스빌(1124-0)",
+      "area": "화성 동탄구 능동",
+      "key": "동탄숲속마을자연앤경남아너스빌(1124-0)|화성 동탄구 능동",
+      "originalStatus": "review_needed",
+      "secondStatus": "verified_second_pass",
+      "richgo": {
+        "id": "a3RUeBW",
+        "name": "능동역경남아너스빌",
+        "units": 455,
+        "year": 2008,
+        "far": 159,
+        "floors": "16~28층",
+        "coverage": 11,
+        "parking": 557,
+        "heating": "지역난방 · 열병합",
+        "builder": "경남기업(주)",
+        "pyeongs": "30·33평",
+        "lat": 37.209703,
+        "lng": 127.054966,
+        "street": "경기도 화성시 동탄구 동탄숲속로 69",
+        "facts": true,
+        "url": "https://m.richgo.ai/realty/danji/a3RUeBW"
+      },
+      "match": {
+        "distanceMeters": 44,
+        "yearDelta": 0,
+        "unitsRatio": 0,
+        "method": "previous_candidate",
+        "score": 256
+      },
+      "candidates": [
+        {
+          "id": "a3RUeBW",
+          "name": "능동역경남아너스빌",
+          "year": 2008,
+          "units": 455,
+          "far": 159,
+          "distanceMeters": 44,
+          "accepted": true,
+          "score": 256
+        }
+      ]
+    },
+    {
+      "name": "동탄2신도시호반베르디움33단지",
+      "area": "화성 동탄구 장지동",
+      "key": "동탄2신도시호반베르디움33단지|화성 동탄구 장지동",
+      "originalStatus": "unmatched",
+      "secondStatus": "still_unresolved",
+      "richgo": null,
+      "match": null,
+      "candidates": []
+    },
+    {
+      "name": "동탄숲속마을모아미래도2단지",
+      "area": "화성 동탄구 능동",
+      "key": "동탄숲속마을모아미래도2단지|화성 동탄구 능동",
+      "originalStatus": "unmatched",
+      "secondStatus": "still_unresolved",
+      "richgo": null,
+      "match": null,
+      "candidates": []
+    },
+    {
+      "name": "동탄숲속마을 광명메이루즈",
+      "area": "화성 동탄구 능동",
+      "key": "동탄숲속마을 광명메이루즈|화성 동탄구 능동",
+      "originalStatus": "unmatched",
+      "secondStatus": "still_unresolved",
+      "richgo": null,
+      "match": null,
+      "candidates": []
+    },
+    {
+      "name": "꽃뫼마을신안",
+      "area": "수원 장안구 정자동",
+      "key": "꽃뫼마을신안|수원 장안구 정자동",
+      "originalStatus": "review_needed",
+      "secondStatus": "still_unresolved",
+      "richgo": null,
+      "match": null,
+      "candidates": [
+        {
+          "id": "a7BgoaA",
+          "name": "꽃뫼노을마을신안",
+          "year": 1999,
+          "units": 358,
+          "far": 229,
+          "distanceMeters": 11,
+          "accepted": false,
+          "score": 135
+        }
+      ]
+    },
+    {
+      "name": "동탄2아이파크2단지",
+      "area": "화성 동탄구 장지동",
+      "key": "동탄2아이파크2단지|화성 동탄구 장지동",
+      "originalStatus": "unmatched",
+      "secondStatus": "still_unresolved",
+      "richgo": null,
+      "match": null,
+      "candidates": []
+    },
+    {
+      "name": "르파비스",
+      "area": "화성 동탄구 목동",
+      "key": "르파비스|화성 동탄구 목동",
+      "originalStatus": "unmatched",
+      "secondStatus": "still_unresolved",
+      "richgo": null,
+      "match": null,
+      "candidates": []
+    },
+    {
+      "name": "엔에이치에프엘크루",
+      "area": "화성 동탄구 장지동",
+      "key": "엔에이치에프엘크루|화성 동탄구 장지동",
+      "originalStatus": "unmatched",
+      "secondStatus": "still_unresolved",
+      "richgo": null,
+      "match": null,
+      "candidates": []
+    },
+    {
+      "name": "푸르지오1차",
+      "area": "안산 단원구 고잔동",
+      "key": "푸르지오1차|안산 단원구 고잔동",
+      "originalStatus": "review_needed",
+      "secondStatus": "still_unresolved",
+      "richgo": null,
+      "match": null,
+      "candidates": [
+        {
+          "id": "a1UrBDI",
+          "name": "푸르지오1차",
+          "year": 2001,
+          "units": 1008,
+          "far": 184,
+          "distanceMeters": 72,
+          "accepted": false,
+          "score": 244
+        }
+      ]
+    },
+    {
+      "name": "한일타운대림",
+      "area": "수원 장안구 조원동",
+      "key": "한일타운대림|수원 장안구 조원동",
+      "originalStatus": "review_needed",
+      "secondStatus": "still_unresolved",
+      "richgo": null,
+      "match": null,
+      "candidates": []
+    },
+    {
+      "name": "한일타운쌍용",
+      "area": "수원 장안구 조원동",
+      "key": "한일타운쌍용|수원 장안구 조원동",
+      "originalStatus": "review_needed",
+      "secondStatus": "still_unresolved",
+      "richgo": null,
+      "match": null,
+      "candidates": []
+    },
+    {
+      "name": "한일타운우성",
+      "area": "수원 장안구 조원동",
+      "key": "한일타운우성|수원 장안구 조원동",
+      "originalStatus": "review_needed",
+      "secondStatus": "still_unresolved",
+      "richgo": null,
+      "match": null,
+      "candidates": []
+    },
+    {
+      "name": "화서주공5단지",
+      "area": "수원 팔달구 화서동",
+      "key": "화서주공5단지|수원 팔달구 화서동",
+      "originalStatus": "review_needed",
+      "secondStatus": "still_unresolved",
+      "richgo": null,
+      "match": null,
+      "candidates": [
+        {
+          "id": "a5EtHgX",
+          "name": "화서주공5단지",
+          "year": 1997,
+          "units": 386,
+          "far": 219,
+          "distanceMeters": 142,
+          "accepted": false,
+          "score": 163
+        },
+        {
+          "id": "a5afvkd",
+          "name": "화서주공4단지",
+          "year": 1997,
+          "units": 1314,
+          "far": 219,
+          "distanceMeters": 77,
+          "accepted": false,
+          "score": 143
+        }
+      ]
+    }
+  ]
+}
