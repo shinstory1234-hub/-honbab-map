@@ -1,10 +1,10 @@
 {
   "classification": {
     "checked": 814,
-    "verified": 783,
-    "notMatch": 31,
-    "missingURLs": 23,
-    "riskyDirect": 7
+    "verified": 782,
+    "notMatch": 32,
+    "missingURLs": 24,
+    "riskyDirect": 6
   },
   "risk": [
     {
@@ -49,21 +49,6 @@
       "score": "1.000",
       "reasons": [
         "generic name has >2.5x household mismatch"
-      ],
-      "related": []
-    },
-    {
-      "name": "현대",
-      "area": "서울 노원구 하계동",
-      "id": "a6qGywr",
-      "origUnits": 1320,
-      "richgoUnits": 730,
-      "origYear": 1988,
-      "richgoYear": 1997,
-      "matchedName": "하계현대",
-      "score": "1.000",
-      "reasons": [
-        "year and household mismatch"
       ],
       "related": []
     },
