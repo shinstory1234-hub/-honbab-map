@@ -1,31 +1,17 @@
 {
   "total": 72,
-  "verified": 71,
-  "ambiguous": 1,
+  "verified": 72,
+  "ambiguous": 0,
   "unmatched": 0,
-  "farKnown": 69,
-  "farChanged": 49,
-  "unitsChanged": 10,
+  "farKnown": 70,
+  "farChanged": 50,
+  "unitsChanged": 11,
   "yearChanged": 3,
-  "geoVerified": 71,
+  "geoVerified": 72,
   "geoOver500": [],
   "hubsAttempted": 175,
   "hubsFailed": 7,
   "detailsFetched": 103,
   "detailErrors": 0,
-  "pending": [
-    {
-      "rank": 347,
-      "name": "광화문스페이스본(101동~105동)",
-      "area": "서울 종로구 사직동",
-      "alternatives": [
-        {
-          "id": "a4XONIH",
-          "name": "광화문풍림스페이스본(주상복합)",
-          "conf": 9,
-          "url": "https://m.richgo.ai/realty/danji/a4XONIH"
-        }
-      ]
-    }
-  ]
+  "pending": []
 }
