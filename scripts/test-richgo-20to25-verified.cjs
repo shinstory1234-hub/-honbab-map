@@ -54,7 +54,7 @@ for(const cap of [6,10,15,20,30,35]){
  assert.deepEqual(c.PICKS.map(d=>d.units),p.PICKS.map(d=>d.units),'other cap units '+cap);
  assert.equal(JSON.stringify(c.FARD),JSON.stringify(p.FARD),'other cap FAR '+cap);
 }
-const html=load('apt-map.html');
-assert.ok(html.includes("T&&c===25?'apt-richgo25.js'"),'25-only script');
-assert.ok(html.indexOf("T?'apt-far-normalize.js'")<html.indexOf("T&&c===25?'apt-richgo25.js'"),'Richgo override last');
+const builder=fs.readFileSync(root+'/scripts/build-apt-assets.mjs','utf8');
+assert.ok(builder.includes("cap === 25 && file === 'apt-far-normalize.js'"),'cap25-only corrections in existing bundle');
+assert.ok(!load('apt-map.html').includes("T&&c===25?'apt-richgo25.js'"),'no HTML loader inflation');
 console.log('PASS: 18 audited, 5 FAR corrections, 7 household corrections, 2 under-300 excluded, other tabs unchanged');
