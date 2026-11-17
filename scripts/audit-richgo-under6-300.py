@@ -28,13 +28,13 @@ for(const r of snap.rows){
  const f=w.FARD[key]||[];
  out.push({seq:out.length+1,rank:r[0],name:d.n,area:d.area,year:d.year,units:d.units,py:d.py,
            price:d.p,far:f[0]??null,far_source:f[1]||'',source:d.u?'univ':d.auto?'auto':'manual'});
- if(out.length>=300)break;
+ if(out.length>=500)break;
 }
 process.stdout.write(JSON.stringify(out));
 """
 raw = subprocess.check_output(['node','-e',JS],cwd=ROOT,text=True)
 targets=json.loads(raw)
-assert len(targets)==300, 'target set must be 300'
+assert len(targets)==500, 'target set must be 500'
 
 def norm(s):
     return ''.join(re.findall(r'[가-힣A-Za-z0-9]+',str(s))).lower()
