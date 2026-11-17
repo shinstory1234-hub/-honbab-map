@@ -1,0 +1,55 @@
+name: Richgo 6to10 second pass public named-page matching
+on:
+  push:
+    branches:
+      - audit/richgo-6to10-top300-20261118
+    paths:
+      - .github/workflows/richgo-cap10-secondpass.yml
+      - scripts/audit-richgo-cap10-secondpass.cjs
+  workflow_dispatch:
+permissions:
+  contents: write
+concurrency:
+  group: richgo-cap10-secondpass
+  cancel-in-progress: false
+jobs:
+  review:
+    runs-on: ubuntu-latest
+    timeout-minutes: 55
+    strategy:
+      fail-fast: false
+      max-parallel: 2
+      matrix:
+        shard: [0, 1, 2, 3, 4, 5]
+    env:
+      SHARD: ${{ matrix.shard }}
+      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: audit/richgo-6to10-top300-20261118
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Refresh branch until this shard's first-pass evidence is present
+        run: |
+          for attempt in $(seq 1 30); do
+            if [ -f "docs/richgo-6to10-remaining-parts/part0${SHARD}.json" ]; then exit 0; fi
+            git fetch origin audit/richgo-6to10-top300-20261118
+            git checkout -f FETCH_HEAD
+            sleep 10
+          done
+          echo 'First-pass evidence missing'; exit 1
+      - name: Second-pass syntax verification
+        run: node --check scripts/audit-richgo-cap10-secondpass.cjs
+      - name: Recheck unmatched complexes on public hub and named pages
+        run: node scripts/audit-richgo-cap10-secondpass.cjs
+      - name: Archive second-pass evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: richgo-cap10-secondpass-shard-${{ matrix.shard }}
+          path: /tmp/richgo-cap10-secondpass${{ matrix.shard }}.json
+          retention-days: 14
+          if-no-files-found: warn
