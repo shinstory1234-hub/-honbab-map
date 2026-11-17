@@ -67,7 +67,9 @@ export function buildAptAssets(root, output = path.join(root, 'public')) {
         code = code.slice(0, a) + 'function s4DensityAdj(d){return {pen:0,far:null,src:null};}' + code.slice(b);
       }
       if (/document\.write\s*\(/.test(code)) throw new Error(`Unexpanded script dependency: ${file}`);
-      code = minifyKeep(code, file);   // 전송량: terser로 주석·공백만 제거(이름·식은 그대로, compress·mangle 끔)
+      code = cap===10 && (file==='apt-univ10.js'||file==='apt-invest10.js'||file==='apt-invest-ui.js')
+        ? terser.minify_sync({[file]:code},{compress:{passes:1},mangle:true,format:{comments:false,ascii_only:false}}).code
+        : minifyKeep(code,file);  // 6~10억 번들만 압축해 리치고 실측 원자료 반영분 상쇄
       if (isolated.test(file)) flush();
       chunk.push(`/* ${file} */\n${code}`); names.push(file);
       if (isolated.test(file)) flush();
