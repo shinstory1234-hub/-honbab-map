@@ -1,19 +1,16 @@
 import fs from 'node:fs';
-const urls=[
- 'https://m.richgo.ai/robots.txt',
- 'https://m.richgo.ai/danji_detail.xml',
- 'https://m.richgo.ai/danji_detail_gyeonggido.xml',
- 'https://m.richgo.ai/realty/apt-hub/%EC%84%9C%EC%9A%B8/%EB%A7%88%ED%8F%AC%EA%B5%AC',
- 'https://m.richgo.ai/realty/apt-hub/%EA%B2%BD%EA%B8%B0/%EA%B3%BC%EC%B2%9C%EC%8B%9C',
- 'https://www.google.com/search?q=site%3Am.richgo.ai%2Frealty%2Fdanji+%22%EB%A7%88%ED%8F%AC%ED%94%84%EB%A0%88%EC%8A%A4%ED%8B%B0%EC%A7%80%EC%9E%90%EC%9D%B4%22'
-];
-const res=await Promise.all(urls.map(async url=>{try{
- const r=await fetch(url,{signal:AbortSignal.timeout(21000),headers:{'User-Agent':'Mozilla/5.0 (compatible; ApartmentMapResearch/1.0; +https://github.com/shinstory1234-hub/-honbab-map)'}});
- const s=await r.text();
- const ids=[...new Set(s.split('/realty/danji/').slice(1).map(x=>x.match(/^[A-Za-z0-9]+/)?.[0]).filter(Boolean))];
- const anchors=[];
- return {url,status:r.status,len:s.length,head:s.slice(0,url.endsWith('robots.txt')?7000:1300),idsCount:ids.length,ids:ids.slice(0,12),anchors,exampleAroundDanji:(()=>{let j=s.indexOf('/realty/danji/');return j<0?'':s.slice(Math.max(0,j-200),j+500)})()};
- }catch(e){return {url,error:String(e)}}
-}));
-fs.writeFileSync('docs/richgo-cap25-lookup-diagnostics.json',JSON.stringify(res,null,2)+'\n');
-console.log(JSON.stringify(res.map(x=>({url:x.url,status:x.status,len:x.len,error:x.error,idsCount:x.idsCount,head:x.head?.slice(0,600)})),null,2));
+const input=fs.readFileSync('docs/richgo-20to25-top300-20261114-snapshot.csv','utf8').trim().split('\n');
+function parseRow(line){let out=[],cell='',quoted=false;for(let i=0;i<line.length;i++){const x=line[i];if(quoted){if(x==='"'&&line[i+1]==='"'){cell+='"';i++}else if(x==='"')quoted=false;else cell+=x;}else if(x==='"')quoted=true;else if(x===','){out.push(cell);cell='';}else cell+=x;}out.push(cell.trim().replace(/\r$/,''));return out;}
+const ranks=input.slice(1).map(parseRow).map(r=>({rank:+r[1],name:r[2],area:r[3],units:+r[8],year:+r[7]}));
+function region(area){const p=area.split(' ');if(p[0]==='서울')return ['서울',p[1]];const m={'성남':'성남시','수원':'수원시','화성':'화성시','용인':'용인시'};return ['경기',m[p[0]]?m[p[0]]+' '+p[1]:p[0]];}
+const uniq=[...new Map(ranks.map(x=>[region(x.area).join('|'),region(x.area)])).values()];
+async function get(url){const r=await fetch(url,{headers:{'User-Agent':'Mozilla/5.0 (compatible; ApartmentMapResearch/1.0)'},signal:AbortSignal.timeout(25000)});const s=await r.text();return {status:r.status,html:s};}
+const rx=/"@type":"ListItem","position":(\d+),"name":"([^"]+)","url":"https:\/\/m\.richgo\.ai\/realty\/danji\/([A-Za-z0-9]+)"/g;
+const regions=await Promise.all(uniq.map(async ([city,gu])=>{const url='https://m.richgo.ai/realty/apt-hub/'+encodeURIComponent(city)+'/'+encodeURIComponent(gu);
+try{const {status,html}=await get(url);let entries=[...html.matchAll(rx)].map(m=>({pos:+m[1],name:m[2],id:m[3]}));return {city,gu,url,status,entries:entries.filter((x,i)=>entries.findIndex(y=>y.id===x.id)===i),length:html.length};}catch(e){return {city,gu,url,error:String(e),entries:[]};}}));
+const normalize=s=>s.normalize('NFKC').replace(/[^\p{L}\p{N}]/gu,'').replace(/아파트/g,'').toLowerCase();
+const result=ranks.map(d=>{let [c,g]=region(d.area),zone=regions.find(x=>x.city===c&&x.gu===g);let n=normalize(d.name),candidates=(zone?.entries||[]).map(q=>{let m=normalize(q.name);return {...q,method:m===n?'exact':(m.length>3&&(n.includes(m)||m.includes(n)))?'contains':'none',score:m===n?1:(m.length>3&&(n.includes(m)||m.includes(n)))?Math.min(m.length,n.length)/Math.max(m.length,n.length):0};}).filter(x=>x.method!=='none').sort((a,b)=>b.score-a.score);return {...d,region:c+'|'+g,candidates:candidates.slice(0,4)};});
+const pages={};for(let id of ['a6KvZvL','a2kgiJu','a1Ucmro']){try{let {status,html}=await get('https://m.richgo.ai/realty/danji/'+id);let snippets={};for(let k of ['용적률','건폐율','세대수','주차대수','입주','층수','지역난방']){let i=html.indexOf(k);snippets[k]=i<0?'':html.slice(Math.max(0,i-270),i+370);}pages[id]={status,len:html.length,snippets,title:html.match(/<title>(.*?)<\/title>/)?.[1]};}catch(e){pages[id]={error:String(e)};}}
+const out={asof:'2026-11-18',groups:regions.map(x=>({...x,entries:x.entries.slice(0,5)})),groupCounts:regions.map(x=>[x.city+' '+x.gu,x.entries.length,x.status,x.error]),exact:result.filter(x=>x.candidates.some(c=>c.method==='exact')).length,approx:result.filter(x=>x.candidates.length).length,unmatched:result.filter(x=>!x.candidates.length).map(({rank,name,area})=>({rank,name,area})),matches:result.map(x=>({rank:x.rank,name:x.name,area:x.area,units:x.units,year:x.year,candidates:x.candidates})),pages};
+fs.writeFileSync('docs/richgo-cap25-lookup-diagnostics.json',JSON.stringify(out,null,2)+'\n');
+console.log(JSON.stringify({groups:out.groupCounts,exact:out.exact,approx:out.approx,unmatched:out.unmatched.length,unmatchedTop:out.unmatched.slice(0,35),pages:Object.fromEntries(Object.entries(pages).map(([k,v])=>[k,{status:v.status,len:v.len,snippets:Object.fromEntries(Object.entries(v.snippets||{}).map(([a,b])=>[a,b.slice(0,220)]))}]))},null,2));
