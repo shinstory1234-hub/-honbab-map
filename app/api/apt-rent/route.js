@@ -51,8 +51,9 @@ export async function GET(req){
   }
   const items=[];
   for(const x of got)if(x.status==='fulfilled')items.push(...makeRows(x.value,k.dong,k.name));
-  const unique=new Map();for(const t of items)unique.set([t.date,t.area,t.floor,t.deposit,t.monthlyRent,t.contractType].join('|'),t);
-  const matched=[...unique.values()].sort((a,b)=>b.date.localeCompare(a.date)||b.deposit-a.deposit);
+  // 같은 날짜·면적·층·금액의 서로 다른 계약이 실제로 존재할 수 있다.
+  // 지역·월 API 페이지는 중복 범위가 없으므로 임의로 거래를 합치지 않는다.
+  const matched=items.sort((a,b)=>b.date.localeCompare(a.date)||b.deposit-a.deposit);
   return safeJson({
     status:incomplete?'partial':'ok',
     complete:!incomplete,
