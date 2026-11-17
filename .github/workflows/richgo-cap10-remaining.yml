@@ -1,0 +1,47 @@
+name: Richgo 6to10 remaining 1108 public-page verification
+on:
+  push:
+    branches:
+      - audit/richgo-6to10-top300-20261118
+    paths:
+      - .github/workflows/richgo-cap10-remaining.yml
+      - scripts/audit-richgo-cap10-remaining.cjs
+  workflow_dispatch:
+permissions:
+  contents: write
+concurrency:
+  group: richgo-cap10-remaining-audit
+  cancel-in-progress: false
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 55
+    strategy:
+      fail-fast: false
+      max-parallel: 2
+      matrix:
+        shard: [0, 1, 2, 3, 4, 5]
+    env:
+      SHARD: ${{ matrix.shard }}
+      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@49933ea5288ca8642d1e84afbd3f7d6820020
+        with:
+          node-version: '22'
+      - name: Syntax and identity scope check
+        run: |
+          node --check scripts/audit-richgo-cap10-remaining.cjs
+          node scripts/test-richgo-6to10-crossband.cjs
+      - name: Audit named apartments through public Richgo district and detail HTML
+        run: node scripts/audit-richgo-cap10-remaining.cjs
+      - name: Archive primary evidence even when a shard is incomplete
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: richgo-cap10-remaining-shard-${{ matrix.shard }}
+          path: /tmp/richgo-6to10-remaining-part${{ matrix.shard }}.json
+          retention-days: 14
+          if-no-files-found: warn
