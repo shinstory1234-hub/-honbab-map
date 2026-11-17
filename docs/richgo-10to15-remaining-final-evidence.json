@@ -2,11 +2,11 @@
   "summary": {
     "date": "2026-11-18",
     "checked": 300,
-    "direct": 283,
-    "aggregateExceptions": 17,
-    "far": 206,
+    "direct": 281,
+    "aggregateExceptions": 19,
+    "far": 204,
     "year": 15,
-    "units": 56
+    "units": 54
   },
   "items": [
     {
@@ -1511,6 +1511,32 @@
       "changes": [
         "units"
       ]
+    }
+  ],
+  "reclassifiedCombined": [
+    {
+      "name": "e편한세상서울대입구1단지",
+      "area": "서울 관악구 봉천동",
+      "old": {
+        "units": "711",
+        "year": "2019",
+        "far": ""
+      },
+      "richgoID": "a9ncrOA",
+      "richgoUnits": "1531",
+      "reason": "Split group total 1276 differs from Richgo merged complex 1531; preserve separate units"
+    },
+    {
+      "name": "e편한세상서울대입구2단지",
+      "area": "서울 관악구 봉천동",
+      "old": {
+        "units": "565",
+        "year": "2019",
+        "far": ""
+      },
+      "richgoID": "a9ncrOA",
+      "richgoUnits": "1531",
+      "reason": "Split group total 1276 differs from Richgo merged complex 1531; preserve separate units"
     }
   ]
 }
