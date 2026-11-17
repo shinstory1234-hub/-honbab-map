@@ -21,7 +21,7 @@ def static_fallback():
     js=r"""
 const fs=require('fs'),s=fs.readFileSync('public/apt-univ30.js','utf8');
 const a=JSON.parse(s.slice(s.indexOf('const A=')+8,s.indexOf(',S=[')));
-const p=s.indexOf('R=['),r=JSON.parse(s.slice(p+2,s.indexOf(';\\nconst TB',p)));
+const p=s.indexOf('R=['),r=JSON.parse(s.slice(p+2,s.indexOf(';'+String.fromCharCode(10)+'const TB',p)));
 const selected=r.filter(q=>q[8].some((v,i)=>i%4===1&&v>250000&&v<=300000));
 process.stdout.write(JSON.stringify({total:selected.length,rows:selected.map((q,i)=>({
  rank:null,name:q[0],area:a[q[1]],year:q[4],units:q[5],py:q[2],price:q[3],
