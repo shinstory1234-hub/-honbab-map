@@ -76,3 +76,23 @@
  }
  W.APT_FAR_RICHGO_PREFERRED_N=n;
 })(window);
+
+/* 리치고 공개 단지정보 직접 대조(2026-11-18) — 6억 초과~10억 이하 탭 전용.
+   날짜·출처·기존값·검증 범위: docs/richgo-6to10-top300-20261118.csv.
+   6억 이하/10억 초과 탭 및 국토부 실거래 중위 가격은 건드리지 않는다. */
+(function(W){
+ if(W.CAPT!==10||!W.FARD||!Array.isArray(W.PICKS))return;
+ const X=[["도덕파크타운1단지|광명시 철산동",274,2001,2351],["도덕파크타운2단지|광명시 철산동",274,2001,2351],["신촌푸르지오|서울 서대문구 북아현동",244,2015,940],["산들마을2단지|성남 중원구 여수동",153,2015,1171],["DMCSK뷰아이파크포레|서울 은평구 수색동",238,2023,1486],["DMC롯데캐슬더퍼스트|서울 은평구 수색동",260,2020,1192],["홍제역해링턴플레이스|서울 서대문구 홍제동",237,2021,1116],["노원롯데캐슬시그니처|서울 노원구 상계동",304,2023,1163],["평촌센텀퍼스트|안양 동안구 호계동",282,2023,2886],["학마을1단지|서울 양천구 신정동",247,2000,639],["송도오션파크베르디움|인천 연수구 송도동",232,2020,1530]];
+ const M=new Map(W.PICKS.map(d=>[d.n+'|'+d.area,d]));
+ let matched=0,farChanged=0,yearChanged=0,unitsChanged=0;
+ for(const [k,far,year,units] of X){
+  const d=M.get(k),f=W.FARD[k];
+  if(!d||!f||d.units!==units)continue; // 동명이단지·세대 집계 불일치 보호
+  matched++;
+  if(Number(f[0])!==far){f[0]=far;f[1]='리치고 단지정보';farChanged++;}
+  if(d.year!==year){d.year=year;yearChanged++;}
+  if(d.units!==units){d.units=units;unitsChanged++;}
+  if(W.PLAT&&W.PLAT[k]&&W.PLAT[k].length>2)W.PLAT[k][2]=far;
+ }
+ W.RICHGO10_APPLIED={matched,farChanged,yearChanged,unitsChanged};
+})(window);
