@@ -28,6 +28,29 @@ for(let i=0;i<6;i++){
  audits.push(...s.rows);
 }
 if(audits.length!==1108||new Set(audits.map(x=>x.key)).size!==1108)throw Error('incomplete or duplicated crawl: '+audits.length);
+// Overlay corroborated public detail results from the targeted second pass, when all six are present.
+const secondFiles=Array.from({length:6},(_,i)=>'docs/richgo-6to10-secondpass-parts/part0'+i+'.json');
+const present=secondFiles.filter(f=>fs.existsSync(p(f)));
+if(present.length>0&&present.length!==6)throw Error('Partial second-pass evidence: '+present.length+'/6');
+let secondPassVerified=0;
+if(present.length===6){
+ const byKey=new Map();
+ for(let i=0;i<6;i++){
+  const part=JSON.parse(read(secondFiles[i]));
+  if(part.meta.shard!==i)throw Error('second-pass shard mismatch '+i);
+  for(const x of part.rows){if(byKey.has(x.key))throw Error('duplicate second pass '+x.key);byKey.set(x.key,x);}
+ }
+ for(const row of audits){
+  if(row.status==='verified')continue;
+  const x=byKey.get(row.key);
+  if(x?.secondStatus!=='verified_second_pass'||!x.richgo)continue;
+  row.status='verified';row.richgo=x.richgo;
+  row.match={distanceMeters:x.match?.distanceMeters??null,yearDelta:x.match?.yearDelta??null,unitsRatio:x.match?.unitsRatio??null,nameSimilarity:null,hubScore:x.match?.score??null};
+  secondPassVerified++;
+ }
+ console.log('SECOND_PASS_MERGED',JSON.stringify({rows:byKey.size,additionalVerified:secondPassVerified}));
+}
+
 for(const x of audits)if(!targets.has(x.key))throw Error('unexpected audited identity '+x.key);
 const duplicatePages=new Map();
 for(const row of audits)if(row.richgo?.id){let a=duplicatePages.get(row.richgo.id)||[];a.push(row.key);duplicatePages.set(row.richgo.id,a);}
@@ -80,6 +103,7 @@ const report=[
  ...Object.entries(reasons).sort((a,b)=>b[1]-a[1]).map(([k,v])=>'- '+k+': '+v+'개'),
  '',
  '- 추가 자동 보정: '+newCorrections.length+'개',
+ '- 2차 재검증에서 추가 복원된 단지: '+secondPassVerified+'개',
  '- 최종 보정 파일 항목: '+fixes.length+'개',
  '- 용적률 수치 존재: '+coverage.rows.filter(x=>x.far_after_verified!=='').length+'개',
  '- 단지 매칭 불명확한 항목은 임의 수치를 넣지 않고 별도 검증 대상으로 유지',
@@ -95,7 +119,7 @@ const writes={
  'scripts/richgo-band10-corrections.json':JSON.stringify(fixes,null,2)+'\n',
  'docs/richgo-6to10-final-audit-20261118.md':report
 };
-console.log('AGGREGATED',JSON.stringify({reviewed:1108,corrections:newCorrections.length,counts:reasons,duplicatePageIds:duplicateIds.size,shards}));
+console.log('AGGREGATED',JSON.stringify({reviewed:1108,corrections:newCorrections.length,counts:reasons,duplicatePageIds:duplicateIds.size,secondPassVerified,shards}));
 if(process.env.GITHUB_TOKEN&&process.env.GITHUB_REPOSITORY){
  const repo=process.env.GITHUB_REPOSITORY,branch=process.env.GITHUB_REF_NAME||'audit/richgo-6to10-top300-20261118';
  const headers={Authorization:'Bearer '+process.env.GITHUB_TOKEN,Accept:'application/vnd.github+json','X-GitHub-Api-Version':'2022-11-28','Content-Type':'application/json'};
