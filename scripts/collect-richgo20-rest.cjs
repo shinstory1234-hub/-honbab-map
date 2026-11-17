@@ -30,7 +30,7 @@ async function get(url){for(let attempt=0;attempt<3;attempt++){try{
 async function mapLimited(arr,cap,fn){const out=new Array(arr.length);let cursor=0;await Promise.all(Array.from({length:cap},async()=>{while(cursor<arr.length){const i=cursor++;out[i]=await fn(arr[i],i);await sleep(250);}}));return out;}
 async function main(){
 const {header,rows}=parseCsv(fs.readFileSync(fCsv,'utf8'));
-if(rows.length!==326||new Set(rows.map(r=>r.name+'|'+r.area)).size!==300)throw Error('audit is not exactly 326 unique complexes');
+if(rows.length!==326||new Set(rows.map(r=>r.name+'|'+r.area)).size!==326)throw Error('audit is not exactly 326 unique complexes');
 const c={};c.window=c;vm.runInNewContext(fs.readFileSync(root+'/public/apt-unitfix.js','utf8'),c);
 for(const r of rows){const k=r.name+'|'+r.area;r.map_units_kapt=String(c.UNITFIX?.[k]?.[0]||'');}
 const folders=new Map();for(const t of rows){const x=district(t.area),key=x.sd+'|'+x.sgg;t.__district=key;if(!folders.has(key))folders.set(key,x);}
