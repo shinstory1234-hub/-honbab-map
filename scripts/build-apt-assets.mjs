@@ -203,7 +203,7 @@ export function buildAptAssets(root, output = path.join(root, 'public')) {
         code = code.slice(0, a) + 'function s4DensityAdj(d){return {pen:0,far:null,src:null};}' + code.slice(b);
       }
       if (/document\.write\s*\(/.test(code)) throw new Error(`Unexpanded script dependency: ${file}`);
-      if(cap===15 && file==='apt-univ15.js'){
+      if((cap===15&&file==='apt-univ15.js')||(cap===10&&file==='apt-univ10.js')||(cap===30&&file==='apt-univ30.js')){
         // Cap15's raw-data audit raised the payload; safe local-only Terser shortening
         // keeps the strict global transfer budget intact without dropping any fields.
         const out=terser.minify_sync({[file]:code},{
@@ -238,6 +238,8 @@ export function buildAptAssets(root, output = path.join(root, 'public')) {
   html = html.replace(/<script>([\s\S]*?)<\/script>/g, (m, c) => '<script>' + minifyKeep(c, 'inline.js') + '</script>');
   // Drop the only nonfunctional HTML comment in the production artifact (not source).
   html = html.replace(/<!--[\s\S]*?-->/g, '');
+  // Lossless indentation cleanup before HTML tags; preserve strict first-page gzip budget.
+  html = html.replace(/\n[ \t]+(?=<)/g, '\n');
   fs.writeFileSync(path.join(output, 'apt-map-fast.html'), html);
   fs.writeFileSync(path.join(assets, 'manifest.json'), JSON.stringify({manifest, inventory}, null, 2));
   return {manifest, inventory, html};
