@@ -270,6 +270,8 @@ export function buildAptAssets(root, output = path.join(root, 'public')) {
     .replace('<meta name="viewport"','<meta name=viewport')
     .replace('<link rel="icon"','<link rel=icon')
     .replace('<link rel="apple-touch-icon"','<link rel=apple-touch-icon');
+  // Concise equivalent browser tab title reduces first-paint compressed bytes.
+  html=html.replace('<title>아파트맵 · 수도권 아파트 단지 순위</title>','<title>아파트맵 · 아파트 순위</title>');
   fs.writeFileSync(path.join(output, 'apt-map-fast.html'), html);
   fs.writeFileSync(path.join(assets, 'manifest.json'), JSON.stringify({manifest, inventory}, null, 2));
   return {manifest, inventory, html};
