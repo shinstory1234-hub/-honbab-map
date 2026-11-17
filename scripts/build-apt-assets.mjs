@@ -81,6 +81,65 @@ function applyRichgo15AtBuild(code,file,root) {
  return code;
 }
 
+
+/* 6~10억 verified Richgo source substitution directly inside existing packed dataset.
+   Loaded only for cap10, so it cannot alter older source tabs or live transaction prices. */
+function getRichgo10Rows(root){
+ const s=fs.readFileSync(path.join(root,'docs','richgo-6to10-full-coverage-20261118.csv'),'utf8').replace(/^\uFEFF/,'');
+ const out=[];let line=[],cell='',quote=false;
+ for(let i=0;i<s.length;i++){const c=s[i];
+  if(quote){if(c==='"'&&s[i+1]==='"'){cell+='"';i++}else if(c==='"')quote=false;else cell+=c;}
+  else if(c==='"')quote=true;else if(c===','){line.push(cell);cell='';}
+  else if(c==='\n'){line.push(cell.replace(/\r$/,''));out.push(line);line=[];cell='';}else cell+=c;
+ }
+ const header=out.shift(),records=out.filter(r=>r.length===header.length).map(r=>Object.fromEntries(header.map((h,j)=>[h,r[j]])));
+ if(records.length!==1822)throw new Error('Richgo10 original CSV inventory mismatch: '+records.length);
+ const good=records.filter(r=>/^https:\/\/m\.richgo\.ai\/realty\/danji\/a[A-Za-z0-9]{6}$/.test(r.richgo_url||'')&&!/candidate_review|unverified|unmatched|pending|no_source/.test(r.review_status||''));
+ if(good.length!==1781)throw new Error('Richgo10 identity-sourced rows mismatch: '+good.length);
+ return good;
+}
+function applyRichgo10AtBuild(code,file,root){
+ const rows=getRichgo10Rows(root),by=new Map(rows.map(x=>[x.name+'|'+x.area,x]));
+ const v=(s)=>s==null||s===''?null:Number(s);
+ if(file==='apt-univ10.js'){
+  const start=code.indexOf(',R=['),end=code.indexOf('];\nconst TB=',start);
+  const ai=code.indexOf('const A=['),ae=code.indexOf('],',ai);
+  if(start<0||end<0||ai<0||ae<0)throw new Error('Richgo10 packed dataset anchors not found');
+  const areas=JSON.parse(code.slice(ai+8,ae+1)),records=JSON.parse(code.slice(start+3,end+1));
+  const found=new Set;
+  for(const r of records){const k=r[0]+'|'+areas[r[1]],s=by.get(k);if(!s)continue;
+   found.add(k);const far=v(s.richgo_far),yr=v(s.richgo_year),units=v(s.richgo_units);
+   if(far!=null&&far>0){r[22][0]=far;r[22][1]='리치고';}
+   else if(s.far_after_verified===''){r[22][0]=null;r[22][1]='';}
+   if(yr!=null&&yr>=1950&&yr<=2035)r[4]=yr;
+   if(units!=null&&units>0)r[5]=units;
+  }
+  if(found.size!==by.size)throw new Error('Richgo10 missing packed rows '+(by.size-found.size));
+  return code.slice(0,start+3)+JSON.stringify(records)+code.slice(end+1);
+ }
+ if(file==='apt-farfix.js'){
+  for(const [k,s] of by){const n=v(s.richgo_far);if(!(n>0))continue;const a=JSON.stringify(k)+': [';const i=code.indexOf(a);if(i<0)continue;
+   const e=code.indexOf(']',i+a.length);if(e<0)throw new Error('Richgo10 farfix syntax '+k);
+   code=code.slice(0,i)+JSON.stringify(k)+': ['+n+',"리치고"]'+code.slice(e+1);
+  }
+  return code;
+ }
+ if(file==='apt-unitfix.js'){
+  const a=code.indexOf('})({'),b=code.indexOf('});\nwindow.UNITDROP=',a);
+  if(a<0||b<0)throw new Error('Richgo10 unitfix region not found');
+  const group=JSON.parse(code.slice(a+3,b+1));
+  for(const s of rows){const n=v(s.richgo_units);if(!(n>0))continue;const entry=group[s.area]?.[s.name];if(entry)entry[0]=n;}
+  let output=code.slice(0,a+3)+JSON.stringify(group)+code.slice(b+1);
+  const tag='window.UNITFIX_M3=',start=output.indexOf(tag),end=output.indexOf(';\nwindow.UNITDROP_M3=',start);
+  if(start>=0&&end>=0){const map=JSON.parse(output.slice(start+tag.length,end));
+   for(const s of rows){const n=v(s.richgo_units),k=s.name+'|'+s.area;if(n>0&&map[k])map[k][0]=n;}
+   output=output.slice(0,start+tag.length)+JSON.stringify(map)+output.slice(end);
+  }
+  return output;
+ }
+ return code;
+}
+
 export function buildAptAssets(root, output = path.join(root, 'public')) {
   const sourceDir = path.join(root, 'public');
   // Build the lazy-loaded Stage 1 source only after reading its versioned Brotli parts.
@@ -129,6 +188,7 @@ export function buildAptAssets(root, output = path.join(root, 'public')) {
       // These URLs are rewritten to live upstream data. Never freeze them at build time.
       if (file === 'apt-live.js' || file === 'apt-live6.js' || file === 'apt-geo.js') { flush(); urls.push(file); continue; }
       let code = fs.readFileSync(path.join(sourceDir, file), 'utf8');
+      if(cap===10&&['apt-univ10.js','apt-farfix.js','apt-unitfix.js'].includes(file))code=applyRichgo10AtBuild(code,file,root);
       if(cap===15&&(file==='apt-univ15.js'||file==='apt-farfix.js'))code=applyRichgo15AtBuild(code,file,root);
       if(cap===15&&file==='apt-unitfix.js')code=applyRichgo15AtBuild(code,file,root);
       if(cap===25&&file==='apt-far-normalize.js')code+='\n'+fs.readFileSync(path.join(sourceDir,'apt-richgo25.js'),'utf8');
