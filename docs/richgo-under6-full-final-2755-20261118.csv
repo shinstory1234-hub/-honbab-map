@@ -75,7 +75,7 @@ LIG건영캐스빌,서울 도봉구 창동,verified,firstpass,,322,300,300,2002,
 인천경서아시아드대광로제비앙,인천 서해구 경서동,verified,firstpass,,159,720,720,2017,2017,37,,no,https://m.richgo.ai/realty/danji/a1RTnMj
 태평샹베르1차,인천 서해구 경서동,verified,firstpass,,211,572,572,2005,2005,16,,no,https://m.richgo.ai/realty/danji/a0YzQmr
 금호어울림,인천 서해구 석남동,verified,firstpass,,249,797,769,2007,2007,66,,no,https://m.richgo.ai/realty/danji/a1RGbmX
-동남,인천 서해구 석남동,unmatched,firstpass,300,,360,,1989,,,,no,
+동남,인천 서해구 석남동,verified_third_pass,thirdpass,300,187.0,360,360.0,1989,1989,29,,no,https://m.richgo.ai/realty/danji/a4pVTvO
 서인천월드메르디앙,인천 서해구 석남동,verified,firstpass,,273,778,778,2006,2006,85,,no,https://m.richgo.ai/realty/danji/a2JMBFC
 석남동경남아너스빌,인천 서해구 석남동,verified,firstpass,,318,471,471,2006,2006,26,,no,https://m.richgo.ai/realty/danji/a1MgOyE
 태화,인천 서해구 석남동,verified,firstpass,289,104,316,299,1990,1990,9,,no,https://m.richgo.ai/realty/danji/a0PGbLC
@@ -128,15 +128,15 @@ e편한세상지제역,평택시 동삭동,verified,firstpass,,199,1516,1516,202
 더샵지제역센트럴파크2BL,평택시 동삭동,verified,firstpass,,196,1674,1674,2020,2020,257,,no,https://m.richgo.ai/realty/danji/a9amlsN
 삼익사이버,평택시 동삭동,verified,firstpass,229,228,672,672,2000,2000,71,,no,https://m.richgo.ai/realty/danji/a0wNdke
 평택센트럴자이 4단지,평택시 동삭동,verified,firstpass,,219,684,684,2018,2018,18,,no,https://m.richgo.ai/realty/danji/a3UdiQb
-현대,평택시 동삭동,unmatched,firstpass,162,,612,,1992,,,,no,
+현대,평택시 동삭동,verified_third_pass,thirdpass,162,205.0,612,612.0,1992,1992,17,,no,https://m.richgo.ai/realty/danji/a9ThDfj
 동아목련,평택시 비전동,unmatched,firstpass,268,,858,,1993,,,,no,
 뜨레휴이곡마을7단지,평택시 비전동,unmatched,firstpass,,,632,,2017,,,,no,
 문화,평택시 비전동,verified,firstpass,133,132,500,500,1994,1994,11,,no,https://m.richgo.ai/realty/danji/a6uAtgn
 벽산,평택시 비전동,verified,firstpass,129,140,380,368,1994,1994,24,,no,https://m.richgo.ai/realty/danji/a6QnwvZ
 비전경남아너스빌,평택시 비전동,unmatched,firstpass,,,903,,2009,,,,no,
-비전롯데캐슬,평택시 비전동,unmatched,firstpass,,,553,,2011,,,,no,
+비전롯데캐슬,평택시 비전동,verified_third_pass,thirdpass,,237.0,553,553.0,2011,2011,34,,no,https://m.richgo.ai/realty/danji/a6IwRxh
 비전현대,평택시 비전동,verified,firstpass,130,130,424,424,1994,1994,56,,no,https://m.richgo.ai/realty/danji/a3AdEAq
-소사벌리더스하임,평택시 비전동,unmatched,firstpass,,,851,,2014,,,,no,
+소사벌리더스하임,평택시 비전동,verified_third_pass,thirdpass,,166.0,851,851.0,2014,2014,13,,no,https://m.richgo.ai/realty/danji/a8mPSNe
 시대한우리,평택시 비전동,unmatched,firstpass,137,,550,,1995,,,,no,
 신명나리,평택시 비전동,verified,firstpass,144,143,306,306,1995,1995,36,,no,https://m.richgo.ai/realty/danji/a1VbxAS
 엘지덕동,평택시 비전동,unmatched,firstpass,121,,494,,1994,,,,no,
@@ -157,7 +157,7 @@ e편한세상지제역,평택시 동삭동,verified,firstpass,,199,1516,1516,202
 개나리,평택시 세교동,verified,firstpass,187,210,650,650,1995,1997,16,,no,https://m.richgo.ai/realty/danji/a1QDZdm
 부영1,평택시 세교동,verified,firstpass,201,198,1590,1590,1996,1996,68,,no,https://m.richgo.ai/realty/danji/a9yrOTe
 부영2,평택시 세교동,unmatched,firstpass,194,,780,,2000,,,,no,
-우성꿈그린,평택시 세교동,unmatched,firstpass,214,,580,,1995,,,,no,
+우성꿈그린,평택시 세교동,verified_third_pass,thirdpass,214,191.0,580,580.0,1995,1995,10,,no,https://m.richgo.ai/realty/danji/a0YcOwV
 청실보성,평택시 세교동,unmatched,firstpass,204,,462,,2000,,,,no,
 태영청솔,평택시 세교동,verified,firstpass,208,192,880,880,1996,1996,38,,no,https://m.richgo.ai/realty/danji/a9DLgLC
 현대향촌,평택시 세교동,unmatched,firstpass,203,,380,,1998,,,,no,
@@ -175,30 +175,30 @@ e편한세상지제역,평택시 동삭동,verified,firstpass,,199,1516,1516,202
 늘푸른사랑마을,평택시 안중읍,verified,firstpass,183,168,1188,1188,1999,1999,50,,no,https://m.richgo.ai/realty/danji/a2WOyAN
 동신사랑마을,평택시 안중읍,unmatched,firstpass,,,496,,2003,,,,no,
 동신아름마을,평택시 안중읍,unmatched,firstpass,,,546,,2005,,,,no,
-서광프리메라,평택시 안중읍,unmatched,firstpass,,,715,,2005,,,,no,
+서광프리메라,평택시 안중읍,verified_third_pass,thirdpass,,192.0,715,715.0,2005,2005,71,,no,https://m.richgo.ai/realty/danji/a3tMlwn
 성원,평택시 안중읍,unmatched,firstpass,,,494,,2002,,,,no,
 현대(3차),평택시 안중읍,unmatched,firstpass,,,418,,2004,,,,no,
 화현마을우림필유,평택시 안중읍,unmatched,firstpass,,,734,,2005,,,,no,
 e편한세상비전센터포레,평택시 용이동,verified,firstpass,,191,583,583,2022,2022,7,,no,https://m.richgo.ai/realty/danji/a0tifiU
 e편한세상평택,평택시 용이동,review_needed,firstpass,,,632,,2015,,,,no,
-e편한세상평택용이1단지,평택시 용이동,unmatched,firstpass,,,949,,2017,,,,no,
-e편한세상평택용이2단지,평택시 용이동,unmatched,firstpass,,,399,,2017,,,,no,
+e편한세상평택용이1단지,평택시 용이동,verified_third_pass,thirdpass,,193.0,949,949.0,2017,2017,25,,no,https://m.richgo.ai/realty/danji/a7hlGzK
+e편한세상평택용이2단지,평택시 용이동,verified_third_pass,thirdpass,,189.0,399,399.0,2017,2017,41,,no,https://m.richgo.ai/realty/danji/a2UmlsG
 비전아이파크평택,평택시 용이동,verified,firstpass,,199,585,585,2018,2018,20,,no,https://m.richgo.ai/realty/danji/a3oLLvW
 신영평택비전지웰푸르지오,평택시 용이동,verified,firstpass,,199,717,717,2019,2019,25,,no,https://m.richgo.ai/realty/danji/a9HlkDZ
-용이반도유보라,평택시 용이동,unmatched,firstpass,,,480,,2010,,,,no,
+용이반도유보라,평택시 용이동,verified_third_pass,thirdpass,,199.0,480,480.0,2010,2010,32,,no,https://m.richgo.ai/realty/danji/a1Bltye
 평택비전레이크푸르지오,평택시 용이동,verified,firstpass,,199,621,621,2019,2019,8,,no,https://m.richgo.ai/realty/danji/a7TonHp
 평택비전센트럴푸르지오,평택시 용이동,verified,firstpass,,199,528,528,2018,2018,34,,no,https://m.richgo.ai/realty/danji/a1veFVC
 평택비전에듀포레푸르지오,평택시 용이동,verified,firstpass,,199,977,977,2018,2018,12,,no,https://m.richgo.ai/realty/danji/a9nznRX
 평택비전푸르지오,평택시 용이동,verified,firstpass,,190,761,761,2016,2016,38,,no,https://m.richgo.ai/realty/danji/a5JGNPy
-평택용이2차푸르지오,평택시 용이동,review_needed,firstpass,,,931,,2010,,,,no,
+평택용이2차푸르지오,평택시 용이동,verified_third_pass,thirdpass,,199.0,931,931.0,2010,2010,83,,no,https://m.richgo.ai/realty/danji/a2kllew
 평택용이금호어울림2단지,평택시 용이동,review_needed,firstpass,,,624,,2015,,,,no,
 푸르지오1차,평택시 용이동,unmatched,firstpass,,,715,,2009,,,,no,
-LIG아파트,평택시 이충동,unmatched,firstpass,192,,560,,1997,,,,no,
+LIG아파트,평택시 이충동,verified_third_pass,thirdpass,192,238.0,560,560.0,1997,1997,41,,no,https://m.richgo.ai/realty/danji/a4QrfID
 미주3(이충),평택시 이충동,unmatched,firstpass,248,,690,,1996,,,,no,
 우미이노스빌5차,평택시 이충동,verified,firstpass,,216,306,306,2006,2006,63,,no,https://m.richgo.ai/realty/danji/a0SkdRy
 이충동부영2단지,평택시 이충동,verified,firstpass,224,233,550,550,1996,1996,25,,no,https://m.richgo.ai/realty/danji/a9IsIba
 이충동부영3단지,평택시 이충동,unmatched,firstpass,192,,600,,1996,,,,no,
-정암마을뜨란채,평택시 이충동,unmatched,firstpass,,,733,,2006,,,,no,
+정암마을뜨란채,평택시 이충동,verified_third_pass,thirdpass,,193.0,733,733.0,2006,2006,12,,no,https://m.richgo.ai/realty/danji/a6mYoYV
 주공4,평택시 이충동,unmatched,firstpass,87,,490,,1990,,,,no,
 현대(이충),평택시 이충동,verified,firstpass,224,283,1206,1266,1992,1992,30,,no,https://m.richgo.ai/realty/danji/a4hmlLn
 휴먼시아추담마을,평택시 이충동,unmatched,firstpass,,,489,,2007,,,,no,
@@ -207,7 +207,7 @@ LIG아파트,평택시 이충동,unmatched,firstpass,192,,560,,1997,,,,no,
 제일풍경채장당센트럴,평택시 장당동,verified,firstpass,,199,448,448,2018,2018,6,,no,https://m.richgo.ai/realty/danji/a0euZEe
 제일하이빌1차,평택시 장당동,verified,firstpass,,219,714,714,2005,2005,52,,no,https://m.richgo.ai/realty/danji/a1KUlfg
 평택석정공원화성파크드림,평택시 장당동,verified,firstpass,,287,1296,1296,2025,2025,74,,no,https://m.richgo.ai/realty/danji/a2zZnFg
-한국아델리움,평택시 장당동,unmatched,firstpass,,,331,,2005,,,,no,
+한국아델리움,평택시 장당동,verified_third_pass,thirdpass,,219.0,331,331.0,2005,2005,46,,no,https://m.richgo.ai/realty/danji/a0cctVm
 평택장안마을코오롱하늘채,평택시 장안동,verified,firstpass,,193,1943,1943,2013,2013,12,,no,https://m.richgo.ai/realty/danji/a7mZcuv
 소사벌더샵마스터뷰,평택시 죽백동,verified,firstpass,,189,817,817,2018,2018,56,,no,https://m.richgo.ai/realty/danji/a6WLyRa
 우미린레이크파크,평택시 죽백동,verified,firstpass,,189,761,761,2017,2017,80,,no,https://m.richgo.ai/realty/danji/a2RbDlW
@@ -227,11 +227,11 @@ LIG아파트,평택시 이충동,unmatched,firstpass,192,,560,,1997,,,,no,
 부영사랑으로1단지,평택시 청북읍,verified,firstpass,,179,1031,1031,2011,2011,34,,no,https://m.richgo.ai/realty/danji/a9qYtcd
 부영사랑으로2단지,평택시 청북읍,verified,firstpass,,180,1138,1138,2011,2011,30,,no,https://m.richgo.ai/realty/danji/a8dljAZ
 브라운스톤청북,평택시 청북읍,unmatched,firstpass,,,581,,2017,,,,no,
-사랑으로부영5차,평택시 청북읍,review_needed,firstpass,,,741,,2012,,,,no,
+사랑으로부영5차,평택시 청북읍,verified_third_pass,thirdpass,,186.0,741,741.0,2012,2012,53,,no,https://m.richgo.ai/realty/danji/a1OhBRn
 유승한내들,평택시 청북읍,verified,firstpass,,189,431,431,2010,2010,11,,no,https://m.richgo.ai/realty/danji/a2dUmYL
 유승한내들퍼스트뷰,평택시 청북읍,unmatched,firstpass,,,386,,2015,,,,no,
-평택청북이안,평택시 청북읍,unmatched,firstpass,,,640,,2011,,,,no,
-평택청북이지더원,평택시 청북읍,unmatched,firstpass,,,513,,2016,,,,no,
+평택청북이안,평택시 청북읍,verified_third_pass,thirdpass,,189.0,640,640.0,2011,2011,31,,no,https://m.richgo.ai/realty/danji/a2PPtqM
+평택청북이지더원,평택시 청북읍,verified_third_pass,thirdpass,,170.0,513,513.0,2016,2016,37,,no,https://m.richgo.ai/realty/danji/a6myDZR
 평택청북한양수자인,평택시 청북읍,unmatched,firstpass,,,718,,2016,,,,no,
 우림필유,평택시 칠괴동,unmatched,firstpass,,,352,,2006,,,,no,
 동광,평택시 칠원동,verified,firstpass,,192,769,769,2003,2003,37,,no,https://m.richgo.ai/realty/danji/a7RQeht
@@ -240,13 +240,13 @@ LIG아파트,평택시 이충동,unmatched,firstpass,192,,560,,1997,,,,no,
 평택지제역동문굿모닝힐맘시티3단지,평택시 칠원동,verified,firstpass,,186,1134,1134,2021,2021,78,,no,https://m.richgo.ai/realty/danji/a4HnCLc
 평택지제역동문굿모닝힐맘시티4단지,평택시 칠원동,identity_review_required,firstpass,,192,921,852,2019,2019,480,large_coordinate_delta;different_block_number,no,https://m.richgo.ai/realty/danji/a1xmMju
 평택지제역동문디이스트5단지,평택시 칠원동,verified,firstpass,,200,741,741,2024,2024,32,,no,https://m.richgo.ai/realty/danji/a3OIoGE
-삼성,평택시 통복동,unmatched,firstpass,246,,624,,1993,,,,no,
+삼성,평택시 통복동,verified_third_pass,thirdpass,246,267.0,624,624.0,1993,1993,25,,no,https://m.richgo.ai/realty/danji/a7Zibiz
 평택역경남아너스빌디아트,평택시 통복동,verified,firstpass,,698,499,499,2025,2025,35,,no,https://m.richgo.ai/realty/danji/a7PoMJa
 대원,평택시 팽성읍,verified,firstpass,,207,650,650,2002,2002,45,,no,https://m.richgo.ai/realty/danji/a5Mzpbu
 송화지구우미이노스빌,평택시 팽성읍,unmatched,firstpass,,,719,,2005,,,,no,
 현대홈타운,평택시 팽성읍,unmatched,firstpass,,,364,,2005,,,,no,
 주공,평택시 팽성읍,unmatched,firstpass,165,,360,,1990,,,,no,
-평택브라운스톤험프리스,평택시 팽성읍,unmatched,firstpass,,,944,,2016,,,,no,
+평택브라운스톤험프리스,평택시 팽성읍,verified_third_pass,thirdpass,,199.0,944,944.0,2016,2016,8,,no,https://m.richgo.ai/realty/danji/a5GSiSS
 롯데인벤스스카이,평택시 평택동,verified,firstpass,,529,540,396,2008,2008,82,,no,https://m.richgo.ai/realty/danji/a1AicIn
 명지미래힐2단지,평택시 포승읍,unmatched,firstpass,,,322,,2004,,,,no,
 모아미래도1차,평택시 포승읍,unmatched,firstpass,,,547,,2006,,,,no,
@@ -346,17 +346,17 @@ e편한세상용인한숲시티6단지,용인 처인구 남사읍,verified,first
 동원마을동원로얄듀크,용인 기흥구 동백동,verified,firstpass,,189,477,477,2007,2007,14,,no,https://m.richgo.ai/realty/danji/a9hwYei
 모아미래도2단지아파트,용인 기흥구 동백동,verified,firstpass,,169,336,336,2006,2006,17,,no,https://m.richgo.ai/realty/danji/a8EDxnQ
 백현마을서해그랑블,용인 기흥구 동백동,verified,firstpass,,188,482,482,2006,2006,16,,no,https://m.richgo.ai/realty/danji/a9APfhR
-백현마을코아루,용인 기흥구 동백동,unmatched,firstpass,,,414,,2006,,,,no,
+백현마을코아루,용인 기흥구 동백동,verified_third_pass,thirdpass,,187.0,414,414.0,2006,2006,28,,no,https://m.richgo.ai/realty/danji/a0illDy
 백현마을한라비발디(1차),용인 기흥구 동백동,unmatched,firstpass,,,342,,2006,,,,no,
-백현마을한라비발디(2차),용인 기흥구 동백동,unmatched,firstpass,,,304,,2006,,,,no,
-호수마을계룡리슈빌,용인 기흥구 동백동,unmatched,firstpass,,,567,,2006,,,,no,
-호수마을동보노빌리티,용인 기흥구 동백동,review_needed,firstpass,,,481,,2006,,,,no,
-호수마을서해그랑블,용인 기흥구 동백동,review_needed,firstpass,,,536,,2006,,,second_pass_rejected_by_quality_gate,no,
-호수마을어울림,용인 기흥구 동백동,unmatched,firstpass,,,488,,2006,,,,no,
-호수마을자연앤데시앙,용인 기흥구 동백동,unmatched,firstpass,,,432,,2006,,,,no,
+백현마을한라비발디(2차),용인 기흥구 동백동,verified_third_pass,thirdpass,,188.0,304,304.0,2006,2006,8,,no,https://m.richgo.ai/realty/danji/a4hYtdr
+호수마을계룡리슈빌,용인 기흥구 동백동,verified_third_pass,thirdpass,,167.0,567,567.0,2006,2006,16,,no,https://m.richgo.ai/realty/danji/a7SlJKO
+호수마을동보노빌리티,용인 기흥구 동백동,verified_third_pass,thirdpass,,189.0,481,481.0,2006,2006,5,,no,https://m.richgo.ai/realty/danji/a3Cgosh
+호수마을서해그랑블,용인 기흥구 동백동,verified_third_pass,thirdpass,,188.0,536,536.0,2006,2006,5,,no,https://m.richgo.ai/realty/danji/a5SOGWt
+호수마을어울림,용인 기흥구 동백동,verified_third_pass,thirdpass,,179.0,488,488.0,2006,2006,33,,no,https://m.richgo.ai/realty/danji/a7hoIBs
+호수마을자연앤데시앙,용인 기흥구 동백동,verified_third_pass,thirdpass,,178.0,432,432.0,2006,2006,16,,no,https://m.richgo.ai/realty/danji/a8pFQyd
 교동마을신창무궁화타운,용인 기흥구 마북동,verified,firstpass,316,316,490,490,1996,1996,2,,no,https://m.richgo.ai/realty/danji/a6jXOhG
 교동마을쌍용,용인 기흥구 마북동,verified,firstpass,,198,340,340,2002,2002,28,,no,https://m.richgo.ai/realty/danji/a2uGmSJ
-교동마을엘지,용인 기흥구 마북동,review_needed,firstpass,185,,450,,2001,,,,no,
+교동마을엘지,용인 기흥구 마북동,verified_third_pass,thirdpass,185,183.0,450,450.0,2001,2001,31,,no,https://m.richgo.ai/realty/danji/a6NrnDQ
 교동마을정광아파트,용인 기흥구 마북동,verified,firstpass,213,213,478,478,1997,1997,49,,no,https://m.richgo.ai/realty/danji/a9VhmFu
 교동마을현대필그린,용인 기흥구 마북동,verified,firstpass,,199,486,486,2002,2002,24,,no,https://m.richgo.ai/realty/danji/a3KNqXH
 교동마을현대홈타운,용인 기흥구 마북동,verified,firstpass,,145,795,795,2003,2003,20,,no,https://m.richgo.ai/realty/danji/a1TJqbs
@@ -465,13 +465,13 @@ e편한세상도화6-2단지,인천 미추홀구 도화동,verified,firstpass,,2
 용현오션뷰경남아너스빌,인천 미추홀구 용현동,verified,firstpass,,532,303,303,2023,2023,33,,no,https://m.richgo.ai/realty/danji/a0FhLBf
 우성,인천 미추홀구 용현동,verified,firstpass,282,282,408,408,1996,1996,16,,no,https://m.richgo.ai/realty/danji/a6pcfTM
 유원용현,인천 미추홀구 용현동,unmatched,firstpass,248,,967,,1989,,,,no,
-윤성,인천 미추홀구 용현동,review_needed,firstpass,282,,368,,1993,,,,no,
+윤성,인천 미추홀구 용현동,verified_third_pass,thirdpass,282,242.0,368,368.0,1993,1993,33,,no,https://m.richgo.ai/realty/danji/a7hAAcW
 인천용현엑슬루타워,인천 미추홀구 용현동,verified,firstpass,,501,630,630,2011,2011,19,,no,https://m.richgo.ai/realty/danji/a7BPkcy
 한양1차,인천 미추홀구 용현동,verified,firstpass,212,216,606,606,1990,1990,95,,no,https://m.richgo.ai/realty/danji/a2iyfjP
 한양2차,인천 미추홀구 용현동,unmatched,firstpass,365,,352,,1992,,,,no,
 e편한세상주안에듀서밋,인천 미추홀구 주안동,verified,firstpass,,249,386,386,2024,2023,32,,no,https://m.richgo.ai/realty/danji/a3DfhIC
 관교한신휴플러스,인천 미추홀구 주안동,verified,firstpass,,249,1509,1509,2010,2010,95,,no,https://m.richgo.ai/realty/danji/a8teqKM
-광명8,인천 미추홀구 주안동,unmatched,firstpass,227,,462,,1988,,,,no,
+광명8,인천 미추홀구 주안동,verified_third_pass,thirdpass,227,189.0,462,462.0,1988,1988,16,,no,https://m.richgo.ai/realty/danji/a5XWeng
 신비마을,인천 미추홀구 주안동,unmatched,firstpass,165,,720,,1994,,,,no,
 쌍용주안,인천 미추홀구 주안동,verified,firstpass,251,186,768,768,1984,1984,89,,no,https://m.richgo.ai/realty/danji/a3Dxwam
 월드스테이트,인천 미추홀구 주안동,verified_second_pass,secondpass,,317,3160,3158,2008,2008,135,,no,https://m.richgo.ai/realty/danji/a6vJcXU
@@ -481,7 +481,7 @@ e편한세상주안에듀서밋,인천 미추홀구 주안동,verified,firstpass
 현대,인천 미추홀구 주안동,verified,firstpass,202,230,338,338,1985,1985,20,,no,https://m.richgo.ai/realty/danji/a8BkrpJ
 동아풍림,인천 미추홀구 학익동,verified,firstpass,300,299,1520,1480,1999,1999,30,,no,https://m.richgo.ai/realty/danji/a2VUgGS
 미추홀트루엘파크,인천 미추홀구 학익동,verified,firstpass,,240,336,336,2022,2022,16,,no,https://m.richgo.ai/realty/danji/a6vLHrv
-서원,인천 미추홀구 학익동,unmatched,firstpass,227,,342,,1990,,,,no,
+서원,인천 미추홀구 학익동,verified_third_pass,thirdpass,227,,342,342.0,1990,1990,31,,no,https://m.richgo.ai/realty/danji/a4JbLxu
 신동아1,인천 미추홀구 학익동,verified_shared_scope_review,firstpass,116,192,938,938,1988,1988,99,,yes,https://m.richgo.ai/realty/danji/a1vGapz
 신동아2,인천 미추홀구 학익동,verified_shared_scope_review,firstpass,158,192,938,938,1989,1988,99,,yes,https://m.richgo.ai/realty/danji/a1vGapz
 신동아3,인천 미추홀구 학익동,verified,firstpass,158,221,894,894,1990,1990,40,,no,https://m.richgo.ai/realty/danji/a5omWMM
@@ -500,7 +500,7 @@ e편한세상주안에듀서밋,인천 미추홀구 주안동,verified,firstpass
 계양산파크트루엘,인천 계양구 계산동,verified,firstpass,,222,369,369,2020,2020,16,,no,https://m.richgo.ai/realty/danji/a2RFezh
 극동,인천 계양구 계산동,unmatched,firstpass,171,,673,,1985,,,,no,
 삼보1,인천 계양구 계산동,verified,firstpass,192,175,474,474,1987,1987,34,,no,https://m.richgo.ai/realty/danji/a7VPZKO
-삼천리,인천 계양구 계산동,review_needed,firstpass,192,,460,,1986,,,second_pass_rejected_by_quality_gate,no,
+삼천리,인천 계양구 계산동,verified_third_pass,thirdpass,192,150,460,460,1986,1986,144,,no,https://m.richgo.ai/realty/danji/a8fYhAz
 서해3,인천 계양구 계산동,verified,firstpass,206,206,498,498,1991,1991,20,,no,https://m.richgo.ai/realty/danji/a0rZURx
 신도브래뉴,인천 계양구 계산동,verified,firstpass,,336,481,481,2005,2005,6,,no,https://m.richgo.ai/realty/danji/a8EpNbe
 영남,인천 계양구 계산동,verified,firstpass,198,198,360,360,1990,1990,17,,no,https://m.richgo.ai/realty/danji/a4wbVtH
@@ -511,7 +511,7 @@ e편한세상주안에듀서밋,인천 미추홀구 주안동,verified,firstpass
 은행마을(태평),인천 계양구 계산동,verified,firstpass,250,249,574,574,1997,1997,119,,no,https://m.richgo.ai/realty/danji/a3zPabG
 인정프린스,인천 계양구 계산동,verified,firstpass,294,293,300,299,1992,1992,15,,no,https://m.richgo.ai/realty/danji/a8XfxeX
 주공,인천 계양구 계산동,verified,firstpass,206,173,1140,1140,1990,1990,52,,no,https://m.richgo.ai/realty/danji/a8rAErk
-태산,인천 계양구 계산동,review_needed,firstpass,185,,408,,1990,,,second_pass_rejected_by_quality_gate,no,
+태산,인천 계양구 계산동,verified_third_pass,thirdpass,185,186.0,408,408.0,1990,1990,47,,no,https://m.richgo.ai/realty/danji/a9nsPGz
 태평,인천 계양구 계산동,verified,firstpass,192,191,432,432,1990,1990,34,,no,https://m.richgo.ai/realty/danji/a7HggSE
 하나,인천 계양구 계산동,identity_review_required,firstpass,192,182,454,994,1987,1987,96,unit_boundary_or_mismatch,no,https://m.richgo.ai/realty/danji/a5LeVQO
 한국,인천 계양구 계산동,verified,firstpass,206,328,416,416,1991,1991,12,,no,https://m.richgo.ai/realty/danji/a1NyQyU
@@ -524,7 +524,7 @@ e편한세상주안에듀서밋,인천 미추홀구 주안동,verified,firstpass
 계양한양수자인,인천 계양구 박촌동,verified,firstpass,,229,376,376,2011,2011,59,,no,https://m.richgo.ai/realty/danji/a9AduVv
 한화꿈에그린,인천 계양구 박촌동,verified,firstpass,,237,670,670,2005,2005,53,,no,https://m.richgo.ai/realty/danji/a4HWcPm
 계양하늘채파크포레,인천 계양구 방축동,verified,firstpass,,185,546,546,2023,2023,71,,no,https://m.richgo.ai/realty/danji/a2kuTiv
-아주,인천 계양구 방축동,review_needed,firstpass,188,,480,,1991,,,,no,
+아주,인천 계양구 방축동,verified_third_pass,thirdpass,188,187.0,480,480.0,1991,1991,64,,no,https://m.richgo.ai/realty/danji/a9nIvzz
 아주,인천 계양구 병방동,verified,firstpass,175,175,493,468,1989,1989,36,,no,https://m.richgo.ai/realty/danji/a7BnGnW
 학마을서원,인천 계양구 병방동,verified,firstpass,247,247,688,688,1997,1997,35,,no,https://m.richgo.ai/realty/danji/a4LKpGi
 학마을서해,인천 계양구 병방동,verified,firstpass,239,239,1262,1261,1997,1997,62,,no,https://m.richgo.ai/realty/danji/a2zvnco
@@ -541,7 +541,7 @@ e편한세상주안에듀서밋,인천 미추홀구 주안동,verified,firstpass
 신동아파밀리에,인천 계양구 이화동,verified,firstpass,,199,399,399,2007,2007,12,,no,https://m.richgo.ai/realty/danji/a3oTvbv
 까치마을태화,인천 계양구 작전동,verified_shared_scope_review,firstpass,250,249,1674,1674,1997,1997,15,,yes,https://m.richgo.ai/realty/danji/a8YhPGd
 까치마을한진,인천 계양구 작전동,verified_shared_scope_review,firstpass,250,249,1674,1674,1997,1997,15,,yes,https://m.richgo.ai/realty/danji/a8YhPGd
-뉴서울1,인천 계양구 작전동,unmatched,firstpass,274,,791,,1988,,,,no,
+뉴서울1,인천 계양구 작전동,verified_third_pass,thirdpass,274,274.0,791,791.0,1988,1988,12,,no,https://m.richgo.ai/realty/danji/a7qFgPv
 뉴서울2,인천 계양구 작전동,verified,firstpass,330,592,400,400,1992,1992,31,,no,https://m.richgo.ai/realty/danji/a6hNkoG
 도두리마을대동,인천 계양구 작전동,verified,firstpass,251,249,1299,1299,1997,1997,27,,no,https://m.richgo.ai/realty/danji/a6jrBRx
 도두리마을동남,인천 계양구 작전동,verified_shared_scope_review,firstpass,248,245,1282,1282,1997,1997,21,,yes,https://m.richgo.ai/realty/danji/a2rfMpr
@@ -550,18 +550,18 @@ e편한세상주안에듀서밋,인천 미추홀구 주안동,verified,firstpass
 동보,인천 계양구 작전동,verified,firstpass,294,295,1187,1187,1995,1995,48,,no,https://m.richgo.ai/realty/danji/a7smvxl
 동보2,인천 계양구 작전동,verified,firstpass,243,243,502,502,2000,2000,9,,no,https://m.richgo.ai/realty/danji/a7hBvGh
 삼보,인천 계양구 작전동,verified,firstpass,256,256,455,454,1994,1994,47,,no,https://m.richgo.ai/realty/danji/a5odOGS
-삼천리,인천 계양구 작전동,unmatched,firstpass,133,,540,,1988,,,,no,
-신진,인천 계양구 작전동,unmatched,firstpass,217,,410,,1987,,,,no,
+삼천리,인천 계양구 작전동,verified_third_pass,thirdpass,133,134.0,540,540.0,1988,1988,82,,no,https://m.richgo.ai/realty/danji/a5yZAmA
+신진,인천 계양구 작전동,verified_third_pass,thirdpass,217,153.0,410,410.0,1987,1987,28,,no,https://m.richgo.ai/realty/danji/a9LnLmB
 작전현대1차,인천 계양구 작전동,verified,firstpass,225,219,582,570,1990,1990,15,,no,https://m.richgo.ai/realty/danji/a7VDzUe
 코오롱,인천 계양구 작전동,verified,firstpass,218,217,480,480,1989,1989,6,,no,https://m.richgo.ai/realty/danji/a5lCZwg
 풍림아이원,인천 계양구 작전동,verified,firstpass,,247,468,468,2003,2003,53,,no,https://m.richgo.ai/realty/danji/a2tHFeF
 현광,인천 계양구 작전동,unmatched,firstpass,300,,392,,1992,,,,no,
 현대2-1차,인천 계양구 작전동,verified,firstpass,225,225,1052,840,1991,1991,30,,no,https://m.richgo.ai/realty/danji/a8tnmoq
 현대2-2차,인천 계양구 작전동,verified,firstpass,225,257,1052,904,1993,1993,120,,no,https://m.richgo.ai/realty/danji/a5aHqee
-경남1,인천 계양구 효성동,unmatched,firstpass,263,,310,,1987,,,,no,
+경남1,인천 계양구 효성동,verified_third_pass,thirdpass,263,,310,310.0,1987,1987,24,,no,https://m.richgo.ai/realty/danji/a9oGWSq
 금호어울림,인천 계양구 효성동,verified,firstpass,,281,410,410,2005,2005,59,,no,https://m.richgo.ai/realty/danji/a9lCDQX
 뉴서울1,인천 계양구 효성동,verified,firstpass,198,139,460,460,1985,1985,21,,no,https://m.richgo.ai/realty/danji/a3ZxHIb
-뉴서울2,인천 계양구 효성동,unmatched,firstpass,183,,775,,1986,,,,no,
+뉴서울2,인천 계양구 효성동,verified_third_pass,thirdpass,183,153.0,775,775.0,1986,1986,97,,no,https://m.richgo.ai/realty/danji/a7lpTOh
 뉴서울3차,인천 계양구 효성동,verified,firstpass,299,299,542,542,1993,1993,52,,no,https://m.richgo.ai/realty/danji/a6obNtz
 뉴서울5차,인천 계양구 효성동,verified,firstpass,298,298,648,648,1994,1994,36,,no,https://m.richgo.ai/realty/danji/a1lKisf
 뉴서울6,인천 계양구 효성동,verified,firstpass,264,263,370,370,1995,1995,19,,no,https://m.richgo.ai/realty/danji/a1NxCtQ
@@ -609,7 +609,7 @@ e편한세상주안에듀서밋,인천 미추홀구 주안동,verified,firstpass
 동부일신,남양주시 별내면,unmatched,firstpass,320,,456,,1996,,,,no,
 청학주공(1단지),남양주시 별내면,review_needed,firstpass,212,,364,,1999,,,,no,
 청학주공(2단지),남양주시 별내면,verified,firstpass,206,206,800,800,1999,1999,27,,no,https://m.richgo.ai/realty/danji/a1NHYYu
-청학주공(3단지),남양주시 별내면,ambiguous,firstpass,222,,776,,1999,,,,no,
+청학주공(3단지),남양주시 별내면,verified_third_pass,thirdpass,222,221.0,776,776.0,1999,1999,58,,no,https://m.richgo.ai/realty/danji/a9zyUQU
 청학주공(4단지),남양주시 별내면,verified,firstpass,198,198,642,642,1999,1999,24,,no,https://m.richgo.ai/realty/danji/a3kIKTw
 청학주공(5단지),남양주시 별내면,verified,firstpass,208,231,592,592,2000,2000,7,,no,https://m.richgo.ai/realty/danji/a8Iteqk
 청학주공(6단지),남양주시 별내면,verified,firstpass,,164,316,316,2002,2002,55,,no,https://m.richgo.ai/realty/danji/a5QNKmH
@@ -660,7 +660,7 @@ e편한세상주안에듀서밋,인천 미추홀구 주안동,verified,firstpass
 남양주진건주공,남양주시 진건읍,verified,firstpass,165,90,300,300,1990,1990,74,,no,https://m.richgo.ai/realty/danji/a5wtdZc
 남양주진건주공2단지,남양주시 진건읍,review_needed,firstpass,210,,499,,1998,,,,no,
 세아,남양주시 진건읍,unmatched,firstpass,286,,467,,1997,,,,no,
-한신그린1차,남양주시 진건읍,unmatched,firstpass,230,,747,,1991,,,,no,
+한신그린1차,남양주시 진건읍,verified_third_pass,thirdpass,230,267.0,747,706.0,1991,1991,57,,no,https://m.richgo.ai/realty/danji/a1wsOIN
 현대,남양주시 진건읍,unmatched,firstpass,182,,399,,1998,,,,no,
 금강펜테리움,남양주시 진접읍,verified,firstpass,,179,790,790,2010,2010,50,,no,https://m.richgo.ai/realty/danji/a9KPqsm
 남양휴튼,남양주시 진접읍,verified,firstpass,,189,443,443,2010,2010,43,,no,https://m.richgo.ai/realty/danji/a8rgVqA
@@ -686,9 +686,9 @@ e편한세상주안에듀서밋,인천 미추홀구 주안동,verified,firstpass
 극동,남양주시 퇴계원읍,verified,firstpass,227,227,498,498,1999,1999,31,,no,https://m.richgo.ai/realty/danji/a1GwFTa
 성원,남양주시 퇴계원읍,verified,firstpass,264,264,751,731,1999,1999,29,,no,https://m.richgo.ai/realty/danji/a1KWxeJ
 신도,남양주시 퇴계원읍,verified,firstpass,259,258,585,578,2000,2000,25,,no,https://m.richgo.ai/realty/danji/a2GbqSB
-신별내퇴계원어울림,남양주시 퇴계원읍,unmatched,firstpass,,,578,,2012,,,,no,
+신별내퇴계원어울림,남양주시 퇴계원읍,verified_third_pass,thirdpass,,204.0,578,578.0,2012,2012,50,,no,https://m.richgo.ai/realty/danji/a3RDxVK
 쌍용,남양주시 퇴계원읍,verified,firstpass,,208,322,305,2002,2002,33,,no,https://m.richgo.ai/realty/danji/a9AHlUP
-퇴계원쌍용예가,남양주시 퇴계원읍,unmatched,firstpass,,,560,,2007,,,,no,
+퇴계원쌍용예가,남양주시 퇴계원읍,verified_third_pass,thirdpass,,269.0,560,552.0,2007,2007,44,,no,https://m.richgo.ai/realty/danji/a3EqJge
 대명,남양주시 평내동,unmatched,firstpass,252,,664,,2000,,,,no,
 세종리젠시빌,남양주시 평내동,unmatched,firstpass,316,,318,,2000,,,,no,
 우남퍼스트빌,남양주시 평내동,unmatched,firstpass,,,378,,2004,,,,no,
@@ -697,15 +697,15 @@ e편한세상주안에듀서밋,인천 미추홀구 주안동,verified,firstpass
 평내마을신명스카이뷰,남양주시 평내동,verified,firstpass,,216,738,738,2004,2004,42,,no,https://m.richgo.ai/realty/danji/a8hwttU
 평내마을주공,남양주시 평내동,verified,firstpass,,190,1058,1050,2004,2004,38,,no,https://m.richgo.ai/realty/danji/a2NvADN
 평내마을중흥에스-클래스(1단지),남양주시 평내동,verified,firstpass,,219,942,942,2005,2005,77,,no,https://m.richgo.ai/realty/danji/a9KRIZw
-평내마을중흥에스-클래스(2단지),남양주시 평내동,review_needed,firstpass,,,425,,2004,,,,no,
-평내마을중흥에스-클래스(3단지),남양주시 평내동,review_needed,firstpass,,,424,,2005,,,,no,
+평내마을중흥에스-클래스(2단지),남양주시 평내동,verified_third_pass,thirdpass,,219.0,425,416.0,2004,2004,48,,no,https://m.richgo.ai/realty/danji/a9iWqch
+평내마을중흥에스-클래스(3단지),남양주시 평내동,verified_third_pass,thirdpass,,218.0,424,424.0,2005,2005,44,,no,https://m.richgo.ai/realty/danji/a6oRwUu
 평내마을평내1차대주파크빌,남양주시 평내동,unmatched,firstpass,,,595,,2005,,,,no,
-평내마을평내2차대주파크빌,남양주시 평내동,unmatched,firstpass,,,606,,2005,,,,no,
-평내마젤란21,남양주시 평내동,unmatched,firstpass,,,499,,2005,,,,no,
+평내마을평내2차대주파크빌,남양주시 평내동,verified_third_pass,thirdpass,,247.0,606,606.0,2005,2005,109,,no,https://m.richgo.ai/realty/danji/a9FjfDP
+평내마젤란21,남양주시 평내동,verified_third_pass,thirdpass,,267.0,499,499.0,2005,2005,13,,no,https://m.richgo.ai/realty/danji/a3aCnct
 평내화성파크힐즈,남양주시 평내동,unmatched,firstpass,,,335,,2004,,,,no,
 효성타운,남양주시 평내동,verified,firstpass,314,314,624,607,1998,1998,11,,no,https://m.richgo.ai/realty/danji/a1RFZig
 라인그린,남양주시 호평동,verified,firstpass,261,260,486,467,1997,1997,11,,no,https://m.richgo.ai/realty/danji/a2RagqV
-호평마을금강,남양주시 호평동,review_needed,firstpass,,,892,,2004,,,,no,
+호평마을금강,남양주시 호평동,verified_third_pass,thirdpass,,215.0,892,892.0,2004,2004,86,,no,https://m.richgo.ai/realty/danji/a1bKpRi
 호평마을대주파크빌,남양주시 호평동,verified,firstpass,,214,673,673,2004,2004,28,,no,https://m.richgo.ai/realty/danji/a0MmhNJ
 호평마을동원로얄듀크,남양주시 호평동,verified,firstpass,,219,593,593,2005,2005,42,,no,https://m.richgo.ai/realty/danji/a7fkCpd
 호평마을신명스카이뷰하트,남양주시 호평동,verified,firstpass,,219,399,399,2006,2006,24,,no,https://m.richgo.ai/realty/danji/a8AVplR
@@ -727,18 +727,18 @@ e편한세상주안에듀서밋,인천 미추홀구 주안동,verified,firstpass
 신창현두산위브,남양주시 화도읍,unmatched,firstpass,,,478,,2008,,,,no,
 화도센트럴우방아이유쉘,남양주시 화도읍,verified,firstpass,,213,808,808,2018,2018,30,,no,https://m.richgo.ai/realty/danji/a7oAJyo
 남양주월산사랑으로부영2단지,남양주시 화도읍,verified,firstpass,,228,937,937,2015,2015,32,,no,https://m.richgo.ai/realty/danji/a6sGCPr
-그랜드힐(2차),남양주시 화도읍,unmatched,firstpass,,,330,,2007,,,,no,
+그랜드힐(2차),남양주시 화도읍,verified_third_pass,thirdpass,,130.0,330,330.0,2007,2007,11,,no,https://m.richgo.ai/realty/danji/a9bIjeq
 대림,남양주시 화도읍,verified,firstpass,193,193,377,370,2001,2001,7,,no,https://m.richgo.ai/realty/danji/a9LTCuq
 마석그랜드힐,남양주시 화도읍,verified,firstpass,,193,562,550,2004,2004,15,,no,https://m.richgo.ai/realty/danji/a5FDRll
 마석힐즈파크푸르지오,남양주시 화도읍,verified,firstpass,,238,620,620,2018,2018,59,,no,https://m.richgo.ai/realty/danji/a8EylfF
-보미청광플러스원,남양주시 화도읍,unmatched,firstpass,,,758,,2005,,,,no,
-신명스카이뷰그린,남양주시 화도읍,unmatched,firstpass,,,657,,2005,,,,no,
+보미청광플러스원,남양주시 화도읍,verified_third_pass,thirdpass,,199.0,758,758.0,2005,2005,24,,no,https://m.richgo.ai/realty/danji/a1aoEQU
+신명스카이뷰그린,남양주시 화도읍,verified_third_pass,thirdpass,,220.0,657,657.0,2005,2005,50,,no,https://m.richgo.ai/realty/danji/a5PiYrX
 중흥S클래스,남양주시 화도읍,unmatched,firstpass,,,477,,2004,,,,no,
 경성큰마을(1단지),남양주시 화도읍,unmatched,firstpass,128,,385,,1998,,,,no,
 경성큰마을(2단지),남양주시 화도읍,unmatched,firstpass,206,,481,,1998,,,,no,
 마석LIG아파트,남양주시 화도읍,unmatched,firstpass,,,444,,2005,,,,no,
 마석역신도브래뉴2차,남양주시 화도읍,verified,firstpass,,197,350,350,2010,2010,15,,no,https://m.richgo.ai/realty/danji/a7TibuX
-마석역신도브래뉴3차,남양주시 화도읍,review_needed,firstpass,,,476,,2010,,,,no,
+마석역신도브래뉴3차,남양주시 화도읍,verified_third_pass,thirdpass,,199.0,476,476.0,2010,2010,79,,no,https://m.richgo.ai/realty/danji/a8QwRNj
 삼신푸른솔,남양주시 화도읍,unmatched,firstpass,240,,799,,1998,,,,no,
 삼익,남양주시 화도읍,unmatched,firstpass,,,436,,2003,,,,no,
 영진그린필,남양주시 화도읍,verified,firstpass,,206,600,588,2003,2003,12,,no,https://m.richgo.ai/realty/danji/a7WJHlK
@@ -747,12 +747,12 @@ e편한세상주안에듀서밋,인천 미추홀구 주안동,verified,firstpass
 경향,남양주시 화도읍,verified,firstpass,210,209,312,312,1997,1997,34,,no,https://m.richgo.ai/realty/danji/a6CRYXW
 남양주창현도뮤토,남양주시 화도읍,verified,firstpass,,229,446,446,2017,2017,68,,no,https://m.richgo.ai/realty/danji/a2VYUSL
 신명,남양주시 화도읍,verified,firstpass,200,199,811,811,1997,1997,57,,no,https://m.richgo.ai/realty/danji/a6xVFXW
-신한토탈,남양주시 화도읍,unmatched,firstpass,209,,659,,1997,,,,no,
+신한토탈,남양주시 화도읍,verified_third_pass,thirdpass,209,209.0,659,628.0,1997,1997,58,,no,https://m.richgo.ai/realty/danji/a0sklkC
 영남탑스빌,남양주시 화도읍,unmatched,firstpass,162,,422,,2000,,,,no,
-이안남양주,남양주시 화도읍,unmatched,firstpass,,,388,,2009,,,,no,
+이안남양주,남양주시 화도읍,verified_third_pass,thirdpass,,195.0,388,388.0,2009,2009,55,,no,https://m.richgo.ai/realty/danji/a3JjISd
 창현두산1단지아파트,남양주시 화도읍,unmatched,firstpass,192,,350,,1997,,,,no,
 창현두산2단지아파트,남양주시 화도읍,verified,firstpass,200,199,800,800,1997,1997,2,,no,https://m.richgo.ai/realty/danji/a1oyDxT
-창현주공,남양주시 화도읍,unmatched,firstpass,201,,480,,1997,,,,no,
+창현주공,남양주시 화도읍,verified_third_pass,thirdpass,201,201.0,480,480.0,1997,1997,21,,no,https://m.richgo.ai/realty/danji/a8AUStZ
 신환,군포시 금정동,verified,firstpass,221,293,562,562,1990,1990,34,,no,https://m.richgo.ai/realty/danji/a0NyefC
 충무주공2단지2차(873-2),군포시 금정동,verified,firstpass,211,219,476,476,1993,1993,7,,no,https://m.richgo.ai/realty/danji/a8ECiyF
 동아(900),군포시 당동,verified,firstpass,226,209,485,483,1993,1993,28,,no,https://m.richgo.ai/realty/danji/a4aFsOn
@@ -864,19 +864,19 @@ e편한세상남양뉴타운,화성 만세구 남양읍,verified,firstpass,,169,
 동성3,서울 중랑구 신내동,verified,firstpass,242,325,831,800,1997,1997,13,,no,https://m.richgo.ai/realty/danji/a0LsSQR
 동성아파트,서울 중랑구 신내동,verified,firstpass,313,312,478,478,1997,1997,26,,no,https://m.richgo.ai/realty/danji/a2fPBYV
 라이프미성,서울 중랑구 신내동,verified,firstpass,218,272,305,277,1992,1992,35,,no,https://m.richgo.ai/realty/danji/a3rjmEA
-새한,서울 중랑구 신내동,unmatched,firstpass,353,,532,,1998,,,,no,
+새한,서울 중랑구 신내동,verified_third_pass,thirdpass,353,353.0,532,532.0,1998,1998,7,,no,https://m.richgo.ai/realty/danji/a9EuDKz
 신내11대명,서울 중랑구 신내동,verified,firstpass,207,207,805,804,1996,1996,27,,no,https://m.richgo.ai/realty/danji/a4vXipG
 시영2단지(라이프)아파트,서울 노원구 공릉동,unmatched,firstpass,84,,300,,1994,,,,no,
-동아불암,서울 노원구 상계동,unmatched,firstpass,354,,673,,1999,,,,no,
-불암현대,서울 노원구 상계동,unmatched,firstpass,349,,826,,1999,,,,no,
+동아불암,서울 노원구 상계동,verified_third_pass,thirdpass,354,353.0,673,673.0,1999,1999,23,,no,https://m.richgo.ai/realty/danji/a7UagjS
+불암현대,서울 노원구 상계동,verified_third_pass,thirdpass,349,348.0,826,826.0,1999,1999,30,,no,https://m.richgo.ai/realty/danji/a1UrEpH
 상계신동아,서울 노원구 상계동,unmatched,firstpass,300,,385,,1995,,,,no,
-한신4차,서울 노원구 상계동,review_needed,firstpass,211,,397,,1995,,,,no,
+한신4차,서울 노원구 상계동,verified_third_pass,thirdpass,211,211.0,397,397.0,1995,1995,25,,no,https://m.richgo.ai/realty/danji/a4GvTem
 현대2차,서울 노원구 상계동,review_needed,firstpass,286,,465,,1993,,,,no,
 성원(사슴4),서울 노원구 월계동,verified,firstpass,213,212,713,713,1995,1995,32,,no,https://m.richgo.ai/realty/danji/a8otZMj
 경남,서울 노원구 중계동,verified,firstpass,208,234,1890,1890,1989,1989,27,,no,https://m.richgo.ai/realty/danji/a8SYGOo
 삼창타워주상프라자,서울 노원구 중계동,unmatched,firstpass,385,,367,,1997,,,,no,
 중계그린1단지,서울 노원구 중계동,verified_second_pass,secondpass,219,191,878,3481,1990,1990,36,,yes,https://m.richgo.ai/realty/danji/a5GwmTs
-중앙하이츠,서울 노원구 중계동,unmatched,firstpass,293,,499,,1998,,,,no,
+중앙하이츠,서울 노원구 중계동,verified_third_pass,thirdpass,293,293.0,499,499.0,1998,1998,47,,no,https://m.richgo.ai/realty/danji/a0qGARk
 현대(6차),서울 노원구 중계동,verified,firstpass,,286,453,453,2018,2018,98,,no,https://m.richgo.ai/realty/danji/a7RTLWE
 건영,서울 노원구 하계동,verified,firstpass,206,231,1980,1980,1988,1988,19,,no,https://m.richgo.ai/realty/danji/a9pTWJb
 갈현동현대,서울 은평구 갈현동,verified,firstpass,261,261,303,278,1997,1997,40,,no,https://m.richgo.ai/realty/danji/a9ARVOT
@@ -973,7 +973,7 @@ e편한세상선부파크플레이스1차,안산 단원구 선부동,verified,fi
 세교쌍용예가엔에이치에프,오산시 내삼미동,verified,firstpass,,193,727,727,2017,2017,20,,no,https://m.richgo.ai/realty/danji/a8igjnB
 오산대역세교자이,오산시 내삼미동,verified,firstpass,,195,1110,1110,2018,2018,27,,no,https://m.richgo.ai/realty/danji/a7TYhqq
 오산대역호반써밋,오산시 내삼미동,verified,firstpass,,191,855,855,2017,2017,30,,no,https://m.richgo.ai/realty/danji/a2lOnfR
-이림,오산시 누읍동,unmatched,firstpass,384,,650,,2000,,,,no,
+이림,오산시 누읍동,verified_third_pass,thirdpass,384,383.0,650,650.0,2000,2000,11,,no,https://m.richgo.ai/realty/danji/a7BQReW
 한라그린타운,오산시 누읍동,verified,firstpass,304,304,784,784,2000,2000,40,,no,https://m.richgo.ai/realty/danji/a8hiRCM
 호반써밋라프리미어,오산시 벌음동,verified,firstpass,,169,1030,1030,2026,2026,3,,no,https://m.richgo.ai/realty/danji/a0LkLKo
 오산센트럴푸르지오,오산시 부산동,verified,firstpass,,247,920,920,2018,2018,15,,no,https://m.richgo.ai/realty/danji/a7tJXlo
@@ -1025,7 +1025,7 @@ e편한세상오산세교,오산시 지곶동,unmatched,firstpass,,,2050,,2018,,
 상록힐스테이트,시흥시 능곡동,verified,firstpass,,150,321,321,2009,2009,15,,no,https://m.richgo.ai/realty/danji/a2lgDKv
 시흥능곡신안인스빌,시흥시 능곡동,verified,firstpass,,151,394,394,2008,2008,6,,no,https://m.richgo.ai/realty/danji/a7Zyevd
 신일해피트리,시흥시 능곡동,verified,firstpass,,128,315,315,2009,2009,64,,no,https://m.richgo.ai/realty/danji/a5jfpHi
-극동,시흥시 대야동,unmatched,firstpass,240,,350,,2000,,,,no,
+극동,시흥시 대야동,verified_third_pass,thirdpass,240,240.0,350,350.0,2000,2000,39,,no,https://m.richgo.ai/realty/danji/a1bXicq
 늘푸른벽산,시흥시 대야동,verified,firstpass,240,,324,324,1995,1995,11,,no,https://m.richgo.ai/realty/danji/a4pRraD
 삼보,시흥시 대야동,verified,firstpass,250,144,300,335,1991,1991,10,,no,https://m.richgo.ai/realty/danji/a8Nfwiy
 서강2,시흥시 대야동,verified,firstpass,249,248,582,582,1997,1997,21,,no,https://m.richgo.ai/realty/danji/a4lOQKL
@@ -1053,7 +1053,7 @@ e편한세상오산세교,오산시 지곶동,unmatched,firstpass,,,2050,,2018,,
 대우푸르지오3차,시흥시 은행동,verified,firstpass,250,249,1272,1272,1998,1998,119,,no,https://m.richgo.ai/realty/danji/a6VVPxg
 대우푸르지오4차,시흥시 은행동,unmatched,firstpass,,,1216,,2004,,,,no,
 두산,시흥시 은행동,verified,firstpass,249,249,438,438,1997,1997,13,,no,https://m.richgo.ai/realty/danji/a3EbvaQ
-벽산3차,시흥시 은행동,unmatched,firstpass,245,,350,,1998,,,,no,
+벽산3차,시흥시 은행동,verified_third_pass,thirdpass,245,244.0,350,350.0,1998,1998,47,,no,https://m.richgo.ai/realty/danji/a4NqTiM
 시흥성원샹떼빌,시흥시 은행동,verified,firstpass,250,249,660,660,1995,1995,34,,no,https://m.richgo.ai/realty/danji/a2enKhZ
 신명,시흥시 은행동,unmatched,firstpass,253,,460,,1995,,,,no,
 우남,시흥시 은행동,verified,firstpass,250,248,346,346,2001,2001,7,,no,https://m.richgo.ai/realty/danji/a3IRtCY
@@ -1073,7 +1073,7 @@ e편한세상오산세교,오산시 지곶동,unmatched,firstpass,,,2050,,2018,,
 제일풍경채에듀,시흥시 장현동,verified,firstpass,,180,489,489,2020,2020,62,,no,https://m.richgo.ai/realty/danji/a1RGdtb
 포레미엘더파크,시흥시 장현동,verified,firstpass,,169,413,413,2022,2022,31,,no,https://m.richgo.ai/realty/danji/a1HJlqd
 건영1,시흥시 정왕동,unmatched,firstpass,130,,796,,1997,,,,no,
-건영2,시흥시 정왕동,unmatched,firstpass,171,,710,,1997,,,,no,
+건영2,시흥시 정왕동,verified_third_pass,thirdpass,171,171.0,710,710.0,1997,1997,85,,no,https://m.richgo.ai/realty/danji/a8sEvzA
 건영5,시흥시 정왕동,verified,firstpass,,109,340,340,2002,2002,19,,no,https://m.richgo.ai/realty/danji/a6KRpfJ
 계룡2,시흥시 정왕동,unmatched,firstpass,120,,641,,1998,,,,no,
 계룡리슈빌,시흥시 정왕동,unmatched,firstpass,120,,620,,1997,,,,no,
@@ -1093,17 +1093,17 @@ e편한세상오산세교,오산시 지곶동,unmatched,firstpass,,,2050,,2018,,
 삼성,시흥시 정왕동,unmatched,firstpass,165,,320,,1996,,,,no,
 삼환,시흥시 정왕동,unmatched,firstpass,120,,350,,1997,,,,no,
 서해1,시흥시 정왕동,verified,firstpass,119,140,530,530,1997,1997,73,,no,https://m.richgo.ai/realty/danji/a0eSdhu
-서해2,시흥시 정왕동,review_needed,firstpass,124,,570,,1998,,,second_pass_rejected_by_quality_gate,no,
+서해2,시흥시 정왕동,verified_third_pass,thirdpass,124,123.0,570,570.0,1998,1998,71,,no,https://m.richgo.ai/realty/danji/a3NELwA
 세종1,시흥시 정왕동,verified,firstpass,135,134,460,460,1996,1996,113,,no,https://m.richgo.ai/realty/danji/a8BhBUc
 세종2,시흥시 정왕동,verified,firstpass,129,129,330,330,1997,1997,11,,no,https://m.richgo.ai/realty/danji/a9zBklF
-시화MTV호반써밋더퍼스트오션,시흥시 정왕동,unmatched,firstpass,,,578,,2022,,,,no,
+시화MTV호반써밋더퍼스트오션,시흥시 정왕동,verified_third_pass,thirdpass,,199.0,578,578.0,2022,2023,8,,no,https://m.richgo.ai/realty/danji/a2iWaxW
 시화두산,시흥시 정왕동,verified,firstpass,114,144,930,930,1996,1996,7,,no,https://m.richgo.ai/realty/danji/a9ofBMw
 시흥금강펜테리움오션베이,시흥시 정왕동,verified,firstpass,,199,930,930,2023,2023,68,,no,https://m.richgo.ai/realty/danji/a2VMWzK
 신동아,시흥시 정왕동,unmatched,firstpass,116,,310,,1996,,,,no,
 신호새피앙,시흥시 정왕동,unmatched,firstpass,143,,330,,1997,,,,no,
 아주,시흥시 정왕동,unmatched,firstpass,291,,534,,1994,,,,no,
 영남1,시흥시 정왕동,unmatched,firstpass,124,,390,,1996,,,,no,
-영남2,시흥시 정왕동,unmatched,firstpass,132,,600,,1996,,,,no,
+영남2,시흥시 정왕동,verified_third_pass,thirdpass,132,132.0,600,600.0,1996,1996,56,,no,https://m.richgo.ai/realty/danji/a6xdOpL
 영남3,시흥시 정왕동,unmatched,firstpass,129,,520,,1996,,,,no,
 영남4,시흥시 정왕동,unmatched,firstpass,130,,330,,1996,,,,no,
 영남5,시흥시 정왕동,unmatched,firstpass,132,,330,,1996,,,,no,
@@ -1114,12 +1114,12 @@ e편한세상오산세교,오산시 지곶동,unmatched,firstpass,,,2050,,2018,,
 주공1,시흥시 정왕동,unmatched,firstpass,120,,690,,1997,,,,no,
 주공2,시흥시 정왕동,review_needed,firstpass,121,,683,,1997,,,second_pass_rejected_by_quality_gate,no,
 주공3,시흥시 정왕동,unmatched,firstpass,120,,630,,1997,,,,no,
-주공4,시흥시 정왕동,unmatched,firstpass,119,,613,,1998,,,,no,
+주공4,시흥시 정왕동,verified_third_pass,thirdpass,119,117.0,613,610.0,1998,1998,10,,no,https://m.richgo.ai/realty/danji/a1lzICY
 주공5,시흥시 정왕동,unmatched,firstpass,118,,690,,1998,,,,no,
-주공6,시흥시 정왕동,unmatched,firstpass,122,,490,,1998,,,,no,
+주공6,시흥시 정왕동,verified_third_pass,thirdpass,122,119.0,490,490.0,1998,1998,43,,no,https://m.richgo.ai/realty/danji/a8MjJqP
 진로,시흥시 정왕동,unmatched,firstpass,118,,350,,1997,,,,no,
 청솔아파트,시흥시 정왕동,unmatched,firstpass,108,,750,,1999,,,,no,
-파라곤센트럴오션시티,시흥시 정왕동,unmatched,firstpass,,,656,,2023,,,,no,
+파라곤센트럴오션시티,시흥시 정왕동,verified_third_pass,thirdpass,,199.0,656,656.0,2023,2023,55,,no,https://m.richgo.ai/realty/danji/a0wGFuM
 한신공영,시흥시 정왕동,unmatched,firstpass,126,,406,,1996,,,,no,
 한일,시흥시 정왕동,unmatched,firstpass,120,,580,,1996,,,,no,
 호반써밋더프라임,시흥시 정왕동,verified,firstpass,,199,826,826,2023,2023,17,,no,https://m.richgo.ai/realty/danji/a9qfhjf
@@ -1133,7 +1133,7 @@ e편한세상오산세교,오산시 지곶동,unmatched,firstpass,,,2050,,2018,,
 삼호가든아파트,시흥시 조남동,verified,firstpass,241,241,362,362,1997,1997,15,,no,https://m.richgo.ai/realty/danji/a6dnbSR
 신안인스빌,시흥시 조남동,verified,firstpass,,184,576,576,2017,2017,33,,no,https://m.richgo.ai/realty/danji/a9NfrQP
 포레하임,시흥시 조남동,verified,firstpass,,183,345,345,2016,2016,11,,no,https://m.richgo.ai/realty/danji/a7buLrW
-시흥6차푸르지오2단지,시흥시 죽율동,review_needed,firstpass,,,769,,2013,,,,no,
+시흥6차푸르지오2단지,시흥시 죽율동,verified_third_pass,thirdpass,,225.0,769,769.0,2013,2013,48,,no,https://m.richgo.ai/realty/danji/a0mgPkR
 태산아파트,시흥시 포동,verified,firstpass,249,317,954,954,1993,1993,14,,no,https://m.richgo.ai/realty/danji/a3omIGb
 연꽃마을금호,시흥시 하상동,unmatched,firstpass,248,,822,,1999,,,,no,
 연꽃마을대우삼호아파트,시흥시 하상동,verified,firstpass,250,249,1043,1044,1999,1999,53,,no,https://m.richgo.ai/realty/danji/a5RdBaU
@@ -1154,11 +1154,11 @@ e편한세상오산세교,오산시 지곶동,unmatched,firstpass,,,2050,,2018,,
 금호,광주시 고산동,verified,firstpass,,213,476,476,2002,2002,15,,no,https://m.richgo.ai/realty/danji/a8kthVp
 오포자이디오브(4단지),광주시 고산동,verified,firstpass,,244,448,448,2024,2024,14,,no,https://m.richgo.ai/realty/danji/a4WkHpw
 삼주노블리제,광주시 곤지암읍,verified,firstpass,,162,448,448,2005,2005,55,,no,https://m.richgo.ai/realty/danji/a5HaWgs
-쌍용1,광주시 곤지암읍,unmatched,firstpass,287,,440,,1998,,,,no,
+쌍용1,광주시 곤지암읍,verified_third_pass,thirdpass,287,287.0,440,440.0,1998,1998,10,,no,https://m.richgo.ai/realty/danji/a1uZGrU
 곤지암킴스빌리지,광주시 곤지암읍,verified,firstpass,220,219,1152,1152,2001,2001,3,,no,https://m.richgo.ai/realty/danji/a6KrIlX
 현진에버빌,광주시 곤지암읍,verified,firstpass,,255,504,504,2003,2003,53,,no,https://m.richgo.ai/realty/danji/a6exCYC
 오포베르빌,광주시 능평동,verified,firstpass,199,199,436,436,2001,2001,58,,no,https://m.richgo.ai/realty/danji/a2enayu
-광주근형심포니,광주시 도척면,unmatched,firstpass,,,384,,2005,,,,no,
+광주근형심포니,광주시 도척면,verified_third_pass,thirdpass,,168.0,384,384.0,2005,2005,22,,no,https://m.richgo.ai/realty/danji/a1bmmqK
 오포대성,광주시 매산동,unmatched,firstpass,185,,466,,2000,,,,no,
 오포문형양우내안애,광주시 문형동,verified,firstpass,,193,1028,1028,2018,2018,103,,no,https://m.richgo.ai/realty/danji/a4JdYOm
 오포우림퓨전빌,광주시 문형동,unmatched,firstpass,,,498,,2002,,,,no,
@@ -1172,7 +1172,7 @@ e편한세상오산세교,오산시 지곶동,unmatched,firstpass,,,2050,,2018,,
 동성1,광주시 쌍령동,verified,firstpass,232,229,495,495,2001,2001,18,,no,https://m.richgo.ai/realty/danji/a6uMgNb
 동성2,광주시 쌍령동,verified,firstpass,,,440,440,2002,2002,27,,no,https://m.richgo.ai/realty/danji/a4lsEwn
 쌍령현대1차모닝사이드,광주시 쌍령동,unmatched,firstpass,226,,470,,2000,,,,no,
-현대모닝사이드2,광주시 쌍령동,unmatched,firstpass,,,513,,2003,,,,no,
+현대모닝사이드2,광주시 쌍령동,verified_third_pass,thirdpass,,196.0,513,513.0,2003,2003,49,,no,https://m.richgo.ai/realty/danji/a6zvnFL
 e편한세상 광주양벌,광주시 양벌동,verified,firstpass,,184,388,388,2018,2018,33,,no,https://m.richgo.ai/realty/danji/a1WrXIA
 광주역우방아이유쉘1단지,광주시 양벌동,verified,firstpass,,138,352,352,2018,2018,22,,no,https://m.richgo.ai/realty/danji/a4cHoui
 광주역우방아이유쉘2단지,광주시 양벌동,verified,firstpass,,159,446,446,2018,2018,20,,no,https://m.richgo.ai/realty/danji/a5EAoTk
@@ -1190,7 +1190,7 @@ e편한세상 광주양벌,광주시 양벌동,verified,firstpass,,184,388,388,2
 대주피오레,광주시 초월읍,unmatched,firstpass,,,434,,2007,,,,no,
 도평리1차우림퓨전빌,광주시 초월읍,unmatched,firstpass,,,477,,2002,,,,no,
 신일해피트리,광주시 초월읍,unmatched,firstpass,188,,358,,2000,,,,no,
-대주파크빌,광주시 초월읍,unmatched,firstpass,,,505,,2004,,,,no,
+대주파크빌,광주시 초월읍,verified_third_pass,thirdpass,,184.0,505,505.0,2004,2004,34,,no,https://m.richgo.ai/realty/danji/a9lYFgc
 벽산블루밍,광주시 초월읍,verified,firstpass,,202,516,516,2004,2004,64,,no,https://m.richgo.ai/realty/danji/a2nHdvd
 코아루햇빛마을,광주시 초월읍,unmatched,firstpass,243,,363,,2000,,,,no,
 광주초월동광모닝스카이,광주시 초월읍,review_needed,firstpass,,,378,,2005,,,,no,
@@ -1279,7 +1279,7 @@ e편한세상검단어반센트로,인천 검단구 당하동,verified,firstpass
 유원하나,서울 서대문구 홍제동,verified,firstpass,250,249,704,704,1996,1996,18,,no,https://m.richgo.ai/realty/danji/a8pjciJ
 국제산장,서울 관악구 신림동,unmatched,firstpass,239,,630,,1993,,,,no,
 신림동쌍용아파트,서울 관악구 신림동,verified,firstpass,329,328,373,373,1998,1998,16,,no,https://m.richgo.ai/realty/danji/a9hMtcp
-현대,서울 관악구 신림동,unmatched,firstpass,234,,336,,1991,,,,no,
+현대,서울 관악구 신림동,verified_third_pass,thirdpass,234,269.0,336,336.0,1991,1991,50,,no,https://m.richgo.ai/realty/danji/a0TRzfF
 건영,인천 연수구 동춘동,verified,firstpass,111,111,970,970,1994,1994,59,,no,https://m.richgo.ai/realty/danji/a3xdOWY
 대동,인천 연수구 동춘동,verified,firstpass,110,111,336,336,1994,1994,37,,no,https://m.richgo.ai/realty/danji/a1Nilfh
 대림,인천 연수구 동춘동,verified_shared_scope_review,firstpass,123,122,700,700,1993,1993,96,,yes,https://m.richgo.ai/realty/danji/a9AavIG
@@ -1332,10 +1332,10 @@ e편한세상검단어반센트로,인천 검단구 당하동,verified,firstpass
 서해,인천 연수구 옥련동,verified,firstpass,313,312,600,600,1995,1995,20,,no,https://m.richgo.ai/realty/danji/a2laXJm
 쌍용,인천 연수구 옥련동,verified,firstpass,363,363,574,574,1998,1998,75,,no,https://m.richgo.ai/realty/danji/a3ohLPh
 아주1,인천 연수구 옥련동,verified,firstpass,279,279,396,384,1997,1997,82,,no,https://m.richgo.ai/realty/danji/a2PRKkR
-우성,인천 연수구 옥련동,unmatched,firstpass,269,,498,,1996,,,,no,
+우성,인천 연수구 옥련동,verified_third_pass,thirdpass,269,269.0,498,498.0,1996,1996,68,,no,https://m.richgo.ai/realty/danji/a7wVXhI
 원흥,인천 연수구 옥련동,unmatched,firstpass,285,,359,,1994,,,,no,
 풍림,인천 연수구 옥련동,verified,firstpass,268,267,386,386,1998,1998,54,,no,https://m.richgo.ai/realty/danji/a7jGspS
-한국,인천 연수구 옥련동,unmatched,firstpass,302,,481,,1997,,,,no,
+한국,인천 연수구 옥련동,verified_third_pass,thirdpass,302,301.0,481,481.0,1997,1997,22,,no,https://m.richgo.ai/realty/danji/a0DpkGH
 현대1,인천 연수구 옥련동,unmatched,firstpass,209,,674,,1994,,,,no,
 현대2차아파트,인천 연수구 옥련동,verified,firstpass,322,322,1180,1180,1995,1995,46,,no,https://m.richgo.ai/realty/danji/a2UYvMw
 현대3,인천 연수구 옥련동,verified,firstpass,267,332,368,368,1996,1996,22,,no,https://m.richgo.ai/realty/danji/a8bmcls
@@ -1381,7 +1381,7 @@ e편한세상부평역어반루체,인천 부평구 부개동,verified,firstpass
 부평LH2단지,인천 부평구 부평동,unmatched,firstpass,,,704,,2012,,,,no,
 부평역한라비발디트레비앙,인천 부평구 부평동,verified,firstpass,,310,385,385,2023,2022,8,,no,https://m.richgo.ai/realty/danji/a1IvQWP
 부평역화성파크드림,인천 부평구 부평동,verified,firstpass,,293,541,541,2020,2020,22,,no,https://m.richgo.ai/realty/danji/a7cEXOA
-욱일,인천 부평구 부평동,unmatched,firstpass,271,,793,,1990,,,,no,
+욱일,인천 부평구 부평동,verified_third_pass,thirdpass,271,326.0,793,780.0,1990,1990,93,,no,https://m.richgo.ai/realty/danji/a4ZCJJc
 인천부평우미린더센트럴,인천 부평구 부평동,verified,firstpass,,435,438,438,2023,2023,7,,no,https://m.richgo.ai/realty/danji/a0wvCCa
 중앙하이츠프리미어부평,인천 부평구 부평동,verified,firstpass,,249,413,413,2023,2022,45,,no,https://m.richgo.ai/realty/danji/a4eACsb
 경남1차,인천 부평구 산곡동,verified,firstpass,271,170,810,810,1990,1990,10,,no,https://m.richgo.ai/realty/danji/a1nUzhM
@@ -1409,7 +1409,7 @@ e편한세상부평역어반루체,인천 부평구 부개동,verified,firstpass
 현대1차,인천 부평구 산곡동,verified,firstpass,202,182,2204,2204,1985,1985,121,,no,https://m.richgo.ai/realty/danji/a2xfEwT
 현대2차,인천 부평구 산곡동,verified,firstpass,271,157,1497,1496,1987,1987,81,,no,https://m.richgo.ai/realty/danji/a1RIAOl
 현대3차,인천 부평구 산곡동,verified,firstpass,312,203,1200,1200,1989,1989,152,,no,https://m.richgo.ai/realty/danji/a5hrPtD
-광명12차,인천 부평구 삼산동,unmatched,firstpass,225,,456,,1990,,,,no,
+광명12차,인천 부평구 삼산동,verified_third_pass,thirdpass,225,190.0,456,456.0,1990,1990,11,,no,https://m.richgo.ai/realty/danji/a8oZxdf
 부평삼산신원아침도시,인천 부평구 삼산동,verified,firstpass,,297,346,346,2023,2022,9,,no,https://m.richgo.ai/realty/danji/a9StEtK
 부평삼산엠코타운,인천 부평구 삼산동,verified,firstpass,,226,708,708,2007,2007,21,,no,https://m.richgo.ai/realty/danji/a4Kpxdx
 삼보,인천 부평구 삼산동,unmatched,firstpass,239,,481,,1990,,,,no,
@@ -1420,7 +1420,7 @@ e편한세상부평역어반루체,인천 부평구 부개동,verified,firstpass
 삼산주공미래타운4차,인천 부평구 삼산동,verified,firstpass,231,231,968,968,2000,2000,40,,no,https://m.richgo.ai/realty/danji/a9wvscO
 삼산주공미래타운5차,인천 부평구 삼산동,verified,firstpass,231,,620,620,2000,2000,25,,no,https://m.richgo.ai/realty/danji/a6eCufw
 임광그대가,인천 부평구 삼산동,verified,firstpass,,242,393,393,2008,2008,68,,no,https://m.richgo.ai/realty/danji/a0uoJzg
-현대,인천 부평구 삼산동,unmatched,firstpass,329,,330,,1995,,,,no,
+현대,인천 부평구 삼산동,verified_third_pass,thirdpass,329,328.0,330,330.0,1995,1995,11,,no,https://m.richgo.ai/realty/danji/a4MRFAk
 대주파크빌,인천 부평구 십정동,verified,firstpass,490,486,312,312,2001,2001,21,,no,https://m.richgo.ai/realty/danji/a4NFnip
 동암신동아,인천 부평구 십정동,verified,firstpass,363,316,1691,1690,2000,2000,14,,no,https://m.richgo.ai/realty/danji/a6glSAE
 서희스타힐스부평센트럴,인천 부평구 십정동,verified,firstpass,,249,571,571,2021,2021,15,,no,https://m.richgo.ai/realty/danji/a4RkXUR
@@ -1431,7 +1431,7 @@ e편한세상부평역어반루체,인천 부평구 부개동,verified,firstpass
 대진,인천 부평구 청천동,verified,firstpass,217,152,340,340,1985,1985,32,,no,https://m.richgo.ai/realty/danji/a1AfMMj
 미도7,인천 부평구 청천동,unmatched,firstpass,271,,384,,1989,,,,no,
 "부평1,2차금호타운",인천 부평구 청천동,verified,firstpass,283,282,2539,2539,1998,1998,64,,no,https://m.richgo.ai/realty/danji/a9TQrXN
-삼익,인천 부평구 청천동,unmatched,firstpass,274,,375,,1986,,,,no,
+삼익,인천 부평구 청천동,verified_third_pass,thirdpass,274,197.0,375,375.0,1986,1986,7,,no,https://m.richgo.ai/realty/danji/a7ZkOUc
 쌍용,인천 부평구 청천동,verified,firstpass,271,239,510,510,1990,1990,22,,no,https://m.richgo.ai/realty/danji/a7QjjUb
 청천우민늘푸른아파트,인천 부평구 청천동,verified,firstpass,,266,341,341,2020,2020,19,,no,https://m.richgo.ai/realty/danji/a2hBmhK
 청천푸르지오,인천 부평구 청천동,verified,firstpass,281,281,2257,2257,1998,1998,60,,no,https://m.richgo.ai/realty/danji/a6ArTny
@@ -1485,18 +1485,18 @@ SKVIEW,의정부시 가능동,verified,firstpass,,299,1019,1019,2007,2007,66,,no
 휴먼시아(4단지),의정부시 녹양동,verified,firstpass,,156,332,332,2008,2008,21,,no,https://m.richgo.ai/realty/danji/a2EysSn
 민락2지구18단지호반베르디움,의정부시 민락동,verified,firstpass,,199,463,463,2017,2017,62,,no,https://m.richgo.ai/realty/danji/a9aWWKC
 민락e-편한세상,의정부시 민락동,verified,firstpass,,227,474,474,2006,2006,59,,no,https://m.richgo.ai/realty/danji/a6gGZgU
-민락센트럴15단지,의정부시 민락동,unmatched,firstpass,,,530,,2013,,,,no,
-민락센트럴17단지,의정부시 민락동,unmatched,firstpass,,,312,,2013,,,,no,
+민락센트럴15단지,의정부시 민락동,verified_third_pass,thirdpass,,190.0,530,530.0,2013,2013,18,,no,https://m.richgo.ai/realty/danji/a9IjVTb
+민락센트럴17단지,의정부시 민락동,verified_third_pass,thirdpass,,179.0,312,312.0,2013,2013,17,,no,https://m.richgo.ai/realty/danji/a6rfLxC
 민락엘레트,의정부시 민락동,verified,firstpass,,216,1540,1540,2017,2017,35,,no,https://m.richgo.ai/realty/danji/a9hrfOb
 민락주공2단지,의정부시 민락동,review_needed,firstpass,216,,860,,1999,,,second_pass_rejected_by_quality_gate,no,
 산들마을(길훈),의정부시 민락동,verified_shared_scope_review,firstpass,218,218,1830,1830,2000,1999,22,,yes,https://m.richgo.ai/realty/danji/a0VVhcp
-산들마을(서광),의정부시 민락동,unmatched,firstpass,219,,838,,1999,,,,no,
+산들마을(서광),의정부시 민락동,verified_third_pass,thirdpass,219,219.0,838,838.0,1999,1999,71,,no,https://m.richgo.ai/realty/danji/a4xIGvN
 산들마을(신안),의정부시 민락동,verified_shared_scope_review,firstpass,218,218,1830,1830,1999,1999,22,,yes,https://m.richgo.ai/realty/danji/a0VVhcp
-산들마을(청구),의정부시 민락동,unmatched,firstpass,219,,838,,2001,,,,no,
+산들마을(청구),의정부시 민락동,verified_third_pass,thirdpass,219,219.0,838,838.0,2001,1999,71,,no,https://m.richgo.ai/realty/danji/a4xIGvN
 산들마을(현대),의정부시 민락동,verified_shared_scope_review,firstpass,218,218,1830,1830,1999,1999,22,,yes,https://m.richgo.ai/realty/danji/a0VVhcp
-산들마을4단지아이파크,의정부시 민락동,unmatched,firstpass,205,,928,,1999,,,,no,
+산들마을4단지아이파크,의정부시 민락동,verified_third_pass,thirdpass,205,205.0,928,928.0,1999,1999,16,,no,https://m.richgo.ai/realty/danji/a5CpWHU
 송산대우푸르지오,의정부시 민락동,verified,firstpass,,221,706,706,2005,2005,18,,no,https://m.richgo.ai/realty/danji/a7CHLyD
-송산리버빌아파트,의정부시 민락동,unmatched,firstpass,206,,320,,2000,,,,no,
+송산리버빌아파트,의정부시 민락동,verified_third_pass,thirdpass,206,206.0,320,320.0,2000,2000,38,,no,https://m.richgo.ai/realty/danji/a4hXIkW
 송산센트럴아파트,의정부시 민락동,unmatched,firstpass,,,442,,2002,,,,no,
 송산팰리스,의정부시 민락동,verified,firstpass,,209,835,835,2002,2002,45,,no,https://m.richgo.ai/realty/danji/a3yDCFr
 청구1차,의정부시 민락동,verified,firstpass,267,267,868,868,2000,2000,34,,no,https://m.richgo.ai/realty/danji/a9IOjLK
@@ -1515,13 +1515,13 @@ SKVIEW,의정부시 가능동,verified,firstpass,,299,1019,1019,2007,2007,66,,no
 삼도세라믹,의정부시 신곡동,verified,firstpass,227,263,480,480,1993,1993,12,,no,https://m.richgo.ai/realty/danji/a4DAJcc
 삼성래미안진흥,의정부시 신곡동,verified,firstpass,,227,832,832,2002,2002,58,,no,https://m.richgo.ai/realty/danji/a5UByxa
 삼익,의정부시 신곡동,unmatched,firstpass,228,,772,,1998,,,,no,
-삼환,의정부시 신곡동,unmatched,firstpass,245,,300,,1994,,,,no,
+삼환,의정부시 신곡동,verified_third_pass,thirdpass,245,198.0,300,300.0,1994,1994,11,,no,https://m.richgo.ai/realty/danji/a0pnQNN
 상록아이파크,의정부시 신곡동,unmatched,firstpass,,,662,,2003,,,,no,
 성원,의정부시 신곡동,unmatched,firstpass,274,,527,,1993,,,,no,
-성원2,의정부시 신곡동,unmatched,firstpass,448,,381,,1998,,,,no,
+성원2,의정부시 신곡동,verified_third_pass,thirdpass,448,447.0,381,377.0,1998,1998,58,,no,https://m.richgo.ai/realty/danji/a9uXUGP
 신곡건영,의정부시 신곡동,review_needed,firstpass,350,,832,,1999,,,,no,
 신곡동신,의정부시 신곡동,unmatched,firstpass,215,,462,,1993,,,,no,
-신곡서해,의정부시 신곡동,review_needed,firstpass,363,,1555,,1998,,,second_pass_rejected_by_quality_gate,no,
+신곡서해,의정부시 신곡동,verified_third_pass,thirdpass,363,362,1555,1483,1998,1998,139,,no,https://m.richgo.ai/realty/danji/a3AbJoT
 신곡주공4,의정부시 신곡동,verified,firstpass,247,246,957,957,2001,2001,48,,no,https://m.richgo.ai/realty/danji/a4uxFdz
 신곡현대,의정부시 신곡동,unmatched,firstpass,245,,415,,1990,,,,no,
 신동아파밀리에,의정부시 신곡동,verified,firstpass,,283,547,547,2004,2004,62,,no,https://m.richgo.ai/realty/danji/a2yWKfF
@@ -1545,15 +1545,15 @@ SKVIEW,의정부시 가능동,verified,firstpass,,299,1019,1019,2007,2007,66,,no
 용현현대1차,의정부시 용현동,verified,firstpass,274,274,986,986,1992,1992,37,,no,https://m.richgo.ai/realty/danji/a0iwqkF
 용현현대2차,의정부시 용현동,verified,firstpass,275,274,388,388,1996,1996,20,,no,https://m.richgo.ai/realty/danji/a3WziIz
 힐스테이트탑석,의정부시 용현동,verified,firstpass,,294,636,636,2025,2025,60,,no,https://m.richgo.ai/realty/danji/a7nUGXi
-동화,의정부시 의정부동,unmatched,firstpass,371,,414,,1995,,,,no,
-의정부롯데캐슬골드파크2단지,의정부시 의정부동,identity_review_required,firstpass,,225,931,919,2018,2018,241,different_block_number,no,https://m.richgo.ai/realty/danji/a4ejUWr
+동화,의정부시 의정부동,verified_third_pass,thirdpass,371,391.0,414,414.0,1995,1995,6,,no,https://m.richgo.ai/realty/danji/a1ixiNs
+의정부롯데캐슬골드파크2단지,의정부시 의정부동,verified_third_pass,thirdpass,,239.0,931,931.0,2018,2018,7,,no,https://m.richgo.ai/realty/danji/a3jXtQS
 의정부역스카이자이,의정부시 의정부동,verified,firstpass,,1184,393,393,2024,2024,7,,no,https://m.richgo.ai/realty/danji/a8iITxb
 동아,의정부시 장암동,verified,firstpass,275,275,1488,1488,1997,1997,59,,no,https://m.richgo.ai/realty/danji/a5ojIkt
 수락리버시티2단지,의정부시 장암동,verified,firstpass,,166,473,473,2009,2009,12,,no,https://m.richgo.ai/realty/danji/a2Fzyav
-신곡우성,의정부시 장암동,unmatched,firstpass,202,,510,,1992,,,,no,
+신곡우성,의정부시 장암동,verified_third_pass,thirdpass,202,202.0,510,510.0,1992,1992,86,,no,https://m.richgo.ai/realty/danji/a1MvXrj
 장암1차푸르지오,의정부시 장암동,verified,firstpass,,246,494,494,2004,2004,37,,no,https://m.richgo.ai/realty/danji/a0aTwTx
 장암주공2,의정부시 장암동,verified,firstpass,216,114,1661,1661,1993,1993,52,,no,https://m.richgo.ai/realty/danji/a5dovwK
-장암주공7,의정부시 장암동,unmatched,firstpass,212,,749,,1998,,,,no,
+장암주공7,의정부시 장암동,verified_third_pass,thirdpass,212,211.0,749,749.0,1998,1998,4,,no,https://m.richgo.ai/realty/danji/a7lxRIZ
 I-PARK,의정부시 호원동,unmatched,firstpass,,,700,,2003,,,,no,
 건영,의정부시 호원동,verified,firstpass,216,215,901,900,1992,1992,15,,no,https://m.richgo.ai/realty/danji/a5rddfH
 뉴삼익호원2,의정부시 호원동,unmatched,firstpass,299,,624,,1997,,,,no,
@@ -1574,7 +1574,7 @@ I-PARK,의정부시 호원동,unmatched,firstpass,,,700,,2003,,,,no,
 한주1,의정부시 호원동,verified,firstpass,336,335,609,609,1994,1994,72,,no,https://m.richgo.ai/realty/danji/a2rXbVv
 호원가든1,의정부시 호원동,verified,firstpass,311,311,806,806,1997,1997,23,,no,https://m.richgo.ai/realty/danji/a6rzjtW
 호원동한승미메이드,의정부시 호원동,verified,firstpass,,270,467,448,2006,2006,8,,no,https://m.richgo.ai/realty/danji/a9MDsWp
-호원두산,의정부시 호원동,unmatched,firstpass,398,,436,,1997,,,,no,
+호원두산,의정부시 호원동,verified_third_pass,thirdpass,398,399.0,436,430.0,1997,1997,23,,no,https://m.richgo.ai/realty/danji/a9Hakwf
 회룡역풍림아이원,의정부시 호원동,verified,firstpass,,277,397,397,2007,2007,59,,no,https://m.richgo.ai/realty/danji/a6ayHgB
 삼익3차,부천 소사구 괴안동,verified,firstpass,194,193,682,682,1990,1990,75,,no,https://m.richgo.ai/realty/danji/a8yjZoO
 삼익세라믹,부천 소사구 괴안동,verified,firstpass,185,181,781,781,1988,1988,99,,no,https://m.richgo.ai/realty/danji/a0tJDYI
@@ -1737,7 +1737,7 @@ e편한세상부천심곡,부천 소사구 심곡본동,verified,firstpass,,248,
 만수주공2단지,인천 남동구 만수동,verified,firstpass,165,,2436,1920,1987,1987,56,,no,https://m.richgo.ai/realty/danji/a4UeLwG
 만수주공3단지,인천 남동구 만수동,verified,firstpass,165,78,510,510,1986,1986,53,,no,https://m.richgo.ai/realty/danji/a4fJKOj
 만수주공4단지,인천 남동구 만수동,verified,firstpass,184,163,2220,2220,1987,1987,39,,no,https://m.richgo.ai/realty/danji/a0Ckfvy
-만수주공5단지,인천 남동구 만수동,identity_review_required,firstpass,135,,900,800,1987,1986,121,different_block_number,no,https://m.richgo.ai/realty/danji/a6NkkYW
+만수주공5단지,인천 남동구 만수동,verified_third_pass,thirdpass,135,135.0,900,900.0,1987,1987,21,,no,https://m.richgo.ai/realty/danji/a0suKVR
 만수주공6단지,인천 남동구 만수동,verified_shared_scope_review,firstpass,165,,800,800,1986,1986,98,,no,https://m.richgo.ai/realty/danji/a6NkkYW
 벽산,인천 남동구 만수동,verified,firstpass,343,343,2073,2073,2000,2000,22,,no,https://m.richgo.ai/realty/danji/a5arqaE
 삼환1단지,인천 남동구 만수동,verified,firstpass,251,191,660,660,1989,1989,34,,no,https://m.richgo.ai/realty/danji/a0uksiW
@@ -1972,7 +1972,7 @@ SKVIEW,고양 일산동구 식사동,unmatched,firstpass,,,539,,2003,,,,no,
 호수마을e편한세상아파트,김포시 구래동,verified,firstpass,,199,1167,1167,2013,2013,27,,no,https://m.richgo.ai/realty/danji/a5frgSO
 호수마을이편한세상,김포시 구래동,verified,firstpass,,199,559,559,2014,2014,23,,no,https://m.richgo.ai/realty/danji/a6jtGps
 e편한세상한강신도시2차,김포시 마산동,verified,firstpass,,208,807,807,2018,2018,18,,no,https://m.richgo.ai/realty/danji/a3CNonS
-은여울마을경남아너스빌,김포시 마산동,unmatched,firstpass,,,976,,2013,,,,no,
+은여울마을경남아너스빌,김포시 마산동,verified_third_pass,thirdpass,,193.0,976,976.0,2013,2013,39,,no,https://m.richgo.ai/realty/danji/a0tMirm
 한강동일스위트TheParkView1단지,김포시 마산동,verified,firstpass,,190,1021,1021,2020,2020,65,,no,https://m.richgo.ai/realty/danji/a1vLoGm
 한강동일스위트TheParkView2단지,김포시 마산동,verified,firstpass,,188,711,711,2020,2020,17,,no,https://m.richgo.ai/realty/danji/a3iGwLK
 한강신도시레이크에일린의뜰,김포시 마산동,verified,firstpass,,120,578,578,2017,2017,15,,no,https://m.richgo.ai/realty/danji/a2HXaBw
@@ -2033,7 +2033,7 @@ e편한세상김포어반베뉴,김포시 통진읍,verified,firstpass,,199,544,
 당곡마을(범양),김포시 풍무동,unmatched,firstpass,203,,562,,1998,,,,no,
 당곡마을(월드메르디앙),김포시 풍무동,verified,firstpass,,227,1847,1846,2002,2002,54,,no,https://m.richgo.ai/realty/danji/a3baDor
 당곡마을(현대),김포시 풍무동,unmatched,firstpass,237,,603,,2001,,,,no,
-대림e-편한세상,김포시 풍무동,unmatched,firstpass,,,575,,2003,,,,no,
+대림e-편한세상,김포시 풍무동,verified_third_pass,thirdpass,,198.0,575,575.0,2003,2003,17,,no,https://m.richgo.ai/realty/danji/a8QFMUm
 삼용,김포시 풍무동,verified,firstpass,303,302,377,376,1997,1997,27,,no,https://m.richgo.ai/realty/danji/a6jcGlU
 신안,김포시 풍무동,verified,firstpass,243,243,792,792,1997,1997,9,,no,https://m.richgo.ai/realty/danji/a8DnLKR
 양도마을(서해그랑블),김포시 풍무동,verified,firstpass,246,245,1206,1265,2000,2000,85,,no,https://m.richgo.ai/realty/danji/a2JwvlM
@@ -2373,17 +2373,17 @@ Y CITY(와이시티),수원 권선구 금곡동,verified,firstpass,,187,660,660,
 해솔마을5단지삼부르네상스(679),파주시 목동동,verified,firstpass,,204,1390,1390,2010,2010,76,,no,https://m.richgo.ai/realty/danji/a7evgzL
 숲속길마을동문굿모닝힐(560),파주시 문발동,verified,firstpass,,159,382,382,2005,2005,18,,no,https://m.richgo.ai/realty/danji/a2rKZGJ
 당동주공2단지,파주시 문산읍,verified,firstpass,,184,415,415,2002,2002,84,,no,https://m.richgo.ai/realty/danji/a8QDusx
-자연앤꿈에그린5단지아파트,파주시 문산읍,unmatched,firstpass,,,411,,2010,,,,no,
+자연앤꿈에그린5단지아파트,파주시 문산읍,verified_third_pass,thirdpass,,199.0,411,411.0,2010,2010,46,,no,https://m.richgo.ai/realty/danji/a0wScpt
 자연앤꿈에그린6단지아파트,파주시 문산읍,unmatched,firstpass,,,320,,2010,,,,no,
 파주한양수자인리버팰리스아파트,파주시 문산읍,verified,firstpass,,198,1006,1006,2015,2015,11,,no,https://m.richgo.ai/realty/danji/a3RhQNX
-파주힐스테이트1차,파주시 문산읍,unmatched,firstpass,,,631,,2009,,,,no,
+파주힐스테이트1차,파주시 문산읍,verified_third_pass,thirdpass,,226.0,631,631.0,2009,2009,114,,no,https://m.richgo.ai/realty/danji/a1SkJsY
 파주힐스테이트2차,파주시 문산읍,unmatched,firstpass,,,454,,2010,,,,no,
 문산주공,파주시 문산읍,verified,firstpass,165,,300,300,1980,1980,5,,no,https://m.richgo.ai/realty/danji/a9NyOYx
 신원아침도시,파주시 문산읍,unmatched,firstpass,,,638,,2006,,,,no,
 일신건영휴먼빌,파주시 문산읍,verified,firstpass,,288,610,610,2006,2006,29,,no,https://m.richgo.ai/realty/danji/a7SKvsd
 장안8차,파주시 문산읍,unmatched,firstpass,,,368,,2003,,,,no,
 경남아너스빌(문산선유4단지),파주시 문산읍,unmatched,firstpass,,,343,,2011,,,,no,
-두산위브,파주시 문산읍,unmatched,firstpass,,,504,,2006,,,,no,
+두산위브,파주시 문산읍,verified_third_pass,thirdpass,,257.0,504,504.0,2006,2006,54,,no,https://m.richgo.ai/realty/danji/a7aZDmA
 선유주공,파주시 문산읍,review_needed,firstpass,165,,300,,1991,,,,no,
 파주문산역1차동문굿모닝힐,파주시 문산읍,verified,firstpass,,198,409,409,2020,2020,58,,no,https://m.richgo.ai/realty/danji/a8wdoSd
 파주문산역2차동문디이스트,파주시 문산읍,verified,firstpass,,202,1503,1503,2024,2024,206,,no,https://m.richgo.ai/realty/danji/a2UGtLp
