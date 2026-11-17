@@ -1,0 +1,3250 @@
+{
+  "targets": 300,
+  "confirmed": 229,
+  "ambiguous": 63,
+  "unavailable": 8,
+  "noFar": 1,
+  "changed": {
+    "far": 208,
+    "units": 14,
+    "year": 18
+  },
+  "hubRequests": 580,
+  "requestFailures": 0,
+  "districts": 30,
+  "unresolved": [
+    {
+      "seq": "1",
+      "name": "수서",
+      "area": "서울 강남구 일원동",
+      "candidates": [
+        {
+          "id": "a0TxnAu",
+          "name": "수서1-2단지",
+          "dong": "일원동",
+          "units": 720,
+          "district": "서울|강남구",
+          "from": "/realty/apt-hub/%EC%84%9C%EC%9A%B8/%EA%B0%95%EB%82%A8%EA%B5%AC/10%EC%96%B5-20%EC%96%B5",
+          "score": 73
+        },
+        {
+          "id": "a8vtprp",
+          "name": "상록수",
+          "dong": "일원동",
+          "units": 740,
+          "district": "서울|강남구",
+          "from": "/realty/apt-hub/%EC%84%9C%EC%9A%B8/%EA%B0%95%EB%82%A8%EA%B5%AC/20%ED%8F%89%EB%8C%80",
+          "score": 37
+        },
+        {
+          "id": "a6EeqiH",
+          "name": "우성7차",
+          "dong": "일원동",
+          "units": 802,
+          "district": "서울|강남구",
+          "from": "/realty/apt-hub/%EC%84%9C%EC%9A%B8/%EA%B0%95%EB%82%A8%EA%B5%AC/30%ED%8F%89%EB%8C%80",
+          "score": 25
+        }
+      ],
+      "richgo": {
+        "name": "수서1-2단지",
+        "far": 177,
+        "year": 1992,
+        "units": 720,
+        "floors": "12~15층",
+        "coverage": 16,
+        "parking": 529,
+        "heating": "지역난방 · 열병합",
+        "builder": "(주)신한",
+        "pyeongs": "17|21|22|25|26"
+      },
+      "reason": "confidence=73 margin=36 yearDiff=0 unitRatio=0.000 duplicate=0"
+    },
+    {
+      "seq": "5",
+      "name": "삼익대청아파트",
+      "area": "서울 강남구 개포동",
+      "candidates": [
+        {
+          "id": "a3sIwKk",
+          "name": "대청",
+          "dong": "개포동",
+          "units": 822,
+          "district": "서울|강남구",
+          "from": "/realty/apt-hub/%EC%84%9C%EC%9A%B8/%EA%B0%95%EB%82%A8%EA%B5%AC/10%EC%96%B5-20%EC%96%B5",
+          "score": 73
+        },
+        {
+          "id": "a3Lrpvf",
+          "name": "개포자이프레지던스",
+          "dong": "개포동",
+          "units": 3375,
+          "district": "서울|강남구",
+          "from": "/realty/apt-hub/%EC%84%9C%EC%9A%B8/%EA%B0%95%EB%82%A8%EA%B5%AC",
+          "score": 25
+        },
+        {
+          "id": "a7iKaSO",
+          "name": "개포주공5단지",
+          "dong": "개포동",
+          "units": 940,
+          "district": "서울|강남구",
+          "from": "/realty/apt-hub/%EC%84%9C%EC%9A%B8/%EA%B0%95%EB%82%A8%EA%B5%AC",
+          "score": 25
+        }
+      ],
+      "richgo": {
+        "name": "대청",
+        "far": 201,
+        "year": 1992,
+        "units": 822,
+        "floors": "13~15층",
+        "coverage": 15,
+        "parking": 700,
+        "heating": "지역난방 · 열병합",
+        "builder": "삼익건설(주)",
+        "pyeongs": "17|21|24"
+      },
+      "reason": "confidence=73 margin=48 yearDiff=0 unitRatio=0.000 duplicate=0"
+    },
+    {
+      "seq": "6",
+      "name": "성원대치2단지아파트",
+      "area": "서울 강남구 개포동",
+      "candidates": [
+        {
+          "id": "a6exFge",
+          "name": "대치2단지",
+          "dong": "개포동",
+          "units": 1758,
+          "district": "서울|강남구",
+          "from": "/realty/apt-hub/%EC%84%9C%EC%9A%B8/%EA%B0%95%EB%82%A8%EA%B5%AC/10%EC%96%B5-20%EC%96%B5",
+          "score": 78
+        },
+        {
+          "id": "a3Lrpvf",
+          "name": "개포자이프레지던스",
+          "dong": "개포동",
+          "units": 3375,
+          "district": "서울|강남구",
+          "from": "/realty/apt-hub/%EC%84%9C%EC%9A%B8/%EA%B0%95%EB%82%A8%EA%B5%AC",
+          "score": 25
+        },
+        {
+          "id": "a6BQIqD",
+          "name": "래미안블레스티지",
+          "dong": "개포동",
+          "units": 1957,
+          "district": "서울|강남구",
+          "from": "/realty/apt-hub/%EC%84%9C%EC%9A%B8/%EA%B0%95%EB%82%A8%EA%B5%AC/%EB%8C%80%EB%8B%A8%EC%A7%80",
+          "score": 25
+        }
+      ],
+      "richgo": {
+        "name": "대치2단지",
+        "far": 174,
+        "year": 1992,
+        "units": 1758,
+        "floors": "15~15층",
+        "coverage": 12,
+        "parking": 1758,
+        "heating": "지역난방 · 열병합",
+        "builder": "진덕산업(주),성원건설(주)",
+        "pyeongs": "14|17|21"
+      },
+      "reason": "confidence=78 margin=53 yearDiff=0 unitRatio=0.003 duplicate=0"
+    },
+    {
+      "seq": "7",
+      "name": "대림e-편한세상",
+      "area": "서울 성동구 행당동",
+      "candidates": [
+        {
+          "id": "a1CMtOn",
+          "name": "행당대림",
+          "dong": "행당동",
+          "units": 3404,
+          "district": "서울|성동구",
+          "from": "/realty/apt-hub/%EC%84%9C%EC%9A%B8/%EC%84%B1%EB%8F%99%EA%B5%AC/10%EC%96%B5-20%EC%96%B5",
+          "score": 37
+        },
+        {
+          "id": "a1lbFCs",
+          "name": "서울숲한신더휴",
+          "dong": "행당동",
+          "units": 1410,
+          "district": "서울|성동구",
+          "from": "/realty/apt-hub/%EC%84%9C%EC%9A%B8/%EC%84%B1%EB%8F%99%EA%B5%AC/10%EC%96%B5-20%EC%96%B5",
+          "score": 7
+        },
+        {
+          "id": "a4wbUWH",
+          "name": "라체르보푸르지오써밋",
+          "dong": "행당동",
+          "units": 958,
+          "district": "서울|성동구",
+          "from": "/realty/apt-hub/%EC%84%9C%EC%9A%B8/%EC%84%B1%EB%8F%99%EA%B5%AC",
+          "score": 0
+        }
+      ]
+    },
+    {
+      "seq": "9",
+      "name": "시범한양",
+      "area": "성남 분당구 서현동",
+      "candidates": [
+        {
+          "id": "a3KqYFQ",
+          "name": "한양",
+          "dong": "서현동",
+          "units": 2419,
+          "district": "경기|성남시 분당구",
+          "from": "/realty/apt-hub/%EA%B2%BD%EA%B8%B0/%EC%84%B1%EB%82%A8%EC%8B%9C%20%EB%B6%84%EB%8B%B9%EA%B5%AC/20%EC%96%B5%EC%9D%B4%EC%83%81",
+          "score": 73
+        },
+        {
+          "id": "a2hzIsC",
+          "name": "삼성,한신",
+          "dong": "서현동",
+          "units": 1781,
+          "district": "경기|성남시 분당구",
+          "from": "/realty/apt-hub/%EA%B2%BD%EA%B8%B0/%EC%84%B1%EB%82%A8%EC%8B%9C%20%EB%B6%84%EB%8B%B9%EA%B5%AC/20%EC%96%B5%EC%9D%B4%EC%83%81",
+          "score": 26
+        },
+        {
+          "id": "a9xRxWV",
+          "name": "효자촌그린타운",
+          "dong": "서현동",
+          "units": 1774,
+          "district": "경기|성남시 분당구",
+          "from": "/realty/apt-hub/%EA%B2%BD%EA%B8%B0/%EC%84%B1%EB%82%A8%EC%8B%9C%20%EB%B6%84%EB%8B%B9%EA%B5%AC/10%EC%96%B5-20%EC%96%B5",
+          "score": 13
+        }
+      ],
+      "richgo": {
+        "name": "한양",
+        "far": 201,
+        "year": 1991,
+        "units": 2419,
+        "floors": "5~30층",
+        "coverage": 16,
+        "parking": 2268,
+        "heating": "지역난방 · 열병합",
+        "builder": "(주)한양",
+        "pyeongs": "12|14|22|24|33|36|47|49|54|60|69|78"
+      },
+      "reason": "confidence=73 margin=47 yearDiff=0 unitRatio=0.000 duplicate=0"
+    },
+    {
+      "seq": "12",
+      "name": "가락(1차)쌍용아파트",
+      "area": "서울 송파구 가락동",
+      "candidates": [
+        {
+          "id": "a9jHYxD",
+          "name": "가락쌍용1차",
+          "dong": "가락동",
+          "units": 2064,
+          "district": "서울|송파구",
+          "from": "/realty/apt-hub/%EC%84%9C%EC%9A%B8/%EC%86%A1%ED%8C%8C%EA%B5%AC",
+          "score": 65
+        },
+        {
+          "id": "a1qAnuP",
+          "name": "가락우성1차",
+          "dong": "가락동",
+          "units": 838,
+          "district": "서울|송파구",
+          "from": "/realty/apt-hub/%EC%84%9C%EC%9A%B8/%EC%86%A1%ED%8C%8C%EA%B5%AC",
+          "score": 17
+        },
+        {
+          "id": "a1Tupqc",
+          "name": "가락금호",
+          "dong": "가락동",
+          "units": 915,
+          "district": "서울|송파구",
+          "from": "/realty/apt-hub/%EC%84%9C%EC%9A%B8/%EC%86%A1%ED%8C%8C%EA%B5%AC",
+          "score": 17
+        }
+      ],
+      "richgo": {
+        "name": "가락쌍용1차",
+        "far": 343,
+        "year": 1997,
+        "units": 2064,
+        "floors": "9~24층",
+        "coverage": 23,
+        "parking": 2022,
+        "heating": "중앙난방 · 도시가스",
+        "builder": "쌍용건설(주)",
+        "pyeongs": "24|33"
+      },
+      "reason": "confidence=65 margin=48 yearDiff=0 unitRatio=0.000 duplicate=0"
+    },
+    {
+      "seq": "13",
+      "name": "시범우성",
+      "area": "성남 분당구 서현동",
+      "candidates": [
+        {
+          "id": "a5VWGTk",
+          "name": "우성(시범단지)",
+          "dong": "서현동",
+          "units": 1874,
+          "district": "경기|성남시 분당구",
+          "from": "/realty/apt-hub/%EA%B2%BD%EA%B8%B0/%EC%84%B1%EB%82%A8%EC%8B%9C%20%EB%B6%84%EB%8B%B9%EA%B5%AC/20%EC%96%B5%EC%9D%B4%EC%83%81",
+          "score": 48
+        },
+        {
+          "id": "a9xRxWV",
+          "name": "효자촌그린타운",
+          "dong": "서현동",
+          "units": 1774,
+          "district": "경기|성남시 분당구",
+          "from": "/realty/apt-hub/%EA%B2%BD%EA%B8%B0/%EC%84%B1%EB%82%A8%EC%8B%9C%20%EB%B6%84%EB%8B%B9%EA%B5%AC/10%EC%96%B5-20%EC%96%B5",
+          "score": 37
+        },
+        {
+          "id": "a2hzIsC",
+          "name": "삼성,한신",
+          "dong": "서현동",
+          "units": 1781,
+          "district": "경기|성남시 분당구",
+          "from": "/realty/apt-hub/%EA%B2%BD%EA%B8%B0/%EC%84%B1%EB%82%A8%EC%8B%9C%20%EB%B6%84%EB%8B%B9%EA%B5%AC/20%EC%96%B5%EC%9D%B4%EC%83%81",
+          "score": 37
+        }
+      ],
+      "richgo": {
+        "name": "우성(시범단지)",
+        "far": 191,
+        "year": 1991,
+        "units": 1874,
+        "floors": "5~30층",
+        "coverage": 22,
+        "parking": 1976,
+        "heating": "지역난방 · 열병합",
+        "builder": "(주)우성건설",
+        "pyeongs": "17|21|22|25|29|32|46|49|50|53|59|63|72"
+      },
+      "reason": "confidence=48 margin=11 yearDiff=0 unitRatio=0.000 duplicate=0"
+    },
+    {
+      "seq": "14",
+      "name": "상록마을(우성)1",
+      "area": "성남 분당구 정자동",
+      "candidates": [
+        {
+          "id": "a0iVqsU",
+          "name": "상록우성",
+          "dong": "정자동",
+          "units": 1762,
+          "district": "경기|성남시 분당구",
+          "from": "/realty/apt-hub/%EA%B2%BD%EA%B8%B0/%EC%84%B1%EB%82%A8%EC%8B%9C%20%EB%B6%84%EB%8B%B9%EA%B5%AC/20%EC%96%B5%EC%9D%B4%EC%83%81",
+          "score": 77
+        },
+        {
+          "id": "a7UIkWm",
+          "name": "한솔4단지주공",
+          "dong": "정자동",
+          "units": 1651,
+          "district": "경기|성남시 분당구",
+          "from": "/realty/apt-hub/%EA%B2%BD%EA%B8%B0/%EC%84%B1%EB%82%A8%EC%8B%9C%20%EB%B6%84%EB%8B%B9%EA%B5%AC/10%EC%96%B5-20%EC%96%B5",
+          "score": 37
+        },
+        {
+          "id": "a2bntrf",
+          "name": "파크뷰",
+          "dong": "정자동",
+          "units": 1829,
+          "district": "경기|성남시 분당구",
+          "from": "/realty/apt-hub/%EA%B2%BD%EA%B8%B0/%EC%84%B1%EB%82%A8%EC%8B%9C%20%EB%B6%84%EB%8B%B9%EA%B5%AC/20%EC%96%B5%EC%9D%B4%EC%83%81",
+          "score": 37
+        }
+      ],
+      "richgo": {
+        "name": "상록우성",
+        "far": 218,
+        "year": 1995,
+        "units": 1762,
+        "floors": "14~25층",
+        "coverage": 18,
+        "parking": 2054,
+        "heating": "지역난방 · 열병합",
+        "builder": "(주)우성건설",
+        "pyeongs": "22|23|26|31|37|46|57"
+      },
+      "reason": "confidence=77 margin=40 yearDiff=1 unitRatio=0.000 duplicate=0"
+    },
+    {
+      "seq": "16",
+      "name": "시범한신",
+      "area": "성남 분당구 서현동",
+      "candidates": [
+        {
+          "id": "a2hzIsC",
+          "name": "삼성,한신",
+          "dong": "서현동",
+          "units": 1781,
+          "district": "경기|성남시 분당구",
+          "from": "/realty/apt-hub/%EA%B2%BD%EA%B8%B0/%EC%84%B1%EB%82%A8%EC%8B%9C%20%EB%B6%84%EB%8B%B9%EA%B5%AC/20%EC%96%B5%EC%9D%B4%EC%83%81",
+          "score": 78
+        },
+        {
+          "id": "a9xRxWV",
+          "name": "효자촌그린타운",
+          "dong": "서현동",
+          "units": 1774,
+          "district": "경기|성남시 분당구",
+          "from": "/realty/apt-hub/%EA%B2%BD%EA%B8%B0/%EC%84%B1%EB%82%A8%EC%8B%9C%20%EB%B6%84%EB%8B%B9%EA%B5%AC/10%EC%96%B5-20%EC%96%B5",
+          "score": 48
+        },
+        {
+          "id": "a5VWGTk",
+          "name": "우성(시범단지)",
+          "dong": "서현동",
+          "units": 1874,
+          "district": "경기|성남시 분당구",
+          "from": "/realty/apt-hub/%EA%B2%BD%EA%B8%B0/%EC%84%B1%EB%82%A8%EC%8B%9C%20%EB%B6%84%EB%8B%B9%EA%B5%AC/20%EC%96%B5%EC%9D%B4%EC%83%81",
+          "score": 37
+        }
+      ],
+      "richgo": {
+        "name": "삼성",
+        "far": 191,
+        "year": 1991,
+        "units": 1781,
+        "floors": "5~28층",
+        "coverage": 16,
+        "parking": 1768,
+        "heating": "지역난방 · 열병합",
+        "builder": "삼성종합건설(주),한신공영(주)",
+        "pyeongs": "22|32|48|62|70"
+      },
+      "reason": "confidence=78 margin=30 yearDiff=0 unitRatio=0.000 duplicate=0"
+    },
+    {
+      "seq": "18",
+      "name": "대흥동태영아파트",
+      "area": "서울 마포구 대흥동",
+      "candidates": [
+        {
+          "id": "a3tgGZq",
+          "name": "대흥태영(마포태영)",
+          "dong": "대흥동",
+          "units": 1992,
+          "district": "서울|마포구",
+          "from": "/realty/apt-hub/%EC%84%9C%EC%9A%B8/%EB%A7%88%ED%8F%AC%EA%B5%AC",
+          "score": 78
+        },
+        {
+          "id": "a3guQVj",
+          "name": "마포그랑자이",
+          "dong": "대흥동",
+          "units": 1248,
+          "district": "서울|마포구",
+          "from": "/realty/apt-hub/%EC%84%9C%EC%9A%B8/%EB%A7%88%ED%8F%AC%EA%B5%AC",
+          "score": 25
+        },
+        {
+          "id": "a6nYots",
+          "name": "대흥세양",
+          "dong": "대흥동",
+          "units": 126,
+          "district": "서울|마포구",
+          "from": "/realty/apt-hub/%EC%84%9C%EC%9A%B8/%EB%A7%88%ED%8F%AC%EA%B5%AC/10%EC%96%B5-20%EC%96%B5",
+          "score": 20
+        }
+      ],
+      "richgo": {
+        "name": "대흥태영(마포태영)",
+        "far": 344,
+        "year": 1999,
+        "units": 1992,
+        "floors": "12~25층",
+        "coverage": 22,
+        "parking": 1953,
+        "heating": "지역난방 · 열병합",
+        "builder": "(주)태영",
+        "pyeongs": "25|33|43"
+      },
+      "reason": "confidence=78 margin=53 yearDiff=0 unitRatio=0.000 duplicate=0"
+    },
+    {
+      "seq": "20",
+      "name": "시범현대",
+      "area": "성남 분당구 서현동",
+      "candidates": [
+        {
+          "id": "a0GPUpL",
+          "name": "현대",
+          "dong": "서현동",
+          "units": 1695,
+          "district": "경기|성남시 분당구",
+          "from": "/realty/apt-hub/%EA%B2%BD%EA%B8%B0/%EC%84%B1%EB%82%A8%EC%8B%9C%20%EB%B6%84%EB%8B%B9%EA%B5%AC/20%EC%96%B5%EC%9D%B4%EC%83%81",
+          "score": 73
+        },
+        {
+          "id": "a9xRxWV",
+          "name": "효자촌그린타운",
+          "dong": "서현동",
+          "units": 1774,
+          "district": "경기|성남시 분당구",
+          "from": "/realty/apt-hub/%EA%B2%BD%EA%B8%B0/%EC%84%B1%EB%82%A8%EC%8B%9C%20%EB%B6%84%EB%8B%B9%EA%B5%AC/10%EC%96%B5-20%EC%96%B5",
+          "score": 37
+        },
+        {
+          "id": "a2hzIsC",
+          "name": "삼성,한신",
+          "dong": "서현동",
+          "units": 1781,
+          "district": "경기|성남시 분당구",
+          "from": "/realty/apt-hub/%EA%B2%BD%EA%B8%B0/%EC%84%B1%EB%82%A8%EC%8B%9C%20%EB%B6%84%EB%8B%B9%EA%B5%AC/20%EC%96%B5%EC%9D%B4%EC%83%81",
+          "score": 37
+        }
+      ],
+      "richgo": {
+        "name": "현대",
+        "far": 194,
+        "year": 1991,
+        "units": 1695,
+        "floors": "4~30층",
+        "coverage": 22,
+        "parking": 1717,
+        "heating": "지역난방 · 열병합",
+        "builder": "현대산업개발(주)",
+        "pyeongs": "18|21|33|39|46|59|62|63|67|68|69|77|78"
+      },
+      "reason": "confidence=73 margin=36 yearDiff=0 unitRatio=0.000 duplicate=0"
+    },
+    {
+      "seq": "24",
+      "name": "래미안힐스테이트고덕",
+      "area": "서울 강동구 고덕동",
+      "candidates": [
+        {
+          "id": "a6IDeve",
+          "name": "고덕래미안힐스테이트",
+          "dong": "고덕동",
+          "units": 3658,
+          "district": "서울|강동구",
+          "from": "/realty/apt-hub/%EC%84%9C%EC%9A%B8/%EA%B0%95%EB%8F%99%EA%B5%AC",
+          "score": 78
+        },
+        {
+          "id": "a9ylRld",
+          "name": "고덕그라시움",
+          "dong": "고덕동",
+          "units": 4932,
+          "district": "서울|강동구",
+          "from": "/realty/apt-hub/%EC%84%9C%EC%9A%B8/%EA%B0%95%EB%8F%99%EA%B5%AC",
+          "score": 13
+        },
+        {
+          "id": "a9gfpVF",
+          "name": "고덕아이파크",
+          "dong": "고덕동",
+          "units": 1142,
+          "district": "서울|강동구",
+          "from": "/realty/apt-hub/%EC%84%9C%EC%9A%B8/%EA%B0%95%EB%8F%99%EA%B5%AC",
+          "score": 5
+        }
+      ],
+      "richgo": {
+        "name": "고덕래미안힐스테이트",
+        "far": 249,
+        "year": 2016,
+        "units": 3658,
+        "floors": "2~35층",
+        "coverage": 19,
+        "parking": 6140,
+        "heating": "지역난방 · 열병합",
+        "builder": "삼성물산(주),현대건설(주)",
+        "pyeongs": "24|28|29|34|39|41|42|44|48|58|67|79"
+      },
+      "reason": "confidence=78 margin=65 yearDiff=0 unitRatio=0.000 duplicate=0"
+    },
+    {
+      "seq": "29",
+      "name": "양지마을(5단지)(한양501-514)",
+      "area": "성남 분당구 수내동",
+      "candidates": [
+        {
+          "id": "a5rFSzF",
+          "name": "양지5단지한양",
+          "dong": "수내동",
+          "units": 1430,
+          "district": "경기|성남시 분당구",
+          "from": "/realty/apt-hub/%EA%B2%BD%EA%B8%B0/%EC%84%B1%EB%82%A8%EC%8B%9C%20%EB%B6%84%EB%8B%B9%EA%B5%AC/10%EC%96%B5-20%EC%96%B5",
+          "score": 67
+        },
+        {
+          "id": "a3XWhbx",
+          "name": "양지1단지금호",
+          "dong": "수내동",
+          "units": 918,
+          "district": "경기|성남시 분당구",
+          "from": "/realty/apt-hub/%EA%B2%BD%EA%B8%B0/%EC%84%B1%EB%82%A8%EC%8B%9C%20%EB%B6%84%EB%8B%B9%EA%B5%AC/20%EC%96%B5%EC%9D%B4%EC%83%81",
+          "score": 25
+        },
+        {
+          "id": "a7hEZJx",
+          "name": "양지6단지한양(603동)",
+          "dong": "수내동",
+          "units": 176,
+          "district": "경기|성남시 분당구",
+          "from": "/realty/apt-hub/%EA%B2%BD%EA%B8%B0/%EC%84%B1%EB%82%A8%EC%8B%9C%20%EB%B6%84%EB%8B%B9%EA%B5%AC/10%EC%96%B5-20%EC%96%B5",
+          "score": 19
+        }
+      ],
+      "richgo": {
+        "name": "양지5단지한양",
+        "far": 157,
+        "year": 1992,
+        "units": 1430,
+        "floors": "5~25층",
+        "coverage": 16,
+        "parking": 1627,
+        "heating": "지역난방 · 도시가스",
+        "builder": "(주)한양",
+        "pyeongs": "11|14|17|18|30|32|42|49|52|60|66|72"
+      },
+      "reason": "confidence=67 margin=42 yearDiff=0 unitRatio=0.000 duplicate=0"
+    },
+    {
+      "seq": "34",
+      "name": "정든마을(2단지)(동아)",
+      "area": "성남 분당구 정자동",
+      "candidates": [
+        {
+          "id": "a9KatMm",
+          "name": "정든동아2단지",
+          "dong": "정자동",
+          "units": 706,
+          "district": "경기|성남시 분당구",
+          "from": "/realty/apt-hub/%EA%B2%BD%EA%B8%B0/%EC%84%B1%EB%82%A8%EC%8B%9C%20%EB%B6%84%EB%8B%B9%EA%B5%AC/10%EC%96%B5-20%EC%96%B5",
+          "score": 69
+        },
+        {
+          "id": "a3wgBnj",
+          "name": "정든우성6단지",
+          "dong": "정자동",
+          "units": 706,
+          "district": "경기|성남시 분당구",
+          "from": "/realty/apt-hub/%EA%B2%BD%EA%B8%B0/%EC%84%B1%EB%82%A8%EC%8B%9C%20%EB%B6%84%EB%8B%B9%EA%B5%AC/10%EC%96%B5-20%EC%96%B5",
+          "score": 62
+        },
+        {
+          "id": "a4IcNGs",
+          "name": "느티마을공무원3단지",
+          "dong": "정자동",
+          "units": 770,
+          "district": "경기|성남시 분당구",
+          "from": "/realty/apt-hub/%EA%B2%BD%EA%B8%B0/%EC%84%B1%EB%82%A8%EC%8B%9C%20%EB%B6%84%EB%8B%B9%EA%B5%AC/10%EC%96%B5-20%EC%96%B5",
+          "score": 38
+        }
+      ],
+      "richgo": {
+        "name": "정든동아2단지",
+        "far": 174,
+        "year": 1995,
+        "units": 706,
+        "floors": "14~23층",
+        "coverage": 14,
+        "parking": 513,
+        "heating": "지역난방 · 열병합",
+        "builder": "동아건설",
+        "pyeongs": "19|26|31"
+      },
+      "reason": "confidence=69 margin=7 yearDiff=0 unitRatio=0.000 duplicate=0"
+    },
+    {
+      "seq": "35",
+      "name": "정든마을(6단지)(우성)",
+      "area": "성남 분당구 정자동",
+      "candidates": [
+        {
+          "id": "a3wgBnj",
+          "name": "정든우성6단지",
+          "dong": "정자동",
+          "units": 706,
+          "district": "경기|성남시 분당구",
+          "from": "/realty/apt-hub/%EA%B2%BD%EA%B8%B0/%EC%84%B1%EB%82%A8%EC%8B%9C%20%EB%B6%84%EB%8B%B9%EA%B5%AC/10%EC%96%B5-20%EC%96%B5",
+          "score": 69
+        },
+        {
+          "id": "a9KatMm",
+          "name": "정든동아2단지",
+          "dong": "정자동",
+          "units": 706,
+          "district": "경기|성남시 분당구",
+          "from": "/realty/apt-hub/%EA%B2%BD%EA%B8%B0/%EC%84%B1%EB%82%A8%EC%8B%9C%20%EB%B6%84%EB%8B%B9%EA%B5%AC/10%EC%96%B5-20%EC%96%B5",
+          "score": 62
+        },
+        {
+          "id": "a4IcNGs",
+          "name": "느티마을공무원3단지",
+          "dong": "정자동",
+          "units": 770,
+          "district": "경기|성남시 분당구",
+          "from": "/realty/apt-hub/%EA%B2%BD%EA%B8%B0/%EC%84%B1%EB%82%A8%EC%8B%9C%20%EB%B6%84%EB%8B%B9%EA%B5%AC/10%EC%96%B5-20%EC%96%B5",
+          "score": 38
+        }
+      ],
+      "richgo": {
+        "name": "정든우성6단지",
+        "far": 174,
+        "year": 1994,
+        "units": 706,
+        "floors": "14~23층",
+        "coverage": 14,
+        "parking": 501,
+        "heating": "지역난방 · 열병합",
+        "builder": "주식회사 우성건설",
+        "pyeongs": "19|26|31"
+      },
+      "reason": "confidence=69 margin=7 yearDiff=0 unitRatio=0.000 duplicate=0"
+    },
+    {
+      "seq": "45",
+      "name": "더클래시",
+      "area": "서울 마포구 아현동",
+      "candidates": [
+        {
+          "id": "a8gmReL",
+          "name": "마포더클래시",
+          "dong": "아현동",
+          "units": 1419,
+          "district": "서울|마포구",
+          "from": "/realty/apt-hub/%EC%84%9C%EC%9A%B8/%EB%A7%88%ED%8F%AC%EA%B5%AC",
+          "score": 78
+        },
+        {
+          "id": "a6aDCjB",
+          "name": "공덕자이",
+          "dong": "아현동",
+          "units": 1164,
+          "district": "서울|마포구",
+          "from": "/realty/apt-hub/%EC%84%9C%EC%9A%B8/%EB%A7%88%ED%8F%AC%EA%B5%AC",
+          "score": 25
+        },
+        {
+          "id": "a4tGVUY",
+          "name": "마포래미안푸르지오",
+          "dong": "아현동",
+          "units": 3885,
+          "district": "서울|마포구",
+          "from": "/realty/apt-hub/%EC%84%9C%EC%9A%B8/%EB%A7%88%ED%8F%AC%EA%B5%AC",
+          "score": 6
+        }
+      ],
+      "richgo": {
+        "name": "마포더클래시",
+        "far": 249,
+        "year": 2022,
+        "units": 1419,
+        "floors": "12~25층",
+        "coverage": 18,
+        "parking": 1583,
+        "heating": "개별난방 · 도시가스",
+        "builder": "에이치디씨현대산업개발주식회사",
+        "pyeongs": "17|24|34"
+      },
+      "reason": "confidence=78 margin=53 yearDiff=0 unitRatio=0.000 duplicate=0"
+    },
+    {
+      "seq": "50",
+      "name": "대림아파트",
+      "area": "서울 동작구 대방동",
+      "candidates": [
+        {
+          "id": "a0LpIlw",
+          "name": "대방대림",
+          "dong": "대방동",
+          "units": 1628,
+          "district": "서울|동작구",
+          "from": "/realty/apt-hub/%EC%84%9C%EC%9A%B8/%EB%8F%99%EC%9E%91%EA%B5%AC",
+          "score": 73
+        },
+        {
+          "id": "a0GeIMK",
+          "name": "대림",
+          "dong": "사당동",
+          "units": 1152,
+          "district": "서울|동작구",
+          "from": "/realty/apt-hub/%EC%84%9C%EC%9A%B8/%EB%8F%99%EC%9E%91%EA%B5%AC",
+          "score": 38
+        },
+        {
+          "id": "a2tiFHI",
+          "name": "대방주공2단지",
+          "dong": "대방동",
+          "units": 798,
+          "district": "서울|동작구",
+          "from": "/realty/apt-hub/%EC%84%9C%EC%9A%B8/%EB%8F%99%EC%9E%91%EA%B5%AC",
+          "score": 10
+        }
+      ],
+      "richgo": {
+        "name": "대방대림",
+        "far": 272,
+        "year": 1993,
+        "units": 1628,
+        "floors": "18~19층",
+        "coverage": 20,
+        "parking": 2199,
+        "heating": "중앙난방 · 열병합",
+        "builder": "대림산업(주)",
+        "pyeongs": "25|33|49|59"
+      },
+      "reason": "confidence=73 margin=35 yearDiff=0 unitRatio=0.000 duplicate=0"
+    },
+    {
+      "seq": "51",
+      "name": "대우",
+      "area": "서울 성동구 금호동4가",
+      "candidates": [
+        {
+          "id": "a3SCUMU",
+          "name": "금호대우",
+          "dong": "금호동4가",
+          "units": 1181,
+          "district": "서울|성동구",
+          "from": "/realty/apt-hub/%EC%84%9C%EC%9A%B8/%EC%84%B1%EB%8F%99%EA%B5%AC",
+          "score": 73
+        },
+        {
+          "id": "a4fCiSU",
+          "name": "서울숲푸르지오1차",
+          "dong": "금호동4가",
+          "units": 888,
+          "district": "서울|성동구",
+          "from": "/realty/apt-hub/%EC%84%9C%EC%9A%B8/%EC%84%B1%EB%8F%99%EA%B5%AC",
+          "score": 13
+        },
+        {
+          "id": "a7dmGTG",
+          "name": "서울숲푸르지오2차",
+          "dong": "금호동4가",
+          "units": 586,
+          "district": "서울|성동구",
+          "from": "/realty/apt-hub/%EC%84%9C%EC%9A%B8/%EC%84%B1%EB%8F%99%EA%B5%AC",
+          "score": 0
+        }
+      ],
+      "richgo": {
+        "name": "금호대우",
+        "far": 290,
+        "year": 2001,
+        "units": 1181,
+        "floors": "15~24층",
+        "coverage": 22,
+        "parking": 1610,
+        "heating": "개별난방 · 도시가스",
+        "builder": "(주)대우",
+        "pyeongs": "24|33|34|44"
+      },
+      "reason": "confidence=73 margin=60 yearDiff=0 unitRatio=0.000 duplicate=0"
+    },
+    {
+      "seq": "54",
+      "name": "산운마을13단지(태영)",
+      "area": "성남 분당구 운중동",
+      "candidates": [
+        {
+          "id": "a2pHsiG",
+          "name": "산운13단지데시앙",
+          "dong": "운중동",
+          "units": 1396,
+          "district": "경기|성남시 분당구",
+          "from": "/realty/apt-hub/%EA%B2%BD%EA%B8%B0/%EC%84%B1%EB%82%A8%EC%8B%9C%20%EB%B6%84%EB%8B%B9%EA%B5%AC/10%EC%96%B5-20%EC%96%B5",
+          "score": 67
+        },
+        {
+          "id": "a6ezYOU",
+          "name": "산운4단지판교LIG건영",
+          "dong": "운중동",
+          "units": 222,
+          "district": "경기|성남시 분당구",
+          "from": "/realty/apt-hub/%EA%B2%BD%EA%B8%B0/%EC%84%B1%EB%82%A8%EC%8B%9C%20%EB%B6%84%EB%8B%B9%EA%B5%AC/30%ED%8F%89%EB%8C%80",
+          "score": 15
+        },
+        {
+          "id": "a4voswH",
+          "name": "산운10단지로제비앙",
+          "dong": "운중동",
+          "units": 257,
+          "district": "경기|성남시 분당구",
+          "from": "/realty/apt-hub/%EA%B2%BD%EA%B8%B0/%EC%84%B1%EB%82%A8%EC%8B%9C%20%EB%B6%84%EB%8B%B9%EA%B5%AC/10%EC%96%B5-20%EC%96%B5",
+          "score": 13
+        }
+      ],
+      "richgo": {
+        "name": "산운13단지데시앙",
+        "far": 209,
+        "year": 2010,
+        "units": 1396,
+        "floors": "29~35층",
+        "coverage": 10,
+        "parking": 2105,
+        "heating": "지역난방 · 열병합",
+        "builder": "태영건설",
+        "pyeongs": "32|38|44|57|68|69"
+      },
+      "reason": "confidence=67 margin=52 yearDiff=0 unitRatio=0.000 duplicate=0"
+    },
+    {
+      "seq": "56",
+      "name": "대림1",
+      "area": "서울 구로구 신도림동",
+      "candidates": [
+        {
+          "id": "a6EBVDi",
+          "name": "신도림대림1,2차(e편한세상)",
+          "dong": "신도림동",
+          "units": 2298,
+          "district": "서울|구로구",
+          "from": "/realty/apt-hub/%EC%84%9C%EC%9A%B8/%EA%B5%AC%EB%A1%9C%EA%B5%AC",
+          "score": 60
+        },
+        {
+          "id": "a7mBtrv",
+          "name": "신도림동아1차",
+          "dong": "신도림동",
+          "units": 1095,
+          "district": "서울|구로구",
+          "from": "/realty/apt-hub/%EC%84%9C%EC%9A%B8/%EA%B5%AC%EB%A1%9C%EA%B5%AC",
+          "score": 14
+        },
+        {
+          "id": "a7tmDUv",
+          "name": "우성1차",
+          "dong": "신도림동",
+          "units": 169,
+          "district": "서울|구로구",
+          "from": "/realty/apt-hub/%EC%84%9C%EC%9A%B8/%EA%B5%AC%EB%A1%9C%EA%B5%AC",
+          "score": 13
+        }
+      ],
+      "richgo": {
+        "name": "신도림대림1",
+        "far": 316,
+        "year": 1999,
+        "units": 2298,
+        "floors": "19~27층",
+        "coverage": 19,
+        "parking": 2776,
+        "heating": "개별난방 · 도시가스",
+        "builder": "대림산업(주)",
+        "pyeongs": "23|24|32|38|49"
+      },
+      "reason": "confidence=60 margin=46 yearDiff=0 unitRatio=0.003 duplicate=1"
+    },
+    {
+      "seq": "57",
+      "name": "대림2",
+      "area": "서울 구로구 신도림동",
+      "candidates": [
+        {
+          "id": "a6EBVDi",
+          "name": "신도림대림1,2차(e편한세상)",
+          "dong": "신도림동",
+          "units": 2298,
+          "district": "서울|구로구",
+          "from": "/realty/apt-hub/%EC%84%9C%EC%9A%B8/%EA%B5%AC%EB%A1%9C%EA%B5%AC",
+          "score": 60
+        },
+        {
+          "id": "a4yBFka",
+          "name": "신도림동아2차",
+          "dong": "신도림동",
+          "units": 655,
+          "district": "서울|구로구",
+          "from": "/realty/apt-hub/%EC%84%9C%EC%9A%B8/%EA%B5%AC%EB%A1%9C%EA%B5%AC",
+          "score": 14
+        },
+        {
+          "id": "a6XjqBB",
+          "name": "우성2차",
+          "dong": "신도림동",
+          "units": 239,
+          "district": "서울|구로구",
+          "from": "/realty/apt-hub/%EC%84%9C%EC%9A%B8/%EA%B5%AC%EB%A1%9C%EA%B5%AC",
+          "score": 13
+        }
+      ],
+      "richgo": {
+        "name": "신도림대림1",
+        "far": 316,
+        "year": 1999,
+        "units": 2298,
+        "floors": "19~27층",
+        "coverage": 19,
+        "parking": 2776,
+        "heating": "개별난방 · 도시가스",
+        "builder": "대림산업(주)",
+        "pyeongs": "23|24|32|38|49"
+      },
+      "reason": "confidence=60 margin=46 yearDiff=2 unitRatio=0.003 duplicate=1"
+    },
+    {
+      "seq": "60",
+      "name": "벽산",
+      "area": "서울 성동구 하왕십리동",
+      "candidates": [
+        {
+          "id": "a4QtqUW",
+          "name": "청계벽산",
+          "dong": "하왕십리동",
+          "units": 1332,
+          "district": "서울|성동구",
+          "from": "/realty/apt-hub/%EC%84%9C%EC%9A%B8/%EC%84%B1%EB%8F%99%EA%B5%AC/40%ED%8F%89%EB%8C%80%EC%9D%B4%EC%83%81",
+          "score": 62
+        },
+        {
+          "id": "a7GupeW",
+          "name": "벽산",
+          "dong": "금호동1가",
+          "units": 1707,
+          "district": "서울|성동구",
+          "from": "/realty/apt-hub/%EC%84%9C%EC%9A%B8/%EC%84%B1%EB%8F%99%EA%B5%AC/10%EC%96%B5-20%EC%96%B5",
+          "score": 38
+        },
+        {
+          "id": "a6UdWjW",
+          "name": "텐즈힐1",
+          "dong": "하왕십리동",
+          "units": 1702,
+          "district": "서울|성동구",
+          "from": "/realty/apt-hub/%EC%84%9C%EC%9A%B8/%EC%84%B1%EB%8F%99%EA%B5%AC",
+          "score": 13
+        }
+      ],
+      "richgo": {
+        "name": "청계벽산",
+        "far": 267,
+        "year": 1996,
+        "units": 1332,
+        "floors": "15~21층",
+        "coverage": 23,
+        "parking": 1037,
+        "heating": "개별난방 · 도시가스",
+        "builder": "벽산건설(주)",
+        "pyeongs": "26|32|42"
+      },
+      "reason": "confidence=62 margin=24 yearDiff=0 unitRatio=0.054 duplicate=0"
+    },
+    {
+      "seq": "76",
+      "name": "현대3",
+      "area": "서울 광진구 광장동",
+      "candidates": [
+        {
+          "id": "a2gqJxX",
+          "name": "광장현대3단지",
+          "dong": "광장동",
+          "units": 1056,
+          "district": "서울|광진구",
+          "from": "/realty/apt-hub/%EC%84%9C%EC%9A%B8/%EA%B4%91%EC%A7%84%EA%B5%AC",
+          "score": 78
+        },
+        {
+          "id": "a5hoDzd",
+          "name": "광장현대파크빌10차",
+          "dong": "광장동",
+          "units": 1170,
+          "district": "서울|광진구",
+          "from": "/realty/apt-hub/%EC%84%9C%EC%9A%B8/%EA%B4%91%EC%A7%84%EA%B5%AC",
+          "score": 35
+        },
+        {
+          "id": "a9nQgrC",
+          "name": "현대9단지",
+          "dong": "광장동",
+          "units": 437,
+          "district": "서울|광진구",
+          "from": "/realty/apt-hub/%EC%84%9C%EC%9A%B8/%EA%B4%91%EC%A7%84%EA%B5%AC",
+          "score": 33
+        }
+      ],
+      "richgo": {
+        "name": "광장현대3단지",
+        "far": 249,
+        "year": 1990,
+        "units": 1056,
+        "floors": "15~21층",
+        "coverage": 17,
+        "parking": 512,
+        "heating": "개별난방 · 도시가스",
+        "builder": "현대건설(주)",
+        "pyeongs": "22|27|32"
+      },
+      "reason": "confidence=78 margin=43 yearDiff=0 unitRatio=0.000 duplicate=0"
+    },
+    {
+      "seq": "77",
+      "name": "고덕센트럴IPARK",
+      "area": "서울 강동구 상일동",
+      "candidates": [
+        {
+          "id": "a3CqoEd",
+          "name": "고덕센트럴아이파크",
+          "dong": "상일동",
+          "units": 1745,
+          "district": "서울|강동구",
+          "from": "/realty/apt-hub/%EC%84%9C%EC%9A%B8/%EA%B0%95%EB%8F%99%EA%B5%AC",
+          "score": 73
+        },
+        {
+          "id": "a8bWmKQ",
+          "name": "고덕자이",
+          "dong": "상일동",
+          "units": 1824,
+          "district": "서울|강동구",
+          "from": "/realty/apt-hub/%EC%84%9C%EC%9A%B8/%EA%B0%95%EB%8F%99%EA%B5%AC",
+          "score": 47
+        },
+        {
+          "id": "a3itVbo",
+          "name": "고덕롯데캐슬베네루체",
+          "dong": "상일동",
+          "units": 1859,
+          "district": "서울|강동구",
+          "from": "/realty/apt-hub/%EC%84%9C%EC%9A%B8/%EA%B0%95%EB%8F%99%EA%B5%AC",
+          "score": 47
+        }
+      ],
+      "richgo": {
+        "name": "고덕센트럴아이파크",
+        "far": 249,
+        "year": 2019,
+        "units": 1745,
+        "floors": "11~29층",
+        "coverage": 19,
+        "parking": 2558,
+        "heating": "지역난방 · 열병합",
+        "builder": "에이치디씨현대산업개발 주식회사",
+        "pyeongs": "24|25|30|31|34|35|42|50|54"
+      },
+      "reason": "confidence=73 margin=26 yearDiff=0 unitRatio=0.000 duplicate=0"
+    },
+    {
+      "seq": "84",
+      "name": "극동",
+      "area": "서울 성동구 옥수동",
+      "candidates": [
+        {
+          "id": "a8gEKBN",
+          "name": "옥수극동",
+          "dong": "옥수동",
+          "units": 900,
+          "district": "서울|성동구",
+          "from": "/realty/apt-hub/%EC%84%9C%EC%9A%B8/%EC%84%B1%EB%8F%99%EA%B5%AC",
+          "score": 73
+        },
+        {
+          "id": "a9XUNBu",
+          "name": "극동그린",
+          "dong": "옥수동",
+          "units": 583,
+          "district": "서울|성동구",
+          "from": "/realty/apt-hub/%EC%84%9C%EC%9A%B8/%EC%84%B1%EB%8F%99%EA%B5%AC/10%EC%96%B5-20%EC%96%B5",
+          "score": 38
+        },
+        {
+          "id": "a3lCpKk",
+          "name": "옥수하이츠",
+          "dong": "옥수동",
+          "units": 774,
+          "district": "서울|성동구",
+          "from": "/realty/apt-hub/%EC%84%9C%EC%9A%B8/%EC%84%B1%EB%8F%99%EA%B5%AC",
+          "score": 25
+        }
+      ],
+      "richgo": {
+        "name": "옥수극동",
+        "far": 219,
+        "year": 1986,
+        "units": 900,
+        "floors": "15~15층",
+        "coverage": 17,
+        "parking": 900,
+        "heating": "중앙난방 · 도시가스",
+        "builder": "극동건설",
+        "pyeongs": "24|27|30|49|51"
+      },
+      "reason": "confidence=73 margin=35 yearDiff=0 unitRatio=0.000 duplicate=0"
+    },
+    {
+      "seq": "90",
+      "name": "우성",
+      "area": "서울 마포구 도화동",
+      "candidates": [
+        {
+          "id": "a2skZUC",
+          "name": "도화3지구우성",
+          "dong": "도화동",
+          "units": 1222,
+          "district": "서울|마포구",
+          "from": "/realty/apt-hub/%EC%84%9C%EC%9A%B8/%EB%A7%88%ED%8F%AC%EA%B5%AC/10%EC%96%B5-20%EC%96%B5",
+          "score": 62
+        },
+        {
+          "id": "a0XACJa",
+          "name": "삼성",
+          "dong": "도화동",
+          "units": 982,
+          "district": "서울|마포구",
+          "from": "/realty/apt-hub/%EC%84%9C%EC%9A%B8/%EB%A7%88%ED%8F%AC%EA%B5%AC",
+          "score": 50
+        },
+        {
+          "id": "a7ucnxZ",
+          "name": "도화현대1차",
+          "dong": "도화동",
+          "units": 1021,
+          "district": "서울|마포구",
+          "from": "/realty/apt-hub/%EC%84%9C%EC%9A%B8/%EB%A7%88%ED%8F%AC%EA%B5%AC/10%EC%96%B5-20%EC%96%B5",
+          "score": 25
+        }
+      ],
+      "richgo": {
+        "name": "도화3지구우성",
+        "far": 228,
+        "year": 1991,
+        "units": 1222,
+        "floors": "8~15층",
+        "coverage": 19,
+        "parking": 1230,
+        "heating": "중앙난방 · 도시가스",
+        "builder": "우성건설(주)",
+        "pyeongs": "22|27|32|39|45|50"
+      },
+      "reason": "confidence=62 margin=12 yearDiff=0 unitRatio=0.000 duplicate=0"
+    },
+    {
+      "seq": "91",
+      "name": "보라매에스케이뷰",
+      "area": "서울 영등포구 신길동",
+      "candidates": [
+        {
+          "id": "a4zNlwE",
+          "name": "보라매SK뷰",
+          "dong": "신길동",
+          "units": 1546,
+          "district": "서울|영등포구",
+          "from": "/realty/apt-hub/%EC%84%9C%EC%9A%B8/%EC%98%81%EB%93%B1%ED%8F%AC%EA%B5%AC",
+          "score": 73
+        },
+        {
+          "id": "a6JPMOK",
+          "name": "래미안에스티움",
+          "dong": "신길동",
+          "units": 1722,
+          "district": "서울|영등포구",
+          "from": "/realty/apt-hub/%EC%84%9C%EC%9A%B8/%EC%98%81%EB%93%B1%ED%8F%AC%EA%B5%AC",
+          "score": 38
+        },
+        {
+          "id": "a5uhYdr",
+          "name": "힐스테이트클래시안",
+          "dong": "신길동",
+          "units": 1476,
+          "district": "서울|영등포구",
+          "from": "/realty/apt-hub/%EC%84%9C%EC%9A%B8/%EC%98%81%EB%93%B1%ED%8F%AC%EA%B5%AC",
+          "score": 37
+        }
+      ],
+      "richgo": {
+        "name": "보라매SK뷰",
+        "far": 264,
+        "year": 2020,
+        "units": 1546,
+        "floors": "1~29층",
+        "coverage": 19,
+        "parking": 1881,
+        "heating": "개별난방 · 도시가스",
+        "builder": "에스케이건설(주)",
+        "pyeongs": "25|34|39|44|52|54"
+      },
+      "reason": "confidence=73 margin=35 yearDiff=0 unitRatio=0.000 duplicate=0"
+    },
+    {
+      "seq": "104",
+      "name": "세곡푸르지오",
+      "area": "서울 강남구 세곡동",
+      "candidates": [
+        {
+          "id": "a6BlShb",
+          "name": "강남LH1단지(e편한세상)",
+          "dong": "세곡동",
+          "units": 809,
+          "district": "서울|강남구",
+          "from": "/realty/apt-hub/%EC%84%9C%EC%9A%B8/%EA%B0%95%EB%82%A8%EA%B5%AC/10%EC%96%B5-20%EC%96%B5",
+          "score": 25
+        },
+        {
+          "id": "a3lFXlN",
+          "name": "역삼푸르지오",
+          "dong": "역삼동",
+          "units": 738,
+          "district": "서울|강남구",
+          "from": "/realty/apt-hub/%EC%84%9C%EC%9A%B8/%EA%B0%95%EB%82%A8%EA%B5%AC",
+          "score": 6
+        },
+        {
+          "id": "a7rcHqt",
+          "name": "강남신동아파밀리에1단지",
+          "dong": "세곡동",
+          "units": 395,
+          "district": "서울|강남구",
+          "from": "/realty/apt-hub/%EC%84%9C%EC%9A%B8/%EA%B0%95%EB%82%A8%EA%B5%AC/10%EC%96%B5-20%EC%96%B5",
+          "score": 0
+        }
+      ]
+    },
+    {
+      "seq": "113",
+      "name": "DMC파크뷰자이1단지",
+      "area": "서울 서대문구 남가좌동",
+      "candidates": [
+        {
+          "id": "a4pTFCD",
+          "name": "DMC파크뷰자이",
+          "dong": "남가좌동",
+          "units": 4300,
+          "district": "서울|서대문구",
+          "from": "/realty/apt-hub/%EC%84%9C%EC%9A%B8/%EC%84%9C%EB%8C%80%EB%AC%B8%EA%B5%AC",
+          "score": 118
+        },
+        {
+          "id": "a8liofQ",
+          "name": "DMC에코자이",
+          "dong": "남가좌동",
+          "units": 1047,
+          "district": "서울|서대문구",
+          "from": "/realty/apt-hub/%EC%84%9C%EC%9A%B8/%EC%84%9C%EB%8C%80%EB%AC%B8%EA%B5%AC",
+          "score": 28
+        },
+        {
+          "id": "a8dCZhU",
+          "name": "DMC가재울아이파크(주상복합)",
+          "dong": "남가좌동",
+          "units": 283,
+          "district": "서울|서대문구",
+          "from": "/realty/apt-hub/%EC%84%9C%EC%9A%B8/%EC%84%9C%EB%8C%80%EB%AC%B8%EA%B5%AC",
+          "score": 20
+        }
+      ],
+      "richgo": {
+        "name": "DMC파크뷰자이",
+        "far": 233,
+        "year": 2015,
+        "units": 4300,
+        "floors": "9~33층",
+        "coverage": 19,
+        "parking": 5823,
+        "heating": "지역난방 · 열병합",
+        "builder": "GS건설(주), SK건설(주), 현대산업개발(주)",
+        "pyeongs": "24|25|33|34|46|47|58|63"
+      },
+      "reason": "confidence=118 margin=90 yearDiff=0 unitRatio=0.000 duplicate=2"
+    },
+    {
+      "seq": "114",
+      "name": "DMC파크뷰자이2단지",
+      "area": "서울 서대문구 남가좌동",
+      "candidates": [
+        {
+          "id": "a4pTFCD",
+          "name": "DMC파크뷰자이",
+          "dong": "남가좌동",
+          "units": 4300,
+          "district": "서울|서대문구",
+          "from": "/realty/apt-hub/%EC%84%9C%EC%9A%B8/%EC%84%9C%EB%8C%80%EB%AC%B8%EA%B5%AC",
+          "score": 118
+        },
+        {
+          "id": "a8liofQ",
+          "name": "DMC에코자이",
+          "dong": "남가좌동",
+          "units": 1047,
+          "district": "서울|서대문구",
+          "from": "/realty/apt-hub/%EC%84%9C%EC%9A%B8/%EC%84%9C%EB%8C%80%EB%AC%B8%EA%B5%AC",
+          "score": 28
+        },
+        {
+          "id": "a8dCZhU",
+          "name": "DMC가재울아이파크(주상복합)",
+          "dong": "남가좌동",
+          "units": 283,
+          "district": "서울|서대문구",
+          "from": "/realty/apt-hub/%EC%84%9C%EC%9A%B8/%EC%84%9C%EB%8C%80%EB%AC%B8%EA%B5%AC",
+          "score": 20
+        }
+      ],
+      "richgo": {
+        "name": "DMC파크뷰자이",
+        "far": 233,
+        "year": 2015,
+        "units": 4300,
+        "floors": "9~33층",
+        "coverage": 19,
+        "parking": 5823,
+        "heating": "지역난방 · 열병합",
+        "builder": "GS건설(주), SK건설(주), 현대산업개발(주)",
+        "pyeongs": "24|25|33|34|46|47|58|63"
+      },
+      "reason": "confidence=118 margin=90 yearDiff=0 unitRatio=0.000 duplicate=2"
+    },
+    {
+      "seq": "115",
+      "name": "DMC파크뷰자이3단지",
+      "area": "서울 서대문구 남가좌동",
+      "candidates": [
+        {
+          "id": "a4pTFCD",
+          "name": "DMC파크뷰자이",
+          "dong": "남가좌동",
+          "units": 4300,
+          "district": "서울|서대문구",
+          "from": "/realty/apt-hub/%EC%84%9C%EC%9A%B8/%EC%84%9C%EB%8C%80%EB%AC%B8%EA%B5%AC",
+          "score": 118
+        },
+        {
+          "id": "a8liofQ",
+          "name": "DMC에코자이",
+          "dong": "남가좌동",
+          "units": 1047,
+          "district": "서울|서대문구",
+          "from": "/realty/apt-hub/%EC%84%9C%EC%9A%B8/%EC%84%9C%EB%8C%80%EB%AC%B8%EA%B5%AC",
+          "score": 28
+        },
+        {
+          "id": "a8dCZhU",
+          "name": "DMC가재울아이파크(주상복합)",
+          "dong": "남가좌동",
+          "units": 283,
+          "district": "서울|서대문구",
+          "from": "/realty/apt-hub/%EC%84%9C%EC%9A%B8/%EC%84%9C%EB%8C%80%EB%AC%B8%EA%B5%AC",
+          "score": 20
+        }
+      ],
+      "richgo": {
+        "name": "DMC파크뷰자이",
+        "far": 233,
+        "year": 2015,
+        "units": 4300,
+        "floors": "9~33층",
+        "coverage": 19,
+        "parking": 5823,
+        "heating": "지역난방 · 열병합",
+        "builder": "GS건설(주), SK건설(주), 현대산업개발(주)",
+        "pyeongs": "24|25|33|34|46|47|58|63"
+      },
+      "reason": "confidence=118 margin=90 yearDiff=0 unitRatio=0.000 duplicate=2"
+    },
+    {
+      "seq": "116",
+      "name": "현대",
+      "area": "서울 성동구 마장동",
+      "candidates": [
+        {
+          "id": "a7cfhkf",
+          "name": "청계현대",
+          "dong": "마장동",
+          "units": 1017,
+          "district": "서울|성동구",
+          "from": "/realty/apt-hub/%EC%84%9C%EC%9A%B8/%EC%84%B1%EB%8F%99%EA%B5%AC/10%EC%96%B5-20%EC%96%B5",
+          "score": 73
+        },
+        {
+          "id": "a9xPfis",
+          "name": "현대",
+          "dong": "성수동1가",
+          "units": 217,
+          "district": "서울|성동구",
+          "from": "/realty/apt-hub/%EC%84%9C%EC%9A%B8/%EC%84%B1%EB%8F%99%EA%B5%AC",
+          "score": 25
+        },
+        {
+          "id": "a6Nsgli",
+          "name": "세림",
+          "dong": "마장동",
+          "units": 811,
+          "district": "서울|성동구",
+          "from": "/realty/apt-hub/%EC%84%9C%EC%9A%B8/%EC%84%B1%EB%8F%99%EA%B5%AC/10%EC%96%B5-20%EC%96%B5",
+          "score": 13
+        }
+      ],
+      "richgo": {
+        "name": "청계현대",
+        "far": 334,
+        "year": 1998,
+        "units": 1017,
+        "floors": "22~28층",
+        "coverage": 20,
+        "parking": 1096,
+        "heating": "개별난방 · 도시가스",
+        "builder": "고려산업개발(주)",
+        "pyeongs": "24|32|49|61"
+      },
+      "reason": "confidence=73 margin=48 yearDiff=0 unitRatio=0.000 duplicate=0"
+    },
+    {
+      "seq": "117",
+      "name": "공덕1삼성래미안",
+      "area": "서울 마포구 공덕동",
+      "candidates": [
+        {
+          "id": "a6FDFaH",
+          "name": "공덕삼성",
+          "dong": "공덕동",
+          "units": 651,
+          "district": "서울|마포구",
+          "from": "/realty/apt-hub/%EC%84%9C%EC%9A%B8/%EB%A7%88%ED%8F%AC%EA%B5%AC",
+          "score": 73
+        },
+        {
+          "id": "a9bxlly",
+          "name": "삼성래미안공덕2차",
+          "dong": "공덕동",
+          "units": 683,
+          "district": "서울|마포구",
+          "from": "/realty/apt-hub/%EC%84%9C%EC%9A%B8/%EB%A7%88%ED%8F%AC%EA%B5%AC/10%EC%96%B5-20%EC%96%B5",
+          "score": 48
+        },
+        {
+          "id": "a0QzMTf",
+          "name": "래미안공덕3차",
+          "dong": "공덕동",
+          "units": 616,
+          "district": "서울|마포구",
+          "from": "/realty/apt-hub/%EC%84%9C%EC%9A%B8/%EB%A7%88%ED%8F%AC%EA%B5%AC",
+          "score": 37
+        }
+      ],
+      "richgo": {
+        "name": "공덕삼성",
+        "far": 266,
+        "year": 1999,
+        "units": 651,
+        "floors": "10~25층",
+        "coverage": 18,
+        "parking": 779,
+        "heating": "개별난방 · 도시가스",
+        "builder": "삼성물산(주)",
+        "pyeongs": "25|34|43"
+      },
+      "reason": "confidence=73 margin=25 yearDiff=0 unitRatio=0.000 duplicate=1"
+    },
+    {
+      "seq": "118",
+      "name": "우성",
+      "area": "서울 송파구 가락동",
+      "candidates": [
+        {
+          "id": "a1qAnuP",
+          "name": "가락우성1차",
+          "dong": "가락동",
+          "units": 838,
+          "district": "서울|송파구",
+          "from": "/realty/apt-hub/%EC%84%9C%EC%9A%B8/%EC%86%A1%ED%8C%8C%EA%B5%AC",
+          "score": 65
+        },
+        {
+          "id": "a1Tupqc",
+          "name": "가락금호",
+          "dong": "가락동",
+          "units": 915,
+          "district": "서울|송파구",
+          "from": "/realty/apt-hub/%EC%84%9C%EC%9A%B8/%EC%86%A1%ED%8C%8C%EA%B5%AC",
+          "score": 37
+        },
+        {
+          "id": "a9twetl",
+          "name": "래미안파크팰리스",
+          "dong": "가락동",
+          "units": 919,
+          "district": "서울|송파구",
+          "from": "/realty/apt-hub/%EC%84%9C%EC%9A%B8/%EC%86%A1%ED%8C%8C%EA%B5%AC",
+          "score": 37
+        }
+      ],
+      "richgo": {
+        "name": "가락우성1차",
+        "far": 210,
+        "year": 1986,
+        "units": 838,
+        "floors": "9~15층",
+        "coverage": null,
+        "parking": 430,
+        "heating": "지역난방 · 열병합",
+        "builder": "우성건설(주)",
+        "pyeongs": "18|23|38|44"
+      },
+      "reason": "confidence=65 margin=28 yearDiff=0 unitRatio=0.001 duplicate=0"
+    },
+    {
+      "seq": "119",
+      "name": "대림(169-8)",
+      "area": "서울 동작구 사당동",
+      "candidates": [
+        {
+          "id": "a0GeIMK",
+          "name": "대림",
+          "dong": "사당동",
+          "units": 1152,
+          "district": "서울|동작구",
+          "from": "/realty/apt-hub/%EC%84%9C%EC%9A%B8/%EB%8F%99%EC%9E%91%EA%B5%AC",
+          "score": 65
+        },
+        {
+          "id": "a7aqFdL",
+          "name": "사당우성2단지",
+          "dong": "사당동",
+          "units": 1080,
+          "district": "서울|동작구",
+          "from": "/realty/apt-hub/%EC%84%9C%EC%9A%B8/%EB%8F%99%EC%9E%91%EA%B5%AC",
+          "score": 37
+        },
+        {
+          "id": "a7czaqW",
+          "name": "사당롯데캐슬골든포레",
+          "dong": "사당동",
+          "units": 959,
+          "district": "서울|동작구",
+          "from": "/realty/apt-hub/%EC%84%9C%EC%9A%B8/%EB%8F%99%EC%9E%91%EA%B5%AC",
+          "score": 25
+        }
+      ],
+      "richgo": {
+        "name": "대림",
+        "far": 208,
+        "year": 1990,
+        "units": 1152,
+        "floors": "12~15층",
+        "coverage": 19,
+        "parking": 1152,
+        "heating": "개별난방 · 도시가스",
+        "builder": "대림산업(주)",
+        "pyeongs": "24|31|43"
+      },
+      "reason": "confidence=65 margin=28 yearDiff=0 unitRatio=0.000 duplicate=0"
+    },
+    {
+      "seq": "125",
+      "name": "극동(105)",
+      "area": "서울 동작구 사당동",
+      "candidates": [
+        {
+          "id": "a0GeIMK",
+          "name": "대림",
+          "dong": "사당동",
+          "units": 1152,
+          "district": "서울|동작구",
+          "from": "/realty/apt-hub/%EC%84%9C%EC%9A%B8/%EB%8F%99%EC%9E%91%EA%B5%AC",
+          "score": 37
+        },
+        {
+          "id": "a7aqFdL",
+          "name": "사당우성2단지",
+          "dong": "사당동",
+          "units": 1080,
+          "district": "서울|동작구",
+          "from": "/realty/apt-hub/%EC%84%9C%EC%9A%B8/%EB%8F%99%EC%9E%91%EA%B5%AC",
+          "score": 37
+        },
+        {
+          "id": "a6OLwRe",
+          "name": "신동아4차",
+          "dong": "사당동",
+          "units": 912,
+          "district": "서울|동작구",
+          "from": "/realty/apt-hub/%EC%84%9C%EC%9A%B8/%EB%8F%99%EC%9E%91%EA%B5%AC",
+          "score": 35
+        }
+      ]
+    },
+    {
+      "seq": "131",
+      "name": "봇들마을3단지(주공)",
+      "area": "성남 분당구 삼평동",
+      "candidates": [
+        {
+          "id": "a9Beosy",
+          "name": "판교봇들마을3단지",
+          "dong": "삼평동",
+          "units": 870,
+          "district": "경기|성남시 분당구",
+          "from": "/realty/apt-hub/%EA%B2%BD%EA%B8%B0/%EC%84%B1%EB%82%A8%EC%8B%9C%20%EB%B6%84%EB%8B%B9%EA%B5%AC/10%EC%96%B5-20%EC%96%B5",
+          "score": 69
+        },
+        {
+          "id": "a5EQtFb",
+          "name": "봇들마을4단지",
+          "dong": "삼평동",
+          "units": 748,
+          "district": "경기|성남시 분당구",
+          "from": "/realty/apt-hub/%EA%B2%BD%EA%B8%B0/%EC%84%B1%EB%82%A8%EC%8B%9C%20%EB%B6%84%EB%8B%B9%EA%B5%AC/10%EC%96%B5-20%EC%96%B5",
+          "score": 54
+        },
+        {
+          "id": "a2YiNyJ",
+          "name": "봇들9단지금호어울림",
+          "dong": "삼평동",
+          "units": 850,
+          "district": "경기|성남시 분당구",
+          "from": "/realty/apt-hub/%EA%B2%BD%EA%B8%B0/%EC%84%B1%EB%82%A8%EC%8B%9C%20%EB%B6%84%EB%8B%B9%EA%B5%AC/20%EC%96%B5%EC%9D%B4%EC%83%81",
+          "score": 50
+        }
+      ],
+      "richgo": {
+        "name": "판교봇들마을3단지",
+        "far": 166,
+        "year": 2009,
+        "units": 870,
+        "floors": "8~18층",
+        "coverage": 16,
+        "parking": 912,
+        "heating": "지역난방 · 열병합",
+        "builder": "LH공사,계룡건설산업(주)",
+        "pyeongs": "24|30|34"
+      },
+      "reason": "confidence=69 margin=15 yearDiff=0 unitRatio=0.000 duplicate=0"
+    },
+    {
+      "seq": "136",
+      "name": "포스코더샵",
+      "area": "서울 동작구 상도동",
+      "candidates": [
+        {
+          "id": "a9jZylw",
+          "name": "상도더샵1차",
+          "dong": "상도동",
+          "units": 1122,
+          "district": "서울|동작구",
+          "from": "/realty/apt-hub/%EC%84%9C%EC%9A%B8/%EB%8F%99%EC%9E%91%EA%B5%AC",
+          "score": 48
+        },
+        {
+          "id": "a1yPcra",
+          "name": "상도역롯데캐슬파크엘",
+          "dong": "상도동",
+          "units": 950,
+          "district": "서울|동작구",
+          "from": "/realty/apt-hub/%EC%84%9C%EC%9A%B8/%EB%8F%99%EC%9E%91%EA%B5%AC",
+          "score": 25
+        },
+        {
+          "id": "a6JYGJe",
+          "name": "힐스테이트상도센트럴파크",
+          "dong": "상도동",
+          "units": 1559,
+          "district": "서울|동작구",
+          "from": "/realty/apt-hub/%EC%84%9C%EC%9A%B8/%EB%8F%99%EC%9E%91%EA%B5%AC",
+          "score": 17
+        }
+      ],
+      "richgo": {
+        "name": "상도더샵1차",
+        "far": 229,
+        "year": 2007,
+        "units": 1122,
+        "floors": "8~15층",
+        "coverage": 21,
+        "parking": 1651,
+        "heating": "개별난방 · 도시가스",
+        "builder": "(주)포스코건설",
+        "pyeongs": "24|32|37|49|54|59"
+      },
+      "reason": "confidence=48 margin=23 yearDiff=0 unitRatio=0.000 duplicate=0"
+    },
+    {
+      "seq": "140",
+      "name": "강남엘에이치1단지",
+      "area": "서울 강남구 세곡동",
+      "candidates": [
+        {
+          "id": "a6BlShb",
+          "name": "강남LH1단지(e편한세상)",
+          "dong": "세곡동",
+          "units": 809,
+          "district": "서울|강남구",
+          "from": "/realty/apt-hub/%EC%84%9C%EC%9A%B8/%EA%B0%95%EB%82%A8%EA%B5%AC/10%EC%96%B5-20%EC%96%B5",
+          "score": 58
+        },
+        {
+          "id": "a3jazWr",
+          "name": "강남데시앙파크",
+          "dong": "세곡동",
+          "units": 546,
+          "district": "서울|강남구",
+          "from": "/realty/apt-hub/%EC%84%9C%EC%9A%B8/%EA%B0%95%EB%82%A8%EA%B5%AC/10%EC%96%B5-20%EC%96%B5",
+          "score": 27
+        },
+        {
+          "id": "a7rcHqt",
+          "name": "강남신동아파밀리에1단지",
+          "dong": "세곡동",
+          "units": 395,
+          "district": "서울|강남구",
+          "from": "/realty/apt-hub/%EC%84%9C%EC%9A%B8/%EA%B0%95%EB%82%A8%EA%B5%AC/10%EC%96%B5-20%EC%96%B5",
+          "score": 15
+        }
+      ],
+      "richgo": {
+        "name": "강남LH1단지(e편한세상)",
+        "far": 173,
+        "year": 2013,
+        "units": 809,
+        "floors": "10~15층",
+        "coverage": 19,
+        "parking": 998,
+        "heating": "지역난방 · 열병합",
+        "builder": "대림건설",
+        "pyeongs": "24|30|35"
+      },
+      "reason": "confidence=58 margin=31 yearDiff=0 unitRatio=0.000 duplicate=0"
+    },
+    {
+      "seq": "143",
+      "name": "탑마을(선경)1",
+      "area": "성남 분당구 야탑동",
+      "candidates": [
+        {
+          "id": "a6XwTCZ",
+          "name": "탑선경",
+          "dong": "야탑동",
+          "units": 976,
+          "district": "경기|성남시 분당구",
+          "from": "/realty/apt-hub/%EA%B2%BD%EA%B8%B0/%EC%84%B1%EB%82%A8%EC%8B%9C%20%EB%B6%84%EB%8B%B9%EA%B5%AC/10%EC%96%B5-20%EC%96%B5",
+          "score": 73
+        },
+        {
+          "id": "a9exVnA",
+          "name": "탑경남",
+          "dong": "야탑동",
+          "units": 884,
+          "district": "경기|성남시 분당구",
+          "from": "/realty/apt-hub/%EA%B2%BD%EA%B8%B0/%EC%84%B1%EB%82%A8%EC%8B%9C%20%EB%B6%84%EB%8B%B9%EA%B5%AC/40%ED%8F%89%EB%8C%80%EC%9D%B4%EC%83%81",
+          "score": 42
+        },
+        {
+          "id": "a7jIYjf",
+          "name": "탑타워빌",
+          "dong": "야탑동",
+          "units": 1166,
+          "district": "경기|성남시 분당구",
+          "from": "/realty/apt-hub/%EA%B2%BD%EA%B8%B0/%EC%84%B1%EB%82%A8%EC%8B%9C%20%EB%B6%84%EB%8B%B9%EA%B5%AC/40%ED%8F%89%EB%8C%80%EC%9D%B4%EC%83%81",
+          "score": 33
+        }
+      ],
+      "richgo": {
+        "name": "탑선경",
+        "far": 199,
+        "year": 1992,
+        "units": 976,
+        "floors": "14~16층",
+        "coverage": 14,
+        "parking": 792,
+        "heating": "지역난방 · 열병합",
+        "builder": "선경건설(주)",
+        "pyeongs": "20|31|37|47"
+      },
+      "reason": "confidence=73 margin=31 yearDiff=0 unitRatio=0.000 duplicate=0"
+    },
+    {
+      "seq": "148",
+      "name": "우성",
+      "area": "서울 서초구 양재동",
+      "candidates": [
+        {
+          "id": "a0Ofrim",
+          "name": "양재우성",
+          "dong": "양재동",
+          "units": 794,
+          "district": "서울|서초구",
+          "from": "/realty/apt-hub/%EC%84%9C%EC%9A%B8/%EC%84%9C%EC%B4%88%EA%B5%AC/30%ED%8F%89%EB%8C%80",
+          "score": 73
+        },
+        {
+          "id": "a8EamEo",
+          "name": "양재우성KBS(113동)",
+          "dong": "양재동",
+          "units": 150,
+          "district": "서울|서초구",
+          "from": "/realty/apt-hub/%EC%84%9C%EC%9A%B8/%EC%84%9C%EC%B4%88%EA%B5%AC/10%EC%96%B5-20%EC%96%B5",
+          "score": 9
+        },
+        {
+          "id": "a4WafaC",
+          "name": "양재한신휴플러스",
+          "dong": "양재동",
+          "units": 46,
+          "district": "서울|서초구",
+          "from": "/realty/apt-hub/%EC%84%9C%EC%9A%B8/%EC%84%9C%EC%B4%88%EA%B5%AC/10%EC%96%B5-20%EC%96%B5",
+          "score": 0
+        }
+      ],
+      "richgo": {
+        "name": "양재우성",
+        "far": 198,
+        "year": 1991,
+        "units": 794,
+        "floors": "12~15층",
+        "coverage": 16,
+        "parking": 747,
+        "heating": "중앙난방 · 도시가스",
+        "builder": "우성건설",
+        "pyeongs": "27|30"
+      },
+      "reason": "confidence=73 margin=64 yearDiff=0 unitRatio=0.000 duplicate=0"
+    },
+    {
+      "seq": "149",
+      "name": "삼성",
+      "area": "서울 중구 신당동",
+      "candidates": [
+        {
+          "id": "a3qVPMX",
+          "name": "신당삼성",
+          "dong": "신당동",
+          "units": 994,
+          "district": "서울|중구",
+          "from": "/realty/apt-hub/%EC%84%9C%EC%9A%B8/%EC%A4%91%EA%B5%AC/10%EC%96%B5-20%EC%96%B5",
+          "score": 73
+        },
+        {
+          "id": "a8XTAux",
+          "name": "현대",
+          "dong": "신당동",
+          "units": 942,
+          "district": "서울|중구",
+          "from": "/realty/apt-hub/%EC%84%9C%EC%9A%B8/%EC%A4%91%EA%B5%AC/10%EC%96%B5-20%EC%96%B5",
+          "score": 37
+        },
+        {
+          "id": "a2tkDAl",
+          "name": "삼성V",
+          "dong": "신당동",
+          "units": 30,
+          "district": "서울|중구",
+          "from": "/realty/apt-hub/%EC%84%9C%EC%9A%B8/%EC%A4%91%EA%B5%AC",
+          "score": 33
+        }
+      ],
+      "richgo": {
+        "name": "신당삼성",
+        "far": 253,
+        "year": 1999,
+        "units": 994,
+        "floors": "14~23층",
+        "coverage": 19,
+        "parking": 1307,
+        "heating": "개별난방 · 도시가스",
+        "builder": "삼성물산(주)",
+        "pyeongs": "24|32|42"
+      },
+      "reason": "confidence=73 margin=36 yearDiff=0 unitRatio=0.000 duplicate=0"
+    },
+    {
+      "seq": "155",
+      "name": "동아1",
+      "area": "서울 구로구 신도림동",
+      "candidates": [
+        {
+          "id": "a7mBtrv",
+          "name": "신도림동아1차",
+          "dong": "신도림동",
+          "units": 1095,
+          "district": "서울|구로구",
+          "from": "/realty/apt-hub/%EC%84%9C%EC%9A%B8/%EA%B5%AC%EB%A1%9C%EA%B5%AC",
+          "score": 69
+        },
+        {
+          "id": "a0JmPox",
+          "name": "신도림동아3차",
+          "dong": "신도림동",
+          "units": 813,
+          "district": "서울|구로구",
+          "from": "/realty/apt-hub/%EC%84%9C%EC%9A%B8/%EA%B5%AC%EB%A1%9C%EA%B5%AC",
+          "score": 27
+        },
+        {
+          "id": "a4yBFka",
+          "name": "신도림동아2차",
+          "dong": "신도림동",
+          "units": 655,
+          "district": "서울|구로구",
+          "from": "/realty/apt-hub/%EC%84%9C%EC%9A%B8/%EA%B5%AC%EB%A1%9C%EA%B5%AC",
+          "score": 14
+        }
+      ],
+      "richgo": {
+        "name": "신도림동아1차",
+        "far": 395,
+        "year": 1999,
+        "units": 1095,
+        "floors": "17~27층",
+        "coverage": 22,
+        "parking": 1533,
+        "heating": "개별난방 · 도시가스",
+        "builder": "한신공영(주)",
+        "pyeongs": "24|32|53|60"
+      },
+      "reason": "confidence=69 margin=42 yearDiff=0 unitRatio=0.000 duplicate=0"
+    },
+    {
+      "seq": "173",
+      "name": "e편한세상신촌1단지",
+      "area": "서울 서대문구 북아현동",
+      "candidates": [
+        {
+          "id": "a6VGrCN",
+          "name": "e편한세상신촌",
+          "dong": "북아현동",
+          "units": 1910,
+          "district": "서울|서대문구",
+          "from": "/realty/apt-hub/%EC%84%9C%EC%9A%B8/%EC%84%9C%EB%8C%80%EB%AC%B8%EA%B5%AC",
+          "score": 118
+        },
+        {
+          "id": "a3plcNS",
+          "name": "힐스테이트신촌",
+          "dong": "북아현동",
+          "units": 1226,
+          "district": "서울|서대문구",
+          "from": "/realty/apt-hub/%EC%84%9C%EC%9A%B8/%EC%84%9C%EB%8C%80%EB%AC%B8%EA%B5%AC",
+          "score": 26
+        },
+        {
+          "id": "a0JrRWM",
+          "name": "경남1차",
+          "dong": "북아현동",
+          "units": 106,
+          "district": "서울|서대문구",
+          "from": "/realty/apt-hub/%EC%84%9C%EC%9A%B8/%EC%84%9C%EB%8C%80%EB%AC%B8%EA%B5%AC",
+          "score": 0
+        }
+      ],
+      "richgo": {
+        "name": "e편한세상신촌",
+        "far": 283,
+        "year": 2017,
+        "units": 1910,
+        "floors": "8~34층",
+        "coverage": 25,
+        "parking": 2528,
+        "heating": "개별난방 · 도시가스",
+        "builder": "대림산업(주)",
+        "pyeongs": "24|25|34|35|46"
+      },
+      "reason": "confidence=118 margin=92 yearDiff=1 unitRatio=0.000 duplicate=1"
+    },
+    {
+      "seq": "174",
+      "name": "e편한세상신촌2단지",
+      "area": "서울 서대문구 북아현동",
+      "candidates": [
+        {
+          "id": "a6VGrCN",
+          "name": "e편한세상신촌",
+          "dong": "북아현동",
+          "units": 1910,
+          "district": "서울|서대문구",
+          "from": "/realty/apt-hub/%EC%84%9C%EC%9A%B8/%EC%84%9C%EB%8C%80%EB%AC%B8%EA%B5%AC",
+          "score": 118
+        },
+        {
+          "id": "a3plcNS",
+          "name": "힐스테이트신촌",
+          "dong": "북아현동",
+          "units": 1226,
+          "district": "서울|서대문구",
+          "from": "/realty/apt-hub/%EC%84%9C%EC%9A%B8/%EC%84%9C%EB%8C%80%EB%AC%B8%EA%B5%AC",
+          "score": 26
+        },
+        {
+          "id": "a0JrRWM",
+          "name": "경남1차",
+          "dong": "북아현동",
+          "units": 106,
+          "district": "서울|서대문구",
+          "from": "/realty/apt-hub/%EC%84%9C%EC%9A%B8/%EC%84%9C%EB%8C%80%EB%AC%B8%EA%B5%AC",
+          "score": 0
+        }
+      ],
+      "richgo": {
+        "name": "e편한세상신촌",
+        "far": 283,
+        "year": 2017,
+        "units": 1910,
+        "floors": "8~34층",
+        "coverage": 25,
+        "parking": 2528,
+        "heating": "개별난방 · 도시가스",
+        "builder": "대림산업(주)",
+        "pyeongs": "24|25|34|35|46"
+      },
+      "reason": "confidence=118 margin=92 yearDiff=1 unitRatio=0.000 duplicate=1"
+    },
+    {
+      "seq": "175",
+      "name": "강남자곡아이파크",
+      "area": "서울 강남구 자곡동",
+      "candidates": [
+        {
+          "id": "a6fBXPW",
+          "name": "디아크리온강남",
+          "dong": "자곡동",
+          "units": 597,
+          "district": "서울|강남구",
+          "from": "/realty/apt-hub/%EC%84%9C%EC%9A%B8/%EA%B0%95%EB%82%A8%EA%B5%AC/10%EC%96%B5-20%EC%96%B5",
+          "score": 25
+        },
+        {
+          "id": "a6rMMFq",
+          "name": "강남자곡힐스테이트",
+          "dong": "자곡동",
+          "units": 1339,
+          "district": "서울|강남구",
+          "from": "/realty/apt-hub/%EC%84%9C%EC%9A%B8/%EA%B0%95%EB%82%A8%EA%B5%AC/10%EC%96%B5-20%EC%96%B5",
+          "score": 22
+        },
+        {
+          "id": "a0yBlCu",
+          "name": "강남브리즈힐",
+          "dong": "자곡동",
+          "units": 402,
+          "district": "서울|강남구",
+          "from": "/realty/apt-hub/%EC%84%9C%EC%9A%B8/%EA%B0%95%EB%82%A8%EA%B5%AC/10%EC%96%B5-20%EC%96%B5",
+          "score": 13
+        }
+      ]
+    },
+    {
+      "seq": "190",
+      "name": "광화문스페이스본(101동~105동)",
+      "area": "서울 종로구 사직동",
+      "candidates": [
+        {
+          "id": "a4XONIH",
+          "name": "광화문풍림스페이스본(주상복합)",
+          "dong": "사직동",
+          "units": 744,
+          "district": "서울|종로구",
+          "from": "/realty/apt-hub/%EC%84%9C%EC%9A%B8/%EC%A2%85%EB%A1%9C%EA%B5%AC",
+          "score": 32
+        },
+        {
+          "id": "a8kkXcB",
+          "name": "무악현대",
+          "dong": "무악동",
+          "units": 964,
+          "district": "서울|종로구",
+          "from": "/realty/apt-hub/%EC%84%9C%EC%9A%B8/%EC%A2%85%EB%A1%9C%EA%B5%AC",
+          "score": -20
+        },
+        {
+          "id": "a5uKSCI",
+          "name": "경희궁자이2단지",
+          "dong": "홍파동",
+          "units": 1148,
+          "district": "서울|종로구",
+          "from": "/realty/apt-hub/%EC%84%9C%EC%9A%B8/%EC%A2%85%EB%A1%9C%EA%B5%AC",
+          "score": -29
+        }
+      ]
+    },
+    {
+      "seq": "193",
+      "name": "현대",
+      "area": "서울 종로구 무악동",
+      "candidates": [
+        {
+          "id": "a8kkXcB",
+          "name": "무악현대",
+          "dong": "무악동",
+          "units": 964,
+          "district": "서울|종로구",
+          "from": "/realty/apt-hub/%EC%84%9C%EC%9A%B8/%EC%A2%85%EB%A1%9C%EA%B5%AC",
+          "score": 73
+        },
+        {
+          "id": "a6Onbmf",
+          "name": "인왕산현대아이파크",
+          "dong": "무악동",
+          "units": 810,
+          "district": "서울|종로구",
+          "from": "/realty/apt-hub/%EC%84%9C%EC%9A%B8/%EC%A2%85%EB%A1%9C%EA%B5%AC",
+          "score": 36
+        },
+        {
+          "id": "a9EvKHw",
+          "name": "경희궁롯데캐슬",
+          "dong": "무악동",
+          "units": 195,
+          "district": "서울|종로구",
+          "from": "/realty/apt-hub/%EC%84%9C%EC%9A%B8/%EC%A2%85%EB%A1%9C%EA%B5%AC",
+          "score": 0
+        }
+      ],
+      "richgo": {
+        "name": "무악현대",
+        "far": 218,
+        "year": 2000,
+        "units": 964,
+        "floors": "10~23층",
+        "coverage": 18,
+        "parking": 1162,
+        "heating": "개별난방 · 도시가스",
+        "builder": "현대건설",
+        "pyeongs": "25|29|33|42"
+      },
+      "reason": "confidence=73 margin=37 yearDiff=0 unitRatio=0.000 duplicate=0"
+    },
+    {
+      "seq": "207",
+      "name": "현대1",
+      "area": "서울 송파구 풍납동",
+      "candidates": [
+        {
+          "id": "a4ETSfU",
+          "name": "풍납현대",
+          "dong": "풍납동",
+          "units": 708,
+          "district": "서울|송파구",
+          "from": "/realty/apt-hub/%EC%84%9C%EC%9A%B8/%EC%86%A1%ED%8C%8C%EA%B5%AC",
+          "score": 50
+        },
+        {
+          "id": "a2EcDYr",
+          "name": "잠실올림픽공원아이파크",
+          "dong": "풍납동",
+          "units": 697,
+          "district": "서울|송파구",
+          "from": "/realty/apt-hub/%EC%84%9C%EC%9A%B8/%EC%86%A1%ED%8C%8C%EA%B5%AC",
+          "score": 37
+        },
+        {
+          "id": "a0XhTCb",
+          "name": "동아한가람",
+          "dong": "풍납동",
+          "units": 782,
+          "district": "서울|송파구",
+          "from": "/realty/apt-hub/%EC%84%9C%EC%9A%B8/%EC%86%A1%ED%8C%8C%EA%B5%AC/10%EC%96%B5-20%EC%96%B5",
+          "score": 37
+        }
+      ],
+      "richgo": {
+        "name": "풍납현대",
+        "far": 249,
+        "year": 1995,
+        "units": 708,
+        "floors": "15~20층",
+        "coverage": 16,
+        "parking": 381,
+        "heating": "지역난방 · 열병합",
+        "builder": "현대건설주식회사",
+        "pyeongs": "26|30|31"
+      },
+      "reason": "confidence=50 margin=13 yearDiff=0 unitRatio=0.030 duplicate=0"
+    },
+    {
+      "seq": "210",
+      "name": "까치마을(2단지)(주공)",
+      "area": "성남 분당구 구미동",
+      "candidates": [
+        {
+          "id": "a1wQaZJ",
+          "name": "까치주공2단지",
+          "dong": "구미동",
+          "units": 768,
+          "district": "경기|성남시 분당구",
+          "from": "/realty/apt-hub/%EA%B2%BD%EA%B8%B0/%EC%84%B1%EB%82%A8%EC%8B%9C%20%EB%B6%84%EB%8B%B9%EA%B5%AC/10%EC%96%B5-20%EC%96%B5",
+          "score": 69
+        },
+        {
+          "id": "a9OcZup",
+          "name": "무지개12단지주공",
+          "dong": "구미동",
+          "units": 905,
+          "district": "경기|성남시 분당구",
+          "from": "/realty/apt-hub/%EA%B2%BD%EA%B8%B0/%EC%84%B1%EB%82%A8%EC%8B%9C%20%EB%B6%84%EB%8B%B9%EA%B5%AC/20%ED%8F%89%EB%8C%80",
+          "score": 51
+        },
+        {
+          "id": "a1UmGpM",
+          "name": "하얀주공5단지",
+          "dong": "구미동",
+          "units": 779,
+          "district": "경기|성남시 분당구",
+          "from": "/realty/apt-hub/%EA%B2%BD%EA%B8%B0/%EC%84%B1%EB%82%A8%EC%8B%9C%20%EB%B6%84%EB%8B%B9%EA%B5%AC/10%EC%96%B5-20%EC%96%B5",
+          "score": 44
+        }
+      ],
+      "richgo": {
+        "name": "까치주공2단지",
+        "far": 150,
+        "year": 1995,
+        "units": 768,
+        "floors": "10~25층",
+        "coverage": 12,
+        "parking": 420,
+        "heating": "지역난방 · 열병합",
+        "builder": "국제종합건설(주)",
+        "pyeongs": "20|24"
+      },
+      "reason": "confidence=69 margin=18 yearDiff=0 unitRatio=0.000 duplicate=0"
+    },
+    {
+      "seq": "212",
+      "name": "성산월드타운대림",
+      "area": "서울 마포구 성산동",
+      "candidates": [
+        {
+          "id": "a1LIZXk",
+          "name": "성산시영",
+          "dong": "성산동",
+          "units": 3710,
+          "district": "서울|마포구",
+          "from": "/realty/apt-hub/%EC%84%9C%EC%9A%B8/%EB%A7%88%ED%8F%AC%EA%B5%AC/10%EC%96%B5-20%EC%96%B5",
+          "score": 13
+        },
+        {
+          "id": "a2iqiuT",
+          "name": "성사풍림1차",
+          "dong": "성산동",
+          "units": 172,
+          "district": "서울|마포구",
+          "from": "/realty/apt-hub/%EC%84%9C%EC%9A%B8/%EB%A7%88%ED%8F%AC%EA%B5%AC/20%ED%8F%89%EB%8C%80",
+          "score": 6
+        },
+        {
+          "id": "a6tYHzT",
+          "name": "월드컵IPARK1차",
+          "dong": "성산동",
+          "units": 320,
+          "district": "서울|마포구",
+          "from": "/realty/apt-hub/%EC%84%9C%EC%9A%B8/%EB%A7%88%ED%8F%AC%EA%B5%AC/10%EC%96%B5-20%EC%96%B5",
+          "score": 0
+        }
+      ]
+    },
+    {
+      "seq": "216",
+      "name": "신동아",
+      "area": "서울 동작구 본동",
+      "candidates": [
+        {
+          "id": "a8Fwtkq",
+          "name": "본동신동아",
+          "dong": "본동",
+          "units": 765,
+          "district": "서울|동작구",
+          "from": "/realty/apt-hub/%EC%84%9C%EC%9A%B8/%EB%8F%99%EC%9E%91%EA%B5%AC/10%EC%96%B5-20%EC%96%B5",
+          "score": 78
+        },
+        {
+          "id": "a3Wxbgo",
+          "name": "신동아",
+          "dong": "신대방동",
+          "units": 171,
+          "district": "서울|동작구",
+          "from": "/realty/apt-hub/%EC%84%9C%EC%9A%B8/%EB%8F%99%EC%9E%91%EA%B5%AC/20%ED%8F%89%EB%8C%80",
+          "score": 25
+        },
+        {
+          "id": "a0xosVR",
+          "name": "래미안트윈파크",
+          "dong": "본동",
+          "units": 523,
+          "district": "서울|동작구",
+          "from": "/realty/apt-hub/%EC%84%9C%EC%9A%B8/%EB%8F%99%EC%9E%91%EA%B5%AC",
+          "score": 13
+        }
+      ],
+      "richgo": {
+        "name": "본동신동아",
+        "far": 237,
+        "year": 1993,
+        "units": 765,
+        "floors": "9~12층",
+        "coverage": 21,
+        "parking": 492,
+        "heating": "중앙난방 · 도시가스",
+        "builder": "신동아건설주식회사",
+        "pyeongs": "18|23|33|37"
+      },
+      "reason": "confidence=78 margin=53 yearDiff=0 unitRatio=0.000 duplicate=0"
+    },
+    {
+      "seq": "223",
+      "name": "장미마을(코오롱)1",
+      "area": "성남 분당구 야탑동",
+      "candidates": [
+        {
+          "id": "a1gMpYV",
+          "name": "장미1단지코오롱",
+          "dong": "야탑동",
+          "units": 1082,
+          "district": "경기|성남시 분당구",
+          "from": "/realty/apt-hub/%EA%B2%BD%EA%B8%B0/%EC%84%B1%EB%82%A8%EC%8B%9C%20%EB%B6%84%EB%8B%B9%EA%B5%AC/10%EC%96%B5-20%EC%96%B5",
+          "score": 79
+        },
+        {
+          "id": "a4NAdYf",
+          "name": "장미1단지동부",
+          "dong": "야탑동",
+          "units": 1134,
+          "district": "경기|성남시 분당구",
+          "from": "/realty/apt-hub/%EA%B2%BD%EA%B8%B0/%EC%84%B1%EB%82%A8%EC%8B%9C%20%EB%B6%84%EB%8B%B9%EA%B5%AC/10%EC%96%B5-20%EC%96%B5",
+          "score": 50
+        },
+        {
+          "id": "a9YoeLS",
+          "name": "매화마을공무원2단지",
+          "dong": "야탑동",
+          "units": 1185,
+          "district": "경기|성남시 분당구",
+          "from": "/realty/apt-hub/%EA%B2%BD%EA%B8%B0/%EC%84%B1%EB%82%A8%EC%8B%9C%20%EB%B6%84%EB%8B%B9%EA%B5%AC/20%ED%8F%89%EB%8C%80",
+          "score": 38
+        }
+      ],
+      "richgo": {
+        "name": "장미1단지코오롱",
+        "far": 202,
+        "year": 1993,
+        "units": 1082,
+        "floors": "14~16층",
+        "coverage": 16,
+        "parking": 865,
+        "heating": "지역난방 · 열병합",
+        "builder": "동부주식회사,코오롱주식회사",
+        "pyeongs": "23|27|32|37|49"
+      },
+      "reason": "confidence=79 margin=29 yearDiff=0 unitRatio=0.000 duplicate=0"
+    },
+    {
+      "seq": "226",
+      "name": "현대",
+      "area": "서울 성동구 옥수동",
+      "candidates": [
+        {
+          "id": "a3JsRcb",
+          "name": "옥수현대",
+          "dong": "옥수동",
+          "units": 566,
+          "district": "서울|성동구",
+          "from": "/realty/apt-hub/%EC%84%9C%EC%9A%B8/%EC%84%B1%EB%8F%99%EA%B5%AC",
+          "score": 73
+        },
+        {
+          "id": "a2FCjkq",
+          "name": "한남하이츠",
+          "dong": "옥수동",
+          "units": 535,
+          "district": "서울|성동구",
+          "from": "/realty/apt-hub/%EC%84%9C%EC%9A%B8/%EC%84%B1%EB%8F%99%EA%B5%AC",
+          "score": 37
+        },
+        {
+          "id": "a9XUNBu",
+          "name": "극동그린",
+          "dong": "옥수동",
+          "units": 583,
+          "district": "서울|성동구",
+          "from": "/realty/apt-hub/%EC%84%9C%EC%9A%B8/%EC%84%B1%EB%8F%99%EA%B5%AC/10%EC%96%B5-20%EC%96%B5",
+          "score": 37
+        }
+      ],
+      "richgo": {
+        "name": "옥수현대",
+        "far": 200,
+        "year": 1990,
+        "units": 566,
+        "floors": "5~15층",
+        "coverage": null,
+        "parking": 357,
+        "heating": "중앙난방 · 도시가스",
+        "builder": "현대건설(주)",
+        "pyeongs": "23|25|27|28|29|35|42"
+      },
+      "reason": "confidence=73 margin=36 yearDiff=0 unitRatio=0.000 duplicate=0"
+    },
+    {
+      "seq": "227",
+      "name": "대림e-편한세상4",
+      "area": "서울 구로구 신도림동",
+      "candidates": [
+        {
+          "id": "a4TFclQ",
+          "name": "신도림4차e-편한세상",
+          "dong": "신도림동",
+          "units": 853,
+          "district": "서울|구로구",
+          "from": "/realty/apt-hub/%EC%84%9C%EC%9A%B8/%EA%B5%AC%EB%A1%9C%EA%B5%AC",
+          "score": 73
+        },
+        {
+          "id": "a0JmPox",
+          "name": "신도림동아3차",
+          "dong": "신도림동",
+          "units": 813,
+          "district": "서울|구로구",
+          "from": "/realty/apt-hub/%EC%84%9C%EC%9A%B8/%EA%B5%AC%EB%A1%9C%EA%B5%AC",
+          "score": 37
+        },
+        {
+          "id": "a8ATyPg",
+          "name": "미성",
+          "dong": "신도림동",
+          "units": 824,
+          "district": "서울|구로구",
+          "from": "/realty/apt-hub/%EC%84%9C%EC%9A%B8/%EA%B5%AC%EB%A1%9C%EA%B5%AC",
+          "score": 37
+        }
+      ],
+      "richgo": {
+        "name": "신도림4차e-편한세상",
+        "far": 249,
+        "year": 2003,
+        "units": 853,
+        "floors": "16~25층",
+        "coverage": 13,
+        "parking": 1484,
+        "heating": "개별난방 · 도시가스",
+        "builder": "대림산업(주)",
+        "pyeongs": "34|46|48|55|57|63"
+      },
+      "reason": "confidence=73 margin=36 yearDiff=0 unitRatio=0.000 duplicate=0"
+    },
+    {
+      "seq": "229",
+      "name": "공덕2삼성래미안",
+      "area": "서울 마포구 공덕동",
+      "candidates": [
+        {
+          "id": "a6FDFaH",
+          "name": "공덕삼성",
+          "dong": "공덕동",
+          "units": 651,
+          "district": "서울|마포구",
+          "from": "/realty/apt-hub/%EC%84%9C%EC%9A%B8/%EB%A7%88%ED%8F%AC%EA%B5%AC",
+          "score": 73
+        },
+        {
+          "id": "a9bxlly",
+          "name": "삼성래미안공덕2차",
+          "dong": "공덕동",
+          "units": 683,
+          "district": "서울|마포구",
+          "from": "/realty/apt-hub/%EC%84%9C%EC%9A%B8/%EB%A7%88%ED%8F%AC%EA%B5%AC/10%EC%96%B5-20%EC%96%B5",
+          "score": 59
+        },
+        {
+          "id": "a0QzMTf",
+          "name": "래미안공덕3차",
+          "dong": "공덕동",
+          "units": 616,
+          "district": "서울|마포구",
+          "from": "/realty/apt-hub/%EC%84%9C%EC%9A%B8/%EB%A7%88%ED%8F%AC%EA%B5%AC",
+          "score": 37
+        }
+      ],
+      "richgo": {
+        "name": "공덕삼성",
+        "far": 266,
+        "year": 1999,
+        "units": 651,
+        "floors": "10~25층",
+        "coverage": 18,
+        "parking": 779,
+        "heating": "개별난방 · 도시가스",
+        "builder": "삼성물산(주)",
+        "pyeongs": "25|34|43"
+      },
+      "reason": "confidence=73 margin=14 yearDiff=5 unitRatio=0.000 duplicate=1"
+    },
+    {
+      "seq": "235",
+      "name": "삼환",
+      "area": "서울 송파구 가락동",
+      "candidates": [
+        {
+          "id": "a6kgvOO",
+          "name": "삼환가락",
+          "dong": "가락동",
+          "units": 648,
+          "district": "서울|송파구",
+          "from": "/realty/apt-hub/%EC%84%9C%EC%9A%B8/%EC%86%A1%ED%8C%8C%EA%B5%AC/20%EC%96%B5%EC%9D%B4%EC%83%81",
+          "score": 73
+        },
+        {
+          "id": "a6NBhpI",
+          "name": "프라자",
+          "dong": "가락동",
+          "units": 672,
+          "district": "서울|송파구",
+          "from": "/realty/apt-hub/%EC%84%9C%EC%9A%B8/%EC%86%A1%ED%8C%8C%EA%B5%AC/40%ED%8F%89%EB%8C%80%EC%9D%B4%EC%83%81",
+          "score": 37
+        },
+        {
+          "id": "a6OnrRE",
+          "name": "극동",
+          "dong": "가락동",
+          "units": 555,
+          "district": "서울|송파구",
+          "from": "/realty/apt-hub/%EC%84%9C%EC%9A%B8/%EC%86%A1%ED%8C%8C%EA%B5%AC/20%EC%96%B5%EC%9D%B4%EC%83%81",
+          "score": 25
+        }
+      ],
+      "richgo": {
+        "name": "삼환가락",
+        "far": 178,
+        "year": 1984,
+        "units": 648,
+        "floors": "12~12층",
+        "coverage": null,
+        "parking": 453,
+        "heating": "지역난방 · 열병합",
+        "builder": "삼환기업",
+        "pyeongs": "28|32|43"
+      },
+      "reason": "confidence=73 margin=36 yearDiff=0 unitRatio=0.000 duplicate=0"
+    },
+    {
+      "seq": "238",
+      "name": "두산위브트레지움",
+      "area": "성남 분당구 금곡동",
+      "candidates": [
+        {
+          "id": "a2uaIaS",
+          "name": "청솔유천화인",
+          "dong": "금곡동",
+          "units": 624,
+          "district": "경기|성남시 분당구",
+          "from": "/realty/apt-hub/%EA%B2%BD%EA%B8%B0/%EC%84%B1%EB%82%A8%EC%8B%9C%20%EB%B6%84%EB%8B%B9%EA%B5%AC/10%EC%96%B5-20%EC%96%B5",
+          "score": 37
+        },
+        {
+          "id": "a5yqOkY",
+          "name": "청솔한라",
+          "dong": "금곡동",
+          "units": 768,
+          "district": "경기|성남시 분당구",
+          "from": "/realty/apt-hub/%EA%B2%BD%EA%B8%B0/%EC%84%B1%EB%82%A8%EC%8B%9C%20%EB%B6%84%EB%8B%B9%EA%B5%AC/10%EC%96%B5-20%EC%96%B5",
+          "score": 25
+        },
+        {
+          "id": "a8yKaep",
+          "name": "청솔계룡",
+          "dong": "금곡동",
+          "units": 492,
+          "district": "경기|성남시 분당구",
+          "from": "/realty/apt-hub/%EA%B2%BD%EA%B8%B0/%EC%84%B1%EB%82%A8%EC%8B%9C%20%EB%B6%84%EB%8B%B9%EA%B5%AC/10%EC%96%B5-20%EC%96%B5",
+          "score": 13
+        }
+      ]
+    },
+    {
+      "seq": "243",
+      "name": "동아3",
+      "area": "서울 구로구 신도림동",
+      "candidates": [
+        {
+          "id": "a0JmPox",
+          "name": "신도림동아3차",
+          "dong": "신도림동",
+          "units": 813,
+          "district": "서울|구로구",
+          "from": "/realty/apt-hub/%EC%84%9C%EC%9A%B8/%EA%B5%AC%EB%A1%9C%EA%B5%AC",
+          "score": 69
+        },
+        {
+          "id": "a4yBFka",
+          "name": "신도림동아2차",
+          "dong": "신도림동",
+          "units": 655,
+          "district": "서울|구로구",
+          "from": "/realty/apt-hub/%EC%84%9C%EC%9A%B8/%EA%B5%AC%EB%A1%9C%EA%B5%AC",
+          "score": 39
+        },
+        {
+          "id": "a4TFclQ",
+          "name": "신도림4차e-편한세상",
+          "dong": "신도림동",
+          "units": 853,
+          "district": "서울|구로구",
+          "from": "/realty/apt-hub/%EC%84%9C%EC%9A%B8/%EA%B5%AC%EB%A1%9C%EA%B5%AC",
+          "score": 37
+        }
+      ],
+      "richgo": {
+        "name": "신도림동아3차",
+        "far": 402,
+        "year": 2000,
+        "units": 813,
+        "floors": "21~27층",
+        "coverage": 49,
+        "parking": 1064,
+        "heating": "개별난방 · 도시가스",
+        "builder": "동아건설산업(주)",
+        "pyeongs": "24|32|41|50|60"
+      },
+      "reason": "confidence=69 margin=30 yearDiff=0 unitRatio=0.000 duplicate=0"
+    },
+    {
+      "seq": "245",
+      "name": "당산2가현대홈타운",
+      "area": "서울 영등포구 당산동2가",
+      "candidates": [
+        {
+          "id": "a8lKnrA",
+          "name": "현대",
+          "dong": "당산동2가",
+          "units": 783,
+          "district": "서울|영등포구",
+          "from": "/realty/apt-hub/%EC%84%9C%EC%9A%B8/%EC%98%81%EB%93%B1%ED%8F%AC%EA%B5%AC",
+          "score": 59
+        },
+        {
+          "id": "a5vnVJi",
+          "name": "한화포레나당산(민간임대)",
+          "dong": "당산동2가",
+          "units": 496,
+          "district": "서울|영등포구",
+          "from": "/realty/apt-hub/%EC%84%9C%EC%9A%B8/%EC%98%81%EB%93%B1%ED%8F%AC%EA%B5%AC",
+          "score": 13
+        },
+        {
+          "id": "a3mfpaI",
+          "name": "당산센트럴아이파크",
+          "dong": "당산동5가",
+          "units": 802,
+          "district": "서울|영등포구",
+          "from": "/realty/apt-hub/%EC%84%9C%EC%9A%B8/%EC%98%81%EB%93%B1%ED%8F%AC%EA%B5%AC",
+          "score": -9
+        }
+      ],
+      "richgo": {
+        "name": "현대",
+        "far": 299,
+        "year": 1994,
+        "units": 783,
+        "floors": "18~20층",
+        "coverage": 22,
+        "parking": 740,
+        "heating": "개별난방 · 도시가스",
+        "builder": "현대건설(주)",
+        "pyeongs": "30"
+      },
+      "reason": "confidence=59 margin=46 yearDiff=0 unitRatio=0.000 duplicate=0"
+    },
+    {
+      "seq": "256",
+      "name": "자양우성7",
+      "area": "서울 광진구 자양동",
+      "candidates": [
+        {
+          "id": "a8uUlBB",
+          "name": "우성7차",
+          "dong": "자양동",
+          "units": 625,
+          "district": "서울|광진구",
+          "from": "/realty/apt-hub/%EC%84%9C%EC%9A%B8/%EA%B4%91%EC%A7%84%EA%B5%AC",
+          "score": 68
+        },
+        {
+          "id": "a7kCjSH",
+          "name": "우성1차",
+          "dong": "자양동",
+          "units": 656,
+          "district": "서울|광진구",
+          "from": "/realty/apt-hub/%EC%84%9C%EC%9A%B8/%EA%B4%91%EC%A7%84%EA%B5%AC",
+          "score": 47
+        },
+        {
+          "id": "a1kCsvW",
+          "name": "자양우성3차",
+          "dong": "자양동",
+          "units": 464,
+          "district": "서울|광진구",
+          "from": "/realty/apt-hub/%EC%84%9C%EC%9A%B8/%EA%B4%91%EC%A7%84%EA%B5%AC",
+          "score": 46
+        }
+      ],
+      "richgo": {
+        "name": "우성7차",
+        "far": 339,
+        "year": 1998,
+        "units": 625,
+        "floors": "7~22층",
+        "coverage": 24,
+        "parking": 652,
+        "heating": "개별난방 · 도시가스",
+        "builder": "(주)우성건설",
+        "pyeongs": "25|33"
+      },
+      "reason": "confidence=68 margin=21 yearDiff=0 unitRatio=0.000 duplicate=0"
+    },
+    {
+      "seq": "264",
+      "name": "현대5",
+      "area": "서울 광진구 광장동",
+      "candidates": [
+        {
+          "id": "a2zGFFZ",
+          "name": "광장현대5단지",
+          "dong": "광장동",
+          "units": 581,
+          "district": "서울|광진구",
+          "from": "/realty/apt-hub/%EC%84%9C%EC%9A%B8/%EA%B4%91%EC%A7%84%EA%B5%AC",
+          "score": 78
+        },
+        {
+          "id": "a2nPFBj",
+          "name": "현대8단지",
+          "dong": "광장동",
+          "units": 537,
+          "district": "서울|광진구",
+          "from": "/realty/apt-hub/%EC%84%9C%EC%9A%B8/%EA%B4%91%EC%A7%84%EA%B5%AC",
+          "score": 70
+        },
+        {
+          "id": "a9QwJSj",
+          "name": "워커힐",
+          "dong": "광장동",
+          "units": 576,
+          "district": "서울|광진구",
+          "from": "/realty/apt-hub/%EC%84%9C%EC%9A%B8/%EA%B4%91%EC%A7%84%EA%B5%AC/20%EC%96%B5%EC%9D%B4%EC%83%81",
+          "score": 48
+        }
+      ],
+      "richgo": {
+        "name": "광장현대5단지",
+        "far": 259,
+        "year": 1989,
+        "units": 581,
+        "floors": "15~19층",
+        "coverage": 14,
+        "parking": 371,
+        "heating": "개별난방 · 도시가스",
+        "builder": "현대건설(주)",
+        "pyeongs": "22|27|31"
+      },
+      "reason": "confidence=78 margin=8 yearDiff=0 unitRatio=0.000 duplicate=0"
+    },
+    {
+      "seq": "266",
+      "name": "청솔마을(유천)",
+      "area": "성남 분당구 금곡동",
+      "candidates": [
+        {
+          "id": "a2uaIaS",
+          "name": "청솔유천화인",
+          "dong": "금곡동",
+          "units": 624,
+          "district": "경기|성남시 분당구",
+          "from": "/realty/apt-hub/%EA%B2%BD%EA%B8%B0/%EC%84%B1%EB%82%A8%EC%8B%9C%20%EB%B6%84%EB%8B%B9%EA%B5%AC/10%EC%96%B5-20%EC%96%B5",
+          "score": 65
+        },
+        {
+          "id": "a5yqOkY",
+          "name": "청솔한라",
+          "dong": "금곡동",
+          "units": 768,
+          "district": "경기|성남시 분당구",
+          "from": "/realty/apt-hub/%EA%B2%BD%EA%B8%B0/%EC%84%B1%EB%82%A8%EC%8B%9C%20%EB%B6%84%EB%8B%B9%EA%B5%AC/10%EC%96%B5-20%EC%96%B5",
+          "score": 30
+        },
+        {
+          "id": "a8yKaep",
+          "name": "청솔계룡",
+          "dong": "금곡동",
+          "units": 492,
+          "district": "경기|성남시 분당구",
+          "from": "/realty/apt-hub/%EA%B2%BD%EA%B8%B0/%EC%84%B1%EB%82%A8%EC%8B%9C%20%EB%B6%84%EB%8B%B9%EA%B5%AC/10%EC%96%B5-20%EC%96%B5",
+          "score": 30
+        }
+      ],
+      "richgo": {
+        "name": "청솔유천화인",
+        "far": 184,
+        "year": 1995,
+        "units": 624,
+        "floors": "14~25층",
+        "coverage": 15,
+        "parking": 510,
+        "heating": "지역난방 · 열병합",
+        "builder": "유천건설(주)",
+        "pyeongs": "17|31|32"
+      },
+      "reason": "confidence=65 margin=35 yearDiff=0 unitRatio=0.000 duplicate=0"
+    },
+    {
+      "seq": "267",
+      "name": "홍제센트럴IPARK",
+      "area": "서울 서대문구 홍제동",
+      "candidates": [
+        {
+          "id": "a5KRtJh",
+          "name": "홍제센트럴아이파크",
+          "dong": "홍제동",
+          "units": 906,
+          "district": "서울|서대문구",
+          "from": "/realty/apt-hub/%EC%84%9C%EC%9A%B8/%EC%84%9C%EB%8C%80%EB%AC%B8%EA%B5%AC",
+          "score": 73
+        },
+        {
+          "id": "a7AyidW",
+          "name": "홍제원현대(홍제원힐스테이트)",
+          "dong": "홍제동",
+          "units": 939,
+          "district": "서울|서대문구",
+          "from": "/realty/apt-hub/%EC%84%9C%EC%9A%B8/%EC%84%9C%EB%8C%80%EB%AC%B8%EA%B5%AC",
+          "score": 45
+        },
+        {
+          "id": "a1cTLMg",
+          "name": "무악청구1차",
+          "dong": "홍제동",
+          "units": 862,
+          "district": "서울|서대문구",
+          "from": "/realty/apt-hub/%EC%84%9C%EC%9A%B8/%EC%84%9C%EB%8C%80%EB%AC%B8%EA%B5%AC",
+          "score": 37
+        }
+      ],
+      "richgo": {
+        "name": "홍제센트럴아이파크",
+        "far": 219,
+        "year": 2020,
+        "units": 906,
+        "floors": "2~18층",
+        "coverage": 20,
+        "parking": 1051,
+        "heating": "개별난방 · 도시가스",
+        "builder": "현대산업개발(주)",
+        "pyeongs": "25|33|34|40|42"
+      },
+      "reason": "confidence=73 margin=28 yearDiff=0 unitRatio=0.000 duplicate=0"
+    },
+    {
+      "seq": "270",
+      "name": "우성2",
+      "area": "서울 영등포구 신길동",
+      "candidates": [
+        {
+          "id": "a9PqKNK",
+          "name": "신길우성2차",
+          "dong": "신길동",
+          "units": 725,
+          "district": "서울|영등포구",
+          "from": "/realty/apt-hub/%EC%84%9C%EC%9A%B8/%EC%98%81%EB%93%B1%ED%8F%AC%EA%B5%AC/10%EC%96%B5-20%EC%96%B5",
+          "score": 73
+        },
+        {
+          "id": "a2HWxlg",
+          "name": "신길우성1차",
+          "dong": "신길동",
+          "units": 688,
+          "district": "서울|영등포구",
+          "from": "/realty/apt-hub/%EC%84%9C%EC%9A%B8/%EC%98%81%EB%93%B1%ED%8F%AC%EA%B5%AC/10%EC%96%B5-20%EC%96%B5",
+          "score": 54
+        },
+        {
+          "id": "a3LIJkL",
+          "name": "보라매경남아너스빌",
+          "dong": "신길동",
+          "units": 669,
+          "district": "서울|영등포구",
+          "from": "/realty/apt-hub/%EC%84%9C%EC%9A%B8/%EC%98%81%EB%93%B1%ED%8F%AC%EA%B5%AC/30%ED%8F%89%EB%8C%80",
+          "score": 37
+        }
+      ],
+      "richgo": {
+        "name": "신길우성2차",
+        "far": 180,
+        "year": 1986,
+        "units": 725,
+        "floors": "13~15층",
+        "coverage": 17,
+        "parking": 870,
+        "heating": "개별난방 · 도시가스",
+        "builder": "우성건설(주)",
+        "pyeongs": "21|27|31"
+      },
+      "reason": "confidence=73 margin=19 yearDiff=0 unitRatio=0.000 duplicate=0"
+    },
+    {
+      "seq": "271",
+      "name": "탑마을(대우)",
+      "area": "성남 분당구 야탑동",
+      "candidates": [
+        {
+          "id": "a0BUHHO",
+          "name": "탑벽산",
+          "dong": "야탑동",
+          "units": 646,
+          "district": "경기|성남시 분당구",
+          "from": "/realty/apt-hub/%EA%B2%BD%EA%B8%B0/%EC%84%B1%EB%82%A8%EC%8B%9C%20%EB%B6%84%EB%8B%B9%EA%B5%AC/%EC%97%AD%EC%84%B8%EA%B6%8C",
+          "score": 47
+        },
+        {
+          "id": "a5ffpZE",
+          "name": "매화마을공무원1단지",
+          "dong": "야탑동",
+          "units": 562,
+          "district": "경기|성남시 분당구",
+          "from": "/realty/apt-hub/%EA%B2%BD%EA%B8%B0/%EC%84%B1%EB%82%A8%EC%8B%9C%20%EB%B6%84%EB%8B%B9%EA%B5%AC/20%ED%8F%89%EB%8C%80",
+          "score": 38
+        },
+        {
+          "id": "a2cMasw",
+          "name": "탑5단지타워빌",
+          "dong": "야탑동",
+          "units": 584,
+          "district": "경기|성남시 분당구",
+          "from": "/realty/apt-hub/%EA%B2%BD%EA%B8%B0/%EC%84%B1%EB%82%A8%EC%8B%9C%20%EB%B6%84%EB%8B%B9%EA%B5%AC/40%ED%8F%89%EB%8C%80%EC%9D%B4%EC%83%81",
+          "score": 35
+        }
+      ]
+    },
+    {
+      "seq": "276",
+      "name": "탑마을(벽산)",
+      "area": "성남 분당구 야탑동",
+      "candidates": [
+        {
+          "id": "a0BUHHO",
+          "name": "탑벽산",
+          "dong": "야탑동",
+          "units": 646,
+          "district": "경기|성남시 분당구",
+          "from": "/realty/apt-hub/%EA%B2%BD%EA%B8%B0/%EC%84%B1%EB%82%A8%EC%8B%9C%20%EB%B6%84%EB%8B%B9%EA%B5%AC/%EC%97%AD%EC%84%B8%EA%B6%8C",
+          "score": 78
+        },
+        {
+          "id": "a5ffpZE",
+          "name": "매화마을공무원1단지",
+          "dong": "야탑동",
+          "units": 562,
+          "district": "경기|성남시 분당구",
+          "from": "/realty/apt-hub/%EA%B2%BD%EA%B8%B0/%EC%84%B1%EB%82%A8%EC%8B%9C%20%EB%B6%84%EB%8B%B9%EA%B5%AC/20%ED%8F%89%EB%8C%80",
+          "score": 38
+        },
+        {
+          "id": "a2cMasw",
+          "name": "탑5단지타워빌",
+          "dong": "야탑동",
+          "units": 584,
+          "district": "경기|성남시 분당구",
+          "from": "/realty/apt-hub/%EA%B2%BD%EA%B8%B0/%EC%84%B1%EB%82%A8%EC%8B%9C%20%EB%B6%84%EB%8B%B9%EA%B5%AC/40%ED%8F%89%EB%8C%80%EC%9D%B4%EC%83%81",
+          "score": 35
+        }
+      ],
+      "richgo": {
+        "name": "탑벽산",
+        "far": 212,
+        "year": 1994,
+        "units": 646,
+        "floors": "12~23층",
+        "coverage": 15,
+        "parking": 716,
+        "heating": "지역난방 · 열병합",
+        "builder": "경남기업(주).벽산건설(주)",
+        "pyeongs": "23|27|32|38|42|49"
+      },
+      "reason": "confidence=78 margin=40 yearDiff=0 unitRatio=0.000 duplicate=0"
+    },
+    {
+      "seq": "277",
+      "name": "아름마을(두산)",
+      "area": "성남 분당구 이매동",
+      "candidates": [
+        {
+          "id": "a4fMvVE",
+          "name": "아름4단지두산삼호",
+          "dong": "이매동",
+          "units": 1132,
+          "district": "경기|성남시 분당구",
+          "from": "/realty/apt-hub/%EA%B2%BD%EA%B8%B0/%EC%84%B1%EB%82%A8%EC%8B%9C%20%EB%B6%84%EB%8B%B9%EA%B5%AC/20%EC%96%B5%EC%9D%B4%EC%83%81",
+          "score": 69
+        },
+        {
+          "id": "a1IIZzg",
+          "name": "이매한신",
+          "dong": "이매동",
+          "units": 1184,
+          "district": "경기|성남시 분당구",
+          "from": "/realty/apt-hub/%EA%B2%BD%EA%B8%B0/%EC%84%B1%EB%82%A8%EC%8B%9C%20%EB%B6%84%EB%8B%B9%EA%B5%AC/10%EC%96%B5-20%EC%96%B5",
+          "score": 37
+        },
+        {
+          "id": "a1Iqbuh",
+          "name": "이매삼성",
+          "dong": "이매동",
+          "units": 1162,
+          "district": "경기|성남시 분당구",
+          "from": "/realty/apt-hub/%EA%B2%BD%EA%B8%B0/%EC%84%B1%EB%82%A8%EC%8B%9C%20%EB%B6%84%EB%8B%B9%EA%B5%AC/20%EC%96%B5%EC%9D%B4%EC%83%81",
+          "score": 37
+        }
+      ],
+      "richgo": {
+        "name": "아름4단지두산삼호",
+        "far": 198,
+        "year": 1992,
+        "units": 1132,
+        "floors": "5~22층",
+        "coverage": 16,
+        "parking": 1556,
+        "heating": "지역난방 · 열병합",
+        "builder": "(주)삼호.두산건설(주)",
+        "pyeongs": "21|31|37|47|56|63"
+      },
+      "reason": "confidence=69 margin=32 yearDiff=0 unitRatio=0.000 duplicate=1"
+    },
+    {
+      "seq": "278",
+      "name": "아름마을(삼호)",
+      "area": "성남 분당구 이매동",
+      "candidates": [
+        {
+          "id": "a4fMvVE",
+          "name": "아름4단지두산삼호",
+          "dong": "이매동",
+          "units": 1132,
+          "district": "경기|성남시 분당구",
+          "from": "/realty/apt-hub/%EA%B2%BD%EA%B8%B0/%EC%84%B1%EB%82%A8%EC%8B%9C%20%EB%B6%84%EB%8B%B9%EA%B5%AC/20%EC%96%B5%EC%9D%B4%EC%83%81",
+          "score": 82
+        },
+        {
+          "id": "a1Iqbuh",
+          "name": "이매삼성",
+          "dong": "이매동",
+          "units": 1162,
+          "district": "경기|성남시 분당구",
+          "from": "/realty/apt-hub/%EA%B2%BD%EA%B8%B0/%EC%84%B1%EB%82%A8%EC%8B%9C%20%EB%B6%84%EB%8B%B9%EA%B5%AC/20%EC%96%B5%EC%9D%B4%EC%83%81",
+          "score": 45
+        },
+        {
+          "id": "a1IIZzg",
+          "name": "이매한신",
+          "dong": "이매동",
+          "units": 1184,
+          "district": "경기|성남시 분당구",
+          "from": "/realty/apt-hub/%EA%B2%BD%EA%B8%B0/%EC%84%B1%EB%82%A8%EC%8B%9C%20%EB%B6%84%EB%8B%B9%EA%B5%AC/10%EC%96%B5-20%EC%96%B5",
+          "score": 37
+        }
+      ],
+      "richgo": {
+        "name": "아름4단지두산삼호",
+        "far": 198,
+        "year": 1992,
+        "units": 1132,
+        "floors": "5~22층",
+        "coverage": 16,
+        "parking": 1556,
+        "heating": "지역난방 · 열병합",
+        "builder": "(주)삼호.두산건설(주)",
+        "pyeongs": "21|31|37|47|56|63"
+      },
+      "reason": "confidence=82 margin=37 yearDiff=0 unitRatio=0.000 duplicate=1"
+    },
+    {
+      "seq": "293",
+      "name": "꿈마을건영3차",
+      "area": "안양 동안구 평촌동",
+      "candidates": [
+        {
+          "id": "a5OvfYi",
+          "name": "꿈건영3단지",
+          "dong": "평촌동",
+          "units": 386,
+          "district": "경기|안양시 동안구",
+          "from": "/realty/apt-hub/%EA%B2%BD%EA%B8%B0/%EC%95%88%EC%96%91%EC%8B%9C%20%EB%8F%99%EC%95%88%EA%B5%AC",
+          "score": 77
+        },
+        {
+          "id": "a9JNcEy",
+          "name": "꿈현대",
+          "dong": "평촌동",
+          "units": 386,
+          "district": "경기|안양시 동안구",
+          "from": "/realty/apt-hub/%EA%B2%BD%EA%B8%B0/%EC%95%88%EC%96%91%EC%8B%9C%20%EB%8F%99%EC%95%88%EA%B5%AC",
+          "score": 55
+        },
+        {
+          "id": "a7WSsfM",
+          "name": "초원3단지대원",
+          "dong": "평촌동",
+          "units": 752,
+          "district": "경기|안양시 동안구",
+          "from": "/realty/apt-hub/%EA%B2%BD%EA%B8%B0/%EC%95%88%EC%96%91%EC%8B%9C%20%EB%8F%99%EC%95%88%EA%B5%AC",
+          "score": 48
+        }
+      ],
+      "richgo": {
+        "name": "꿈건영3단지",
+        "far": 205,
+        "year": 1994,
+        "units": 386,
+        "floors": "15~24층",
+        "coverage": 15,
+        "parking": 1050,
+        "heating": "지역난방 · 열병합",
+        "builder": "(주)건영",
+        "pyeongs": "37|47|50"
+      },
+      "reason": "confidence=77 margin=22 yearDiff=0 unitRatio=0.000 duplicate=0"
+    },
+    {
+      "seq": "299",
+      "name": "미사강변2차푸르지오",
+      "area": "하남시 선동",
+      "candidates": [
+        {
+          "id": "a2bSNib",
+          "name": "미사강변푸르지오2차",
+          "dong": "선동",
+          "units": 1066,
+          "district": "경기|하남시",
+          "from": "/realty/apt-hub/%EA%B2%BD%EA%B8%B0/%ED%95%98%EB%82%A8%EC%8B%9C",
+          "score": 78
+        },
+        {
+          "id": "a0oBwbe",
+          "name": "미사강변리슈빌NHF",
+          "dong": "선동",
+          "units": 996,
+          "district": "경기|하남시",
+          "from": "/realty/apt-hub/%EA%B2%BD%EA%B8%B0/%ED%95%98%EB%82%A8%EC%8B%9C",
+          "score": 57
+        },
+        {
+          "id": "a8ZkdPa",
+          "name": "미사강변센트리버",
+          "dong": "선동",
+          "units": 1145,
+          "district": "경기|하남시",
+          "from": "/realty/apt-hub/%EA%B2%BD%EA%B8%B0/%ED%95%98%EB%82%A8%EC%8B%9C",
+          "score": 57
+        }
+      ],
+      "richgo": {
+        "name": "미사강변푸르지오2차",
+        "far": 209,
+        "year": 2016,
+        "units": 1066,
+        "floors": "25~29층",
+        "coverage": 14,
+        "parking": 1806,
+        "heating": "지역난방 · 열병합",
+        "builder": "(주)대우건설",
+        "pyeongs": "36|39|45|46"
+      },
+      "reason": "confidence=78 margin=21 yearDiff=0 unitRatio=0.000 duplicate=0"
+    }
+  ]
+}
