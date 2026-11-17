@@ -33,7 +33,8 @@ jobs:
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add docs/richgo-10to15-remaining814-20261118.csv docs/richgo-10to15-verified-corrections.json
+          git add -f docs/richgo-10to15-remaining814-20261118.csv
+          git add docs/richgo-10to15-verified-corrections.json
           if [ -f docs/richgo-10to15-remaining814-crawl-status.json ]; then
             git add docs/richgo-10to15-remaining814-crawl-status.json
           fi
