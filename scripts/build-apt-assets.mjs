@@ -65,18 +65,7 @@ export function buildAptAssets(root, output = path.join(root, 'public')) {
         code = code.slice(0, a) + 'function s4DensityAdj(d){return {pen:0,far:null,src:null};}' + code.slice(b);
       }
       if (/document\.write\s*\(/.test(code)) throw new Error(`Unexpanded script dependency: ${file}`);
-      // 25~30억: 추가된 검증 근거용 스크립트만큼 점수 엔진의 기존 JS를
-      // 마찬가지 Terser로 안전 압축한다(식·값 유지, 전역 이름 mangle 금지).
-      // 30억 탭에만 한정하므로 다른 가격대의 전송량과 동작은 불변.
-      if (cap === 30 && file === 'apt-s4.js') {
-        const o = terser.minify_sync({[file]:code}, {
-          compress: {defaults: true, passes: 1}, mangle: false,
-          format: {comments: false, ascii_only: false}
-        });
-        if (!o || typeof o.code !== 'string') throw new Error('cap30 minify failed');
-        new vm.Script(o.code);
-        code = o.code;
-      } else code = minifyKeep(code, file);
+      code = minifyKeep(code, file);   // 전송량: terser로 주석·공백만 제거(이름·식은 그대로, compress·mangle 끔)
       if (isolated.test(file)) flush();
       chunk.push(`/* ${file} */\n${code}`); names.push(file);
       if (isolated.test(file)) flush();
@@ -96,8 +85,6 @@ export function buildAptAssets(root, output = path.join(root, 'public')) {
   if (key) html = html.replace('</head>', `<link rel="preload" as="script" href="https://dapi.kakao.com/v2/maps/sdk.js?appkey=${key}&amp;libraries=services&amp;autoload=false">\n</head>`);
   // 전송량: 첫 HTML의 <style> 안 CSS 주석·들여쓰기만 제거(규칙은 그대로)
   html = html.replace(/<style>([\s\S]*?)<\/style>/g, (m, c) => '<style>' + c.replace(/\/\*[\s\S]*?\*\//g, '').replace(/\n\s*/g, '\n') + '</style>');
-  // CSS의 닫는 중괄호 직전 세미콜론은 문법상 선택사항 — 삭제해 첫 HTML 압축 크기를 줄인다.
-  html = html.replace(/<style>([\s\S]*?)<\/style>/g, (m,c) => '<style>'+c.replace(/;\s*}/g,'}')+'</style>');
   // 전송량: 첫 HTML 안 인라인 스크립트도 주석·공백만 제거(이름·식 그대로)
   html = html.replace(/<script>([\s\S]*?)<\/script>/g, (m, c) => '<script>' + minifyKeep(c, 'inline.js') + '</script>');
   fs.writeFileSync(path.join(output, 'apt-map-fast.html'), html);
