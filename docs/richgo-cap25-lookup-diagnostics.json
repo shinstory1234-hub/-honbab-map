@@ -3,145 +3,112 @@
     "url": "https://m.richgo.ai/robots.txt",
     "status": 200,
     "len": 3473,
-    "final": "https://m.richgo.ai/robots.txt",
-    "head": "Sitemap: https://m.richgo.ai/sitemap.xml\nSitemap: https://m.richgo.ai/goodnews_detail.xml\nSitemap: https://m.richgo.ai/international.xml\nSitemap: https://m.richgo.ai/international_danji.xml\nSitemap: https://m.richgo.ai/international_danji_ja.xml\nSitemap: https://m.richgo.ai/international_danji_zh.xml\nSitemap: https://m.richgo.ai/danji_detail.xml\nSitemap: https://m.richgo.ai/community_posts.xml\nSitemap: https://m.richgo.ai/community_category.xml\nSitemap: https://m.richgo.ai/parcel.xml\nSitemap: https://m.richgo.ai/auctionMobile.xml\nSitemap: https://m.richgo.ai/auction_hub.xml\nSitemap: https://m.richgo.ai/onbid.xml\nSitemap: https://m.richgo.ai/onbid_hub.xml\n\nUser-agent: Applebot\nUser-agent: baiduspider\nUser-agent: Bingbot\nUser-agent: Googlebot\nUser-agent: ia_archiver\nUser-agent: msnbot\nUser-agent: Naverbot\nUser-agent: seznambot\nUser-agent: Slurp\nUser-agent: teoma\nUser-agent: Twitterbot\nUser-agent: Yandex\nUser-agent: Daumoa\nUser-agent: Daum\nUser-agent: Naverbot\nUser-agent: Yeti\nUser-agent: facebookexternalhit\nUser-agent: LinkedInBot\nUser-agent: Pinterestbot\nUser-agent: InstagramBot\nUser-agent: Googlebot-Image\nUser-agent: GPTBot\nUser-agent: ChatGPT-User\nUser-agent: OAI-SearchBot\nUser-agent: ClaudeBot\nUser-agent: Claude-User\nUser-agent: Claude-SearchBot\nUser-agent: anthropic-ai\nUser-agent: PerplexityBot\nUser-agent: Perplexity-User\nUser-agent: DuckAssistBot\nUser-agent: Amazonbot\nUser-agent: Google-Extended\nUser-agent: Google-CloudVertexBot\nUser-agent: CCBot\nUser-agent: GoogleOther\nUser-agent: cohere-ai\nUser-agent: Bytespider\nUser-agent: MistralAI-User\nUser-agent: meta-externalagent\nUser-agent: meta-externalfetcher\nUser-agent: AEOResearchBot\nUser-agent: AEOOperatorAudit\nUser-agent: AEOOperator\nAllow: /\nDisallow: /ad\nDisallow: /allMenu\nDisallow: /brokerAdmin\nDisallow: /brokerPay\nDisallow: /auctionRecommendation\nDisallow: /checklist\nDisallow: /comment\nDisallow: /realty/community/my\nDisallow: /realty/community/write\nAllow: /realty/danji\nAllow: /danji_detail.xml\nAllow: /danji.xml\nAllow: /danji_detail_busan.xml\nAllow: /danji_detail_chungbuk.xml\nAllow: /danji_detail_chungnam.xml\nAllow: /danji_detail_daegu.xml\nAllow: /danji_detail_daejeon.xml\nAllow: /danji_detail_gangwondo.xml\nAllow: /danji_detail_gwangju.xml\nAllow: /danji_detail_gyeongbuk.xml\nAllow: /danji_detail_gyeonggido.xml\nAllow: /danji_detail_gyeongnam.xml\nAllow: /danji_detail_incheon.xml\nAllow: /danji_detail_jeju.xml\nAllow: /danji_detail_jeonbuk.xml\nAllow: /danji_detail_jeonnam.xml\nAllow: /danji_detail_sejong.xml",
-    "keyTags": [
-      [
-        "sitemap",
-        29
-      ],
-      [
-        "<loc>",
-        -1
-      ],
-      [
-        "용적률",
-        -1
-      ],
-      [
-        "아파트 시세",
-        -1
-      ],
-      [
-        "/realty/danji/",
-        -1
-      ]
-    ]
+    "head": "Sitemap: https://m.richgo.ai/sitemap.xml\nSitemap: https://m.richgo.ai/goodnews_detail.xml\nSitemap: https://m.richgo.ai/international.xml\nSitemap: https://m.richgo.ai/international_danji.xml\nSitemap: https://m.richgo.ai/international_danji_ja.xml\nSitemap: https://m.richgo.ai/international_danji_zh.xml\nSitemap: https://m.richgo.ai/danji_detail.xml\nSitemap: https://m.richgo.ai/community_posts.xml\nSitemap: https://m.richgo.ai/community_category.xml\nSitemap: https://m.richgo.ai/parcel.xml\nSitemap: https://m.richgo.ai/auctionMobile.xml\nSitemap: https://m.richgo.ai/auction_hub.xml\nSitemap: https://m.richgo.ai/onbid.xml\nSitemap: https://m.richgo.ai/onbid_hub.xml\n\nUser-agent: Applebot\nUser-agent: baiduspider\nUser-agent: Bingbot\nUser-agent: Googlebot\nUser-agent: ia_archiver\nUser-agent: msnbot\nUser-agent: Naverbot\nUser-agent: seznambot\nUser-agent: Slurp\nUser-agent: teoma\nUser-agent: Twitterbot\nUser-agent: Yandex\nUser-agent: Daumoa\nUser-agent: Daum\nUser-agent: Naverbot\nUser-agent: Yeti\nUser-agent: facebookexternalhit\nUser-agent: LinkedInBot\nUser-agent: Pinterestbot\nUser-agent: InstagramBot\nUser-agent: Googlebot-Image\nUser-agent: GPTBot\nUser-agent: ChatGPT-User\nUser-agent: OAI-SearchBot\nUser-agent: ClaudeBot\nUser-agent: Claude-User\nUser-agent: Claude-SearchBot\nUser-agent: anthropic-ai\nUser-agent: PerplexityBot\nUser-agent: Perplexity-User\nUser-agent: DuckAssistBot\nUser-agent: Amazonbot\nUser-agent: Google-Extended\nUser-agent: Google-CloudVertexBot\nUser-agent: CCBot\nUser-agent: GoogleOther\nUser-agent: cohere-ai\nUser-agent: Bytespider\nUser-agent: MistralAI-User\nUser-agent: meta-externalagent\nUser-agent: meta-externalfetcher\nUser-agent: AEOResearchBot\nUser-agent: AEOOperatorAudit\nUser-agent: AEOOperator\nAllow: /\nDisallow: /ad\nDisallow: /allMenu\nDisallow: /brokerAdmin\nDisallow: /brokerPay\nDisallow: /auctionRecommendation\nDisallow: /checklist\nDisallow: /comment\nDisallow: /realty/community/my\nDisallow: /realty/community/write\nAllow: /realty/danji\nAllow: /danji_detail.xml\nAllow: /danji.xml\nAllow: /danji_detail_busan.xml\nAllow: /danji_detail_chungbuk.xml\nAllow: /danji_detail_chungnam.xml\nAllow: /danji_detail_daegu.xml\nAllow: /danji_detail_daejeon.xml\nAllow: /danji_detail_gangwondo.xml\nAllow: /danji_detail_gwangju.xml\nAllow: /danji_detail_gyeongbuk.xml\nAllow: /danji_detail_gyeonggido.xml\nAllow: /danji_detail_gyeongnam.xml\nAllow: /danji_detail_incheon.xml\nAllow: /danji_detail_jeju.xml\nAllow: /danji_detail_jeonbuk.xml\nAllow: /danji_detail_jeonnam.xml\nAllow: /danji_detail_sejong.xml\nAllow: /danji_detail_seoul.xml\nAllow: /danji_detail_ulsan.xml\nDisallow: /examples\nDisallow: /fluctuation\nDisallow: /log\nDisallow: /my\nDisallow: /oauth\nDisallow: /pcSelling\nDisallow: /post\nDisallow: /purchase\nDisallow: /realty/analytics\nDisallow: /realty/checklist\nDisallow: /realty/depositScan\nDisallow: /realty/my-house\nDisallow: /realty/notification\nDisallow: /realty/rader\nDisallow: /realty/safetyJeonse\nDisallow: /realty/search\nDisallow: /realty/unregisteredBroker\nDisallow: /realty/_home\nDisallow: /registry\nDisallow: /selling\nDisallow: /signUpPages\nDisallow: /toss-payments\nDisallow: /500\nDisallow: /502\nDisallow: /503\nDisallow: /504\nDisallow: /404\nDisallow: /4xx\nDisallow: /nhRoute\nDisallow: /login\nDisallow: /realty/goods\nDisallow: /realty/price-milestone\nDisallow: /realty/danji-comparison/teaser\nDisallow: /realty/parcel/hedge\n\nUser-agent: *\nDisallow: /\n#DaumWebMasterTool:89ac3e9a2d768ff9391492a6557a3b30a289910b6947a69ad8697bc6a823ab7c:hKlrfZ6UGLkfN4YRJoOe/Q==",
+    "idsCount": 0,
+    "ids": [],
+    "anchors": [],
+    "exampleAroundDanji": ""
   },
   {
-    "url": "https://m.richgo.ai/sitemap.xml",
+    "url": "https://m.richgo.ai/danji_detail.xml",
     "status": 200,
-    "len": 3586,
-    "final": "https://m.richgo.ai/sitemap.xml",
-    "head": "<?xml version='1.0' encoding='UTF-8'?>\r\n<sitemapindex xmlns=\"http://www.sitemaps.org/schemas/sitemap/0.9\"><sitemap><loc>https://m.richgo.ai/danji_detail.xml</loc></sitemap><sitemap><loc>https://m.richgo.ai/danji_detail_busan.xml</loc></sitemap><sitemap><loc>https://m.richgo.ai/danji_detail_chungbuk.xml</loc></sitemap><sitemap><loc>https://m.richgo.ai/danji_detail_chungnam.xml</loc></sitemap><sitemap><loc>https://m.richgo.ai/danji_detail_daegu.xml</loc></sitemap><sitemap><loc>https://m.richgo.ai/danji_detail_daejeon.xml</loc></sitemap><sitemap><loc>https://m.richgo.ai/danji_detail_gangwondo.xml</loc></sitemap><sitemap><loc>https://m.richgo.ai/danji_detail_gyeongbuk.xml</loc></sitemap><sitemap><loc>https://m.richgo.ai/danji_detail_gyeongnam.xml</loc></sitemap><sitemap><loc>https://m.richgo.ai/danji_detail_gyeonggido.xml</loc></sitemap><sitemap><loc>https://m.richgo.ai/danji_detail_jeju.xml</loc></sitemap><sitemap><loc>https://m.richgo.ai/danji_detail_jeonbuk.xml</loc></sitemap><sitemap><loc>https://m.richgo.ai/danji_detail_sejong.xml</loc></sitemap><sitemap><loc>https://m.richgo.ai/danji_detail_seoul.xml</loc></sitemap><sitemap><loc>https://m.richgo.ai/danji_detail_ulsan.xml</loc></sitemap><sitemap><loc>https://m.richgo.ai/danji_detail_incheon.xml</loc></sitemap><sitemap><loc>https://m.richgo.ai/danji_detail_jeonnamgwangju.xml</loc></sitemap><sitemap><loc>https://m.richgo.ai/officetel.xml</loc></sitemap><sitemap><loc>https://m.richgo.ai/region.xml</loc></sitemap><sitemap><loc>https://m.richgo.ai/parcel.xml</loc></sitemap><sitemap><loc>https://m.richgo.ai/redevelop.xml</loc></sitemap><sitemap><loc>https://m.richgo.ai/rebuilding.xml</loc></sitemap><sitemap><loc>https://m.richgo.ai/remodeling.xml</loc></sitemap><sitemap><loc>https://m.richgo.ai/elementary.xml</loc></sitemap><sitemap><loc>https://m.richgo.ai/middle.xml</loc></sitemap><sitemap><loc>https://m.richgo.ai/high.xml</loc></sitemap><sitemap><loc>https://m.richgo.ai/elementary_danji.xml</loc></sitemap><sitemap><loc>https://m.richgo.ai/middle_danji.xml</loc></sitemap><sitemap><loc>https://m.richgo.ai/subway_line.xml</loc></sitemap><sitemap><loc>https://m.richgo.ai/subway_station.xml</loc></sitemap><sitemap><loc>https://m.richgo.ai/signal.xml</loc></sitemap><sitemap><loc>https://m.richgo.ai/auctionMobile.xml</loc></sitemap><sitemap><loc>https://m.richgo.ai/auctionMobile_2.xml</loc></sitemap><sitemap><loc>https://m.richgo.ai/auctionMobile_3.xml</loc></sitemap><sitemap><loc>https://m.richgo.ai/onbid.xml</loc",
-    "keyTags": [
-      [
-        "sitemap",
-        41
-      ],
-      [
-        "<loc>",
-        115
-      ],
-      [
-        "용적률",
-        -1
-      ],
-      [
-        "아파트 시세",
-        -1
-      ],
-      [
-        "/realty/danji/",
-        -1
-      ]
-    ]
+    "len": 2505244,
+    "head": "<?xml version='1.0' encoding='UTF-8'?>\r\n<urlset xmlns=\"http://www.sitemaps.org/schemas/sitemap/0.9\"><url><loc>https://m.richgo.ai/realty/danji/a0aacRc</loc><lastmod>2026-11-04</lastmod></url><url><loc>https://m.richgo.ai/realty/danji/a0aAGNO</loc><lastmod>2026-10-30</lastmod></url><url><loc>https://m.richgo.ai/realty/danji/a0AaiDE</loc><lastmod>2026-09-05</lastmod></url><url><loc>https://m.richgo.ai/realty/danji/a0AaTBI</loc></url><url><loc>https://m.richgo.ai/realty/danji/a0aawIZ</loc><lastmod>2026-11-12</lastmod></url><url><loc>https://m.richgo.ai/realty/danji/a0abFyU</loc><lastmod>2026-10-31</lastmod></url><url><loc>https://m.richgo.ai/realty/danji/a0aBOIn</loc><lastmod>2026-11-01</lastmod></url><url><loc>https://m.richgo.ai/realty/danji/a0ABqTs</loc><lastmod>2026-10-12</lastmod></url><url><loc>https://m.richgo.ai/realty/danji/a0aBujA</loc></url><url><loc>https://m.richgo.ai/realty/danji/a0ACyED</loc><lastmod>2025-10-15</lastmod></url><url><loc>https://m.richgo.ai/realty/danji/a0aDepa</loc><lastmod>2026-10-28</lastmod></url><url><loc>https://m.richgo.ai/realty/danji/a0AdMaK</loc><lastmod>2026-11-11</lastmod></url><url><loc>https://m.richgo.ai/realty/danji/a0adreI</loc><lastmod>2026-04-29</lastmod></url><url><loc>https://m.richgo.ai/realty/danji/a0aDRNF</loc><lastmod>2026-10-15",
+    "idsCount": 28166,
+    "ids": [
+      "a0aacRc",
+      "a0aAGNO",
+      "a0AaiDE",
+      "a0AaTBI",
+      "a0aawIZ",
+      "a0abFyU",
+      "a0aBOIn",
+      "a0ABqTs",
+      "a0aBujA",
+      "a0ACyED",
+      "a0aDepa",
+      "a0AdMaK"
+    ],
+    "anchors": [],
+    "exampleAroundDanji": "<?xml version='1.0' encoding='UTF-8'?>\r\n<urlset xmlns=\"http://www.sitemaps.org/schemas/sitemap/0.9\"><url><loc>https://m.richgo.ai/realty/danji/a0aacRc</loc><lastmod>2026-11-04</lastmod></url><url><loc>https://m.richgo.ai/realty/danji/a0aAGNO</loc><lastmod>2026-10-30</lastmod></url><url><loc>https://m.richgo.ai/realty/danji/a0AaiDE</loc><lastmod>2026-09-05</lastmod></url><url><loc>https://m.richgo.ai/realty/danji/a0AaTBI</loc></url><url><loc>https://m.richgo.ai/realty/danji/a0aawIZ</loc><lastmod>2026-11-12</lastmod></url><url><loc>https://m.richgo.ai/realty/danji/a0abFyU</loc><lastmod>2026-10-31</lastmod></url><url><loc>ht"
   },
   {
-    "url": "https://m.richgo.ai/realty/danji/a6KvZvL",
+    "url": "https://m.richgo.ai/danji_detail_gyeonggido.xml",
     "status": 200,
-    "len": 313990,
-    "final": "https://m.richgo.ai/realty/danji/a6KvZvL",
-    "head": "<!DOCTYPE html><html lang=\"ko\"><head><meta charSet=\"utf-8\"/><link rel=\"alternate\" hrefLang=\"ko\" href=\"https://m.richgo.ai/realty/danji/a6KvZvL\"/><link rel=\"alternate\" hrefLang=\"en\" href=\"https://m.richgo.ai/realty/danji/a6KvZvL?lang=en\"/><link rel=\"alternate\" hrefLang=\"ja\" href=\"https://m.richgo.ai/realty/danji/a6KvZvL?lang=ja\"/><link rel=\"alternate\" hrefLang=\"zh-CN\" href=\"https://m.richgo.ai/realty/danji/a6KvZvL?lang=zh-cn\"/><link rel=\"alternate\" hrefLang=\"x-default\" href=\"https://m.richgo.ai/realty/danji/a6KvZvL\"/><link rel=\"canonical\" href=\"https://m.richgo.ai/realty/danji/a6KvZvL\"/><title>&#x27;염리동 마포프레스티지자이&#x27; 아파트 실거래가·시세·2년뒤 가격예측 분석 - 리치고</title><meta name=\"description\" content=\"&#x27;염리동 마포프레스티지자이&#x27; 24평 매매 23.5억, 전세 9.3억. 3개월 뒤 24.3억 전망(리치고 단기 예측, 상승 예상). AI 가격예측, 실거래가, 시세 분석. 1,694세대 2021년 입주, 서울한서초·광성중·경성고 학군. 주민·방문자 이야기 9개.\"/><meta name=\"keywords\" content=\"마포프레스티지자이, 마포구 염리동 마포프레스티지자이, 마포프레스티지자이 아파트, 마포구 아파트 매매, 염리동 아파트 전세, 서울 아파트 시세, 마포프레스티지자이 세대수, 염리동 아파트 실거래가, 학군, 마포구 아파트 월세, 아파트 호가, 부동산 미래가격, 서울 아파트 매물, 마포구 아파트 시세, 염리동 부동산 정보,  아파트 평형 정보, 서울 아파트 투자\"/><style>@font-face{font-family:'SUIT Variable';font-weight:100 900;font-display:optional;src:url('https://cdn.jsdelivr.net/gh/sunn-us/SUIT/fonts/variable/woff2/SUIT-Variable.woff2') format('woff2-variations')}</style><link rel=\"preconnect\" href=\"https://firebase.googleapis.com\" crossorigin=\"anonymous\"/><link rel=\"preconnect\" href=\"http://nrbe.map.naver.net\" crossorigin=\"anonymous\"/><meta name=\"apple-mobile-web-app-capable\" content=\"yes\"/><meta name=\"mobile-web-app-capable\" content=\"yes\"/><meta name=\"apple-mobile-web-app-status-bar-style\" content=\"#3B82F6\"/><script defer=\"\" type=\"text/javascript\" src=\"https://appleid.cdn-apple.com/appleauth/static/jsapi/appleid/1/en_US/appleid.auth.js\"></script><meta name=\"naver-site-verification\" content=\"2ea079bbb7580c53309a92936f21eca76cc052a3\"/><meta name=\"naver-site-verification\" content=\"a6b94a36b40cf26f74ccefd4a5b45d7df3770f3b\"/><meta name=\"google-site-verification\" content=\"R_8Mc4R9zA3bu43D3T-FOir8NKVufQNpHdAb4RBmLo0\"/><script type=\"application/ld+json\">[{\"@context\":\"https://schema.org\",\"@type\":\"Organization\",\"@id\":\"https://m.richgo.ai/#organization\",\"name\":\"리치고\",\"alternateName\":\"RichGo\",\"legalName\":\"주식회사 데이터노우즈\",\"url\":\"https://m.richgo.ai\",\"logo\":\"https://m.richgo.ai/apple-touch-icon.png\",\"description\":\"대한민국 아파트 시세·실거래가·매물 최저가, 동·호수별 적정 호가, 보유세, 법원 경매 권리분석, 청약·재건축 정보를 제공하는 부동산 데이터 서비스\",\"sameAs\":[\"https://apps.apple.com/kr/app/id1540692940\",\"https://",
-    "keyTags": [
-      [
-        "sitemap",
-        -1
-      ],
-      [
-        "<loc>",
-        -1
-      ],
-      [
-        "용적률",
-        189688
-      ],
-      [
-        "아파트 시세",
-        958
-      ],
-      [
-        "/realty/danji/",
-        121
-      ]
-    ]
+    "len": 580489,
+    "head": "<?xml version='1.0' encoding='UTF-8'?>\r\n<urlset xmlns=\"http://www.sitemaps.org/schemas/sitemap/0.9\"><url><loc>https://m.richgo.ai/realty/danji/a0abFyU</loc><lastmod>2026-10-31</lastmod></url><url><loc>https://m.richgo.ai/realty/danji/a0aDepa</loc><lastmod>2026-10-28</lastmod></url><url><loc>https://m.richgo.ai/realty/danji/a0AdwGf</loc><lastmod>2026-07-05</lastmod></url><url><loc>https://m.richgo.ai/realty/danji/a0Aeagn</loc><lastmod>2026-11-04</lastmod></url><url><loc>https://m.richgo.ai/realty/danji/a0afeCB</loc><lastmod>2026-10-18</lastmod></url><url><loc>https://m.richgo.ai/realty/danji/a0aFVXu</loc><lastmod>2026-10-16</lastmod></url><url><loc>https://m.richgo.ai/realty/danji/a0AHAhg</loc><lastmod>2026-11-07</lastmod></url><url><loc>https://m.richgo.ai/realty/danji/a0ahNNr</loc><lastmod>2026-11-07</lastmod></url><url><loc>https://m.richgo.ai/realty/danji/a0Ajnzs</loc><lastmod>2026-07-01</lastmod></url><url><loc>https://m.richgo.ai/realty/danji/a0akkoB</loc><lastmod>2026-10-31</lastmod></url><url><loc>https://m.richgo.ai/realty/danji/a0AkrGl</loc><lastmod>2026-10-09</lastmod></url><url><loc>https://m.richgo.ai/realty/danji/a0AmJWP</loc><lastmod>2026-10-09</lastmod></url><url><loc>https://m.richgo.ai/realty/danji/a0AMssT</loc><lastmod>2026-10-23</lastmod></url><url><loc>https:/",
+    "idsCount": 6533,
+    "ids": [
+      "a0abFyU",
+      "a0aDepa",
+      "a0AdwGf",
+      "a0Aeagn",
+      "a0afeCB",
+      "a0aFVXu",
+      "a0AHAhg",
+      "a0ahNNr",
+      "a0Ajnzs",
+      "a0akkoB",
+      "a0AkrGl",
+      "a0AmJWP"
+    ],
+    "anchors": [],
+    "exampleAroundDanji": "<?xml version='1.0' encoding='UTF-8'?>\r\n<urlset xmlns=\"http://www.sitemaps.org/schemas/sitemap/0.9\"><url><loc>https://m.richgo.ai/realty/danji/a0abFyU</loc><lastmod>2026-10-31</lastmod></url><url><loc>https://m.richgo.ai/realty/danji/a0aDepa</loc><lastmod>2026-10-28</lastmod></url><url><loc>https://m.richgo.ai/realty/danji/a0AdwGf</loc><lastmod>2026-07-05</lastmod></url><url><loc>https://m.richgo.ai/realty/danji/a0Aeagn</loc><lastmod>2026-11-04</lastmod></url><url><loc>https://m.richgo.ai/realty/danji/a0afeCB</loc><lastmod>2026-10-18</lastmod></url><url><loc>https://m.richgo.ai/realty/danji/a0aFVXu</loc><lastmod>2026-10-1"
+  },
+  {
+    "url": "https://m.richgo.ai/realty/apt-hub/%EC%84%9C%EC%9A%B8/%EB%A7%88%ED%8F%AC%EA%B5%AC",
+    "status": 200,
+    "len": 68340,
+    "head": "<!DOCTYPE html><html lang=\"ko\"><head><meta charSet=\"utf-8\"/><style>@font-face{font-family:'SUIT Variable';font-weight:100 900;font-display:optional;src:url('https://cdn.jsdelivr.net/gh/sunn-us/SUIT/fonts/variable/woff2/SUIT-Variable.woff2') format('woff2-variations')}</style><link rel=\"preconnect\" href=\"https://firebase.googleapis.com\" crossorigin=\"anonymous\"/><link rel=\"preconnect\" href=\"http://nrbe.map.naver.net\" crossorigin=\"anonymous\"/><meta name=\"apple-mobile-web-app-capable\" content=\"yes\"/><meta name=\"mobile-web-app-capable\" content=\"yes\"/><meta name=\"apple-mobile-web-app-status-bar-style\" content=\"#3B82F6\"/><script defer=\"\" type=\"text/javascript\" src=\"https://appleid.cdn-apple.com/appleauth/static/jsapi/appleid/1/en_US/appleid.auth.js\"></script><meta name=\"naver-site-verification\" content=\"2ea079bbb7580c53309a92936f21eca76cc052a3\"/><meta name=\"naver-site-verification\" content=\"a6b94a36b40cf26f74ccefd4a5b45d7df3770f3b\"/><meta name=\"google-site-verification\" content=\"R_8Mc4R9zA3bu43D3T-FOir8NKVufQNpHdAb4RBmLo0\"/><script type=\"application/ld+json\">[{\"@context\":\"https://schema.org\",\"@type\":\"Organization\",\"@id\":\"https://m.richgo.ai/#organization\",\"name\":\"리치고\",\"alternateName\":\"RichGo\",\"legalName\":\"주식회사 데이터노우즈\",\"url\":\"https://m.richgo.ai\",\"logo\":\"https://m.richgo.ai/apple-touch-i",
+    "idsCount": 60,
+    "ids": [
+      "a6KvZvL",
+      "a8gmReL",
+      "a0QzMTf",
+      "a0rnkel",
+      "a1jMORm",
+      "a5PbpPL",
+      "a9sFiii",
+      "a9kSBpq",
+      "a6Pmzuy",
+      "a8LzFEO",
+      "a4DCxeO",
+      "a7fYQjG"
+    ],
+    "anchors": [],
+    "exampleAroundDanji": "%B5%AC\"}]},{\"@context\":\"https://schema.org\",\"@type\":\"ItemList\",\"name\":\"서울 마포구 아파트\",\"numberOfItems\":206,\"itemListElement\":[{\"@type\":\"ListItem\",\"position\":1,\"name\":\"마포프레스티지자이\",\"url\":\"https://m.richgo.ai/realty/danji/a6KvZvL\"},{\"@type\":\"ListItem\",\"position\":2,\"name\":\"마포더클래시\",\"url\":\"https://m.richgo.ai/realty/danji/a8gmReL\"},{\"@type\":\"ListItem\",\"position\":3,\"name\":\"래미안공덕3차\",\"url\":\"https://m.richgo.ai/realty/danji/a0QzMTf\"},{\"@type\":\"ListItem\",\"position\":4,\"name\":\"e편한세상마포리버파크\",\"url\":\"https://m.richgo.ai/realty/danji/a0rnkel\"},{\"@type\":\"ListItem\",\"position\":5,\"name\":\"래미안공덕5차\",\"url\":\"https://m.richgo.ai/realty/danji/a1jMORm\"},{\"@type\":\"ListItem\",\"position\":6,\"name\":\"래미안마포리버웰\",\"url\":\"https://m.richg"
+  },
+  {
+    "url": "https://m.richgo.ai/realty/apt-hub/%EA%B2%BD%EA%B8%B0/%EA%B3%BC%EC%B2%9C%EC%8B%9C",
+    "status": 200,
+    "len": 46426,
+    "head": "<!DOCTYPE html><html lang=\"ko\"><head><meta charSet=\"utf-8\"/><style>@font-face{font-family:'SUIT Variable';font-weight:100 900;font-display:optional;src:url('https://cdn.jsdelivr.net/gh/sunn-us/SUIT/fonts/variable/woff2/SUIT-Variable.woff2') format('woff2-variations')}</style><link rel=\"preconnect\" href=\"https://firebase.googleapis.com\" crossorigin=\"anonymous\"/><link rel=\"preconnect\" href=\"http://nrbe.map.naver.net\" crossorigin=\"anonymous\"/><meta name=\"apple-mobile-web-app-capable\" content=\"yes\"/><meta name=\"mobile-web-app-capable\" content=\"yes\"/><meta name=\"apple-mobile-web-app-status-bar-style\" content=\"#3B82F6\"/><script defer=\"\" type=\"text/javascript\" src=\"https://appleid.cdn-apple.com/appleauth/static/jsapi/appleid/1/en_US/appleid.auth.js\"></script><meta name=\"naver-site-verification\" content=\"2ea079bbb7580c53309a92936f21eca76cc052a3\"/><meta name=\"naver-site-verification\" content=\"a6b94a36b40cf26f74ccefd4a5b45d7df3770f3b\"/><meta name=\"google-site-verification\" content=\"R_8Mc4R9zA3bu43D3T-FOir8NKVufQNpHdAb4RBmLo0\"/><script type=\"application/ld+json\">[{\"@context\":\"https://schema.org\",\"@type\":\"Organization\",\"@id\":\"https://m.richgo.ai/#organization\",\"name\":\"리치고\",\"alternateName\":\"RichGo\",\"legalName\":\"주식회사 데이터노우즈\",\"url\":\"https://m.richgo.ai\",\"logo\":\"https://m.richgo.ai/apple-touch-i",
+    "idsCount": 25,
+    "ids": [
+      "a1GZhJL",
+      "a9SkxdQ",
+      "a0HUuxE",
+      "a3SifkX",
+      "a9yQjLC",
+      "a4zroyp",
+      "a5oxNYK",
+      "a7XHQJZ",
+      "a1VbcWq",
+      "a9IIQlF",
+      "a9TeazT",
+      "a7pCCTU"
+    ],
+    "anchors": [],
+    "exampleAroundDanji": "9C%EC%8B%9C\"}]},{\"@context\":\"https://schema.org\",\"@type\":\"ItemList\",\"name\":\"경기 과천시 아파트\",\"numberOfItems\":25,\"itemListElement\":[{\"@type\":\"ListItem\",\"position\":1,\"name\":\"주공9단지\",\"url\":\"https://m.richgo.ai/realty/danji/a1GZhJL\"},{\"@type\":\"ListItem\",\"position\":2,\"name\":\"주공8단지\",\"url\":\"https://m.richgo.ai/realty/danji/a9SkxdQ\"},{\"@type\":\"ListItem\",\"position\":3,\"name\":\"과천푸르지오써밋\",\"url\":\"https://m.richgo.ai/realty/danji/a0HUuxE\"},{\"@type\":\"ListItem\",\"position\":4,\"name\":\"과천자이\",\"url\":\"https://m.richgo.ai/realty/danji/a3SifkX\"},{\"@type\":\"ListItem\",\"position\":5,\"name\":\"주공10단지\",\"url\":\"https://m.richgo.ai/realty/danji/a9yQjLC\"},{\"@type\":\"ListItem\",\"position\":6,\"name\":\"과천위버필드\",\"url\":\"https://m.richgo.ai/realt"
   },
   {
     "url": "https://www.google.com/search?q=site%3Am.richgo.ai%2Frealty%2Fdanji+%22%EB%A7%88%ED%8F%AC%ED%94%84%EB%A0%88%EC%8A%A4%ED%8B%B0%EC%A7%80%EC%9E%90%EC%9D%B4%22",
     "status": 200,
-    "len": 93666,
-    "final": "https://www.google.com/search?q=site%3Am.richgo.ai%2Frealty%2Fdanji+%22%EB%A7%88%ED%8F%AC%ED%94%84%EB%A0%88%EC%8A%A4%ED%8B%B0%EC%A7%80%EC%9E%90%EC%9D%B4%22",
-    "head": "<!DOCTYPE html><html lang=\"en\"><head><title>Google Search</title><style>body{background-color:#fff}</style><script nonce=\"4TQGuqgyn6sCQRfXHdjZHg\">window.google = window.google || {};window.google.c = window.google.c || {cap:0};</script></head><body><noscript><style>table,div,span,p{display:none}</style><meta content=\"0;url=/httpservice/retry/enablejs?sei=nYr8aurkBJyzmtkP4-L10Aw\" http-equiv=\"refresh\"><div style=\"display:block\">Please click <a href=\"/httpservice/retry/enablejs?sei=nYr8aurkBJyzmtkP4-L10Aw\">here</a> if you are not redirected within a few seconds.</div></noscript><script nonce=\"4TQGuqgyn6sCQRfXHdjZHg\">(function(){var sctm=false;(function(){sctm&&google.tick(\"load\",\"pbsst\");}).call(this);})();</script><script nonce=\"4TQGuqgyn6sCQRfXHdjZHg\">//# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjogMywic291cmNlcyI6WyIiXSwic291cmNlc0NvbnRlbnQiOlsiICJdLCJuYW1lcyI6WyJjbG9zdXJlRHluYW1pY0J1dHRvbiJdLCJtYXBwaW5ncyI6IkFBQUE7QUFBQTtBQUFBO0FBQUE7QUFBQTtBQUFBO0FBQUEifQ==\n(function(){var L=108,v=162,f=27,h=231,E=40,c=function(z,S,J,H,W,Z,B,R,G,U){{U=3;while(U!=42)if(U==3)U=63;else if(U==17)U=((J^22)&4)<1&&(J^1)>=10?S:78;else if(U==S){a:{if(!(R=(B=H,g).trustedTypes,R)||!R.createPolicy){G=B;break a}try{B=R.createPolicy(Z,{createHTML:A,createScript:A,createScriptURL:A})}catch(D){if(g.console)g.console[W](D.message)}G=B}U=78}else if(U==63)U=(J+z^22)>=J&&(J-5|z)<J?93:17;else{if(U==78)return G;U==93&&(G=H,U=17)}}},A=function(z){return c.call(this,7,13,3,z)},g=this||self;(0,eval)(function(z,S,J,H,W){return(S=c(7,13,12,(J=(J=(W=(J=143,h=f^v,228),H=145,229),97),null),\"error\",\"ks\"))&&z.eval(S.createScript(\"1\"))===1?function(Z){return S.createScript(Z)}:function(Z){return\"\"+Z}}(g)(Array(Math.random()*7824|0).join(\"\\n\")+['//# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjogMywic291cmNlcyI6WyIiXSwic291cmNlc0NvbnRlbnQiOlsiICJdLCJuYW1lcyI6WyJjbG9zdXJlRHluYW1pY0J1dHRvbiJdLCJtYXBwaW5ncyI6IkFBQUE7QUFBQTtBQUFBO0FBQUE7QUFBQTtBQUFBO0FBQUEifQ==',\n'(function(){/*',\n'',\n' Copyright Google LLC',\n' SPDX-License-Identifier: Apache-2.0',\n'*/',\n'var J4=function(U,z,J,S,B,H,R,G){try{G=U[((z|0)+2)%3],U[z]=(B=(R=U[z],S=U[((z|0)+1)%3],(R&S)+~(R&S)+(~R^S)-2*(~R|S))-(G|0),H=z==1?G<<J:G>>>J,(B|H)+~(B|H)-(~B^H))}catch(L){throw L;}},cs=function(U,z,J){if(U==67||U==93)J.C[U]?J.C[U].concat(z):J.C[U]=l(J,16,z);else{if(J.YW&&U!=353)return;U==405||U==236||U==100||U==143||U==149||U==197||U==281||U==44||U==111||U==382?J.C[U]||(J.C[U]=l(2,36,J,150,z,U)):J",
-    "keyTags": [
-      [
-        "sitemap",
-        -1
-      ],
-      [
-        "<loc>",
-        -1
-      ],
-      [
-        "용적률",
-        -1
-      ],
-      [
-        "아파트 시세",
-        -1
-      ],
-      [
-        "/realty/danji/",
-        -1
-      ]
-    ]
-  },
-  {
-    "url": "https://www.bing.com/search?q=site%3Am.richgo.ai%2Frealty%2Fdanji+%22%EB%A7%88%ED%8F%AC%ED%94%84%EB%A0%88%EC%8A%A4%ED%8B%B0%EC%A7%80%EC%9E%90%EC%9D%B4%22",
-    "status": 200,
-    "len": 106887,
-    "final": "https://www.bing.com/search?q=site%3Am.richgo.ai%2Frealty%2Fdanji+%22%EB%A7%88%ED%8F%AC%ED%94%84%EB%A0%88%EC%8A%A4%ED%8B%B0%EC%A7%80%EC%9E%90%EC%9D%B4%22",
-    "head": "<!DOCTYPE html><html dir=\"ltr\" lang=\"en\" xml:lang=\"en\" xmlns=\"http://www.w3.org/1999/xhtml\" xmlns:Web=\"http://schemas.live.com/Web/\"><script type=\"text/javascript\" nonce=\"5yImnfc/k9sZ4C0h/qdkNc+liBcf57QSMeeiiR7EU+U=\" >\"use strict\";//<![CDATA[\r\nwindow.si_ST=new Date\r\n//]]></script><head><!--pc--><title>site:m.richgo.ai/realty/danji &quot;마포프레스티지자이&quot; - Search</title><meta content=\"text/html; charset=utf-8\" http-equiv=\"content-type\" /><meta name=\"referrer\" content=\"origin-when-cross-origin\" /><meta property=\"og:description\" content=\"Intelligent search from Bing makes it easier to quickly find what you’re looking for and rewards you.\" /><meta property=\"og:site_name\" content=\"Bing\" /><meta property=\"og:title\" content=\"site:m.richgo.ai/realty/danji &quot;마포프레스티지자이&quot; - Bing\" /><meta property=\"og:url\" content=\"https://www.bing.com/search?q=site%3Am.richgo.ai%2Frealty%2Fdanji+&quot;마포프레스티지자이&quot;\" /><meta property=\"fb:app_id\" content=\"3732605936979161\" /><meta property=\"og:image\" content=\"http://www.bing.com/sa/simg/facebook_sharing_5.png\" /><meta property=\"og:type\" content=\"website\" /><meta property=\"og:image:width\" content=\"600\" /><meta property=\"og:image:height\" content=\"315\" /><link rel=\"alternate\"\r\n                      href=\"/search?format=rss&amp;q=site%3Am.richgo.ai%2Frealty%2Fdanji+%22%EB%A7%88%ED%8F%AC%ED%94%84%EB%A0%88%EC%8A%A4%ED%8B%B0%EC%A7%80%EC%9E%90%EC%9D%B4%22\"title='XML'type='text/xml' /><link rel=\"alternate\"\r\n                      href=\"/search?format=rss&amp;q=site%3Am.richgo.ai%2Frealty%2Fdanji+%22%EB%A7%88%ED%8F%AC%ED%94%84%EB%A0%88%EC%8A%A4%ED%8B%B0%EC%A7%80%EC%9E%90%EC%9D%B4%22\"title='RSS'type='application/rss+xml' /><link rel=\"icon\"\r\n                      href=\"/sa/simg/favicon-trans-bg-blue-mg.ico\" /><link rel=\"preconnect\" href=\"https://r.bing.com\" /><link rel=\"preconnect\" href=\"https://r.bing.com\" crossorigin/><link rel=\"dns-prefetch\" href=\"https://r.bing.com\" /><link rel=\"dns-prefetch\" href=\"https://r.bing.com\" crossorigin/><link rel=\"preconnect\" href=\"https://th.bing.com\" /><link rel=\"preconnect\" href=\"https://th.bing.com\" crossorigin/><link rel=\"dns-prefetch\" href=\"https://th.bing.com\" /><link rel=\"dns-prefetch\" href=\"https://th.bing.com\" crossorigin/><script type=\"text/javascript\" nonce=\"5yImnfc/k9sZ4C0h/qdkNc+liBcf57QSMeeiiR7EU+U=\">//<![CDATA[\n\"use strict\";\nwindow._G={Region:\"US\",Lang:\"en-US\",ST:(typeof si_ST!=='undefined'?si_ST:new Date),Mkt:\"en-US\",RevIpCC:\"us\",RTL:false,Ver:\"47\",IG:\"FBC8FCEC3CB14E38B77D5CA57CF6F285\",Event",
-    "keyTags": [
-      [
-        "sitemap",
-        -1
-      ],
-      [
-        "<loc>",
-        -1
-      ],
-      [
-        "용적률",
-        -1
-      ],
-      [
-        "아파트 시세",
-        -1
-      ],
-      [
-        "/realty/danji/",
-        -1
-      ]
-    ]
+    "len": 93231,
+    "head": "<!DOCTYPE html><html lang=\"en\"><head><title>Google Search</title><style>body{background-color:#fff}</style><script nonce=\"6MMggSX27k3ucWQTYJOsrw\">window.google = window.google || {};window.google.c = window.google.c || {cap:0};</script></head><body><noscript><style>table,div,span,p{display:none}</style><meta content=\"0;url=/httpservice/retry/enablejs?sei=Gov8aqP9IMyFw8cPsuzEuAE\" http-equiv=\"refresh\"><div style=\"display:block\">Please click <a href=\"/httpservice/retry/enablejs?sei=Gov8aqP9IMyFw8cPsuzEuAE\">here</a> if you are not redirected within a few seconds.</div></noscript><script nonce=\"6MMggSX27k3ucWQTYJOsrw\">(function(){var sctm=false;(function(){sctm&&google.tick(\"load\",\"pbsst\");}).call(this);})();</script><script nonce=\"6MMggSX27k3ucWQTYJOsrw\">//# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjogMywic291cmNlcyI6WyIiXSwic291cmNlc0NvbnRlbnQiOlsiICJdLCJuYW1lcyI6WyJjbG9zdXJlRHluYW1pY0J1dHRvbiJdLCJtYXBwaW5ncyI6IkFBQUE7QUFBQTtBQUFBO0FBQUE7QUFBQTtBQUFBO0FBQUEifQ==\n(function(){var l=function(R,n,a,c,t,r,p,Y,v,q){for(v=n;v!=18;)if(v==36)q=c,v=67;else if(v==67)v=(a|24)==a?84:12;else if(v==84){a:{if(Y=(p=r,O).trustedTypes,!Y||!Y.createPolicy){q=p;break a}try{p=Y.createPolicy(c,{createHTML:C,createScript:C,createScriptURL:C})}catch(S){if(O.console)O.console[",
+    "idsCount": 0,
+    "ids": [],
+    "anchors": [],
+    "exampleAroundDanji": ""
   }
 ]
