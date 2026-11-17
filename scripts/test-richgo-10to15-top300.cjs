@@ -22,15 +22,15 @@ for(const field of ['far','year','units']){
  for(const [k,value] of changes){
   const r=byKey.get(k);
   assert.ok(r,'correction not in top300: '+k);
-  assert.ok(['직접확인','기존직접대조','기존검증확인'].includes(r.verification),'unverified '+field+' '+k);
+  assert.ok(['직접확인','기존직접대조','기존검증확인','리치고집계기준적용'].includes(r.verification),'unverified '+field+' '+k);
   assert.equal(Number(r[external]),Number(value),'must equal Richgo source '+field+' '+k);
   assert.ok(r.source_url&&r.source_url.startsWith('https://m.richgo.ai/realty/danji/'),'source URL missing '+k);
   assert.notEqual(Number(r[original]||0),Number(value),'redundant correction '+field+' '+k);
  }
 }
-const allReview=records.every(r=>r.verification==='직접확인'||r.verification==='집계단위불일치');
+const allReview=records.every(r=>r.verification==='직접확인'||r.verification==='리치고집계기준적용');
 assert.ok(allReview,'all 300 must have direct or aggregate verification');
-assert.equal(records.filter(r=>r.verification==='집계단위불일치').length,19,'19 explicitly documented aggregate exceptions');
+assert.equal(records.filter(r=>r.verification==='리치고집계기준적용').length,19,'19 Richgo aggregate-source precedence decisions');
 const kbPairs=Object.entries(spec.farFallbackKB||{});
 assert.equal(kbPairs.length,2,'two independently sourced KB FAR fallbacks');
 for(const [key,value] of kbPairs){
@@ -68,4 +68,4 @@ for(const cap of [6,10,15,20,25,30,35]){
   assert.equal(d.units,cap===15&&(k in spec.units)?Number(spec.units[k]):Number(r.map_units),'units cap '+cap+' '+k);
  }
 }
-console.log('Richgo top300 audit ✅',JSON.stringify({rows:records.length,far:Object.keys(spec.far||{}).filter(k=>byKey.has(k)).length,year:Object.keys(spec.year||{}).filter(k=>byKey.has(k)).length,units:Object.keys(spec.units||{}).filter(k=>byKey.has(k)).length,verified:records.filter(r=>r.verification==='직접확인').length,aggregateExceptions:19,kbFARFallback:2}));
+console.log('Richgo top300 audit ✅',JSON.stringify({rows:records.length,far:Object.keys(spec.far||{}).filter(k=>byKey.has(k)).length,year:Object.keys(spec.year||{}).filter(k=>byKey.has(k)).length,units:Object.keys(spec.units||{}).filter(k=>byKey.has(k)).length,verified:records.filter(r=>r.verification==='직접확인').length,richgoAggregateApplied:19,kbFARFallback:2}));
