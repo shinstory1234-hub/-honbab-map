@@ -50,7 +50,7 @@ const esc=s=>String(s||'').replace(/<[^>]*>/g,'').replace(/&#(\d+);/g,(_,n)=>Str
 const factsResult=await pool(idList,5,async id=>{
  const url='https://m.richgo.ai/realty/danji/'+id;const r=await get(url);
  if(r.status!==200)return {id,url,status:r.status,error:r.error||'HTTP '+r.status};
- const tag=r.html.match(/<h2>([\s\S]*?)단지 정보<\/h2><dl class="facts">([\s\S]*?)<\/dl>/);
+ const tag=r.html.match(/<h2>([^<]*)(?:<!-- -->)? 단지 정보<\/h2><dl class="facts">([\s\S]*?)<\/dl>/);
  if(!tag)return {id,url,status:r.status,error:'facts section missing'};
  const found={};for(const m of tag[2].matchAll(/<dt>([^<]+)<\/dt><dd>([\s\S]*?)<\/dd>/g))found[esc(m[1])]=esc(m[2]);
  const title=esc(r.html.match(/<title>([\s\S]*?)<\/title>/)?.[1]);
