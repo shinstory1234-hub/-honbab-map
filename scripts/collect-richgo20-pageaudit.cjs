@@ -28,6 +28,7 @@ async function get(url){for(let attempt=0;attempt<3;attempt++){try{
   const t=await r.text();if(!r.ok)return null;requestCount++;return t;
  }catch(e){if(attempt===2){failCount++;return null;}await sleep(1200*2**attempt);}}return null;}
 async function mapLimited(arr,cap,fn){const out=new Array(arr.length);let cursor=0;await Promise.all(Array.from({length:cap},async()=>{while(cursor<arr.length){const i=cursor++;out[i]=await fn(arr[i],i);await sleep(250);}}));return out;}
+async function main(){
 const {header,rows}=parseCsv(fs.readFileSync(fCsv,'utf8'));
 if(rows.length!==300||new Set(rows.map(r=>r.name+'|'+r.area)).size!==300)throw Error('audit is not exactly 300 unique complexes');
 const c={};c.window=c;vm.runInNewContext(fs.readFileSync(root+'/public/apt-unitfix.js','utf8'),c);
@@ -103,3 +104,6 @@ const out={targets:300,confirmed,ambiguous,unavailable,noFar,changed,hubRequests
 fs.writeFileSync(path.join(root,'docs/richgo20-remaining-candidates-20261118.json'),JSON.stringify(out,null,2)+'\n');
 console.log('FINAL RESULT',JSON.stringify({...out,unresolved:undefined}));
 if(confirmed<100)console.error('LOW COVERAGE: do not treat as finished');
+
+}
+main().catch(e=>{console.error(e);process.exitCode=1});
