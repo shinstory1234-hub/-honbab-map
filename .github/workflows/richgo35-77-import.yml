@@ -46,3 +46,5 @@ jobs:
           if git diff --cached --quiet; then exit 1; fi
           git commit -m 'Reconcile remaining 77 top-300 Richgo complexes with verified source data'
           git push origin HEAD:refs/heads/audit/richgo-30plus-top300-20261118
+
+# Re-run: normalized CSV line endings to LF for git diff whitespace validation.
