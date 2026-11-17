@@ -60,23 +60,24 @@ export function appendRichgoCap10FinalOverrides(code,root){
   const filename=path.join(root,'scripts/richgo-band10-corrections.json');
   const fixes=JSON.parse(fs.readFileSync(filename,'utf8'));
   if(!fixes.length)return code;
-  const rows=fixes.map(x=>[x.name+'|'+x.area,x.far??null,x.year??null,x.units??null]);
+  // 32-bit FNV1a base36 IDs replace 1340 repeated name|district strings in network bundles.
+  // Uniqueness across source IDs is enforced by a runtime collision guard and the source audit.
+  const hash=s=>{
+    let h=2166136261;
+    for(let i=0;i<s.length;i++){h^=s.charCodeAt(i);h=Math.imul(h,16777619);}
+    return (h>>>0).toString(36);
+  };
+  const rows=fixes.map(x=>[hash(x.name+'|'+x.area),x.far??null,x.year??null,x.units??null]);
+  if(new Set(rows.map(r=>r[0])).size!==rows.length)throw new Error('Cap10 correction key hash collision');
   const post=[
     ';(function(W){',
     'if(W.CAPT!==10)return;',
-    'const X='+JSON.stringify(rows)+',D=new Map((W.PICKS||[]).map(d=>[d.n+"|"+d.area,d]));',
-    'for(const [k,far,year,units] of X){',
-    'if(far!=null){',
-    'const f=(W.FARD||{})[k];if(f){f[0]=far;f[1]="리치고";}',
-    'const p=(W.PLAT||{})[k];if(p&&p.length>2)p[2]=far;',
-    '}',
-    'if(year!=null||units!=null){const d=D.get(k);if(d){',
+    'const X='+JSON.stringify(rows)+',H=s=>{let h=2166136261;for(let i=0;i<s.length;i++){h^=s.charCodeAt(i);h=Math.imul(h,16777619);}return(h>>>0).toString(36);},D=new Map();',
+    'for(const d of W.PICKS||[]){const h=H(d.n+"|"+d.area);if(D.has(h)&&D.get(h)!==d)throw Error("Cap10 source hash collision");D.set(h,d);}',
+    'for(const [h,far,year,units] of X){const d=D.get(h);if(!d)throw Error("Missing verified cap10 apartment "+h);const k=d.n+"|"+d.area;',
+    'if(far!=null){const f=(W.FARD||{})[k];if(f){f[0]=far;f[1]="리치고";}const p=(W.PLAT||{})[k];if(p&&p.length>2)p[2]=far;}',
     'if(year!=null)d.year=year;',
-    'if(units!=null){d.units=units;',
-    'const uf=(W.UNITFIX||{})[k];if(uf)uf[0]=units;',
-    'const um=(W.UNITFIX_M3||{})[k];if(um)um[0]=units;',
-    '}',
-    '}}',
+    'if(units!=null){d.units=units;const uf=(W.UNITFIX||{})[k];if(uf)uf[0]=units;const um=(W.UNITFIX_M3||{})[k];if(um)um[0]=units;}',
     '}',
     'W.RICHGO10_FINAL={checked:X.length};',
     '})(window);'
