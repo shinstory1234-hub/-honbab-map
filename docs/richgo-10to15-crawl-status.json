@@ -1,0 +1,17 @@
+{
+  "asOf": "2026-11-17",
+  "total": 300,
+  "processed": 6,
+  "confirmed": 1,
+  "changedRows": 1,
+  "ambiguous": 4,
+  "notFound": 1,
+  "blocked": true,
+  "searchCalls": 2,
+  "pageCalls": 5,
+  "errors": 0,
+  "storedVerified": 38,
+  "farCorrections": 22,
+  "yearCorrections": 1,
+  "unitsCorrections": 0
+}
