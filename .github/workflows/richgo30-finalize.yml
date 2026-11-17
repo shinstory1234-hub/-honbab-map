@@ -5,6 +5,7 @@ on:
       - audit/richgo-25to30-top300-20261118
     paths:
       - '.github/workflows/richgo30-finalize.yml'
+      - 'scripts/finalize-richgo30-identities.cjs'
 permissions:
   contents: write
 jobs:
