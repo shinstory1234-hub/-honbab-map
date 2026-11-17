@@ -10,7 +10,7 @@ const corrections=path.join(root,'docs/richgo-10to15-verified-corrections.json')
 const auditPath=path.join(root,'docs/richgo-10to15-crawl-status.json');
 const concurrency=Math.max(1,Math.min(8,Number((process.argv.find(x=>x.startsWith('--concurrency='))||'--concurrency=6').split('=')[1])));
 const limit=Number((process.argv.find(x=>x.startsWith('--limit='))||'--limit=300').split('=')[1]);
-const timeoutMs=18000;
+const timeoutMs=30000;
 const delay=ms=>new Promise(r=>setTimeout(r,ms));
 const today=new Intl.DateTimeFormat('en-CA',{timeZone:'Asia/Seoul',year:'numeric',month:'2-digit',day:'2-digit'}).format(new Date());
 const userAgent='Mozilla/5.0 (compatible; AptMapDataAudit/1.0; +https://github.com/shinstory1234-hub/-honbab-map)';
@@ -80,18 +80,26 @@ const codeEquivalence=(name1,name2)=>{
  return 1-M[b.length]/Math.max(a.length,b.length);
 };
 function identity(record,fact){
- const dong=record.area.split(' ').at(-1);
+ const dong=record.area.split(' ').at(-1),prefix=norm(dong).replace(/동$/,'');
+ const site=norm(fact.name),shortName=site.startsWith(prefix)?site.slice(prefix.length):site;
+ const score=Math.max(codeEquivalence(record.name,fact.name),codeEquivalence(record.name,shortName));
  const dongMatch=norm(fact.title).includes(norm(dong));
- const score=codeEquivalence(record.name,fact.name);
  const unitsMatch=num(record.map_units)===fact.units&&fact.units>0;
- const direct=(score>=0.82&&dongMatch);
- const safe=!!(fact.year&&fact.units&&(direct||(score>=0.65&&dongMatch&&unitsMatch)));
- return {safe,score,dongMatch,unitsMatch,direct,quality:(score+Number(dongMatch)*0.25+Number(unitsMatch)*0.2)};
+ const yearMatch=num(record.map_year)===fact.year;
+ // Do not stamp an aggregated 3,028-household town onto each smaller split complex.
+ const safe=!!(fact.year&&fact.units&&dongMatch&&(
+   score>=0.90||(unitsMatch&&score>=0.55)||(unitsMatch&&yearMatch&&score>=0.20)
+ ));
+ return {safe,score,dongMatch,unitsMatch,yearMatch,quality:score+Number(dongMatch)*0.25+Number(unitsMatch)*0.32+Number(yearMatch)*0.16};
 }
 async function getById(id){
  if(!/^a[A-Za-z0-9]{6}$/.test(id))return null;
  if(detailCache.has(id))return detailCache.get(id);
- const promise=(async()=>{pageCalls++;const html=await fetchPage('https://m.richgo.ai/realty/danji/'+id);return getSiteFacts(html,id);})();
+ const promise=(async()=>{pageCalls++;
+   let html=await fetchPage('https://m.richgo.ai/realty/danji/'+id);
+   if(!html&&!blocked){await delay(500);html=await fetchPage('https://m.richgo.ai/realty/danji/'+id);}
+   return getSiteFacts(html,id);
+ })();
  detailCache.set(id,promise);
  return promise;
 }
@@ -162,41 +170,40 @@ async function buildCatalog(records){
   withComplex:records.filter(r=>(regionCatalog.get(r.area)||[]).some(x=>codeEquivalence(x.name,r.name)>.65)).length}));
 }
 async function lookup(record,index){
- const candidates=(regionCatalog.get(record.area)||[]).map(x=>({id:x.id,name:x.name,score:codeEquivalence(record.name,x.name)}))
-   .filter(x=>x.score>=0.43).sort((a,b)=>b.score-a.score).slice(0,12);
- const fromOld=new Set();
- for(const u of [record.richgo_id,record.source_url]){
-   const m=String(u||'').match(/a[A-Za-z0-9]{6}/);
-   if(m)fromOld.add(m[0]);
- }
- const ids=[...new Set([...candidates.map(x=>x.id),...fromOld])];
+ const dong=record.area.split(' ').at(-1),prefix=norm(dong).replace(/동$/,'');
+ const list=(regionCatalog.get(record.area)||[]).map(x=>{
+   const candidateName=norm(x.name);
+   const shortName=candidateName.startsWith(prefix)?candidateName.slice(prefix.length):candidateName;
+   return {id:x.id,name:x.name,score:Math.max(codeEquivalence(record.name,x.name),codeEquivalence(record.name,shortName))};
+ }).sort((a,b)=>b.score-a.score);
+ const old=new Set();
+ for(const u of [record.richgo_id,record.source_url]){const m=String(u||'').match(/a[A-Za-z0-9]{6}/);if(m)old.add(m[0]);}
+ // All same-dong candidates are checked, including shortened official names.
+ const ids=[...new Set([...list.filter(x=>x.score>=0.32).map(x=>x.id),...old,...list.filter(x=>x.score<0.32).map(x=>x.id)])];
  let best=null;
  for(const id of ids){
    if(blocked)break;
-   const fact=await getById(id);
-   if(!fact)continue;
-   const match=identity(record,fact);
-   const candidate={fact,match};
+   const fact=await getById(id);if(!fact)continue;
+   const match=identity(record,fact),candidate={fact,match};
    if(!best||candidate.match.quality>best.match.quality)best=candidate;
-   if(match.safe){
-     return {...candidate,discovery:candidates.some(x=>x.id===id)?'richgo_dong_catalog':'previous_link'};
-   }
+   if(match.safe)return {...candidate,discovery:list.some(x=>x.id===id)?'richgo_dong_catalog':'previous_link'};
  }
  return best?{...best,discovery:'richgo_dong_candidate_unverified'}:null;
 }
-
 function changed(record,field,source){const old=num(record['map_'+field]);return source!=null&&old!==source;}
 const {header,records}=readCSV(fs.readFileSync(input,'utf8'));
 if(records.length!==300||new Set(records.map(r=>r.name+'|'+r.area)).size!==300)throw Error('Expected 300 unique complexes');
 const extra=['richgo_name','richgo_builder','richgo_pyeongs','richgo_same_py_sale','richgo_same_py_jeonse','checked_at','audit_discovery','audit_match_quality'];
 for(const k of extra)if(!header.includes(k))header.push(k);
-const count=Math.min(records.length,limit);
+const onlyUnresolved=process.argv.includes('--unresolved-only');
+const targetIndices=records.map((r,i)=>i).filter(i=>!onlyUnresolved||!['직접확인','기존직접대조','기존검증확인'].includes(records[i].verification));
+const count=Math.min(targetIndices.length,limit);
 let done=0,confirmed=0,different=0,notFound=0,ambiguous=0;
 async function processRecord(i){
  const row=records[i];
  const lookupResult=await lookup(row,i);
  row.checked_at=today;
- if(!lookupResult){notFound++;row.audit_discovery='no_indexed_result';row.notes=(row.notes?row.notes+' | ':'')+'Public search attempted via Naver and Daum, no confirmed matching complex';done++;return;}
+ if(!lookupResult){notFound++;row.audit_discovery='no_indexed_result';row.notes=(row.notes?row.notes+' | ':'')+'Direct Richgo dong catalog and known IDs checked; no confirmed matching page';done++;return;}
  const {fact,match,discovery}=lookupResult;
  row.audit_discovery=discovery;row.audit_match_quality=match.score.toFixed(3);
  // Require complex identity before altering any existing raw value.
@@ -224,9 +231,9 @@ async function processRecord(i){
  if(done%25===0)console.log('PROGRESS',JSON.stringify({done,count,confirmed,different,notFound,ambiguous,searchCalls,pageCalls,errors}));
 }
 let next=0;
-const workers=Array.from({length:concurrency},()=>async()=>{while(!blocked){const i=next++;if(i>=count)break;try{await processRecord(i)}catch(e){errors++;done++;console.log('AUDIT-ERROR',i,String(e).slice(0,220));}}});
+const workers=Array.from({length:concurrency},()=>async()=>{while(!blocked){const pos=next++;if(pos>=count)break;const i=targetIndices[pos];try{await processRecord(i)}catch(e){errors++;done++;console.log('AUDIT-ERROR',i,String(e).slice(0,220));}}});
 (async()=>{
- await buildCatalog(records.slice(0,count));
+ await buildCatalog(records);
  await Promise.all(workers.map(w=>w()));
  // Keep previously verified corrections if fewer than 300 reviewed due connectivity.
  const existing=JSON.parse(fs.readFileSync(corrections,'utf8')),spec={...existing,asOf:today,far:{...existing.far},year:{...existing.year},units:{...(existing.units||{})}};
