@@ -21,6 +21,8 @@ const key=d=>d.name+'|'+d.area;
 const find=(c,k)=>c.PICKS.find(d=>d.n+'|'+d.area===k);
 assert.equal(live.RICHGO25_FULL_PATCH?.rankingRows,372);
 assert.equal(live.RICHGO25_FULL_PATCH?.verified,372);
+assert.equal(live.RICHGO25_FULL_PATCH?.unitDiffs,42);
+assert.equal(live.RICHGO25_FULL_PATCH?.yearDiffs,20);
 let changes={far:0,units:0,year:0},noncomparable=0;
 for(const d of verified){
  const k=key(d),b=find(base,k),x=find(live,k);assert.ok(b&&x,'missing '+k);
@@ -38,7 +40,9 @@ for(const d of verified){
    assert.equal(effective,d.richgoUnits,'Richgo effective site units '+k);
    if(d.richgoUnits!==d.mapUnits)changes.units++;
  }
- if(d.richgoYear!==null){
+ if(d.yearComparable===false){
+  assert.equal(x.year,b.year,'do not overwrite verified block completion year '+k);
+ } else if(d.richgoYear!==null){
   assert.equal(x.year,d.richgoYear,'Richgo completion year '+k);
   if(d.richgoYear!==d.mapYear)changes.year++;
  }
@@ -53,4 +57,5 @@ for(const cap of [6,10,15,20,30,35]){
  assert.equal(JSON.stringify(old.PICKS.map(d=>[d.n,d.area,d.units,d.year,d.types])),JSON.stringify(cur.PICKS.map(d=>[d.n,d.area,d.units,d.year,d.types])),'other cap PICKS '+cap);
  assert.equal(JSON.stringify(old.FARD),JSON.stringify(cur.FARD),'other cap FAR '+cap);
 }
+assert.equal(noncomparable,9,'6 previously excluded blocks and 3 reverified blocks must be protected');
 console.log('Verified '+verified.length+' Richgo web details; '+JSON.stringify(changes)+' changed, '+noncomparable+' shared K-apt blocks preserved, other six price bands unchanged ✅');
