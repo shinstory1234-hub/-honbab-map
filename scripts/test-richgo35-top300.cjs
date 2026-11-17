@@ -8,8 +8,8 @@ if(arr.length){arr.push(v.replace(/\r$/,''));rows.push(arr);}const H=rows.shift(
 const rows=csv(read('docs/richgo-over30-current-top300-20261118.csv'));
 assert.equal(rows.length,300);
 assert.deepEqual(rows.map(x=>Number(x.rank)),Array.from({length:300},(_,i)=>i+1));
-const confirmed=rows.filter(x=>x.status==='직접대조');assert.equal(confirmed.length,223);
-const eligible=confirmed.filter(x=>Number(x.richgo_far)>0);assert.equal(eligible.length,209);
+const confirmed=rows.filter(x=>x.status==='직접대조');assert.equal(confirmed.length,286);
+const eligible=rows.filter(x=>(x.status==='직접대조'||x.status==='리치고통합대조')&&Number(x.richgo_far)>0);assert.equal(eligible.length,274);
 const school={window:null};school.window=school;vm.runInNewContext(read('public/apt-invest35.js'),school);
 assert.equal(school.RICHGO35_RESTORED.length,80);
 const apply=(cap)=>{
@@ -18,9 +18,18 @@ const apply=(cap)=>{
  W.window=W;vm.runInNewContext(read('public/apt-r35.js'),W);return W;
 };
 const W=apply(35);
-assert.equal(W.RICHGO35_APPLIED.verified,209);
-assert.equal(W.RICHGO35_APPLIED.matched,209);
+assert.equal(W.RICHGO35_APPLIED.verified,274);
+assert.equal(W.RICHGO35_APPLIED.matched,274);
 assert.equal(W.RICHGO35_APPLIED.conflict,0);
+assert.equal(W.RICHGO35_RECONCILED77.sourced,76);
+assert.equal(W.RICHGO35_RECONCILED77.matched,76);
+assert.equal(W.RICHGO35_RECONCILED77.aggregate,13);
+assert.equal(W.RICHGO35_RECONCILED77.unitChanged,29);
+for(const x of rows.filter(x=>x.applied_units)){
+ const d=W.PICKS.find(d=>d.n===x.name&&d.area===x.area);
+ assert.equal(Number(d.units),Number(x.applied_units),x.name+' Richgo units');
+}
+
 for(const x of eligible){
  const k=x.name+'|'+x.area;
  assert.equal(W.FARD[k][0],Number(x.richgo_far),k+' FAR');
@@ -33,4 +42,4 @@ for(const cap of [6,10,15,20,25,30]){
 }
 assert.ok(read('public/apt-univ35.js').includes('O.push(...(root.RICHGO35_RESTORED||[]))'));
 assert.ok(read('public/apt-map.html').includes("c>30?'apt-r35.js':''"));
-console.log('30억 이상 순위 상위300, 직접확인 223, 용적률 209, 누락복원 80, 타 가격대 불변: PASS');
+console.log('30억 이상 순위 상위300, 직접확인 286, 통합대조 13, 용적률 274, 누락복원 80, 타 가격대 불변: PASS');
