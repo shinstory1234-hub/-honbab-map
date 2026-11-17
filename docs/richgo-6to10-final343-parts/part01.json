@@ -1,0 +1,2381 @@
+{
+  "meta": {
+    "date": "2026-11-18",
+    "shard": 1,
+    "targetCount": 57,
+    "universe": 1822,
+    "totalUnresolved": 343,
+    "statistics": {
+      "requests": 112,
+      "failed": 0,
+      "blocked": 0,
+      "limited": 0,
+      "indexSearch": 22,
+      "detailRequests": 90
+    },
+    "counts": {
+      "verified_exact": 7,
+      "verified_units_small_delta": 0,
+      "verified_no_far": 2,
+      "shared_identity": 4,
+      "source_scope_mismatch": 32,
+      "unresolved": 12
+    }
+  },
+  "rows": [
+    {
+      "key": "등촌7,8단지주공아파트|서울 강서구 등촌동",
+      "name": "등촌7,8단지주공아파트",
+      "area": "서울 강서구 등촌동",
+      "oldStatus": "unmatched",
+      "status": "unresolved",
+      "matched": false,
+      "source": null,
+      "match": null,
+      "candidateCount": 0,
+      "existingSourceIds": [],
+      "problems": null,
+      "candidates": []
+    },
+    {
+      "key": "샛별한양6(고층1109-6)|안양 동안구 비산동",
+      "name": "샛별한양6(고층1109-6)",
+      "area": "안양 동안구 비산동",
+      "oldStatus": "name_mismatch",
+      "status": "source_scope_mismatch",
+      "matched": false,
+      "source": null,
+      "match": null,
+      "candidateCount": 1,
+      "existingSourceIds": [
+        "a2VNrus"
+      ],
+      "problems": null,
+      "candidates": [
+        {
+          "id": "a2VNrus",
+          "name": "샛별한양1단지",
+          "units": 1262,
+          "year": 1993,
+          "far": 204,
+          "url": "https://m.richgo.ai/realty/danji/a2VNrus",
+          "distanceMeters": 440,
+          "nameSimilarity": 0.5,
+          "unitsDelta": 536,
+          "score": -95.6,
+          "valid": false
+        }
+      ]
+    },
+    {
+      "key": "청구|서울 노원구 하계동",
+      "name": "청구",
+      "area": "서울 노원구 하계동",
+      "oldStatus": "name_mismatch",
+      "status": "source_scope_mismatch",
+      "matched": false,
+      "source": null,
+      "match": null,
+      "candidateCount": 1,
+      "existingSourceIds": [
+        "a3ZiBPW"
+      ],
+      "problems": null,
+      "candidates": [
+        {
+          "id": "a3ZiBPW",
+          "name": "청구(284)",
+          "units": 660,
+          "year": 1988,
+          "far": 214,
+          "url": "https://m.richgo.ai/realty/danji/a3ZiBPW",
+          "distanceMeters": 35,
+          "nameSimilarity": 0.4,
+          "unitsDelta": 1200,
+          "score": 0.1,
+          "valid": false
+        }
+      ]
+    },
+    {
+      "key": "장미마을(현대)|성남 분당구 야탑동",
+      "name": "장미마을(현대)",
+      "area": "성남 분당구 야탑동",
+      "oldStatus": "crawler_unmatched",
+      "status": "source_scope_mismatch",
+      "matched": false,
+      "source": null,
+      "match": null,
+      "candidateCount": 2,
+      "existingSourceIds": [
+        "a5yIHnd",
+        "a4TRuAn"
+      ],
+      "problems": null,
+      "candidates": [
+        {
+          "id": "a5yIHnd",
+          "name": "장미8단지현대",
+          "units": 2136,
+          "year": 1993,
+          "far": 214,
+          "url": "https://m.richgo.ai/realty/danji/a5yIHnd",
+          "distanceMeters": 134,
+          "nameSimilarity": 0.667,
+          "unitsDelta": 1288,
+          "score": 0.5,
+          "valid": false
+        },
+        {
+          "id": "a4TRuAn",
+          "name": "매화마을현대벽산",
+          "units": 252,
+          "year": 1994,
+          "far": 99,
+          "url": "https://m.richgo.ai/realty/danji/a4TRuAn",
+          "distanceMeters": 1090,
+          "nameSimilarity": 0.5,
+          "unitsDelta": 596,
+          "score": -198.5,
+          "valid": false
+        }
+      ]
+    },
+    {
+      "key": "상계주공16(고층)|서울 노원구 상계동",
+      "name": "상계주공16(고층)",
+      "area": "서울 노원구 상계동",
+      "oldStatus": "crawler_review_needed",
+      "status": "source_scope_mismatch",
+      "matched": false,
+      "source": null,
+      "match": null,
+      "candidateCount": 4,
+      "existingSourceIds": [
+        "a7ipCqb",
+        "a3OCrAW",
+        "a1Uawtt",
+        "a1OtXAF"
+      ],
+      "problems": null,
+      "candidates": [
+        {
+          "id": "a7ipCqb",
+          "name": "상계주공16단지",
+          "units": 2392,
+          "year": 1988,
+          "far": 184,
+          "url": "https://m.richgo.ai/realty/danji/a7ipCqb",
+          "distanceMeters": 154,
+          "nameSimilarity": 1,
+          "unitsDelta": 2100,
+          "score": 48.9,
+          "valid": false
+        },
+        {
+          "id": "a3OCrAW",
+          "name": "상계주공14단지",
+          "units": 2265,
+          "year": 1989,
+          "far": 147,
+          "url": "https://m.richgo.ai/realty/danji/a3OCrAW",
+          "distanceMeters": 416,
+          "nameSimilarity": 0.833,
+          "unitsDelta": 2227,
+          "score": -65.7,
+          "valid": false
+        },
+        {
+          "id": "a1Uawtt",
+          "name": "상계주공10단지",
+          "units": 2654,
+          "year": 1988,
+          "far": 169,
+          "url": "https://m.richgo.ai/realty/danji/a1Uawtt",
+          "distanceMeters": 699,
+          "nameSimilarity": 0.833,
+          "unitsDelta": 1838,
+          "score": -112.1,
+          "valid": false
+        },
+        {
+          "id": "a1OtXAF",
+          "name": "상계주공6단지",
+          "units": 2646,
+          "year": 1988,
+          "far": 193,
+          "url": "https://m.richgo.ai/realty/danji/a1OtXAF",
+          "distanceMeters": 1964,
+          "nameSimilarity": 0.833,
+          "unitsDelta": 1846,
+          "score": -112.4,
+          "valid": false
+        }
+      ]
+    },
+    {
+      "key": "쌍용|서울 동대문구 이문동",
+      "name": "쌍용",
+      "area": "서울 동대문구 이문동",
+      "oldStatus": "crawler_review_needed",
+      "status": "source_scope_mismatch",
+      "matched": false,
+      "source": null,
+      "match": null,
+      "candidateCount": 1,
+      "existingSourceIds": [
+        "a3LcViZ"
+      ],
+      "problems": null,
+      "candidates": [
+        {
+          "id": "a3LcViZ",
+          "name": "쌍용",
+          "units": 1318,
+          "year": 2000,
+          "far": 343,
+          "url": "https://m.richgo.ai/realty/danji/a3LcViZ",
+          "distanceMeters": 113,
+          "nameSimilarity": 1,
+          "unitsDelta": 50,
+          "score": 131.5,
+          "valid": false
+        }
+      ]
+    },
+    {
+      "key": "효자촌(동아)|성남 분당구 서현동",
+      "name": "효자촌(동아)",
+      "area": "성남 분당구 서현동",
+      "oldStatus": "crawler_review_needed",
+      "status": "source_scope_mismatch",
+      "matched": false,
+      "source": null,
+      "match": null,
+      "candidateCount": 4,
+      "existingSourceIds": [
+        "a1NTVgq",
+        "a9CCzHC",
+        "a8ksQhv",
+        "a8fUUYY"
+      ],
+      "problems": null,
+      "candidates": [
+        {
+          "id": "a1NTVgq",
+          "name": "효자촌동아",
+          "units": 648,
+          "year": 1992,
+          "far": 187,
+          "url": "https://m.richgo.ai/realty/danji/a1NTVgq",
+          "distanceMeters": 16,
+          "nameSimilarity": 1,
+          "unitsDelta": 74,
+          "score": 151.4,
+          "valid": false
+        },
+        {
+          "id": "a8ksQhv",
+          "name": "효자촌임광",
+          "units": 732,
+          "year": 1992,
+          "far": 186,
+          "url": "https://m.richgo.ai/realty/danji/a8ksQhv",
+          "distanceMeters": 256,
+          "nameSimilarity": 0.6,
+          "unitsDelta": 158,
+          "score": 15.1,
+          "valid": false
+        },
+        {
+          "id": "a8fUUYY",
+          "name": "효자촌현대",
+          "units": 710,
+          "year": 1992,
+          "far": 185,
+          "url": "https://m.richgo.ai/realty/danji/a8fUUYY",
+          "distanceMeters": 364,
+          "nameSimilarity": 0.6,
+          "unitsDelta": 136,
+          "score": -17,
+          "valid": false
+        },
+        {
+          "id": "a9CCzHC",
+          "name": "효자촌삼환",
+          "units": 632,
+          "year": 1992,
+          "far": 174,
+          "url": "https://m.richgo.ai/realty/danji/a9CCzHC",
+          "distanceMeters": 517,
+          "nameSimilarity": 0.6,
+          "unitsDelta": 58,
+          "score": -52,
+          "valid": false
+        }
+      ]
+    },
+    {
+      "key": "관악산벽산타운5|서울 금천구 시흥동",
+      "name": "관악산벽산타운5",
+      "area": "서울 금천구 시흥동",
+      "oldStatus": "crawler_review_needed",
+      "status": "source_scope_mismatch",
+      "matched": false,
+      "source": null,
+      "match": null,
+      "candidateCount": 2,
+      "existingSourceIds": [
+        "a7cSVad",
+        "a0qwQnL"
+      ],
+      "problems": null,
+      "candidates": [
+        {
+          "id": "a7cSVad",
+          "name": "벽산5단지",
+          "units": 2810,
+          "year": 2004,
+          "far": 270,
+          "url": "https://m.richgo.ai/realty/danji/a7cSVad",
+          "distanceMeters": 126,
+          "nameSimilarity": 0.375,
+          "unitsDelta": 0,
+          "score": 100.5,
+          "valid": false
+        },
+        {
+          "id": "a0qwQnL",
+          "name": "벽산타운3단지",
+          "units": 270,
+          "year": 1998,
+          "far": 261,
+          "url": "https://m.richgo.ai/realty/danji/a0qwQnL",
+          "distanceMeters": 617,
+          "nameSimilarity": 0.5,
+          "unitsDelta": 2540,
+          "score": -260.6,
+          "valid": false
+        }
+      ]
+    },
+    {
+      "key": "주공4|구리시 인창동",
+      "name": "주공4",
+      "area": "구리시 인창동",
+      "oldStatus": "crawler_unmatched",
+      "status": "unresolved",
+      "matched": false,
+      "source": null,
+      "match": null,
+      "candidateCount": 0,
+      "existingSourceIds": [],
+      "problems": null,
+      "candidates": []
+    },
+    {
+      "key": "현대코아|서울 동대문구 청량리동",
+      "name": "현대코아",
+      "area": "서울 동대문구 청량리동",
+      "oldStatus": "crawler_unmatched",
+      "status": "source_scope_mismatch",
+      "matched": false,
+      "source": null,
+      "match": null,
+      "candidateCount": 2,
+      "existingSourceIds": [
+        "a3efPSH",
+        "a1XyKDG"
+      ],
+      "problems": null,
+      "candidates": [
+        {
+          "id": "a3efPSH",
+          "name": "청량리현대코아",
+          "units": 88,
+          "year": 1997,
+          "far": 471,
+          "url": "https://m.richgo.ai/realty/danji/a3efPSH",
+          "distanceMeters": 30,
+          "nameSimilarity": 0.571,
+          "unitsDelta": 575,
+          "score": -16.6,
+          "valid": false
+        },
+        {
+          "id": "a1XyKDG",
+          "name": "현대",
+          "units": 241,
+          "year": 1987,
+          "far": 248,
+          "url": "https://m.richgo.ai/realty/danji/a1XyKDG",
+          "distanceMeters": 387,
+          "nameSimilarity": 0.5,
+          "unitsDelta": 422,
+          "score": -165.8,
+          "valid": false
+        }
+      ]
+    },
+    {
+      "key": "엘지,쌍용아파트|서울 중랑구 상봉동",
+      "name": "엘지,쌍용아파트",
+      "area": "서울 중랑구 상봉동",
+      "oldStatus": "crawler_review_needed",
+      "status": "source_scope_mismatch",
+      "matched": false,
+      "source": null,
+      "match": null,
+      "candidateCount": 1,
+      "existingSourceIds": [
+        "a5LejfF"
+      ],
+      "problems": null,
+      "candidates": [
+        {
+          "id": "a5LejfF",
+          "name": "LG쌍용",
+          "units": 858,
+          "year": 1996,
+          "far": 249,
+          "url": "https://m.richgo.ai/realty/danji/a5LejfF",
+          "distanceMeters": 138,
+          "nameSimilarity": 0.5,
+          "unitsDelta": 0,
+          "score": 109,
+          "valid": false
+        }
+      ]
+    },
+    {
+      "key": "우륵|군포시 산본동",
+      "name": "우륵",
+      "area": "군포시 산본동",
+      "oldStatus": "crawler_review_needed",
+      "status": "verified_exact",
+      "matched": true,
+      "source": {
+        "id": "a9LdzpG",
+        "name": "우륵주공7단지",
+        "far": 226,
+        "year": 1994,
+        "units": 1312,
+        "lat": 37.36009,
+        "lng": 126.925727,
+        "street": "경기도 군포시 산본천로 33",
+        "url": "https://m.richgo.ai/realty/danji/a9LdzpG",
+        "info": "15~25층"
+      },
+      "match": {
+        "meters": 58,
+        "yearDelta": 0,
+        "unitDelta": 0,
+        "ratio": 0,
+        "nameSimilarity": 0.4
+      },
+      "candidateCount": 1,
+      "existingSourceIds": [
+        "a9LdzpG"
+      ],
+      "problems": {
+        "duplicatePriorOwners": [],
+        "scoreTie": false,
+        "richgoFarBlank": false
+      },
+      "candidates": [
+        {
+          "id": "a9LdzpG",
+          "name": "우륵주공7단지",
+          "units": 1312,
+          "year": 1994,
+          "far": 226,
+          "url": "https://m.richgo.ai/realty/danji/a9LdzpG",
+          "distanceMeters": 58,
+          "nameSimilarity": 0.4,
+          "unitsDelta": 0,
+          "score": 125.7,
+          "valid": true
+        }
+      ]
+    },
+    {
+      "key": "테헤란로대우아이빌(891-6)|서울 강남구 대치동",
+      "name": "테헤란로대우아이빌(891-6)",
+      "area": "서울 강남구 대치동",
+      "oldStatus": "crawler_units_mismatch_review",
+      "status": "source_scope_mismatch",
+      "matched": false,
+      "source": null,
+      "match": null,
+      "candidateCount": 1,
+      "existingSourceIds": [
+        "a4YnRBV"
+      ],
+      "problems": null,
+      "candidates": [
+        {
+          "id": "a4YnRBV",
+          "name": "테헤란로대우아이빌",
+          "units": 371,
+          "year": 2004,
+          "far": 1096,
+          "url": "https://m.richgo.ai/realty/danji/a4YnRBV",
+          "distanceMeters": 20,
+          "nameSimilarity": 0.692,
+          "unitsDelta": 1,
+          "score": 137.1,
+          "valid": false
+        }
+      ]
+    },
+    {
+      "key": "삼보|구리시 인창동",
+      "name": "삼보",
+      "area": "구리시 인창동",
+      "oldStatus": "crawler_review_needed",
+      "status": "source_scope_mismatch",
+      "matched": false,
+      "source": null,
+      "match": null,
+      "candidateCount": 2,
+      "existingSourceIds": [
+        "a6LfHWB",
+        "a8PZdSq"
+      ],
+      "problems": null,
+      "candidates": [
+        {
+          "id": "a6LfHWB",
+          "name": "삼보",
+          "units": 906,
+          "year": 1996,
+          "far": 244,
+          "url": "https://m.richgo.ai/realty/danji/a6LfHWB",
+          "distanceMeters": 27,
+          "nameSimilarity": 1,
+          "unitsDelta": 66,
+          "score": 155.1,
+          "valid": false
+        },
+        {
+          "id": "a8PZdSq",
+          "name": "삼호",
+          "units": 231,
+          "year": 1991,
+          "far": 119,
+          "url": "https://m.richgo.ai/realty/danji/a8PZdSq",
+          "distanceMeters": 523,
+          "nameSimilarity": 0.5,
+          "unitsDelta": 741,
+          "score": -201.3,
+          "valid": false
+        }
+      ]
+    },
+    {
+      "key": "동성3|서울 중랑구 신내동",
+      "name": "동성3",
+      "area": "서울 중랑구 신내동",
+      "oldStatus": "crawler_review_needed",
+      "status": "source_scope_mismatch",
+      "matched": false,
+      "source": null,
+      "match": null,
+      "candidateCount": 4,
+      "existingSourceIds": [
+        "a0LsSQR",
+        "a2fPBYV",
+        "a2OQHXo",
+        "a0JUOJJ"
+      ],
+      "problems": null,
+      "candidates": [
+        {
+          "id": "a0LsSQR",
+          "name": "동성3차",
+          "units": 800,
+          "year": 1997,
+          "far": 325,
+          "url": "https://m.richgo.ai/realty/danji/a0LsSQR",
+          "distanceMeters": 13,
+          "nameSimilarity": 0.75,
+          "unitsDelta": 31,
+          "score": 139.7,
+          "valid": false
+        },
+        {
+          "id": "a2fPBYV",
+          "name": "동성4차",
+          "units": 478,
+          "year": 1997,
+          "far": 312,
+          "url": "https://m.richgo.ai/realty/danji/a2fPBYV",
+          "distanceMeters": 188,
+          "nameSimilarity": 0.5,
+          "unitsDelta": 353,
+          "score": -5.6,
+          "valid": false
+        },
+        {
+          "id": "a0JUOJJ",
+          "name": "동성7차",
+          "units": 235,
+          "year": 1999,
+          "far": 309,
+          "url": "https://m.richgo.ai/realty/danji/a0JUOJJ",
+          "distanceMeters": 263,
+          "nameSimilarity": 0.5,
+          "unitsDelta": 596,
+          "score": -89.4,
+          "valid": false
+        },
+        {
+          "id": "a2OQHXo",
+          "name": "동성5차",
+          "units": 75,
+          "year": 1997,
+          "far": 221,
+          "url": "https://m.richgo.ai/realty/danji/a2OQHXo",
+          "distanceMeters": 260,
+          "nameSimilarity": 0.5,
+          "unitsDelta": 756,
+          "score": -107.2,
+          "valid": false
+        }
+      ]
+    },
+    {
+      "key": "화성.두산아파트|서울 중랑구 신내동",
+      "name": "화성.두산아파트",
+      "area": "서울 중랑구 신내동",
+      "oldStatus": "crawler_unmatched",
+      "status": "unresolved",
+      "matched": false,
+      "source": null,
+      "match": null,
+      "candidateCount": 0,
+      "existingSourceIds": [],
+      "problems": null,
+      "candidates": []
+    },
+    {
+      "key": "인천 SK Sky VIEW|인천 미추홀구 용현동",
+      "name": "인천 SK Sky VIEW",
+      "area": "인천 미추홀구 용현동",
+      "oldStatus": "crawler_review_needed",
+      "status": "verified_exact",
+      "matched": true,
+      "source": {
+        "id": "a4IvJYP",
+        "name": "인천SK스카이뷰",
+        "far": 238,
+        "year": 2016,
+        "units": 3971,
+        "lat": 37.449426,
+        "lng": 126.645696,
+        "street": "인천시 미추홀구 용정공원로 33",
+        "url": "https://m.richgo.ai/realty/danji/a4IvJYP",
+        "info": "22~40층"
+      },
+      "match": {
+        "meters": 41,
+        "yearDelta": 0,
+        "unitDelta": 0,
+        "ratio": 0,
+        "nameSimilarity": 0.364
+      },
+      "candidateCount": 1,
+      "existingSourceIds": [
+        "a4IvJYP"
+      ],
+      "problems": {
+        "duplicatePriorOwners": [],
+        "scoreTie": false,
+        "richgoFarBlank": false
+      },
+      "candidates": [
+        {
+          "id": "a4IvJYP",
+          "name": "인천SK스카이뷰",
+          "units": 3971,
+          "year": 2016,
+          "far": 238,
+          "url": "https://m.richgo.ai/realty/danji/a4IvJYP",
+          "distanceMeters": 41,
+          "nameSimilarity": 0.364,
+          "unitsDelta": 0,
+          "score": 127.7,
+          "valid": true
+        }
+      ]
+    },
+    {
+      "key": "백련산힐스테이트3차|서울 은평구 응암동",
+      "name": "백련산힐스테이트3차",
+      "area": "서울 은평구 응암동",
+      "oldStatus": "crawler_review_needed",
+      "status": "source_scope_mismatch",
+      "matched": false,
+      "source": null,
+      "match": null,
+      "candidateCount": 3,
+      "existingSourceIds": [
+        "a6GmWpZ",
+        "a9PDpNd",
+        "a7yVPZE"
+      ],
+      "problems": null,
+      "candidates": [
+        {
+          "id": "a6GmWpZ",
+          "name": "백련산힐스테이트3차",
+          "units": 967,
+          "year": 2011,
+          "far": 213,
+          "url": "https://m.richgo.ai/realty/danji/a6GmWpZ",
+          "distanceMeters": 42,
+          "nameSimilarity": 1,
+          "unitsDelta": 219,
+          "score": 124.8,
+          "valid": false
+        },
+        {
+          "id": "a9PDpNd",
+          "name": "백련산힐스테이트2차",
+          "units": 1148,
+          "year": 2011,
+          "far": 215,
+          "url": "https://m.richgo.ai/realty/danji/a9PDpNd",
+          "distanceMeters": 361,
+          "nameSimilarity": 0.9,
+          "unitsDelta": 400,
+          "score": -11.1,
+          "valid": false
+        },
+        {
+          "id": "a7yVPZE",
+          "name": "백련산힐스테이트1차",
+          "units": 1106,
+          "year": 2011,
+          "far": 191,
+          "url": "https://m.richgo.ai/realty/danji/a7yVPZE",
+          "distanceMeters": 468,
+          "nameSimilarity": 0.9,
+          "unitsDelta": 358,
+          "score": -42.8,
+          "valid": false
+        }
+      ]
+    },
+    {
+      "key": "더샵지제역센트럴파크1BL|평택시 동삭동",
+      "name": "더샵지제역센트럴파크1BL",
+      "area": "평택시 동삭동",
+      "oldStatus": "crawler_review_needed",
+      "status": "source_scope_mismatch",
+      "matched": false,
+      "source": null,
+      "match": null,
+      "candidateCount": 3,
+      "existingSourceIds": [
+        "a3DVJSm",
+        "a9amlsN",
+        "a5yBMkJ"
+      ],
+      "problems": null,
+      "candidates": [
+        {
+          "id": "a3DVJSm",
+          "name": "더샵지제역센트럴파크(1BL)",
+          "units": 2124,
+          "year": 2020,
+          "far": 193,
+          "url": "https://m.richgo.ai/realty/danji/a3DVJSm",
+          "distanceMeters": 838,
+          "nameSimilarity": 1,
+          "unitsDelta": 0,
+          "score": 0,
+          "valid": false
+        },
+        {
+          "id": "a9amlsN",
+          "name": "더샵지제역센트럴파크(2BL)",
+          "units": 1674,
+          "year": 2020,
+          "far": 196,
+          "url": "https://m.richgo.ai/realty/danji/a9amlsN",
+          "distanceMeters": 527,
+          "nameSimilarity": 0.923,
+          "unitsDelta": 450,
+          "score": -42.3,
+          "valid": false
+        },
+        {
+          "id": "a5yBMkJ",
+          "name": "지제더샵센트럴파크",
+          "units": 1280,
+          "year": 2019,
+          "far": 186,
+          "url": "https://m.richgo.ai/realty/danji/a5yBMkJ",
+          "distanceMeters": 949,
+          "nameSimilarity": 0.462,
+          "unitsDelta": 844,
+          "score": -153.4,
+          "valid": false
+        }
+      ]
+    },
+    {
+      "key": "태영|수원 영통구 영통동",
+      "name": "태영",
+      "area": "수원 영통구 영통동",
+      "oldStatus": "crawler_shared_scope_review",
+      "status": "source_scope_mismatch",
+      "matched": false,
+      "source": null,
+      "match": null,
+      "candidateCount": 1,
+      "existingSourceIds": [
+        "a7QaUGd"
+      ],
+      "problems": null,
+      "candidates": [
+        {
+          "id": "a7QaUGd",
+          "name": "삼성",
+          "units": 832,
+          "year": 1997,
+          "far": 218,
+          "url": "https://m.richgo.ai/realty/danji/a7QaUGd",
+          "distanceMeters": 36,
+          "nameSimilarity": 0,
+          "unitsDelta": 0,
+          "score": 93,
+          "valid": false
+        }
+      ]
+    },
+    {
+      "key": "신나무실극동|수원 영통구 영통동",
+      "name": "신나무실극동",
+      "area": "수원 영통구 영통동",
+      "oldStatus": "crawler_shared_scope_review",
+      "status": "shared_identity",
+      "matched": false,
+      "source": null,
+      "match": null,
+      "candidateCount": 2,
+      "existingSourceIds": [
+        "a2KOYIW",
+        "a3RlGKK"
+      ],
+      "problems": {
+        "duplicatePriorOwners": [
+          "신나무실풍림|수원 영통구 영통동"
+        ],
+        "scoreTie": false,
+        "richgoFarBlank": false
+      },
+      "candidates": [
+        {
+          "id": "a2KOYIW",
+          "name": "신나무실극동",
+          "units": 776,
+          "year": 2000,
+          "far": 219,
+          "url": "https://m.richgo.ai/realty/danji/a2KOYIW",
+          "distanceMeters": 76,
+          "nameSimilarity": 1,
+          "unitsDelta": 0,
+          "score": 173.7,
+          "valid": true
+        },
+        {
+          "id": "a3RlGKK",
+          "name": "신나무실6단지동보",
+          "units": 836,
+          "year": 1997,
+          "far": 219,
+          "url": "https://m.richgo.ai/realty/danji/a3RlGKK",
+          "distanceMeters": 312,
+          "nameSimilarity": 0.714,
+          "unitsDelta": 60,
+          "score": 18.9,
+          "valid": false
+        }
+      ]
+    },
+    {
+      "key": "금호타운(583)|서울 노원구 중계동",
+      "name": "금호타운(583)",
+      "area": "서울 노원구 중계동",
+      "oldStatus": "crawler_unmatched",
+      "status": "unresolved",
+      "matched": false,
+      "source": null,
+      "match": null,
+      "candidateCount": 0,
+      "existingSourceIds": [],
+      "problems": null,
+      "candidates": []
+    },
+    {
+      "key": "미륭|안양 동안구 비산동",
+      "name": "미륭",
+      "area": "안양 동안구 비산동",
+      "oldStatus": "crawler_review_needed",
+      "status": "source_scope_mismatch",
+      "matched": false,
+      "source": null,
+      "match": null,
+      "candidateCount": 1,
+      "existingSourceIds": [
+        "a5bGCkQ"
+      ],
+      "problems": null,
+      "candidates": [
+        {
+          "id": "a5bGCkQ",
+          "name": "미륭",
+          "units": 576,
+          "year": 1979,
+          "far": 257,
+          "url": "https://m.richgo.ai/realty/danji/a5bGCkQ",
+          "distanceMeters": 90,
+          "nameSimilarity": 1,
+          "unitsDelta": 12,
+          "score": 141.7,
+          "valid": false
+        }
+      ]
+    },
+    {
+      "key": "동부센트레빌|남양주시 와부읍",
+      "name": "동부센트레빌",
+      "area": "남양주시 와부읍",
+      "oldStatus": "crawler_review_needed",
+      "status": "source_scope_mismatch",
+      "matched": false,
+      "source": null,
+      "match": null,
+      "candidateCount": 1,
+      "existingSourceIds": [
+        "a7NzYUN"
+      ],
+      "problems": null,
+      "candidates": [
+        {
+          "id": "a7NzYUN",
+          "name": "남양주덕소동부센트레빌",
+          "units": 1220,
+          "year": 2006,
+          "far": 239,
+          "url": "https://m.richgo.ai/realty/danji/a7NzYUN",
+          "distanceMeters": 93,
+          "nameSimilarity": 0.545,
+          "unitsDelta": 26,
+          "score": 95.2,
+          "valid": false
+        }
+      ]
+    },
+    {
+      "key": "그린타운(금호)|부천 원미구 중동",
+      "name": "그린타운(금호)",
+      "area": "부천 원미구 중동",
+      "oldStatus": "crawler_shared_scope_review",
+      "status": "shared_identity",
+      "matched": false,
+      "source": null,
+      "match": null,
+      "candidateCount": 1,
+      "existingSourceIds": [
+        "a7MOZWn"
+      ],
+      "problems": {
+        "duplicatePriorOwners": [
+          "그린타운(한양)|부천 원미구 중동"
+        ],
+        "scoreTie": false,
+        "richgoFarBlank": false
+      },
+      "candidates": [
+        {
+          "id": "a7MOZWn",
+          "name": "그린타운금호한양",
+          "units": 712,
+          "year": 1993,
+          "far": 223,
+          "url": "https://m.richgo.ai/realty/danji/a7MOZWn",
+          "distanceMeters": 11,
+          "nameSimilarity": 0.75,
+          "unitsDelta": 0,
+          "score": 176.3,
+          "valid": true
+        }
+      ]
+    },
+    {
+      "key": "햇빛마을|고양 덕양구 행신동",
+      "name": "햇빛마을",
+      "area": "고양 덕양구 행신동",
+      "oldStatus": "crawler_review_needed",
+      "status": "source_scope_mismatch",
+      "matched": false,
+      "source": null,
+      "match": null,
+      "candidateCount": 1,
+      "existingSourceIds": [
+        "a7pmpwc"
+      ],
+      "problems": null,
+      "candidates": [
+        {
+          "id": "a7pmpwc",
+          "name": "햇빛마을19단지",
+          "units": 840,
+          "year": 1998,
+          "far": 228,
+          "url": "https://m.richgo.ai/realty/danji/a7pmpwc",
+          "distanceMeters": 754,
+          "nameSimilarity": 0.667,
+          "unitsDelta": 76,
+          "score": -82.6,
+          "valid": false
+        }
+      ]
+    },
+    {
+      "key": "신일|구리시 인창동",
+      "name": "신일",
+      "area": "구리시 인창동",
+      "oldStatus": "crawler_unmatched",
+      "status": "unresolved",
+      "matched": false,
+      "source": null,
+      "match": null,
+      "candidateCount": 0,
+      "existingSourceIds": [],
+      "problems": null,
+      "candidates": []
+    },
+    {
+      "key": "삼익|서울 동대문구 이문동",
+      "name": "삼익",
+      "area": "서울 동대문구 이문동",
+      "oldStatus": "crawler_review_needed",
+      "status": "verified_exact",
+      "matched": true,
+      "source": {
+        "id": "a8CseBF",
+        "name": "이문삼익",
+        "far": 397,
+        "year": 1997,
+        "units": 353,
+        "lat": 37.596088,
+        "lng": 127.067347,
+        "street": "서울시 동대문구 한천로55길 9",
+        "url": "https://m.richgo.ai/realty/danji/a8CseBF",
+        "info": "16~23층"
+      },
+      "match": {
+        "meters": 31,
+        "yearDelta": 0,
+        "unitDelta": 0,
+        "ratio": 0,
+        "nameSimilarity": 0.5
+      },
+      "candidateCount": 1,
+      "existingSourceIds": [
+        "a8CseBF"
+      ],
+      "problems": {
+        "duplicatePriorOwners": [],
+        "scoreTie": false,
+        "richgoFarBlank": false
+      },
+      "candidates": [
+        {
+          "id": "a8CseBF",
+          "name": "이문삼익",
+          "units": 353,
+          "year": 1997,
+          "far": 397,
+          "url": "https://m.richgo.ai/realty/danji/a8CseBF",
+          "distanceMeters": 31,
+          "nameSimilarity": 0.5,
+          "unitsDelta": 0,
+          "score": 144.7,
+          "valid": true
+        }
+      ]
+    },
+    {
+      "key": "은하마을(대우)|부천 원미구 중동",
+      "name": "은하마을(대우)",
+      "area": "부천 원미구 중동",
+      "oldStatus": "crawler_review_needed",
+      "status": "source_scope_mismatch",
+      "matched": false,
+      "source": null,
+      "match": null,
+      "candidateCount": 3,
+      "existingSourceIds": [
+        "a6lOPpQ",
+        "a8Xaoqi",
+        "a6fCsde"
+      ],
+      "problems": null,
+      "candidates": [
+        {
+          "id": "a6lOPpQ",
+          "name": "은하대우.동부",
+          "units": 632,
+          "year": 1993,
+          "far": 222,
+          "url": "https://m.richgo.ai/realty/danji/a6lOPpQ",
+          "distanceMeters": 28,
+          "nameSimilarity": 0.333,
+          "unitsDelta": 0,
+          "score": 129,
+          "valid": false
+        },
+        {
+          "id": "a8Xaoqi",
+          "name": "은하마을주공2단지",
+          "units": 420,
+          "year": 1995,
+          "far": 210,
+          "url": "https://m.richgo.ai/realty/danji/a8Xaoqi",
+          "distanceMeters": 182,
+          "nameSimilarity": 0.571,
+          "unitsDelta": 212,
+          "score": 5.8,
+          "valid": false
+        },
+        {
+          "id": "a6fCsde",
+          "name": "은하마을주공1단지",
+          "units": 795,
+          "year": 1995,
+          "far": 202,
+          "url": "https://m.richgo.ai/realty/danji/a6fCsde",
+          "distanceMeters": 294,
+          "nameSimilarity": 0.571,
+          "unitsDelta": 163,
+          "score": -10.7,
+          "valid": false
+        }
+      ]
+    },
+    {
+      "key": "마고정3단지센트레빌(323~335동)BL2-2|서울 은평구 진관동",
+      "name": "마고정3단지센트레빌(323~335동)BL2-2",
+      "area": "서울 은평구 진관동",
+      "oldStatus": "crawler_unmatched",
+      "status": "unresolved",
+      "matched": false,
+      "source": null,
+      "match": null,
+      "candidateCount": 0,
+      "existingSourceIds": [],
+      "problems": null,
+      "candidates": []
+    },
+    {
+      "key": "은평뉴타운 제각말 푸르지오(5-4단지)|서울 은평구 진관동",
+      "name": "은평뉴타운 제각말 푸르지오(5-4단지)",
+      "area": "서울 은평구 진관동",
+      "oldStatus": "crawler_review_needed",
+      "status": "source_scope_mismatch",
+      "matched": false,
+      "source": null,
+      "match": null,
+      "candidateCount": 6,
+      "existingSourceIds": [
+        "a0jqPZb",
+        "a0SoEWY",
+        "a9ScTbN",
+        "a1oWCGZ",
+        "a0Uoamp",
+        "a5uSPWm"
+      ],
+      "problems": null,
+      "candidates": [
+        {
+          "id": "a0jqPZb",
+          "name": "은평뉴타운제각말5-4단지",
+          "units": 412,
+          "year": 2010,
+          "far": 146,
+          "url": "https://m.richgo.ai/realty/danji/a0jqPZb",
+          "distanceMeters": 28,
+          "nameSimilarity": 0.714,
+          "unitsDelta": 17,
+          "score": 130.8,
+          "valid": false
+        },
+        {
+          "id": "a0SoEWY",
+          "name": "은평뉴타운기자촌11단지",
+          "units": 426,
+          "year": 2015,
+          "far": 145,
+          "url": "https://m.richgo.ai/realty/danji/a0SoEWY",
+          "distanceMeters": 222,
+          "nameSimilarity": 0.357,
+          "unitsDelta": 3,
+          "score": 5.6,
+          "valid": false
+        },
+        {
+          "id": "a1oWCGZ",
+          "name": "은평뉴타운제각말5-2단지",
+          "units": 175,
+          "year": 2010,
+          "far": 131,
+          "url": "https://m.richgo.ai/realty/danji/a1oWCGZ",
+          "distanceMeters": 345,
+          "nameSimilarity": 0.643,
+          "unitsDelta": 254,
+          "score": -70.4,
+          "valid": false
+        },
+        {
+          "id": "a9ScTbN",
+          "name": "은평뉴타운마고정2단지",
+          "units": 434,
+          "year": 2009,
+          "far": 170,
+          "url": "https://m.richgo.ai/realty/danji/a9ScTbN",
+          "distanceMeters": 874,
+          "nameSimilarity": 0.357,
+          "unitsDelta": 5,
+          "score": -102.1,
+          "valid": false
+        }
+      ]
+    },
+    {
+      "key": "창동2차현대|서울 도봉구 창동",
+      "name": "창동2차현대",
+      "area": "서울 도봉구 창동",
+      "oldStatus": "crawler_review_needed",
+      "status": "source_scope_mismatch",
+      "matched": false,
+      "source": null,
+      "match": null,
+      "candidateCount": 2,
+      "existingSourceIds": [
+        "a4dHEuF",
+        "a0BTVvw"
+      ],
+      "problems": null,
+      "candidates": [
+        {
+          "id": "a4dHEuF",
+          "name": "창동현대2차",
+          "units": 705,
+          "year": 2001,
+          "far": 299,
+          "url": "https://m.richgo.ai/realty/danji/a4dHEuF",
+          "distanceMeters": 46,
+          "nameSimilarity": 0.333,
+          "unitsDelta": 0,
+          "score": 123,
+          "valid": false
+        },
+        {
+          "id": "a0BTVvw",
+          "name": "현대",
+          "units": 205,
+          "year": 2000,
+          "far": 399,
+          "url": "https://m.richgo.ai/realty/danji/a0BTVvw",
+          "distanceMeters": 725,
+          "nameSimilarity": 0.5,
+          "unitsDelta": 500,
+          "score": -199.5,
+          "valid": false
+        }
+      ]
+    },
+    {
+      "key": "벽산블루밍2단지|용인 수지구 죽전동",
+      "name": "벽산블루밍2단지",
+      "area": "용인 수지구 죽전동",
+      "oldStatus": "crawler_unmatched",
+      "status": "unresolved",
+      "matched": false,
+      "source": null,
+      "match": null,
+      "candidateCount": 0,
+      "existingSourceIds": [],
+      "problems": null,
+      "candidates": []
+    },
+    {
+      "key": "대림e편한세상|서울 강서구 화곡동",
+      "name": "대림e편한세상",
+      "area": "서울 강서구 화곡동",
+      "oldStatus": "crawler_unmatched",
+      "status": "unresolved",
+      "matched": false,
+      "source": null,
+      "match": null,
+      "candidateCount": 0,
+      "existingSourceIds": [],
+      "problems": null,
+      "candidates": []
+    },
+    {
+      "key": "우물골2단지두산위브(204~208동)BL2-5|서울 은평구 진관동",
+      "name": "우물골2단지두산위브(204~208동)BL2-5",
+      "area": "서울 은평구 진관동",
+      "oldStatus": "crawler_unmatched",
+      "status": "unresolved",
+      "matched": false,
+      "source": null,
+      "match": null,
+      "candidateCount": 0,
+      "existingSourceIds": [],
+      "problems": null,
+      "candidates": []
+    },
+    {
+      "key": "동아에코빌|서울 성북구 상월곡동",
+      "name": "동아에코빌",
+      "area": "서울 성북구 상월곡동",
+      "oldStatus": "crawler_review_needed",
+      "status": "source_scope_mismatch",
+      "matched": false,
+      "source": null,
+      "match": null,
+      "candidateCount": 1,
+      "existingSourceIds": [
+        "a8efvSj"
+      ],
+      "problems": null,
+      "candidates": [
+        {
+          "id": "a8efvSj",
+          "name": "동아에코빌",
+          "units": 1253,
+          "year": 2003,
+          "far": 281,
+          "url": "https://m.richgo.ai/realty/danji/a8efvSj",
+          "distanceMeters": 16,
+          "nameSimilarity": 1,
+          "unitsDelta": 278,
+          "score": 140.6,
+          "valid": false
+        }
+      ]
+    },
+    {
+      "key": "송도더샵하버뷰(D13)|인천 연수구 송도동",
+      "name": "송도더샵하버뷰(D13)",
+      "area": "인천 연수구 송도동",
+      "oldStatus": "crawler_review_needed",
+      "status": "verified_exact",
+      "matched": true,
+      "source": {
+        "id": "a4eNhsZ",
+        "name": "송도더샵13단지하버뷰",
+        "far": 243,
+        "year": 2011,
+        "units": 553,
+        "lat": 37.398472,
+        "lng": 126.646342,
+        "street": "인천시 연수구 아트센터대로97번길 75",
+        "url": "https://m.richgo.ai/realty/danji/a4eNhsZ",
+        "info": "13~33층"
+      },
+      "match": {
+        "meters": 32,
+        "yearDelta": 0,
+        "unitDelta": 0,
+        "ratio": 0,
+        "nameSimilarity": 0.5
+      },
+      "candidateCount": 4,
+      "existingSourceIds": [
+        "a4eNhsZ",
+        "a7IvJWA",
+        "a8YFLsB",
+        "a2yGRmj"
+      ],
+      "problems": {
+        "duplicatePriorOwners": [],
+        "scoreTie": false,
+        "richgoFarBlank": false
+      },
+      "candidates": [
+        {
+          "id": "a4eNhsZ",
+          "name": "송도더샵13단지하버뷰",
+          "units": 553,
+          "year": 2011,
+          "far": 243,
+          "url": "https://m.richgo.ai/realty/danji/a4eNhsZ",
+          "distanceMeters": 32,
+          "nameSimilarity": 0.5,
+          "unitsDelta": 0,
+          "score": 144.3,
+          "valid": true
+        },
+        {
+          "id": "a7IvJWA",
+          "name": "송도더샵하버뷰II",
+          "units": 548,
+          "year": 2012,
+          "far": 259,
+          "url": "https://m.richgo.ai/realty/danji/a7IvJWA",
+          "distanceMeters": 274,
+          "nameSimilarity": 0.7,
+          "unitsDelta": 5,
+          "score": 46.2,
+          "valid": false
+        },
+        {
+          "id": "a2yGRmj",
+          "name": "송도자이하버뷰2단지",
+          "units": 523,
+          "year": 2011,
+          "far": 266,
+          "url": "https://m.richgo.ai/realty/danji/a2yGRmj",
+          "distanceMeters": 419,
+          "nameSimilarity": 0.5,
+          "unitsDelta": 30,
+          "score": -23.3,
+          "valid": false
+        },
+        {
+          "id": "a8YFLsB",
+          "name": "송도자이하버뷰1단지",
+          "units": 546,
+          "year": 2011,
+          "far": 298,
+          "url": "https://m.richgo.ai/realty/danji/a8YFLsB",
+          "distanceMeters": 469,
+          "nameSimilarity": 0.6,
+          "unitsDelta": 7,
+          "score": -23.4,
+          "valid": false
+        }
+      ]
+    },
+    {
+      "key": "미아1차래미안|서울 강북구 미아동",
+      "name": "미아1차래미안",
+      "area": "서울 강북구 미아동",
+      "oldStatus": "crawler_review_needed",
+      "status": "verified_exact",
+      "matched": true,
+      "source": {
+        "id": "a3lUbrb",
+        "name": "미아래미안1차",
+        "far": 219,
+        "year": 2006,
+        "units": 306,
+        "lat": 37.62612,
+        "lng": 127.019619,
+        "street": "서울시 강북구 삼양로 256",
+        "url": "https://m.richgo.ai/realty/danji/a3lUbrb",
+        "info": "9~15층"
+      },
+      "match": {
+        "meters": 28,
+        "yearDelta": 0,
+        "unitDelta": 0,
+        "ratio": 0,
+        "nameSimilarity": 0.429
+      },
+      "candidateCount": 1,
+      "existingSourceIds": [
+        "a3lUbrb"
+      ],
+      "problems": {
+        "duplicatePriorOwners": [],
+        "scoreTie": false,
+        "richgoFarBlank": false
+      },
+      "candidates": [
+        {
+          "id": "a3lUbrb",
+          "name": "미아래미안1차",
+          "units": 306,
+          "year": 2006,
+          "far": 219,
+          "url": "https://m.richgo.ai/realty/danji/a3lUbrb",
+          "distanceMeters": 28,
+          "nameSimilarity": 0.429,
+          "unitsDelta": 0,
+          "score": 138.5,
+          "valid": true
+        }
+      ]
+    },
+    {
+      "key": "한효|서울 구로구 고척동",
+      "name": "한효",
+      "area": "서울 구로구 고척동",
+      "oldStatus": "crawler_review_needed",
+      "status": "source_scope_mismatch",
+      "matched": false,
+      "source": null,
+      "match": null,
+      "candidateCount": 2,
+      "existingSourceIds": [
+        "a7srDnQ",
+        "a3OsGaT"
+      ],
+      "problems": null,
+      "candidates": [
+        {
+          "id": "a7srDnQ",
+          "name": "한효",
+          "units": 290,
+          "year": 1985,
+          "far": 175,
+          "url": "https://m.richgo.ai/realty/danji/a7srDnQ",
+          "distanceMeters": 56,
+          "nameSimilarity": 1,
+          "unitsDelta": 25,
+          "score": 143.6,
+          "valid": false
+        },
+        {
+          "id": "a3OsGaT",
+          "name": "한성",
+          "units": 130,
+          "year": 1986,
+          "far": 147,
+          "url": "https://m.richgo.ai/realty/danji/a3OsGaT",
+          "distanceMeters": 1025,
+          "nameSimilarity": 0.5,
+          "unitsDelta": 185,
+          "score": -180,
+          "valid": false
+        }
+      ]
+    },
+    {
+      "key": "도담마을아이파크|용인 수지구 죽전동",
+      "name": "도담마을아이파크",
+      "area": "용인 수지구 죽전동",
+      "oldStatus": "crawler_far_blank",
+      "status": "verified_no_far",
+      "matched": true,
+      "source": {
+        "id": "a3WbRld",
+        "name": "도담마을아이파크",
+        "far": null,
+        "year": 1998,
+        "units": 360,
+        "lat": 37.329006,
+        "lng": 127.117995,
+        "street": "경기도 용인시 수지구 대지로 82",
+        "url": "https://m.richgo.ai/realty/danji/a3WbRld",
+        "info": "13~20층"
+      },
+      "match": {
+        "meters": 34,
+        "yearDelta": 0,
+        "unitDelta": 0,
+        "ratio": 0,
+        "nameSimilarity": 1
+      },
+      "candidateCount": 1,
+      "existingSourceIds": [
+        "a3WbRld"
+      ],
+      "problems": {
+        "duplicatePriorOwners": [],
+        "scoreTie": false,
+        "richgoFarBlank": true
+      },
+      "candidates": [
+        {
+          "id": "a3WbRld",
+          "name": "도담마을아이파크",
+          "units": 360,
+          "year": 1998,
+          "far": null,
+          "url": "https://m.richgo.ai/realty/danji/a3WbRld",
+          "distanceMeters": 34,
+          "nameSimilarity": 1,
+          "unitsDelta": 0,
+          "score": 193.7,
+          "valid": true
+        }
+      ]
+    },
+    {
+      "key": "신구로자이|서울 구로구 구로동",
+      "name": "신구로자이",
+      "area": "서울 구로구 구로동",
+      "oldStatus": "crawler_review_needed",
+      "status": "source_scope_mismatch",
+      "matched": false,
+      "source": null,
+      "match": null,
+      "candidateCount": 2,
+      "existingSourceIds": [
+        "a6BoLnr",
+        "a5nqmaJ"
+      ],
+      "problems": null,
+      "candidates": [
+        {
+          "id": "a6BoLnr",
+          "name": "신구로자이",
+          "units": 299,
+          "year": 2007,
+          "far": 637,
+          "url": "https://m.richgo.ai/realty/danji/a6BoLnr",
+          "distanceMeters": 43,
+          "nameSimilarity": 1,
+          "unitsDelta": 3216,
+          "score": 14.3,
+          "valid": false
+        },
+        {
+          "id": "a5nqmaJ",
+          "name": "LG신도림자이",
+          "units": 299,
+          "year": 2004,
+          "far": 782,
+          "url": "https://m.richgo.ai/realty/danji/a5nqmaJ",
+          "distanceMeters": 794,
+          "nameSimilarity": 0.429,
+          "unitsDelta": 3216,
+          "score": -251.5,
+          "valid": false
+        }
+      ]
+    },
+    {
+      "key": "한신|용인 수지구 죽전동",
+      "name": "한신",
+      "area": "용인 수지구 죽전동",
+      "oldStatus": "crawler_review_needed",
+      "status": "verified_exact",
+      "matched": true,
+      "source": {
+        "id": "a3FdqPT",
+        "name": "대주한신",
+        "far": 310,
+        "year": 1998,
+        "units": 311,
+        "lat": 37.328018,
+        "lng": 127.112342,
+        "street": "경기도 용인시 수지구 대지로 27",
+        "url": "https://m.richgo.ai/realty/danji/a3FdqPT",
+        "info": "10~19층"
+      },
+      "match": {
+        "meters": 34,
+        "yearDelta": 0,
+        "unitDelta": 0,
+        "ratio": 0,
+        "nameSimilarity": 0.5
+      },
+      "candidateCount": 1,
+      "existingSourceIds": [
+        "a3FdqPT"
+      ],
+      "problems": {
+        "duplicatePriorOwners": [],
+        "scoreTie": false,
+        "richgoFarBlank": false
+      },
+      "candidates": [
+        {
+          "id": "a3FdqPT",
+          "name": "대주한신",
+          "units": 311,
+          "year": 1998,
+          "far": 310,
+          "url": "https://m.richgo.ai/realty/danji/a3FdqPT",
+          "distanceMeters": 34,
+          "nameSimilarity": 0.5,
+          "unitsDelta": 0,
+          "score": 143.7,
+          "valid": true
+        }
+      ]
+    },
+    {
+      "key": "행복한마을(한양)|부천 원미구 상동",
+      "name": "행복한마을(한양)",
+      "area": "부천 원미구 상동",
+      "oldStatus": "crawler_review_needed",
+      "status": "verified_exact",
+      "matched": true,
+      "source": {
+        "id": "a5mnbPx",
+        "name": "행복한한양수자인",
+        "far": 209,
+        "year": 2002,
+        "units": 396,
+        "lat": 37.501706,
+        "lng": 126.748844,
+        "street": "경기도 부천시 원미구 조마루로 47",
+        "url": "https://m.richgo.ai/realty/danji/a5mnbPx",
+        "info": "15~25층"
+      },
+      "match": {
+        "meters": 30,
+        "yearDelta": 0,
+        "unitDelta": 0,
+        "ratio": 0,
+        "nameSimilarity": 0.375
+      },
+      "candidateCount": 2,
+      "existingSourceIds": [
+        "a5mnbPx",
+        "a6hmAvO"
+      ],
+      "problems": {
+        "duplicatePriorOwners": [],
+        "scoreTie": false,
+        "richgoFarBlank": false
+      },
+      "candidates": [
+        {
+          "id": "a5mnbPx",
+          "name": "행복한한양수자인",
+          "units": 396,
+          "year": 2002,
+          "far": 209,
+          "url": "https://m.richgo.ai/realty/danji/a5mnbPx",
+          "distanceMeters": 30,
+          "nameSimilarity": 0.375,
+          "unitsDelta": 0,
+          "score": 132.5,
+          "valid": true
+        },
+        {
+          "id": "a6hmAvO",
+          "name": "행복한서해그랑블",
+          "units": 402,
+          "year": 2002,
+          "far": 209,
+          "url": "https://m.richgo.ai/realty/danji/a6hmAvO",
+          "distanceMeters": 215,
+          "nameSimilarity": 0.375,
+          "unitsDelta": 6,
+          "score": 38.4,
+          "valid": false
+        }
+      ]
+    },
+    {
+      "key": "무궁화(화성)|군포시 금정동",
+      "name": "무궁화(화성)",
+      "area": "군포시 금정동",
+      "oldStatus": "crawler_review_needed",
+      "status": "source_scope_mismatch",
+      "matched": false,
+      "source": null,
+      "match": null,
+      "candidateCount": 1,
+      "existingSourceIds": [
+        "a3qZkDv"
+      ],
+      "problems": null,
+      "candidates": [
+        {
+          "id": "a3qZkDv",
+          "name": "무궁화(화성)",
+          "units": 402,
+          "year": 1992,
+          "far": 220,
+          "url": "https://m.richgo.ai/realty/danji/a3qZkDv",
+          "distanceMeters": 21,
+          "nameSimilarity": 1,
+          "unitsDelta": 70,
+          "score": 140.1,
+          "valid": false
+        }
+      ]
+    },
+    {
+      "key": "수원아이파크시티6단지|수원 권선구 권선동",
+      "name": "수원아이파크시티6단지",
+      "area": "수원 권선구 권선동",
+      "oldStatus": "crawler_review_needed",
+      "status": "source_scope_mismatch",
+      "matched": false,
+      "source": null,
+      "match": null,
+      "candidateCount": 6,
+      "existingSourceIds": [
+        "a3mhAYn",
+        "a7fhnTv",
+        "a4zoycT",
+        "a7LedHK",
+        "a1JrvFu",
+        "a5JoOLx"
+      ],
+      "problems": null,
+      "candidates": [
+        {
+          "id": "a3mhAYn",
+          "name": "수원아이파크시티5",
+          "units": 1152,
+          "year": 2015,
+          "far": 177,
+          "url": "https://m.richgo.ai/realty/danji/a3mhAYn",
+          "distanceMeters": 170,
+          "nameSimilarity": 0.889,
+          "unitsDelta": 704,
+          "score": 9.4,
+          "valid": false
+        },
+        {
+          "id": "a1JrvFu",
+          "name": "수원아이파크시티4단지",
+          "units": 889,
+          "year": 2012,
+          "far": 192,
+          "url": "https://m.richgo.ai/realty/danji/a1JrvFu",
+          "distanceMeters": 405,
+          "nameSimilarity": 0.889,
+          "unitsDelta": 441,
+          "score": -68.5,
+          "valid": false
+        },
+        {
+          "id": "a7fhnTv",
+          "name": "수원아이파크시티1단지",
+          "units": 543,
+          "year": 2011,
+          "far": 189,
+          "url": "https://m.richgo.ai/realty/danji/a7fhnTv",
+          "distanceMeters": 843,
+          "nameSimilarity": 0.889,
+          "unitsDelta": 95,
+          "score": -93.1,
+          "valid": false
+        },
+        {
+          "id": "a5JoOLx",
+          "name": "수원아이파크시티8단지",
+          "units": 282,
+          "year": 2017,
+          "far": 398,
+          "url": "https://m.richgo.ai/realty/danji/a5JoOLx",
+          "distanceMeters": 994,
+          "nameSimilarity": 0.889,
+          "unitsDelta": 166,
+          "score": -112.4,
+          "valid": false
+        }
+      ]
+    },
+    {
+      "key": "동탄2신도시호반베르디움33단지|화성 동탄구 장지동",
+      "name": "동탄2신도시호반베르디움33단지",
+      "area": "화성 동탄구 장지동",
+      "oldStatus": "crawler_far_blank",
+      "status": "verified_no_far",
+      "matched": true,
+      "source": {
+        "id": "a6hnrir",
+        "name": "동탄2신도시호반베르디움33차",
+        "far": null,
+        "year": 2018,
+        "units": 393,
+        "lat": 37.157447,
+        "lng": 127.11185,
+        "street": "경기도 화성시 동탄구 동탄대로4다길 78",
+        "url": "https://m.richgo.ai/realty/danji/a6hnrir",
+        "info": "10~15층"
+      },
+      "match": {
+        "meters": 38,
+        "yearDelta": 0,
+        "unitDelta": 0,
+        "ratio": 0,
+        "nameSimilarity": 0.933
+      },
+      "candidateCount": 1,
+      "existingSourceIds": [
+        "a6hnrir"
+      ],
+      "problems": {
+        "duplicatePriorOwners": [],
+        "scoreTie": false,
+        "richgoFarBlank": true
+      },
+      "candidates": [
+        {
+          "id": "a6hnrir",
+          "name": "동탄2신도시호반베르디움33차",
+          "units": 393,
+          "year": 2018,
+          "far": null,
+          "url": "https://m.richgo.ai/realty/danji/a6hnrir",
+          "distanceMeters": 38,
+          "nameSimilarity": 0.933,
+          "unitsDelta": 0,
+          "score": 185.7,
+          "valid": true
+        }
+      ]
+    },
+    {
+      "key": "벽산|수원 권선구 권선동",
+      "name": "벽산",
+      "area": "수원 권선구 권선동",
+      "oldStatus": "crawler_shared_scope_review",
+      "status": "shared_identity",
+      "matched": false,
+      "source": null,
+      "match": null,
+      "candidateCount": 2,
+      "existingSourceIds": [
+        "a1VpKwr",
+        "a1QMKhR"
+      ],
+      "problems": {
+        "duplicatePriorOwners": [
+          "한성|수원 권선구 권선동"
+        ],
+        "scoreTie": false,
+        "richgoFarBlank": false
+      },
+      "candidates": [
+        {
+          "id": "a1VpKwr",
+          "name": "벽산한성",
+          "units": 562,
+          "year": 1995,
+          "far": 194,
+          "url": "https://m.richgo.ai/realty/danji/a1VpKwr",
+          "distanceMeters": 9,
+          "nameSimilarity": 0.5,
+          "unitsDelta": 0,
+          "score": 152,
+          "valid": true
+        },
+        {
+          "id": "a1QMKhR",
+          "name": "벽산",
+          "units": 368,
+          "year": 1996,
+          "far": 218,
+          "url": "https://m.richgo.ai/realty/danji/a1QMKhR",
+          "distanceMeters": 242,
+          "nameSimilarity": 1,
+          "unitsDelta": 194,
+          "score": 33.1,
+          "valid": false
+        }
+      ]
+    },
+    {
+      "key": "구운동성원상떼빌|수원 권선구 구운동",
+      "name": "구운동성원상떼빌",
+      "area": "수원 권선구 구운동",
+      "oldStatus": "crawler_unmatched",
+      "status": "unresolved",
+      "matched": false,
+      "source": null,
+      "match": null,
+      "candidateCount": 0,
+      "existingSourceIds": [],
+      "problems": null,
+      "candidates": []
+    },
+    {
+      "key": "녹원마을새천년그린빌(1)|용인 기흥구 신갈동",
+      "name": "녹원마을새천년그린빌(1)",
+      "area": "용인 기흥구 신갈동",
+      "oldStatus": "crawler_review_needed",
+      "status": "source_scope_mismatch",
+      "matched": false,
+      "source": null,
+      "match": null,
+      "candidateCount": 1,
+      "existingSourceIds": [
+        "a3egazz"
+      ],
+      "problems": null,
+      "candidates": [
+        {
+          "id": "a3egazz",
+          "name": "녹원마을새천년그린빌2단지",
+          "units": 238,
+          "year": 2004,
+          "far": 150,
+          "url": "https://m.richgo.ai/realty/danji/a3egazz",
+          "distanceMeters": 123,
+          "nameSimilarity": 0.909,
+          "unitsDelta": 176,
+          "score": 44.9,
+          "valid": false
+        }
+      ]
+    },
+    {
+      "key": "동일하이빌|하남시 신장동",
+      "name": "동일하이빌",
+      "area": "하남시 신장동",
+      "oldStatus": "crawler_unmatched",
+      "status": "unresolved",
+      "matched": false,
+      "source": null,
+      "match": null,
+      "candidateCount": 0,
+      "existingSourceIds": [],
+      "problems": null,
+      "candidates": []
+    },
+    {
+      "key": "미리내마을(한양)|부천 원미구 중동",
+      "name": "미리내마을(한양)",
+      "area": "부천 원미구 중동",
+      "oldStatus": "crawler_shared_scope_review",
+      "status": "shared_identity",
+      "matched": false,
+      "source": null,
+      "match": null,
+      "candidateCount": 3,
+      "existingSourceIds": [
+        "a5WdjgX",
+        "a4pXeIv",
+        "a1wHMWc"
+      ],
+      "problems": {
+        "duplicatePriorOwners": [
+          "미리내마을(금호)|부천 원미구 중동",
+          "미리내마을(한신)|부천 원미구 중동"
+        ],
+        "scoreTie": false,
+        "richgoFarBlank": false
+      },
+      "candidates": [
+        {
+          "id": "a5WdjgX",
+          "name": "미리내금호",
+          "units": 1008,
+          "year": 1994,
+          "far": 212,
+          "url": "https://m.richgo.ai/realty/danji/a5WdjgX",
+          "distanceMeters": 41,
+          "nameSimilarity": 0.429,
+          "unitsDelta": 0,
+          "score": 134.2,
+          "valid": true
+        },
+        {
+          "id": "a4pXeIv",
+          "name": "미리내롯데",
+          "units": 756,
+          "year": 1993,
+          "far": 219,
+          "url": "https://m.richgo.ai/realty/danji/a4pXeIv",
+          "distanceMeters": 162,
+          "nameSimilarity": 0.429,
+          "unitsDelta": 252,
+          "score": 17.9,
+          "valid": false
+        },
+        {
+          "id": "a1wHMWc",
+          "name": "미리내동성",
+          "units": 970,
+          "year": 1993,
+          "far": 222,
+          "url": "https://m.richgo.ai/realty/danji/a1wHMWc",
+          "distanceMeters": 326,
+          "nameSimilarity": 0.429,
+          "unitsDelta": 38,
+          "score": -2.8,
+          "valid": false
+        }
+      ]
+    },
+    {
+      "key": "수원아이파크시티5단지|수원 권선구 권선동",
+      "name": "수원아이파크시티5단지",
+      "area": "수원 권선구 권선동",
+      "oldStatus": "crawler_review_needed",
+      "status": "source_scope_mismatch",
+      "matched": false,
+      "source": null,
+      "match": null,
+      "candidateCount": 6,
+      "existingSourceIds": [
+        "a6TbaxZ",
+        "a1JrvFu",
+        "a7fhnTv",
+        "a3mhAYn",
+        "a4zoycT",
+        "a5JoOLx"
+      ],
+      "problems": null,
+      "candidates": [
+        {
+          "id": "a3mhAYn",
+          "name": "수원아이파크시티5",
+          "units": 1152,
+          "year": 2015,
+          "far": 177,
+          "url": "https://m.richgo.ai/realty/danji/a3mhAYn",
+          "distanceMeters": 80,
+          "nameSimilarity": 1,
+          "unitsDelta": 448,
+          "score": 86.1,
+          "valid": false
+        },
+        {
+          "id": "a6TbaxZ",
+          "name": "수원아이파크시티3단지",
+          "units": 793,
+          "year": 2011,
+          "far": 198,
+          "url": "https://m.richgo.ai/realty/danji/a6TbaxZ",
+          "distanceMeters": 427,
+          "nameSimilarity": 0.889,
+          "unitsDelta": 89,
+          "score": -20.4,
+          "valid": false
+        },
+        {
+          "id": "a1JrvFu",
+          "name": "수원아이파크시티4단지",
+          "units": 889,
+          "year": 2012,
+          "far": 192,
+          "url": "https://m.richgo.ai/realty/danji/a1JrvFu",
+          "distanceMeters": 413,
+          "nameSimilarity": 0.889,
+          "unitsDelta": 185,
+          "score": -25.1,
+          "valid": false
+        },
+        {
+          "id": "a7fhnTv",
+          "name": "수원아이파크시티1단지",
+          "units": 543,
+          "year": 2011,
+          "far": 189,
+          "url": "https://m.richgo.ai/realty/danji/a7fhnTv",
+          "distanceMeters": 801,
+          "nameSimilarity": 0.889,
+          "unitsDelta": 161,
+          "score": -101.7,
+          "valid": false
+        }
+      ]
+    },
+    {
+      "key": "용마한신|서울 중랑구 면목동",
+      "name": "용마한신",
+      "area": "서울 중랑구 면목동",
+      "oldStatus": "crawler_review_needed",
+      "status": "source_scope_mismatch",
+      "matched": false,
+      "source": null,
+      "match": null,
+      "candidateCount": 4,
+      "existingSourceIds": [
+        "a0iDhht",
+        "a1YqrAq",
+        "a0pXqCx",
+        "a7FQFPA"
+      ],
+      "problems": null,
+      "candidates": [
+        {
+          "id": "a0iDhht",
+          "name": "용마한신",
+          "units": 565,
+          "year": 1990,
+          "far": 261,
+          "url": "https://m.richgo.ai/realty/danji/a0iDhht",
+          "distanceMeters": 20,
+          "nameSimilarity": 1,
+          "unitsDelta": 37,
+          "score": 158.5,
+          "valid": false
+        },
+        {
+          "id": "a1YqrAq",
+          "name": "용마한신2차",
+          "units": 174,
+          "year": 1998,
+          "far": 264,
+          "url": "https://m.richgo.ai/realty/danji/a1YqrAq",
+          "distanceMeters": 110,
+          "nameSimilarity": 0.667,
+          "unitsDelta": 428,
+          "score": -56.8,
+          "valid": false
+        },
+        {
+          "id": "a0pXqCx",
+          "name": "용마동아",
+          "units": 174,
+          "year": 1993,
+          "far": 240,
+          "url": "https://m.richgo.ai/realty/danji/a0pXqCx",
+          "distanceMeters": 291,
+          "nameSimilarity": 0.5,
+          "unitsDelta": 428,
+          "score": -103.8,
+          "valid": false
+        },
+        {
+          "id": "a7FQFPA",
+          "name": "면목한신",
+          "units": 1362,
+          "year": 1987,
+          "far": 232,
+          "url": "https://m.richgo.ai/realty/danji/a7FQFPA",
+          "distanceMeters": 1946,
+          "nameSimilarity": 0.5,
+          "unitsDelta": 760,
+          "score": -187.3,
+          "valid": false
+        }
+      ]
+    },
+    {
+      "key": "은빛삼익건설(5)|고양 덕양구 화정동",
+      "name": "은빛삼익건설(5)",
+      "area": "고양 덕양구 화정동",
+      "oldStatus": "crawler_shared_scope_review",
+      "status": "source_scope_mismatch",
+      "matched": false,
+      "source": null,
+      "match": null,
+      "candidateCount": 1,
+      "existingSourceIds": [
+        "a7BGxXk"
+      ],
+      "problems": null,
+      "candidates": [
+        {
+          "id": "a7BGxXk",
+          "name": "은빛5단지",
+          "units": 2032,
+          "year": 1995,
+          "far": 198,
+          "url": "https://m.richgo.ai/realty/danji/a7BGxXk",
+          "distanceMeters": 51,
+          "nameSimilarity": 0.429,
+          "unitsDelta": 2,
+          "score": 100.7,
+          "valid": false
+        }
+      ]
+    },
+    {
+      "key": "주공6|구리시 인창동",
+      "name": "주공6",
+      "area": "구리시 인창동",
+      "oldStatus": "crawler_unmatched",
+      "status": "unresolved",
+      "matched": false,
+      "source": null,
+      "match": null,
+      "candidateCount": 0,
+      "existingSourceIds": [],
+      "problems": null,
+      "candidates": []
+    },
+    {
+      "key": "한강우성|남양주시 와부읍",
+      "name": "한강우성",
+      "area": "남양주시 와부읍",
+      "oldStatus": "crawler_review_needed",
+      "status": "source_scope_mismatch",
+      "matched": false,
+      "source": null,
+      "match": null,
+      "candidateCount": 1,
+      "existingSourceIds": [
+        "a3aFBtw"
+      ],
+      "problems": null,
+      "candidates": [
+        {
+          "id": "a3aFBtw",
+          "name": "한강우성",
+          "units": 1488,
+          "year": 1998,
+          "far": 216,
+          "url": "https://m.richgo.ai/realty/danji/a3aFBtw",
+          "distanceMeters": 62,
+          "nameSimilarity": 1,
+          "unitsDelta": 66,
+          "score": 147.5,
+          "valid": false
+        }
+      ]
+    },
+    {
+      "key": "화서주공5단지|수원 팔달구 화서동",
+      "name": "화서주공5단지",
+      "area": "수원 팔달구 화서동",
+      "oldStatus": "crawler_review_needed",
+      "status": "source_scope_mismatch",
+      "matched": false,
+      "source": null,
+      "match": null,
+      "candidateCount": 3,
+      "existingSourceIds": [
+        "a5EtHgX",
+        "a5afvkd",
+        "a1wOOnZ"
+      ],
+      "problems": null,
+      "candidates": [
+        {
+          "id": "a5afvkd",
+          "name": "화서주공4단지",
+          "units": 1314,
+          "year": 1997,
+          "far": 219,
+          "url": "https://m.richgo.ai/realty/danji/a5afvkd",
+          "distanceMeters": 77,
+          "nameSimilarity": 0.8,
+          "unitsDelta": 386,
+          "score": 93,
+          "valid": false
+        },
+        {
+          "id": "a5EtHgX",
+          "name": "화서주공5단지",
+          "units": 386,
+          "year": 1997,
+          "far": 219,
+          "url": "https://m.richgo.ai/realty/danji/a5EtHgX",
+          "distanceMeters": 142,
+          "nameSimilarity": 1,
+          "unitsDelta": 1314,
+          "score": 4,
+          "valid": false
+        },
+        {
+          "id": "a1wOOnZ",
+          "name": "화서주공3단지",
+          "units": 582,
+          "year": 1997,
+          "far": 236,
+          "url": "https://m.richgo.ai/realty/danji/a1wOOnZ",
+          "distanceMeters": 228,
+          "nameSimilarity": 0.8,
+          "unitsDelta": 1118,
+          "score": -26.2,
+          "valid": false
+        }
+      ]
+    }
+  ]
+}

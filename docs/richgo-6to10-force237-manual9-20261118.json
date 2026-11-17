@@ -1,0 +1,155 @@
+[
+  {
+    "name": "진양상가",
+    "area": "서울 중구 충무로4가",
+    "original": {
+      "units": 850,
+      "year": 1970,
+      "far": "183"
+    },
+    "source": {
+      "url": "https://m.richgo.ai/realty/danji/a9QcWYI",
+      "name": "진양",
+      "far": 147,
+      "year": 1970,
+      "units": 280,
+      "distance_m": 4
+    }
+  },
+  {
+    "name": "주공2",
+    "area": "서울 노원구 월계동",
+    "original": {
+      "units": 4300,
+      "year": 1992,
+      "far": "165"
+    },
+    "source": {
+      "url": "https://m.richgo.ai/realty/danji/a2yQdLu",
+      "name": "월계주공2단지",
+      "far": 227,
+      "year": 1992,
+      "units": 2002,
+      "distance_m": 162
+    }
+  },
+  {
+    "name": "동아(1차)",
+    "area": "인천 부평구 부평동",
+    "original": {
+      "units": 2475,
+      "year": 1986,
+      "far": "271"
+    },
+    "source": {
+      "url": "https://m.richgo.ai/realty/danji/a3QBfAn",
+      "name": "부평동아1단지",
+      "far": 181,
+      "year": 1986,
+      "units": 2475,
+      "distance_m": 205
+    }
+  },
+  {
+    "name": "더샵지제역센트럴파크1BL",
+    "area": "평택시 동삭동",
+    "original": {
+      "units": 2124,
+      "year": 2020,
+      "far": ""
+    },
+    "source": {
+      "url": "https://m.richgo.ai/realty/danji/a3DVJSm",
+      "name": "더샵지제역센트럴파크(1BL)",
+      "far": 193,
+      "year": 2020,
+      "units": 2124,
+      "distance_m": 838
+    }
+  },
+  {
+    "name": "우만주공2단지",
+    "area": "수원 팔달구 우만동",
+    "original": {
+      "units": 1484,
+      "year": 1989,
+      "far": "219"
+    },
+    "source": {
+      "url": "https://m.richgo.ai/realty/danji/a0OGzUG",
+      "name": "주공2단지",
+      "far": null,
+      "year": 1989,
+      "units": 984,
+      "distance_m": 315
+    }
+  },
+  {
+    "name": "백송마을(엘지에스케이)",
+    "area": "부천 원미구 상동",
+    "original": {
+      "units": 496,
+      "year": 2002,
+      "far": ""
+    },
+    "source": {
+      "url": "https://m.richgo.ai/realty/danji/a3jMqAl",
+      "name": "백송LG",
+      "far": 207,
+      "year": 2002,
+      "units": 496,
+      "distance_m": 79
+    }
+  },
+  {
+    "name": "성원1차이화",
+    "area": "의왕시 오전동",
+    "original": {
+      "units": 544,
+      "year": 2000,
+      "far": "286"
+    },
+    "source": {
+      "url": "https://m.richgo.ai/realty/danji/a5FZIKR",
+      "name": "성원이화1차",
+      "far": 286,
+      "year": 2000,
+      "units": 520,
+      "distance_m": 56
+    }
+  },
+  {
+    "name": "SK",
+    "area": "용인 기흥구 서천동",
+    "original": {
+      "units": 826,
+      "year": 2002,
+      "far": ""
+    },
+    "source": {
+      "url": "https://m.richgo.ai/realty/danji/a0UXjDH",
+      "name": "서그내마을SK",
+      "far": 202,
+      "year": 2002,
+      "units": 807,
+      "distance_m": 62
+    }
+  },
+  {
+    "name": "진도",
+    "area": "남양주시 와부읍",
+    "original": {
+      "units": 608,
+      "year": 1998,
+      "far": "259"
+    },
+    "source": {
+      "url": "https://m.richgo.ai/realty/danji/a8hBBMb",
+      "name": "덕소리버뷰진도",
+      "far": 258,
+      "year": 1998,
+      "units": 571,
+      "distance_m": 29
+    }
+  }
+]

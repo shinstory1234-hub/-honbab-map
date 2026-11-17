@@ -1,0 +1,1654 @@
+{
+  "meta": {
+    "shard": 2,
+    "originalPending": 63,
+    "additionalVerified": 20,
+    "additionalFarKnown": 20,
+    "farBlank": 0,
+    "stillPending": 43,
+    "collisions": 0,
+    "network": {
+      "attempted": 0,
+      "fetched": 77,
+      "error": 0,
+      "blocked": 0,
+      "limited": 0,
+      "bing": 23,
+      "hub": 10,
+      "detail": 44
+    },
+    "method": "region hub + named indexed pages + coordinates + year + units"
+  },
+  "rows": [
+    {
+      "name": "관악산벽산타운5",
+      "area": "서울 금천구 시흥동",
+      "key": "관악산벽산타운5|서울 금천구 시흥동",
+      "originalStatus": "review_needed",
+      "secondStatus": "still_unresolved",
+      "richgo": null,
+      "match": null,
+      "candidates": []
+    },
+    {
+      "name": "영통에듀파크(331동~337동)",
+      "area": "수원 영통구 영통동",
+      "key": "영통에듀파크(331동~337동)|수원 영통구 영통동",
+      "originalStatus": "review_needed",
+      "secondStatus": "still_unresolved",
+      "richgo": null,
+      "match": null,
+      "candidates": [
+        {
+          "id": "a1dpwcE",
+          "name": "영통에듀파크",
+          "year": 1997,
+          "units": 1242,
+          "far": 220,
+          "distanceMeters": 100,
+          "accepted": false,
+          "score": 211
+        }
+      ]
+    },
+    {
+      "name": "청라29블럭호반베르디움",
+      "area": "인천 서해구 청라동",
+      "key": "청라29블럭호반베르디움|인천 서해구 청라동",
+      "originalStatus": "review_needed",
+      "secondStatus": "still_unresolved",
+      "richgo": null,
+      "match": null,
+      "candidates": []
+    },
+    {
+      "name": "풍림",
+      "area": "수원 영통구 영통동",
+      "key": "풍림|수원 영통구 영통동",
+      "originalStatus": "review_needed",
+      "secondStatus": "verified_second_pass",
+      "richgo": {
+        "id": "a3XpAlo",
+        "name": "벽산",
+        "units": 928,
+        "year": 1997,
+        "far": 220,
+        "floors": "17~20층",
+        "coverage": 18,
+        "parking": 983,
+        "heating": "지역난방 · 열병합",
+        "builder": "벽산건설(주)",
+        "pyeongs": "33평",
+        "lat": 37.266454,
+        "lng": 127.083672,
+        "street": "경기도 수원시 영통구 봉영로1744번길 11",
+        "facts": true,
+        "url": "https://m.richgo.ai/realty/danji/a3XpAlo"
+      },
+      "match": {
+        "distanceMeters": 79,
+        "yearDelta": 0,
+        "unitsRatio": 0,
+        "method": "previous_candidate",
+        "score": 256
+      },
+      "candidates": [
+        {
+          "id": "a3XpAlo",
+          "name": "벽산",
+          "year": 1997,
+          "units": 928,
+          "far": 220,
+          "distanceMeters": 79,
+          "accepted": true,
+          "score": 256
+        }
+      ]
+    },
+    {
+      "name": "건영",
+      "area": "서울 성동구 송정동",
+      "key": "건영|서울 성동구 송정동",
+      "originalStatus": "unmatched",
+      "secondStatus": "still_unresolved",
+      "richgo": null,
+      "match": null,
+      "candidates": []
+    },
+    {
+      "name": "인천 SK Sky VIEW",
+      "area": "인천 미추홀구 용현동",
+      "key": "인천 SK Sky VIEW|인천 미추홀구 용현동",
+      "originalStatus": "review_needed",
+      "secondStatus": "still_unresolved",
+      "richgo": null,
+      "match": null,
+      "candidates": []
+    },
+    {
+      "name": "청라제일풍경채2차에듀앤파크",
+      "area": "인천 서해구 청라동",
+      "key": "청라제일풍경채2차에듀앤파크|인천 서해구 청라동",
+      "originalStatus": "review_needed",
+      "secondStatus": "still_unresolved",
+      "richgo": null,
+      "match": null,
+      "candidates": [
+        {
+          "id": "a0jxkXH",
+          "name": "청라제일풍경채에듀&파크2차",
+          "year": 2017,
+          "units": 1581,
+          "far": 220,
+          "distanceMeters": 12,
+          "accepted": false,
+          "score": 141
+        },
+        {
+          "id": "a0JappW",
+          "name": "청라제일풍경채",
+          "year": 2012,
+          "units": 1071,
+          "far": 181,
+          "distanceMeters": 263,
+          "accepted": false,
+          "score": 104
+        }
+      ]
+    },
+    {
+      "name": "신나무실동보",
+      "area": "수원 영통구 영통동",
+      "key": "신나무실동보|수원 영통구 영통동",
+      "originalStatus": "verified_shared_scope_review",
+      "secondStatus": "verified_second_pass",
+      "richgo": {
+        "id": "a3RlGKK",
+        "name": "신나무실6단지동보",
+        "units": 836,
+        "year": 1997,
+        "far": 219,
+        "floors": "18~20층",
+        "coverage": 17,
+        "parking": 890,
+        "heating": "지역난방 · 열병합",
+        "builder": "동보건설(주) ,신명종합건설(주)",
+        "pyeongs": "32평",
+        "lat": 37.251206,
+        "lng": 127.065032,
+        "street": "경기도 수원시 영통구 봉영로1517번길 76",
+        "facts": true,
+        "url": "https://m.richgo.ai/realty/danji/a3RlGKK"
+      },
+      "match": {
+        "distanceMeters": 36,
+        "yearDelta": 0,
+        "unitsRatio": 0,
+        "method": "region_hub",
+        "score": 143
+      },
+      "candidates": [
+        {
+          "id": "a3RlGKK",
+          "name": "신나무실6단지동보",
+          "year": 1997,
+          "units": 836,
+          "far": 219,
+          "distanceMeters": 36,
+          "accepted": true,
+          "score": 143
+        }
+      ]
+    },
+    {
+      "name": "신나무실신명",
+      "area": "수원 영통구 영통동",
+      "key": "신나무실신명|수원 영통구 영통동",
+      "originalStatus": "verified_shared_scope_review",
+      "secondStatus": "verified_second_pass",
+      "richgo": {
+        "id": "a3RlGKK",
+        "name": "신나무실6단지동보",
+        "units": 836,
+        "year": 1997,
+        "far": 219,
+        "floors": "18~20층",
+        "coverage": 17,
+        "parking": 890,
+        "heating": "지역난방 · 열병합",
+        "builder": "동보건설(주) ,신명종합건설(주)",
+        "pyeongs": "32평",
+        "lat": 37.251206,
+        "lng": 127.065032,
+        "street": "경기도 수원시 영통구 봉영로1517번길 76",
+        "facts": true,
+        "url": "https://m.richgo.ai/realty/danji/a3RlGKK"
+      },
+      "match": {
+        "distanceMeters": 36,
+        "yearDelta": 0,
+        "unitsRatio": 0,
+        "method": "region_hub",
+        "score": 143
+      },
+      "candidates": [
+        {
+          "id": "a3RlGKK",
+          "name": "신나무실6단지동보",
+          "year": 1997,
+          "units": 836,
+          "far": 219,
+          "distanceMeters": 36,
+          "accepted": true,
+          "score": 143
+        }
+      ]
+    },
+    {
+      "name": "태영",
+      "area": "수원 영통구 영통동",
+      "key": "태영|수원 영통구 영통동",
+      "originalStatus": "review_needed",
+      "secondStatus": "verified_second_pass",
+      "richgo": {
+        "id": "a7QaUGd",
+        "name": "삼성",
+        "units": 832,
+        "year": 1997,
+        "far": 218,
+        "floors": "16~18층",
+        "coverage": 18,
+        "parking": 851,
+        "heating": "지역난방 · 열병합",
+        "builder": "삼성물산(주),주식회사 태영",
+        "pyeongs": "32·33평",
+        "lat": 37.249373,
+        "lng": 127.0635,
+        "street": "경기도 수원시 영통구 봉영로1517번길 73",
+        "facts": true,
+        "url": "https://m.richgo.ai/realty/danji/a7QaUGd"
+      },
+      "match": {
+        "distanceMeters": 36,
+        "yearDelta": 0,
+        "unitsRatio": 0,
+        "method": "previous_candidate",
+        "score": 256
+      },
+      "candidates": [
+        {
+          "id": "a7QaUGd",
+          "name": "삼성",
+          "year": 1997,
+          "units": 832,
+          "far": 218,
+          "distanceMeters": 36,
+          "accepted": true,
+          "score": 256
+        }
+      ]
+    },
+    {
+      "name": "장미마을삼성래미안2",
+      "area": "용인 기흥구 언남동",
+      "key": "장미마을삼성래미안2|용인 기흥구 언남동",
+      "originalStatus": "review_needed",
+      "secondStatus": "still_unresolved",
+      "richgo": null,
+      "match": null,
+      "candidates": [
+        {
+          "id": "a7cMxub",
+          "name": "장미마을삼성래미안2차",
+          "year": 2003,
+          "units": 1219,
+          "far": 169,
+          "distanceMeters": 25,
+          "accepted": false,
+          "score": 211
+        }
+      ]
+    },
+    {
+      "name": "신나무실극동",
+      "area": "수원 영통구 영통동",
+      "key": "신나무실극동|수원 영통구 영통동",
+      "originalStatus": "verified_shared_scope_review",
+      "secondStatus": "verified_second_pass",
+      "richgo": {
+        "id": "a2KOYIW",
+        "name": "신나무실극동",
+        "units": 776,
+        "year": 2000,
+        "far": 219,
+        "floors": "17~20층",
+        "coverage": 16,
+        "parking": 798,
+        "heating": "지역난방 · 열병합",
+        "builder": "풍림건설(주)",
+        "pyeongs": "29·32평",
+        "lat": 37.24981,
+        "lng": 127.068544,
+        "street": "경기도 수원시 영통구 봉영로1517번길 30",
+        "facts": true,
+        "url": "https://m.richgo.ai/realty/danji/a2KOYIW"
+      },
+      "match": {
+        "distanceMeters": 76,
+        "yearDelta": 1,
+        "unitsRatio": 0,
+        "method": "region_hub",
+        "score": 231
+      },
+      "candidates": [
+        {
+          "id": "a2KOYIW",
+          "name": "신나무실극동",
+          "year": 2000,
+          "units": 776,
+          "far": 219,
+          "distanceMeters": 76,
+          "accepted": true,
+          "score": 231
+        }
+      ]
+    },
+    {
+      "name": "신나무실풍림",
+      "area": "수원 영통구 영통동",
+      "key": "신나무실풍림|수원 영통구 영통동",
+      "originalStatus": "verified_shared_scope_review",
+      "secondStatus": "verified_second_pass",
+      "richgo": {
+        "id": "a2KOYIW",
+        "name": "신나무실극동",
+        "units": 776,
+        "year": 2000,
+        "far": 219,
+        "floors": "17~20층",
+        "coverage": 16,
+        "parking": 798,
+        "heating": "지역난방 · 열병합",
+        "builder": "풍림건설(주)",
+        "pyeongs": "29·32평",
+        "lat": 37.24981,
+        "lng": 127.068544,
+        "street": "경기도 수원시 영통구 봉영로1517번길 30",
+        "facts": true,
+        "url": "https://m.richgo.ai/realty/danji/a2KOYIW"
+      },
+      "match": {
+        "distanceMeters": 76,
+        "yearDelta": 0,
+        "unitsRatio": 0,
+        "method": "region_hub",
+        "score": 147
+      },
+      "candidates": [
+        {
+          "id": "a2KOYIW",
+          "name": "신나무실극동",
+          "year": 2000,
+          "units": 776,
+          "far": 219,
+          "distanceMeters": 76,
+          "accepted": true,
+          "score": 147
+        }
+      ]
+    },
+    {
+      "name": "상떼빌구성역플랫폼시티",
+      "area": "용인 기흥구 보정동",
+      "key": "상떼빌구성역플랫폼시티|용인 기흥구 보정동",
+      "originalStatus": "review_needed",
+      "secondStatus": "still_unresolved",
+      "richgo": null,
+      "match": null,
+      "candidates": [
+        {
+          "id": "a8oEkgL",
+          "name": "상떼빌구성역플랫폼시티",
+          "year": 2000,
+          "units": 691,
+          "far": 204,
+          "distanceMeters": 74,
+          "accepted": false,
+          "score": 244
+        }
+      ]
+    },
+    {
+      "name": "호반베르디움",
+      "area": "인천 서해구 청라동",
+      "key": "호반베르디움|인천 서해구 청라동",
+      "originalStatus": "review_needed",
+      "secondStatus": "verified_second_pass",
+      "richgo": {
+        "id": "a8AfONJ",
+        "name": "호반베르디움(A20블록)",
+        "units": 620,
+        "year": 2011,
+        "far": 179,
+        "floors": "28~30층",
+        "coverage": 9,
+        "parking": 935,
+        "heating": "지역난방 · 열병합",
+        "builder": "(주)호반건설",
+        "pyeongs": "34평",
+        "lat": 37.531148,
+        "lng": 126.658249,
+        "street": "인천시 서해구 청라에메랄드로76번길 14",
+        "facts": true,
+        "url": "https://m.richgo.ai/realty/danji/a8AfONJ"
+      },
+      "match": {
+        "distanceMeters": 31,
+        "yearDelta": 0,
+        "unitsRatio": 0,
+        "method": "region_hub",
+        "score": 211
+      },
+      "candidates": [
+        {
+          "id": "a8AfONJ",
+          "name": "호반베르디움(A20블록)",
+          "year": 2011,
+          "units": 620,
+          "far": 179,
+          "distanceMeters": 31,
+          "accepted": true,
+          "score": 211
+        },
+        {
+          "id": "a7ZUjyq",
+          "name": "호반베르디움(A14블럭)",
+          "year": 2011,
+          "units": 745,
+          "far": 179,
+          "distanceMeters": 872,
+          "accepted": false,
+          "score": 68
+        },
+        {
+          "id": "a2RaliO",
+          "name": "호반베르디움앤영무예다음",
+          "year": 2011,
+          "units": 1051,
+          "far": 179,
+          "distanceMeters": 712,
+          "accepted": false,
+          "score": 47
+        }
+      ]
+    },
+    {
+      "name": "호반베르디움(116-6)",
+      "area": "인천 서해구 청라동",
+      "key": "호반베르디움(116-6)|인천 서해구 청라동",
+      "originalStatus": "review_needed",
+      "secondStatus": "still_unresolved",
+      "richgo": null,
+      "match": null,
+      "candidates": [
+        {
+          "id": "a7ZUjyq",
+          "name": "호반베르디움(A14블럭)",
+          "year": 2011,
+          "units": 745,
+          "far": 179,
+          "distanceMeters": 24,
+          "accepted": false,
+          "score": 141
+        }
+      ]
+    },
+    {
+      "name": "엘지동수원자이",
+      "area": "수원 영통구 망포동",
+      "key": "엘지동수원자이|수원 영통구 망포동",
+      "originalStatus": "review_needed",
+      "secondStatus": "verified_second_pass",
+      "richgo": {
+        "id": "a4SnZjy",
+        "name": "LG동수원자이3단지",
+        "units": 924,
+        "year": 2003,
+        "far": 232,
+        "floors": "12~25층",
+        "coverage": 15,
+        "parking": 1288,
+        "heating": "지역난방 · 열병합",
+        "builder": "엘지건설(주)",
+        "pyeongs": "30·35·43·49평",
+        "lat": 37.23689,
+        "lng": 127.05624,
+        "street": "경기도 수원시 영통구 영통로 111",
+        "facts": true,
+        "url": "https://m.richgo.ai/realty/danji/a4SnZjy"
+      },
+      "match": {
+        "distanceMeters": 47,
+        "yearDelta": 0,
+        "unitsRatio": 0,
+        "method": "previous_candidate",
+        "score": 256
+      },
+      "candidates": [
+        {
+          "id": "a4SnZjy",
+          "name": "LG동수원자이3단지",
+          "year": 2003,
+          "units": 924,
+          "far": 232,
+          "distanceMeters": 47,
+          "accepted": true,
+          "score": 256
+        }
+      ]
+    },
+    {
+      "name": "양현마을신안",
+      "area": "용인 기흥구 신갈동",
+      "key": "양현마을신안|용인 기흥구 신갈동",
+      "originalStatus": "verified_shared_scope_review",
+      "secondStatus": "verified_second_pass",
+      "richgo": {
+        "id": "a2JpNFA",
+        "name": "양현마을풍림",
+        "units": 776,
+        "year": 2001,
+        "far": 187,
+        "floors": "10~13층",
+        "coverage": 23,
+        "parking": 788,
+        "heating": "지역난방 · 열병합",
+        "builder": "풍림산업(주),주식회사 신안",
+        "pyeongs": "25평",
+        "lat": 37.284038,
+        "lng": 127.106645,
+        "street": "경기도 용인시 기흥구 산양로 17",
+        "facts": true,
+        "url": "https://m.richgo.ai/realty/danji/a2JpNFA"
+      },
+      "match": {
+        "distanceMeters": 28,
+        "yearDelta": 0,
+        "unitsRatio": 0,
+        "method": "region_hub",
+        "score": 147
+      },
+      "candidates": [
+        {
+          "id": "a2JpNFA",
+          "name": "양현마을풍림",
+          "year": 2001,
+          "units": 776,
+          "far": 187,
+          "distanceMeters": 28,
+          "accepted": true,
+          "score": 147
+        }
+      ]
+    },
+    {
+      "name": "양현마을풍림",
+      "area": "용인 기흥구 신갈동",
+      "key": "양현마을풍림|용인 기흥구 신갈동",
+      "originalStatus": "verified_shared_scope_review",
+      "secondStatus": "verified_second_pass",
+      "richgo": {
+        "id": "a2JpNFA",
+        "name": "양현마을풍림",
+        "units": 776,
+        "year": 2001,
+        "far": 187,
+        "floors": "10~13층",
+        "coverage": 23,
+        "parking": 788,
+        "heating": "지역난방 · 열병합",
+        "builder": "풍림산업(주),주식회사 신안",
+        "pyeongs": "25평",
+        "lat": 37.284038,
+        "lng": 127.106645,
+        "street": "경기도 용인시 기흥구 산양로 17",
+        "facts": true,
+        "url": "https://m.richgo.ai/realty/danji/a2JpNFA"
+      },
+      "match": {
+        "distanceMeters": 28,
+        "yearDelta": 0,
+        "unitsRatio": 0,
+        "method": "region_hub",
+        "score": 236
+      },
+      "candidates": [
+        {
+          "id": "a2JpNFA",
+          "name": "양현마을풍림",
+          "year": 2001,
+          "units": 776,
+          "far": 187,
+          "distanceMeters": 28,
+          "accepted": true,
+          "score": 236
+        }
+      ]
+    },
+    {
+      "name": "신나무실미주",
+      "area": "수원 영통구 영통동",
+      "key": "신나무실미주|수원 영통구 영통동",
+      "originalStatus": "review_needed",
+      "secondStatus": "verified_second_pass",
+      "richgo": {
+        "id": "a3EBZsb",
+        "name": "신원",
+        "units": 574,
+        "year": 1999,
+        "far": 218,
+        "floors": "17~20층",
+        "coverage": 16,
+        "parking": 976,
+        "heating": "지역난방 · 열병합",
+        "builder": "신원종합개발(주) 외1",
+        "pyeongs": "38·43·49평",
+        "lat": 37.25207,
+        "lng": 127.067276,
+        "street": "경기도 수원시 영통구 매영로310번길 27",
+        "facts": true,
+        "url": "https://m.richgo.ai/realty/danji/a3EBZsb"
+      },
+      "match": {
+        "distanceMeters": 50,
+        "yearDelta": 0,
+        "unitsRatio": 0,
+        "method": "previous_candidate",
+        "score": 256
+      },
+      "candidates": [
+        {
+          "id": "a3EBZsb",
+          "name": "신원",
+          "year": 1999,
+          "units": 574,
+          "far": 218,
+          "distanceMeters": 50,
+          "accepted": true,
+          "score": 256
+        }
+      ]
+    },
+    {
+      "name": "신나무실신원",
+      "area": "수원 영통구 영통동",
+      "key": "신나무실신원|수원 영통구 영통동",
+      "originalStatus": "unmatched",
+      "secondStatus": "still_unresolved",
+      "richgo": null,
+      "match": null,
+      "candidates": []
+    },
+    {
+      "name": "영통SKVIEW",
+      "area": "수원 영통구 망포동",
+      "key": "영통SKVIEW|수원 영통구 망포동",
+      "originalStatus": "review_needed",
+      "secondStatus": "still_unresolved",
+      "richgo": null,
+      "match": null,
+      "candidates": [
+        {
+          "id": "a2KgXbf",
+          "name": "영통SK뷰",
+          "year": 2016,
+          "units": 710,
+          "far": 209,
+          "distanceMeters": 36,
+          "accepted": false,
+          "score": 134
+        }
+      ]
+    },
+    {
+      "name": "금화마을4단지주공그린빌",
+      "area": "용인 기흥구 상갈동",
+      "key": "금화마을4단지주공그린빌|용인 기흥구 상갈동",
+      "originalStatus": "review_needed",
+      "secondStatus": "still_unresolved",
+      "richgo": null,
+      "match": null,
+      "candidates": [
+        {
+          "id": "a2cEzyc",
+          "name": "금화마을5단지주공그린빌",
+          "year": 2001,
+          "units": 681,
+          "far": 216,
+          "distanceMeters": 515,
+          "accepted": false,
+          "score": 170
+        },
+        {
+          "id": "a7hIonn",
+          "name": "금화마을6단지주공그린빌",
+          "year": 2001,
+          "units": 228,
+          "far": 100,
+          "distanceMeters": 484,
+          "accepted": false,
+          "score": 121
+        },
+        {
+          "id": "a6JbVnm",
+          "name": "금화마을3단지주공그린빌",
+          "year": 2001,
+          "units": 1070,
+          "far": 223,
+          "distanceMeters": 251,
+          "accepted": false,
+          "score": 111
+        }
+      ]
+    },
+    {
+      "name": "신동아파밀리에",
+      "area": "용인 기흥구 영덕동",
+      "key": "신동아파밀리에|용인 기흥구 영덕동",
+      "originalStatus": "review_needed",
+      "secondStatus": "verified_second_pass",
+      "richgo": {
+        "id": "a4RTiHK",
+        "name": "흥덕마을12단지신동아파밀리에",
+        "units": 759,
+        "year": 2009,
+        "far": 177,
+        "floors": "12~20층",
+        "coverage": 13,
+        "parking": 1485,
+        "heating": "지역난방 · 열병합",
+        "builder": "신동아건설(주)",
+        "pyeongs": "42·46·49·52평",
+        "lat": 37.271368,
+        "lng": 127.084143,
+        "street": "경기도 용인시 기흥구 흥덕3로 20",
+        "facts": true,
+        "url": "https://m.richgo.ai/realty/danji/a4RTiHK"
+      },
+      "match": {
+        "distanceMeters": 22,
+        "yearDelta": 0,
+        "unitsRatio": 0,
+        "method": "previous_candidate",
+        "score": 256
+      },
+      "candidates": [
+        {
+          "id": "a4RTiHK",
+          "name": "흥덕마을12단지신동아파밀리에",
+          "year": 2009,
+          "units": 759,
+          "far": 177,
+          "distanceMeters": 22,
+          "accepted": true,
+          "score": 256
+        }
+      ]
+    },
+    {
+      "name": "한양수자인",
+      "area": "용인 기흥구 구갈동",
+      "key": "한양수자인|용인 기흥구 구갈동",
+      "originalStatus": "unmatched",
+      "secondStatus": "still_unresolved",
+      "richgo": null,
+      "match": null,
+      "candidates": []
+    },
+    {
+      "name": "청송마을(현대3)",
+      "area": "김포시 장기동",
+      "key": "청송마을(현대3)|김포시 장기동",
+      "originalStatus": "unmatched",
+      "secondStatus": "still_unresolved",
+      "richgo": null,
+      "match": null,
+      "candidates": []
+    },
+    {
+      "name": "벽산(1053-2)",
+      "area": "수원 영통구 영통동",
+      "key": "벽산(1053-2)|수원 영통구 영통동",
+      "originalStatus": "unmatched",
+      "secondStatus": "still_unresolved",
+      "richgo": null,
+      "match": null,
+      "candidates": []
+    },
+    {
+      "name": "연원마을삼성명가타운",
+      "area": "용인 기흥구 보정동",
+      "key": "연원마을삼성명가타운|용인 기흥구 보정동",
+      "originalStatus": "review_needed",
+      "secondStatus": "still_unresolved",
+      "richgo": null,
+      "match": null,
+      "candidates": [
+        {
+          "id": "a5FZxnW",
+          "name": "연원마을삼성명가타운",
+          "year": 2002,
+          "units": 424,
+          "far": 174,
+          "distanceMeters": 52,
+          "accepted": false,
+          "score": 256
+        }
+      ]
+    },
+    {
+      "name": "도현마을현대",
+      "area": "용인 기흥구 신갈동",
+      "key": "도현마을현대|용인 기흥구 신갈동",
+      "originalStatus": "review_needed",
+      "secondStatus": "verified_second_pass",
+      "richgo": {
+        "id": "a6TIZti",
+        "name": "도현마을현대(아이파크)",
+        "units": 568,
+        "year": 2001,
+        "far": 198,
+        "floors": "15~15층",
+        "coverage": 20,
+        "parking": 883,
+        "heating": "지역난방 · 열병합",
+        "builder": "현대산업개발(주)",
+        "pyeongs": "33·39·50·62·63평",
+        "lat": 37.285765,
+        "lng": 127.109839,
+        "street": "경기도 용인시 기흥구 구갈로 115-16",
+        "facts": true,
+        "url": "https://m.richgo.ai/realty/danji/a6TIZti"
+      },
+      "match": {
+        "distanceMeters": 3,
+        "yearDelta": 0,
+        "unitsRatio": 0,
+        "method": "region_hub",
+        "score": 211
+      },
+      "candidates": [
+        {
+          "id": "a6TIZti",
+          "name": "도현마을현대(아이파크)",
+          "year": 2001,
+          "units": 568,
+          "far": 198,
+          "distanceMeters": 3,
+          "accepted": true,
+          "score": 211
+        }
+      ]
+    },
+    {
+      "name": "태전7지구C-14BL태전파크자이",
+      "area": "광주시 태전동",
+      "key": "태전7지구C-14BL태전파크자이|광주시 태전동",
+      "originalStatus": "review_needed",
+      "secondStatus": "still_unresolved",
+      "richgo": null,
+      "match": null,
+      "candidates": [
+        {
+          "id": "a5HgpxM",
+          "name": "태전파크자이",
+          "year": 2019,
+          "units": 668,
+          "far": 199,
+          "distanceMeters": 112,
+          "accepted": false,
+          "score": 146
+        }
+      ]
+    },
+    {
+      "name": "강선마을1단지(벽산,대우)",
+      "area": "고양 일산서구 주엽동",
+      "key": "강선마을1단지(벽산,대우)|고양 일산서구 주엽동",
+      "originalStatus": "review_needed",
+      "secondStatus": "still_unresolved",
+      "richgo": null,
+      "match": null,
+      "candidates": []
+    },
+    {
+      "name": "망포역아이파크",
+      "area": "수원 영통구 망포동",
+      "key": "망포역아이파크|수원 영통구 망포동",
+      "originalStatus": "review_needed",
+      "secondStatus": "still_unresolved",
+      "richgo": null,
+      "match": null,
+      "candidates": [
+        {
+          "id": "a2ukvMq",
+          "name": "망포역아이파크",
+          "year": 2002,
+          "units": 554,
+          "far": 235,
+          "distanceMeters": 41,
+          "accepted": false,
+          "score": 244
+        },
+        {
+          "id": "a3OpOxo",
+          "name": "망포마을현대아이파크2차",
+          "year": 2002,
+          "units": 489,
+          "far": 220,
+          "distanceMeters": 659,
+          "accepted": false,
+          "score": 152
+        }
+      ]
+    },
+    {
+      "name": "망포마을쌍용1차",
+      "area": "수원 영통구 망포동",
+      "key": "망포마을쌍용1차|수원 영통구 망포동",
+      "originalStatus": "review_needed",
+      "secondStatus": "verified_second_pass",
+      "richgo": {
+        "id": "a9Kvjam",
+        "name": "망포역마을쌍용",
+        "units": 531,
+        "year": 2002,
+        "far": 225,
+        "floors": "12~24층",
+        "coverage": 17,
+        "parking": 741,
+        "heating": "지역난방 · 열병합",
+        "builder": "쌍용건설(주)",
+        "pyeongs": "35·48평",
+        "lat": 37.243,
+        "lng": 127.05227,
+        "street": "경기도 수원시 영통구 영통로173번길 37",
+        "facts": true,
+        "url": "https://m.richgo.ai/realty/danji/a9Kvjam"
+      },
+      "match": {
+        "distanceMeters": 15,
+        "yearDelta": 0,
+        "unitsRatio": 0,
+        "method": "previous_candidate",
+        "score": 256
+      },
+      "candidates": [
+        {
+          "id": "a9Kvjam",
+          "name": "망포역마을쌍용",
+          "year": 2002,
+          "units": 531,
+          "far": 225,
+          "distanceMeters": 15,
+          "accepted": true,
+          "score": 256
+        }
+      ]
+    },
+    {
+      "name": "한양수자인",
+      "area": "수원 영통구 망포동",
+      "key": "한양수자인|수원 영통구 망포동",
+      "originalStatus": "review_needed",
+      "secondStatus": "verified_second_pass",
+      "richgo": {
+        "id": "a7gFzkd",
+        "name": "한양수자인에듀파크",
+        "units": 530,
+        "year": 2013,
+        "far": 205,
+        "floors": "18~21층",
+        "coverage": 15,
+        "parking": 898,
+        "heating": "지역난방 · 열병합",
+        "builder": "(주)한양",
+        "pyeongs": "26·33·39·45·53평",
+        "lat": 37.240845,
+        "lng": 127.057339,
+        "street": "경기도 수원시 영통구 영통로154번길 56",
+        "facts": true,
+        "url": "https://m.richgo.ai/realty/danji/a7gFzkd"
+      },
+      "match": {
+        "distanceMeters": 33,
+        "yearDelta": 0,
+        "unitsRatio": 0,
+        "method": "region_hub",
+        "score": 211
+      },
+      "candidates": [
+        {
+          "id": "a7gFzkd",
+          "name": "한양수자인에듀파크",
+          "year": 2013,
+          "units": 530,
+          "far": 205,
+          "distanceMeters": 33,
+          "accepted": true,
+          "score": 211
+        }
+      ]
+    },
+    {
+      "name": "한국1",
+      "area": "수원 영통구 매탄동",
+      "key": "한국1|수원 영통구 매탄동",
+      "originalStatus": "unmatched",
+      "secondStatus": "still_unresolved",
+      "richgo": null,
+      "match": null,
+      "candidates": []
+    },
+    {
+      "name": "경남아너스빌(11블럭)",
+      "area": "용인 기흥구 영덕동",
+      "key": "경남아너스빌(11블럭)|용인 기흥구 영덕동",
+      "originalStatus": "unmatched",
+      "secondStatus": "still_unresolved",
+      "richgo": null,
+      "match": null,
+      "candidates": []
+    },
+    {
+      "name": "교동마을엘지",
+      "area": "용인 기흥구 마북동",
+      "key": "교동마을엘지|용인 기흥구 마북동",
+      "originalStatus": "review_needed",
+      "secondStatus": "still_unresolved",
+      "richgo": null,
+      "match": null,
+      "candidates": [
+        {
+          "id": "a6jXOhG",
+          "name": "교동마을신창",
+          "year": 1996,
+          "units": 490,
+          "far": 316,
+          "distanceMeters": 169,
+          "accepted": false,
+          "score": 188
+        },
+        {
+          "id": "a9VhmFu",
+          "name": "교동마을정광",
+          "year": 1997,
+          "units": 478,
+          "far": 213,
+          "distanceMeters": 240,
+          "accepted": false,
+          "score": 184
+        }
+      ]
+    },
+    {
+      "name": "망포현대2아이파크",
+      "area": "수원 영통구 망포동",
+      "key": "망포현대2아이파크|수원 영통구 망포동",
+      "originalStatus": "review_needed",
+      "secondStatus": "verified_second_pass",
+      "richgo": {
+        "id": "a3OpOxo",
+        "name": "망포마을현대아이파크2차",
+        "units": 489,
+        "year": 2002,
+        "far": 220,
+        "floors": "15~25층",
+        "coverage": 16,
+        "parking": 696,
+        "heating": "지역난방 · 열병합",
+        "builder": "현대산업개발(주)",
+        "pyeongs": "34·39·50·61평",
+        "lat": 37.240238,
+        "lng": 127.051215,
+        "street": "경기도 수원시 영통구 태장로 45",
+        "facts": true,
+        "url": "https://m.richgo.ai/realty/danji/a3OpOxo"
+      },
+      "match": {
+        "distanceMeters": 9,
+        "yearDelta": 0,
+        "unitsRatio": 0,
+        "method": "previous_candidate",
+        "score": 256
+      },
+      "candidates": [
+        {
+          "id": "a3OpOxo",
+          "name": "망포마을현대아이파크2차",
+          "year": 2002,
+          "units": 489,
+          "far": 220,
+          "distanceMeters": 9,
+          "accepted": true,
+          "score": 256
+        },
+        {
+          "id": "a2ukvMq",
+          "name": "망포역아이파크",
+          "year": 2002,
+          "units": 554,
+          "far": 235,
+          "distanceMeters": 702,
+          "accepted": false,
+          "score": 146
+        }
+      ]
+    },
+    {
+      "name": "흥덕마을자연앤스위첸",
+      "area": "용인 기흥구 영덕동",
+      "key": "흥덕마을자연앤스위첸|용인 기흥구 영덕동",
+      "originalStatus": "review_needed",
+      "secondStatus": "still_unresolved",
+      "richgo": null,
+      "match": null,
+      "candidates": []
+    },
+    {
+      "name": "후곡마을(현대3)",
+      "area": "고양 일산서구 일산동",
+      "key": "후곡마을(현대3)|고양 일산서구 일산동",
+      "originalStatus": "review_needed",
+      "secondStatus": "still_unresolved",
+      "richgo": null,
+      "match": null,
+      "candidates": [
+        {
+          "id": "a8oAoIv",
+          "name": "후곡3단지현대",
+          "year": 1994,
+          "units": 530,
+          "far": 182,
+          "distanceMeters": 41,
+          "accepted": false,
+          "score": 137
+        }
+      ]
+    },
+    {
+      "name": "어은목마을벽산블루밍아파트",
+      "area": "용인 기흥구 중동",
+      "key": "어은목마을벽산블루밍아파트|용인 기흥구 중동",
+      "originalStatus": "review_needed",
+      "secondStatus": "verified_second_pass",
+      "richgo": {
+        "id": "a6SSMwc",
+        "name": "동백역벽산블루밍",
+        "units": 533,
+        "year": 2006,
+        "far": 158,
+        "floors": "13~25층",
+        "coverage": 12,
+        "parking": 777,
+        "heating": "지역난방 · 열병합",
+        "builder": "벽산건설(주)",
+        "pyeongs": "32·33·46평",
+        "lat": 37.268254,
+        "lng": 127.154817,
+        "street": "경기도 용인시 기흥구 동백2로 11",
+        "facts": true,
+        "url": "https://m.richgo.ai/realty/danji/a6SSMwc"
+      },
+      "match": {
+        "distanceMeters": 18,
+        "yearDelta": 0,
+        "unitsRatio": 0,
+        "method": "previous_candidate",
+        "score": 256
+      },
+      "candidates": [
+        {
+          "id": "a6SSMwc",
+          "name": "동백역벽산블루밍",
+          "year": 2006,
+          "units": 533,
+          "far": 158,
+          "distanceMeters": 18,
+          "accepted": true,
+          "score": 256
+        }
+      ]
+    },
+    {
+      "name": "후곡마을(동아10)",
+      "area": "고양 일산서구 일산동",
+      "key": "후곡마을(동아10)|고양 일산서구 일산동",
+      "originalStatus": "review_needed",
+      "secondStatus": "still_unresolved",
+      "richgo": null,
+      "match": null,
+      "candidates": []
+    },
+    {
+      "name": "연원마을현대아이파크",
+      "area": "용인 기흥구 마북동",
+      "key": "연원마을현대아이파크|용인 기흥구 마북동",
+      "originalStatus": "review_needed",
+      "secondStatus": "verified_second_pass",
+      "richgo": {
+        "id": "a9JJuOQ",
+        "name": "연원마을현대",
+        "units": 424,
+        "year": 2000,
+        "far": 227,
+        "floors": "16~18층",
+        "coverage": 18,
+        "parking": 771,
+        "heating": "지역난방 · 열병합",
+        "builder": "현대산업개발(주)",
+        "pyeongs": "24·33·66평",
+        "lat": 37.303067,
+        "lng": 127.112331,
+        "street": "경기도 용인시 기흥구 연원로 60",
+        "facts": true,
+        "url": "https://m.richgo.ai/realty/danji/a9JJuOQ"
+      },
+      "match": {
+        "distanceMeters": 49,
+        "yearDelta": 0,
+        "unitsRatio": 0,
+        "method": "previous_candidate",
+        "score": 256
+      },
+      "candidates": [
+        {
+          "id": "a9JJuOQ",
+          "name": "연원마을현대",
+          "year": 2000,
+          "units": 424,
+          "far": 227,
+          "distanceMeters": 49,
+          "accepted": true,
+          "score": 256
+        }
+      ]
+    },
+    {
+      "name": "청라지구중흥S-CLASS1단지",
+      "area": "인천 서해구 청라동",
+      "key": "청라지구중흥S-CLASS1단지|인천 서해구 청라동",
+      "originalStatus": "review_needed",
+      "secondStatus": "verified_second_pass",
+      "richgo": {
+        "id": "a8dncMp",
+        "name": "중흥s-클래스1단지",
+        "units": 476,
+        "year": 2010,
+        "far": 171,
+        "floors": "15~25층",
+        "coverage": 12,
+        "parking": 1030,
+        "heating": "지역난방 · 열병합",
+        "builder": "중흥건설(주)",
+        "pyeongs": "43·44·50평",
+        "lat": 37.5392,
+        "lng": 126.651632,
+        "street": "인천시 서해구 청라라임로 131",
+        "facts": true,
+        "url": "https://m.richgo.ai/realty/danji/a8dncMp"
+      },
+      "match": {
+        "distanceMeters": 18,
+        "yearDelta": 0,
+        "unitsRatio": 0,
+        "method": "previous_candidate",
+        "score": 256
+      },
+      "candidates": [
+        {
+          "id": "a8dncMp",
+          "name": "중흥s-클래스1단지",
+          "year": 2010,
+          "units": 476,
+          "far": 171,
+          "distanceMeters": 18,
+          "accepted": true,
+          "score": 256
+        }
+      ]
+    },
+    {
+      "name": "교동마을마북이편한세상",
+      "area": "용인 기흥구 마북동",
+      "key": "교동마을마북이편한세상|용인 기흥구 마북동",
+      "originalStatus": "unmatched",
+      "secondStatus": "still_unresolved",
+      "richgo": null,
+      "match": null,
+      "candidates": []
+    },
+    {
+      "name": "후곡마을(럭키)",
+      "area": "고양 일산서구 일산동",
+      "key": "후곡마을(럭키)|고양 일산서구 일산동",
+      "originalStatus": "unmatched",
+      "secondStatus": "still_unresolved",
+      "richgo": null,
+      "match": null,
+      "candidates": []
+    },
+    {
+      "name": "하마비마을동부",
+      "area": "용인 기흥구 언남동",
+      "key": "하마비마을동부|용인 기흥구 언남동",
+      "originalStatus": "review_needed",
+      "secondStatus": "still_unresolved",
+      "richgo": null,
+      "match": null,
+      "candidates": [
+        {
+          "id": "a8xCInv",
+          "name": "하마비마을동부센트레빌",
+          "year": 2002,
+          "units": 418,
+          "far": 196,
+          "distanceMeters": 209,
+          "accepted": false,
+          "score": 188
+        }
+      ]
+    },
+    {
+      "name": "호원동한승미메이드",
+      "area": "의정부시 호원동",
+      "key": "호원동한승미메이드|의정부시 호원동",
+      "originalStatus": "review_needed",
+      "secondStatus": "still_unresolved",
+      "richgo": null,
+      "match": null,
+      "candidates": [
+        {
+          "id": "a9MDsWp",
+          "name": "호원한승미메이드",
+          "year": 2006,
+          "units": 448,
+          "far": 270,
+          "distanceMeters": 8,
+          "accepted": false,
+          "score": 199
+        }
+      ]
+    },
+    {
+      "name": "백현마을코아루",
+      "area": "용인 기흥구 동백동",
+      "key": "백현마을코아루|용인 기흥구 동백동",
+      "originalStatus": "unmatched",
+      "secondStatus": "still_unresolved",
+      "richgo": null,
+      "match": null,
+      "candidates": []
+    },
+    {
+      "name": "용화마을태영데시앙1",
+      "area": "용인 기흥구 마북동",
+      "key": "용화마을태영데시앙1|용인 기흥구 마북동",
+      "originalStatus": "review_needed",
+      "secondStatus": "still_unresolved",
+      "richgo": null,
+      "match": null,
+      "candidates": [
+        {
+          "id": "a6WCizG",
+          "name": "용화마을태영데시앙1",
+          "year": 2003,
+          "units": 321,
+          "far": 199,
+          "distanceMeters": 65,
+          "accepted": false,
+          "score": 256
+        },
+        {
+          "id": "a7HDrgZ",
+          "name": "용화마을태영데시앙2",
+          "year": 2003,
+          "units": 132,
+          "far": 199,
+          "distanceMeters": 173,
+          "accepted": false,
+          "score": 95
+        }
+      ]
+    },
+    {
+      "name": "연원마을삼성쉐르빌",
+      "area": "용인 기흥구 마북동",
+      "key": "연원마을삼성쉐르빌|용인 기흥구 마북동",
+      "originalStatus": "unmatched",
+      "secondStatus": "still_unresolved",
+      "richgo": null,
+      "match": null,
+      "candidates": []
+    },
+    {
+      "name": "교동마을구성자이3차",
+      "area": "용인 기흥구 마북동",
+      "key": "교동마을구성자이3차|용인 기흥구 마북동",
+      "originalStatus": "unmatched",
+      "secondStatus": "still_unresolved",
+      "richgo": null,
+      "match": null,
+      "candidates": []
+    },
+    {
+      "name": "흥덕마을경남아너스빌(13블럭)",
+      "area": "용인 기흥구 영덕동",
+      "key": "흥덕마을경남아너스빌(13블럭)|용인 기흥구 영덕동",
+      "originalStatus": "review_needed",
+      "secondStatus": "verified_second_pass",
+      "richgo": {
+        "id": "a0UWiav",
+        "name": "흥덕마을13단지경남아너스빌",
+        "units": 368,
+        "year": 2009,
+        "far": 177,
+        "floors": "14~20층",
+        "coverage": 11,
+        "parking": 739,
+        "heating": "지역난방 · 열병합",
+        "builder": "경남기업(주)",
+        "pyeongs": "43·58평",
+        "lat": 37.275544,
+        "lng": 127.091625,
+        "street": "경기도 용인시 기흥구 흥덕4로30번길 11",
+        "facts": true,
+        "url": "https://m.richgo.ai/realty/danji/a0UWiav"
+      },
+      "match": {
+        "distanceMeters": 13,
+        "yearDelta": 0,
+        "unitsRatio": 0,
+        "method": "previous_candidate",
+        "score": 256
+      },
+      "candidates": [
+        {
+          "id": "a0UWiav",
+          "name": "흥덕마을13단지경남아너스빌",
+          "year": 2009,
+          "units": 368,
+          "far": 177,
+          "distanceMeters": 13,
+          "accepted": true,
+          "score": 256
+        }
+      ]
+    },
+    {
+      "name": "장성마을(건영3)",
+      "area": "고양 일산서구 대화동",
+      "key": "장성마을(건영3)|고양 일산서구 대화동",
+      "originalStatus": "review_needed",
+      "secondStatus": "still_unresolved",
+      "richgo": null,
+      "match": null,
+      "candidates": [
+        {
+          "id": "a2MOyBX",
+          "name": "장성3단지건영",
+          "year": 1996,
+          "units": 354,
+          "far": 182,
+          "distanceMeters": 22,
+          "accepted": false,
+          "score": 137
+        }
+      ]
+    },
+    {
+      "name": "후곡마을(영풍)",
+      "area": "고양 일산서구 일산동",
+      "key": "후곡마을(영풍)|고양 일산서구 일산동",
+      "originalStatus": "review_needed",
+      "secondStatus": "still_unresolved",
+      "richgo": null,
+      "match": null,
+      "candidates": []
+    },
+    {
+      "name": "백현마을한라비발디(2차)",
+      "area": "용인 기흥구 동백동",
+      "key": "백현마을한라비발디(2차)|용인 기흥구 동백동",
+      "originalStatus": "unmatched",
+      "secondStatus": "still_unresolved",
+      "richgo": null,
+      "match": null,
+      "candidates": []
+    },
+    {
+      "name": "태전7지구C-13BL태전파크자이",
+      "area": "광주시 태전동",
+      "key": "태전7지구C-13BL태전파크자이|광주시 태전동",
+      "originalStatus": "review_needed",
+      "secondStatus": "still_unresolved",
+      "richgo": null,
+      "match": null,
+      "candidates": [
+        {
+          "id": "a5HgpxM",
+          "name": "태전파크자이",
+          "year": 2019,
+          "units": 668,
+          "far": 199,
+          "distanceMeters": 24,
+          "accepted": false,
+          "score": 146
+        }
+      ]
+    },
+    {
+      "name": "후곡마을(서안)",
+      "area": "고양 일산서구 일산동",
+      "key": "후곡마을(서안)|고양 일산서구 일산동",
+      "originalStatus": "review_needed",
+      "secondStatus": "still_unresolved",
+      "richgo": null,
+      "match": null,
+      "candidates": []
+    },
+    {
+      "name": "SK",
+      "area": "용인 기흥구 서천동",
+      "key": "SK|용인 기흥구 서천동",
+      "originalStatus": "unmatched",
+      "secondStatus": "still_unresolved",
+      "richgo": null,
+      "match": null,
+      "candidates": []
+    },
+    {
+      "name": "녹원마을새천년그린빌(1)",
+      "area": "용인 기흥구 신갈동",
+      "key": "녹원마을새천년그린빌(1)|용인 기흥구 신갈동",
+      "originalStatus": "review_needed",
+      "secondStatus": "still_unresolved",
+      "richgo": null,
+      "match": null,
+      "candidates": [
+        {
+          "id": "a3egazz",
+          "name": "녹원마을새천년그린빌2단지",
+          "year": 2004,
+          "units": 238,
+          "far": 150,
+          "distanceMeters": 123,
+          "accepted": false,
+          "score": 117
+        }
+      ]
+    },
+    {
+      "name": "신일유토빌",
+      "area": "의정부시 호원동",
+      "key": "신일유토빌|의정부시 호원동",
+      "originalStatus": "review_needed",
+      "secondStatus": "still_unresolved",
+      "richgo": null,
+      "match": null,
+      "candidates": [
+        {
+          "id": "a7gANpL",
+          "name": "신일유토빌",
+          "year": 2003,
+          "units": 1432,
+          "far": 297,
+          "distanceMeters": 120,
+          "accepted": false,
+          "score": 256
+        },
+        {
+          "id": "a4pKKoz",
+          "name": "신일유토빌플러스",
+          "year": 2004,
+          "units": 864,
+          "far": 299,
+          "distanceMeters": 1499,
+          "accepted": false,
+          "score": 16
+        }
+      ]
+    },
+    {
+      "name": "우방",
+      "area": "서울 금천구 시흥동",
+      "key": "우방|서울 금천구 시흥동",
+      "originalStatus": "review_needed",
+      "secondStatus": "still_unresolved",
+      "richgo": null,
+      "match": null,
+      "candidates": []
+    },
+    {
+      "name": "호수마을동보노빌리티",
+      "area": "용인 기흥구 동백동",
+      "key": "호수마을동보노빌리티|용인 기흥구 동백동",
+      "originalStatus": "review_needed",
+      "secondStatus": "still_unresolved",
+      "richgo": null,
+      "match": null,
+      "candidates": [
+        {
+          "id": "a9hwYei",
+          "name": "동백마을동원로얄듀크",
+          "year": 2007,
+          "units": 477,
+          "far": 189,
+          "distanceMeters": 579,
+          "accepted": false,
+          "score": 169
+        }
+      ]
+    }
+  ]
+}

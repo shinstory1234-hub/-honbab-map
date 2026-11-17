@@ -1,0 +1,2172 @@
+{
+  "meta": {
+    "shard": 3,
+    "originalPending": 87,
+    "additionalVerified": 21,
+    "additionalFarKnown": 21,
+    "farBlank": 0,
+    "stillPending": 66,
+    "collisions": 0,
+    "network": {
+      "attempted": 0,
+      "fetched": 96,
+      "error": 0,
+      "blocked": 0,
+      "limited": 0,
+      "bing": 22,
+      "hub": 10,
+      "detail": 64
+    },
+    "method": "region hub + named indexed pages + coordinates + year + units"
+  },
+  "rows": [
+    {
+      "name": "홍제역해링턴플레이스",
+      "area": "서울 서대문구 홍제동",
+      "key": "홍제역해링턴플레이스|서울 서대문구 홍제동",
+      "originalStatus": "review_needed",
+      "secondStatus": "still_unresolved",
+      "richgo": null,
+      "match": null,
+      "candidates": [
+        {
+          "id": "a4vxgJV",
+          "name": "홍제역해링턴플레이스",
+          "year": 2021,
+          "units": 1116,
+          "far": 237,
+          "distanceMeters": 58,
+          "accepted": false,
+          "score": 241
+        }
+      ]
+    },
+    {
+      "name": "세종",
+      "area": "군포시 산본동",
+      "key": "세종|군포시 산본동",
+      "originalStatus": "review_needed",
+      "secondStatus": "still_unresolved",
+      "richgo": null,
+      "match": null,
+      "candidates": []
+    },
+    {
+      "name": "플루리움4,5단지",
+      "area": "남양주시 다산동",
+      "key": "플루리움4,5단지|남양주시 다산동",
+      "originalStatus": "review_needed",
+      "secondStatus": "still_unresolved",
+      "richgo": null,
+      "match": null,
+      "candidates": [
+        {
+          "id": "a6outEh",
+          "name": "플루리움4",
+          "year": 2000,
+          "units": 2042,
+          "far": 294,
+          "distanceMeters": 116,
+          "accepted": false,
+          "score": 191
+        }
+      ]
+    },
+    {
+      "name": "플루리움2단지",
+      "area": "남양주시 다산동",
+      "key": "플루리움2단지|남양주시 다산동",
+      "originalStatus": "review_needed",
+      "secondStatus": "still_unresolved",
+      "richgo": null,
+      "match": null,
+      "candidates": [
+        {
+          "id": "a3ohNUq",
+          "name": "플루리움2단지",
+          "year": 2002,
+          "units": 1484,
+          "far": 294,
+          "distanceMeters": 188,
+          "accepted": false,
+          "score": 158
+        }
+      ]
+    },
+    {
+      "name": "우륵",
+      "area": "군포시 산본동",
+      "key": "우륵|군포시 산본동",
+      "originalStatus": "review_needed",
+      "secondStatus": "still_unresolved",
+      "richgo": null,
+      "match": null,
+      "candidates": []
+    },
+    {
+      "name": "성원",
+      "area": "서울 서대문구 연희동",
+      "key": "성원|서울 서대문구 연희동",
+      "originalStatus": "review_needed",
+      "secondStatus": "verified_second_pass",
+      "richgo": {
+        "id": "a9QunIV",
+        "name": "연희성원",
+        "units": 581,
+        "year": 2001,
+        "far": 270,
+        "floors": "8~22층",
+        "coverage": 22,
+        "parking": 732,
+        "heating": "개별난방 · 도시가스",
+        "builder": "성원건설",
+        "pyeongs": "26·32·42·45·49평",
+        "lat": 37.576758,
+        "lng": 126.939004,
+        "street": "서울시 서대문구 연희로32길 48",
+        "facts": true,
+        "url": "https://m.richgo.ai/realty/danji/a9QunIV"
+      },
+      "match": {
+        "distanceMeters": 68,
+        "yearDelta": 0,
+        "unitsRatio": 0,
+        "method": "previous_candidate",
+        "score": 256
+      },
+      "candidates": [
+        {
+          "id": "a9QunIV",
+          "name": "연희성원",
+          "year": 2001,
+          "units": 581,
+          "far": 270,
+          "distanceMeters": 68,
+          "accepted": true,
+          "score": 256
+        }
+      ]
+    },
+    {
+      "name": "삼송2차아이파크",
+      "area": "고양 덕양구 삼송동",
+      "key": "삼송2차아이파크|고양 덕양구 삼송동",
+      "originalStatus": "review_needed",
+      "secondStatus": "still_unresolved",
+      "richgo": null,
+      "match": null,
+      "candidates": [
+        {
+          "id": "a2jNvMl",
+          "name": "삼송아이파크2차",
+          "year": 2015,
+          "units": 1066,
+          "far": 183,
+          "distanceMeters": 28,
+          "accepted": false,
+          "score": 134
+        }
+      ]
+    },
+    {
+      "name": "현대리버빌2지구",
+      "area": "서울 송파구 풍납동",
+      "key": "현대리버빌2지구|서울 송파구 풍납동",
+      "originalStatus": "review_needed",
+      "secondStatus": "still_unresolved",
+      "richgo": null,
+      "match": null,
+      "candidates": [
+        {
+          "id": "a2KFvwc",
+          "name": "현대리버빌1지구",
+          "year": 1999,
+          "units": 557,
+          "far": 276,
+          "distanceMeters": 202,
+          "accepted": false,
+          "score": 115
+        }
+      ]
+    },
+    {
+      "name": "플루리움3단지",
+      "area": "남양주시 다산동",
+      "key": "플루리움3단지|남양주시 다산동",
+      "originalStatus": "review_needed",
+      "secondStatus": "still_unresolved",
+      "richgo": null,
+      "match": null,
+      "candidates": [
+        {
+          "id": "a5URBzu",
+          "name": "플루리움3단지",
+          "year": 2001,
+          "units": 1144,
+          "far": 294,
+          "distanceMeters": 281,
+          "accepted": false,
+          "score": 146
+        }
+      ]
+    },
+    {
+      "name": "플루리움1단지",
+      "area": "남양주시 다산동",
+      "key": "플루리움1단지|남양주시 다산동",
+      "originalStatus": "review_needed",
+      "secondStatus": "still_unresolved",
+      "richgo": null,
+      "match": null,
+      "candidates": [
+        {
+          "id": "a3XSEbH",
+          "name": "플루리움1단지",
+          "year": 2001,
+          "units": 1086,
+          "far": 294,
+          "distanceMeters": 305,
+          "accepted": false,
+          "score": 143
+        }
+      ]
+    },
+    {
+      "name": "은빛마을6단지",
+      "area": "고양 덕양구 화정동",
+      "key": "은빛마을6단지|고양 덕양구 화정동",
+      "originalStatus": "review_needed",
+      "secondStatus": "verified_second_pass",
+      "richgo": {
+        "id": "a7vykeH",
+        "name": "은빛6단지프라웰",
+        "units": 1320,
+        "year": 1996,
+        "far": 199,
+        "floors": "15~20층",
+        "coverage": 15,
+        "parking": 1980,
+        "heating": "지역난방 · 열병합",
+        "builder": "동광주택산업(주)",
+        "pyeongs": "36·46·58평",
+        "lat": 37.637127,
+        "lng": 126.829444,
+        "street": "경기도 고양시 덕양구 화정로 27",
+        "facts": true,
+        "url": "https://m.richgo.ai/realty/danji/a7vykeH"
+      },
+      "match": {
+        "distanceMeters": 69,
+        "yearDelta": 0,
+        "unitsRatio": 0,
+        "method": "previous_candidate",
+        "score": 256
+      },
+      "candidates": [
+        {
+          "id": "a7vykeH",
+          "name": "은빛6단지프라웰",
+          "year": 1996,
+          "units": 1320,
+          "far": 199,
+          "distanceMeters": 69,
+          "accepted": true,
+          "score": 256
+        }
+      ]
+    },
+    {
+      "name": "동아(1차)",
+      "area": "인천 부평구 부평동",
+      "key": "동아(1차)|인천 부평구 부평동",
+      "originalStatus": "review_needed",
+      "secondStatus": "still_unresolved",
+      "richgo": null,
+      "match": null,
+      "candidates": [
+        {
+          "id": "a3QBfAn",
+          "name": "부평동아1단지",
+          "year": 1986,
+          "units": 2475,
+          "far": 181,
+          "distanceMeters": 205,
+          "accepted": false,
+          "score": 98
+        }
+      ]
+    },
+    {
+      "name": "호수마을(삼환)",
+      "area": "고양 일산동구 장항동",
+      "key": "호수마을(삼환)|고양 일산동구 장항동",
+      "originalStatus": "review_needed",
+      "secondStatus": "still_unresolved",
+      "richgo": null,
+      "match": null,
+      "candidates": []
+    },
+    {
+      "name": "호수마을(유원)",
+      "area": "고양 일산동구 장항동",
+      "key": "호수마을(유원)|고양 일산동구 장항동",
+      "originalStatus": "review_needed",
+      "secondStatus": "still_unresolved",
+      "richgo": null,
+      "match": null,
+      "candidates": [
+        {
+          "id": "a5JmWhb",
+          "name": "호수3단지삼환유원",
+          "year": 1994,
+          "units": 876,
+          "far": 183,
+          "distanceMeters": 39,
+          "accepted": false,
+          "score": 137
+        }
+      ]
+    },
+    {
+      "name": "광명역세권휴먼시아3단지",
+      "area": "광명시 소하동",
+      "key": "광명역세권휴먼시아3단지|광명시 소하동",
+      "originalStatus": "review_needed",
+      "secondStatus": "still_unresolved",
+      "richgo": null,
+      "match": null,
+      "candidates": [
+        {
+          "id": "a7vvaUy",
+          "name": "광명역세권휴먼시아4단지",
+          "year": 2010,
+          "units": 730,
+          "far": 168,
+          "distanceMeters": 184,
+          "accepted": false,
+          "score": 142
+        },
+        {
+          "id": "a6OhXGq",
+          "name": "광명역세권루미엘",
+          "year": 2011,
+          "units": 797,
+          "far": 166,
+          "distanceMeters": 13,
+          "accepted": false,
+          "score": 134
+        },
+        {
+          "id": "a3Apkmt",
+          "name": "휴먼시아3단지",
+          "year": 2009,
+          "units": 413,
+          "far": 158,
+          "distanceMeters": 1905,
+          "accepted": false,
+          "score": 11
+        }
+      ]
+    },
+    {
+      "name": "동양메이저2차",
+      "area": "광명시 소하동",
+      "key": "동양메이저2차|광명시 소하동",
+      "originalStatus": "review_needed",
+      "secondStatus": "still_unresolved",
+      "richgo": null,
+      "match": null,
+      "candidates": [
+        {
+          "id": "a9OGYpK",
+          "name": "동양2차",
+          "year": 2003,
+          "units": 763,
+          "far": 319,
+          "distanceMeters": 10,
+          "accepted": false,
+          "score": 137
+        }
+      ]
+    },
+    {
+      "name": "별빛마을7단지",
+      "area": "고양 덕양구 화정동",
+      "key": "별빛마을7단지|고양 덕양구 화정동",
+      "originalStatus": "unmatched",
+      "secondStatus": "still_unresolved",
+      "richgo": null,
+      "match": null,
+      "candidates": []
+    },
+    {
+      "name": "삼성장미",
+      "area": "군포시 산본동",
+      "key": "삼성장미|군포시 산본동",
+      "originalStatus": "review_needed",
+      "secondStatus": "still_unresolved",
+      "richgo": null,
+      "match": null,
+      "candidates": [
+        {
+          "id": "a1nERQr",
+          "name": "장미",
+          "year": 1993,
+          "units": 822,
+          "far": 220,
+          "distanceMeters": 62,
+          "accepted": false,
+          "score": 134
+        }
+      ]
+    },
+    {
+      "name": "삼익가든을지",
+      "area": "군포시 산본동",
+      "key": "삼익가든을지|군포시 산본동",
+      "originalStatus": "unmatched",
+      "secondStatus": "still_unresolved",
+      "richgo": null,
+      "match": null,
+      "candidates": []
+    },
+    {
+      "name": "한일을지",
+      "area": "군포시 산본동",
+      "key": "한일을지|군포시 산본동",
+      "originalStatus": "unmatched",
+      "secondStatus": "still_unresolved",
+      "richgo": null,
+      "match": null,
+      "candidates": []
+    },
+    {
+      "name": "삼산타운7단지",
+      "area": "인천 부평구 삼산동",
+      "key": "삼산타운7단지|인천 부평구 삼산동",
+      "originalStatus": "review_needed",
+      "secondStatus": "still_unresolved",
+      "richgo": null,
+      "match": null,
+      "candidates": [
+        {
+          "id": "a6ZdvMN",
+          "name": "삼산타운7단지주공",
+          "year": 2004,
+          "units": 1314,
+          "far": 201,
+          "distanceMeters": 20,
+          "accepted": false,
+          "score": 199
+        },
+        {
+          "id": "a6FzdUM",
+          "name": "삼산타운1단지",
+          "year": 2005,
+          "units": 1873,
+          "far": 196,
+          "distanceMeters": 369,
+          "accepted": false,
+          "score": 82
+        }
+      ]
+    },
+    {
+      "name": "안산고잔7차푸르지오",
+      "area": "안산 상록구 사동",
+      "key": "안산고잔7차푸르지오|안산 상록구 사동",
+      "originalStatus": "review_needed",
+      "secondStatus": "still_unresolved",
+      "richgo": null,
+      "match": null,
+      "candidates": [
+        {
+          "id": "a0rVhtg",
+          "name": "안산고잔푸르지오7차",
+          "year": 2005,
+          "units": 1312,
+          "far": 198,
+          "distanceMeters": 29,
+          "accepted": false,
+          "score": 139
+        }
+      ]
+    },
+    {
+      "name": "광명소하휴먼시아7단지",
+      "area": "광명시 소하동",
+      "key": "광명소하휴먼시아7단지|광명시 소하동",
+      "originalStatus": "review_needed",
+      "secondStatus": "verified_second_pass",
+      "richgo": {
+        "id": "a7XgsPI",
+        "name": "휴먼시아7단지",
+        "units": 701,
+        "year": 2010,
+        "far": 178,
+        "floors": "9~15층",
+        "coverage": 20,
+        "parking": 1186,
+        "heating": "지역난방 · 열병합",
+        "builder": "경남기업(주)",
+        "pyeongs": "37·44·50평",
+        "lat": 37.444655,
+        "lng": 126.891667,
+        "street": "경기도 광명시 소하로 162",
+        "facts": true,
+        "url": "https://m.richgo.ai/realty/danji/a7XgsPI"
+      },
+      "match": {
+        "distanceMeters": 112,
+        "yearDelta": 0,
+        "unitsRatio": 0,
+        "method": "previous_candidate",
+        "score": 256
+      },
+      "candidates": [
+        {
+          "id": "a7XgsPI",
+          "name": "휴먼시아7단지",
+          "year": 2010,
+          "units": 701,
+          "far": 178,
+          "distanceMeters": 112,
+          "accepted": true,
+          "score": 256
+        }
+      ]
+    },
+    {
+      "name": "덕소두산위브",
+      "area": "남양주시 와부읍",
+      "key": "덕소두산위브|남양주시 와부읍",
+      "originalStatus": "review_needed",
+      "secondStatus": "still_unresolved",
+      "richgo": null,
+      "match": null,
+      "candidates": [
+        {
+          "id": "a9twSrg",
+          "name": "덕소두산위브",
+          "year": 2002,
+          "units": 1253,
+          "far": 287,
+          "distanceMeters": 119,
+          "accepted": false,
+          "score": 244
+        }
+      ]
+    },
+    {
+      "name": "백마마을(삼환)",
+      "area": "고양 일산동구 마두동",
+      "key": "백마마을(삼환)|고양 일산동구 마두동",
+      "originalStatus": "review_needed",
+      "secondStatus": "still_unresolved",
+      "richgo": null,
+      "match": null,
+      "candidates": [
+        {
+          "id": "a4xzRIA",
+          "name": "백마2단지극동",
+          "year": 1992,
+          "units": 806,
+          "far": 185,
+          "distanceMeters": 7,
+          "accepted": false,
+          "score": 137
+        }
+      ]
+    },
+    {
+      "name": "다산주공(3단지)",
+      "area": "군포시 금정동",
+      "key": "다산주공(3단지)|군포시 금정동",
+      "originalStatus": "review_needed",
+      "secondStatus": "still_unresolved",
+      "richgo": null,
+      "match": null,
+      "candidates": [
+        {
+          "id": "a7KjBcn",
+          "name": "다산주공3단지",
+          "year": 1992,
+          "units": 829,
+          "far": 195,
+          "distanceMeters": 58,
+          "accepted": false,
+          "score": 256
+        }
+      ]
+    },
+    {
+      "name": "덕소아이파크",
+      "area": "남양주시 와부읍",
+      "key": "덕소아이파크|남양주시 와부읍",
+      "originalStatus": "review_needed",
+      "secondStatus": "still_unresolved",
+      "richgo": null,
+      "match": null,
+      "candidates": [
+        {
+          "id": "a3OtGlN",
+          "name": "덕소아이파크",
+          "year": 2007,
+          "units": 1239,
+          "far": 239,
+          "distanceMeters": 63,
+          "accepted": false,
+          "score": 256
+        },
+        {
+          "id": "a9twSrg",
+          "name": "덕소두산위브",
+          "year": 2002,
+          "units": 1253,
+          "far": 287,
+          "distanceMeters": 1016,
+          "accepted": false,
+          "score": 106
+        }
+      ]
+    },
+    {
+      "name": "동부센트레빌",
+      "area": "남양주시 와부읍",
+      "key": "동부센트레빌|남양주시 와부읍",
+      "originalStatus": "review_needed",
+      "secondStatus": "still_unresolved",
+      "richgo": null,
+      "match": null,
+      "candidates": [
+        {
+          "id": "a7NzYUN",
+          "name": "남양주덕소동부센트레빌",
+          "year": 2006,
+          "units": 1220,
+          "far": 239,
+          "distanceMeters": 93,
+          "accepted": false,
+          "score": 244
+        }
+      ]
+    },
+    {
+      "name": "햇빛마을",
+      "area": "고양 덕양구 행신동",
+      "key": "햇빛마을|고양 덕양구 행신동",
+      "originalStatus": "review_needed",
+      "secondStatus": "still_unresolved",
+      "richgo": null,
+      "match": null,
+      "candidates": [
+        {
+          "id": "a7pmpwc",
+          "name": "햇빛마을19단지",
+          "year": 1998,
+          "units": 840,
+          "far": 228,
+          "distanceMeters": 754,
+          "accepted": false,
+          "score": 135
+        }
+      ]
+    },
+    {
+      "name": "롯데낙천대",
+      "area": "남양주시 다산동",
+      "key": "롯데낙천대|남양주시 다산동",
+      "originalStatus": "review_needed",
+      "secondStatus": "verified_second_pass",
+      "richgo": {
+        "id": "a4icvfr",
+        "name": "남양주다산롯데낙천대",
+        "units": 708,
+        "year": 2005,
+        "far": 319,
+        "floors": "9~24층",
+        "coverage": 20,
+        "parking": 737,
+        "heating": "개별난방 · 도시가스",
+        "builder": "롯데건설(주)",
+        "pyeongs": "25·34·44평",
+        "lat": 37.608044,
+        "lng": 127.153343,
+        "street": "경기도 남양주시 미금로 24",
+        "facts": true,
+        "url": "https://m.richgo.ai/realty/danji/a4icvfr"
+      },
+      "match": {
+        "distanceMeters": 29,
+        "yearDelta": 0,
+        "unitsRatio": 0,
+        "method": "region_hub",
+        "score": 211
+      },
+      "candidates": [
+        {
+          "id": "a4icvfr",
+          "name": "남양주다산롯데낙천대",
+          "year": 2005,
+          "units": 708,
+          "far": 319,
+          "distanceMeters": 29,
+          "accepted": true,
+          "score": 211
+        }
+      ]
+    },
+    {
+      "name": "백마마을(청구)",
+      "area": "고양 일산동구 마두동",
+      "key": "백마마을(청구)|고양 일산동구 마두동",
+      "originalStatus": "review_needed",
+      "secondStatus": "still_unresolved",
+      "richgo": null,
+      "match": null,
+      "candidates": [
+        {
+          "id": "a7ItXyp",
+          "name": "백마4단지한양",
+          "year": 1994,
+          "units": 668,
+          "far": 182,
+          "distanceMeters": 22,
+          "accepted": false,
+          "score": 137
+        }
+      ]
+    },
+    {
+      "name": "백마마을(한양4)",
+      "area": "고양 일산동구 마두동",
+      "key": "백마마을(한양4)|고양 일산동구 마두동",
+      "originalStatus": "review_needed",
+      "secondStatus": "still_unresolved",
+      "richgo": null,
+      "match": null,
+      "candidates": []
+    },
+    {
+      "name": "브라운스톤2차",
+      "area": "광명시 철산동",
+      "key": "브라운스톤2차|광명시 철산동",
+      "originalStatus": "review_needed",
+      "secondStatus": "still_unresolved",
+      "richgo": null,
+      "match": null,
+      "candidates": [
+        {
+          "id": "a2cuKif",
+          "name": "브라운스톤광명2단지",
+          "year": 2007,
+          "units": 445,
+          "far": 292,
+          "distanceMeters": 16,
+          "accepted": false,
+          "score": 140
+        }
+      ]
+    },
+    {
+      "name": "현대아이파크",
+      "area": "남양주시 별내동",
+      "key": "현대아이파크|남양주시 별내동",
+      "originalStatus": "review_needed",
+      "secondStatus": "verified_second_pass",
+      "richgo": {
+        "id": "a8sZzid",
+        "name": "남양주별내아이파크",
+        "units": 753,
+        "year": 2012,
+        "far": 189,
+        "floors": "10~25층",
+        "coverage": 15,
+        "parking": 1341,
+        "heating": "지역난방 · 열병합",
+        "builder": "현대산업개발(주)",
+        "pyeongs": "39·45·51평",
+        "lat": 37.661676,
+        "lng": 127.117973,
+        "street": "경기도 남양주시 별내3로 285",
+        "facts": true,
+        "url": "https://m.richgo.ai/realty/danji/a8sZzid"
+      },
+      "match": {
+        "distanceMeters": 49,
+        "yearDelta": 0,
+        "unitsRatio": 0,
+        "method": "previous_candidate",
+        "score": 256
+      },
+      "candidates": [
+        {
+          "id": "a8sZzid",
+          "name": "남양주별내아이파크",
+          "year": 2012,
+          "units": 753,
+          "far": 189,
+          "distanceMeters": 49,
+          "accepted": true,
+          "score": 256
+        }
+      ]
+    },
+    {
+      "name": "샘터마을(화성)",
+      "area": "고양 덕양구 행신동",
+      "key": "샘터마을(화성)|고양 덕양구 행신동",
+      "originalStatus": "review_needed",
+      "secondStatus": "verified_second_pass",
+      "richgo": {
+        "id": "a3dDsqg",
+        "name": "샘터1단지",
+        "units": 822,
+        "year": 1997,
+        "far": 229,
+        "floors": "18~22층",
+        "coverage": 16,
+        "parking": 1297,
+        "heating": "지역난방 · 열병합",
+        "builder": "효성중공업주식회사",
+        "pyeongs": "38·49평",
+        "lat": 37.619768,
+        "lng": 126.839877,
+        "street": "경기도 고양시 덕양구 화신로 76",
+        "facts": true,
+        "url": "https://m.richgo.ai/realty/danji/a3dDsqg"
+      },
+      "match": {
+        "distanceMeters": 97,
+        "yearDelta": 0,
+        "unitsRatio": 0,
+        "method": "previous_candidate",
+        "score": 256
+      },
+      "candidates": [
+        {
+          "id": "a3dDsqg",
+          "name": "샘터1단지",
+          "year": 1997,
+          "units": 822,
+          "far": 229,
+          "distanceMeters": 97,
+          "accepted": true,
+          "score": 256
+        }
+      ]
+    },
+    {
+      "name": "고양삼송동원로얄듀크",
+      "area": "고양 덕양구 삼송동",
+      "key": "고양삼송동원로얄듀크|고양 덕양구 삼송동",
+      "originalStatus": "review_needed",
+      "secondStatus": "still_unresolved",
+      "richgo": null,
+      "match": null,
+      "candidates": [
+        {
+          "id": "a6uBCzM",
+          "name": "삼송마을동원로얄듀크",
+          "year": 2012,
+          "units": 598,
+          "far": 169,
+          "distanceMeters": 23,
+          "accepted": false,
+          "score": 139
+        }
+      ]
+    },
+    {
+      "name": "남광하우스토리",
+      "area": "남양주시 별내동",
+      "key": "남광하우스토리|남양주시 별내동",
+      "originalStatus": "unmatched",
+      "secondStatus": "still_unresolved",
+      "richgo": null,
+      "match": null,
+      "candidates": []
+    },
+    {
+      "name": "강촌마을(미도파)",
+      "area": "고양 일산동구 마두동",
+      "key": "강촌마을(미도파)|고양 일산동구 마두동",
+      "originalStatus": "review_needed",
+      "secondStatus": "still_unresolved",
+      "richgo": null,
+      "match": null,
+      "candidates": []
+    },
+    {
+      "name": "강촌마을(진흥)",
+      "area": "고양 일산동구 마두동",
+      "key": "강촌마을(진흥)|고양 일산동구 마두동",
+      "originalStatus": "review_needed",
+      "secondStatus": "still_unresolved",
+      "richgo": null,
+      "match": null,
+      "candidates": []
+    },
+    {
+      "name": "강촌마을(한신)",
+      "area": "고양 일산동구 마두동",
+      "key": "강촌마을(한신)|고양 일산동구 마두동",
+      "originalStatus": "review_needed",
+      "secondStatus": "verified_second_pass",
+      "richgo": {
+        "id": "a0kfnNs",
+        "name": "강촌한신2단지",
+        "units": 608,
+        "year": 1993,
+        "far": 196,
+        "floors": "10~25층",
+        "coverage": 14,
+        "parking": 945,
+        "heating": "지역난방 · 열병합",
+        "builder": "한신공영(주)",
+        "pyeongs": "34·48·62평",
+        "lat": 37.654093,
+        "lng": 126.785797,
+        "street": "경기도 고양시 일산동구 강송로 156",
+        "facts": true,
+        "url": "https://m.richgo.ai/realty/danji/a0kfnNs"
+      },
+      "match": {
+        "distanceMeters": 111,
+        "yearDelta": 0,
+        "unitsRatio": 0,
+        "method": "previous_candidate",
+        "score": 256
+      },
+      "candidates": [
+        {
+          "id": "a0kfnNs",
+          "name": "강촌한신2단지",
+          "year": 1993,
+          "units": 608,
+          "far": 196,
+          "distanceMeters": 111,
+          "accepted": true,
+          "score": 256
+        }
+      ]
+    },
+    {
+      "name": "KCC스위첸",
+      "area": "남양주시 별내동",
+      "key": "KCC스위첸|남양주시 별내동",
+      "originalStatus": "review_needed",
+      "secondStatus": "verified_second_pass",
+      "richgo": {
+        "id": "a3SdmWJ",
+        "name": "남양주별내스위첸",
+        "units": 679,
+        "year": 2012,
+        "far": 193,
+        "floors": "10~28층",
+        "coverage": 15,
+        "parking": 1094,
+        "heating": "지역난방 · 열병합",
+        "builder": "(주)케이씨씨건설",
+        "pyeongs": "39·44·48·59평",
+        "lat": 37.656476,
+        "lng": 127.11655,
+        "street": "경기도 남양주시 별내5로 81",
+        "facts": true,
+        "url": "https://m.richgo.ai/realty/danji/a3SdmWJ"
+      },
+      "match": {
+        "distanceMeters": 35,
+        "yearDelta": 0,
+        "unitsRatio": 0,
+        "method": "previous_candidate",
+        "score": 256
+      },
+      "candidates": [
+        {
+          "id": "a3SdmWJ",
+          "name": "남양주별내스위첸",
+          "year": 2012,
+          "units": 679,
+          "far": 193,
+          "distanceMeters": 35,
+          "accepted": true,
+          "score": 256
+        }
+      ]
+    },
+    {
+      "name": "래미안수유",
+      "area": "서울 강북구 수유동",
+      "key": "래미안수유|서울 강북구 수유동",
+      "originalStatus": "unmatched",
+      "secondStatus": "still_unresolved",
+      "richgo": null,
+      "match": null,
+      "candidates": []
+    },
+    {
+      "name": "쌍용예가",
+      "area": "남양주시 별내동",
+      "key": "쌍용예가|남양주시 별내동",
+      "originalStatus": "review_needed",
+      "secondStatus": "verified_second_pass",
+      "richgo": {
+        "id": "a0uTdgD",
+        "name": "별내신도시쌍용예가",
+        "units": 652,
+        "year": 2012,
+        "far": 204,
+        "floors": "13~22층",
+        "coverage": 16,
+        "parking": 1120,
+        "heating": "지역난방 · 열병합",
+        "builder": "쌍용건설(주)",
+        "pyeongs": "38·39·46·51·52평",
+        "lat": 37.647073,
+        "lng": 127.119539,
+        "street": "경기도 남양주시 별내3로 63",
+        "facts": true,
+        "url": "https://m.richgo.ai/realty/danji/a0uTdgD"
+      },
+      "match": {
+        "distanceMeters": 28,
+        "yearDelta": 0,
+        "unitsRatio": 0,
+        "method": "region_hub",
+        "score": 211
+      },
+      "candidates": [
+        {
+          "id": "a0uTdgD",
+          "name": "별내신도시쌍용예가",
+          "year": 2012,
+          "units": 652,
+          "far": 204,
+          "distanceMeters": 28,
+          "accepted": true,
+          "score": 211
+        }
+      ]
+    },
+    {
+      "name": "포스코더샵",
+      "area": "남양주시 별내동",
+      "key": "포스코더샵|남양주시 별내동",
+      "originalStatus": "unmatched",
+      "secondStatus": "still_unresolved",
+      "richgo": null,
+      "match": null,
+      "candidates": []
+    },
+    {
+      "name": "삼산타운6단지",
+      "area": "인천 부평구 삼산동",
+      "key": "삼산타운6단지|인천 부평구 삼산동",
+      "originalStatus": "review_needed",
+      "secondStatus": "still_unresolved",
+      "richgo": null,
+      "match": null,
+      "candidates": [
+        {
+          "id": "a1ENGQs",
+          "name": "삼산타운6단지주공",
+          "year": 2004,
+          "units": 784,
+          "far": 201,
+          "distanceMeters": 18,
+          "accepted": false,
+          "score": 211
+        }
+      ]
+    },
+    {
+      "name": "도래울센트럴파크(CentralPark)",
+      "area": "고양 덕양구 도내동",
+      "key": "도래울센트럴파크(CentralPark)|고양 덕양구 도내동",
+      "originalStatus": "review_needed",
+      "secondStatus": "still_unresolved",
+      "richgo": null,
+      "match": null,
+      "candidates": [
+        {
+          "id": "a8wAZQf",
+          "name": "도래울센트럴파크",
+          "year": 2013,
+          "units": 598,
+          "far": 216,
+          "distanceMeters": 17,
+          "accepted": false,
+          "score": 211
+        }
+      ]
+    },
+    {
+      "name": "호수마을(롯데)",
+      "area": "고양 일산동구 장항동",
+      "key": "호수마을(롯데)|고양 일산동구 장항동",
+      "originalStatus": "review_needed",
+      "secondStatus": "still_unresolved",
+      "richgo": null,
+      "match": null,
+      "candidates": [
+        {
+          "id": "a7dyRIC",
+          "name": "호수4단지럭키롯데",
+          "year": 1994,
+          "units": 472,
+          "far": 182,
+          "distanceMeters": 16,
+          "accepted": false,
+          "score": 137
+        }
+      ]
+    },
+    {
+      "name": "무원마을(쌍용)5",
+      "area": "고양 덕양구 행신동",
+      "key": "무원마을(쌍용)5|고양 덕양구 행신동",
+      "originalStatus": "review_needed",
+      "secondStatus": "verified_second_pass",
+      "richgo": {
+        "id": "a2NJGmz",
+        "name": "무원5단지쌍용한진",
+        "units": 636,
+        "year": 1995,
+        "far": 224,
+        "floors": "14~15층",
+        "coverage": 22,
+        "parking": 757,
+        "heating": "지역난방 · 열병합",
+        "builder": "쌍용종합건설",
+        "pyeongs": "37·47평",
+        "lat": 37.613685,
+        "lng": 126.837016,
+        "street": "경기도 고양시 덕양구 용현로 10",
+        "facts": true,
+        "url": "https://m.richgo.ai/realty/danji/a2NJGmz"
+      },
+      "match": {
+        "distanceMeters": 35,
+        "yearDelta": 0,
+        "unitsRatio": 0,
+        "method": "previous_candidate",
+        "score": 256
+      },
+      "candidates": [
+        {
+          "id": "a2NJGmz",
+          "name": "무원5단지쌍용한진",
+          "year": 1995,
+          "units": 636,
+          "far": 224,
+          "distanceMeters": 35,
+          "accepted": true,
+          "score": 256
+        }
+      ]
+    },
+    {
+      "name": "무원마을5단지",
+      "area": "고양 덕양구 행신동",
+      "key": "무원마을5단지|고양 덕양구 행신동",
+      "originalStatus": "unmatched",
+      "secondStatus": "still_unresolved",
+      "richgo": null,
+      "match": null,
+      "candidates": []
+    },
+    {
+      "name": "미아1차래미안",
+      "area": "서울 강북구 미아동",
+      "key": "미아1차래미안|서울 강북구 미아동",
+      "originalStatus": "review_needed",
+      "secondStatus": "still_unresolved",
+      "richgo": null,
+      "match": null,
+      "candidates": []
+    },
+    {
+      "name": "광명소하휴먼시아3단지",
+      "area": "광명시 소하동",
+      "key": "광명소하휴먼시아3단지|광명시 소하동",
+      "originalStatus": "review_needed",
+      "secondStatus": "still_unresolved",
+      "richgo": null,
+      "match": null,
+      "candidates": [
+        {
+          "id": "a3Apkmt",
+          "name": "휴먼시아3단지",
+          "year": 2009,
+          "units": 413,
+          "far": 158,
+          "distanceMeters": 18,
+          "accepted": false,
+          "score": 211
+        }
+      ]
+    },
+    {
+      "name": "백두(동성)",
+      "area": "군포시 산본동",
+      "key": "백두(동성)|군포시 산본동",
+      "originalStatus": "review_needed",
+      "secondStatus": "still_unresolved",
+      "richgo": null,
+      "match": null,
+      "candidates": []
+    },
+    {
+      "name": "광명역세권휴먼시아5단지",
+      "area": "광명시 소하동",
+      "key": "광명역세권휴먼시아5단지|광명시 소하동",
+      "originalStatus": "review_needed",
+      "secondStatus": "verified_second_pass",
+      "richgo": {
+        "id": "a4iMuNs",
+        "name": "광명역세권메트로포레",
+        "units": 407,
+        "year": 2011,
+        "far": 179,
+        "floors": "14~20층",
+        "coverage": 15,
+        "parking": 676,
+        "heating": "지역난방 · 열병합",
+        "builder": "진흥기업(주)",
+        "pyeongs": "37·38·44·46·49·50·56평",
+        "lat": 37.430873,
+        "lng": 126.884458,
+        "street": "경기도 광명시 서원로 13",
+        "facts": true,
+        "url": "https://m.richgo.ai/realty/danji/a4iMuNs"
+      },
+      "match": {
+        "distanceMeters": 28,
+        "yearDelta": 0,
+        "unitsRatio": 0,
+        "method": "previous_candidate",
+        "score": 256
+      },
+      "candidates": [
+        {
+          "id": "a4iMuNs",
+          "name": "광명역세권메트로포레",
+          "year": 2011,
+          "units": 407,
+          "far": 179,
+          "distanceMeters": 28,
+          "accepted": true,
+          "score": 256
+        },
+        {
+          "id": "a7vvaUy",
+          "name": "광명역세권휴먼시아4단지",
+          "year": 2010,
+          "units": 730,
+          "far": 168,
+          "distanceMeters": 232,
+          "accepted": false,
+          "score": 83
+        },
+        {
+          "id": "a6yOdDi",
+          "name": "휴먼시아5단지",
+          "year": 2009,
+          "units": 731,
+          "far": 159,
+          "distanceMeters": 2377,
+          "accepted": false,
+          "score": 11
+        }
+      ]
+    },
+    {
+      "name": "홍은동풍림아이원",
+      "area": "서울 서대문구 홍은동",
+      "key": "홍은동풍림아이원|서울 서대문구 홍은동",
+      "originalStatus": "review_needed",
+      "secondStatus": "still_unresolved",
+      "richgo": null,
+      "match": null,
+      "candidates": [
+        {
+          "id": "a0oXpMB",
+          "name": "홍은풍림아이원",
+          "year": 2002,
+          "units": 333,
+          "far": 260,
+          "distanceMeters": 57,
+          "accepted": false,
+          "score": 244
+        }
+      ]
+    },
+    {
+      "name": "상우신명보람",
+      "area": "인천 부평구 부개동",
+      "key": "상우신명보람|인천 부평구 부개동",
+      "originalStatus": "review_needed",
+      "secondStatus": "still_unresolved",
+      "richgo": null,
+      "match": null,
+      "candidates": [
+        {
+          "id": "a6eVNbQ",
+          "name": "상우신명보람",
+          "year": 1998,
+          "units": 576,
+          "far": 249,
+          "distanceMeters": 54,
+          "accepted": false,
+          "score": 244
+        }
+      ]
+    },
+    {
+      "name": "홍은미성",
+      "area": "서울 서대문구 홍은동",
+      "key": "홍은미성|서울 서대문구 홍은동",
+      "originalStatus": "unmatched",
+      "secondStatus": "still_unresolved",
+      "richgo": null,
+      "match": null,
+      "candidates": []
+    },
+    {
+      "name": "대원칸타빌",
+      "area": "남양주시 별내동",
+      "key": "대원칸타빌|남양주시 별내동",
+      "originalStatus": "review_needed",
+      "secondStatus": "verified_second_pass",
+      "richgo": {
+        "id": "a7HxQIY",
+        "name": "별내신도시대원칸타빌",
+        "units": 486,
+        "year": 2012,
+        "far": 169,
+        "floors": "13~25층",
+        "coverage": 15,
+        "parking": 839,
+        "heating": "지역난방 · 열병합",
+        "builder": "(주)대원",
+        "pyeongs": "39·40·49·57·60평",
+        "lat": 37.661999,
+        "lng": 127.125019,
+        "street": "경기도 남양주시 순화궁로 384",
+        "facts": true,
+        "url": "https://m.richgo.ai/realty/danji/a7HxQIY"
+      },
+      "match": {
+        "distanceMeters": 24,
+        "yearDelta": 0,
+        "unitsRatio": 0,
+        "method": "previous_candidate",
+        "score": 256
+      },
+      "candidates": [
+        {
+          "id": "a7HxQIY",
+          "name": "별내신도시대원칸타빌",
+          "year": 2012,
+          "units": 486,
+          "far": 169,
+          "distanceMeters": 24,
+          "accepted": true,
+          "score": 256
+        }
+      ]
+    },
+    {
+      "name": "목화",
+      "area": "군포시 금정동",
+      "key": "목화|군포시 금정동",
+      "originalStatus": "review_needed",
+      "secondStatus": "still_unresolved",
+      "richgo": null,
+      "match": null,
+      "candidates": [
+        {
+          "id": "a8hqIbk",
+          "name": "목화",
+          "year": 1992,
+          "units": 420,
+          "far": 214,
+          "distanceMeters": 29,
+          "accepted": false,
+          "score": 232
+        }
+      ]
+    },
+    {
+      "name": "신별내퇴계원어울림",
+      "area": "남양주시 퇴계원읍",
+      "key": "신별내퇴계원어울림|남양주시 퇴계원읍",
+      "originalStatus": "unmatched",
+      "secondStatus": "still_unresolved",
+      "richgo": null,
+      "match": null,
+      "candidates": []
+    },
+    {
+      "name": "무궁화(화성)",
+      "area": "군포시 금정동",
+      "key": "무궁화(화성)|군포시 금정동",
+      "originalStatus": "review_needed",
+      "secondStatus": "still_unresolved",
+      "richgo": null,
+      "match": null,
+      "candidates": [
+        {
+          "id": "a3qZkDv",
+          "name": "무궁화(화성)",
+          "year": 1992,
+          "units": 402,
+          "far": 220,
+          "distanceMeters": 21,
+          "accepted": false,
+          "score": 232
+        }
+      ]
+    },
+    {
+      "name": "삼성마을5단지",
+      "area": "군포시 부곡동",
+      "key": "삼성마을5단지|군포시 부곡동",
+      "originalStatus": "review_needed",
+      "secondStatus": "verified_second_pass",
+      "richgo": {
+        "id": "a4RYOxU",
+        "name": "삼성LH5단지",
+        "units": 489,
+        "year": 2012,
+        "far": 198,
+        "floors": "10~20층",
+        "coverage": 17,
+        "parking": 824,
+        "heating": "지역난방 · 열병합",
+        "builder": "경남기업(주)",
+        "pyeongs": "38·39·46·52·58평",
+        "lat": 37.334799,
+        "lng": 126.928976,
+        "street": "경기도 군포시 번영로200번길 31",
+        "facts": true,
+        "url": "https://m.richgo.ai/realty/danji/a4RYOxU"
+      },
+      "match": {
+        "distanceMeters": 18,
+        "yearDelta": 0,
+        "unitsRatio": 0,
+        "method": "previous_candidate",
+        "score": 256
+      },
+      "candidates": [
+        {
+          "id": "a4RYOxU",
+          "name": "삼성LH5단지",
+          "year": 2012,
+          "units": 489,
+          "far": 198,
+          "distanceMeters": 18,
+          "accepted": true,
+          "score": 256
+        },
+        {
+          "id": "a6vghyA",
+          "name": "삼성마을2단지",
+          "year": 2013,
+          "units": 422,
+          "far": 162,
+          "distanceMeters": 374,
+          "accepted": false,
+          "score": 96
+        }
+      ]
+    },
+    {
+      "name": "동익미라벨(1060)",
+      "area": "남양주시 별내동",
+      "key": "동익미라벨(1060)|남양주시 별내동",
+      "originalStatus": "review_needed",
+      "secondStatus": "still_unresolved",
+      "richgo": null,
+      "match": null,
+      "candidates": [
+        {
+          "id": "a3QxaoV",
+          "name": "동익미라벨39단지",
+          "year": 2013,
+          "units": 433,
+          "far": 159,
+          "distanceMeters": 5,
+          "accepted": false,
+          "score": 137
+        }
+      ]
+    },
+    {
+      "name": "부영사랑으로7단지",
+      "area": "남양주시 다산동",
+      "key": "부영사랑으로7단지|남양주시 다산동",
+      "originalStatus": "review_needed",
+      "secondStatus": "still_unresolved",
+      "richgo": null,
+      "match": null,
+      "candidates": []
+    },
+    {
+      "name": "서정마을5단지",
+      "area": "고양 덕양구 행신동",
+      "key": "서정마을5단지|고양 덕양구 행신동",
+      "originalStatus": "unmatched",
+      "secondStatus": "still_unresolved",
+      "richgo": null,
+      "match": null,
+      "candidates": []
+    },
+    {
+      "name": "서해그랑블5단지",
+      "area": "인천 부평구 삼산동",
+      "key": "서해그랑블5단지|인천 부평구 삼산동",
+      "originalStatus": "review_needed",
+      "secondStatus": "still_unresolved",
+      "richgo": null,
+      "match": null,
+      "candidates": [
+        {
+          "id": "a9kzZHw",
+          "name": "서해그랑블",
+          "year": 2011,
+          "units": 454,
+          "far": 219,
+          "distanceMeters": 1075,
+          "accepted": false,
+          "score": -14
+        }
+      ]
+    },
+    {
+      "name": "은빛(미도파)5",
+      "area": "고양 덕양구 화정동",
+      "key": "은빛(미도파)5|고양 덕양구 화정동",
+      "originalStatus": "review_needed",
+      "secondStatus": "verified_second_pass",
+      "richgo": {
+        "id": "a7BGxXk",
+        "name": "은빛5단지",
+        "units": 2032,
+        "year": 1995,
+        "far": 198,
+        "floors": "12~20층",
+        "coverage": 25,
+        "parking": 3453,
+        "heating": "지역난방 · 열병합",
+        "builder": "(주)삼익주택,삼성건설(주),엘지건설(주),(주)신성,(주)미도파",
+        "pyeongs": "37·47·48·58평",
+        "lat": 37.641978,
+        "lng": 126.836189,
+        "street": "경기도 고양시 덕양구 화중로 164",
+        "facts": true,
+        "url": "https://m.richgo.ai/realty/danji/a7BGxXk"
+      },
+      "match": {
+        "distanceMeters": 51,
+        "yearDelta": 0,
+        "unitsRatio": 0.0009832841691248771,
+        "method": "previous_candidate",
+        "score": 256
+      },
+      "candidates": [
+        {
+          "id": "a7BGxXk",
+          "name": "은빛5단지",
+          "year": 1995,
+          "units": 2032,
+          "far": 198,
+          "distanceMeters": 51,
+          "accepted": true,
+          "score": 256
+        }
+      ]
+    },
+    {
+      "name": "A9블럭신원마을호반베르디움",
+      "area": "고양 덕양구 신원동",
+      "key": "A9블럭신원마을호반베르디움|고양 덕양구 신원동",
+      "originalStatus": "review_needed",
+      "secondStatus": "verified_second_pass",
+      "richgo": {
+        "id": "a1UFssn",
+        "name": "신원마을호반베르디움9단지",
+        "units": 353,
+        "year": 2012,
+        "far": 169,
+        "floors": "17~22층",
+        "coverage": 14,
+        "parking": 688,
+        "heating": "지역난방 · 열병합",
+        "builder": "(주)호반건설",
+        "pyeongs": "33·41·42평",
+        "lat": 37.661768,
+        "lng": 126.885058,
+        "street": "경기도 고양시 덕양구 권율대로 831",
+        "facts": true,
+        "url": "https://m.richgo.ai/realty/danji/a1UFssn"
+      },
+      "match": {
+        "distanceMeters": 25,
+        "yearDelta": 0,
+        "unitsRatio": 0,
+        "method": "previous_candidate",
+        "score": 256
+      },
+      "candidates": [
+        {
+          "id": "a1UFssn",
+          "name": "신원마을호반베르디움9단지",
+          "year": 2012,
+          "units": 353,
+          "far": 169,
+          "distanceMeters": 25,
+          "accepted": true,
+          "score": 256
+        }
+      ]
+    },
+    {
+      "name": "유승한내들",
+      "area": "남양주시 별내동",
+      "key": "유승한내들|남양주시 별내동",
+      "originalStatus": "review_needed",
+      "secondStatus": "verified_second_pass",
+      "richgo": {
+        "id": "a7dSzKn",
+        "name": "남양주별내유승한내들(이든힐즈)",
+        "units": 378,
+        "year": 2014,
+        "far": 198,
+        "floors": "18~23층",
+        "coverage": 15,
+        "parking": 494,
+        "heating": "지역난방 · 열병합",
+        "builder": "(주)유승종합건설",
+        "pyeongs": "33평",
+        "lat": 37.664431,
+        "lng": 127.128651,
+        "street": "경기도 남양주시 불암로 337",
+        "facts": true,
+        "url": "https://m.richgo.ai/realty/danji/a7dSzKn"
+      },
+      "match": {
+        "distanceMeters": 22,
+        "yearDelta": 0,
+        "unitsRatio": 0,
+        "method": "previous_candidate",
+        "score": 256
+      },
+      "candidates": [
+        {
+          "id": "a7dSzKn",
+          "name": "남양주별내유승한내들(이든힐즈)",
+          "year": 2014,
+          "units": 378,
+          "far": 198,
+          "distanceMeters": 22,
+          "accepted": true,
+          "score": 256
+        }
+      ]
+    },
+    {
+      "name": "덕소강변현대",
+      "area": "남양주시 와부읍",
+      "key": "덕소강변현대|남양주시 와부읍",
+      "originalStatus": "review_needed",
+      "secondStatus": "still_unresolved",
+      "richgo": null,
+      "match": null,
+      "candidates": [
+        {
+          "id": "a9fwxxT",
+          "name": "덕소강변현대홈타운",
+          "year": 2001,
+          "units": 387,
+          "far": 349,
+          "distanceMeters": 23,
+          "accepted": false,
+          "score": 244
+        }
+      ]
+    },
+    {
+      "name": "건영덕소리버파크",
+      "area": "남양주시 와부읍",
+      "key": "건영덕소리버파크|남양주시 와부읍",
+      "originalStatus": "review_needed",
+      "secondStatus": "still_unresolved",
+      "richgo": null,
+      "match": null,
+      "candidates": [
+        {
+          "id": "a4sgvZw",
+          "name": "건영덕소리버파크",
+          "year": 2002,
+          "units": 652,
+          "far": 304,
+          "distanceMeters": 38,
+          "accepted": false,
+          "score": 244
+        }
+      ]
+    },
+    {
+      "name": "극동",
+      "area": "서울 강북구 수유동",
+      "key": "극동|서울 강북구 수유동",
+      "originalStatus": "review_needed",
+      "secondStatus": "still_unresolved",
+      "richgo": null,
+      "match": null,
+      "candidates": [
+        {
+          "id": "a2baoNu",
+          "name": "극동",
+          "year": 1992,
+          "units": 574,
+          "far": 331,
+          "distanceMeters": 15,
+          "accepted": false,
+          "score": 244
+        }
+      ]
+    },
+    {
+      "name": "금호이수마운트밸리",
+      "area": "인천 부평구 산곡동",
+      "key": "금호이수마운트밸리|인천 부평구 산곡동",
+      "originalStatus": "review_needed",
+      "secondStatus": "still_unresolved",
+      "richgo": null,
+      "match": null,
+      "candidates": [
+        {
+          "id": "a8ctFqO",
+          "name": "금호이수마운트밸리",
+          "year": 2007,
+          "units": 1365,
+          "far": 340,
+          "distanceMeters": 55,
+          "accepted": false,
+          "score": 256
+        }
+      ]
+    },
+    {
+      "name": "덕소강변서희스타힐스",
+      "area": "남양주시 와부읍",
+      "key": "덕소강변서희스타힐스|남양주시 와부읍",
+      "originalStatus": "review_needed",
+      "secondStatus": "still_unresolved",
+      "richgo": null,
+      "match": null,
+      "candidates": [
+        {
+          "id": "a9ahnod",
+          "name": "강변스타힐스",
+          "year": 2023,
+          "units": 423,
+          "far": 229,
+          "distanceMeters": 42,
+          "accepted": false,
+          "score": 124
+        },
+        {
+          "id": "a9fwxxT",
+          "name": "덕소강변현대홈타운",
+          "year": 2001,
+          "units": 387,
+          "far": 349,
+          "distanceMeters": 1124,
+          "accepted": false,
+          "score": -6
+        }
+      ]
+    },
+    {
+      "name": "덕소쌍용",
+      "area": "남양주시 와부읍",
+      "key": "덕소쌍용|남양주시 와부읍",
+      "originalStatus": "review_needed",
+      "secondStatus": "still_unresolved",
+      "richgo": null,
+      "match": null,
+      "candidates": [
+        {
+          "id": "a3VeCjo",
+          "name": "덕소쌍용",
+          "year": 2000,
+          "units": 528,
+          "far": 300,
+          "distanceMeters": 18,
+          "accepted": false,
+          "score": 244
+        }
+      ]
+    },
+    {
+      "name": "동아(2차)",
+      "area": "인천 부평구 부평동",
+      "key": "동아(2차)|인천 부평구 부평동",
+      "originalStatus": "review_needed",
+      "secondStatus": "still_unresolved",
+      "richgo": null,
+      "match": null,
+      "candidates": [
+        {
+          "id": "a0droDd",
+          "name": "동아2단지",
+          "year": 1995,
+          "units": 2128,
+          "far": 242,
+          "distanceMeters": 143,
+          "accepted": false,
+          "score": 119
+        }
+      ]
+    },
+    {
+      "name": "백마마을(한성)",
+      "area": "고양 일산동구 마두동",
+      "key": "백마마을(한성)|고양 일산동구 마두동",
+      "originalStatus": "review_needed",
+      "secondStatus": "still_unresolved",
+      "richgo": null,
+      "match": null,
+      "candidates": [
+        {
+          "id": "a1QWmxQ",
+          "name": "백마5단지쌍용",
+          "year": 1994,
+          "units": 1152,
+          "far": 168,
+          "distanceMeters": 63,
+          "accepted": false,
+          "score": 137
+        }
+      ]
+    },
+    {
+      "name": "삼성래미안",
+      "area": "고양 덕양구 성사동",
+      "key": "삼성래미안|고양 덕양구 성사동",
+      "originalStatus": "unmatched",
+      "secondStatus": "still_unresolved",
+      "richgo": null,
+      "match": null,
+      "candidates": []
+    },
+    {
+      "name": "은빛마을(LG)5",
+      "area": "고양 덕양구 화정동",
+      "key": "은빛마을(LG)5|고양 덕양구 화정동",
+      "originalStatus": "review_needed",
+      "secondStatus": "verified_second_pass",
+      "richgo": {
+        "id": "a7BGxXk",
+        "name": "은빛5단지",
+        "units": 2032,
+        "year": 1995,
+        "far": 198,
+        "floors": "12~20층",
+        "coverage": 25,
+        "parking": 3453,
+        "heating": "지역난방 · 열병합",
+        "builder": "(주)삼익주택,삼성건설(주),엘지건설(주),(주)신성,(주)미도파",
+        "pyeongs": "37·47·48·58평",
+        "lat": 37.641978,
+        "lng": 126.836189,
+        "street": "경기도 고양시 덕양구 화중로 164",
+        "facts": true,
+        "url": "https://m.richgo.ai/realty/danji/a7BGxXk"
+      },
+      "match": {
+        "distanceMeters": 51,
+        "yearDelta": 0,
+        "unitsRatio": 0.0009832841691248771,
+        "method": "previous_candidate",
+        "score": 256
+      },
+      "candidates": [
+        {
+          "id": "a7BGxXk",
+          "name": "은빛5단지",
+          "year": 1995,
+          "units": 2032,
+          "far": 198,
+          "distanceMeters": 51,
+          "accepted": true,
+          "score": 256
+        }
+      ]
+    },
+    {
+      "name": "은빛마을(삼성)5",
+      "area": "고양 덕양구 화정동",
+      "key": "은빛마을(삼성)5|고양 덕양구 화정동",
+      "originalStatus": "review_needed",
+      "secondStatus": "verified_second_pass",
+      "richgo": {
+        "id": "a7BGxXk",
+        "name": "은빛5단지",
+        "units": 2032,
+        "year": 1995,
+        "far": 198,
+        "floors": "12~20층",
+        "coverage": 25,
+        "parking": 3453,
+        "heating": "지역난방 · 열병합",
+        "builder": "(주)삼익주택,삼성건설(주),엘지건설(주),(주)신성,(주)미도파",
+        "pyeongs": "37·47·48·58평",
+        "lat": 37.641978,
+        "lng": 126.836189,
+        "street": "경기도 고양시 덕양구 화중로 164",
+        "facts": true,
+        "url": "https://m.richgo.ai/realty/danji/a7BGxXk"
+      },
+      "match": {
+        "distanceMeters": 51,
+        "yearDelta": 0,
+        "unitsRatio": 0.0009832841691248771,
+        "method": "previous_candidate",
+        "score": 256
+      },
+      "candidates": [
+        {
+          "id": "a7BGxXk",
+          "name": "은빛5단지",
+          "year": 1995,
+          "units": 2032,
+          "far": 198,
+          "distanceMeters": 51,
+          "accepted": true,
+          "score": 256
+        }
+      ]
+    },
+    {
+      "name": "은빛마을(신성)5",
+      "area": "고양 덕양구 화정동",
+      "key": "은빛마을(신성)5|고양 덕양구 화정동",
+      "originalStatus": "review_needed",
+      "secondStatus": "verified_second_pass",
+      "richgo": {
+        "id": "a7BGxXk",
+        "name": "은빛5단지",
+        "units": 2032,
+        "year": 1995,
+        "far": 198,
+        "floors": "12~20층",
+        "coverage": 25,
+        "parking": 3453,
+        "heating": "지역난방 · 열병합",
+        "builder": "(주)삼익주택,삼성건설(주),엘지건설(주),(주)신성,(주)미도파",
+        "pyeongs": "37·47·48·58평",
+        "lat": 37.641978,
+        "lng": 126.836189,
+        "street": "경기도 고양시 덕양구 화중로 164",
+        "facts": true,
+        "url": "https://m.richgo.ai/realty/danji/a7BGxXk"
+      },
+      "match": {
+        "distanceMeters": 51,
+        "yearDelta": 0,
+        "unitsRatio": 0.0009832841691248771,
+        "method": "previous_candidate",
+        "score": 256
+      },
+      "candidates": [
+        {
+          "id": "a7BGxXk",
+          "name": "은빛5단지",
+          "year": 1995,
+          "units": 2032,
+          "far": 198,
+          "distanceMeters": 51,
+          "accepted": true,
+          "score": 256
+        }
+      ]
+    },
+    {
+      "name": "은빛삼익건설(5)",
+      "area": "고양 덕양구 화정동",
+      "key": "은빛삼익건설(5)|고양 덕양구 화정동",
+      "originalStatus": "review_needed",
+      "secondStatus": "verified_second_pass",
+      "richgo": {
+        "id": "a7BGxXk",
+        "name": "은빛5단지",
+        "units": 2032,
+        "year": 1995,
+        "far": 198,
+        "floors": "12~20층",
+        "coverage": 25,
+        "parking": 3453,
+        "heating": "지역난방 · 열병합",
+        "builder": "(주)삼익주택,삼성건설(주),엘지건설(주),(주)신성,(주)미도파",
+        "pyeongs": "37·47·48·58평",
+        "lat": 37.641978,
+        "lng": 126.836189,
+        "street": "경기도 고양시 덕양구 화중로 164",
+        "facts": true,
+        "url": "https://m.richgo.ai/realty/danji/a7BGxXk"
+      },
+      "match": {
+        "distanceMeters": 51,
+        "yearDelta": 0,
+        "unitsRatio": 0.0009832841691248771,
+        "method": "previous_candidate",
+        "score": 256
+      },
+      "candidates": [
+        {
+          "id": "a7BGxXk",
+          "name": "은빛5단지",
+          "year": 1995,
+          "units": 2032,
+          "far": 198,
+          "distanceMeters": 51,
+          "accepted": true,
+          "score": 256
+        }
+      ]
+    },
+    {
+      "name": "은빛삼익주택(5)",
+      "area": "고양 덕양구 화정동",
+      "key": "은빛삼익주택(5)|고양 덕양구 화정동",
+      "originalStatus": "review_needed",
+      "secondStatus": "verified_second_pass",
+      "richgo": {
+        "id": "a7BGxXk",
+        "name": "은빛5단지",
+        "units": 2032,
+        "year": 1995,
+        "far": 198,
+        "floors": "12~20층",
+        "coverage": 25,
+        "parking": 3453,
+        "heating": "지역난방 · 열병합",
+        "builder": "(주)삼익주택,삼성건설(주),엘지건설(주),(주)신성,(주)미도파",
+        "pyeongs": "37·47·48·58평",
+        "lat": 37.641978,
+        "lng": 126.836189,
+        "street": "경기도 고양시 덕양구 화중로 164",
+        "facts": true,
+        "url": "https://m.richgo.ai/realty/danji/a7BGxXk"
+      },
+      "match": {
+        "distanceMeters": 51,
+        "yearDelta": 0,
+        "unitsRatio": 0.0009832841691248771,
+        "method": "previous_candidate",
+        "score": 256
+      },
+      "candidates": [
+        {
+          "id": "a7BGxXk",
+          "name": "은빛5단지",
+          "year": 1995,
+          "units": 2032,
+          "far": 198,
+          "distanceMeters": 51,
+          "accepted": true,
+          "score": 256
+        }
+      ]
+    },
+    {
+      "name": "진도",
+      "area": "남양주시 와부읍",
+      "key": "진도|남양주시 와부읍",
+      "originalStatus": "unmatched",
+      "secondStatus": "still_unresolved",
+      "richgo": null,
+      "match": null,
+      "candidates": []
+    },
+    {
+      "name": "퇴계원쌍용예가",
+      "area": "남양주시 퇴계원읍",
+      "key": "퇴계원쌍용예가|남양주시 퇴계원읍",
+      "originalStatus": "unmatched",
+      "secondStatus": "still_unresolved",
+      "richgo": null,
+      "match": null,
+      "candidates": []
+    },
+    {
+      "name": "푸르지오2차",
+      "area": "안산 상록구 이동",
+      "key": "푸르지오2차|안산 상록구 이동",
+      "originalStatus": "review_needed",
+      "secondStatus": "still_unresolved",
+      "richgo": null,
+      "match": null,
+      "candidates": [
+        {
+          "id": "a3lCDRx",
+          "name": "푸르지오2차",
+          "year": 2001,
+          "units": 443,
+          "far": 190,
+          "distanceMeters": 34,
+          "accepted": false,
+          "score": 256
+        }
+      ]
+    },
+    {
+      "name": "한강우성",
+      "area": "남양주시 와부읍",
+      "key": "한강우성|남양주시 와부읍",
+      "originalStatus": "review_needed",
+      "secondStatus": "still_unresolved",
+      "richgo": null,
+      "match": null,
+      "candidates": [
+        {
+          "id": "a3aFBtw",
+          "name": "한강우성",
+          "year": 1998,
+          "units": 1488,
+          "far": 216,
+          "distanceMeters": 62,
+          "accepted": false,
+          "score": 244
+        }
+      ]
+    },
+    {
+      "name": "흰돌마을(한진)",
+      "area": "고양 일산동구 백석동",
+      "key": "흰돌마을(한진)|고양 일산동구 백석동",
+      "originalStatus": "review_needed",
+      "secondStatus": "still_unresolved",
+      "richgo": null,
+      "match": null,
+      "candidates": [
+        {
+          "id": "a4hJCNN",
+          "name": "흰돌3단지국제",
+          "year": 1994,
+          "units": 816,
+          "far": 160,
+          "distanceMeters": 36,
+          "accepted": false,
+          "score": 137
+        }
+      ]
+    }
+  ]
+}

@@ -6,6 +6,7 @@ const terser = createRequire(import.meta.url)('next/dist/compiled/terser');
 import {createHash} from 'node:crypto';
 import {fileURLToPath} from 'node:url';
 import zlib from 'node:zlib';
+import { patchRichgoCap10Source, appendRichgoCap10FinalOverrides } from './apply-richgo-band10.mjs';
 
 // Keep apt-map.html as the editable source. Production serves the generated page.
 export function buildAptAssets(root, output = path.join(root, 'public')) {
@@ -56,6 +57,8 @@ export function buildAptAssets(root, output = path.join(root, 'public')) {
       // These URLs are rewritten to live upstream data. Never freeze them at build time.
       if (file === 'apt-live.js' || file === 'apt-live6.js' || file === 'apt-geo.js') { flush(); urls.push(file); continue; }
       let code = fs.readFileSync(path.join(sourceDir, file), 'utf8');
+      if (cap === 10 && file === 'apt-univ10.js') code = patchRichgoCap10Source(code, root);
+      if (cap === 10 && file === 'apt-farfix.js') code = appendRichgoCap10FinalOverrides(code, root);
       if (file === 'apt-picks10.js') code = code.replace(/^if\(document\.write\).*$/m, '');
       if (cap === 6 && file === 'apt-s4.js' && peak6) { code = code.replace(peak6.from, peak6.to); if (peak6.estFrom) code = code.replace(peak6.estFrom, peak6.estTo); }
       // 6억 이하 탭에서는 고밀도 감점 함수가 항상 0이다. 높은 가격대 전용 코드는 6억 탭 번들에서 제외(순위 불변).
@@ -65,7 +68,9 @@ export function buildAptAssets(root, output = path.join(root, 'public')) {
         code = code.slice(0, a) + 'function s4DensityAdj(d){return {pen:0,far:null,src:null};}' + code.slice(b);
       }
       if (/document\.write\s*\(/.test(code)) throw new Error(`Unexpanded script dependency: ${file}`);
-      code = minifyKeep(code, file);   // 전송량: terser로 주석·공백만 제거(이름·식은 그대로, compress·mangle 끔)
+      code = cap===10 && (file==='apt-univ10.js'||file==='apt-invest10.js'||file==='apt-invest-ui.js')
+        ? terser.minify_sync({[file]:code},{compress:{passes:3},mangle:true,format:{comments:false,ascii_only:false}}).code
+        : minifyKeep(code,file);  // 6~10억 번들만 압축해 리치고 실측 원자료 반영분 상쇄
       if (isolated.test(file)) flush();
       chunk.push(`/* ${file} */\n${code}`); names.push(file);
       if (isolated.test(file)) flush();
@@ -76,7 +81,7 @@ export function buildAptAssets(root, output = path.join(root, 'public')) {
   if (!loop.test(bootstrap[1])) throw new Error('Source loader changed');
   const loader = bootstrap[1].replace(loop, `  F=${JSON.stringify(manifest)}[c];\n  window.__APT_LOAD_START=performance.now();\n  window.aptLoadError=function(){window.__aptLoadFailed=true;var el=document.getElementById('aptLoading');if(el)el.textContent='자료를 불러오지 못했습니다. 새로고침해 주세요.';};\n  for(var i=0;i<F.length;i++) document.write('<script defer src="'+F[i]+'" onerror="aptLoadError()"><\\/script>');`);
   // Show consent and loading state before network data. Keep the global app scope intact.
-  const loading = '<div id="aptLoading" role="status" class="inline-note" style="margin:24px">아파트 자료를 불러오고 있습니다…</div>';
+  const loading = '<div id="aptLoading" role="status" class="inline-note" >불러오는 중…</div>';
   let html = source.replace('<div class="body" id="body"></div>', `<div class="body" id="body">${loading}</div>`);
   html = html.replace(bootstrap[0], `<script>\n${consent}\n${loader}\n</script>`).replace(application[0], '');
   html = html.replaceAll('apt-map.html', '/');
@@ -84,7 +89,7 @@ export function buildAptAssets(root, output = path.join(root, 'public')) {
   const key = /const KAKAO_JS_KEY='([^']+)'/.exec(app)?.[1];
   if (key) html = html.replace('</head>', `<link rel="preload" as="script" href="https://dapi.kakao.com/v2/maps/sdk.js?appkey=${key}&amp;libraries=services&amp;autoload=false">\n</head>`);
   // 전송량: 첫 HTML의 <style> 안 CSS 주석·들여쓰기만 제거(규칙은 그대로)
-  html = html.replace(/<style>([\s\S]*?)<\/style>/g, (m, c) => '<style>' + c.replace(/\/\*[\s\S]*?\*\//g, '').replace(/\n\s*/g, '\n') + '</style>');
+  html = html.replace(/<style>([\s\S]*?)<\/style>/g, (m, c) => '<style>' + c.replace(/\/\*[\s\S]*?\*\//g, '').replace(/\n\s*/g, '\n').replace(/;\n/g, ';').replace(/}\n/g, '}') + '</style>');
   // 전송량: 첫 HTML 안 인라인 스크립트도 주석·공백만 제거(이름·식 그대로)
   html = html.replace(/<script>([\s\S]*?)<\/script>/g, (m, c) => '<script>' + minifyKeep(c, 'inline.js') + '</script>');
   fs.writeFileSync(path.join(output, 'apt-map-fast.html'), html);

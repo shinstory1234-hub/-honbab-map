@@ -1,0 +1,1879 @@
+{
+  "meta": {
+    "shard": 1,
+    "originalPending": 86,
+    "additionalVerified": 13,
+    "additionalFarKnown": 13,
+    "farBlank": 0,
+    "stillPending": 73,
+    "collisions": 0,
+    "network": {
+      "attempted": 0,
+      "fetched": 101,
+      "error": 0,
+      "blocked": 0,
+      "limited": 0,
+      "bing": 40,
+      "hub": 9,
+      "detail": 52
+    },
+    "method": "region hub + named indexed pages + coordinates + year + units"
+  },
+  "rows": [
+    {
+      "name": "장미마을(현대)",
+      "area": "성남 분당구 야탑동",
+      "key": "장미마을(현대)|성남 분당구 야탑동",
+      "originalStatus": "unmatched",
+      "secondStatus": "still_unresolved",
+      "richgo": null,
+      "match": null,
+      "candidates": []
+    },
+    {
+      "name": "쌍용",
+      "area": "서울 동대문구 이문동",
+      "key": "쌍용|서울 동대문구 이문동",
+      "originalStatus": "review_needed",
+      "secondStatus": "still_unresolved",
+      "richgo": null,
+      "match": null,
+      "candidates": [
+        {
+          "id": "a3LcViZ",
+          "name": "쌍용",
+          "year": 2000,
+          "units": 1318,
+          "far": 343,
+          "distanceMeters": 113,
+          "accepted": false,
+          "score": 244
+        }
+      ]
+    },
+    {
+      "name": "답십리청솔우성",
+      "area": "서울 동대문구 답십리동",
+      "key": "답십리청솔우성|서울 동대문구 답십리동",
+      "originalStatus": "review_needed",
+      "secondStatus": "still_unresolved",
+      "richgo": null,
+      "match": null,
+      "candidates": [
+        {
+          "id": "a7NggsV",
+          "name": "답십리청솔우성",
+          "year": 2000,
+          "units": 1542,
+          "far": 258,
+          "distanceMeters": 50,
+          "accepted": false,
+          "score": 244
+        }
+      ]
+    },
+    {
+      "name": "샛별마을한양4-1",
+      "area": "안양 동안구 비산동",
+      "key": "샛별마을한양4-1|안양 동안구 비산동",
+      "originalStatus": "unmatched",
+      "secondStatus": "still_unresolved",
+      "richgo": null,
+      "match": null,
+      "candidates": []
+    },
+    {
+      "name": "하얀마을(5단지)(주공)",
+      "area": "성남 분당구 구미동",
+      "key": "하얀마을(5단지)(주공)|성남 분당구 구미동",
+      "originalStatus": "review_needed",
+      "secondStatus": "still_unresolved",
+      "richgo": null,
+      "match": null,
+      "candidates": []
+    },
+    {
+      "name": "효자촌(동아)",
+      "area": "성남 분당구 서현동",
+      "key": "효자촌(동아)|성남 분당구 서현동",
+      "originalStatus": "review_needed",
+      "secondStatus": "still_unresolved",
+      "richgo": null,
+      "match": null,
+      "candidates": [
+        {
+          "id": "a1NTVgq",
+          "name": "효자촌동아",
+          "year": 1992,
+          "units": 648,
+          "far": 187,
+          "distanceMeters": 16,
+          "accepted": false,
+          "score": 244
+        }
+      ]
+    },
+    {
+      "name": "휘경리오포레아파트(1단지)",
+      "area": "서울 동대문구 휘경동",
+      "key": "휘경리오포레아파트(1단지)|서울 동대문구 휘경동",
+      "originalStatus": "review_needed",
+      "secondStatus": "still_unresolved",
+      "richgo": null,
+      "match": null,
+      "candidates": [
+        {
+          "id": "a7usPGi",
+          "name": "휘경리오포레1단지",
+          "year": 2001,
+          "units": 1224,
+          "far": 257,
+          "distanceMeters": 25,
+          "accepted": false,
+          "score": 191
+        },
+        {
+          "id": "a2yGETD",
+          "name": "휘경리오포레2단지",
+          "year": 2001,
+          "units": 800,
+          "far": 257,
+          "distanceMeters": 91,
+          "accepted": false,
+          "score": 122
+        }
+      ]
+    },
+    {
+      "name": "호계2차현대홈타운",
+      "area": "안양 동안구 호계동",
+      "key": "호계2차현대홈타운|안양 동안구 호계동",
+      "originalStatus": "review_needed",
+      "secondStatus": "verified_second_pass",
+      "richgo": {
+        "id": "a5OwpGs",
+        "name": "호계현대홈타운2차",
+        "units": 1977,
+        "year": 2003,
+        "far": 350,
+        "floors": "11~27층",
+        "coverage": 18,
+        "parking": 2448,
+        "heating": "지역난방 · 열병합",
+        "builder": "현대건설주식회사",
+        "pyeongs": "24·32·33·38·43·52평",
+        "lat": 37.365324,
+        "lng": 126.960943,
+        "street": "경기도 안양시 동안구 경수대로 462",
+        "facts": true,
+        "url": "https://m.richgo.ai/realty/danji/a5OwpGs"
+      },
+      "match": {
+        "distanceMeters": 104,
+        "yearDelta": 0,
+        "unitsRatio": 0,
+        "method": "previous_candidate",
+        "score": 256
+      },
+      "candidates": [
+        {
+          "id": "a5OwpGs",
+          "name": "호계현대홈타운2차",
+          "year": 2003,
+          "units": 1977,
+          "far": 350,
+          "distanceMeters": 104,
+          "accepted": true,
+          "score": 256
+        }
+      ]
+    },
+    {
+      "name": "동아",
+      "area": "서울 동대문구 답십리동",
+      "key": "동아|서울 동대문구 답십리동",
+      "originalStatus": "review_needed",
+      "secondStatus": "still_unresolved",
+      "richgo": null,
+      "match": null,
+      "candidates": [
+        {
+          "id": "a8yaytW",
+          "name": "동아",
+          "year": 2001,
+          "units": 741,
+          "far": 328,
+          "distanceMeters": 16,
+          "accepted": false,
+          "score": 244
+        }
+      ]
+    },
+    {
+      "name": "현대코아",
+      "area": "서울 동대문구 청량리동",
+      "key": "현대코아|서울 동대문구 청량리동",
+      "originalStatus": "unmatched",
+      "secondStatus": "still_unresolved",
+      "richgo": null,
+      "match": null,
+      "candidates": []
+    },
+    {
+      "name": "동아",
+      "area": "서울 동대문구 전농동",
+      "key": "동아|서울 동대문구 전농동",
+      "originalStatus": "review_needed",
+      "secondStatus": "still_unresolved",
+      "richgo": null,
+      "match": null,
+      "candidates": [
+        {
+          "id": "a3VFltk",
+          "name": "동아",
+          "year": 1997,
+          "units": 360,
+          "far": null,
+          "distanceMeters": 28,
+          "accepted": false,
+          "score": 191
+        }
+      ]
+    },
+    {
+      "name": "박석고개1단지힐스테이트(116~131동)BL2-1",
+      "area": "서울 은평구 진관동",
+      "key": "박석고개1단지힐스테이트(116~131동)BL2-1|서울 은평구 진관동",
+      "originalStatus": "unmatched",
+      "secondStatus": "still_unresolved",
+      "richgo": null,
+      "match": null,
+      "candidates": []
+    },
+    {
+      "name": "휘경리오포레아파트(2단지)",
+      "area": "서울 동대문구 휘경동",
+      "key": "휘경리오포레아파트(2단지)|서울 동대문구 휘경동",
+      "originalStatus": "review_needed",
+      "secondStatus": "still_unresolved",
+      "richgo": null,
+      "match": null,
+      "candidates": [
+        {
+          "id": "a2yGETD",
+          "name": "휘경리오포레2단지",
+          "year": 2001,
+          "units": 800,
+          "far": 257,
+          "distanceMeters": 91,
+          "accepted": false,
+          "score": 191
+        },
+        {
+          "id": "a7usPGi",
+          "name": "휘경리오포레1단지",
+          "year": 2001,
+          "units": 1224,
+          "far": 257,
+          "distanceMeters": 25,
+          "accepted": false,
+          "score": 191
+        }
+      ]
+    },
+    {
+      "name": "DMC아트포레자이",
+      "area": "서울 은평구 수색동",
+      "key": "DMC아트포레자이|서울 은평구 수색동",
+      "originalStatus": "review_needed",
+      "secondStatus": "still_unresolved",
+      "richgo": null,
+      "match": null,
+      "candidates": [
+        {
+          "id": "a7zdlRO",
+          "name": "DMC아트포레자이",
+          "year": 2023,
+          "units": 672,
+          "far": 249,
+          "distanceMeters": 14,
+          "accepted": false,
+          "score": 241
+        }
+      ]
+    },
+    {
+      "name": "백련산힐스테이트4차",
+      "area": "서울 은평구 응암동",
+      "key": "백련산힐스테이트4차|서울 은평구 응암동",
+      "originalStatus": "review_needed",
+      "secondStatus": "still_unresolved",
+      "richgo": null,
+      "match": null,
+      "candidates": [
+        {
+          "id": "a6GmWpZ",
+          "name": "백련산힐스테이트3차",
+          "year": 2011,
+          "units": 967,
+          "far": 213,
+          "distanceMeters": 329,
+          "accepted": false,
+          "score": 105
+        },
+        {
+          "id": "a9PDpNd",
+          "name": "백련산힐스테이트2차",
+          "year": 2011,
+          "units": 1148,
+          "far": 215,
+          "distanceMeters": 227,
+          "accepted": false,
+          "score": 94
+        },
+        {
+          "id": "a7yVPZE",
+          "name": "백련산힐스테이트1차",
+          "year": 2011,
+          "units": 1106,
+          "far": 191,
+          "distanceMeters": 407,
+          "accepted": false,
+          "score": 72
+        }
+      ]
+    },
+    {
+      "name": "백련산힐스테이트2차",
+      "area": "서울 은평구 응암동",
+      "key": "백련산힐스테이트2차|서울 은평구 응암동",
+      "originalStatus": "review_needed",
+      "secondStatus": "still_unresolved",
+      "richgo": null,
+      "match": null,
+      "candidates": [
+        {
+          "id": "a9PDpNd",
+          "name": "백련산힐스테이트2차",
+          "year": 2011,
+          "units": 1148,
+          "far": 215,
+          "distanceMeters": 36,
+          "accepted": false,
+          "score": 217
+        },
+        {
+          "id": "a6GmWpZ",
+          "name": "백련산힐스테이트3차",
+          "year": 2011,
+          "units": 967,
+          "far": 213,
+          "distanceMeters": 293,
+          "accepted": false,
+          "score": 133
+        },
+        {
+          "id": "a7yVPZE",
+          "name": "백련산힐스테이트1차",
+          "year": 2011,
+          "units": 1106,
+          "far": 191,
+          "distanceMeters": 206,
+          "accepted": false,
+          "score": 132
+        }
+      ]
+    },
+    {
+      "name": "LIG대학마을(건영아파트3차)",
+      "area": "서울 관악구 신림동",
+      "key": "LIG대학마을(건영아파트3차)|서울 관악구 신림동",
+      "originalStatus": "review_needed",
+      "secondStatus": "verified_second_pass",
+      "richgo": {
+        "id": "a0Xhjwv",
+        "name": "건영3차",
+        "units": 783,
+        "year": 1996,
+        "far": 250,
+        "floors": "7~15층",
+        "coverage": 22,
+        "parking": 299,
+        "heating": "개별난방 · 도시가스",
+        "builder": "(주)건영종합건설",
+        "pyeongs": "23·27·30평",
+        "lat": 37.466932,
+        "lng": 126.943192,
+        "street": "서울시 관악구 신림로3길 40",
+        "facts": true,
+        "url": "https://m.richgo.ai/realty/danji/a0Xhjwv"
+      },
+      "match": {
+        "distanceMeters": 54,
+        "yearDelta": 0,
+        "unitsRatio": 0,
+        "method": "previous_candidate",
+        "score": 256
+      },
+      "candidates": [
+        {
+          "id": "a0Xhjwv",
+          "name": "건영3차",
+          "year": 1996,
+          "units": 783,
+          "far": 250,
+          "distanceMeters": 54,
+          "accepted": true,
+          "score": 256
+        }
+      ]
+    },
+    {
+      "name": "광교상떼빌파크뷰",
+      "area": "용인 수지구 상현동",
+      "key": "광교상떼빌파크뷰|용인 수지구 상현동",
+      "originalStatus": "unmatched",
+      "secondStatus": "still_unresolved",
+      "richgo": null,
+      "match": null,
+      "candidates": []
+    },
+    {
+      "name": "상림마을8단지롯데캐슬(810~820동)BL1-1",
+      "area": "서울 은평구 진관동",
+      "key": "상림마을8단지롯데캐슬(810~820동)BL1-1|서울 은평구 진관동",
+      "originalStatus": "unmatched",
+      "secondStatus": "still_unresolved",
+      "richgo": null,
+      "match": null,
+      "candidates": []
+    },
+    {
+      "name": "우성그린",
+      "area": "서울 동대문구 답십리동",
+      "key": "우성그린|서울 동대문구 답십리동",
+      "originalStatus": "review_needed",
+      "secondStatus": "still_unresolved",
+      "richgo": null,
+      "match": null,
+      "candidates": [
+        {
+          "id": "a4tJVtf",
+          "name": "우성그린",
+          "year": 1997,
+          "units": 496,
+          "far": 275,
+          "distanceMeters": 19,
+          "accepted": false,
+          "score": 244
+        }
+      ]
+    },
+    {
+      "name": "무궁화한양",
+      "area": "안양 동안구 호계동",
+      "key": "무궁화한양|안양 동안구 호계동",
+      "originalStatus": "verified_shared_scope_review",
+      "secondStatus": "verified_second_pass",
+      "richgo": {
+        "id": "a7McgHc",
+        "name": "무궁화효성",
+        "units": 800,
+        "year": 1992,
+        "far": 219,
+        "floors": "10~22층",
+        "coverage": 17,
+        "parking": 642,
+        "heating": "지역난방 · 열병합",
+        "builder": "효성중공업주식회사, 주식회사한양",
+        "pyeongs": "23·24·30·32평",
+        "lat": 37.382459,
+        "lng": 126.954428,
+        "street": "경기도 안양시 동안구 동안로 35",
+        "facts": true,
+        "url": "https://m.richgo.ai/realty/danji/a7McgHc"
+      },
+      "match": {
+        "distanceMeters": 27,
+        "yearDelta": 0,
+        "unitsRatio": 0,
+        "method": "previous_candidate",
+        "score": 256
+      },
+      "candidates": [
+        {
+          "id": "a7McgHc",
+          "name": "무궁화효성",
+          "year": 1992,
+          "units": 800,
+          "far": 219,
+          "distanceMeters": 27,
+          "accepted": true,
+          "score": 256
+        }
+      ]
+    },
+    {
+      "name": "무궁화효성",
+      "area": "안양 동안구 호계동",
+      "key": "무궁화효성|안양 동안구 호계동",
+      "originalStatus": "verified_shared_scope_review",
+      "secondStatus": "verified_second_pass",
+      "richgo": {
+        "id": "a7McgHc",
+        "name": "무궁화효성",
+        "units": 800,
+        "year": 1992,
+        "far": 219,
+        "floors": "10~22층",
+        "coverage": 17,
+        "parking": 642,
+        "heating": "지역난방 · 열병합",
+        "builder": "효성중공업주식회사, 주식회사한양",
+        "pyeongs": "23·24·30·32평",
+        "lat": 37.382459,
+        "lng": 126.954428,
+        "street": "경기도 안양시 동안구 동안로 35",
+        "facts": true,
+        "url": "https://m.richgo.ai/realty/danji/a7McgHc"
+      },
+      "match": {
+        "distanceMeters": 27,
+        "yearDelta": 0,
+        "unitsRatio": 0,
+        "method": "previous_candidate",
+        "score": 256
+      },
+      "candidates": [
+        {
+          "id": "a7McgHc",
+          "name": "무궁화효성",
+          "year": 1992,
+          "units": 800,
+          "far": 219,
+          "distanceMeters": 27,
+          "accepted": true,
+          "score": 256
+        }
+      ]
+    },
+    {
+      "name": "엘지빌리지6",
+      "area": "용인 수지구 성복동",
+      "key": "엘지빌리지6|용인 수지구 성복동",
+      "originalStatus": "review_needed",
+      "secondStatus": "verified_second_pass",
+      "richgo": {
+        "id": "a6nAnnz",
+        "name": "성동마을LG빌리지6차",
+        "units": 956,
+        "year": 2003,
+        "far": 199,
+        "floors": "19~20층",
+        "coverage": 13,
+        "parking": 2064,
+        "heating": "지역난방 · 열병합",
+        "builder": "LG건설(주)",
+        "pyeongs": "51·64평",
+        "lat": 37.318963,
+        "lng": 127.070207,
+        "street": "경기도 용인시 수지구 성복2로 158",
+        "facts": true,
+        "url": "https://m.richgo.ai/realty/danji/a6nAnnz"
+      },
+      "match": {
+        "distanceMeters": 26,
+        "yearDelta": 0,
+        "unitsRatio": 0,
+        "method": "previous_candidate",
+        "score": 256
+      },
+      "candidates": [
+        {
+          "id": "a6nAnnz",
+          "name": "성동마을LG빌리지6차",
+          "year": 2003,
+          "units": 956,
+          "far": 199,
+          "distanceMeters": 26,
+          "accepted": true,
+          "score": 256
+        }
+      ]
+    },
+    {
+      "name": "에스케이뷰파크",
+      "area": "화성 병점구 반월동",
+      "key": "에스케이뷰파크|화성 병점구 반월동",
+      "originalStatus": "review_needed",
+      "secondStatus": "still_unresolved",
+      "richgo": null,
+      "match": null,
+      "candidates": []
+    },
+    {
+      "name": "벽산첼시빌2차",
+      "area": "용인 수지구 성복동",
+      "key": "벽산첼시빌2차|용인 수지구 성복동",
+      "originalStatus": "unmatched",
+      "secondStatus": "still_unresolved",
+      "richgo": null,
+      "match": null,
+      "candidates": []
+    },
+    {
+      "name": "백련산힐스테이트3차",
+      "area": "서울 은평구 응암동",
+      "key": "백련산힐스테이트3차|서울 은평구 응암동",
+      "originalStatus": "review_needed",
+      "secondStatus": "still_unresolved",
+      "richgo": null,
+      "match": null,
+      "candidates": [
+        {
+          "id": "a6GmWpZ",
+          "name": "백련산힐스테이트3차",
+          "year": 2011,
+          "units": 967,
+          "far": 213,
+          "distanceMeters": 42,
+          "accepted": false,
+          "score": 217
+        },
+        {
+          "id": "a9PDpNd",
+          "name": "백련산힐스테이트2차",
+          "year": 2011,
+          "units": 1148,
+          "far": 215,
+          "distanceMeters": 361,
+          "accepted": false,
+          "score": 97
+        },
+        {
+          "id": "a7yVPZE",
+          "name": "백련산힐스테이트1차",
+          "year": 2011,
+          "units": 1106,
+          "far": 191,
+          "distanceMeters": 468,
+          "accepted": false,
+          "score": 84
+        }
+      ]
+    },
+    {
+      "name": "동아아파트",
+      "area": "용인 수지구 풍덕천동",
+      "key": "동아아파트|용인 수지구 풍덕천동",
+      "originalStatus": "review_needed",
+      "secondStatus": "still_unresolved",
+      "richgo": null,
+      "match": null,
+      "candidates": []
+    },
+    {
+      "name": "풍림아파트",
+      "area": "용인 수지구 풍덕천동",
+      "key": "풍림아파트|용인 수지구 풍덕천동",
+      "originalStatus": "review_needed",
+      "secondStatus": "still_unresolved",
+      "richgo": null,
+      "match": null,
+      "candidates": []
+    },
+    {
+      "name": "임광한마음1차",
+      "area": "안양 동안구 호계동",
+      "key": "임광한마음1차|안양 동안구 호계동",
+      "originalStatus": "review_needed",
+      "secondStatus": "verified_second_pass",
+      "richgo": {
+        "id": "a3DxqCq",
+        "name": "한마음1단지",
+        "units": 644,
+        "year": 1999,
+        "far": 400,
+        "floors": "8~28층",
+        "coverage": 25,
+        "parking": 656,
+        "heating": "개별난방 · 도시가스",
+        "builder": "임광토건 주식회사",
+        "pyeongs": "24·32평",
+        "lat": 37.39058,
+        "lng": 126.94533,
+        "street": "경기도 안양시 동안구 경수대로797번길 5",
+        "facts": true,
+        "url": "https://m.richgo.ai/realty/danji/a3DxqCq"
+      },
+      "match": {
+        "distanceMeters": 45,
+        "yearDelta": 0,
+        "unitsRatio": 0,
+        "method": "previous_candidate",
+        "score": 256
+      },
+      "candidates": [
+        {
+          "id": "a3DxqCq",
+          "name": "한마음1단지",
+          "year": 1999,
+          "units": 644,
+          "far": 400,
+          "distanceMeters": 45,
+          "accepted": true,
+          "score": 256
+        }
+      ]
+    },
+    {
+      "name": "미륭",
+      "area": "안양 동안구 비산동",
+      "key": "미륭|안양 동안구 비산동",
+      "originalStatus": "review_needed",
+      "secondStatus": "still_unresolved",
+      "richgo": null,
+      "match": null,
+      "candidates": [
+        {
+          "id": "a5bGCkQ",
+          "name": "미륭",
+          "year": 1979,
+          "units": 576,
+          "far": 257,
+          "distanceMeters": 90,
+          "accepted": false,
+          "score": 244
+        }
+      ]
+    },
+    {
+      "name": "상림마을8단지롯데캐슬(821~830동)BL1-12",
+      "area": "서울 은평구 진관동",
+      "key": "상림마을8단지롯데캐슬(821~830동)BL1-12|서울 은평구 진관동",
+      "originalStatus": "unmatched",
+      "secondStatus": "still_unresolved",
+      "richgo": null,
+      "match": null,
+      "candidates": []
+    },
+    {
+      "name": "에스케이뷰파크2차",
+      "area": "화성 병점구 기산동",
+      "key": "에스케이뷰파크2차|화성 병점구 기산동",
+      "originalStatus": "review_needed",
+      "secondStatus": "still_unresolved",
+      "richgo": null,
+      "match": null,
+      "candidates": [
+        {
+          "id": "a8ZXJuX",
+          "name": "SK뷰파크2차",
+          "year": 2017,
+          "units": 1196,
+          "far": 196,
+          "distanceMeters": 19,
+          "accepted": false,
+          "score": 137
+        }
+      ]
+    },
+    {
+      "name": "홍릉동부",
+      "area": "서울 동대문구 청량리동",
+      "key": "홍릉동부|서울 동대문구 청량리동",
+      "originalStatus": "review_needed",
+      "secondStatus": "still_unresolved",
+      "richgo": null,
+      "match": null,
+      "candidates": [
+        {
+          "id": "a9FqYvX",
+          "name": "홍릉동부",
+          "year": 2001,
+          "units": 371,
+          "far": 299,
+          "distanceMeters": 19,
+          "accepted": false,
+          "score": 244
+        }
+      ]
+    },
+    {
+      "name": "구파발9단지래미안(916~928동)BL3-2",
+      "area": "서울 은평구 진관동",
+      "key": "구파발9단지래미안(916~928동)BL3-2|서울 은평구 진관동",
+      "originalStatus": "unmatched",
+      "secondStatus": "still_unresolved",
+      "richgo": null,
+      "match": null,
+      "candidates": []
+    },
+    {
+      "name": "낙성대현대아파트",
+      "area": "서울 관악구 봉천동",
+      "key": "낙성대현대아파트|서울 관악구 봉천동",
+      "originalStatus": "unmatched",
+      "secondStatus": "still_unresolved",
+      "richgo": null,
+      "match": null,
+      "candidates": [
+        {
+          "id": "a4McfUV",
+          "name": "낙성대현대1차",
+          "year": 1988,
+          "units": 251,
+          "far": 223,
+          "distanceMeters": 69,
+          "accepted": false,
+          "score": 172
+        },
+        {
+          "id": "a6Cpxov",
+          "name": "낙성대현대2차",
+          "year": 1998,
+          "units": 122,
+          "far": 317,
+          "distanceMeters": 672,
+          "accepted": false,
+          "score": 2
+        },
+        {
+          "id": "a9tofov",
+          "name": "낙성대현대홈타운",
+          "year": 2002,
+          "units": 297,
+          "far": 301,
+          "distanceMeters": 970,
+          "accepted": false,
+          "score": -8
+        }
+      ]
+    },
+    {
+      "name": "신봉동일하이빌4단지",
+      "area": "용인 수지구 신봉동",
+      "key": "신봉동일하이빌4단지|용인 수지구 신봉동",
+      "originalStatus": "review_needed",
+      "secondStatus": "verified_second_pass",
+      "richgo": {
+        "id": "a5UyTEE",
+        "name": "신봉마을4단지동일하이빌",
+        "units": 636,
+        "year": 2010,
+        "far": 199,
+        "floors": "20~28층",
+        "coverage": 42,
+        "parking": 1209,
+        "heating": "지역난방 · 열병합",
+        "builder": "(주)동일토건",
+        "pyeongs": "33·48·58·62평",
+        "lat": 37.328798,
+        "lng": 127.064637,
+        "street": "경기도 용인시 수지구 신봉3로12번길 9",
+        "facts": true,
+        "url": "https://m.richgo.ai/realty/danji/a5UyTEE"
+      },
+      "match": {
+        "distanceMeters": 8,
+        "yearDelta": 0,
+        "unitsRatio": 0,
+        "method": "previous_candidate",
+        "score": 256
+      },
+      "candidates": [
+        {
+          "id": "a5UyTEE",
+          "name": "신봉마을4단지동일하이빌",
+          "year": 2010,
+          "units": 636,
+          "far": 199,
+          "distanceMeters": 8,
+          "accepted": true,
+          "score": 256
+        },
+        {
+          "id": "a9eOqRL",
+          "name": "신봉마을3단지동일하이빌",
+          "year": 2010,
+          "units": 594,
+          "far": 199,
+          "distanceMeters": 310,
+          "accepted": false,
+          "score": 195
+        }
+      ]
+    },
+    {
+      "name": "이-편한세상",
+      "area": "안양 동안구 비산동",
+      "key": "이-편한세상|안양 동안구 비산동",
+      "originalStatus": "review_needed",
+      "secondStatus": "verified_second_pass",
+      "richgo": {
+        "id": "a0RNGWH",
+        "name": "비산e-편한세상",
+        "units": 486,
+        "year": 2008,
+        "far": 227,
+        "floors": "12~15층",
+        "coverage": 20,
+        "parking": 623,
+        "heating": "지역난방 · 열병합",
+        "builder": "대림산업(주)",
+        "pyeongs": "24·32·45평",
+        "lat": 37.399959,
+        "lng": 126.942484,
+        "street": "경기도 안양시 동안구 관악대로 171",
+        "facts": true,
+        "url": "https://m.richgo.ai/realty/danji/a0RNGWH"
+      },
+      "match": {
+        "distanceMeters": 10,
+        "yearDelta": 0,
+        "unitsRatio": 0,
+        "method": "previous_candidate",
+        "score": 256
+      },
+      "candidates": [
+        {
+          "id": "a0RNGWH",
+          "name": "비산e-편한세상",
+          "year": 2008,
+          "units": 486,
+          "far": 227,
+          "distanceMeters": 10,
+          "accepted": true,
+          "score": 256
+        }
+      ]
+    },
+    {
+      "name": "그대家",
+      "area": "서울 관악구 신림동",
+      "key": "그대家|서울 관악구 신림동",
+      "originalStatus": "unmatched",
+      "secondStatus": "still_unresolved",
+      "richgo": null,
+      "match": null,
+      "candidates": []
+    },
+    {
+      "name": "삼익",
+      "area": "서울 동대문구 이문동",
+      "key": "삼익|서울 동대문구 이문동",
+      "originalStatus": "review_needed",
+      "secondStatus": "still_unresolved",
+      "richgo": null,
+      "match": null,
+      "candidates": [
+        {
+          "id": "a8CseBF",
+          "name": "이문삼익",
+          "year": 1997,
+          "units": 353,
+          "far": 397,
+          "distanceMeters": 31,
+          "accepted": false,
+          "score": 134
+        }
+      ]
+    },
+    {
+      "name": "우물골2단지두산위브(209~222동)BL2-8",
+      "area": "서울 은평구 진관동",
+      "key": "우물골2단지두산위브(209~222동)BL2-8|서울 은평구 진관동",
+      "originalStatus": "unmatched",
+      "secondStatus": "still_unresolved",
+      "richgo": null,
+      "match": null,
+      "candidates": []
+    },
+    {
+      "name": "수지금호베스트빌TheEdu",
+      "area": "용인 수지구 상현동",
+      "key": "수지금호베스트빌TheEdu|용인 수지구 상현동",
+      "originalStatus": "review_needed",
+      "secondStatus": "verified_second_pass",
+      "richgo": {
+        "id": "a7vgNQs",
+        "name": "수지금호베스트빌디에듀",
+        "units": 573,
+        "year": 2001,
+        "far": 249,
+        "floors": "17~17층",
+        "coverage": 20,
+        "parking": 1074,
+        "heating": "지역난방 · 열병합",
+        "builder": "금호산업(주)",
+        "pyeongs": "47·52평",
+        "lat": 37.30478,
+        "lng": 127.079384,
+        "street": "경기도 용인시 수지구 상현로 59",
+        "facts": true,
+        "url": "https://m.richgo.ai/realty/danji/a7vgNQs"
+      },
+      "match": {
+        "distanceMeters": 20,
+        "yearDelta": 0,
+        "unitsRatio": 0,
+        "method": "previous_candidate",
+        "score": 256
+      },
+      "candidates": [
+        {
+          "id": "a7vgNQs",
+          "name": "수지금호베스트빌디에듀",
+          "year": 2001,
+          "units": 573,
+          "far": 249,
+          "distanceMeters": 20,
+          "accepted": true,
+          "score": 256
+        }
+      ]
+    },
+    {
+      "name": "마고정3단지센트레빌(323~335동)BL2-2",
+      "area": "서울 은평구 진관동",
+      "key": "마고정3단지센트레빌(323~335동)BL2-2|서울 은평구 진관동",
+      "originalStatus": "unmatched",
+      "secondStatus": "still_unresolved",
+      "richgo": null,
+      "match": null,
+      "candidates": []
+    },
+    {
+      "name": "휘경베스트빌현대",
+      "area": "서울 동대문구 휘경동",
+      "key": "휘경베스트빌현대|서울 동대문구 휘경동",
+      "originalStatus": "review_needed",
+      "secondStatus": "still_unresolved",
+      "richgo": null,
+      "match": null,
+      "candidates": [
+        {
+          "id": "a1ggbbU",
+          "name": "휘경베스트빌현대",
+          "year": 2000,
+          "units": 372,
+          "far": 362,
+          "distanceMeters": 15,
+          "accepted": false,
+          "score": 244
+        }
+      ]
+    },
+    {
+      "name": "은평뉴타운 제각말 푸르지오(5-4단지)",
+      "area": "서울 은평구 진관동",
+      "key": "은평뉴타운 제각말 푸르지오(5-4단지)|서울 은평구 진관동",
+      "originalStatus": "review_needed",
+      "secondStatus": "still_unresolved",
+      "richgo": null,
+      "match": null,
+      "candidates": [
+        {
+          "id": "a0SoEWY",
+          "name": "은평뉴타운기자촌11단지",
+          "year": 2015,
+          "units": 426,
+          "far": 145,
+          "distanceMeters": 222,
+          "accepted": false,
+          "score": 193
+        },
+        {
+          "id": "a0jqPZb",
+          "name": "은평뉴타운제각말5-4단지",
+          "year": 2010,
+          "units": 412,
+          "far": 146,
+          "distanceMeters": 28,
+          "accepted": false,
+          "score": 133
+        }
+      ]
+    },
+    {
+      "name": "무궁화건영캐스빌",
+      "area": "안양 동안구 호계동",
+      "key": "무궁화건영캐스빌|안양 동안구 호계동",
+      "originalStatus": "unmatched",
+      "secondStatus": "still_unresolved",
+      "richgo": null,
+      "match": null,
+      "candidates": []
+    },
+    {
+      "name": "신봉마을엘지빌리지5차(B)",
+      "area": "용인 수지구 신봉동",
+      "key": "신봉마을엘지빌리지5차(B)|용인 수지구 신봉동",
+      "originalStatus": "unmatched",
+      "secondStatus": "still_unresolved",
+      "richgo": null,
+      "match": null,
+      "candidates": []
+    },
+    {
+      "name": "대림아파트(276)",
+      "area": "서울 은평구 녹번동",
+      "key": "대림아파트(276)|서울 은평구 녹번동",
+      "originalStatus": "review_needed",
+      "secondStatus": "verified_second_pass",
+      "richgo": {
+        "id": "a1YfmXD",
+        "name": "대림",
+        "units": 370,
+        "year": 1993,
+        "far": 240,
+        "floors": "9~19층",
+        "coverage": 22,
+        "parking": 281,
+        "heating": "개별난방 · 도시가스",
+        "builder": "(주)대림산업",
+        "pyeongs": "32·51평",
+        "lat": 37.599773,
+        "lng": 126.937239,
+        "street": "서울시 은평구 통일로 586",
+        "facts": true,
+        "url": "https://m.richgo.ai/realty/danji/a1YfmXD"
+      },
+      "match": {
+        "distanceMeters": 40,
+        "yearDelta": 0,
+        "unitsRatio": 0,
+        "method": "previous_candidate",
+        "score": 256
+      },
+      "candidates": [
+        {
+          "id": "a1YfmXD",
+          "name": "대림",
+          "year": 1993,
+          "units": 370,
+          "far": 240,
+          "distanceMeters": 40,
+          "accepted": true,
+          "score": 256
+        }
+      ]
+    },
+    {
+      "name": "벽산블루밍2단지",
+      "area": "용인 수지구 죽전동",
+      "key": "벽산블루밍2단지|용인 수지구 죽전동",
+      "originalStatus": "unmatched",
+      "secondStatus": "still_unresolved",
+      "richgo": null,
+      "match": null,
+      "candidates": []
+    },
+    {
+      "name": "무궁화코오롱",
+      "area": "안양 동안구 호계동",
+      "key": "무궁화코오롱|안양 동안구 호계동",
+      "originalStatus": "review_needed",
+      "secondStatus": "still_unresolved",
+      "richgo": null,
+      "match": null,
+      "candidates": [
+        {
+          "id": "a5tYXmA",
+          "name": "무궁화코오롱",
+          "year": 1992,
+          "units": 458,
+          "far": 208,
+          "distanceMeters": 65,
+          "accepted": false,
+          "score": 191
+        }
+      ]
+    },
+    {
+      "name": "신봉마을엘지빌리지5차(A)",
+      "area": "용인 수지구 신봉동",
+      "key": "신봉마을엘지빌리지5차(A)|용인 수지구 신봉동",
+      "originalStatus": "unmatched",
+      "secondStatus": "still_unresolved",
+      "richgo": null,
+      "match": null,
+      "candidates": []
+    },
+    {
+      "name": "상림마을6단지푸르지오(615~621동)BL1-6",
+      "area": "서울 은평구 진관동",
+      "key": "상림마을6단지푸르지오(615~621동)BL1-6|서울 은평구 진관동",
+      "originalStatus": "unmatched",
+      "secondStatus": "still_unresolved",
+      "richgo": null,
+      "match": null,
+      "candidates": []
+    },
+    {
+      "name": "우물골2단지두산위브(204~208동)BL2-5",
+      "area": "서울 은평구 진관동",
+      "key": "우물골2단지두산위브(204~208동)BL2-5|서울 은평구 진관동",
+      "originalStatus": "unmatched",
+      "secondStatus": "still_unresolved",
+      "richgo": null,
+      "match": null,
+      "candidates": []
+    },
+    {
+      "name": "이문휘경지웰에스테이트",
+      "area": "서울 동대문구 휘경동",
+      "key": "이문휘경지웰에스테이트|서울 동대문구 휘경동",
+      "originalStatus": "review_needed",
+      "secondStatus": "still_unresolved",
+      "richgo": null,
+      "match": null,
+      "candidates": [
+        {
+          "id": "a3cYMoD",
+          "name": "이문휘경지웰에스테이트(도시형)",
+          "year": 2021,
+          "units": 280,
+          "far": 399,
+          "distanceMeters": 42,
+          "accepted": false,
+          "score": 244
+        }
+      ]
+    },
+    {
+      "name": "상림마을6단지푸르지오(606~614동)BL1-7",
+      "area": "서울 은평구 진관동",
+      "key": "상림마을6단지푸르지오(606~614동)BL1-7|서울 은평구 진관동",
+      "originalStatus": "unmatched",
+      "secondStatus": "still_unresolved",
+      "richgo": null,
+      "match": null,
+      "candidates": []
+    },
+    {
+      "name": "현대1",
+      "area": "서울 은평구 신사동",
+      "key": "현대1|서울 은평구 신사동",
+      "originalStatus": "unmatched",
+      "secondStatus": "still_unresolved",
+      "richgo": null,
+      "match": null,
+      "candidates": []
+    },
+    {
+      "name": "서원마을현대홈타운",
+      "area": "용인 수지구 상현동",
+      "key": "서원마을현대홈타운|용인 수지구 상현동",
+      "originalStatus": "review_needed",
+      "secondStatus": "still_unresolved",
+      "richgo": null,
+      "match": null,
+      "candidates": [
+        {
+          "id": "a7sfYOC",
+          "name": "상현마을현대성우1차",
+          "year": 2001,
+          "units": 470,
+          "far": 193,
+          "distanceMeters": 596,
+          "accepted": false,
+          "score": 172
+        },
+        {
+          "id": "a9GrxnE",
+          "name": "성복역현대홈타운",
+          "year": 2001,
+          "units": 462,
+          "far": 247,
+          "distanceMeters": 19,
+          "accepted": false,
+          "score": 137
+        }
+      ]
+    },
+    {
+      "name": "동부센트레빌5단지",
+      "area": "용인 수지구 신봉동",
+      "key": "동부센트레빌5단지|용인 수지구 신봉동",
+      "originalStatus": "review_needed",
+      "secondStatus": "verified_second_pass",
+      "richgo": {
+        "id": "a2ZGIFd",
+        "name": "신봉마을5단지동부센트레빌",
+        "units": 490,
+        "year": 2010,
+        "far": 199,
+        "floors": "10~17층",
+        "coverage": 18,
+        "parking": 909,
+        "heating": "지역난방 · 열병합",
+        "builder": "(주)동부건설",
+        "pyeongs": "33·45·53평",
+        "lat": 37.331017,
+        "lng": 127.066733,
+        "street": "경기도 용인시 수지구 신봉1로 214",
+        "facts": true,
+        "url": "https://m.richgo.ai/realty/danji/a2ZGIFd"
+      },
+      "match": {
+        "distanceMeters": 20,
+        "yearDelta": 0,
+        "unitsRatio": 0,
+        "method": "previous_candidate",
+        "score": 256
+      },
+      "candidates": [
+        {
+          "id": "a2ZGIFd",
+          "name": "신봉마을5단지동부센트레빌",
+          "year": 2010,
+          "units": 490,
+          "far": 199,
+          "distanceMeters": 20,
+          "accepted": true,
+          "score": 256
+        },
+        {
+          "id": "a8DpdbC",
+          "name": "신봉마을6단지동부센트레빌",
+          "year": 2010,
+          "units": 450,
+          "far": 199,
+          "distanceMeters": 274,
+          "accepted": false,
+          "score": 200
+        }
+      ]
+    },
+    {
+      "name": "도담마을우미린",
+      "area": "용인 수지구 죽전동",
+      "key": "도담마을우미린|용인 수지구 죽전동",
+      "originalStatus": "review_needed",
+      "secondStatus": "verified_second_pass",
+      "richgo": {
+        "id": "a1TkXkC",
+        "name": "도담마을우미이노스빌",
+        "units": 418,
+        "year": 2004,
+        "far": 169,
+        "floors": "19~25층",
+        "coverage": 12,
+        "parking": 429,
+        "heating": "지역난방 · 열병합",
+        "builder": "(주)우미토건",
+        "pyeongs": "26평",
+        "lat": 37.326134,
+        "lng": 127.119495,
+        "street": "경기도 용인시 수지구 푸른솔로 88",
+        "facts": true,
+        "url": "https://m.richgo.ai/realty/danji/a1TkXkC"
+      },
+      "match": {
+        "distanceMeters": 21,
+        "yearDelta": 0,
+        "unitsRatio": 0,
+        "method": "previous_candidate",
+        "score": 256
+      },
+      "candidates": [
+        {
+          "id": "a1TkXkC",
+          "name": "도담마을우미이노스빌",
+          "year": 2004,
+          "units": 418,
+          "far": 169,
+          "distanceMeters": 21,
+          "accepted": true,
+          "score": 256
+        }
+      ]
+    },
+    {
+      "name": "신림2차푸르지오",
+      "area": "서울 관악구 신림동",
+      "key": "신림2차푸르지오|서울 관악구 신림동",
+      "originalStatus": "review_needed",
+      "secondStatus": "still_unresolved",
+      "richgo": null,
+      "match": null,
+      "candidates": [
+        {
+          "id": "a2gnxqK",
+          "name": "신림푸르지오2차",
+          "year": 2007,
+          "units": 349,
+          "far": 194,
+          "distanceMeters": 46,
+          "accepted": false,
+          "score": 134
+        }
+      ]
+    },
+    {
+      "name": "상림마을8단지롯데캐슬(801~809동)BL1-2",
+      "area": "서울 은평구 진관동",
+      "key": "상림마을8단지롯데캐슬(801~809동)BL1-2|서울 은평구 진관동",
+      "originalStatus": "unmatched",
+      "secondStatus": "still_unresolved",
+      "richgo": null,
+      "match": null,
+      "candidates": []
+    },
+    {
+      "name": "상림마을6단지푸르지오(622~629동)BL1-5",
+      "area": "서울 은평구 진관동",
+      "key": "상림마을6단지푸르지오(622~629동)BL1-5|서울 은평구 진관동",
+      "originalStatus": "unmatched",
+      "secondStatus": "still_unresolved",
+      "richgo": null,
+      "match": null,
+      "candidates": []
+    },
+    {
+      "name": "은평뉴타운 제각말 푸르지오(5-1단지)",
+      "area": "서울 은평구 진관동",
+      "key": "은평뉴타운 제각말 푸르지오(5-1단지)|서울 은평구 진관동",
+      "originalStatus": "review_needed",
+      "secondStatus": "still_unresolved",
+      "richgo": null,
+      "match": null,
+      "candidates": [
+        {
+          "id": "a8tTxhJ",
+          "name": "은평뉴타운제각말5-1단지",
+          "year": 2010,
+          "units": 330,
+          "far": 131,
+          "distanceMeters": 19,
+          "accepted": false,
+          "score": 256
+        },
+        {
+          "id": "a5uSPWm",
+          "name": "은평뉴타운상림5단지푸르지오",
+          "year": 2008,
+          "units": 318,
+          "far": 149,
+          "distanceMeters": 1442,
+          "accepted": false,
+          "score": 109
+        }
+      ]
+    },
+    {
+      "name": "구파발10단지어울림(1011~1019동)BL3-1",
+      "area": "서울 은평구 진관동",
+      "key": "구파발10단지어울림(1011~1019동)BL3-1|서울 은평구 진관동",
+      "originalStatus": "unmatched",
+      "secondStatus": "still_unresolved",
+      "richgo": null,
+      "match": null,
+      "candidates": []
+    },
+    {
+      "name": "동부센트레빌6단지",
+      "area": "용인 수지구 신봉동",
+      "key": "동부센트레빌6단지|용인 수지구 신봉동",
+      "originalStatus": "review_needed",
+      "secondStatus": "verified_second_pass",
+      "richgo": {
+        "id": "a8DpdbC",
+        "name": "신봉마을6단지동부센트레빌",
+        "units": 450,
+        "year": 2010,
+        "far": 199,
+        "floors": "12~17층",
+        "coverage": 18,
+        "parking": 840,
+        "heating": "지역난방 · 열병합",
+        "builder": "(주)동부건설",
+        "pyeongs": "33·45·47·53평",
+        "lat": 37.33276,
+        "lng": 127.064875,
+        "street": "경기도 용인시 수지구 신봉1로 216",
+        "facts": true,
+        "url": "https://m.richgo.ai/realty/danji/a8DpdbC"
+      },
+      "match": {
+        "distanceMeters": 27,
+        "yearDelta": 0,
+        "unitsRatio": 0,
+        "method": "previous_candidate",
+        "score": 256
+      },
+      "candidates": [
+        {
+          "id": "a8DpdbC",
+          "name": "신봉마을6단지동부센트레빌",
+          "year": 2010,
+          "units": 450,
+          "far": 199,
+          "distanceMeters": 27,
+          "accepted": true,
+          "score": 256
+        },
+        {
+          "id": "a2ZGIFd",
+          "name": "신봉마을5단지동부센트레빌",
+          "year": 2010,
+          "units": 490,
+          "far": 199,
+          "distanceMeters": 281,
+          "accepted": false,
+          "score": 199
+        }
+      ]
+    },
+    {
+      "name": "장안삼성쉐르빌",
+      "area": "서울 동대문구 장안동",
+      "key": "장안삼성쉐르빌|서울 동대문구 장안동",
+      "originalStatus": "review_needed",
+      "secondStatus": "still_unresolved",
+      "richgo": null,
+      "match": null,
+      "candidates": [
+        {
+          "id": "a6ztGuz",
+          "name": "장안삼성쉐르빌",
+          "year": 2002,
+          "units": 254,
+          "far": 809,
+          "distanceMeters": 70,
+          "accepted": false,
+          "score": 191
+        }
+      ]
+    },
+    {
+      "name": "상림마을7단지아이파크(730~742동)BL1-14",
+      "area": "서울 은평구 진관동",
+      "key": "상림마을7단지아이파크(730~742동)BL1-14|서울 은평구 진관동",
+      "originalStatus": "unmatched",
+      "secondStatus": "still_unresolved",
+      "richgo": null,
+      "match": null,
+      "candidates": []
+    },
+    {
+      "name": "꽃메마을아이파크",
+      "area": "용인 수지구 죽전동",
+      "key": "꽃메마을아이파크|용인 수지구 죽전동",
+      "originalStatus": "review_needed",
+      "secondStatus": "still_unresolved",
+      "richgo": null,
+      "match": null,
+      "candidates": [
+        {
+          "id": "a3WbRld",
+          "name": "도담마을아이파크",
+          "year": 1998,
+          "units": 360,
+          "far": null,
+          "distanceMeters": 612,
+          "accepted": false,
+          "score": 128
+        }
+      ]
+    },
+    {
+      "name": "상현마을금호베스트빌2단지",
+      "area": "용인 수지구 상현동",
+      "key": "상현마을금호베스트빌2단지|용인 수지구 상현동",
+      "originalStatus": "review_needed",
+      "secondStatus": "still_unresolved",
+      "richgo": null,
+      "match": null,
+      "candidates": [
+        {
+          "id": "a0yCldt",
+          "name": "상현마을금호베스트빌3단지",
+          "year": 2002,
+          "units": 159,
+          "far": 246,
+          "distanceMeters": 164,
+          "accepted": false,
+          "score": 156
+        }
+      ]
+    },
+    {
+      "name": "만현마을2단지아이파크",
+      "area": "용인 수지구 상현동",
+      "key": "만현마을2단지아이파크|용인 수지구 상현동",
+      "originalStatus": "review_needed",
+      "secondStatus": "still_unresolved",
+      "richgo": null,
+      "match": null,
+      "candidates": [
+        {
+          "id": "a7fyqjq",
+          "name": "만현마을5단지아이파크",
+          "year": 2002,
+          "units": 528,
+          "far": 226,
+          "distanceMeters": 214,
+          "accepted": false,
+          "score": 180
+        },
+        {
+          "id": "a0QlxBF",
+          "name": "서원마을3단지아이파크",
+          "year": 2002,
+          "units": 438,
+          "far": 199,
+          "distanceMeters": 711,
+          "accepted": false,
+          "score": 145
+        }
+      ]
+    },
+    {
+      "name": "현대2",
+      "area": "서울 은평구 신사동",
+      "key": "현대2|서울 은평구 신사동",
+      "originalStatus": "unmatched",
+      "secondStatus": "still_unresolved",
+      "richgo": null,
+      "match": null,
+      "candidates": []
+    },
+    {
+      "name": "도담마을힐스테이트4차1단지",
+      "area": "용인 수지구 죽전동",
+      "key": "도담마을힐스테이트4차1단지|용인 수지구 죽전동",
+      "originalStatus": "unmatched",
+      "secondStatus": "still_unresolved",
+      "richgo": null,
+      "match": null,
+      "candidates": []
+    },
+    {
+      "name": "한신",
+      "area": "용인 수지구 죽전동",
+      "key": "한신|용인 수지구 죽전동",
+      "originalStatus": "review_needed",
+      "secondStatus": "still_unresolved",
+      "richgo": null,
+      "match": null,
+      "candidates": [
+        {
+          "id": "a3FdqPT",
+          "name": "대주한신",
+          "year": 1998,
+          "units": 311,
+          "far": 310,
+          "distanceMeters": 34,
+          "accepted": false,
+          "score": 134
+        }
+      ]
+    },
+    {
+      "name": "역촌센트레빌",
+      "area": "서울 은평구 역촌동",
+      "key": "역촌센트레빌|서울 은평구 역촌동",
+      "originalStatus": "unmatched",
+      "secondStatus": "still_unresolved",
+      "richgo": null,
+      "match": null,
+      "candidates": []
+    },
+    {
+      "name": "성복아이파크",
+      "area": "용인 수지구 성복동",
+      "key": "성복아이파크|용인 수지구 성복동",
+      "originalStatus": "unmatched",
+      "secondStatus": "still_unresolved",
+      "richgo": null,
+      "match": null,
+      "candidates": []
+    },
+    {
+      "name": "광교쌍용포레듀엔",
+      "area": "용인 수지구 상현동",
+      "key": "광교쌍용포레듀엔|용인 수지구 상현동",
+      "originalStatus": "unmatched",
+      "secondStatus": "still_unresolved",
+      "richgo": null,
+      "match": null,
+      "candidates": []
+    },
+    {
+      "name": "광교쌍용포레듀엔(2-B)",
+      "area": "용인 수지구 상현동",
+      "key": "광교쌍용포레듀엔(2-B)|용인 수지구 상현동",
+      "originalStatus": "unmatched",
+      "secondStatus": "still_unresolved",
+      "richgo": null,
+      "match": null,
+      "candidates": []
+    },
+    {
+      "name": "광교현대프레미오",
+      "area": "용인 수지구 상현동",
+      "key": "광교현대프레미오|용인 수지구 상현동",
+      "originalStatus": "unmatched",
+      "secondStatus": "still_unresolved",
+      "richgo": null,
+      "match": null,
+      "candidates": []
+    },
+    {
+      "name": "갈현1단지e-편한세상",
+      "area": "서울 은평구 구산동",
+      "key": "갈현1단지e-편한세상|서울 은평구 구산동",
+      "originalStatus": "unmatched",
+      "secondStatus": "still_unresolved",
+      "richgo": null,
+      "match": null,
+      "candidates": []
+    },
+    {
+      "name": "갈현동현대",
+      "area": "서울 은평구 갈현동",
+      "key": "갈현동현대|서울 은평구 갈현동",
+      "originalStatus": "review_needed",
+      "secondStatus": "still_unresolved",
+      "richgo": null,
+      "match": null,
+      "candidates": [
+        {
+          "id": "a9ARVOT",
+          "name": "갈현현대",
+          "year": 1997,
+          "units": 278,
+          "far": 261,
+          "distanceMeters": 40,
+          "accepted": false,
+          "score": 244
+        }
+      ]
+    },
+    {
+      "name": "경남아너스빌",
+      "area": "서울 은평구 구산동",
+      "key": "경남아너스빌|서울 은평구 구산동",
+      "originalStatus": "unmatched",
+      "secondStatus": "still_unresolved",
+      "richgo": null,
+      "match": null,
+      "candidates": []
+    },
+    {
+      "name": "더샵서초",
+      "area": "서울 서초구 서초동",
+      "key": "더샵서초|서울 서초구 서초동",
+      "originalStatus": "unmatched",
+      "secondStatus": "still_unresolved",
+      "richgo": null,
+      "match": null,
+      "candidates": []
+    },
+    {
+      "name": "샛별한양4-3",
+      "area": "안양 동안구 비산동",
+      "key": "샛별한양4-3|안양 동안구 비산동",
+      "originalStatus": "unmatched",
+      "secondStatus": "still_unresolved",
+      "richgo": null,
+      "match": null,
+      "candidates": [
+        {
+          "id": "a3MLtkM",
+          "name": "샛별한양2",
+          "year": 1993,
+          "units": 1482,
+          "far": 208,
+          "distanceMeters": 218,
+          "accepted": false,
+          "score": 83
+        }
+      ]
+    },
+    {
+      "name": "은행주공",
+      "area": "성남 중원구 은행동",
+      "key": "은행주공|성남 중원구 은행동",
+      "originalStatus": "review_needed",
+      "secondStatus": "still_unresolved",
+      "richgo": null,
+      "match": null,
+      "candidates": [
+        {
+          "id": "a5SCpxE",
+          "name": "은행주공1",
+          "year": 1987,
+          "units": 1900,
+          "far": 116,
+          "distanceMeters": 128,
+          "accepted": false,
+          "score": 173
+        },
+        {
+          "id": "a7OmlkM",
+          "name": "은행주공2",
+          "year": 1987,
+          "units": 110,
+          "far": null,
+          "distanceMeters": 308,
+          "accepted": false,
+          "score": 98
+        }
+      ]
+    },
+    {
+      "name": "은행주공2",
+      "area": "성남 중원구 은행동",
+      "key": "은행주공2|성남 중원구 은행동",
+      "originalStatus": "review_needed",
+      "secondStatus": "still_unresolved",
+      "richgo": null,
+      "match": null,
+      "candidates": [
+        {
+          "id": "a5SCpxE",
+          "name": "은행주공1",
+          "year": 1987,
+          "units": 1900,
+          "far": 116,
+          "distanceMeters": 128,
+          "accepted": false,
+          "score": 144
+        },
+        {
+          "id": "a7OmlkM",
+          "name": "은행주공2",
+          "year": 1987,
+          "units": 110,
+          "far": null,
+          "distanceMeters": 308,
+          "accepted": false,
+          "score": 143
+        }
+      ]
+    },
+    {
+      "name": "죽전현대1차",
+      "area": "용인 수지구 죽전동",
+      "key": "죽전현대1차|용인 수지구 죽전동",
+      "originalStatus": "unmatched",
+      "secondStatus": "still_unresolved",
+      "richgo": null,
+      "match": null,
+      "candidates": []
+    },
+    {
+      "name": "효성백년가약",
+      "area": "안양 동안구 호계동",
+      "key": "효성백년가약|안양 동안구 호계동",
+      "originalStatus": "unmatched",
+      "secondStatus": "still_unresolved",
+      "richgo": null,
+      "match": null,
+      "candidates": []
+    }
+  ]
+}

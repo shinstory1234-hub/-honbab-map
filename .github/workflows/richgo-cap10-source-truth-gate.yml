@@ -1,0 +1,33 @@
+name: Final Richgo-first cap10 1822 source consistency and performance
+on:
+  push:
+    branches:
+      - audit/richgo-6to10-top300-20261118
+    paths:
+      - .github/workflows/richgo-cap10-source-truth-gate.yml
+      - scripts/test-richgo-cap10-source-truth.cjs
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  test-and-build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 40
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: audit/richgo-6to10-top300-20261118
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Verify Richgo-matched sources and explicit missing-data provenance
+        run: |
+          node scripts/test-richgo-cap10-source-truth.cjs
+          node scripts/test-richgo-cap10-final.cjs
+          node scripts/test-richgo-6to10-crossband.cjs
+          node scripts/test-richgo-band10-audit.cjs
+      - name: Enforce original network budgets and production build
+        run: |
+          npm ci --ignore-scripts
+          npm run build

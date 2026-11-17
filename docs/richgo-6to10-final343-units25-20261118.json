@@ -1,0 +1,257 @@
+{
+  "source": "Richgo public detail",
+  "threshold": "name exact, year +-1, distance <=130m, households <=50 and <=5%",
+  "count": 25,
+  "records": [
+    {
+      "name": "방화4단지",
+      "area": "서울 강서구 방화동",
+      "source_url": "https://m.richgo.ai/realty/danji/a6PobCd",
+      "distance_m": 49,
+      "source_name": "방화4단지",
+      "original_units": "689",
+      "richgo_units": 680,
+      "far": 247
+    },
+    {
+      "name": "광교상떼빌파크뷰",
+      "area": "용인 수지구 상현동",
+      "source_url": "https://m.richgo.ai/realty/danji/a2dtmUS",
+      "distance_m": 40,
+      "source_name": "광교상떼빌파크뷰",
+      "original_units": "995",
+      "richgo_units": 968,
+      "far": 199
+    },
+    {
+      "name": "덕소아이파크",
+      "area": "남양주시 와부읍",
+      "source_url": "https://m.richgo.ai/realty/danji/a3OtGlN",
+      "distance_m": 63,
+      "source_name": "덕소아이파크",
+      "original_units": "1254",
+      "richgo_units": 1239,
+      "far": 239
+    },
+    {
+      "name": "용마금호타운",
+      "area": "서울 중랑구 면목동",
+      "source_url": "https://m.richgo.ai/realty/danji/a6StnfE",
+      "distance_m": 9,
+      "source_name": "용마금호타운",
+      "original_units": "462",
+      "richgo_units": 440,
+      "far": 257
+    },
+    {
+      "name": "건영덕소리버파크",
+      "area": "남양주시 와부읍",
+      "source_url": "https://m.richgo.ai/realty/danji/a4sgvZw",
+      "distance_m": 38,
+      "source_name": "건영덕소리버파크",
+      "original_units": "674",
+      "richgo_units": 652,
+      "far": 304
+    },
+    {
+      "name": "푸르지오2차",
+      "area": "안산 상록구 이동",
+      "source_url": "https://m.richgo.ai/realty/danji/a3lCDRx",
+      "distance_m": 34,
+      "source_name": "푸르지오2차",
+      "original_units": "449",
+      "richgo_units": 443,
+      "far": 190
+    },
+    {
+      "name": "쌍용",
+      "area": "서울 동대문구 이문동",
+      "source_url": "https://m.richgo.ai/realty/danji/a3LcViZ",
+      "distance_m": 113,
+      "source_name": "쌍용",
+      "original_units": "1368",
+      "richgo_units": 1318,
+      "far": 343
+    },
+    {
+      "name": "미륭",
+      "area": "안양 동안구 비산동",
+      "source_url": "https://m.richgo.ai/realty/danji/a5bGCkQ",
+      "distance_m": 90,
+      "source_name": "미륭",
+      "original_units": "564",
+      "richgo_units": 576,
+      "far": 257
+    },
+    {
+      "name": "홍릉동부",
+      "area": "서울 동대문구 청량리동",
+      "source_url": "https://m.richgo.ai/realty/danji/a9FqYvX",
+      "distance_m": 19,
+      "source_name": "홍릉동부",
+      "original_units": "390",
+      "richgo_units": 371,
+      "far": 299
+    },
+    {
+      "name": "연원마을삼성명가타운",
+      "area": "용인 기흥구 보정동",
+      "source_url": "https://m.richgo.ai/realty/danji/a5FZxnW",
+      "distance_m": 52,
+      "source_name": "연원마을삼성명가타운",
+      "original_units": "430",
+      "richgo_units": 424,
+      "far": 174
+    },
+    {
+      "name": "상우신명보람",
+      "area": "인천 부평구 부개동",
+      "source_url": "https://m.richgo.ai/realty/danji/a6eVNbQ",
+      "distance_m": 54,
+      "source_name": "상우신명보람",
+      "original_units": "604",
+      "richgo_units": 576,
+      "far": 249
+    },
+    {
+      "name": "용화마을태영데시앙1",
+      "area": "용인 기흥구 마북동",
+      "source_url": "https://m.richgo.ai/realty/danji/a6WCizG",
+      "distance_m": 65,
+      "source_name": "용화마을태영데시앙1",
+      "original_units": "326",
+      "richgo_units": 321,
+      "far": 199
+    },
+    {
+      "name": "한라비발디",
+      "area": "안양 만안구 박달동",
+      "source_url": "https://m.richgo.ai/realty/danji/a1OyOwY",
+      "distance_m": 59,
+      "source_name": "한라비발디",
+      "original_units": "1394",
+      "richgo_units": 1385,
+      "far": 374
+    },
+    {
+      "name": "럭키",
+      "area": "안양 만안구 석수동",
+      "source_url": "https://m.richgo.ai/realty/danji/a4imfXK",
+      "distance_m": 49,
+      "source_name": "럭키",
+      "original_units": "763",
+      "richgo_units": 735,
+      "far": 235
+    },
+    {
+      "name": "다산주공(3단지)",
+      "area": "군포시 금정동",
+      "source_url": "https://m.richgo.ai/realty/danji/a7KjBcn",
+      "distance_m": 58,
+      "source_name": "다산주공3단지",
+      "original_units": "840",
+      "richgo_units": 829,
+      "far": 195
+    },
+    {
+      "name": "금호이수마운트밸리",
+      "area": "인천 부평구 산곡동",
+      "source_url": "https://m.richgo.ai/realty/danji/a8ctFqO",
+      "distance_m": 55,
+      "source_name": "금호이수마운트밸리",
+      "original_units": "1384",
+      "richgo_units": 1365,
+      "far": 340
+    },
+    {
+      "name": "롯데캐슬루나",
+      "area": "서울 노원구 월계동",
+      "source_url": "https://m.richgo.ai/realty/danji/a9qRNLY",
+      "distance_m": 46,
+      "source_name": "롯데캐슬루나",
+      "original_units": "886",
+      "richgo_units": 850,
+      "far": 199
+    },
+    {
+      "name": "상떼빌구성역플랫폼시티",
+      "area": "용인 기흥구 보정동",
+      "source_url": "https://m.richgo.ai/realty/danji/a8oEkgL",
+      "distance_m": 74,
+      "source_name": "상떼빌구성역플랫폼시티",
+      "original_units": "714",
+      "richgo_units": 691,
+      "far": 204
+    },
+    {
+      "name": "꽃뫼버들마을진흥",
+      "area": "수원 팔달구 화서동",
+      "source_url": "https://m.richgo.ai/realty/danji/a5tWuAU",
+      "distance_m": 45,
+      "source_name": "꽃뫼버들마을진흥",
+      "original_units": "834",
+      "richgo_units": 824,
+      "far": 217
+    },
+    {
+      "name": "덕소쌍용",
+      "area": "남양주시 와부읍",
+      "source_url": "https://m.richgo.ai/realty/danji/a3VeCjo",
+      "distance_m": 18,
+      "source_name": "덕소쌍용",
+      "original_units": "539",
+      "richgo_units": 528,
+      "far": 300
+    },
+    {
+      "name": "신일유토빌",
+      "area": "의정부시 호원동",
+      "source_url": "https://m.richgo.ai/realty/danji/a7gANpL",
+      "distance_m": 120,
+      "source_name": "신일유토빌",
+      "original_units": "1456",
+      "richgo_units": 1432,
+      "far": 297
+    },
+    {
+      "name": "퇴계원쌍용예가",
+      "area": "남양주시 퇴계원읍",
+      "source_url": "https://m.richgo.ai/realty/danji/a3EqJge",
+      "distance_m": 44,
+      "source_name": "퇴계원쌍용예가",
+      "original_units": "560",
+      "richgo_units": 552,
+      "far": 269
+    },
+    {
+      "name": "동아",
+      "area": "서울 동대문구 답십리동",
+      "source_url": "https://m.richgo.ai/realty/danji/a8yaytW",
+      "distance_m": 16,
+      "source_name": "동아",
+      "original_units": "767",
+      "richgo_units": 741,
+      "far": 328
+    },
+    {
+      "name": "동성1",
+      "area": "서울 중랑구 신내동",
+      "source_url": "https://m.richgo.ai/realty/danji/a1LGvqs",
+      "distance_m": 32,
+      "source_name": "동성1",
+      "original_units": "1081",
+      "richgo_units": 1047,
+      "far": 229
+    },
+    {
+      "name": "푸르지오1차",
+      "area": "안산 단원구 고잔동",
+      "source_url": "https://m.richgo.ai/realty/danji/a1UrBDI",
+      "distance_m": 72,
+      "source_name": "푸르지오1차",
+      "original_units": "1032",
+      "richgo_units": 1008,
+      "far": 184
+    }
+  ]
+}

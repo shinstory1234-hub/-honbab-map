@@ -1,0 +1,46 @@
+name: Richgo complete public dong catalogs for all 237 unresolved cap10 complexes
+on:
+  push:
+    branches:
+      - audit/richgo-6to10-top300-20261118
+    paths:
+      - .github/workflows/richgo-cap10-force237-catalog.yml
+      - scripts/audit-richgo-cap10-force237-catalog.cjs
+  workflow_dispatch:
+permissions:
+  contents: write
+concurrency:
+  group: richgo-cap10-force237-catalog
+  cancel-in-progress: false
+jobs:
+  catalogs:
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    strategy:
+      fail-fast: false
+      max-parallel: 2
+      matrix:
+        shard: [0, 1, 2, 3, 4, 5]
+    env:
+      SHARD: ${{ matrix.shard }}
+      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: audit/richgo-6to10-top300-20261118
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Verify crawler syntax
+        run: node --check scripts/audit-richgo-cap10-force237-catalog.cjs
+      - name: Inspect public Richgo neighborhood catalogs, coordinates and details
+        run: node scripts/audit-richgo-cap10-force237-catalog.cjs
+      - name: Archive public evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: force237-${{ matrix.shard }}
+          path: /tmp/richgo-force237-${{ matrix.shard }}.json
+          retention-days: 14
+          if-no-files-found: warn

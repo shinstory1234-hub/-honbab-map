@@ -1,0 +1,1067 @@
+{
+  "meta": {
+    "shard": 5,
+    "originalPending": 46,
+    "additionalVerified": 10,
+    "additionalFarKnown": 10,
+    "farBlank": 0,
+    "stillPending": 36,
+    "collisions": 0,
+    "network": {
+      "attempted": 0,
+      "fetched": 59,
+      "error": 0,
+      "blocked": 0,
+      "limited": 0,
+      "bing": 23,
+      "hub": 8,
+      "detail": 28
+    },
+    "method": "region hub + named indexed pages + coordinates + year + units"
+  },
+  "rows": [
+    {
+      "name": "석수엘지빌리지",
+      "area": "안양 만안구 석수동",
+      "key": "석수엘지빌리지|안양 만안구 석수동",
+      "originalStatus": "review_needed",
+      "secondStatus": "still_unresolved",
+      "richgo": null,
+      "match": null,
+      "candidates": [
+        {
+          "id": "a6ExfMH",
+          "name": "석수LG빌리지",
+          "year": 2001,
+          "units": 1872,
+          "far": 184,
+          "distanceMeters": 151,
+          "accepted": false,
+          "score": 116
+        }
+      ]
+    },
+    {
+      "name": "송도LuxeOceanSKVIEW",
+      "area": "인천 연수구 송도동",
+      "key": "송도LuxeOceanSKVIEW|인천 연수구 송도동",
+      "originalStatus": "unmatched",
+      "secondStatus": "still_unresolved",
+      "richgo": null,
+      "match": null,
+      "candidates": []
+    },
+    {
+      "name": "송도SKVIEW",
+      "area": "인천 연수구 송도동",
+      "key": "송도SKVIEW|인천 연수구 송도동",
+      "originalStatus": "review_needed",
+      "secondStatus": "still_unresolved",
+      "richgo": null,
+      "match": null,
+      "candidates": [
+        {
+          "id": "a4BpHHb",
+          "name": "송도SK뷰",
+          "year": 2019,
+          "units": 2100,
+          "far": 231,
+          "distanceMeters": 41,
+          "accepted": false,
+          "score": 134
+        }
+      ]
+    },
+    {
+      "name": "엘지빌리지3",
+      "area": "수원 권선구 금곡동",
+      "key": "엘지빌리지3|수원 권선구 금곡동",
+      "originalStatus": "unmatched",
+      "secondStatus": "still_unresolved",
+      "richgo": null,
+      "match": null,
+      "candidates": []
+    },
+    {
+      "name": "한울마을1단지운정신도시IPARK",
+      "area": "파주시 동패동",
+      "key": "한울마을1단지운정신도시IPARK|파주시 동패동",
+      "originalStatus": "review_needed",
+      "secondStatus": "still_unresolved",
+      "richgo": null,
+      "match": null,
+      "candidates": []
+    },
+    {
+      "name": "더샵지제역센트럴파크1BL",
+      "area": "평택시 동삭동",
+      "key": "더샵지제역센트럴파크1BL|평택시 동삭동",
+      "originalStatus": "review_needed",
+      "secondStatus": "still_unresolved",
+      "richgo": null,
+      "match": null,
+      "candidates": [
+        {
+          "id": "a3DVJSm",
+          "name": "더샵지제역센트럴파크(1BL)",
+          "year": 2020,
+          "units": 2124,
+          "far": 193,
+          "distanceMeters": 838,
+          "accepted": false,
+          "score": 141
+        },
+        {
+          "id": "a9amlsN",
+          "name": "더샵지제역센트럴파크(2BL)",
+          "year": 2020,
+          "units": 1674,
+          "far": 196,
+          "distanceMeters": 527,
+          "accepted": false,
+          "score": 79
+        }
+      ]
+    },
+    {
+      "name": "럭키",
+      "area": "안양 만안구 석수동",
+      "key": "럭키|안양 만안구 석수동",
+      "originalStatus": "review_needed",
+      "secondStatus": "still_unresolved",
+      "richgo": null,
+      "match": null,
+      "candidates": [
+        {
+          "id": "a4imfXK",
+          "name": "럭키",
+          "year": 1987,
+          "units": 735,
+          "far": 235,
+          "distanceMeters": 49,
+          "accepted": false,
+          "score": 244
+        }
+      ]
+    },
+    {
+      "name": "에코타운(A블럭)",
+      "area": "하남시 신장동",
+      "key": "에코타운(A블럭)|하남시 신장동",
+      "originalStatus": "review_needed",
+      "secondStatus": "still_unresolved",
+      "richgo": null,
+      "match": null,
+      "candidates": [
+        {
+          "id": "a6CvZjq",
+          "name": "에코타운2단지",
+          "year": 2004,
+          "units": 488,
+          "far": 243,
+          "distanceMeters": 155,
+          "accepted": false,
+          "score": 215
+        },
+        {
+          "id": "a4uRooe",
+          "name": "에코타운1단지",
+          "year": 2004,
+          "units": 525,
+          "far": 235,
+          "distanceMeters": 57,
+          "accepted": false,
+          "score": 137
+        }
+      ]
+    },
+    {
+      "name": "에코타운(B블럭)",
+      "area": "하남시 신장동",
+      "key": "에코타운(B블럭)|하남시 신장동",
+      "originalStatus": "review_needed",
+      "secondStatus": "verified_second_pass",
+      "richgo": {
+        "id": "a6CvZjq",
+        "name": "에코타운2단지",
+        "units": 488,
+        "year": 2004,
+        "far": 243,
+        "floors": "16~23층",
+        "coverage": 14,
+        "parking": 541,
+        "heating": "개별난방 · 도시가스",
+        "builder": "현대산업개발(주)",
+        "pyeongs": "33평",
+        "lat": 37.542568,
+        "lng": 127.210913,
+        "street": "경기도 하남시 하남대로802번길 55",
+        "facts": true,
+        "url": "https://m.richgo.ai/realty/danji/a6CvZjq"
+      },
+      "match": {
+        "distanceMeters": 6,
+        "yearDelta": 0,
+        "unitsRatio": 0,
+        "method": "previous_candidate",
+        "score": 256
+      },
+      "candidates": [
+        {
+          "id": "a6CvZjq",
+          "name": "에코타운2단지",
+          "year": 2004,
+          "units": 488,
+          "far": 243,
+          "distanceMeters": 6,
+          "accepted": true,
+          "score": 256
+        }
+      ]
+    },
+    {
+      "name": "그린타운(금호)",
+      "area": "부천 원미구 중동",
+      "key": "그린타운(금호)|부천 원미구 중동",
+      "originalStatus": "verified_shared_scope_review",
+      "secondStatus": "verified_second_pass",
+      "richgo": {
+        "id": "a7MOZWn",
+        "name": "그린타운금호한양",
+        "units": 712,
+        "year": 1993,
+        "far": 223,
+        "floors": "10~25층",
+        "coverage": 15,
+        "parking": 1122,
+        "heating": "지역난방 · 열병합",
+        "builder": "(주)금호건설,(주)한양건설",
+        "pyeongs": "32·36·43·48·52·59평",
+        "lat": 37.495684,
+        "lng": 126.774344,
+        "street": "경기도 부천시 원미구 부흥로303번길 31",
+        "facts": true,
+        "url": "https://m.richgo.ai/realty/danji/a7MOZWn"
+      },
+      "match": {
+        "distanceMeters": 11,
+        "yearDelta": 0,
+        "unitsRatio": 0,
+        "method": "previous_candidate",
+        "score": 256
+      },
+      "candidates": [
+        {
+          "id": "a7MOZWn",
+          "name": "그린타운금호한양",
+          "year": 1993,
+          "units": 712,
+          "far": 223,
+          "distanceMeters": 11,
+          "accepted": true,
+          "score": 256
+        }
+      ]
+    },
+    {
+      "name": "그린타운(한양)",
+      "area": "부천 원미구 중동",
+      "key": "그린타운(한양)|부천 원미구 중동",
+      "originalStatus": "verified_shared_scope_review",
+      "secondStatus": "verified_second_pass",
+      "richgo": {
+        "id": "a7MOZWn",
+        "name": "그린타운금호한양",
+        "units": 712,
+        "year": 1993,
+        "far": 223,
+        "floors": "10~25층",
+        "coverage": 15,
+        "parking": 1122,
+        "heating": "지역난방 · 열병합",
+        "builder": "(주)금호건설,(주)한양건설",
+        "pyeongs": "32·36·43·48·52·59평",
+        "lat": 37.495684,
+        "lng": 126.774344,
+        "street": "경기도 부천시 원미구 부흥로303번길 31",
+        "facts": true,
+        "url": "https://m.richgo.ai/realty/danji/a7MOZWn"
+      },
+      "match": {
+        "distanceMeters": 11,
+        "yearDelta": 1,
+        "unitsRatio": 0,
+        "method": "previous_candidate",
+        "score": 251
+      },
+      "candidates": [
+        {
+          "id": "a7MOZWn",
+          "name": "그린타운금호한양",
+          "year": 1993,
+          "units": 712,
+          "far": 223,
+          "distanceMeters": 11,
+          "accepted": true,
+          "score": 251
+        }
+      ]
+    },
+    {
+      "name": "위브호수마을1단지",
+      "area": "의왕시 포일동",
+      "key": "위브호수마을1단지|의왕시 포일동",
+      "originalStatus": "unmatched",
+      "secondStatus": "still_unresolved",
+      "richgo": null,
+      "match": null,
+      "candidates": []
+    },
+    {
+      "name": "다정한마을(삼성)",
+      "area": "부천 원미구 상동",
+      "key": "다정한마을(삼성)|부천 원미구 상동",
+      "originalStatus": "review_needed",
+      "secondStatus": "still_unresolved",
+      "richgo": null,
+      "match": null,
+      "candidates": []
+    },
+    {
+      "name": "우성1",
+      "area": "인천 연수구 연수동",
+      "key": "우성1|인천 연수구 연수동",
+      "originalStatus": "review_needed",
+      "secondStatus": "verified_second_pass",
+      "richgo": {
+        "id": "a7ajOYE",
+        "name": "연수우성1차",
+        "units": 1088,
+        "year": 1994,
+        "far": 220,
+        "floors": "18~25층",
+        "coverage": 13,
+        "parking": 1351,
+        "heating": "지역난방 · 열병합",
+        "builder": "(주)우성건설",
+        "pyeongs": "38·48·57평",
+        "lat": 37.410115,
+        "lng": 126.683262,
+        "street": "인천시 연수구 청능대로 175",
+        "facts": true,
+        "url": "https://m.richgo.ai/realty/danji/a7ajOYE"
+      },
+      "match": {
+        "distanceMeters": 46,
+        "yearDelta": 0,
+        "unitsRatio": 0,
+        "method": "previous_candidate",
+        "score": 256
+      },
+      "candidates": [
+        {
+          "id": "a7ajOYE",
+          "name": "연수우성1차",
+          "year": 1994,
+          "units": 1088,
+          "far": 220,
+          "distanceMeters": 46,
+          "accepted": true,
+          "score": 256
+        }
+      ]
+    },
+    {
+      "name": "꿈동산(신안)",
+      "area": "부천 원미구 상동",
+      "key": "꿈동산(신안)|부천 원미구 상동",
+      "originalStatus": "review_needed",
+      "secondStatus": "verified_second_pass",
+      "richgo": {
+        "id": "a5jOUmu",
+        "name": "꿈동산",
+        "units": 668,
+        "year": 1994,
+        "far": 225,
+        "floors": "12~26층",
+        "coverage": 14,
+        "parking": 1000,
+        "heating": "지역난방 · 열병합",
+        "builder": "신안종합건설",
+        "pyeongs": "37·43·47·60평",
+        "lat": 37.4934,
+        "lng": 126.756717,
+        "street": "경기도 부천시 원미구 장말로 136",
+        "facts": true,
+        "url": "https://m.richgo.ai/realty/danji/a5jOUmu"
+      },
+      "match": {
+        "distanceMeters": 52,
+        "yearDelta": 0,
+        "unitsRatio": 0,
+        "method": "previous_candidate",
+        "score": 256
+      },
+      "candidates": [
+        {
+          "id": "a5jOUmu",
+          "name": "꿈동산",
+          "year": 1994,
+          "units": 668,
+          "far": 225,
+          "distanceMeters": 52,
+          "accepted": true,
+          "score": 256
+        }
+      ]
+    },
+    {
+      "name": "중흥마을(신동아)",
+      "area": "부천 원미구 중동",
+      "key": "중흥마을(신동아)|부천 원미구 중동",
+      "originalStatus": "review_needed",
+      "secondStatus": "still_unresolved",
+      "richgo": null,
+      "match": null,
+      "candidates": []
+    },
+    {
+      "name": "은하마을(대우)",
+      "area": "부천 원미구 중동",
+      "key": "은하마을(대우)|부천 원미구 중동",
+      "originalStatus": "review_needed",
+      "secondStatus": "still_unresolved",
+      "richgo": null,
+      "match": null,
+      "candidates": []
+    },
+    {
+      "name": "진달래마을(대림)",
+      "area": "부천 원미구 상동",
+      "key": "진달래마을(대림)|부천 원미구 상동",
+      "originalStatus": "review_needed",
+      "secondStatus": "still_unresolved",
+      "richgo": null,
+      "match": null,
+      "candidates": [
+        {
+          "id": "a3eYOYk",
+          "name": "진달래대우",
+          "year": 2002,
+          "units": 580,
+          "far": 208,
+          "distanceMeters": 214,
+          "accepted": false,
+          "score": 207
+        }
+      ]
+    },
+    {
+      "name": "그린타운(삼성)",
+      "area": "부천 원미구 중동",
+      "key": "그린타운(삼성)|부천 원미구 중동",
+      "originalStatus": "verified_shared_scope_review",
+      "secondStatus": "verified_second_pass",
+      "richgo": {
+        "id": "a1sbxiJ",
+        "name": "그린타운삼성",
+        "units": 592,
+        "year": 1993,
+        "far": 224,
+        "floors": "15~25층",
+        "coverage": 16,
+        "parking": 752,
+        "heating": "지역난방 · 열병합",
+        "builder": "삼성종합건설주식회사,주식회사 우성건설",
+        "pyeongs": "36·37·46·47·58·60평",
+        "lat": 37.497717,
+        "lng": 126.76964,
+        "street": "경기도 부천시 원미구 중동로 204",
+        "facts": true,
+        "url": "https://m.richgo.ai/realty/danji/a1sbxiJ"
+      },
+      "match": {
+        "distanceMeters": 23,
+        "yearDelta": 0,
+        "unitsRatio": 0,
+        "method": "previous_candidate",
+        "score": 256
+      },
+      "candidates": [
+        {
+          "id": "a1sbxiJ",
+          "name": "그린타운삼성",
+          "year": 1993,
+          "units": 592,
+          "far": 224,
+          "distanceMeters": 23,
+          "accepted": true,
+          "score": 256
+        },
+        {
+          "id": "a9eWHYH",
+          "name": "그린타운한신",
+          "year": 1993,
+          "units": 474,
+          "far": 224,
+          "distanceMeters": 151,
+          "accepted": false,
+          "score": 203
+        }
+      ]
+    },
+    {
+      "name": "그린타운(우성1)",
+      "area": "부천 원미구 중동",
+      "key": "그린타운(우성1)|부천 원미구 중동",
+      "originalStatus": "verified_shared_scope_review",
+      "secondStatus": "verified_second_pass",
+      "richgo": {
+        "id": "a1sbxiJ",
+        "name": "그린타운삼성",
+        "units": 592,
+        "year": 1993,
+        "far": 224,
+        "floors": "15~25층",
+        "coverage": 16,
+        "parking": 752,
+        "heating": "지역난방 · 열병합",
+        "builder": "삼성종합건설주식회사,주식회사 우성건설",
+        "pyeongs": "36·37·46·47·58·60평",
+        "lat": 37.497717,
+        "lng": 126.76964,
+        "street": "경기도 부천시 원미구 중동로 204",
+        "facts": true,
+        "url": "https://m.richgo.ai/realty/danji/a1sbxiJ"
+      },
+      "match": {
+        "distanceMeters": 23,
+        "yearDelta": 0,
+        "unitsRatio": 0,
+        "method": "previous_candidate",
+        "score": 256
+      },
+      "candidates": [
+        {
+          "id": "a1sbxiJ",
+          "name": "그린타운삼성",
+          "year": 1993,
+          "units": 592,
+          "far": 224,
+          "distanceMeters": 23,
+          "accepted": true,
+          "score": 256
+        }
+      ]
+    },
+    {
+      "name": "아이파크송도",
+      "area": "인천 연수구 송도동",
+      "key": "아이파크송도|인천 연수구 송도동",
+      "originalStatus": "review_needed",
+      "secondStatus": "verified_second_pass",
+      "richgo": {
+        "id": "a0OwyzZ",
+        "name": "송도아이파크",
+        "units": 616,
+        "year": 2005,
+        "far": 157,
+        "floors": "10~20층",
+        "coverage": 13,
+        "parking": 962,
+        "heating": "지역난방 · 열병합",
+        "builder": "(주)현대산업개발",
+        "pyeongs": "33·35·40·41·51·68·91평",
+        "lat": 37.38773,
+        "lng": 126.658855,
+        "street": "인천시 연수구 해돋이로6번길 7",
+        "facts": true,
+        "url": "https://m.richgo.ai/realty/danji/a0OwyzZ"
+      },
+      "match": {
+        "distanceMeters": 14,
+        "yearDelta": 0,
+        "unitsRatio": 0,
+        "method": "previous_candidate",
+        "score": 256
+      },
+      "candidates": [
+        {
+          "id": "a0OwyzZ",
+          "name": "송도아이파크",
+          "year": 2005,
+          "units": 616,
+          "far": 157,
+          "distanceMeters": 14,
+          "accepted": true,
+          "score": 256
+        }
+      ]
+    },
+    {
+      "name": "라일락마을(동양)",
+      "area": "부천 원미구 상동",
+      "key": "라일락마을(동양)|부천 원미구 상동",
+      "originalStatus": "review_needed",
+      "secondStatus": "still_unresolved",
+      "richgo": null,
+      "match": null,
+      "candidates": []
+    },
+    {
+      "name": "다정한마을(금강)",
+      "area": "부천 원미구 상동",
+      "key": "다정한마을(금강)|부천 원미구 상동",
+      "originalStatus": "review_needed",
+      "secondStatus": "still_unresolved",
+      "richgo": null,
+      "match": null,
+      "candidates": []
+    },
+    {
+      "name": "은하마을(효성)",
+      "area": "부천 원미구 중동",
+      "key": "은하마을(효성)|부천 원미구 중동",
+      "originalStatus": "review_needed",
+      "secondStatus": "still_unresolved",
+      "richgo": null,
+      "match": null,
+      "candidates": []
+    },
+    {
+      "name": "중흥마을(극동)",
+      "area": "부천 원미구 중동",
+      "key": "중흥마을(극동)|부천 원미구 중동",
+      "originalStatus": "review_needed",
+      "secondStatus": "still_unresolved",
+      "richgo": null,
+      "match": null,
+      "candidates": []
+    },
+    {
+      "name": "송도더샵하버뷰(D13)",
+      "area": "인천 연수구 송도동",
+      "key": "송도더샵하버뷰(D13)|인천 연수구 송도동",
+      "originalStatus": "review_needed",
+      "secondStatus": "still_unresolved",
+      "richgo": null,
+      "match": null,
+      "candidates": [
+        {
+          "id": "a4eNhsZ",
+          "name": "송도더샵13단지하버뷰",
+          "year": 2011,
+          "units": 553,
+          "far": 243,
+          "distanceMeters": 32,
+          "accepted": false,
+          "score": 134
+        },
+        {
+          "id": "a7IvJWA",
+          "name": "송도더샵하버뷰II",
+          "year": 2012,
+          "units": 548,
+          "far": 259,
+          "distanceMeters": 274,
+          "accepted": false,
+          "score": 95
+        },
+        {
+          "id": "a8YFLsB",
+          "name": "송도자이하버뷰1단지",
+          "year": 2011,
+          "units": 546,
+          "far": 298,
+          "distanceMeters": 469,
+          "accepted": false,
+          "score": 70
+        }
+      ]
+    },
+    {
+      "name": "백송마을(상록LG)",
+      "area": "부천 원미구 상동",
+      "key": "백송마을(상록LG)|부천 원미구 상동",
+      "originalStatus": "review_needed",
+      "secondStatus": "still_unresolved",
+      "richgo": null,
+      "match": null,
+      "candidates": []
+    },
+    {
+      "name": "백송마을(엘지에스케이)",
+      "area": "부천 원미구 상동",
+      "key": "백송마을(엘지에스케이)|부천 원미구 상동",
+      "originalStatus": "unmatched",
+      "secondStatus": "still_unresolved",
+      "richgo": null,
+      "match": null,
+      "candidates": []
+    },
+    {
+      "name": "성원1차이화",
+      "area": "의왕시 오전동",
+      "key": "성원1차이화|의왕시 오전동",
+      "originalStatus": "unmatched",
+      "secondStatus": "still_unresolved",
+      "richgo": null,
+      "match": null,
+      "candidates": []
+    },
+    {
+      "name": "한성",
+      "area": "수원 권선구 권선동",
+      "key": "한성|수원 권선구 권선동",
+      "originalStatus": "review_needed",
+      "secondStatus": "verified_second_pass",
+      "richgo": {
+        "id": "a1VpKwr",
+        "name": "벽산한성",
+        "units": 562,
+        "year": 1995,
+        "far": 194,
+        "floors": "10~11층",
+        "coverage": 23,
+        "parking": 812,
+        "heating": "지역난방 · 열병합",
+        "builder": "벽산건설(주), (주)한성",
+        "pyeongs": "38·49·51평",
+        "lat": 37.249953,
+        "lng": 127.030229,
+        "street": "경기도 수원시 권선구 권중로 99",
+        "facts": true,
+        "url": "https://m.richgo.ai/realty/danji/a1VpKwr"
+      },
+      "match": {
+        "distanceMeters": 9,
+        "yearDelta": 0,
+        "unitsRatio": 0,
+        "method": "previous_candidate",
+        "score": 256
+      },
+      "candidates": [
+        {
+          "id": "a1VpKwr",
+          "name": "벽산한성",
+          "year": 1995,
+          "units": 562,
+          "far": 194,
+          "distanceMeters": 9,
+          "accepted": true,
+          "score": 256
+        }
+      ]
+    },
+    {
+      "name": "행복한마을(금호)",
+      "area": "부천 원미구 상동",
+      "key": "행복한마을(금호)|부천 원미구 상동",
+      "originalStatus": "review_needed",
+      "secondStatus": "still_unresolved",
+      "richgo": null,
+      "match": null,
+      "candidates": []
+    },
+    {
+      "name": "행복한마을(한양)",
+      "area": "부천 원미구 상동",
+      "key": "행복한마을(한양)|부천 원미구 상동",
+      "originalStatus": "review_needed",
+      "secondStatus": "still_unresolved",
+      "richgo": null,
+      "match": null,
+      "candidates": []
+    },
+    {
+      "name": "연화마을(대원)",
+      "area": "부천 원미구 중동",
+      "key": "연화마을(대원)|부천 원미구 중동",
+      "originalStatus": "review_needed",
+      "secondStatus": "still_unresolved",
+      "richgo": null,
+      "match": null,
+      "candidates": [
+        {
+          "id": "a7fUKoM",
+          "name": "연화대원",
+          "year": 1995,
+          "units": 386,
+          "far": 218,
+          "distanceMeters": 20,
+          "accepted": false,
+          "score": 232
+        }
+      ]
+    },
+    {
+      "name": "푸른마을(한라)",
+      "area": "부천 원미구 상동",
+      "key": "푸른마을(한라)|부천 원미구 상동",
+      "originalStatus": "unmatched",
+      "secondStatus": "still_unresolved",
+      "richgo": null,
+      "match": null,
+      "candidates": []
+    },
+    {
+      "name": "푸른마을(창보)",
+      "area": "부천 원미구 상동",
+      "key": "푸른마을(창보)|부천 원미구 상동",
+      "originalStatus": "unmatched",
+      "secondStatus": "still_unresolved",
+      "richgo": null,
+      "match": null,
+      "candidates": []
+    },
+    {
+      "name": "수원아이파크시티6단지",
+      "area": "수원 권선구 권선동",
+      "key": "수원아이파크시티6단지|수원 권선구 권선동",
+      "originalStatus": "review_needed",
+      "secondStatus": "still_unresolved",
+      "richgo": null,
+      "match": null,
+      "candidates": [
+        {
+          "id": "a3mhAYn",
+          "name": "수원아이파크시티5",
+          "year": 2015,
+          "units": 1152,
+          "far": 177,
+          "distanceMeters": 170,
+          "accepted": false,
+          "score": 95
+        },
+        {
+          "id": "a7fhnTv",
+          "name": "수원아이파크시티1단지",
+          "year": 2011,
+          "units": 543,
+          "far": 189,
+          "distanceMeters": 843,
+          "accepted": false,
+          "score": 31
+        },
+        {
+          "id": "a7LedHK",
+          "name": "수원아이파크시티2단지",
+          "year": 2012,
+          "units": 1135,
+          "far": 185,
+          "distanceMeters": 782,
+          "accepted": false,
+          "score": 3
+        }
+      ]
+    },
+    {
+      "name": "벽산",
+      "area": "수원 권선구 권선동",
+      "key": "벽산|수원 권선구 권선동",
+      "originalStatus": "review_needed",
+      "secondStatus": "verified_second_pass",
+      "richgo": {
+        "id": "a1VpKwr",
+        "name": "벽산한성",
+        "units": 562,
+        "year": 1995,
+        "far": 194,
+        "floors": "10~11층",
+        "coverage": 23,
+        "parking": 812,
+        "heating": "지역난방 · 열병합",
+        "builder": "벽산건설(주), (주)한성",
+        "pyeongs": "38·49·51평",
+        "lat": 37.249953,
+        "lng": 127.030229,
+        "street": "경기도 수원시 권선구 권중로 99",
+        "facts": true,
+        "url": "https://m.richgo.ai/realty/danji/a1VpKwr"
+      },
+      "match": {
+        "distanceMeters": 9,
+        "yearDelta": 0,
+        "unitsRatio": 0,
+        "method": "previous_candidate",
+        "score": 256
+      },
+      "candidates": [
+        {
+          "id": "a1VpKwr",
+          "name": "벽산한성",
+          "year": 1995,
+          "units": 562,
+          "far": 194,
+          "distanceMeters": 9,
+          "accepted": true,
+          "score": 256
+        },
+        {
+          "id": "a1QMKhR",
+          "name": "벽산",
+          "year": 1996,
+          "units": 368,
+          "far": 218,
+          "distanceMeters": 242,
+          "accepted": false,
+          "score": 172
+        }
+      ]
+    },
+    {
+      "name": "구운동성원상떼빌",
+      "area": "수원 권선구 구운동",
+      "key": "구운동성원상떼빌|수원 권선구 구운동",
+      "originalStatus": "unmatched",
+      "secondStatus": "still_unresolved",
+      "richgo": null,
+      "match": null,
+      "candidates": []
+    },
+    {
+      "name": "꿈마을(건영)",
+      "area": "부천 원미구 중동",
+      "key": "꿈마을(건영)|부천 원미구 중동",
+      "originalStatus": "review_needed",
+      "secondStatus": "still_unresolved",
+      "richgo": null,
+      "match": null,
+      "candidates": [
+        {
+          "id": "a3WwHXB",
+          "name": "보람마을동남",
+          "year": 1995,
+          "units": 494,
+          "far": 217,
+          "distanceMeters": 1714,
+          "accepted": false,
+          "score": 126
+        }
+      ]
+    },
+    {
+      "name": "꿈마을(삼환)",
+      "area": "부천 원미구 중동",
+      "key": "꿈마을(삼환)|부천 원미구 중동",
+      "originalStatus": "unmatched",
+      "secondStatus": "still_unresolved",
+      "richgo": null,
+      "match": null,
+      "candidates": []
+    },
+    {
+      "name": "동일하이빌",
+      "area": "하남시 신장동",
+      "key": "동일하이빌|하남시 신장동",
+      "originalStatus": "unmatched",
+      "secondStatus": "still_unresolved",
+      "richgo": null,
+      "match": null,
+      "candidates": []
+    },
+    {
+      "name": "미리내마을(한신)",
+      "area": "부천 원미구 중동",
+      "key": "미리내마을(한신)|부천 원미구 중동",
+      "originalStatus": "review_needed",
+      "secondStatus": "still_unresolved",
+      "richgo": null,
+      "match": null,
+      "candidates": [
+        {
+          "id": "a5WdjgX",
+          "name": "미리내금호",
+          "year": 1994,
+          "units": 1008,
+          "far": 212,
+          "distanceMeters": 41,
+          "accepted": false,
+          "score": 137
+        }
+      ]
+    },
+    {
+      "name": "미리내마을(한양)",
+      "area": "부천 원미구 중동",
+      "key": "미리내마을(한양)|부천 원미구 중동",
+      "originalStatus": "review_needed",
+      "secondStatus": "still_unresolved",
+      "richgo": null,
+      "match": null,
+      "candidates": [
+        {
+          "id": "a5WdjgX",
+          "name": "미리내금호",
+          "year": 1994,
+          "units": 1008,
+          "far": 212,
+          "distanceMeters": 41,
+          "accepted": false,
+          "score": 137
+        }
+      ]
+    },
+    {
+      "name": "수원아이파크시티5단지",
+      "area": "수원 권선구 권선동",
+      "key": "수원아이파크시티5단지|수원 권선구 권선동",
+      "originalStatus": "review_needed",
+      "secondStatus": "still_unresolved",
+      "richgo": null,
+      "match": null,
+      "candidates": [
+        {
+          "id": "a3mhAYn",
+          "name": "수원아이파크시티5",
+          "year": 2015,
+          "units": 1152,
+          "far": 177,
+          "distanceMeters": 80,
+          "accepted": false,
+          "score": 171
+        },
+        {
+          "id": "a6TbaxZ",
+          "name": "수원아이파크시티3단지",
+          "year": 2011,
+          "units": 793,
+          "far": 198,
+          "distanceMeters": 427,
+          "accepted": false,
+          "score": 95
+        },
+        {
+          "id": "a1JrvFu",
+          "name": "수원아이파크시티4단지",
+          "year": 2012,
+          "units": 889,
+          "far": 192,
+          "distanceMeters": 413,
+          "accepted": false,
+          "score": 75
+        }
+      ]
+    },
+    {
+      "name": "엘지빌리지1",
+      "area": "수원 권선구 금곡동",
+      "key": "엘지빌리지1|수원 권선구 금곡동",
+      "originalStatus": "unmatched",
+      "secondStatus": "still_unresolved",
+      "richgo": null,
+      "match": null,
+      "candidates": []
+    },
+    {
+      "name": "한빛마을4단지롯데캐슬Ⅱ",
+      "area": "파주시 야당동",
+      "key": "한빛마을4단지롯데캐슬Ⅱ|파주시 야당동",
+      "originalStatus": "unmatched",
+      "secondStatus": "still_unresolved",
+      "richgo": null,
+      "match": null,
+      "candidates": []
+    }
+  ]
+}
