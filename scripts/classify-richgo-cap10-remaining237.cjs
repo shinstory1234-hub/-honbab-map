@@ -26,7 +26,7 @@ const labels={
  COMPLETION_YEAR_CONFLICT:'주소·이름이 가까우나 입주연도 불일치',
  POSITION_CONFLICT:'단지 좌표가 멀리 떨어져 다른 단지일 가능성',
  NAME_IDENTITY_CONFLICT:'리치고 단지명과 아파트맵 이름이 다른 주택 단지를 가리킬 가능성',
- FAR_UNAVAILABLE:'리치고 상세 용적률이 공란',
+ FAR_UNAVAILABLE:'리치고 상세 용적률이 공란(동일성 요건 충족 시)',
  IDENTITY_UNRESOLVED:'리치고 후보가 있으나 단지 동일성을 1대1로 확정할 근거가 부족함'
 };
 const entries=[],counts={};for(const source of unresolved){
@@ -36,7 +36,7 @@ const entries=[],counts={};for(const source of unresolved){
  let reason;
  if(source.review_status==='audit4_duplicate_source_review'||a.status==='shared_identity')reason='COMBINED_OR_ALIAS';
  else if(candidates.length===0)reason='SOURCE_NOT_FOUND';
- else if(near&&near.nameSimilarity>=.65&&near.distanceMeters!=null&&near.distanceMeters<=220&&
+ else if(near&&near.nameSimilarity>=.4&&near.distanceMeters!=null&&near.distanceMeters<=220&&
    Math.abs(+source.year_after_verified-near.year)<=2&&
    near.unitsDelta/Math.max(1,+source.units_after_verified,+near.units)>=.08)reason='UNIT_SCOPE_CONFLICT';
  else if(near&&near.nameSimilarity>=.75&&near.distanceMeters!=null&&near.distanceMeters<=220&&Math.abs(+source.year_after_verified-near.year)>2)
@@ -61,7 +61,7 @@ const summary=[
  '# 6억~10억 리치고 전수검증 최종 예외 237개 상세 분류',
  '',
  '## 최종 결론',
- '- 전체 1,822개 단지에 대해 기존 자료와 6차까지의 공개 웹 대조를 시행했고, 각 단지는 검증 완료 또는 근거 있는 예외로 분류했다.',
+ '- 전체 1,822개 단지에 대해 기존 자료와 7차까지의 공개 웹 대조를 시행했고, 각 단지는 검증 완료 또는 근거 있는 예외로 분류했다.',
  '- 단지 동일성 1대1 검증 성공: '+verified+'개',
  '- 동일성 검증을 통과하지 못한 예외: 237개. **343개 재검토 완료가 343개 모두 리치고와 일치함을 뜻하지는 않는다.**',
  '- 최종 보정 기록: '+fixes.length+'개. 용적률 숫자 존재 '+far+'개, 결측 '+(1822-far)+'개.',
