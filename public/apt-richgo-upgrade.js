@@ -148,17 +148,33 @@ function volumeView(d,box){
   };
 }
 function livingView(d,box){
-  var units=typeof unitN==='function'?unitN(d):d.units||null,far=n(d.m3&&d.m3.far),fkey=key(d);
-  var external=(window.APT_RESIDENTIAL_FACTS||{})[fkey]||{},verified=external.source&&external.verified===true;
-  function val(prop,suffix){return verified&&n(external[prop])!=null?fmt(external[prop])+(suffix||''):'자료 미확보';}
+  var units=typeof unitN==='function'?unitN(d):d.units||null,far=n(d.m3&&d.m3.far);
   box.innerHTML='<h4>실거주 기본정보</h4><ul class="ru-list">'
-    +chip('세대수',units?fmt(units)+'세대':'자료 미확보','아파트맵 단지 분리·통합 기준')
-    +chip('입주연도',d.year?d.year+'년':'자료 미확보','단지 기본정보')
-    +chip('용적률',far!=null?Math.round(far)+'%':'자료 미확보','등록된 단지 평가 데이터 기준')
-    +chip('세대당 주차',verified?val('parkingPerHousehold','대'):'자료 미확보','동일 관리단지 기준 검증 필요')
-    +chip('월평균 관리비',verified?val('monthlyFee','원'):'자료 미확보','공급면적 및 기준월에 따라 달라짐')
-    +chip('난방방식',verified?external.heating||'자료 미확보':'자료 미확보','자료 출처 확인 후 표시')+'</ul>'
-    +'<div class="ru-warning">주차·관리비는 현재 단지별 검증 데이터가 연결되지 않아 숫자를 임의로 표시하지 않습니다. 관리비는 동일 면적·기준월을 확인한 값만 연결해야 합니다.</div>';
+    +chip('세대수',units?fmt(units)+'세대':'자료 미확보','아파트맵의 단지 구분 기준')
+    +chip('입주연도',d.year?d.year+'년':'자료 미확보','기존 단지 기본정보')
+    +chip('용적률',far!=null?Math.round(far)+'%':'자료 미확보','기존 등록 자료 기준')
+    +'</ul><div data-ru-kapt-result role="status">공식 K-apt 단지정보를 확인하고 있습니다…</div>';
+  var out=box.querySelector('[data-ru-kapt-result]');
+  (async function(){
+    if(!(await ensureDx())){if(out.isConnected)out.innerHTML='<p class="ru-warning">단지 식별정보를 불러올 수 없습니다.</p>';return;}
+    var k=window.aptLkey(d);
+    if(!k){if(out.isConnected)out.innerHTML='<p class="ru-warning">해당 단지의 국토부 시군구코드 매칭이 없어 K-apt 자료를 임의로 연결하지 않습니다.</p>';return;}
+    try{
+      var r=await fetch('/api/apt-kapt?k='+encodeURIComponent(k)+'&units='+encodeURIComponent(units||'')),v=await r.json();
+      if(!out.isConnected)return;
+      if(!r.ok||v.status==='unavailable'){out.innerHTML='<p class="ru-warning">K-apt 조회가 불가능합니다. 인증키·서비스 권한 또는 원본 서버를 확인해 주세요.</p>';return;}
+      if(v.status!=='ok'&&v.status!=='unit-conflict'){out.innerHTML='<p class="ru-warning">'+esc(v.message||'공식 단지 식별정보가 일치하지 않습니다.')+'</p>';return;}
+      out.innerHTML='<ul class="ru-list">'
+        +chip('K-apt 관리단지 세대수',v.households?fmt(v.households)+'세대':'미공개',v.kaptName||'')
+        +chip('동수',n(v.buildingCount)!=null?fmt(v.buildingCount)+'개동':'미공개','K-apt 관리단지 단위')
+        +chip('최고층',n(v.topFloor)!=null?fmt(v.topFloor)+'층':'미공개','단지 대표 최고층')
+        +chip('난방방식',v.heating||'미공개','K-apt 기본정보')
+        +chip('지상·지하 주차',n(v.parkingTotal)!=null?fmt(v.parkingTotal)+'대':'미공개',n(v.parkingGround)!=null&&n(v.parkingUnderground)!=null?'지상 '+fmt(v.parkingGround)+'대 · 지하 '+fmt(v.parkingUnderground)+'대':'주차 구성 미확인')
+        +chip('세대당 주차',v.verified&&n(v.parkingPerHousehold)!=null?v.parkingPerHousehold.toFixed(2)+'대':'계산 보류','K-apt 관리단지 공식 세대수 대비')
+        +chip('관리비','확인된 월별 금액 없음','공용관리비·개별사용료·장기수선충당금의 범위가 달라 별도 대사 필요')
+        +'</ul><p class="ru-note">출처: '+esc(v.source||'K-apt')+' · 단지코드 '+esc(v.kaptCode||'')+'. '+esc(v.note||'')+'</p>';
+    }catch(e){if(out.isConnected)out.innerHTML='<p class="ru-warning">K-apt 서버 또는 네트워크 요청에 실패했습니다.</p>';}
+  })();
 }
 function schoolView(d,box){
   var g=d.g||{},hak=typeof hakH==='function'?hakH(d):null;
@@ -234,10 +250,41 @@ function makeMap(d,box,mode){
   }
   setTimeout(function(){if(el.isConnected)map.relayout();},100);
 }
+function rentView(d,box){
+  box.innerHTML='<h4>전세·월세 실제 계약</h4><p>국토교통부에서 신고된 아파트 임대차 계약입니다. 선택 평형과 유사한 전용면적만 표시합니다.</p>'
+    +'<div data-ru-rent-results role="status">최근 6개월 전월세 계약을 조회하고 있습니다…</div>';
+  var out=box.querySelector('[data-ru-rent-results]');
+  (async function(){
+    if(!(await ensureDx())){if(out.isConnected)out.innerHTML='<div class="ru-warning">단지 식별키를 불러오지 못했습니다.</div>';return;}
+    var k=window.aptLkey(d);
+    if(!k){if(out.isConnected)out.innerHTML='<div class="ru-warning">시군구·법정동·단지명 식별키가 없어 매칭을 진행할 수 없습니다.</div>';return;}
+    try{
+      var res=await fetch('/api/apt-rent?k='+encodeURIComponent(k)),v=await res.json();
+      if(!out.isConnected)return;
+      if(!res.ok){out.innerHTML='<div class="ru-warning">'+esc(v.error||'전월세 API 호출 실패')+'</div>';return;}
+      var target=d.py*3.3058*.76,rows=(v.rows||[]).filter(function(x){return n(x.area)!=null&&Math.abs(x.area-target)<=5;});
+      var lease=rows.filter(function(x){return x.kind==='전세';}),monthly=rows.filter(function(x){return x.kind==='월세';});
+      var prices=lease.map(function(x){return n(x.deposit);}).filter(function(x){return x>0;});
+      var sorted=prices.slice().sort(function(a,b){return a-b;});
+      var med=sorted.length?sorted[Math.floor(sorted.length/2)]:null;
+      var sale=n(d.p),ratio=med>0&&sale>0?med/sale*100:null;
+      out.innerHTML='<ul class="ru-list">'+chip('최근 6개월 해당 평형 전세',fmt(lease.length)+'건','전세보증금 중위가격은 거래 3건 이상일 때 표시')
+        +chip('전세 실거래 중위가격',lease.length>=3?money(med):'표본 부족','보증금 단위: 만원')
+        +chip('매매 시세 대비 전세가율',lease.length>=3&&ratio!=null?ratio.toFixed(1)+'%':'계산 불가','전세 실거래 중위 ÷ 기존 아파트맵 산출 매매 시세 · 서로 다른 기준')
+        +chip('최근 6개월 해당 평형 월세',fmt(monthly.length)+'건','보증금과 월세를 분리하여 표시')+'</ul>'
+        +(rows.length?'<table class="ru-table"><thead><tr><th>계약일·면적</th><th>구분</th><th>보증금 / 월세</th></tr></thead><tbody>'
+           +rows.slice(0,12).map(function(x){return '<tr><td>'+esc(x.date)+'<br>'+esc(x.area)+'㎡ · '+esc(x.floor||'?')+'층</td><td>'+esc(x.kind)+(x.contractType?' <small>'+esc(x.contractType)+'</small>':'')+'</td><td>'+money(x.deposit)+(x.monthlyRent?'<br>월 '+fmt(x.monthlyRent)+'만원':'')+'</td></tr>';}).join('')+'</tbody></table>':
+        '<p class="ru-empty">일치하는 전세·월세 계약을 찾지 못했습니다. 단지명 변경·미신고·자료 누락 가능성이 있습니다.</p>')
+        +(v.complete?'':'<div class="ru-warning">일부 계약월 조회가 실패했습니다. 아래 건수는 부분 수집 자료이며 거래가 없다는 뜻이 아닙니다.</div>')
+        +'<p class="ru-note">출처: '+esc(v.source||'국토교통부')+' · 동일 평형의 전용면적은 공급면적 환산 추정치 ±5㎡입니다. 동·호수는 공개되지 않습니다. 신고 지연과 계약갱신이 포함될 수 있습니다.</p>';
+    }catch(e){if(out.isConnected)out.innerHTML='<div class="ru-warning">임대차 조회 중 네트워크 오류가 발생했습니다.</div>';}
+  })();
+}
 var views=[
 ['rivals','라이벌 비교',rivalsView],
 ['volume','거래 유동성',volumeView],
 ['living','실거주',livingView],
+['rent','전세·월세',rentView],
 ['school','학군',schoolView],
 ['near','주변 생활권',function(d,b){makeMap(d,b,'near');}],
 ['dong','동 위치',function(d,b){makeMap(d,b,'dong');}]
