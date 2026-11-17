@@ -1,0 +1,220 @@
+#!/usr/bin/env python3
+"""Independent, read-only Richgo versus apartment-map audit on an isolated branch.
+Visits only explicitly selected 300 map apartments. No production writes.
+"""
+import csv, json, os, re, subprocess, urllib.parse, time, sys, gzip, base64
+from difflib import SequenceMatcher
+from concurrent.futures import ThreadPoolExecutor, as_completed
+from collections import Counter, defaultdict
+import requests
+from bs4 import BeautifulSoup
+
+BRANCH='audit/richgo-under6-300-20261118'
+ROOT=os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+OUT='/tmp/richgo_under6_300_audit.csv'
+JS=r"""
+const fs=require('fs');
+const paths=['public/apt-picks.js','public/apt-auto3.js','public/apt-fard.js','public/apt-univ.js','public/apt-farfix.js'];
+const w={};
+new Function('window', paths.map(p=>fs.readFileSync(p,'utf8')).join('\\n'))(w);
+const snap=JSON.parse(fs.readFileSync('public/apt-snap6-2026-11-01-s14.json','utf8'));
+const seen=new Set(),out=[];
+for(const r of snap.rows){
+ const key=r[1]+'|'+r[2];if(seen.has(key))continue;seen.add(key);
+ const d=w.PICKS.find(x=>x.n===r[1]&&x.area===r[2]);
+ if(!d)continue;
+ const f=w.FARD[key]||[];
+ out.push({seq:out.length+1,rank:r[0],name:d.n,area:d.area,year:d.year,units:d.units,py:d.py,
+           price:d.p,far:f[0]??null,far_source:f[1]||'',source:d.u?'univ':d.auto?'auto':'manual'});
+ if(out.length>=300)break;
+}
+process.stdout.write(JSON.stringify(out));
+"""
+raw = subprocess.check_output(['node','-e',JS],cwd=ROOT,text=True)
+targets=json.loads(raw)
+assert len(targets)==300, 'target set must be 300'
+
+def norm(s):
+    return ''.join(re.findall(r'[가-힣A-Za-z0-9]+',str(s))).lower()
+def shortnorm(s):
+    s=norm(s)
+    for p in ('안양','군포','서울','수원','성남','부천','상계동','중계동','관양동','방화동','송도동','화서동','호매실동','산본동','신림동','창동'):
+        if s.startswith(p) and len(s)>len(p)+3:s=s[len(p):]
+    s=s.replace('아파트','').replace('단지아파트','단지')
+    return s
+
+def region_of(a):
+    part=a.split();city=part[0]
+    if city in ('서울','인천'):return city,part[1],part[-1]
+    if len(part)>2 and part[1].endswith('구'):
+        city2=city if city.endswith('시') else city+'시'
+        return '경기',city2+' '+part[1],part[-1]
+    return '경기',city,part[-1]
+
+hubs=defaultdict(list)
+for t in targets:
+    sd,sgg,dong=region_of(t['area'])
+    hubs[(sd,sgg)].append(t)
+print('AUDIT_INIT',json.dumps({'target':len(targets),'regions':len(hubs)},ensure_ascii=False),flush=True)
+HEADERS={'User-Agent':'Mozilla/5.0 (compatible; ApartmentMap-DataQA/1.0; personal-audit)','Accept-Language':'ko-KR,ko;q=0.9'}
+def fetch(url):
+    try:
+        r=requests.get(url,headers=HEADERS,timeout=22,allow_redirects=True)
+        if r.status_code==200 and len(r.content)>500:return r.text
+        return None
+    except requests.RequestException:
+        return None
+
+segments=['','5억이하','5억-10억','20평대','30평대','대단지','역세권','신축','재건축']
+# Request hub categories sequentially per district, but parallelize independent districts.
+def fetch_hub(group):
+    sd,sgg=group
+    base='https://m.richgo.ai/realty/apt-hub/'+urllib.parse.quote(sd)+'/'+urllib.parse.quote(sgg)
+    found={}
+    mine=hubs[group]
+    remaining={t['seq']:t for t in mine}
+    for seg in segments:
+        if not remaining:break
+        url=base+('/'+urllib.parse.quote(seg) if seg else '')
+        html=fetch(url)
+        if not html:continue
+        soup=BeautifulSoup(html,'html.parser')
+        candidates=[]
+        for tag in soup.find_all('a',href=True):
+            h=tag.get('href','')
+            m=re.search(r'/realty/danji/([A-Za-z0-9]{7})',h)
+            if not m:continue
+            label=re.sub(r'^\\s*\\d+\\.\\s*','',tag.get_text(' ',strip=True))
+            if label: candidates.append((label,m.group(1)))
+        for seq,t in list(remaining.items()):
+            n=shortnorm(t['name']); matches=[]
+            for label,danjiid in candidates:
+                x=shortnorm(label)
+                # Require close complex name, no substring matches between 1 and 11 complexes.
+                sim=SequenceMatcher(None,n,x).ratio()
+                if n==x:score=100
+                elif len(n)>5 and n in x[:len(n)+3] and sim>.84:score=93
+                elif sim>.91:score=90
+                else: continue
+                matches.append((score,danjiid,label))
+            if matches:
+                matches.sort(reverse=True)
+                if len({x[1] for x in matches if x[0]==matches[0][0]})==1:
+                    found[seq]=matches[0][1:]
+                    remaining.pop(seq,None)
+    return found
+
+idmap={}
+with ThreadPoolExecutor(max_workers=5) as ex:
+    tasks={ex.submit(fetch_hub,g):g for g in hubs}
+    for fut in as_completed(tasks):
+        try:idmap.update(fut.result())
+        except Exception as e:print('HUB_FAIL',tasks[fut],str(e)[:200],flush=True)
+print('HUB_MATCH',len(idmap),'of',len(targets),flush=True)
+
+def grab_tokens(soup):
+    return [x.strip() for x in soup.stripped_strings if str(x).strip()]
+def parse_section(toks):
+    start=next((i for i,x in enumerate(toks) if x.endswith('단지 정보')),None)
+    if start is None:start=next((i for i,x in enumerate(toks) if x=='세대수'),None)
+    return toks[start:start+80] if start is not None else []
+def label_val(toks,term):
+    for i,v in enumerate(toks):
+        if v==term and i+1<len(toks):return toks[i+1]
+    return None
+def parse_money(s):
+    if not s:return None
+    s=str(s).replace(',','')
+    e=re.search(r'(\\d+)\\s*억',s)
+    m=re.search(r'(\\d+)\\s*만',s)
+    if not e and not m:return None
+    return (int(e.group(1))*10000 if e else 0)+(int(m.group(1)) if m else 0)
+
+def parse_detail(t):
+    seq=t['seq']
+    if seq not in idmap:return {'status':'미매칭'}
+    danjiid,hub_label=idmap[seq]
+    url='https://m.richgo.ai/realty/danji/'+danjiid
+    html=fetch(url)
+    if not html:return {'status':'원문 조회 실패','url':url}
+    soup=BeautifulSoup(html,'html.parser')
+    toks=grab_tokens(soup);info=parse_section(toks)
+    h1=soup.find('h1');title=h1.get_text(' ',strip=True) if h1 else ''
+    yr=label_val(info,'입주');unit=label_val(info,'세대수');far=label_val(info,'용적률')
+    parking=label_val(info,'주차');pys=label_val(info,'평형')
+    yy=re.search(r'((?:19|20)\\d{2})',yr or '')
+    uu=re.search(r'([\\d,]+)\\s*세대',unit or '')
+    ff=re.search(r'(\\d{2,4}(?:\\.\\d+)?)\\s*%',far or '')
+    rr=re.search(r'\\d+(?:\\s*[·,]\\s*\\d+)*\\s*평',pys or '')
+    rpy=[int(x) for x in re.findall(r'\\d+',rr.group(0))] if rr else []
+    sale=None;jeonse=None
+    for table in soup.find_all('table'):
+        head=table.get_text(' ',strip=True)
+        if '매매 시세' not in head or '전세 시세' not in head:continue
+        for tr in table.find_all('tr'):
+            cells=[c.get_text(' ',strip=True) for c in tr.find_all(['th','td'])]
+            if len(cells)<3:continue
+            py_match=re.search(r'(\\d+)\\s*평',cells[0])
+            if py_match and int(py_match.group(1))==t['py']:
+                sale=parse_money(cells[1]);jeonse=parse_money(cells[2]);break
+        if sale is not None:break
+    if sale is None:
+        i=next((j for j,x in enumerate(toks) if x=='평형별 시세'),None)
+        if i is not None:
+            for k in range(i+1,min(i+85,len(toks)-2)):
+                if toks[k]==str(t['py'])+'평':
+                    sale=parse_money(toks[k+1]);jeonse=parse_money(toks[k+2]);break
+    rich_year=int(yy.group(1)) if yy else None
+    rich_units=int(uu.group(1).replace(',','')) if uu else None
+    rich_far=float(ff.group(1)) if ff else None
+    if rich_far is not None and rich_far.is_integer():rich_far=int(rich_far)
+    # A nearby matching apartment on a similarly-named hub can be a false positive.
+    dom=t['area'].split()[-1]
+    detail_first=' '.join(toks[:45])
+    name_ok=(shortnorm(t['name']) in shortnorm(title)) or (SequenceMatcher(None,shortnorm(t['name']),shortnorm(hub_label)).ratio()>.91)
+    dong_ok=dom in title or dom in detail_first or dom.endswith('읍') or dom.endswith('동') and dom in url # best effort
+    if rich_units is not None and t['units']!=rich_units and abs(rich_units-t['units'])/max(rich_units,t['units'])>.15: name_ok=False
+    status='직접대조' if name_ok and rich_units is not None and rich_year is not None else '동일단지 추가확인'
+    return {'status':status,'url':url,'richgo_name':hub_label,'richgo_year':rich_year,
+            'richgo_units':rich_units,'richgo_far':rich_far,'richgo_pyeongs':','.join(map(str,rpy)),
+            'richgo_sale':sale,'richgo_jeonse':jeonse,'richgo_parking':parking,'title':title}
+
+results={}
+with ThreadPoolExecutor(max_workers=5) as ex:
+    tasks={ex.submit(parse_detail,t):t['seq'] for t in targets}
+    for fut in as_completed(tasks):
+        seq=tasks[fut]
+        try: results[seq]=fut.result()
+        except Exception as e:results[seq]={'status':'파싱 실패','error':str(e)[:250]}
+columns=['seq','snapshot_rank','name','area','map_year','richgo_year','year_match',
+         'map_units','richgo_units','units_match','map_py','richgo_pyeongs','pyeong_present',
+         'map_far','map_far_source','richgo_far','far_delta_pp','map_reference_price_manwon',
+         'richgo_same_py_sale_manwon','richgo_same_py_jeonse_manwon','price_basis',
+         'richgo_parking','status','source_url']
+counts=Counter()
+with open(OUT,'w',encoding='utf-8-sig',newline='') as f:
+    w=csv.DictWriter(f,fieldnames=columns);w.writeheader()
+    for t in targets:
+        r=results[t['seq']];counts[r['status']]+=1
+        yn=r.get('richgo_year');un=r.get('richgo_units');ff=r.get('richgo_far')
+        py=r.get('richgo_pyeongs','')
+        pylist=[int(x) for x in py.split(',') if x]
+        w.writerow(dict(seq=t['seq'],snapshot_rank=t['rank'],name=t['name'],area=t['area'],
+          map_year=t['year'],richgo_year=yn,year_match='' if yn is None else yn==t['year'],
+          map_units=t['units'],richgo_units=un,units_match='' if un is None else un==t['units'],
+          map_py=t['py'],richgo_pyeongs=py,pyeong_present='' if not pylist else t['py'] in pylist,
+          map_far=t['far'],map_far_source=t['far_source'],richgo_far=ff,
+          far_delta_pp='' if ff is None or t['far'] is None else ff-t['far'],
+          map_reference_price_manwon=t['price'],richgo_same_py_sale_manwon=r.get('richgo_sale'),
+          richgo_same_py_jeonse_manwon=r.get('richgo_jeonse'),
+          price_basis='맵 거래중위 / 리치고 추정시세 — 수치 차이를 오류로 단정하지 않음',
+          richgo_parking=r.get('richgo_parking'),status=r['status'],source_url=r.get('url')))
+import io
+with open(OUT,'rb') as f:data=f.read()
+blob=base64.b64encode(gzip.compress(data,compresslevel=9)).decode()
+summary={'targets':len(targets),'hub_match':len(idmap),'statuses':dict(counts),
+         'direct_comparison':counts['직접대조'],'compressed_bytes':len(blob),'output_file':OUT}
+with open('/tmp/richgo_under6_300_summary.json','w') as f:json.dump(summary,f,ensure_ascii=False,indent=2)
+print('AUDIT_SUMMARY '+json.dumps(summary,ensure_ascii=False),flush=True)
+for i in range(0,len(blob),4000):
+    print('AUDIT_DATA_B64_PART_'+str(i//4000+1)+' '+blob[i:i+4000],flush=True)
