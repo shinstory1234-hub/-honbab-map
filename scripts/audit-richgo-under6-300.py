@@ -73,7 +73,7 @@ def fetch(url):
     except requests.RequestException:
         return None
 
-segments=['','5억이하','5억-10억','20평대','30평대','대단지','역세권','신축','재건축']
+segments=['','5억이하','5억-10억','20평대','30평대','대단지','역세권','신축','재건축','40평대','10억-20억','초품아','리모델링','전세가율70이상','주차여유']
 # Request hub categories sequentially per district, but parallelize independent districts.
 def fetch_hub(group):
     sd,sgg=group
@@ -93,16 +93,21 @@ def fetch_hub(group):
             m=re.search(r'/realty/danji/([A-Za-z0-9]{7})',h)
             if not m:continue
             label=re.sub(r'^\s*\d+\.\s*','',tag.get_text(' ',strip=True))
-            if label: candidates.append((label,m.group(1)))
+            if label:
+                tr=tag.find_parent('tr')
+                context=tr.get_text(' ',strip=True) if tr else ''
+                units_search=re.search(r'([\\d,]+)\\s*세대',context)
+                candidates.append((label,m.group(1),context,int(units_search.group(1).replace(',','')) if units_search else None))
         for seq,t in list(remaining.items()):
             n=shortnorm(t['name']); matches=[]
-            for label,danjiid in candidates:
+            for label,danjiid,context,cunits in candidates:
                 x=shortnorm(label)
                 # Require close complex name, no substring matches between 1 and 11 complexes.
                 sim=SequenceMatcher(None,n,x).ratio()
                 if n==x:score=100
                 elif len(n)>5 and n in x[:len(n)+3] and sim>.84:score=93
                 elif sim>.91:score=90
+                elif cunits==t['units'] and t['area'].split()[-1] in context and sim>.48:score=85
                 else: continue
                 matches.append((score,danjiid,label))
             if matches:
@@ -122,7 +127,7 @@ print('HUB_MATCH',len(idmap),'of',len(targets),flush=True)
 # Previously hand-verified URLs for difficult name variants; match the same frozen cohort.
 PREVERIFIED={6:'a4Syfug',10:'a2cdJUP',21:'a0wDLkC',203:'a9CgDtA',179:'a2NkvBu',
              38:'a2ERRGO',34:'a1TWSHN',37:'a7cSVad',22:'a5GwmTs',31:'a3cndYH',
-             35:'a6thNEd',36:'a9ypbnR',54:'a3WCdao',53:'a5hJTDI',59:'a3SERoa'}
+             35:'a6thNEd',36:'a9ypbnR',54:'a3WCdao',53:'a5hJTDI',59:'a3SERoa',25:'a2mfnup',93:'a3IUJFF'}
 for t in targets:
     if t['seq'] in PREVERIFIED and t['seq'] not in idmap:
         idmap[t['seq']]=(PREVERIFIED[t['seq']],t['name'])
