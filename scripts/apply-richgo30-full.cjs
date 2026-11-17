@@ -4,9 +4,10 @@
  */
 'use strict';
 const fs=require('node:fs'),path=require('node:path'),assert=require('node:assert/strict');
-const root=path.resolve(__dirname,'..'),sourcePath=root+'/public/apt-univ30.js',reportPath=root+'/docs/richgo30-resolved-20261118.json';
+const root=path.resolve(__dirname,'..'),sourcePath=root+'/public/apt-univ30.js',reportPath=root+'/docs/richgo30-final-20261118.json';
 const audit=JSON.parse(fs.readFileSync(reportPath,'utf8')),all=audit.rows;
 assert.equal(all.length,273);
+assert.equal(all.filter(x=>x.status==='direct_verified'&&x.richgo&&x.match).length,273,'do not apply until ALL 273 are source identified');
 const s=fs.readFileSync(sourcePath,'utf8'),A=JSON.parse(s.slice(s.indexOf('const A=')+8,s.indexOf(',S=[')));
 const beg=s.indexOf('R=[')+2,end=s.indexOf(';\nconst TB',beg),R=JSON.parse(s.slice(beg,end));
 assert.equal(R.length,218);
@@ -19,7 +20,8 @@ for(const r of R){
  if(d.far!=null){
    assert.ok(d.far>=50&&d.far<=1800,'implausible FAR '+key);
    if(fd[0]!==d.far){fd[0]=d.far;updated.far++}
-   if(fd[1]!=='R'){fd[1]='R';updated.source++}
+   const sourceCode=['경희궁자이(2단지)|서울 종로구 홍파동','서울숲리버뷰자이|서울 성동구 행당동'].includes(key)?'리치고':'R';
+   if(fd[1]!==sourceCode){fd[1]=sourceCode;updated.source++}
  }else updated.farUnavailable.push(key);
  // The maps contain parent complexes and subblocks. Keep the current individual
  // block units unless both the expected unit count and source identity match.
