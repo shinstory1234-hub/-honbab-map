@@ -1,0 +1,37 @@
+name: Finalize Richgo cap30 alias identities
+on:
+  push:
+    branches:
+      - audit/richgo-25to30-top300-20261118
+    paths:
+      - '.github/workflows/richgo30-finalize.yml'
+permissions:
+  contents: write
+jobs:
+  finalize:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+        with:
+          persist-credentials: true
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
+        with:
+          node-version: '22'
+      - name: Cross-check 22 pending aliases via region, year, units and coordinates
+        run: |
+          node --check scripts/finalize-richgo30-identities.cjs
+          node scripts/finalize-richgo30-identities.cjs
+      - name: Save complete evidence and explicit exceptional rows
+        if: always()
+        run: |
+          if [ -s docs/richgo30-final-20261118.json ]; then
+            git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+            git config user.name "github-actions[bot]"
+            git add -f docs/richgo30-final-20261118.json
+            if ! git diff --cached --quiet; then
+              git commit -m "audit: preserve final cap30 source exceptions and alias evidence"
+              git pull --rebase origin audit/richgo-25to30-top300-20261118
+              git push origin HEAD:audit/richgo-25to30-top300-20261118
+            fi
+          fi
