@@ -4,9 +4,7 @@
 <meta charset="utf-8">
 <script>try{var t=localStorage.aptTheme;if(t?t=="dark":matchMedia("(prefers-color-scheme:dark)").matches)document.documentElement.className="dk"}catch(e){}</script>
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<meta name="theme-color" content="#ffffff">
-<link rel="icon" href="/icon.svg" type="image/svg+xml">
-<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<link rel="icon" href="/icon.svg">
 <title>아파트맵 · 수도권 아파트 단지 순위</title>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable.min.css">
 <style>
@@ -53,7 +51,7 @@ a{color:inherit;text-decoration:none}
 .linkbtn{color:var(--primary-soft-fg);text-decoration:underline;font-size:inherit;padding:0}
 @media(max-width:520px){.notice-gate{padding:0;align-items:flex-end}.notice-card{max-height:94dvh;padding:24px 20px calc(20px + env(safe-area-inset-bottom));border-radius:5px 12px 0 0}.notice-actions{grid-template-columns:1fr}.notice-actions .agree{order:-1}}
 
-/* ── masthead ── */
+
 .masthead{display:flex;align-items:center;gap:24px;height:72px;padding:0 28px;border-bottom:1px solid var(--text);flex:none;z-index:21;background:var(--bg)}
 .wordmark{display:inline-flex;align-items:center;font-size:31px;font-weight:950;line-height:1;letter-spacing:-.095em;white-space:nowrap}
 .wordmark{color:inherit;text-decoration:none;cursor:pointer;-webkit-tap-highlight-color:transparent}
@@ -77,7 +75,7 @@ main{flex:1;display:flex;min-height:0;position:relative}
 #map{position:absolute;inset:0}
 #keymsg{display:none;position:absolute;inset:0;align-items:center;justify-content:center;text-align:center;font-size:14px;line-height:1.7;padding:24px;color:var(--text-tertiary);z-index:2;background:var(--bg-subtle)}
 
-/* ── panel ── */
+
 aside{order:-1;width:408px;flex:none;border-right:1px solid var(--border);background:var(--bg);display:flex;flex-direction:column;min-height:0;z-index:20}
 .grab{display:none}
 .sheet-head{flex:none}
@@ -166,7 +164,7 @@ aside{order:-1;width:408px;flex:none;border-right:1px solid var(--border);backgr
 .excluded li span{grid-column:1/-1;font-size:12px;color:var(--text-tertiary)}
 .source{padding:16px 24px 40px;font-size:11.5px;line-height:1.8;color:var(--text-tertiary);word-break:keep-all}
 
-/* ── detail ── */
+
 .phead{display:flex;align-items:center;justify-content:space-between;min-height:50px;padding:3px 14px 3px 16px;border-bottom:1px solid var(--border-soft)}
 .phead button{display:flex;align-items:center;gap:6px;min-height:44px;padding:0 8px;border-radius:4px;font-size:13px;font-weight:600;color:var(--text-secondary)}
 .phead button:hover{background:var(--bg-muted)}
@@ -264,7 +262,7 @@ aside{order:-1;width:408px;flex:none;border-right:1px solid var(--border);backgr
 .btn.ghost{flex:none;background:var(--bg);color:var(--text-secondary);border:1px solid var(--border)}
 .btn.ghost:hover{background:var(--bg-subtle)}
 
-/* ── map markers (판단 chip) ── */
+
 .mk{transform:translate(-50%,-100%) translateY(-6px);cursor:pointer;white-space:nowrap;font-family:"Pretendard Variable",Pretendard,sans-serif;letter-spacing:-.02em;position:relative}
 .mk>div{display:flex;align-items:center;gap:6px;background:#fff;border:1px solid rgba(112,115,124,.28);border-radius:8px;box-shadow:0 2px 8px rgba(23,23,23,.12);padding:4px 8px 4px 4px;line-height:1.25}
 .mk::after{content:"";position:absolute;left:50%;bottom:-5px;margin-left:-5px;border:5px solid transparent;border-top-color:#fff;border-bottom:0;filter:drop-shadow(0 1px 0 rgba(112,115,124,.28))}
@@ -358,7 +356,7 @@ aside{order:-1;width:408px;flex:none;border-right:1px solid var(--border);backgr
   try{ var ps=document.createElement('script'); ps.async=true; ps.src='/api/apt-first?cap='+x; document.head.appendChild(ps); }catch(e){}
   /* 주변 시세 커널(apt-loc10·cx10)은 가격과 무관한 전체 단지 자료라 6~10억·10~15억 탭이 같이 씀 */
   var F=[T?'':'apt-first.js','apt-unitfix.js',T?'apt-stsfix.js':'','apt-sd.js','apt-picks.js', T?'apt-picks10.js':'apt-auto3.js','apt-gj.js', T?'apt-loc10.js':'apt-loc.js', T?'apt-cx10.js':'apt-cx.js','apt-fard.js','apt-hak.js', T&&c!==35?'apt-univ10.js':T?'':'apt-univ.js', T&&c!==35?'apt-univ15.js':'', T&&c!==35?'apt-univ20.js':'', T&&c!==35?'apt-univ30.js':'', T&&c!==35?'apt-univadd.js':'', T?'apt-live.js':'apt-live6.js', c===35?'apt-univ35.js':'',
-    'apt-farplan.js','apt-mixhi.js','apt-cur.js',T?'apt-livefix.js':'apt-curlive.js','apt-trn.js','apt-small.js', T?'apt-s4q'+dataCap+'.js':'apt-s4q.js','apt-peak.js','apt-gjl.js', T?'apt-gjc.js':'',T?'apt-transport.js':'','apt-s4.js','apt-redevelopment-evidence.js',T?'apt-m3.js':'','apt-band.js','apt-plat.js','apt-farfix.js',T?'apt-far-normalize.js':'','apt-dem.js', T?'apt-dem10.js':'', T?'apt-dem15.js':'', T?'apt-dem20.js':'', T?'apt-dem30.js':'', T?'apt-demadd.js':'','apt-walk.js','apt-geo.js', T?'':'apt-deep6-100.js', T?'':'apt-deep6-200.js', T?'':'apt-research6-600.js', T?'':'apt-invest-ui.js'];
+    'apt-farplan.js','apt-mixhi.js','apt-cur.js',T?'apt-livefix.js':'apt-curlive.js','apt-trn.js','apt-small.js', T?'apt-s4q'+dataCap+'.js':'apt-s4q.js','apt-peak.js','apt-gjl.js', T?'apt-gjc.js':'',T?'apt-transport.js':'','apt-s4.js','apt-redevelopment-evidence.js',T?'apt-m3.js':'','apt-band.js','apt-plat.js','apt-farfix.js',T?'apt-far-normalize.js':'',c===15?'apt-richgo15.js':'','apt-dem.js', T?'apt-dem10.js':'', T?'apt-dem15.js':'', T?'apt-dem20.js':'', T?'apt-dem30.js':'', T?'apt-demadd.js':'','apt-walk.js','apt-geo.js', T?'':'apt-deep6-100.js', T?'':'apt-deep6-200.js', T?'':'apt-research6-600.js', T?'':'apt-invest-ui.js'];
   for(var i=0;i<F.length;i++) if(F[i]) document.write('<script src="'+F[i]+'"><\/script>');
   if(T) document.title='아파트맵 · '+CAPTXT+' 아파트';
   var t6=document.getElementById('cap'+x); if(t6){ t6.setAttribute('aria-current','page'); try{ t6.scrollIntoView({block:'nearest',inline:'center'}); }catch(e){} } var hm=document.getElementById('home'); if(hm&&T) hm.href='apt-map.html?cap='+x;

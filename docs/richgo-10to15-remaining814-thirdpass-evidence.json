@@ -1,0 +1,267 @@
+{
+  "stats": {
+    "total": 814,
+    "verified": 791,
+    "aggregate": 9,
+    "unidentified": 14,
+    "farCorrections": 922,
+    "yearCorrections": 53,
+    "unitCorrections": 116
+  },
+  "items": [
+    {
+      "seq": 330,
+      "name": "자양호반써밋",
+      "area": "서울 광진구 자양동",
+      "method": "direct",
+      "richgo": {
+        "name": "호반써밋자양(주)",
+        "title": "'자양동 호반써밋자양(주)' 실거래가·시세·2년뒤 가격예측 분석 - 리치고",
+        "year": 2021,
+        "units": 305,
+        "far": 399,
+        "id": "a0BWwsg",
+        "url": "https://m.richgo.ai/realty/danji/a0BWwsg",
+        "floors": "18~26층",
+        "coverage": 51,
+        "parking": 285,
+        "heating": "개별난방 · 도시가스",
+        "builder": "(주)호반건설",
+        "pyeongs": "16·17·24·34평"
+      },
+      "changed": [
+        "far"
+      ],
+      "originalUnits": 305
+    },
+    {
+      "seq": 467,
+      "name": "마고정3단지센트레빌(301~309동)BL2-11",
+      "area": "서울 은평구 진관동",
+      "method": "direct",
+      "richgo": {
+        "name": "은평뉴타운마고정11단지",
+        "title": "'진관동 은평뉴타운마고정11단지' 실거래가·시세·2년뒤 가격예측 분석 - 리치고",
+        "year": 2009,
+        "units": 469,
+        "far": 177,
+        "id": "a6fZaNq",
+        "url": "https://m.richgo.ai/realty/danji/a6fZaNq",
+        "floors": "7~18층",
+        "coverage": 15,
+        "parking": 629,
+        "heating": "지역난방 · 열병합",
+        "builder": "동부건설,포스코건설",
+        "pyeongs": "32·33·34·51·52·64·65평"
+      },
+      "changed": [
+        "far",
+        "units"
+      ],
+      "originalUnits": 483
+    },
+    {
+      "seq": 468,
+      "name": "마고정3단지센트레빌(310~322동)BL2-3",
+      "area": "서울 은평구 진관동",
+      "method": "direct",
+      "richgo": {
+        "name": "은평뉴타운마고정3단지",
+        "title": "'진관동 은평뉴타운마고정3단지' 아파트 실거래가·시세·2년뒤 가격예측 분석 - 리치고",
+        "year": 2009,
+        "units": 659,
+        "far": 156,
+        "id": "a3YowZk",
+        "url": "https://m.richgo.ai/realty/danji/a3YowZk",
+        "floors": "6~19층",
+        "coverage": 21,
+        "parking": 936,
+        "heating": "지역난방 · 열병합",
+        "builder": "동부건설(주)",
+        "pyeongs": "22·23·32·33·39·50·52·63·64평"
+      },
+      "changed": [
+        "far"
+      ],
+      "originalUnits": 659
+    },
+    {
+      "seq": 469,
+      "name": "마고정3단지센트레빌(323~335동)BL2-2",
+      "area": "서울 은평구 진관동",
+      "method": "direct",
+      "richgo": {
+        "name": "은평뉴타운마고정2단지",
+        "title": "'진관동 은평뉴타운마고정2단지' 아파트 실거래가·시세·2년뒤 가격예측 분석 - 리치고",
+        "year": 2009,
+        "units": 434,
+        "far": 170,
+        "id": "a9ScTbN",
+        "url": "https://m.richgo.ai/realty/danji/a9ScTbN",
+        "floors": "6~18층",
+        "coverage": 21,
+        "parking": 595,
+        "heating": "지역난방 · 열병합",
+        "builder": "동부건설(주)외 1",
+        "pyeongs": "22·32·33·38·39·40·51·52·63·65평"
+      },
+      "changed": [
+        "far",
+        "units"
+      ],
+      "originalUnits": 447
+    },
+    {
+      "seq": 473,
+      "name": "상림마을8단지롯데캐슬(810~820동)BL1-1",
+      "area": "서울 은평구 진관동",
+      "method": "direct",
+      "richgo": {
+        "name": "은평뉴타운상림1단지롯데캐슬",
+        "title": "'진관동 은평뉴타운상림1단지롯데캐슬' 아파트 실거래가·시세·2년뒤 가격예측 분석 - 리치고",
+        "year": 2008,
+        "units": 707,
+        "far": 172,
+        "id": "a6wJeBo",
+        "url": "https://m.richgo.ai/realty/danji/a6wJeBo",
+        "floors": "7~15층",
+        "coverage": 26,
+        "parking": 883,
+        "heating": "지역난방 · 열병합",
+        "builder": "롯데건설(주)외1",
+        "pyeongs": "31·32·40·41·50·51·52평"
+      },
+      "changed": [
+        "far",
+        "units"
+      ],
+      "originalUnits": 729
+    },
+    {
+      "seq": 475,
+      "name": "우물골2단지두산위브(223~244동)BL2-7",
+      "area": "서울 은평구 진관동",
+      "method": "direct",
+      "richgo": {
+        "name": "은평뉴타운우물골7단지",
+        "title": "'진관동 은평뉴타운우물골7단지' 아파트 실거래가·시세·2년뒤 가격예측 분석 - 리치고",
+        "year": 2010,
+        "units": 472,
+        "far": 136,
+        "id": "a2azqhU",
+        "url": "https://m.richgo.ai/realty/danji/a2azqhU",
+        "floors": "4~15층",
+        "coverage": 28,
+        "parking": 855,
+        "heating": "지역난방 · 열병합",
+        "builder": "두산건설,금호건설",
+        "pyeongs": "31·32·37·38·49·50·61·62·63평"
+      },
+      "changed": [
+        "far",
+        "units"
+      ],
+      "originalUnits": 486
+    },
+    {
+      "seq": 476,
+      "name": "우물골2단지두산위브(245~255동)BL2-6",
+      "area": "서울 은평구 진관동",
+      "method": "direct",
+      "richgo": {
+        "name": "은평뉴타운우물골6단지",
+        "title": "'진관동 은평뉴타운우물골6단지' 아파트 실거래가·시세·2년뒤 가격예측 분석 - 리치고",
+        "year": 2009,
+        "units": 353,
+        "far": 149,
+        "id": "a7XASvX",
+        "url": "https://m.richgo.ai/realty/danji/a7XASvX",
+        "floors": "3~15층",
+        "coverage": 22,
+        "parking": 519,
+        "heating": "지역난방 · 열병합",
+        "builder": "두산건설(주)",
+        "pyeongs": "31·32·37·38·50·51·62·64평"
+      },
+      "changed": [
+        "far"
+      ],
+      "originalUnits": 353
+    },
+    {
+      "seq": 1032,
+      "name": "대지마을현대홈타운3차2단지",
+      "area": "용인 수지구 죽전동",
+      "method": "direct",
+      "richgo": {
+        "name": "대지마을3차2단지현대홈타운",
+        "title": "'죽전동 대지마을3차2단지현대홈타운' 아파트 실거래가·시세·2년뒤 가격예측 분석 - 리치고",
+        "year": 2003,
+        "units": 537,
+        "far": 200,
+        "id": "a5sCUud",
+        "url": "https://m.richgo.ai/realty/danji/a5sCUud",
+        "floors": "16~20층",
+        "coverage": 16,
+        "parking": 657,
+        "heating": "지역난방 · 열병합",
+        "builder": "현대건설㈜",
+        "pyeongs": "33·46평"
+      },
+      "changed": [
+        "far",
+        "units"
+      ],
+      "originalUnits": 538
+    },
+    {
+      "seq": 789,
+      "name": "정든마을(8단지)(한진)",
+      "area": "성남 분당구 정자동",
+      "method": "direct",
+      "richgo": {
+        "name": "정든한진8차",
+        "title": "'정자동 정든한진8차' 실거래가·시세·2년뒤 가격예측 분석 - 리치고",
+        "year": 1995,
+        "units": 512,
+        "far": 188,
+        "id": "a4zbqFY",
+        "url": "https://m.richgo.ai/realty/danji/a4zbqFY",
+        "floors": "13~25층",
+        "coverage": 14,
+        "parking": 647,
+        "heating": "지역난방 · 열병합",
+        "builder": "한진종합건설(주)",
+        "pyeongs": "20·26·31·36·40·47·58평"
+      },
+      "changed": [
+        "far",
+        "units"
+      ],
+      "originalUnits": 634
+    },
+    {
+      "seq": 1063,
+      "name": "METAPOLIS",
+      "area": "화성 동탄구 반송동",
+      "method": "combined",
+      "richgo": {
+        "name": "메타폴리스",
+        "title": "'반송동 메타폴리스' 아파트 실거래가·시세·2년뒤 가격예측 분석 - 리치고",
+        "year": 2010,
+        "units": 1266,
+        "far": 503,
+        "id": "a0KvURQ",
+        "url": "https://m.richgo.ai/realty/danji/a0KvURQ",
+        "floors": "55~66층",
+        "coverage": 70,
+        "parking": 4184,
+        "heating": "지역난방 · 열병합",
+        "builder": "(주)포스코건설",
+        "pyeongs": "40·46·48·54·68·79·88·98평"
+      },
+      "changed": [],
+      "originalUnits": 617
+    }
+  ]
+}

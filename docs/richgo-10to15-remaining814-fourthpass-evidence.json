@@ -1,0 +1,177 @@
+{
+  "summary": {
+    "total": 814,
+    "verified": 795,
+    "aggregate": 12,
+    "unidentified": 7,
+    "far": 926,
+    "year": 53,
+    "units": 118
+  },
+  "entries": [
+    {
+      "seq": 435,
+      "name": "신동아(366)",
+      "area": "서울 노원구 중계동",
+      "classification": "direct",
+      "site": {
+        "id": "a7rFudH",
+        "url": "https://m.richgo.ai/realty/danji/a7rFudH",
+        "name": "라이프,청구,신동아",
+        "title": "'중계동 라이프,청구,신동아' 실거래가·시세·2년뒤 가격예측 분석 - 리치고",
+        "year": 1993,
+        "units": 960,
+        "far": 215,
+        "floors": "10~15층",
+        "coverage": 19,
+        "parking": 1353,
+        "heating": "중앙난방 · 도시가스",
+        "builder": "라이프주택개발(주),(주)청구,신동아건설(주)",
+        "pyeongs": "36·37·41평"
+      },
+      "changes": [
+        "far"
+      ]
+    },
+    {
+      "seq": 445,
+      "name": "현대",
+      "area": "서울 노원구 하계동",
+      "classification": "direct",
+      "site": {
+        "id": "a0lUGCq",
+        "url": "https://m.richgo.ai/realty/danji/a0lUGCq",
+        "name": "현대,우성",
+        "title": "'하계동 현대,우성' 실거래가·시세·2년뒤 가격예측 분석 - 리치고",
+        "year": 1988,
+        "units": 1320,
+        "far": 209,
+        "floors": "15~15층",
+        "coverage": 11,
+        "parking": 1386,
+        "heating": "중앙난방 · 도시가스",
+        "builder": "우성건설,현대산업개발",
+        "pyeongs": "26·30·31·44평"
+      },
+      "changes": [
+        "far"
+      ]
+    },
+    {
+      "seq": 738,
+      "name": "청명마을대우",
+      "area": "수원 영통구 영통동",
+      "classification": "direct",
+      "site": {
+        "id": "a6AtYvW",
+        "url": "https://m.richgo.ai/realty/danji/a6AtYvW",
+        "name": "대우",
+        "title": "'영통동 대우' 아파트 실거래가·시세·2년뒤 가격예측 분석 - 리치고",
+        "year": 1998,
+        "units": 492,
+        "far": 217,
+        "floors": "18~20층",
+        "coverage": 16,
+        "parking": 890,
+        "heating": "지역난방 · 열병합",
+        "builder": "(주)대우 외1",
+        "pyeongs": "37·49·59평"
+      },
+      "changes": [
+        "far",
+        "units"
+      ]
+    },
+    {
+      "seq": 739,
+      "name": "청명마을동신",
+      "area": "수원 영통구 영통동",
+      "classification": "direct",
+      "site": {
+        "id": "a2tDRsZ",
+        "url": "https://m.richgo.ai/realty/danji/a2tDRsZ",
+        "name": "동신",
+        "title": "'영통동 동신' 아파트 실거래가·시세·2년뒤 가격예측 분석 - 리치고",
+        "year": 1998,
+        "units": 492,
+        "far": 217,
+        "floors": "18~20층",
+        "coverage": 16,
+        "parking": 882,
+        "heating": "지역난방 · 열병합",
+        "builder": "대우외1",
+        "pyeongs": "37·49·59평"
+      },
+      "changes": [
+        "far",
+        "units"
+      ]
+    },
+    {
+      "seq": 353,
+      "name": "전농동삼성래미안",
+      "area": "서울 동대문구 전농동",
+      "classification": "combined",
+      "site": {
+        "id": "a4qEeIw",
+        "url": "https://m.richgo.ai/realty/danji/a4qEeIw",
+        "name": "전농삼성(전농삼성래미안)",
+        "title": "'전농동 전농삼성(전농삼성래미안)' 아파트 실거래가·시세·2년뒤 가격예측 분석 - 리치고",
+        "year": 2000,
+        "units": 463,
+        "far": 258,
+        "floors": "9~22층",
+        "coverage": 19,
+        "parking": 611,
+        "heating": "개별난방 · 도시가스",
+        "builder": "삼성물산(주)",
+        "pyeongs": "26·33·43평"
+      },
+      "changes": []
+    },
+    {
+      "seq": 466,
+      "name": "구파발9단지래미안(916~928동)BL3-2",
+      "area": "서울 은평구 진관동",
+      "classification": "combined",
+      "site": {
+        "id": "a5USULw",
+        "url": "https://m.richgo.ai/realty/danji/a5USULw",
+        "name": "은평뉴타운구파발9단지래미안",
+        "title": "'진관동 은평뉴타운구파발9단지래미안' 아파트 실거래가·시세·2년뒤 가격예측 분석 - 리치고",
+        "year": 2010,
+        "units": 486,
+        "far": 149,
+        "floors": "7~10층",
+        "coverage": 23,
+        "parking": 811,
+        "heating": "지역난방 · 열병합",
+        "builder": "삼성물산(주)",
+        "pyeongs": "31·38·49·50·61평"
+      },
+      "changes": []
+    },
+    {
+      "seq": 787,
+      "name": "아름마을(한성)",
+      "area": "성남 분당구 이매동",
+      "classification": "combined",
+      "site": {
+        "id": "a6PTEyj",
+        "url": "https://m.richgo.ai/realty/danji/a6PTEyj",
+        "name": "아름2단지한성",
+        "title": "'이매동 아름2단지한성' 실거래가·시세·2년뒤 가격예측 분석 - 리치고",
+        "year": 1992,
+        "units": 240,
+        "far": 191,
+        "floors": "5~5층",
+        "coverage": 18,
+        "parking": 192,
+        "heating": "지역난방 · 열병합",
+        "builder": "(주)건영,(주)태영,(주)한성",
+        "pyeongs": "20·29평"
+      },
+      "changes": []
+    }
+  ]
+}

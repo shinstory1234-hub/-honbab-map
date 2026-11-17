@@ -1,0 +1,556 @@
+{
+  "counts": {
+    "checked": 814,
+    "direct": 782,
+    "exceptions": 8,
+    "unidentified": 24,
+    "fromSecondPass": 20,
+    "far": 913,
+    "year": 53,
+    "units": 110
+  },
+  "review": [
+    {
+      "seq": 302,
+      "name": "로얄팰리스스위트",
+      "status": "리치고단지미확인",
+      "reason": "no same-dong verified detail"
+    },
+    {
+      "seq": 308,
+      "name": "힐스테이트세운센트럴1단지",
+      "status": "집계단위불일치",
+      "candidate": "https://m.richgo.ai/realty/danji/a7aggsx",
+      "siteName": "힐스테이트세운센트럴1단지(도시형)",
+      "siteUnits": 208,
+      "origUnits": 414,
+      "yearMatch": true
+    },
+    {
+      "seq": 309,
+      "name": "힐스테이트세운센트럴2단지",
+      "status": "집계단위불일치",
+      "candidate": "https://m.richgo.ai/realty/danji/a9SPEen",
+      "siteName": "힐스테이트세운센트럴2단지(도시형)",
+      "siteUnits": 279,
+      "origUnits": 608,
+      "yearMatch": true
+    },
+    {
+      "seq": 315,
+      "name": "삼성쉐르빌",
+      "status": "집계단위불일치",
+      "candidate": "https://m.richgo.ai/realty/danji/a6niYpd",
+      "siteName": "성동삼성쉐르빌",
+      "siteUnits": 342,
+      "origUnits": 455,
+      "yearMatch": true
+    },
+    {
+      "seq": 330,
+      "name": "자양호반써밋",
+      "status": "리치고후보불일치",
+      "candidate": "https://m.richgo.ai/realty/danji/a1kCsvW",
+      "siteName": "자양우성3차",
+      "siteUnits": 464,
+      "origUnits": 305,
+      "yearMatch": false
+    },
+    {
+      "seq": 353,
+      "name": "전농동삼성래미안",
+      "status": "리치고후보불일치",
+      "candidate": "https://m.richgo.ai/realty/danji/a4qEeIw",
+      "siteName": "전농삼성(전농삼성래미안)",
+      "siteUnits": 463,
+      "origUnits": 618,
+      "yearMatch": true
+    },
+    {
+      "seq": 369,
+      "name": "진로아파트",
+      "status": "직접확인",
+      "source": "https://m.richgo.ai/realty/danji/a2ArjCM",
+      "changes": [
+        "units",
+        "far"
+      ],
+      "yearMatch": true,
+      "ratio": 1.028117359413203
+    },
+    {
+      "seq": 385,
+      "name": "현대I-PARK",
+      "status": "직접확인",
+      "source": "https://m.richgo.ai/realty/danji/a5YJwYi",
+      "changes": [
+        "far"
+      ],
+      "yearMatch": true,
+      "ratio": 1
+    },
+    {
+      "seq": 390,
+      "name": "석관래미안",
+      "status": "직접확인",
+      "source": "https://m.richgo.ai/realty/danji/a1slmPk",
+      "changes": [
+        "far"
+      ],
+      "yearMatch": true,
+      "ratio": 1
+    },
+    {
+      "seq": 391,
+      "name": "안암동삼성래미안",
+      "status": "직접확인",
+      "source": "https://m.richgo.ai/realty/danji/a3bwSJg",
+      "changes": [
+        "far"
+      ],
+      "yearMatch": true,
+      "ratio": 1
+    },
+    {
+      "seq": 415,
+      "name": "주공19단지(창동리버타운)",
+      "status": "직접확인",
+      "source": "https://m.richgo.ai/realty/danji/a3yVfGc",
+      "changes": [
+        "units",
+        "far"
+      ],
+      "yearMatch": true,
+      "ratio": 2.2615384615384615
+    },
+    {
+      "seq": 432,
+      "name": "롯데(505)",
+      "status": "직접확인",
+      "source": "https://m.richgo.ai/realty/danji/a8SYGOo",
+      "changes": [
+        "far"
+      ],
+      "yearMatch": true,
+      "ratio": 1
+    },
+    {
+      "seq": 435,
+      "name": "신동아(366)",
+      "status": "리치고후보불일치",
+      "candidate": "https://m.richgo.ai/realty/danji/a0nfdzo",
+      "siteName": "동진신안",
+      "siteUnits": 468,
+      "origUnits": 960,
+      "yearMatch": true
+    },
+    {
+      "seq": 448,
+      "name": "북한산래미안아파트(1단지)",
+      "status": "집계단위불일치",
+      "candidate": "https://m.richgo.ai/realty/danji/a3gCydX",
+      "siteName": "북한산래미안",
+      "siteUnits": 782,
+      "origUnits": 305,
+      "yearMatch": true
+    },
+    {
+      "seq": 449,
+      "name": "북한산래미안아파트(2단지)",
+      "status": "집계단위불일치",
+      "candidate": "https://m.richgo.ai/realty/danji/a3gCydX",
+      "siteName": "북한산래미안",
+      "siteUnits": 782,
+      "origUnits": 342,
+      "yearMatch": true
+    },
+    {
+      "seq": 466,
+      "name": "구파발9단지래미안(916~928동)BL3-2",
+      "status": "리치고후보불일치",
+      "candidate": "https://m.richgo.ai/realty/danji/a5USULw",
+      "siteName": "은평뉴타운구파발9단지래미안",
+      "siteUnits": 486,
+      "origUnits": 529,
+      "yearMatch": true
+    },
+    {
+      "seq": 467,
+      "name": "마고정3단지센트레빌(301~309동)BL2-11",
+      "status": "리치고후보불일치",
+      "candidate": "https://m.richgo.ai/realty/danji/a4ihRFr",
+      "siteName": "은평뉴타운박석고개힐스테이트12단지",
+      "siteUnits": 660,
+      "origUnits": 483,
+      "yearMatch": true
+    },
+    {
+      "seq": 468,
+      "name": "마고정3단지센트레빌(310~322동)BL2-3",
+      "status": "리치고후보불일치",
+      "candidate": "https://m.richgo.ai/realty/danji/a0clZnK",
+      "siteName": "은평뉴타운박석고개13단지",
+      "siteUnits": 162,
+      "origUnits": 659,
+      "yearMatch": false
+    },
+    {
+      "seq": 469,
+      "name": "마고정3단지센트레빌(323~335동)BL2-2",
+      "status": "리치고후보불일치",
+      "candidate": "https://m.richgo.ai/realty/danji/a0clZnK",
+      "siteName": "은평뉴타운박석고개13단지",
+      "siteUnits": 162,
+      "origUnits": 447,
+      "yearMatch": false
+    },
+    {
+      "seq": 472,
+      "name": "상림마을7단지아이파크(730~742동)BL1-14",
+      "status": "직접확인",
+      "source": "https://m.richgo.ai/realty/danji/a0dUxLO",
+      "changes": [
+        "units",
+        "far"
+      ],
+      "yearMatch": true,
+      "ratio": 1.0066666666666666
+    },
+    {
+      "seq": 473,
+      "name": "상림마을8단지롯데캐슬(810~820동)BL1-1",
+      "status": "리치고후보불일치",
+      "candidate": "https://m.richgo.ai/realty/danji/a0MUaqq",
+      "siteName": "은평뉴타운상림2단지롯데캐슬",
+      "siteUnits": 335,
+      "origUnits": 729,
+      "yearMatch": true
+    },
+    {
+      "seq": 474,
+      "name": "상림마을8단지롯데캐슬(821~830동)BL1-12",
+      "status": "직접확인",
+      "source": "https://m.richgo.ai/realty/danji/a1TmRBW",
+      "changes": [
+        "far"
+      ],
+      "yearMatch": true,
+      "ratio": 1
+    },
+    {
+      "seq": 475,
+      "name": "우물골2단지두산위브(223~244동)BL2-7",
+      "status": "리치고후보불일치",
+      "candidate": "https://m.richgo.ai/realty/danji/a8hcOCG",
+      "siteName": "은평뉴타운폭포동힐스테이트4-4단지",
+      "siteUnits": 125,
+      "origUnits": 486,
+      "yearMatch": true
+    },
+    {
+      "seq": 476,
+      "name": "우물골2단지두산위브(245~255동)BL2-6",
+      "status": "리치고후보불일치",
+      "candidate": "https://m.richgo.ai/realty/danji/a1oWCGZ",
+      "siteName": "은평뉴타운제각말5-2단지",
+      "siteUnits": 175,
+      "origUnits": 353,
+      "yearMatch": false
+    },
+    {
+      "seq": 477,
+      "name": "은평뉴타운 제각말 푸르지오(5-4단지)",
+      "status": "직접확인",
+      "source": "https://m.richgo.ai/realty/danji/a0jqPZb",
+      "changes": [
+        "units",
+        "far"
+      ],
+      "yearMatch": true,
+      "ratio": 1.0412621359223302
+    },
+    {
+      "seq": 479,
+      "name": "폭포동4단지힐스테이트(408~422동)BL3-9",
+      "status": "리치고후보불일치",
+      "candidate": "https://m.richgo.ai/realty/danji/a0VYFkn",
+      "siteName": "은평뉴타운폭포동힐스테이트4-2단지",
+      "siteUnits": 571,
+      "origUnits": 585,
+      "yearMatch": true
+    },
+    {
+      "seq": 507,
+      "name": "코오롱",
+      "status": "직접확인",
+      "source": "https://m.richgo.ai/realty/danji/a7VTdcd",
+      "changes": [
+        "units",
+        "far"
+      ],
+      "yearMatch": true,
+      "ratio": 1.111587982832618
+    },
+    {
+      "seq": 509,
+      "name": "마포중동현대",
+      "status": "직접확인",
+      "source": "https://m.richgo.ai/realty/danji/a0kQMiT",
+      "changes": [],
+      "yearMatch": true,
+      "ratio": 1
+    },
+    {
+      "seq": 512,
+      "name": "대원칸타빌2",
+      "status": "집계단위불일치",
+      "candidate": "https://m.richgo.ai/realty/danji/a9gcqpC",
+      "siteName": "목동대원칸타빌",
+      "siteUnits": 511,
+      "origUnits": 387,
+      "yearMatch": true
+    },
+    {
+      "seq": 534,
+      "name": "진로,미주아파트",
+      "status": "리치고후보불일치",
+      "candidate": "https://m.richgo.ai/realty/danji/a4SgcxK",
+      "siteName": "그레이스힐(주상복합)",
+      "siteUnits": 182,
+      "origUnits": 488,
+      "yearMatch": false
+    },
+    {
+      "seq": 544,
+      "name": "관음삼성",
+      "status": "직접확인",
+      "source": "https://m.richgo.ai/realty/danji/a7JHFyX",
+      "changes": [
+        "far"
+      ],
+      "yearMatch": true,
+      "ratio": 1
+    },
+    {
+      "seq": 546,
+      "name": "삼성한마음",
+      "status": "직접확인",
+      "source": "https://m.richgo.ai/realty/danji/a7ZKaci",
+      "changes": [
+        "far"
+      ],
+      "yearMatch": true,
+      "ratio": 1
+    },
+    {
+      "seq": 557,
+      "name": "현대홈타운",
+      "status": "직접확인",
+      "source": "https://m.richgo.ai/realty/danji/a2DFWoS",
+      "changes": [
+        "units",
+        "far"
+      ],
+      "yearMatch": true,
+      "ratio": 1.0010373443983402
+    },
+    {
+      "seq": 613,
+      "name": "상도동래미안1차",
+      "status": "직접확인",
+      "source": "https://m.richgo.ai/realty/danji/a5HnUBs",
+      "changes": [
+        "units",
+        "far"
+      ],
+      "yearMatch": true,
+      "ratio": 1.001937984496124
+    },
+    {
+      "seq": 617,
+      "name": "현대(관악)",
+      "status": "리치고후보불일치",
+      "candidate": "https://m.richgo.ai/realty/danji/a3LEcar",
+      "siteName": "상도현대",
+      "siteUnits": 194,
+      "origUnits": 405,
+      "yearMatch": false
+    },
+    {
+      "seq": 625,
+      "name": "낙성대현대아파트",
+      "status": "리치고후보불일치",
+      "candidate": "https://m.richgo.ai/realty/danji/a4McfUV",
+      "siteName": "낙성대현대1차",
+      "siteUnits": 251,
+      "origUnits": 354,
+      "yearMatch": true
+    },
+    {
+      "seq": 645,
+      "name": "씨티극동1",
+      "status": "직접확인",
+      "source": "https://m.richgo.ai/realty/danji/a1wEMdP",
+      "changes": [
+        "units"
+      ],
+      "yearMatch": true,
+      "ratio": 1.0769230769230769
+    },
+    {
+      "seq": 737,
+      "name": "신나무실신원",
+      "status": "직접확인",
+      "source": "https://m.richgo.ai/realty/danji/a3EBZsb",
+      "changes": [
+        "far"
+      ],
+      "yearMatch": true,
+      "ratio": 1
+    },
+    {
+      "seq": 738,
+      "name": "청명마을대우",
+      "status": "리치고후보불일치",
+      "candidate": "https://m.richgo.ai/realty/danji/a4elXjB",
+      "siteName": "청명마을주공",
+      "siteUnits": 946,
+      "origUnits": 984,
+      "yearMatch": false
+    },
+    {
+      "seq": 739,
+      "name": "청명마을동신",
+      "status": "리치고후보불일치",
+      "candidate": "https://m.richgo.ai/realty/danji/a4elXjB",
+      "siteName": "청명마을주공",
+      "siteUnits": 946,
+      "origUnits": 984,
+      "yearMatch": false
+    },
+    {
+      "seq": 781,
+      "name": "장안타운(건영)",
+      "status": "집계단위불일치",
+      "candidate": "https://m.richgo.ai/realty/danji/a5kycZx",
+      "siteName": "장안타운건영2차",
+      "siteUnits": 1688,
+      "origUnits": 437,
+      "yearMatch": true
+    },
+    {
+      "seq": 787,
+      "name": "아름마을(한성)",
+      "status": "리치고후보불일치",
+      "candidate": "https://m.richgo.ai/realty/danji/a6PTEyj",
+      "siteName": "아름2단지한성",
+      "siteUnits": 240,
+      "origUnits": 1380,
+      "yearMatch": true
+    },
+    {
+      "seq": 789,
+      "name": "정든마을(8단지)(한진)",
+      "status": "리치고후보불일치",
+      "candidate": "https://m.richgo.ai/realty/danji/a4sRytd",
+      "siteName": "정든우성4단지",
+      "siteUnits": 270,
+      "origUnits": 634,
+      "yearMatch": true
+    },
+    {
+      "seq": 795,
+      "name": "샛별한양4-3",
+      "status": "집계단위불일치",
+      "candidate": "https://m.richgo.ai/realty/danji/a3MLtkM",
+      "siteName": "샛별한양2,3단지",
+      "siteUnits": 1482,
+      "origUnits": 638,
+      "yearMatch": true
+    },
+    {
+      "seq": 814,
+      "name": "샘마을대우",
+      "status": "리치고후보불일치",
+      "candidate": "https://m.richgo.ai/realty/danji/a9mbTep",
+      "siteName": "샘마을임광",
+      "siteUnits": 390,
+      "origUnits": 1072,
+      "yearMatch": false
+    },
+    {
+      "seq": 824,
+      "name": "백송마을(엘지에스케이)",
+      "status": "직접확인",
+      "source": "https://m.richgo.ai/realty/danji/a3jMqAl",
+      "changes": [
+        "far"
+      ],
+      "yearMatch": true,
+      "ratio": 1
+    },
+    {
+      "seq": 873,
+      "name": "한화 포레나 킨텍스",
+      "status": "직접확인",
+      "source": "https://m.richgo.ai/realty/danji/a3ZKWqY",
+      "changes": [
+        "far"
+      ],
+      "yearMatch": true,
+      "ratio": 1
+    },
+    {
+      "seq": 915,
+      "name": "덕소강변현대",
+      "status": "직접확인",
+      "source": "https://m.richgo.ai/realty/danji/a9fwxxT",
+      "changes": [
+        "units"
+      ],
+      "yearMatch": true,
+      "ratio": 1.0335917312661498
+    },
+    {
+      "seq": 952,
+      "name": "동일하이빌",
+      "status": "리치고후보불일치",
+      "candidate": "https://m.richgo.ai/realty/danji/a0ffhZg",
+      "siteName": "성원상떼빌",
+      "siteUnits": 234,
+      "origUnits": 438,
+      "yearMatch": false
+    },
+    {
+      "seq": 1032,
+      "name": "대지마을현대홈타운3차2단지",
+      "status": "리치고후보불일치",
+      "candidate": "https://m.richgo.ai/realty/danji/a5AVclZ",
+      "siteName": "도담마을현대홈타운4차1단지",
+      "siteUnits": 351,
+      "origUnits": 538,
+      "yearMatch": true
+    },
+    {
+      "seq": 1063,
+      "name": "METAPOLIS",
+      "status": "리치고후보불일치",
+      "candidate": "https://m.richgo.ai/realty/danji/a1jPbGA",
+      "siteName": "동탄파라곤II",
+      "siteUnits": 90,
+      "origUnits": 617,
+      "yearMatch": true
+    }
+  ],
+  "independentlyDisprovedMatches": [
+    {
+      "seq": 445,
+      "name": "현대",
+      "area": "서울 노원구 하계동",
+      "old": "1988년 1,320세대",
+      "wrongRichgo": "1997년 730세대",
+      "decision": "same-dong name collision, original preserved",
+      "officialKapt": "https://www.k-apt.go.kr/cmmn/introMmentPop.do?bjdCode=11350&searchOccuDate=201806&upYn=Y"
+    }
+  ]
+}

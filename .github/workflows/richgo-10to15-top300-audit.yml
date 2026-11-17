@@ -1,0 +1,26 @@
+name: Richgo 10-to-15 top300 audit and performance gate
+on:
+  push:
+    branches:
+      - audit/richgo-10to15-top300-20261118
+permissions:
+  contents: read
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
+        with:
+          node-version: '22'
+      - name: Validate 300 unique complexes and isolated Richgo FAR corrections
+        run: node scripts/test-richgo-10to15-top300.cjs
+      - name: Verify all 1114 unique cap15 complexes and identity-sourced corrections
+        run: node scripts/test-richgo-10to15-full1114.cjs
+      - name: Install dependencies
+        run: npm ci --ignore-scripts
+      - name: Build site and enforce immutable payload speed budgets
+        run: npm run build

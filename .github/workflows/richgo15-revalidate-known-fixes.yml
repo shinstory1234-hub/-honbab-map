@@ -1,0 +1,33 @@
+name: Correct wrong Richgo 1114 source IDs and remodeling year
+on:
+  push:
+    branches:
+      - audit/richgo-10to15-top300-20261118
+    paths:
+      - .github/workflows/richgo15-revalidate-known-fixes.yml
+permissions:
+  contents: write
+jobs:
+  repair:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: true
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Check four corrected Richgo entity URLs directly and repair six source issues
+        run: node scripts/richgo15-revalidate-fix-known-wrong.cjs
+      - name: Persist proof, corrected rows and conservative correction map
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -f docs/richgo-10to15-top300-20261118.csv docs/richgo-10to15-remaining814-20261118.csv
+          git add docs/richgo-10to15-verified-corrections.json docs/richgo-10to15-revalidation-corrections.json
+          if ! git diff --cached --quiet; then
+            git commit -m "fix: replace 4 mistaken Richgo references, reject wrong 5th block, retain remodeling year [skip ci]"
+            git pull --rebase origin audit/richgo-10to15-top300-20261118
+            git push origin HEAD:audit/richgo-10to15-top300-20261118
+          fi
