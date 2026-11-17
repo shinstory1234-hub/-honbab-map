@@ -1,0 +1,47 @@
+name: Richgo under6 full remaining 2455 district-parallel audit
+on:
+  push:
+    branches:
+      - audit/richgo-under6-full-20261118
+    paths:
+      - .github/workflows/richgo-under6-full.yml
+      - scripts/audit-richgo-under6-full.cjs
+  workflow_dispatch:
+permissions:
+  contents: write
+concurrency:
+  group: richgo-under6-full
+  cancel-in-progress: false
+jobs:
+  compare:
+    runs-on: ubuntu-latest
+    timeout-minutes: 55
+    strategy:
+      fail-fast: false
+      max-parallel: 2
+      matrix:
+        shard: [0, 1, 2, 3, 4, 5]
+    env:
+      SHARD: ${{ matrix.shard }}
+      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    steps:
+      - name: Checkout isolated audit branch
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+        with:
+          persist-credentials: false
+      - name: Setup Node.js
+        uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
+        with:
+          node-version: '22'
+      - name: Validate crawler syntax
+        run: node --check scripts/audit-richgo-under6-full.cjs
+      - name: Compare named apartment complexes with public Richgo district listings and details
+        run: node scripts/audit-richgo-under6-full.cjs
+      - name: Preserve shard evidence regardless of matching rate
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: richgo-under6-full-shard-${{ matrix.shard }}
+          path: /tmp/richgo-under6-full-part${{ matrix.shard }}.json
+          retention-days: 14
+          if-no-files-found: warn
