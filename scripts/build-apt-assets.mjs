@@ -40,6 +40,22 @@ function applyRichgo15AtBuild(code,file,root) {
    if(!coded.includes(loop))throw new Error('Richgo15 completion year decoder anchor missing');
    return coded.replace(loop,'for(const r of R){r[4]+=2000;');
  }
+ if(file==='apt-unitfix.js'){
+   // Source K-apt corrections are subsequently applied by fixUnits() and could
+   // overwrite the freshly verified cap15 population. Replace the *existing*
+   // per-complex value in this price band's bundled unitfix only.
+   const start=code.indexOf('})({'),end=code.indexOf('});\nwindow.UNITDROP=',start);
+   if(start<0||end<0)throw new Error('Richgo15 could not parse regional unitfix table');
+   const regional=JSON.parse(code.slice(start+3,end+1));
+   let corrected=0;
+   for(const [key,value] of Object.entries(units)){
+     const sep=key.indexOf('|'), name=key.slice(0,sep),area=key.slice(sep+1);
+     const existing=regional[area]?.[name];
+     if(existing&&existing[0]!==value){existing[0]=value;corrected++;}
+   }
+   // The flat UNITFIX_M3 is unchanged: its audited entries already match Richgo.
+   return code.slice(0,start+3)+JSON.stringify(regional)+code.slice(end+1);
+ }
  if(file==='apt-farfix.js'){
    let patched=0;
    for(const [key,value] of Object.entries(far)){
@@ -105,6 +121,7 @@ export function buildAptAssets(root, output = path.join(root, 'public')) {
       if (file === 'apt-live.js' || file === 'apt-live6.js' || file === 'apt-geo.js') { flush(); urls.push(file); continue; }
       let code = fs.readFileSync(path.join(sourceDir, file), 'utf8');
       if(cap===15&&(file==='apt-univ15.js'||file==='apt-farfix.js'))code=applyRichgo15AtBuild(code,file,root);
+      if(cap===15&&file==='apt-unitfix.js')code=applyRichgo15AtBuild(code,file,root);
       if (file === 'apt-picks10.js') code = code.replace(/^if\(document\.write\).*$/m, '');
       if (cap === 6 && file === 'apt-s4.js' && peak6) { code = code.replace(peak6.from, peak6.to); if (peak6.estFrom) code = code.replace(peak6.estFrom, peak6.estTo); }
       // 6억 이하 탭에서는 고밀도 감점 함수가 항상 0이다. 높은 가격대 전용 코드는 6억 탭 번들에서 제외(순위 불변).
