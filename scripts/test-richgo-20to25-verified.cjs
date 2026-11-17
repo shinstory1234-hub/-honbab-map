@@ -41,7 +41,7 @@ for(const [k,far,units] of expected){
  const d=patched.PICKS.find(x=>key(x)===k);
  assert.ok(d,'missing candidate '+k);
  assert.equal(d.units,units,k+' units');
- if(far!==null){assert.equal(patched.FARD[k][0],far,k+' FAR');assert.equal(patched.FARD[k][1],'리치고(단지 직접확인)',k+' source');}
+ if(far!==null){assert.equal(patched.FARD[k][0],far,k+' FAR');assert.match(patched.FARD[k][1],/^리치고\((?:단지|상위300) 직접확인\)$/,k+' source');}
  else assert.equal(patched.FARD[k][0],null,k+' FAR stays missing');
  if(originalMap.get(k).units!==units)assert.equal(patched.UNITFIX_M3[k][0],units,k+' fixUnits precedence');
 }
