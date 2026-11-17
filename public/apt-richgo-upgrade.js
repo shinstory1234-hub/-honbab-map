@@ -164,7 +164,7 @@ function schoolView(d,box){
   var g=d.g||{},hak=typeof hakH==='function'?hakH(d):null;
   box.innerHTML='<h4>학군과 통학 정보</h4><ul class="ru-list">'
     +chip('인근 초등학교',g.scn||'미확인',g.sc!=null?'단지 대표좌표 직선 '+fmt(Math.round(g.sc))+'m · 실제 배정과 별개':'학교 거리 자료 없음')
-    +chip('학원가',hak&&n(hak[1])!=null?fmt(hak[1])+'곳':'확인 불가','학원 접근성 지표 · 과목별 반영값')
+    +chip('주변 수학·영어 학원',hak&&n(hak[0])!=null?fmt(hak[0])+'곳':'확인 불가','반경 1km 교과학원 집계')+chip('인근 중학교',hak&&hak[3]?hak[3]:'미확인',hak&&n(hak[4])!=null?'직선거리 '+fmt(hak[4])+'m · 배정 학교 아님':'거리 자료 없음')
     +'</ul><button type="button" class="ru-action" data-ru-school>공식 초등 통학구역 확인</button><div data-ru-school-result aria-live="polite"></div>'
     +'<p class="ru-note">교육 성과·중학교 진학률은 검증된 공식 자료 없이 등급으로 추정하지 않습니다.</p>';
   box.querySelector('[data-ru-school]').onclick=async function(){
@@ -184,7 +184,7 @@ function makeMap(d,box,mode){
   var title=mode==='dong'?'단지 동 위치 확인':'단지 주변 1km 생활권';
   box.innerHTML='<h4>'+title+'</h4><p>'+(mode==='dong'?'지도 항공사진으로 건물 위치를 확인합니다. 동 번호·층수·세대수와 개별 동 거래는 검증된 원본 자료가 없어 자동으로 표시하지 않습니다.':'단지 중심 직선거리 1km 안의 시설을 지도에서 검색합니다. 실제 보행 시간과 다릅니다.')+'</p>'
     +(mode==='dong'?'<div class="ru-flex"><label style="flex:1;min-width:160px"><span class="ru-muted">동 번호 검색 (지도 업체 검색 결과)</span><input class="ru-input" data-ru-dong-input placeholder="예: 101동" maxlength="12"></label><button class="ru-action" data-ru-dong-search>검색</button></div>':
-    '<div class="ru-flex">'+[['SW8','지하철'],['SC4','학교'],['HP8','병원'],['MT1','마트']].map(function(x,i){return '<button type="button" data-ru-poi="'+x[0]+'" aria-pressed="'+(i===0)+'">'+x[1]+'</button>';}).join('')+'</div>')
+    '<div class="ru-flex">'+[['SW8','지하철'],['SC4','학교'],['AC5','학원'],['HP8','병원'],['MT1','마트']].map(function(x,i){return '<button type="button" data-ru-poi="'+x[0]+'" aria-pressed="'+(i===0)+'">'+x[1]+'</button>';}).join('')+'</div>')
     +'<div class="ru-map" data-ru-map aria-label="'+title+'"></div><div data-ru-place-list aria-live="polite"></div>'
     +'<p class="ru-note">지도·시설 정보: 카카오 지도. 위성사진과 외부 검색 결과는 건축물대장이나 공식 동 배치도의 대체 자료가 아닙니다.</p>';
   var el=box.querySelector('[data-ru-map]'),list=box.querySelector('[data-ru-place-list]');
@@ -242,7 +242,8 @@ function removeOldSummary(b){
   });
 }
 function attach(d,b,i){
-  if(!b||!alive(b,d)||b.dataset.ruDetail===key(d)+'|'+d.py)return;
+  if(!b||!alive(b,d))return;
+  if(b.dataset.ruDetail===key(d)+'|'+d.py){removeOldSummary(b);return;}
   b.querySelectorAll('.ru-summary,.ru-root').forEach(function(x){x.remove();});
   removeOldSummary(b);
   b.dataset.ruDetail=key(d)+'|'+d.py;
@@ -250,16 +251,16 @@ function attach(d,b,i){
   var k=b.querySelector('dl.kpis'),id=b.querySelector('section.identity');
   if(k)k.after(summary.firstElementChild);else if(id)id.after(summary.firstElementChild);
   var root=document.createElement('section');root.className='ru-root';
-  root.innerHTML='<h3>아파트 상세 분석</h3><div class="ru-tabs" role="group" aria-label="상세 분석 메뉴">'
-    +views.map(function(v,j){return '<button type="button" data-ru-tab="'+v[0]+'" aria-pressed="'+(j===0)+'">'+v[1]+'</button>';}).join('')
-    +'</div><div class="ru-content" data-ru-content aria-live="polite"></div>';
-  b.appendChild(root);
-  var panel=root.querySelector('[data-ru-content]'),seq=0;
-  function show(v){seq++;root.querySelectorAll('[data-ru-tab]').forEach(function(x){x.setAttribute('aria-pressed',String(x.dataset.ruTab===v[0]));});panel.innerHTML='';
+  root.innerHTML='<h3>상세 분석 <small style="font-size:12px;font-weight:500;color:var(--text-tertiary)">원하는 항목만 열기</small></h3><div class="ru-tabs" role="group" aria-label="상세 분석 메뉴">'
+    +views.map(function(v){return '<button type="button" data-ru-tab="'+v[0]+'" aria-pressed="false">'+v[1]+'</button>';}).join('')
+    +'</div><div class="ru-content" data-ru-content aria-live="polite" hidden></div>';
+  var summaryEl=b.querySelector('.ru-summary');if(summaryEl)summaryEl.after(root);else b.appendChild(root);
+  var panel=root.querySelector('[data-ru-content]'),active=null;
+  function show(v){if(active===v[0]){active=null;panel.hidden=true;panel.innerHTML='';root.querySelectorAll('[data-ru-tab]').forEach(function(x){x.setAttribute('aria-pressed','false');});return;}
+    active=v[0];panel.hidden=false;root.querySelectorAll('[data-ru-tab]').forEach(function(x){x.setAttribute('aria-pressed',String(x.dataset.ruTab===v[0]));});panel.innerHTML='';
     if(alive(b,d))v[2](d,panel);
   }
   root.querySelectorAll('[data-ru-tab]').forEach(function(btn){btn.onclick=function(){var v=views.find(function(x){return x[0]===btn.dataset.ruTab;});if(v)show(v);};});
-  show(views[0]);
   if(typeof aptLayout==='function')aptLayout(b);
 }
 window.APT_RICHGO={attach:attach,version:'2026-11-18'};
