@@ -138,7 +138,49 @@ function livingTab(){
  return '<h3>실거주 요소별 평가</h3><div class="s2-cols"><label class="s2-wide">단지 선택<select id="s2LivingPick">'+pool.map(d=>'<option value="'+esc(key(d))+'"'+(chosen===d?' selected':'')+'>'+esc(name(d))+'</option>').join('')+'</select></label><label class="s2-wide">다른 단지 검색<input id="s2LivingSearch" type="search" placeholder="단지명 검색" autocomplete="off"></label></div><div id="s2LivingMatches"></div><div class="s2-chip"><b>'+esc(name(chosen))+'</b><br>'+esc(chosen.area)+' · 추천 '+chosen.rank+'위</div><ul class="s2-rows">'+fields.map(x=>'<li><div><b>'+esc(x[0])+'</b><small>'+esc(x[1])+'</small></div><b>'+esc(x[2])+'</b></li>').join('')+'</ul><p>기존 평가값을 실거주 관점에서 설명합니다. 항목마다 배점이 다르므로 합산한 별도 실거주 총점이나 순위가 아닙니다. 동호수별 일조·소음·조망은 평가하지 않았습니다.</p>';
 }
 var livingPick=null;
-var contents={view:viewTab,filters:filtersTab,nav:navTab,saved:savedTab,rivals:rivalsTab,living:livingTab},tabnames=[['view','현재 화면'],['filters','추가 조건'],['nav','지도'],['saved','저장함'],['rivals','라이벌'],['living','실거주']];
+
+/* 사용자 기록 매물: 외부 매물사이트를 자동 수집하거나 삭제를 거래 완료로 오인하지 않는다. */
+var watchKey='aptListingWatch_v1',watch=[];try{watch=JSON.parse(localStorage.getItem(watchKey)||'[]');if(!Array.isArray(watch))watch=[];}catch(e){}
+function persistWatch(){try{localStorage.setItem(watchKey,JSON.stringify(watch.slice(-100)));}catch(e){note('기기 저장 공간이 부족합니다.');}}
+function watchTab(){
+ const entries=watch.slice().reverse().slice(0,25);
+ return '<h3>매물 호가 기록 · 직접 입력</h3><div class="s2-cols"><label>매물 식별명<input id="s2WName" maxlength="70" placeholder="예: 단지명 101동 12층"></label><label>호가 (억원)<input id="s2WPrice" type="number" min=".01" max="1000" step=".01" placeholder="예: 8.5"></label></div><div class="s2-flex"><button class="s2-btn on" id="s2WAdd">호가 기록</button></div><p>같은 식별명으로 다시 기록하면 호가 변화와 최초 기록 후 경과일을 계산합니다. 매물 삭제는 매매 완료가 아니므로 실제 소화 기간으로 표시하지 않습니다.</p><h3>내 기록</h3>'
+ +(entries.length?'<ul class="s2-rows">'+entries.map((w,i)=>{const prior=watch.slice(0,watch.indexOf(w)).reverse().find(x=>x.n===w.n);const first=watch.find(x=>x.n===w.n);const diff=prior?((w.p-prior.p)/100).toFixed(2):null;return '<li><div><b>'+esc(w.n)+'</b><small>'+esc(w.at.slice(0,10))+' · 최초 기록 후 '+Math.max(0,Math.floor((Date.parse(w.at)-Date.parse(first.at))/864e5))+'일'+(diff!==null?' · 직전 대비 '+(diff>0?'+':'')+diff+'억원':' · 최초 기록')+'</small></div><b>'+((w.p/100).toFixed(2))+'억</b></li>';}).join('')+'</ul>':'<p>직접 기록한 매물이 없습니다.</p>')
+ +'<div class="s2-flex"><button class="s2-btn" id="s2WClear">내 기록 전체 삭제</button></div>';
+}
+/* 평형 목록은 단지별 보유 데이터 범위에서만 제공. 향·배치도는 추정하지 않는다. */
+var typesPick=null;
+function typesTab(){
+ const d=D.find(x=>key(x)===typesPick)||recent.map(k=>D.find(x=>key(x)===k)).find(Boolean)||D[0];
+ if(!d)return '<p>단지 자료가 없습니다.</p>';
+ const types=(d.types||[]).slice().sort((a,b)=>a.py-b.py);
+ return '<h3>평형 구성</h3><div class="s2-cols"><label class="s2-wide">단지 검색<input id="s2TypesSearch" type="search" placeholder="단지명 검색" autocomplete="off"></label></div><div id="s2TypesMatches"></div><div class="s2-chip"><b>'+esc(name(d))+'</b> · '+esc(d.area)+'</div>'
+ +(types.length?'<ul class="s2-rows">'+types.map(t=>'<li><div><b>'+esc(t.py)+'평</b><small>최근 12개월 매매 '+(Number.isFinite(+t.n)?+t.n:'미확인')+'건 · 최근 3개월 '+(Number.isFinite(+t.n3)?+t.n3:'미확인')+'건</small></div><b>'+esc(t.last||'날짜 미확인')+'</b></li>').join('')+'</ul>':'<p>평형별 자료가 없습니다.</p>')
+ +'<p>동 배치도·향·호수별 일조와 조망은 확인된 원본 도면이 없어 표시하지 않습니다. 평형 목록은 전용면적별 실제 타입 도면을 뜻하지 않습니다.</p><h3>층별 거래 비교</h3><button class="s2-btn on" id="s2FloorLoad">이 단지 층별 실거래 조회</button><div id="s2FloorOut" role="status"></div>';
+}
+async function floorLoad(d,out){
+ out.textContent='최근 실거래 조회 중…';
+ try{
+  if(!window.aptLkey)await new Promise((ok,fail)=>{const x=document.createElement('script');x.src='/apt-dx.js?v=9';x.onload=ok;x.onerror=fail;document.head.appendChild(x);});
+  const k=window.aptLkey(d);if(!k)throw Error('key');
+  const res=await fetch('/api/apt-dx?k='+encodeURIComponent(k));if(!res.ok)throw Error('fetch');
+  const data=await res.json(),tx=data.t||[],target=d.py*3.3058*.76;
+  const recentCut=Date.now()-548*864e5,groups=[[],[],[]];
+  for(const t of tx){if(!Array.isArray(t)||t[4]||!Number.isFinite(+t[2])||!Number.isFinite(+t[3])||t[3]<=0||Math.abs(t[1]-target)>5)continue;
+   const day=String(t[0]);if(!/^\d{8}$/.test(day)||Date.UTC(+day.slice(0,4),+day.slice(4,6)-1,+day.slice(6,8))<recentCut)continue;
+   const f=+t[2];if(f<=2)groups[0].push(+t[3]);else if(f<=9)groups[1].push(+t[3]);else groups[2].push(+t[3]);
+  }
+  if(!out.isConnected)return;
+  out.innerHTML='<ul class="s2-rows">'+['1~2층','3~9층','10층 이상'].map((label,i)=>'<li><b>'+label+'</b><div>'+ (groups[i].length>=3?'<b>'+eokSafe(median(groups[i]))+'</b>':'<b>표본 부족</b>')+'<small>'+groups[i].length+'건</small></div></li>').join('')+'</ul><p>최근 18개월 · 해당 평형 추정 전용면적 ±5㎡ · 직거래 제외 · 3건 이상일 때만 중위가격 표시. 층별 적정 호가나 로열동 판정이 아닙니다.</p>';
+ }catch(e){if(out.isConnected)out.textContent='층별 실거래를 확보하지 못했습니다.';}
+}
+function bindTypeSearch(body){
+ const input=body.querySelector('#s2TypesSearch'),matches=body.querySelector('#s2TypesMatches');
+ input.oninput=()=>{matches.innerHTML=(input.value.trim()?searchIndex(input.value):[]).map(d=>'<button class="s2-btn" data-s2type="'+D.indexOf(d)+'">'+esc(name(d))+'</button>').join('');
+ matches.querySelectorAll('[data-s2type]').forEach(b=>b.onclick=()=>{typesPick=key(D[+b.dataset.s2type]);paint();});};
+ body.querySelector('#s2FloorLoad').onclick=()=>floorLoad(D.find(x=>key(x)===(typesPick||''))||recent.map(k=>D.find(x=>key(x)===k)).find(Boolean)||D[0],body.querySelector('#s2FloorOut'));
+}
+var contents={view:viewTab,filters:filtersTab,nav:navTab,saved:savedTab,rivals:rivalsTab,living:livingTab,types:typesTab,watch:watchTab},tabnames=[['view','현재 화면'],['filters','추가 조건'],['nav','지도'],['saved','저장함'],['rivals','라이벌'],['living','실거주'],['types','평형·층'],['watch','호가 기록']];
 function open(t){mapReady();if(t)tab=t;if(!panel){panel=document.createElement('div');panel.className='s2-shade';panel.id='s2Shade';panel.innerHTML='<section class="s2-dialog" role="dialog" aria-modal="true" aria-label="탐색 도구"><header class="s2-top"><h2>탐색 도구</h2><button class="s2-btn" id="s2Close">닫기 ×</button></header><nav class="s2-tabs" role="tablist"></nav><div class="s2-body"></div></section>';document.body.appendChild(panel);panel.addEventListener('click',e=>{if(e.target===panel)close();});document.addEventListener('keydown',escClose);}paint();}
 function escClose(e){if(e.key==='Escape')close();}
 function close(){if(panel){panel.remove();panel=null;document.removeEventListener('keydown',escClose);}}
@@ -167,6 +209,15 @@ function paint(){
    try{await navigator.clipboard.writeText(u.href);note('조건과 지도 위치를 포함한 링크를 복사했습니다.');}catch(e){prompt('링크 복사',u.href);}
   };
   body.querySelector('#s2ClearHistory').onclick=()=>{recent=[];try{localStorage.removeItem(recKey);}catch(e){}paint();};
+ }
+ if(tab==='types')bindTypeSearch(body);
+ if(tab==='watch'){
+  body.querySelector('#s2WAdd').onclick=()=>{
+   const n=body.querySelector('#s2WName').value.trim(),p=+body.querySelector('#s2WPrice').value;
+   if(n.length<3||n.length>70||!Number.isFinite(p)||p<=0||p>1000){note('식별명 3자 이상과 유효한 호가를 입력하세요.');return;}
+   watch.push({n,p:Math.round(p*100),at:new Date().toISOString()});watch=watch.slice(-100);persistWatch();paint();note('호가를 기록했습니다.');
+  };
+  body.querySelector('#s2WClear').onclick=()=>{if(!confirm('이 기기의 모든 매물 기록을 삭제할까요?'))return;watch=[];persistWatch();paint();};
  }
  if(tab==='living'){
   const picker=body.querySelector('#s2LivingPick'),input=body.querySelector('#s2LivingSearch'),matches=body.querySelector('#s2LivingMatches');
