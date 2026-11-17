@@ -1,60 +1,15 @@
 {
   "total": 300,
-  "verified": 297,
-  "ambiguous": 2,
-  "unmatched": 1,
-  "farKnown": 294,
-  "farChanged": 205,
-  "unitsChanged": 35,
-  "yearChanged": 19,
+  "verified": 300,
+  "ambiguous": 0,
+  "unmatched": 0,
+  "farKnown": 297,
+  "farChanged": 207,
+  "unitsChanged": 36,
+  "yearChanged": 20,
   "hubsAttempted": 250,
   "hubsFailed": 2,
-  "detailsFetched": 352,
+  "detailsFetched": 354,
   "detailErrors": 0,
-  "pending": [
-    {
-      "rank": 238,
-      "name": "대림",
-      "area": "서울 송파구 방이동",
-      "alternatives": [
-        {
-          "id": "a2IGSDI",
-          "name": "대림",
-          "conf": 9,
-          "url": "https://m.richgo.ai/realty/danji/a2IGSDI"
-        },
-        {
-          "id": "a5DxEwN",
-          "name": "가락대림",
-          "conf": 5,
-          "url": "https://m.richgo.ai/realty/danji/a5DxEwN"
-        },
-        {
-          "id": "a1QatwF",
-          "name": "대동",
-          "conf": 3,
-          "url": "https://m.richgo.ai/realty/danji/a1QatwF"
-        }
-      ]
-    },
-    {
-      "rank": 260,
-      "name": "푸른마을(신성)",
-      "area": "성남 분당구 수내동",
-      "alternatives": []
-    },
-    {
-      "rank": 265,
-      "name": "상록마을(라이프1차)",
-      "area": "성남 분당구 정자동",
-      "alternatives": [
-        {
-          "id": "a4suMIg",
-          "name": "상록라이프",
-          "conf": 9,
-          "url": "https://m.richgo.ai/realty/danji/a4suMIg"
-        }
-      ]
-    }
-  ]
+  "pending": []
 }
