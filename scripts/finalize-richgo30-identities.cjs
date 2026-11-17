@@ -58,9 +58,9 @@ async function main(){
   if(row.seq===272)accepted=accepted&&name.includes('아이파크');
   // require name overlap for non-geo-exact aliases, except exact units/year/near.
   if(meter>45&&unitsRatio>=.04&&!integrated&& !norm(row.name).includes(name)&&!name.includes(norm(row.name)))accepted=false;
-  if(!accepted){failed.push({seq:row.seq,id,name:src.name,units:src.units,year:src.year,distance:meter,unitRatio,reason:'identity guard'});return}
+  if(!accepted){failed.push({seq:row.seq,id,name:src.name,units:src.units,year:src.year,distance:meter,unitRatio:unitsRatio,reason:'identity guard'});return}
   row.status='direct_verified';row.richgo={...src,url:'https://m.richgo.ai/realty/danji/'+id};
-  row.match={method:'curated_legacy_alias_verified_by_public_geo',distance_m:meter,yearDiff:src.year-row.map.year,unitRatio,sourceId:id,rule};
+  row.match={method:'curated_legacy_alias_verified_by_public_geo',distance_m:meter,yearDiff:src.year-row.map.year,unitRatio:unitsRatio,sourceId:id,rule};
   row.integrated=integrated||unitsRatio>.20;
   added.push({seq:row.seq,key:row.key,id,far:src.far,distance:meter,units:src.units,year:src.year,rule});
  }
