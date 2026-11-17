@@ -60,26 +60,35 @@ export function appendRichgoCap10FinalOverrides(code,root){
   const filename=path.join(root,'scripts/richgo-band10-corrections.json');
   const fixes=JSON.parse(fs.readFileSync(filename,'utf8'));
   if(!fixes.length)return code;
-  // 32-bit FNV1a base36 IDs replace 1340 repeated name|district strings in network bundles.
-  // Uniqueness across source IDs is enforced by a runtime collision guard and the source audit.
   const hash=s=>{
-    let h=2166136261;
-    for(let i=0;i<s.length;i++){h^=s.charCodeAt(i);h=Math.imul(h,16777619);}
-    return (h>>>0).toString(36);
+    let h=2166136261;for(let i=0;i<s.length;i++){h^=s.charCodeAt(i);h=Math.imul(h,16777619);}
+    return (h>>>0).toString(36).padStart(7,'0');
   };
-  const rows=fixes.map(x=>[hash(x.name+'|'+x.area),x.far??null,x.year??null,x.units??null]);
-  if(new Set(rows.map(r=>r[0])).size!==rows.length)throw new Error('Cap10 correction key hash collision');
+  // Compact each verified change into 16 base36 chars:
+  // source-key fingerprint (7) + FAR (3) + year (3) + households (3).
+  // Zero is a null sentinel and is never a valid year, FAR or household value.
+  const slot=v=>{
+    if(v==null)return '000';
+    if(!Number.isInteger(v)||v<1||v>=46656)throw new Error('Non-packable cap10 verified value: '+v);
+    return v.toString(36).padStart(3,'0');
+  };
+  const ids=fixes.map(x=>hash(x.name+'|'+x.area));
+  if(new Set(ids).size!==ids.length)throw new Error('Cap10 source hash collision');
+  const packed=fixes.map((x,i)=>ids[i]+slot(x.far)+slot(x.year)+slot(x.units)).join('');
+  if(packed.length!==fixes.length*16)throw new Error('Cap10 packed length mismatch');
   const post=[
     ';(function(W){',
     'if(W.CAPT!==10)return;',
-    'const X='+JSON.stringify(rows)+',H=s=>{let h=2166136261;for(let i=0;i<s.length;i++){h^=s.charCodeAt(i);h=Math.imul(h,16777619);}return(h>>>0).toString(36);},D=new Map();',
+    'const P='+JSON.stringify(packed)+',H=s=>{let h=2166136261;for(let i=0;i<s.length;i++){h^=s.charCodeAt(i);h=Math.imul(h,16777619);}return(h>>>0).toString(36).padStart(7,"0");},D=new Map();',
     'for(const d of W.PICKS||[]){const h=H(d.n+"|"+d.area);if(D.has(h)&&D.get(h)!==d)throw Error("Cap10 source hash collision");D.set(h,d);}',
-    'for(const [h,far,year,units] of X){const d=D.get(h);if(!d)throw Error("Missing verified cap10 apartment "+h);const k=d.n+"|"+d.area;',
+    'for(let i=0;i<P.length;i+=16){',
+    'const h=P.slice(i,i+7),far=parseInt(P.slice(i+7,i+10),36)||null,year=parseInt(P.slice(i+10,i+13),36)||null,units=parseInt(P.slice(i+13,i+16),36)||null;',
+    'const d=D.get(h);if(!d)throw Error("Missing verified cap10 apartment "+h);const k=d.n+"|"+d.area;',
     'if(far!=null){const f=(W.FARD||{})[k];if(f){f[0]=far;f[1]="리치고";}const p=(W.PLAT||{})[k];if(p&&p.length>2)p[2]=far;}',
     'if(year!=null)d.year=year;',
     'if(units!=null){d.units=units;const uf=(W.UNITFIX||{})[k];if(uf)uf[0]=units;const um=(W.UNITFIX_M3||{})[k];if(um)um[0]=units;}',
     '}',
-    'W.RICHGO10_FINAL={checked:X.length};',
+    'W.RICHGO10_FINAL={checked:P.length/16};',
     '})(window);'
   ].join('\n');
   return code+'\n'+post;
