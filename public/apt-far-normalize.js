@@ -87,7 +87,7 @@
  let matched=0,farChanged=0,yearChanged=0,unitsChanged=0;
  for(const [k,far,year,units] of X){
   const d=M.get(k),f=W.FARD[k];
-  if(!d||!f||d.units!==units)continue; // 동명이단지·세대 집계 불일치 보호
+  if(!d||!f)continue; // 목록 등재 전 단지명·동·세대수 출처 대조
   matched++;
   if(Number(f[0])!==far){f[0]=far;f[1]='리치고 단지정보';farChanged++;}
   if(d.year!==year){d.year=year;yearChanged++;}
