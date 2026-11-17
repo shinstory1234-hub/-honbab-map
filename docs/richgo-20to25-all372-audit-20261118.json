@@ -14814,7 +14814,7 @@
       "richgoLatitude": 37.581003,
       "richgoLongitude": 126.899946,
       "manualVerified": false,
-      "unitsComparable": false,
+      "unitsComparable": true,
       "richgoName": "DMC SK뷰",
       "richgoId": "a6QRKbr",
       "richgoUrl": "https://m.richgo.ai/realty/danji/a6QRKbr",
@@ -14839,11 +14839,7 @@
         }
       ],
       "error": "",
-      "mapFound": true,
-      "unitBoundaryReason": "DMC SK VIEW 1블록 644세대, 2블록 109세대 분리. 통합 753세대를 개별 644세대에 적용하지 않음. https://www.k-apt.go.kr/cmmn/introMmentPop.do?bjdCode=11&searchOccuDate=202609&upYn=Y",
-      "unitsReverifiedAt": "2026-11-18",
-      "yearComparable": false,
-      "yearBoundaryReason": "K-apt 사용승인 2023-08-24. 리치고 2021 연도 오표기를 적용하지 않음."
+      "mapFound": true
     },
     {
       "rank": 315,
@@ -17639,15 +17635,16 @@
   "reverification": {
     "date": "2026-11-18",
     "unitMismatchRaw": 51,
-    "unitNoncomparable": 9,
-    "unitChangesApplied": 42,
-    "yearChangesApplied": 20,
+    "unitNoncomparable": 8,
+    "unitChangesApplied": 43,
+    "yearChangesApplied": 21,
     "farChangesApplied": 257,
-    "scope": "파크타운 롯데·삼익 통합 단지 세대수 오류 및 DMC SK VIEW 1/2블록 오류 수정. 리치고 원시 조회값은 그대로 보존.",
+    "scope": "파크타운 롯데·삼익의 통합 세대수 개별 단지 오적용을 방지; DMC SK VIEW는 SK 공식 단지정보와 리치고가 일치하는 전체 753세대, 2021년 입주 기준으로 복구. 9-1블록 644세대와 9-2블록 109세대를 전체 단지로 합산함.",
     "sourceUrls": [
+      "https://www.skview.co.kr/html/info/?dp1=lots&dp2=on&dp3=info&idx=227",
+      "https://openapt.seoul.go.kr/openApt/index.do?aptCode=A10024086",
       "https://statnorth.kr/apt/경기/성남시-분당구/수내동-파크타운롯데-14a574bee8a6",
-      "https://statnorth.kr/apt/경기/성남시-분당구/수내동-파크타운삼익-3a81d348a644",
-      "https://www.k-apt.go.kr/cmmn/introMmentPop.do?bjdCode=11&searchOccuDate=202609&upYn=Y"
+      "https://statnorth.kr/apt/경기/성남시-분당구/수내동-파크타운삼익-3a81d348a644"
     ]
   }
 }
