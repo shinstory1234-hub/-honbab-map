@@ -332,7 +332,7 @@
 478,신동아,서울 동작구 본동,,152,1993,1993,765,765,37.50969,126.95181,275,237,237,1993,765,crossband_verified_10to15-direct,https://m.richgo.ai/realty/danji/a8Fwtkq,10to15-direct;15to20
 877,샛별마을한양4-1,안양 동안구 비산동,,160,1993,1993,2744,2744,37.39651,126.94895,204,204,,,,audit4_candidate_review,,
 1461,부영,하남시 창우동,,164,1994,1994,2055,2055,37.54083,127.22522,204,203,203,1994,2055,crawler_verified,https://m.richgo.ai/realty/danji/a7vUylN,
-349,홍제역해링턴플레이스,서울 서대문구 홍제동,,168,2024,2024,1116,1116,37.58982,126.94761,,,,,,audit4_candidate_review,,
+349,홍제역해링턴플레이스,서울 서대문구 홍제동,,168,2024,2021,1116,1116,37.58982,126.94761,,237,237,2021,1116,audit7_verified_year_corrected,https://m.richgo.ai/realty/danji/a4vxgJV,
 1453,미사강변효성해링턴플레이스엔에이치에프,하남시 망월동,,169,2017,2017,1401,1401,37.56147,127.19854,,219,219,2017,1401,crossband_verified_10to15-direct,https://m.richgo.ai/realty/danji/a2jAdUo,10to15-direct
 38,한신아파트,서울 동대문구 제기동,,183,2004,2004,1070,1070,37.58885,127.03912,,300,300,2004,1070,crossband_verified_10to15-direct,https://m.richgo.ai/realty/danji/a5lfYUZ,10to15-direct
 31,래미안장안2차,서울 동대문구 장안동,,187,2007,2007,1786,1786,37.57396,127.07539,,299,299,2007,1786,crossband_verified_10to15-direct,https://m.richgo.ai/realty/danji/a6ieiPJ,10to15-direct
@@ -421,7 +421,7 @@
 536,베르디움더퍼스트,인천 연수구 송도동,,533,2017,2017,1834,1834,37.37049,126.6558,,199,199,2017,1834,crawler_verified,https://m.richgo.ai/realty/danji/a7HQsap,
 576,호반써밋송도,인천 연수구 송도동,,540,2023,2023,1820,1820,37.41549,126.62508,,509,509,2023,1820,crawler_verified,https://m.richgo.ai/realty/danji/a2ChioL,
 252,롯데(505),서울 노원구 중계동,,542,1989,1989,1890,1890,37.63879,127.06249,208,208,,,,audit4_no_source,,
-296,DMC아트포레자이,서울 은평구 수색동,,545,2026,2026,672,672,37.58529,126.89807,,,,,,audit4_candidate_review,,
+296,DMC아트포레자이,서울 은평구 수색동,,545,2026,2023,672,672,37.58529,126.89807,,249,249,2023,672,audit7_verified_year_corrected,https://m.richgo.ai/realty/danji/a7zdlRO,
 772,살구골마을진덕서광성지동아,수원 영통구 영통동,,546,1998,1998,1248,1248,37.24784,127.07039,220,219,219,1998,1248,crawler_verified,https://m.richgo.ai/realty/danji/a6dwlyd,
 765,현대힐스테이트,수원 영통구 매탄동,,547,2006,2006,2328,2328,37.27105,127.0396,,280,280,2006,2328,crawler_verified,https://m.richgo.ai/realty/danji/a7XCBdE,
 784,영통에듀파크(331동~337동),수원 영통구 영통동,,558,1997,1997,1242,1242,37.25772,127.07486,220,220,,,,audit4_candidate_review,,
