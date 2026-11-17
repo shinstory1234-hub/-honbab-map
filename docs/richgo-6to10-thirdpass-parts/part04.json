@@ -1,0 +1,2495 @@
+{
+  "meta": {
+    "shard": 4,
+    "targets": 79,
+    "additionalVerified": 17,
+    "farKnown": 17,
+    "farBlank": 0,
+    "remaining": 62,
+    "stats": {
+      "requests": 132,
+      "failures": 0,
+      "blocked": 0,
+      "limited": 0,
+      "regions": 8,
+      "dongs": 24,
+      "details": 100
+    }
+  },
+  "rows": [
+    {
+      "key": "극동|서울 노원구 하계동",
+      "name": "극동",
+      "area": "서울 노원구 하계동",
+      "oldStatus": "review_needed",
+      "thirdStatus": "still_unresolved",
+      "richgo": null,
+      "match": null,
+      "dongCatalog": "https://m.richgo.ai/realty/region/1135010400",
+      "candidates": []
+    },
+    {
+      "key": "벽산|서울 노원구 하계동",
+      "name": "벽산",
+      "area": "서울 노원구 하계동",
+      "oldStatus": "review_needed",
+      "thirdStatus": "still_unresolved",
+      "richgo": null,
+      "match": null,
+      "dongCatalog": "https://m.richgo.ai/realty/region/1135010400",
+      "candidates": []
+    },
+    {
+      "key": "주공2|서울 노원구 월계동",
+      "name": "주공2",
+      "area": "서울 노원구 월계동",
+      "oldStatus": "unmatched",
+      "thirdStatus": "still_unresolved",
+      "richgo": null,
+      "match": null,
+      "dongCatalog": "https://m.richgo.ai/realty/region/1135010200",
+      "candidates": [
+        {
+          "id": "a2yQdLu",
+          "name": "월계주공2단지",
+          "far": 227,
+          "units": 2002,
+          "year": 1992,
+          "distance": 162,
+          "nameSimilarity": 0.6,
+          "accepted": false
+        }
+      ]
+    },
+    {
+      "key": "상계주공16(고층)|서울 노원구 상계동",
+      "name": "상계주공16(고층)",
+      "area": "서울 노원구 상계동",
+      "oldStatus": "review_needed",
+      "thirdStatus": "still_unresolved",
+      "richgo": null,
+      "match": null,
+      "dongCatalog": "https://m.richgo.ai/realty/region/1135010500",
+      "candidates": [
+        {
+          "id": "a7ipCqb",
+          "name": "상계주공16단지",
+          "far": 184,
+          "units": 2392,
+          "year": 1988,
+          "distance": 154,
+          "nameSimilarity": 1,
+          "accepted": false
+        },
+        {
+          "id": "a3OCrAW",
+          "name": "상계주공14단지",
+          "far": 147,
+          "units": 2265,
+          "year": 1989,
+          "distance": 416,
+          "nameSimilarity": 0.8333333333333334,
+          "accepted": false
+        },
+        {
+          "id": "a1Uawtt",
+          "name": "상계주공10단지",
+          "far": 169,
+          "units": 2654,
+          "year": 1988,
+          "distance": 699,
+          "nameSimilarity": 0.8333333333333334,
+          "accepted": false
+        },
+        {
+          "id": "a1OtXAF",
+          "name": "상계주공6단지",
+          "far": 193,
+          "units": 2646,
+          "year": 1988,
+          "distance": 1964,
+          "nameSimilarity": 0.8333333333333334,
+          "accepted": false
+        }
+      ]
+    },
+    {
+      "key": "상계주공14|서울 노원구 상계동",
+      "name": "상계주공14",
+      "area": "서울 노원구 상계동",
+      "oldStatus": "review_needed",
+      "thirdStatus": "still_unresolved",
+      "richgo": null,
+      "match": null,
+      "dongCatalog": "https://m.richgo.ai/realty/region/1135010500",
+      "candidates": [
+        {
+          "id": "a3OCrAW",
+          "name": "상계주공14단지",
+          "far": 147,
+          "units": 2265,
+          "year": 1989,
+          "distance": 87,
+          "nameSimilarity": 1,
+          "accepted": false
+        },
+        {
+          "id": "a2mixDj",
+          "name": "상계주공13단지",
+          "far": 189,
+          "units": 939,
+          "year": 1989,
+          "distance": 272,
+          "nameSimilarity": 0.8333333333333334,
+          "accepted": false
+        },
+        {
+          "id": "a7eVqLy",
+          "name": "상계주공11단지",
+          "far": 173,
+          "units": 1944,
+          "year": 1988,
+          "distance": 460,
+          "nameSimilarity": 0.8333333333333334,
+          "accepted": false
+        },
+        {
+          "id": "a7ipCqb",
+          "name": "상계주공16단지",
+          "far": 184,
+          "units": 2392,
+          "year": 1988,
+          "distance": 627,
+          "nameSimilarity": 0.8333333333333334,
+          "accepted": false
+        }
+      ]
+    },
+    {
+      "key": "상계주공3(저층)|서울 노원구 상계동",
+      "name": "상계주공3(저층)",
+      "area": "서울 노원구 상계동",
+      "oldStatus": "review_needed",
+      "thirdStatus": "still_unresolved",
+      "richgo": null,
+      "match": null,
+      "dongCatalog": "https://m.richgo.ai/realty/region/1135010500",
+      "candidates": [
+        {
+          "id": "a9ypbnR",
+          "name": "상계주공3단지",
+          "far": 178,
+          "units": 2213,
+          "year": 1987,
+          "distance": 20,
+          "nameSimilarity": 1,
+          "accepted": false
+        },
+        {
+          "id": "a5aTGqB",
+          "name": "상계주공5단지",
+          "far": 93,
+          "units": 840,
+          "year": 1987,
+          "distance": 536,
+          "nameSimilarity": 0.8,
+          "accepted": false
+        },
+        {
+          "id": "a1OtXAF",
+          "name": "상계주공6단지",
+          "far": 193,
+          "units": 2646,
+          "year": 1988,
+          "distance": 730,
+          "nameSimilarity": 0.8,
+          "accepted": false
+        },
+        {
+          "id": "a7CuvKn",
+          "name": "상계주공9단지",
+          "far": 207,
+          "units": 2830,
+          "year": 1988,
+          "distance": 1268,
+          "nameSimilarity": 0.8,
+          "accepted": false
+        }
+      ]
+    },
+    {
+      "key": "상계주공1(고층)|서울 노원구 상계동",
+      "name": "상계주공1(고층)",
+      "area": "서울 노원구 상계동",
+      "oldStatus": "review_needed",
+      "thirdStatus": "still_unresolved",
+      "richgo": null,
+      "match": null,
+      "dongCatalog": "https://m.richgo.ai/realty/region/1135010500",
+      "candidates": [
+        {
+          "id": "a9TabCj",
+          "name": "상계주공1단지",
+          "far": 176,
+          "units": 2064,
+          "year": 1988,
+          "distance": 189,
+          "nameSimilarity": 1,
+          "accepted": false
+        },
+        {
+          "id": "a1Uawtt",
+          "name": "상계주공10단지",
+          "far": 169,
+          "units": 2654,
+          "year": 1988,
+          "distance": 1706,
+          "nameSimilarity": 0.8333333333333334,
+          "accepted": false
+        },
+        {
+          "id": "a7eVqLy",
+          "name": "상계주공11단지",
+          "far": 173,
+          "units": 1944,
+          "year": 1988,
+          "distance": 2090,
+          "nameSimilarity": 0.8333333333333334,
+          "accepted": false
+        },
+        {
+          "id": "a2mixDj",
+          "name": "상계주공13단지",
+          "far": 189,
+          "units": 939,
+          "year": 1989,
+          "distance": 2250,
+          "nameSimilarity": 0.8333333333333334,
+          "accepted": false
+        }
+      ]
+    },
+    {
+      "key": "벽산|서울 노원구 상계동",
+      "name": "벽산",
+      "area": "서울 노원구 상계동",
+      "oldStatus": "review_needed",
+      "thirdStatus": "still_unresolved",
+      "richgo": null,
+      "match": null,
+      "dongCatalog": "https://m.richgo.ai/realty/region/1135010500",
+      "candidates": [
+        {
+          "id": "a2dswSs",
+          "name": "벽산",
+          "far": 274,
+          "units": 1590,
+          "year": 1989,
+          "distance": 48,
+          "nameSimilarity": 1,
+          "accepted": false
+        },
+        {
+          "id": "a9WaeNo",
+          "name": "두산",
+          "far": 224,
+          "units": 763,
+          "year": 1994,
+          "distance": 2486,
+          "nameSimilarity": 0.5,
+          "accepted": false
+        }
+      ]
+    },
+    {
+      "key": "청솔(시영7)|서울 노원구 하계동",
+      "name": "청솔(시영7)",
+      "area": "서울 노원구 하계동",
+      "oldStatus": "review_needed",
+      "thirdStatus": "still_unresolved",
+      "richgo": null,
+      "match": null,
+      "dongCatalog": "https://m.richgo.ai/realty/region/1135010400",
+      "candidates": []
+    },
+    {
+      "key": "진양상가|서울 중구 충무로4가",
+      "name": "진양상가",
+      "area": "서울 중구 충무로4가",
+      "oldStatus": "unmatched",
+      "thirdStatus": "still_unresolved",
+      "richgo": null,
+      "match": null,
+      "dongCatalog": "https://m.richgo.ai/realty/region/1114013200",
+      "candidates": [
+        {
+          "id": "a9QcWYI",
+          "name": "진양",
+          "far": 147,
+          "units": 280,
+          "year": 1970,
+          "distance": 4,
+          "nameSimilarity": 0.5,
+          "accepted": false
+        }
+      ]
+    },
+    {
+      "key": "한신1|서울 노원구 하계동",
+      "name": "한신1",
+      "area": "서울 노원구 하계동",
+      "oldStatus": "unmatched",
+      "thirdStatus": "still_unresolved",
+      "richgo": null,
+      "match": null,
+      "dongCatalog": "https://m.richgo.ai/realty/region/1135010400",
+      "candidates": [
+        {
+          "id": "a8PhJKh",
+          "name": "한신",
+          "far": 214,
+          "units": 1200,
+          "year": 1988,
+          "distance": 56,
+          "nameSimilarity": 0.6666666666666667,
+          "accepted": false
+        },
+        {
+          "id": "a9FXUvn",
+          "name": "한신코아",
+          "far": 110,
+          "units": 160,
+          "year": 1994,
+          "distance": 233,
+          "nameSimilarity": 0.5,
+          "accepted": false
+        },
+        {
+          "id": "a0sGROK",
+          "name": "한신동성",
+          "far": 219,
+          "units": 498,
+          "year": 1993,
+          "distance": 633,
+          "nameSimilarity": 0.5,
+          "accepted": false
+        }
+      ]
+    },
+    {
+      "key": "신동아아파트1|서울 도봉구 방학동",
+      "name": "신동아아파트1",
+      "area": "서울 도봉구 방학동",
+      "oldStatus": "review_needed",
+      "thirdStatus": "still_unresolved",
+      "richgo": null,
+      "match": null,
+      "dongCatalog": "https://m.richgo.ai/realty/region/1132010600",
+      "candidates": [
+        {
+          "id": "a6PWZZp",
+          "name": "신동아1단지",
+          "far": 201,
+          "units": 3169,
+          "year": 1986,
+          "distance": 171,
+          "nameSimilarity": 1,
+          "accepted": false
+        },
+        {
+          "id": "a9OPcbN",
+          "name": "신동아2단지",
+          "far": 259,
+          "units": 660,
+          "year": 1992,
+          "distance": 324,
+          "nameSimilarity": 0.75,
+          "accepted": false
+        },
+        {
+          "id": "a6sgxho",
+          "name": "신동아3단지",
+          "far": 211,
+          "units": 210,
+          "year": 1992,
+          "distance": 332,
+          "nameSimilarity": 0.75,
+          "accepted": false
+        },
+        {
+          "id": "a2jQACH",
+          "name": "신동아4단지",
+          "far": 290,
+          "units": 361,
+          "year": 1995,
+          "distance": 319,
+          "nameSimilarity": 0.75,
+          "accepted": false
+        }
+      ]
+    },
+    {
+      "key": "한신|서울 도봉구 도봉동",
+      "name": "한신",
+      "area": "서울 도봉구 도봉동",
+      "oldStatus": "review_needed",
+      "thirdStatus": "still_unresolved",
+      "richgo": null,
+      "match": null,
+      "dongCatalog": "https://m.richgo.ai/realty/region/1132010800",
+      "candidates": [
+        {
+          "id": "a0SxPDZ",
+          "name": "도봉한신",
+          "far": 283,
+          "units": 2678,
+          "year": 1995,
+          "distance": 15,
+          "nameSimilarity": 0.5,
+          "accepted": false
+        }
+      ]
+    },
+    {
+      "key": "건영2차아파트|서울 중랑구 상봉동",
+      "name": "건영2차아파트",
+      "area": "서울 중랑구 상봉동",
+      "oldStatus": "review_needed",
+      "thirdStatus": "still_unresolved",
+      "richgo": null,
+      "match": null,
+      "dongCatalog": "https://m.richgo.ai/realty/region/1126010200",
+      "candidates": [
+        {
+          "id": "a6JKSlX",
+          "name": "건영2차",
+          "far": 302,
+          "units": 1113,
+          "year": 1996,
+          "distance": 123,
+          "nameSimilarity": 1,
+          "accepted": false
+        },
+        {
+          "id": "a3bNUBk",
+          "name": "건영1차",
+          "far": 303,
+          "units": 408,
+          "year": 1997,
+          "distance": 334,
+          "nameSimilarity": 0.75,
+          "accepted": false
+        }
+      ]
+    },
+    {
+      "key": "주공4|구리시 인창동",
+      "name": "주공4",
+      "area": "구리시 인창동",
+      "oldStatus": "unmatched",
+      "thirdStatus": "still_unresolved",
+      "richgo": null,
+      "match": null,
+      "dongCatalog": "https://m.richgo.ai/realty/region/4131010300",
+      "candidates": []
+    },
+    {
+      "key": "롯데캐슬루나|서울 노원구 월계동",
+      "name": "롯데캐슬루나",
+      "area": "서울 노원구 월계동",
+      "oldStatus": "review_needed",
+      "thirdStatus": "still_unresolved",
+      "richgo": null,
+      "match": null,
+      "dongCatalog": "https://m.richgo.ai/realty/region/1135010200",
+      "candidates": [
+        {
+          "id": "a9qRNLY",
+          "name": "롯데캐슬루나",
+          "far": 199,
+          "units": 850,
+          "year": 2006,
+          "distance": 46,
+          "nameSimilarity": 1,
+          "accepted": false
+        }
+      ]
+    },
+    {
+      "key": "양지마을(대림)2|서울 노원구 중계동",
+      "name": "양지마을(대림)2",
+      "area": "서울 노원구 중계동",
+      "oldStatus": "review_needed",
+      "thirdStatus": "verified_third_pass",
+      "richgo": {
+        "id": "a3Blcix",
+        "name": "양지대림2차",
+        "far": 331,
+        "year": 1999,
+        "units": 652,
+        "lat": 37.653759,
+        "lng": 127.07252,
+        "floors": "7~25층",
+        "heating": "지역난방 · 열병합",
+        "pyeongs": "25·32·42평",
+        "parking": "695대 (세대당 1.06대)",
+        "street": "서울시 노원구 덕릉로73길 28",
+        "url": "https://m.richgo.ai/realty/danji/a3Blcix"
+      },
+      "match": {
+        "distanceMeters": 41,
+        "yearDelta": 0,
+        "unitsRatio": 0,
+        "nameSimilarity": 0.5714285714285714,
+        "method": "official_dong_catalog"
+      },
+      "dongCatalog": "https://m.richgo.ai/realty/region/1135010600",
+      "candidates": [
+        {
+          "id": "a3Blcix",
+          "name": "양지대림2차",
+          "far": 331,
+          "units": 652,
+          "year": 1999,
+          "distance": 41,
+          "nameSimilarity": 0.5714285714285714,
+          "accepted": true
+        },
+        {
+          "id": "a8rfPwq",
+          "name": "양지대림",
+          "far": 328,
+          "units": 508,
+          "year": 1998,
+          "distance": 204,
+          "nameSimilarity": 0.5714285714285714,
+          "accepted": false
+        }
+      ]
+    },
+    {
+      "key": "엘지,쌍용아파트|서울 중랑구 상봉동",
+      "name": "엘지,쌍용아파트",
+      "area": "서울 중랑구 상봉동",
+      "oldStatus": "review_needed",
+      "thirdStatus": "still_unresolved",
+      "richgo": null,
+      "match": null,
+      "dongCatalog": "https://m.richgo.ai/realty/region/1126010200",
+      "candidates": [
+        {
+          "id": "a5LejfF",
+          "name": "LG쌍용",
+          "far": 249,
+          "units": 858,
+          "year": 1996,
+          "distance": 138,
+          "nameSimilarity": 0.5,
+          "accepted": false
+        }
+      ]
+    },
+    {
+      "key": "롯데(505)|서울 노원구 중계동",
+      "name": "롯데(505)",
+      "area": "서울 노원구 중계동",
+      "oldStatus": "unmatched",
+      "thirdStatus": "still_unresolved",
+      "richgo": null,
+      "match": null,
+      "dongCatalog": "https://m.richgo.ai/realty/region/1135010600",
+      "candidates": []
+    },
+    {
+      "key": "한가람아파트|구리시 교문동",
+      "name": "한가람아파트",
+      "area": "구리시 교문동",
+      "oldStatus": "review_needed",
+      "thirdStatus": "verified_third_pass",
+      "richgo": {
+        "id": "a7dDSdN",
+        "name": "한가람LG",
+        "far": 215,
+        "year": 1994,
+        "units": 712,
+        "lat": 37.591164,
+        "lng": 127.13544,
+        "floors": "17~18층",
+        "heating": "개별난방 · 도시가스",
+        "pyeongs": "24·31·43평",
+        "parking": "882대 (세대당 1.23대)",
+        "street": "경기도 구리시 장자대로37번길 70",
+        "url": "https://m.richgo.ai/realty/danji/a7dDSdN"
+      },
+      "match": {
+        "distanceMeters": 19,
+        "yearDelta": 0,
+        "unitsRatio": 0,
+        "nameSimilarity": 0.6,
+        "method": "official_dong_catalog"
+      },
+      "dongCatalog": "https://m.richgo.ai/realty/region/4131010400",
+      "candidates": [
+        {
+          "id": "a7dDSdN",
+          "name": "한가람LG",
+          "far": 215,
+          "units": 712,
+          "year": 1994,
+          "distance": 19,
+          "nameSimilarity": 0.6,
+          "accepted": true
+        }
+      ]
+    },
+    {
+      "key": "수락리버시티3단지|서울 노원구 상계동",
+      "name": "수락리버시티3단지",
+      "area": "서울 노원구 상계동",
+      "oldStatus": "unmatched",
+      "thirdStatus": "verified_third_pass",
+      "richgo": {
+        "id": "a0MNuOa",
+        "name": "수락리버시티3단지",
+        "far": 184,
+        "year": 2009,
+        "units": 696,
+        "lat": 37.687745,
+        "lng": 127.054262,
+        "floors": "7~15층",
+        "heating": "지역난방 · 열병합",
+        "pyeongs": "33평",
+        "parking": "751대 (세대당 1.07대)",
+        "street": "서울시 노원구 누원로 28",
+        "url": "https://m.richgo.ai/realty/danji/a0MNuOa"
+      },
+      "match": {
+        "distanceMeters": 26,
+        "yearDelta": 0,
+        "unitsRatio": 0,
+        "nameSimilarity": 1,
+        "method": "official_dong_catalog"
+      },
+      "dongCatalog": "https://m.richgo.ai/realty/region/1135010500",
+      "candidates": [
+        {
+          "id": "a0MNuOa",
+          "name": "수락리버시티3단지",
+          "far": 184,
+          "units": 696,
+          "year": 2009,
+          "distance": 26,
+          "nameSimilarity": 1,
+          "accepted": true
+        },
+        {
+          "id": "a3mRBqp",
+          "name": "수락리버시티4단지",
+          "far": 189,
+          "units": 548,
+          "year": 2009,
+          "distance": 168,
+          "nameSimilarity": 0.8571428571428572,
+          "accepted": false
+        }
+      ]
+    },
+    {
+      "key": "장자마을금호1|구리시 교문동",
+      "name": "장자마을금호1",
+      "area": "구리시 교문동",
+      "oldStatus": "unmatched",
+      "thirdStatus": "still_unresolved",
+      "richgo": null,
+      "match": null,
+      "dongCatalog": "https://m.richgo.ai/realty/region/4131010400",
+      "candidates": []
+    },
+    {
+      "key": "엘에이치이스트힐|구리시 갈매동",
+      "name": "엘에이치이스트힐",
+      "area": "구리시 갈매동",
+      "oldStatus": "review_needed",
+      "thirdStatus": "still_unresolved",
+      "richgo": null,
+      "match": null,
+      "dongCatalog": "https://m.richgo.ai/realty/region/4131010100",
+      "candidates": [
+        {
+          "id": "a8YOiyD",
+          "name": "LH이스트힐",
+          "far": 210,
+          "units": 1444,
+          "year": 2016,
+          "distance": 55,
+          "nameSimilarity": 0.5,
+          "accepted": false
+        }
+      ]
+    },
+    {
+      "key": "방화4단지|서울 강서구 방화동",
+      "name": "방화4단지",
+      "area": "서울 강서구 방화동",
+      "oldStatus": "unmatched",
+      "thirdStatus": "still_unresolved",
+      "richgo": null,
+      "match": null,
+      "dongCatalog": "https://m.richgo.ai/realty/region/1150010900",
+      "candidates": [
+        {
+          "id": "a6PobCd",
+          "name": "방화4단지",
+          "far": 247,
+          "units": 680,
+          "year": 1994,
+          "distance": 49,
+          "nameSimilarity": 1,
+          "accepted": false
+        },
+        {
+          "id": "a3cndYH",
+          "name": "방화5단지",
+          "far": 175,
+          "units": 1372,
+          "year": 1994,
+          "distance": 381,
+          "nameSimilarity": 0.6666666666666667,
+          "accepted": false
+        },
+        {
+          "id": "a2QBuuT",
+          "name": "방화개화",
+          "far": 240,
+          "units": 462,
+          "year": 1994,
+          "distance": 454,
+          "nameSimilarity": 0.5,
+          "accepted": false
+        },
+        {
+          "id": "a3oqQvr",
+          "name": "방화진로",
+          "far": 196,
+          "units": 160,
+          "year": 1994,
+          "distance": 549,
+          "nameSimilarity": 0.5,
+          "accepted": false
+        }
+      ]
+    },
+    {
+      "key": "교문(동양고속)|구리시 교문동",
+      "name": "교문(동양고속)",
+      "area": "구리시 교문동",
+      "oldStatus": "verified_shared_scope_review",
+      "thirdStatus": "verified_third_pass",
+      "richgo": {
+        "id": "a6WKwNW",
+        "name": "교문대우",
+        "far": 219,
+        "year": 1994,
+        "units": 680,
+        "lat": 37.589407,
+        "lng": 127.135426,
+        "floors": "16~19층",
+        "heating": "개별난방 · 도시가스",
+        "pyeongs": "23·31·36·47평",
+        "parking": "791대 (세대당 1.16대)",
+        "street": "경기도 구리시 장자대로37번길 20",
+        "url": "https://m.richgo.ai/realty/danji/a6WKwNW"
+      },
+      "match": {
+        "distanceMeters": 57,
+        "yearDelta": 0,
+        "unitsRatio": 0,
+        "nameSimilarity": 0.75,
+        "method": "official_dong_catalog"
+      },
+      "dongCatalog": "https://m.richgo.ai/realty/region/4131010400",
+      "candidates": [
+        {
+          "id": "a6WKwNW",
+          "name": "교문대우",
+          "far": 219,
+          "units": 680,
+          "year": 1994,
+          "distance": 57,
+          "nameSimilarity": 0.75,
+          "accepted": true
+        }
+      ]
+    },
+    {
+      "key": "삼보|구리시 인창동",
+      "name": "삼보",
+      "area": "구리시 인창동",
+      "oldStatus": "review_needed",
+      "thirdStatus": "still_unresolved",
+      "richgo": null,
+      "match": null,
+      "dongCatalog": "https://m.richgo.ai/realty/region/4131010300",
+      "candidates": [
+        {
+          "id": "a6LfHWB",
+          "name": "삼보",
+          "far": 244,
+          "units": 906,
+          "year": 1996,
+          "distance": 27,
+          "nameSimilarity": 1,
+          "accepted": false
+        },
+        {
+          "id": "a8PZdSq",
+          "name": "삼호",
+          "far": 119,
+          "units": 231,
+          "year": 1991,
+          "distance": 523,
+          "nameSimilarity": 0.5,
+          "accepted": false
+        }
+      ]
+    },
+    {
+      "key": "진로아파트|서울 중랑구 신내동",
+      "name": "진로아파트",
+      "area": "서울 중랑구 신내동",
+      "oldStatus": "unmatched",
+      "thirdStatus": "still_unresolved",
+      "richgo": null,
+      "match": null,
+      "dongCatalog": "https://m.richgo.ai/realty/region/1126010600",
+      "candidates": []
+    },
+    {
+      "key": "동아|서울 도봉구 창동",
+      "name": "동아",
+      "area": "서울 도봉구 창동",
+      "oldStatus": "review_needed",
+      "thirdStatus": "still_unresolved",
+      "richgo": null,
+      "match": null,
+      "dongCatalog": "https://m.richgo.ai/realty/region/1132010700",
+      "candidates": [
+        {
+          "id": "a8IkSdm",
+          "name": "동아",
+          "far": 212,
+          "units": 600,
+          "year": 1988,
+          "distance": 10,
+          "nameSimilarity": 1,
+          "accepted": false
+        },
+        {
+          "id": "a3SnRqa",
+          "name": "동아그린",
+          "far": 284,
+          "units": 449,
+          "year": 1996,
+          "distance": 511,
+          "nameSimilarity": 0.5,
+          "accepted": false
+        },
+        {
+          "id": "a0SkDNp",
+          "name": "동아청솔",
+          "far": 249,
+          "units": 1981,
+          "year": 1997,
+          "distance": 735,
+          "nameSimilarity": 0.5,
+          "accepted": false
+        }
+      ]
+    },
+    {
+      "key": "동성3|서울 중랑구 신내동",
+      "name": "동성3",
+      "area": "서울 중랑구 신내동",
+      "oldStatus": "review_needed",
+      "thirdStatus": "still_unresolved",
+      "richgo": null,
+      "match": null,
+      "dongCatalog": "https://m.richgo.ai/realty/region/1126010600",
+      "candidates": [
+        {
+          "id": "a0LsSQR",
+          "name": "동성3차",
+          "far": 325,
+          "units": 800,
+          "year": 1997,
+          "distance": 13,
+          "nameSimilarity": 0.75,
+          "accepted": false
+        },
+        {
+          "id": "a2fPBYV",
+          "name": "동성4차",
+          "far": 312,
+          "units": 478,
+          "year": 1997,
+          "distance": 188,
+          "nameSimilarity": 0.5,
+          "accepted": false
+        },
+        {
+          "id": "a2OQHXo",
+          "name": "동성5차",
+          "far": 221,
+          "units": 75,
+          "year": 1997,
+          "distance": 260,
+          "nameSimilarity": 0.5,
+          "accepted": false
+        },
+        {
+          "id": "a0JUOJJ",
+          "name": "동성7차",
+          "far": 309,
+          "units": 235,
+          "year": 1999,
+          "distance": 263,
+          "nameSimilarity": 0.5,
+          "accepted": false
+        }
+      ]
+    },
+    {
+      "key": "화성.두산아파트|서울 중랑구 신내동",
+      "name": "화성.두산아파트",
+      "area": "서울 중랑구 신내동",
+      "oldStatus": "unmatched",
+      "thirdStatus": "still_unresolved",
+      "richgo": null,
+      "match": null,
+      "dongCatalog": "https://m.richgo.ai/realty/region/1126010600",
+      "candidates": []
+    },
+    {
+      "key": "양지마을(대림)1|서울 노원구 중계동",
+      "name": "양지마을(대림)1",
+      "area": "서울 노원구 중계동",
+      "oldStatus": "review_needed",
+      "thirdStatus": "verified_third_pass",
+      "richgo": {
+        "id": "a8rfPwq",
+        "name": "양지대림",
+        "far": 328,
+        "year": 1998,
+        "units": 508,
+        "lat": 37.65175,
+        "lng": 127.071366,
+        "floors": "12~23층",
+        "heating": "지역난방 · 열병합",
+        "pyeongs": "24·32·43평",
+        "parking": "560대 (세대당 1.10대)",
+        "street": "서울시 노원구 덕릉로71길 30",
+        "url": "https://m.richgo.ai/realty/danji/a8rfPwq"
+      },
+      "match": {
+        "distanceMeters": 98,
+        "yearDelta": 0,
+        "unitsRatio": 0,
+        "nameSimilarity": 0.5714285714285714,
+        "method": "official_dong_catalog"
+      },
+      "dongCatalog": "https://m.richgo.ai/realty/region/1135010600",
+      "candidates": [
+        {
+          "id": "a8rfPwq",
+          "name": "양지대림",
+          "far": 328,
+          "units": 508,
+          "year": 1998,
+          "distance": 98,
+          "nameSimilarity": 0.5714285714285714,
+          "accepted": true
+        },
+        {
+          "id": "a3Blcix",
+          "name": "양지대림2차",
+          "far": 331,
+          "units": 652,
+          "year": 1999,
+          "distance": 336,
+          "nameSimilarity": 0.4285714285714286,
+          "accepted": false
+        }
+      ]
+    },
+    {
+      "key": "엘지원앙|구리시 수택동",
+      "name": "엘지원앙",
+      "area": "구리시 수택동",
+      "oldStatus": "review_needed",
+      "thirdStatus": "still_unresolved",
+      "richgo": null,
+      "match": null,
+      "dongCatalog": "https://m.richgo.ai/realty/region/4131010500",
+      "candidates": [
+        {
+          "id": "a6YTBiz",
+          "name": "LG원앙",
+          "far": 219,
+          "units": 824,
+          "year": 1995,
+          "distance": 23,
+          "nameSimilarity": 0.5,
+          "accepted": false
+        }
+      ]
+    },
+    {
+      "key": "수락리버시티4단지|서울 노원구 상계동",
+      "name": "수락리버시티4단지",
+      "area": "서울 노원구 상계동",
+      "oldStatus": "unmatched",
+      "thirdStatus": "verified_third_pass",
+      "richgo": {
+        "id": "a3mRBqp",
+        "name": "수락리버시티4단지",
+        "far": 189,
+        "year": 2009,
+        "units": 548,
+        "lat": 37.686064,
+        "lng": 127.053682,
+        "floors": "7~15층",
+        "heating": "지역난방 · 열병합",
+        "pyeongs": "24·33평",
+        "parking": "581대 (세대당 1.06대)",
+        "street": "서울시 노원구 누원로 18",
+        "url": "https://m.richgo.ai/realty/danji/a3mRBqp"
+      },
+      "match": {
+        "distanceMeters": 14,
+        "yearDelta": 0,
+        "unitsRatio": 0,
+        "nameSimilarity": 1,
+        "method": "official_dong_catalog"
+      },
+      "dongCatalog": "https://m.richgo.ai/realty/region/1135010500",
+      "candidates": [
+        {
+          "id": "a3mRBqp",
+          "name": "수락리버시티4단지",
+          "far": 189,
+          "units": 548,
+          "year": 2009,
+          "distance": 14,
+          "nameSimilarity": 1,
+          "accepted": true
+        },
+        {
+          "id": "a0MNuOa",
+          "name": "수락리버시티3단지",
+          "far": 184,
+          "units": 696,
+          "year": 2009,
+          "distance": 188,
+          "nameSimilarity": 0.8571428571428572,
+          "accepted": false
+        }
+      ]
+    },
+    {
+      "key": "중앙하이츠|서울 중랑구 신내동",
+      "name": "중앙하이츠",
+      "area": "서울 중랑구 신내동",
+      "oldStatus": "review_needed",
+      "thirdStatus": "still_unresolved",
+      "richgo": null,
+      "match": null,
+      "dongCatalog": "https://m.richgo.ai/realty/region/1126010600",
+      "candidates": [
+        {
+          "id": "a9nOpnC",
+          "name": "중앙하이츠",
+          "far": 250,
+          "units": 704,
+          "year": 1996,
+          "distance": 6,
+          "nameSimilarity": 1,
+          "accepted": false
+        }
+      ]
+    },
+    {
+      "key": "태영데시앙1|서울 중랑구 상봉동",
+      "name": "태영데시앙1",
+      "area": "서울 중랑구 상봉동",
+      "oldStatus": "unmatched",
+      "thirdStatus": "still_unresolved",
+      "richgo": null,
+      "match": null,
+      "dongCatalog": "https://m.richgo.ai/realty/region/1126010200",
+      "candidates": [
+        {
+          "id": "a4wONSS",
+          "name": "상봉태영데시앙",
+          "far": 292,
+          "units": 582,
+          "year": 2003,
+          "distance": 27,
+          "nameSimilarity": 0.5714285714285714,
+          "accepted": false
+        }
+      ]
+    },
+    {
+      "key": "청백4|서울 노원구 월계동",
+      "name": "청백4",
+      "area": "서울 노원구 월계동",
+      "oldStatus": "review_needed",
+      "thirdStatus": "verified_third_pass",
+      "richgo": {
+        "id": "a3ibeKY",
+        "name": "청백4단지",
+        "far": 250,
+        "year": 1998,
+        "units": 520,
+        "lat": 37.632023,
+        "lng": 127.051728,
+        "floors": "11~15층",
+        "heating": "지역난방 · 열병합",
+        "pyeongs": "16·20·24·32평",
+        "parking": "389대 (세대당 0.74대)",
+        "street": "서울시 노원구 월계로45가길 94",
+        "url": "https://m.richgo.ai/realty/danji/a3ibeKY"
+      },
+      "match": {
+        "distanceMeters": 46,
+        "yearDelta": 0,
+        "unitsRatio": 0,
+        "nameSimilarity": 1,
+        "method": "official_dong_catalog"
+      },
+      "dongCatalog": "https://m.richgo.ai/realty/region/1135010200",
+      "candidates": [
+        {
+          "id": "a3ibeKY",
+          "name": "청백4단지",
+          "far": 250,
+          "units": 520,
+          "year": 1998,
+          "distance": 46,
+          "nameSimilarity": 1,
+          "accepted": true
+        },
+        {
+          "id": "a4fOgkY",
+          "name": "청백3단지",
+          "far": 257,
+          "units": 458,
+          "year": 1998,
+          "distance": 142,
+          "nameSimilarity": 0.6666666666666667,
+          "accepted": false
+        }
+      ]
+    },
+    {
+      "key": "우일타운|서울 중구 흥인동",
+      "name": "우일타운",
+      "area": "서울 중구 흥인동",
+      "oldStatus": "review_needed",
+      "thirdStatus": "still_unresolved",
+      "richgo": null,
+      "match": null,
+      "dongCatalog": "https://m.richgo.ai/realty/region/1114016300",
+      "candidates": [
+        {
+          "id": "a0bVxfC",
+          "name": "우일타운",
+          "far": 837,
+          "units": 86,
+          "year": 1994,
+          "distance": 7,
+          "nameSimilarity": 1,
+          "accepted": false
+        }
+      ]
+    },
+    {
+      "key": "상계현대3차|서울 노원구 상계동",
+      "name": "상계현대3차",
+      "area": "서울 노원구 상계동",
+      "oldStatus": "unmatched",
+      "thirdStatus": "verified_third_pass",
+      "richgo": {
+        "id": "a5KbxTv",
+        "name": "상계현대3차",
+        "far": 243,
+        "year": 1999,
+        "units": 494,
+        "lat": 37.67136,
+        "lng": 127.052645,
+        "floors": "12~15층",
+        "heating": "지역난방 · 열병합",
+        "pyeongs": "30평",
+        "parking": "400대 (세대당 0.80대)",
+        "street": "서울시 노원구 수락산로 234",
+        "url": "https://m.richgo.ai/realty/danji/a5KbxTv"
+      },
+      "match": {
+        "distanceMeters": 35,
+        "yearDelta": 0,
+        "unitsRatio": 0,
+        "nameSimilarity": 1,
+        "method": "official_dong_catalog"
+      },
+      "dongCatalog": "https://m.richgo.ai/realty/region/1135010500",
+      "candidates": [
+        {
+          "id": "a5KbxTv",
+          "name": "상계현대3차",
+          "far": 243,
+          "units": 494,
+          "year": 1999,
+          "distance": 35,
+          "nameSimilarity": 1,
+          "accepted": true
+        },
+        {
+          "id": "a7jHCBm",
+          "name": "상계현대1차",
+          "far": 256,
+          "units": 331,
+          "year": 1993,
+          "distance": 159,
+          "nameSimilarity": 0.8333333333333334,
+          "accepted": false
+        },
+        {
+          "id": "a0xjiIx",
+          "name": "상계현대2차",
+          "far": 286,
+          "units": 465,
+          "year": 1993,
+          "distance": 229,
+          "nameSimilarity": 0.8333333333333334,
+          "accepted": false
+        },
+        {
+          "id": "a4PMrek",
+          "name": "현대4차",
+          "far": 258,
+          "units": 106,
+          "year": 1995,
+          "distance": 280,
+          "nameSimilarity": 0.5,
+          "accepted": false
+        }
+      ]
+    },
+    {
+      "key": "꿈의숲SKVIEW|서울 노원구 월계동",
+      "name": "꿈의숲SKVIEW",
+      "area": "서울 노원구 월계동",
+      "oldStatus": "review_needed",
+      "thirdStatus": "verified_third_pass",
+      "richgo": {
+        "id": "a2peLyv",
+        "name": "꿈의숲SK뷰",
+        "far": 249,
+        "year": 2016,
+        "units": 504,
+        "lat": 37.622032,
+        "lng": 127.053592,
+        "floors": "16~20층",
+        "heating": "개별난방 · 도시가스",
+        "pyeongs": "25·26·33·34평",
+        "parking": "590대 (세대당 1.17대)",
+        "street": "서울시 노원구 월계로42길 97",
+        "url": "https://m.richgo.ai/realty/danji/a2peLyv"
+      },
+      "match": {
+        "distanceMeters": 24,
+        "yearDelta": 0,
+        "unitsRatio": 0,
+        "nameSimilarity": 0.5555555555555556,
+        "method": "official_dong_catalog"
+      },
+      "dongCatalog": "https://m.richgo.ai/realty/region/1135010200",
+      "candidates": [
+        {
+          "id": "a2peLyv",
+          "name": "꿈의숲SK뷰",
+          "far": 249,
+          "units": 504,
+          "year": 2016,
+          "distance": 24,
+          "nameSimilarity": 0.5555555555555556,
+          "accepted": true
+        }
+      ]
+    },
+    {
+      "key": "금호타운(583)|서울 노원구 중계동",
+      "name": "금호타운(583)",
+      "area": "서울 노원구 중계동",
+      "oldStatus": "unmatched",
+      "thirdStatus": "still_unresolved",
+      "richgo": null,
+      "match": null,
+      "dongCatalog": "https://m.richgo.ai/realty/region/1135010600",
+      "candidates": []
+    },
+    {
+      "key": "개화|서울 강서구 방화동",
+      "name": "개화",
+      "area": "서울 강서구 방화동",
+      "oldStatus": "unmatched",
+      "thirdStatus": "still_unresolved",
+      "richgo": null,
+      "match": null,
+      "dongCatalog": "https://m.richgo.ai/realty/region/1150010900",
+      "candidates": [
+        {
+          "id": "a2QBuuT",
+          "name": "방화개화",
+          "far": 240,
+          "units": 462,
+          "year": 1994,
+          "distance": 34,
+          "nameSimilarity": 0.5,
+          "accepted": false
+        }
+      ]
+    },
+    {
+      "key": "동아에코빌|서울 영등포구 도림동",
+      "name": "동아에코빌",
+      "area": "서울 영등포구 도림동",
+      "oldStatus": "unmatched",
+      "thirdStatus": "verified_third_pass",
+      "richgo": {
+        "id": "a3cqRDT",
+        "name": "동아에코빌",
+        "far": 379,
+        "year": 2000,
+        "units": 346,
+        "lat": 37.509046,
+        "lng": 126.898678,
+        "floors": "13~24층",
+        "heating": "개별난방 · 도시가스",
+        "pyeongs": "25·32·43·55평",
+        "parking": "405대 (세대당 1.17대)",
+        "street": "서울시 영등포구 도림로 365",
+        "url": "https://m.richgo.ai/realty/danji/a3cqRDT"
+      },
+      "match": {
+        "distanceMeters": 12,
+        "yearDelta": 0,
+        "unitsRatio": 0,
+        "nameSimilarity": 1,
+        "method": "official_dong_catalog"
+      },
+      "dongCatalog": "https://m.richgo.ai/realty/region/1156011800",
+      "candidates": [
+        {
+          "id": "a3cqRDT",
+          "name": "동아에코빌",
+          "far": 379,
+          "units": 346,
+          "year": 2000,
+          "distance": 12,
+          "nameSimilarity": 1,
+          "accepted": true
+        }
+      ]
+    },
+    {
+      "key": "금호어울림(580)|서울 중랑구 망우동",
+      "name": "금호어울림(580)",
+      "area": "서울 중랑구 망우동",
+      "oldStatus": "unmatched",
+      "thirdStatus": "still_unresolved",
+      "richgo": null,
+      "match": null,
+      "dongCatalog": "https://m.richgo.ai/realty/region/1126010500",
+      "candidates": []
+    },
+    {
+      "key": "인창2차e-편한세상|구리시 인창동",
+      "name": "인창2차e-편한세상",
+      "area": "구리시 인창동",
+      "oldStatus": "review_needed",
+      "thirdStatus": "verified_third_pass",
+      "richgo": {
+        "id": "a6pqcJM",
+        "name": "인창e-편한세상2차",
+        "far": 297,
+        "year": 2006,
+        "units": 621,
+        "lat": 37.610527,
+        "lng": 127.135408,
+        "floors": "7~25층",
+        "heating": "개별난방 · 도시가스",
+        "pyeongs": "23·24·32·33·43평",
+        "parking": "685대 (세대당 1.10대)",
+        "street": "경기도 구리시 동구릉로129번길 23",
+        "url": "https://m.richgo.ai/realty/danji/a6pqcJM"
+      },
+      "match": {
+        "distanceMeters": 35,
+        "yearDelta": 0,
+        "unitsRatio": 0,
+        "nameSimilarity": 0.5555555555555556,
+        "method": "official_dong_catalog"
+      },
+      "dongCatalog": "https://m.richgo.ai/realty/region/4131010300",
+      "candidates": [
+        {
+          "id": "a6pqcJM",
+          "name": "인창e-편한세상2차",
+          "far": 297,
+          "units": 621,
+          "year": 2006,
+          "distance": 35,
+          "nameSimilarity": 0.5555555555555556,
+          "accepted": true
+        },
+        {
+          "id": "a6oCZOJ",
+          "name": "인창e-편한세상1차",
+          "far": 276,
+          "units": 154,
+          "year": 2004,
+          "distance": 568,
+          "nameSimilarity": 0.5555555555555556,
+          "accepted": false
+        }
+      ]
+    },
+    {
+      "key": "현대홈타운|구리시 인창동",
+      "name": "현대홈타운",
+      "area": "구리시 인창동",
+      "oldStatus": "review_needed",
+      "thirdStatus": "still_unresolved",
+      "richgo": null,
+      "match": null,
+      "dongCatalog": "https://m.richgo.ai/realty/region/4131010300",
+      "candidates": []
+    },
+    {
+      "key": "삼환|구리시 인창동",
+      "name": "삼환",
+      "area": "구리시 인창동",
+      "oldStatus": "unmatched",
+      "thirdStatus": "still_unresolved",
+      "richgo": null,
+      "match": null,
+      "dongCatalog": "https://m.richgo.ai/realty/region/4131010300",
+      "candidates": [
+        {
+          "id": "a6LfHWB",
+          "name": "삼보",
+          "far": 244,
+          "units": 906,
+          "year": 1996,
+          "distance": 254,
+          "nameSimilarity": 0.5,
+          "accepted": false
+        },
+        {
+          "id": "a8PZdSq",
+          "name": "삼호",
+          "far": 119,
+          "units": 231,
+          "year": 1991,
+          "distance": 619,
+          "nameSimilarity": 0.5,
+          "accepted": false
+        }
+      ]
+    },
+    {
+      "key": "신일|구리시 인창동",
+      "name": "신일",
+      "area": "구리시 인창동",
+      "oldStatus": "unmatched",
+      "thirdStatus": "still_unresolved",
+      "richgo": null,
+      "match": null,
+      "dongCatalog": "https://m.richgo.ai/realty/region/4131010300",
+      "candidates": []
+    },
+    {
+      "key": "태릉우성아파트|서울 노원구 공릉동",
+      "name": "태릉우성아파트",
+      "area": "서울 노원구 공릉동",
+      "oldStatus": "unmatched",
+      "thirdStatus": "still_unresolved",
+      "richgo": null,
+      "match": null,
+      "dongCatalog": "https://m.richgo.ai/realty/region/1135010300",
+      "candidates": []
+    },
+    {
+      "key": "상계신동아|서울 노원구 상계동",
+      "name": "상계신동아",
+      "area": "서울 노원구 상계동",
+      "oldStatus": "unmatched",
+      "thirdStatus": "verified_third_pass",
+      "richgo": {
+        "id": "a1YrcUW",
+        "name": "상계신동아",
+        "far": 299,
+        "year": 1995,
+        "units": 385,
+        "lat": 37.667516,
+        "lng": 127.067667,
+        "floors": "10~15층",
+        "heating": "지역난방 · 열병합",
+        "pyeongs": "25·31평",
+        "parking": "318대 (세대당 0.82대)",
+        "street": "서울시 노원구 한글비석로52길 66",
+        "url": "https://m.richgo.ai/realty/danji/a1YrcUW"
+      },
+      "match": {
+        "distanceMeters": 18,
+        "yearDelta": 0,
+        "unitsRatio": 0,
+        "nameSimilarity": 1,
+        "method": "official_dong_catalog"
+      },
+      "dongCatalog": "https://m.richgo.ai/realty/region/1135010500",
+      "candidates": [
+        {
+          "id": "a1YrcUW",
+          "name": "상계신동아",
+          "far": 299,
+          "units": 385,
+          "year": 1995,
+          "distance": 18,
+          "nameSimilarity": 1,
+          "accepted": true
+        }
+      ]
+    },
+    {
+      "key": "대동황토방|서울 노원구 상계동",
+      "name": "대동황토방",
+      "area": "서울 노원구 상계동",
+      "oldStatus": "unmatched",
+      "thirdStatus": "still_unresolved",
+      "richgo": null,
+      "match": null,
+      "dongCatalog": "https://m.richgo.ai/realty/region/1135010500",
+      "candidates": []
+    },
+    {
+      "key": "용마금호타운|서울 중랑구 면목동",
+      "name": "용마금호타운",
+      "area": "서울 중랑구 면목동",
+      "oldStatus": "review_needed",
+      "thirdStatus": "still_unresolved",
+      "richgo": null,
+      "match": null,
+      "dongCatalog": "https://m.richgo.ai/realty/region/1126010100",
+      "candidates": [
+        {
+          "id": "a6StnfE",
+          "name": "용마금호타운",
+          "far": 257,
+          "units": 440,
+          "year": 1992,
+          "distance": 9,
+          "nameSimilarity": 1,
+          "accepted": false
+        },
+        {
+          "id": "a9kfKrJ",
+          "name": "용마산금호어울림",
+          "far": 194,
+          "units": 165,
+          "year": 2006,
+          "distance": 671,
+          "nameSimilarity": 0.5,
+          "accepted": false
+        }
+      ]
+    },
+    {
+      "key": "하나(유원)아파트|구리시 교문동",
+      "name": "하나(유원)아파트",
+      "area": "구리시 교문동",
+      "oldStatus": "review_needed",
+      "thirdStatus": "still_unresolved",
+      "richgo": null,
+      "match": null,
+      "dongCatalog": "https://m.richgo.ai/realty/region/4131010400",
+      "candidates": [
+        {
+          "id": "a0xwbiV",
+          "name": "하나",
+          "far": 219,
+          "units": 686,
+          "year": 1994,
+          "distance": 20,
+          "nameSimilarity": 0.5,
+          "accepted": false
+        }
+      ]
+    },
+    {
+      "key": "하나(한성)아파트|구리시 교문동",
+      "name": "하나(한성)아파트",
+      "area": "구리시 교문동",
+      "oldStatus": "review_needed",
+      "thirdStatus": "still_unresolved",
+      "richgo": null,
+      "match": null,
+      "dongCatalog": "https://m.richgo.ai/realty/region/4131010400",
+      "candidates": [
+        {
+          "id": "a0xwbiV",
+          "name": "하나",
+          "far": 219,
+          "units": 686,
+          "year": 1994,
+          "distance": 20,
+          "nameSimilarity": 0.5,
+          "accepted": false
+        },
+        {
+          "id": "a7zwqjY",
+          "name": "한성",
+          "far": 136,
+          "units": 490,
+          "year": 1990,
+          "distance": 241,
+          "nameSimilarity": 0.5,
+          "accepted": false
+        }
+      ]
+    },
+    {
+      "key": "동양주택조합|구리시 인창동",
+      "name": "동양주택조합",
+      "area": "구리시 인창동",
+      "oldStatus": "review_needed",
+      "thirdStatus": "still_unresolved",
+      "richgo": null,
+      "match": null,
+      "dongCatalog": "https://m.richgo.ai/realty/region/4131010300",
+      "candidates": []
+    },
+    {
+      "key": "대우|서울 노원구 월계동",
+      "name": "대우",
+      "area": "서울 노원구 월계동",
+      "oldStatus": "unmatched",
+      "thirdStatus": "still_unresolved",
+      "richgo": null,
+      "match": null,
+      "dongCatalog": "https://m.richgo.ai/realty/region/1135010200",
+      "candidates": [
+        {
+          "id": "a8weAce",
+          "name": "월계대우",
+          "far": 269,
+          "units": 344,
+          "year": 1998,
+          "distance": 32,
+          "nameSimilarity": 0.5,
+          "accepted": false
+        },
+        {
+          "id": "a0UFLrb",
+          "name": "대동",
+          "far": 282,
+          "units": 258,
+          "year": 1997,
+          "distance": 1502,
+          "nameSimilarity": 0.5,
+          "accepted": false
+        }
+      ]
+    },
+    {
+      "key": "창동2차현대|서울 도봉구 창동",
+      "name": "창동2차현대",
+      "area": "서울 도봉구 창동",
+      "oldStatus": "review_needed",
+      "thirdStatus": "still_unresolved",
+      "richgo": null,
+      "match": null,
+      "dongCatalog": "https://m.richgo.ai/realty/region/1132010700",
+      "candidates": [
+        {
+          "id": "a0BTVvw",
+          "name": "현대",
+          "far": 399,
+          "units": 205,
+          "year": 2000,
+          "distance": 725,
+          "nameSimilarity": 0.5,
+          "accepted": false
+        }
+      ]
+    },
+    {
+      "key": "공릉우성아파트|서울 노원구 공릉동",
+      "name": "공릉우성아파트",
+      "area": "서울 노원구 공릉동",
+      "oldStatus": "unmatched",
+      "thirdStatus": "still_unresolved",
+      "richgo": null,
+      "match": null,
+      "dongCatalog": "https://m.richgo.ai/realty/region/1135010300",
+      "candidates": []
+    },
+    {
+      "key": "상계1차현대아파트|서울 노원구 상계동",
+      "name": "상계1차현대아파트",
+      "area": "서울 노원구 상계동",
+      "oldStatus": "unmatched",
+      "thirdStatus": "still_unresolved",
+      "richgo": null,
+      "match": null,
+      "dongCatalog": "https://m.richgo.ai/realty/region/1135010500",
+      "candidates": []
+    },
+    {
+      "key": "대림e편한세상|서울 강서구 화곡동",
+      "name": "대림e편한세상",
+      "area": "서울 강서구 화곡동",
+      "oldStatus": "unmatched",
+      "thirdStatus": "still_unresolved",
+      "richgo": null,
+      "match": null,
+      "dongCatalog": "https://m.richgo.ai/realty/region/1150010300",
+      "candidates": []
+    },
+    {
+      "key": "우정아파트|서울 중랑구 상봉동",
+      "name": "우정아파트",
+      "area": "서울 중랑구 상봉동",
+      "oldStatus": "review_needed",
+      "thirdStatus": "still_unresolved",
+      "richgo": null,
+      "match": null,
+      "dongCatalog": "https://m.richgo.ai/realty/region/1126010200",
+      "candidates": [
+        {
+          "id": "a2aLIrY",
+          "name": "상봉우정",
+          "far": 297,
+          "units": 375,
+          "year": 2002,
+          "distance": 30,
+          "nameSimilarity": 0.5,
+          "accepted": false
+        }
+      ]
+    },
+    {
+      "key": "건영2차|서울 중랑구 신내동",
+      "name": "건영2차",
+      "area": "서울 중랑구 신내동",
+      "oldStatus": "unmatched",
+      "thirdStatus": "still_unresolved",
+      "richgo": null,
+      "match": null,
+      "dongCatalog": "https://m.richgo.ai/realty/region/1126010600",
+      "candidates": []
+    },
+    {
+      "key": "래미안도봉|서울 도봉구 도봉동",
+      "name": "래미안도봉",
+      "area": "서울 도봉구 도봉동",
+      "oldStatus": "unmatched",
+      "thirdStatus": "still_unresolved",
+      "richgo": null,
+      "match": null,
+      "dongCatalog": "https://m.richgo.ai/realty/region/1132010800",
+      "candidates": []
+    },
+    {
+      "key": "아름마을삼성|구리시 인창동",
+      "name": "아름마을삼성",
+      "area": "구리시 인창동",
+      "oldStatus": "unmatched",
+      "thirdStatus": "still_unresolved",
+      "richgo": null,
+      "match": null,
+      "dongCatalog": "https://m.richgo.ai/realty/region/4131010300",
+      "candidates": [
+        {
+          "id": "a7ikaGP",
+          "name": "아름마을인창래미안",
+          "far": 313,
+          "units": 816,
+          "year": 2000,
+          "distance": 19,
+          "nameSimilarity": 0.4444444444444444,
+          "accepted": false
+        },
+        {
+          "id": "a1zYehk",
+          "name": "아름마을원일",
+          "far": 282,
+          "units": 777,
+          "year": 1998,
+          "distance": 132,
+          "nameSimilarity": 0.6666666666666667,
+          "accepted": false
+        },
+        {
+          "id": "a4kjgcJ",
+          "name": "아름마을성원1차",
+          "far": 317,
+          "units": 190,
+          "year": 1999,
+          "distance": 237,
+          "nameSimilarity": 0.5,
+          "accepted": false
+        },
+        {
+          "id": "a6WGLEo",
+          "name": "아름마을LG",
+          "far": 309,
+          "units": 482,
+          "year": 1999,
+          "distance": 381,
+          "nameSimilarity": 0.6666666666666667,
+          "accepted": false
+        }
+      ]
+    },
+    {
+      "key": "서해2|시흥시 정왕동",
+      "name": "서해2",
+      "area": "시흥시 정왕동",
+      "oldStatus": "review_needed",
+      "thirdStatus": "verified_third_pass",
+      "richgo": {
+        "id": "a3NELwA",
+        "name": "서해2차",
+        "far": 123,
+        "year": 1998,
+        "units": 570,
+        "lat": 37.360431,
+        "lng": 126.7268,
+        "floors": "5~10층",
+        "heating": "개별난방 · 도시가스",
+        "pyeongs": "23·28·35·45평",
+        "parking": "709대 (세대당 1.24대)",
+        "street": "경기도 시흥시 정왕신길로49번길 21",
+        "url": "https://m.richgo.ai/realty/danji/a3NELwA"
+      },
+      "match": {
+        "distanceMeters": 71,
+        "yearDelta": 0,
+        "unitsRatio": 0,
+        "nameSimilarity": 0.75,
+        "method": "official_dong_catalog"
+      },
+      "dongCatalog": "https://m.richgo.ai/realty/region/4139013200",
+      "candidates": [
+        {
+          "id": "a3NELwA",
+          "name": "서해2차",
+          "far": 123,
+          "units": 570,
+          "year": 1998,
+          "distance": 71,
+          "nameSimilarity": 0.75,
+          "accepted": true
+        },
+        {
+          "id": "a0eSdhu",
+          "name": "서해1차",
+          "far": 140,
+          "units": 530,
+          "year": 1997,
+          "distance": 150,
+          "nameSimilarity": 0.5,
+          "accepted": false
+        }
+      ]
+    },
+    {
+      "key": "동성1|서울 중랑구 신내동",
+      "name": "동성1",
+      "area": "서울 중랑구 신내동",
+      "oldStatus": "review_needed",
+      "thirdStatus": "still_unresolved",
+      "richgo": null,
+      "match": null,
+      "dongCatalog": "https://m.richgo.ai/realty/region/1126010600",
+      "candidates": [
+        {
+          "id": "a1LGvqs",
+          "name": "동성1",
+          "far": 229,
+          "units": 1047,
+          "year": 1993,
+          "distance": 32,
+          "nameSimilarity": 1,
+          "accepted": false
+        },
+        {
+          "id": "a0LsSQR",
+          "name": "동성3차",
+          "far": 325,
+          "units": 800,
+          "year": 1997,
+          "distance": 143,
+          "nameSimilarity": 0.5,
+          "accepted": false
+        },
+        {
+          "id": "a2OQHXo",
+          "name": "동성5차",
+          "far": 221,
+          "units": 75,
+          "year": 1997,
+          "distance": 250,
+          "nameSimilarity": 0.5,
+          "accepted": false
+        },
+        {
+          "id": "a2fPBYV",
+          "name": "동성4차",
+          "far": 312,
+          "units": 478,
+          "year": 1997,
+          "distance": 330,
+          "nameSimilarity": 0.5,
+          "accepted": false
+        }
+      ]
+    },
+    {
+      "key": "동아불암|서울 노원구 상계동",
+      "name": "동아불암",
+      "area": "서울 노원구 상계동",
+      "oldStatus": "unmatched",
+      "thirdStatus": "verified_third_pass",
+      "richgo": {
+        "id": "a7UagjS",
+        "name": "동아불암",
+        "far": 353,
+        "year": 1999,
+        "units": 673,
+        "lat": 37.667071,
+        "lng": 127.079914,
+        "floors": "12~22층",
+        "heating": "개별난방 · 도시가스",
+        "pyeongs": "25·33·42평",
+        "parking": "637대 (세대당 0.94대)",
+        "street": "서울시 노원구 덕릉로 780",
+        "url": "https://m.richgo.ai/realty/danji/a7UagjS"
+      },
+      "match": {
+        "distanceMeters": 23,
+        "yearDelta": 0,
+        "unitsRatio": 0,
+        "nameSimilarity": 1,
+        "method": "official_dong_catalog"
+      },
+      "dongCatalog": "https://m.richgo.ai/realty/region/1135010500",
+      "candidates": [
+        {
+          "id": "a7UagjS",
+          "name": "동아불암",
+          "far": 353,
+          "units": 673,
+          "year": 1999,
+          "distance": 23,
+          "nameSimilarity": 1,
+          "accepted": true
+        }
+      ]
+    },
+    {
+      "key": "면목한신|서울 중랑구 면목동",
+      "name": "면목한신",
+      "area": "서울 중랑구 면목동",
+      "oldStatus": "review_needed",
+      "thirdStatus": "still_unresolved",
+      "richgo": null,
+      "match": null,
+      "dongCatalog": "https://m.richgo.ai/realty/region/1126010100",
+      "candidates": [
+        {
+          "id": "a7FQFPA",
+          "name": "면목한신",
+          "far": 232,
+          "units": 1362,
+          "year": 1987,
+          "distance": 6,
+          "nameSimilarity": 1,
+          "accepted": false
+        },
+        {
+          "id": "a0iDhht",
+          "name": "용마한신",
+          "far": 261,
+          "units": 565,
+          "year": 1990,
+          "distance": 1942,
+          "nameSimilarity": 0.5,
+          "accepted": false
+        },
+        {
+          "id": "a0XAaIN",
+          "name": "면목삼익",
+          "far": 402,
+          "units": 216,
+          "year": 1997,
+          "distance": 1468,
+          "nameSimilarity": 0.5,
+          "accepted": false
+        },
+        {
+          "id": "a6xvRCo",
+          "name": "면목삼호",
+          "far": null,
+          "units": 183,
+          "year": 2000,
+          "distance": 1694,
+          "nameSimilarity": 0.5,
+          "accepted": false
+        }
+      ]
+    },
+    {
+      "key": "불암현대|서울 노원구 상계동",
+      "name": "불암현대",
+      "area": "서울 노원구 상계동",
+      "oldStatus": "unmatched",
+      "thirdStatus": "verified_third_pass",
+      "richgo": {
+        "id": "a1UrEpH",
+        "name": "불암현대",
+        "far": 348,
+        "year": 1999,
+        "units": 826,
+        "lat": 37.667938,
+        "lng": 127.081309,
+        "floors": "8~22층",
+        "heating": "개별난방 · 도시가스",
+        "pyeongs": "24·33·42평",
+        "parking": "833대 (세대당 1.00대)",
+        "street": "서울시 노원구 덕릉로118길 29",
+        "url": "https://m.richgo.ai/realty/danji/a1UrEpH"
+      },
+      "match": {
+        "distanceMeters": 30,
+        "yearDelta": 0,
+        "unitsRatio": 0,
+        "nameSimilarity": 1,
+        "method": "official_dong_catalog"
+      },
+      "dongCatalog": "https://m.richgo.ai/realty/region/1135010500",
+      "candidates": [
+        {
+          "id": "a1UrEpH",
+          "name": "불암현대",
+          "far": 348,
+          "units": 826,
+          "year": 1999,
+          "distance": 30,
+          "nameSimilarity": 1,
+          "accepted": true
+        },
+        {
+          "id": "a9dHPHV",
+          "name": "노원현대",
+          "far": 195,
+          "units": 259,
+          "year": 1997,
+          "distance": 1904,
+          "nameSimilarity": 0.5,
+          "accepted": false
+        },
+        {
+          "id": "a2EBMmy",
+          "name": "북부현대",
+          "far": 336,
+          "units": 105,
+          "year": 1996,
+          "distance": 2836,
+          "nameSimilarity": 0.5,
+          "accepted": false
+        },
+        {
+          "id": "a2OCDlO",
+          "name": "수락현대",
+          "far": 188,
+          "units": 216,
+          "year": 1995,
+          "distance": 2044,
+          "nameSimilarity": 0.5,
+          "accepted": false
+        }
+      ]
+    },
+    {
+      "key": "새한|서울 중랑구 신내동",
+      "name": "새한",
+      "area": "서울 중랑구 신내동",
+      "oldStatus": "unmatched",
+      "thirdStatus": "verified_third_pass",
+      "richgo": {
+        "id": "a9EuDKz",
+        "name": "새한",
+        "far": 353,
+        "year": 1998,
+        "units": 532,
+        "lat": 37.605246,
+        "lng": 127.101493,
+        "floors": "9~25층",
+        "heating": "개별난방 · 도시가스",
+        "pyeongs": "23·32·42평",
+        "parking": "610대 (세대당 1.14대)",
+        "street": "서울시 중랑구 용마산로 616",
+        "url": "https://m.richgo.ai/realty/danji/a9EuDKz"
+      },
+      "match": {
+        "distanceMeters": 7,
+        "yearDelta": 0,
+        "unitsRatio": 0,
+        "nameSimilarity": 1,
+        "method": "official_dong_catalog"
+      },
+      "dongCatalog": "https://m.richgo.ai/realty/region/1126010600",
+      "candidates": [
+        {
+          "id": "a9EuDKz",
+          "name": "새한",
+          "far": 353,
+          "units": 532,
+          "year": 1998,
+          "distance": 7,
+          "nameSimilarity": 1,
+          "accepted": true
+        }
+      ]
+    },
+    {
+      "key": "세운푸르지오헤리시티|서울 중구 인현동2가",
+      "name": "세운푸르지오헤리시티",
+      "area": "서울 중구 인현동2가",
+      "oldStatus": "review_needed",
+      "thirdStatus": "still_unresolved",
+      "richgo": null,
+      "match": null,
+      "dongCatalog": "https://m.richgo.ai/realty/region/1114013400",
+      "candidates": [
+        {
+          "id": "a6bGSfx",
+          "name": "세운푸르지오헤리시티",
+          "far": 937,
+          "units": 321,
+          "year": 2023,
+          "distance": 10,
+          "nameSimilarity": 1,
+          "accepted": false
+        },
+        {
+          "id": "a1rPWxy",
+          "name": "세운푸르지오헤리시티(도시형)",
+          "far": 937,
+          "units": 293,
+          "year": 2023,
+          "distance": 47,
+          "nameSimilarity": 0.7692307692307692,
+          "accepted": false
+        }
+      ]
+    },
+    {
+      "key": "용마한신|서울 중랑구 면목동",
+      "name": "용마한신",
+      "area": "서울 중랑구 면목동",
+      "oldStatus": "review_needed",
+      "thirdStatus": "still_unresolved",
+      "richgo": null,
+      "match": null,
+      "dongCatalog": "https://m.richgo.ai/realty/region/1126010100",
+      "candidates": [
+        {
+          "id": "a0iDhht",
+          "name": "용마한신",
+          "far": 261,
+          "units": 565,
+          "year": 1990,
+          "distance": 20,
+          "nameSimilarity": 1,
+          "accepted": false
+        },
+        {
+          "id": "a1YqrAq",
+          "name": "용마한신2차",
+          "far": 264,
+          "units": 174,
+          "year": 1998,
+          "distance": 110,
+          "nameSimilarity": 0.6666666666666667,
+          "accepted": false
+        },
+        {
+          "id": "a0pXqCx",
+          "name": "용마동아",
+          "far": 240,
+          "units": 174,
+          "year": 1993,
+          "distance": 291,
+          "nameSimilarity": 0.5,
+          "accepted": false
+        },
+        {
+          "id": "a7FQFPA",
+          "name": "면목한신",
+          "far": 232,
+          "units": 1362,
+          "year": 1987,
+          "distance": 1946,
+          "nameSimilarity": 0.5,
+          "accepted": false
+        }
+      ]
+    },
+    {
+      "key": "원일아름|구리시 인창동",
+      "name": "원일아름",
+      "area": "구리시 인창동",
+      "oldStatus": "unmatched",
+      "thirdStatus": "still_unresolved",
+      "richgo": null,
+      "match": null,
+      "dongCatalog": "https://m.richgo.ai/realty/region/4131010300",
+      "candidates": []
+    },
+    {
+      "key": "주공1|구리시 인창동",
+      "name": "주공1",
+      "area": "구리시 인창동",
+      "oldStatus": "unmatched",
+      "thirdStatus": "still_unresolved",
+      "richgo": null,
+      "match": null,
+      "dongCatalog": "https://m.richgo.ai/realty/region/4131010300",
+      "candidates": []
+    },
+    {
+      "key": "주공2|구리시 인창동",
+      "name": "주공2",
+      "area": "구리시 인창동",
+      "oldStatus": "unmatched",
+      "thirdStatus": "still_unresolved",
+      "richgo": null,
+      "match": null,
+      "dongCatalog": "https://m.richgo.ai/realty/region/4131010300",
+      "candidates": []
+    },
+    {
+      "key": "주공6|구리시 인창동",
+      "name": "주공6",
+      "area": "구리시 인창동",
+      "oldStatus": "unmatched",
+      "thirdStatus": "still_unresolved",
+      "richgo": null,
+      "match": null,
+      "dongCatalog": "https://m.richgo.ai/realty/region/4131010300",
+      "candidates": []
+    },
+    {
+      "key": "중계그린1단지|서울 노원구 중계동",
+      "name": "중계그린1단지",
+      "area": "서울 노원구 중계동",
+      "oldStatus": "unmatched",
+      "thirdStatus": "still_unresolved",
+      "richgo": null,
+      "match": null,
+      "dongCatalog": "https://m.richgo.ai/realty/region/1135010600",
+      "candidates": [
+        {
+          "id": "a5GwmTs",
+          "name": "중계그린",
+          "far": 191,
+          "units": 3481,
+          "year": 1990,
+          "distance": 36,
+          "nameSimilarity": 0.8,
+          "accepted": false
+        },
+        {
+          "id": "a3nPlJj",
+          "name": "중계주공10단지",
+          "far": 207,
+          "units": 330,
+          "year": 1995,
+          "distance": 968,
+          "nameSimilarity": 0.5,
+          "accepted": false
+        }
+      ]
+    },
+    {
+      "key": "중앙하이츠|서울 노원구 중계동",
+      "name": "중앙하이츠",
+      "area": "서울 노원구 중계동",
+      "oldStatus": "unmatched",
+      "thirdStatus": "verified_third_pass",
+      "richgo": {
+        "id": "a0qGARk",
+        "name": "중앙하이츠",
+        "far": 293,
+        "year": 1998,
+        "units": 499,
+        "lat": 37.659631,
+        "lng": 127.076731,
+        "floors": "9~18층",
+        "heating": "개별난방 · 도시가스",
+        "pyeongs": "22·27·32평",
+        "parking": "327대 (세대당 0.65대)",
+        "street": "서울시 노원구 한글비석로14길 37",
+        "url": "https://m.richgo.ai/realty/danji/a0qGARk"
+      },
+      "match": {
+        "distanceMeters": 47,
+        "yearDelta": 0,
+        "unitsRatio": 0,
+        "nameSimilarity": 1,
+        "method": "official_dong_catalog"
+      },
+      "dongCatalog": "https://m.richgo.ai/realty/region/1135010600",
+      "candidates": [
+        {
+          "id": "a0qGARk",
+          "name": "중앙하이츠",
+          "far": 293,
+          "units": 499,
+          "year": 1998,
+          "distance": 47,
+          "nameSimilarity": 1,
+          "accepted": true
+        },
+        {
+          "id": "a1TlbcD",
+          "name": "중앙하이츠아쿠아",
+          "far": 214,
+          "units": 219,
+          "year": 2008,
+          "distance": 1802,
+          "nameSimilarity": 0.625,
+          "accepted": false
+        }
+      ]
+    },
+    {
+      "key": "힐스테이트세운센트럴1단지|서울 중구 입정동",
+      "name": "힐스테이트세운센트럴1단지",
+      "area": "서울 중구 입정동",
+      "oldStatus": "review_needed",
+      "thirdStatus": "still_unresolved",
+      "richgo": null,
+      "match": null,
+      "dongCatalog": "https://m.richgo.ai/realty/region/1114015600",
+      "candidates": [
+        {
+          "id": "a2ijNfS",
+          "name": "힐스테이트세운센트럴1단지(주상복합)",
+          "far": 910,
+          "units": 206,
+          "year": 2023,
+          "distance": 36,
+          "nameSimilarity": 1,
+          "accepted": false
+        },
+        {
+          "id": "a7aggsx",
+          "name": "힐스테이트세운센트럴1단지(도시형)",
+          "far": 910,
+          "units": 208,
+          "year": 2023,
+          "distance": 35,
+          "nameSimilarity": 0.7857142857142857,
+          "accepted": false
+        },
+        {
+          "id": "a2FPcPB",
+          "name": "힐스테이트세운센트럴2단지(주상복합)",
+          "far": 938,
+          "units": 329,
+          "year": 2023,
+          "distance": 100,
+          "nameSimilarity": 0.9090909090909091,
+          "accepted": false
+        },
+        {
+          "id": "a9SPEen",
+          "name": "힐스테이트세운센트럴2단지(도시형)",
+          "far": 938,
+          "units": 279,
+          "year": 2023,
+          "distance": 119,
+          "nameSimilarity": 0.7142857142857143,
+          "accepted": false
+        }
+      ]
+    },
+    {
+      "key": "힐스테이트세운센트럴2단지|서울 중구 입정동",
+      "name": "힐스테이트세운센트럴2단지",
+      "area": "서울 중구 입정동",
+      "oldStatus": "review_needed",
+      "thirdStatus": "still_unresolved",
+      "richgo": null,
+      "match": null,
+      "dongCatalog": "https://m.richgo.ai/realty/region/1114015600",
+      "candidates": [
+        {
+          "id": "a2FPcPB",
+          "name": "힐스테이트세운센트럴2단지(주상복합)",
+          "far": 938,
+          "units": 329,
+          "year": 2023,
+          "distance": 4,
+          "nameSimilarity": 1,
+          "accepted": false
+        },
+        {
+          "id": "a9SPEen",
+          "name": "힐스테이트세운센트럴2단지(도시형)",
+          "far": 938,
+          "units": 279,
+          "year": 2023,
+          "distance": 23,
+          "nameSimilarity": 0.7857142857142857,
+          "accepted": false
+        },
+        {
+          "id": "a2ijNfS",
+          "name": "힐스테이트세운센트럴1단지(주상복합)",
+          "far": 910,
+          "units": 206,
+          "year": 2023,
+          "distance": 133,
+          "nameSimilarity": 0.9090909090909091,
+          "accepted": false
+        },
+        {
+          "id": "a7aggsx",
+          "name": "힐스테이트세운센트럴1단지(도시형)",
+          "far": 910,
+          "units": 208,
+          "year": 2023,
+          "distance": 132,
+          "nameSimilarity": 0.7142857142857143,
+          "accepted": false
+        }
+      ]
+    }
+  ]
+}
