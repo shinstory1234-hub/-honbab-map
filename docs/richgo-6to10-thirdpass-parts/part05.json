@@ -1,0 +1,936 @@
+{
+  "meta": {
+    "shard": 5,
+    "targets": 36,
+    "additionalVerified": 3,
+    "farKnown": 3,
+    "farBlank": 0,
+    "remaining": 33,
+    "stats": {
+      "requests": 56,
+      "failures": 0,
+      "blocked": 0,
+      "limited": 0,
+      "regions": 8,
+      "dongs": 13,
+      "details": 35
+    }
+  },
+  "rows": [
+    {
+      "key": "석수엘지빌리지|안양 만안구 석수동",
+      "name": "석수엘지빌리지",
+      "area": "안양 만안구 석수동",
+      "oldStatus": "review_needed",
+      "thirdStatus": "still_unresolved",
+      "richgo": null,
+      "match": null,
+      "dongCatalog": "https://m.richgo.ai/realty/region/4117110200",
+      "candidates": [
+        {
+          "id": "a6ExfMH",
+          "name": "석수LG빌리지",
+          "far": 184,
+          "units": 1872,
+          "year": 2001,
+          "distance": 151,
+          "nameSimilarity": 0.7142857142857143,
+          "accepted": false
+        },
+        {
+          "id": "a5KvXtU",
+          "name": "석수지웰",
+          "far": 224,
+          "units": 90,
+          "year": 2015,
+          "distance": 804,
+          "nameSimilarity": 0.4285714285714286,
+          "accepted": false
+        }
+      ]
+    },
+    {
+      "key": "송도LuxeOceanSKVIEW|인천 연수구 송도동",
+      "name": "송도LuxeOceanSKVIEW",
+      "area": "인천 연수구 송도동",
+      "oldStatus": "unmatched",
+      "thirdStatus": "still_unresolved",
+      "richgo": null,
+      "match": null,
+      "dongCatalog": "https://m.richgo.ai/realty/region/2818510600",
+      "candidates": []
+    },
+    {
+      "key": "송도SKVIEW|인천 연수구 송도동",
+      "name": "송도SKVIEW",
+      "area": "인천 연수구 송도동",
+      "oldStatus": "review_needed",
+      "thirdStatus": "still_unresolved",
+      "richgo": null,
+      "match": null,
+      "dongCatalog": "https://m.richgo.ai/realty/region/2818510600",
+      "candidates": [
+        {
+          "id": "a4BpHHb",
+          "name": "송도SK뷰",
+          "far": 231,
+          "units": 2100,
+          "year": 2019,
+          "distance": 41,
+          "nameSimilarity": 0.5,
+          "accepted": false
+        },
+        {
+          "id": "a6QZjha",
+          "name": "송도SK뷰센트럴",
+          "far": 349,
+          "units": 299,
+          "year": 2020,
+          "distance": 3656,
+          "nameSimilarity": 0.5,
+          "accepted": false
+        }
+      ]
+    },
+    {
+      "key": "엘지빌리지3|수원 권선구 금곡동",
+      "name": "엘지빌리지3",
+      "area": "수원 권선구 금곡동",
+      "oldStatus": "unmatched",
+      "thirdStatus": "still_unresolved",
+      "richgo": null,
+      "match": null,
+      "dongCatalog": "https://m.richgo.ai/realty/region/4111313400",
+      "candidates": []
+    },
+    {
+      "key": "한울마을1단지운정신도시IPARK|파주시 동패동",
+      "name": "한울마을1단지운정신도시IPARK",
+      "area": "파주시 동패동",
+      "oldStatus": "review_needed",
+      "thirdStatus": "still_unresolved",
+      "richgo": null,
+      "match": null,
+      "dongCatalog": "https://m.richgo.ai/realty/region/4148011300",
+      "candidates": []
+    },
+    {
+      "key": "더샵지제역센트럴파크1BL|평택시 동삭동",
+      "name": "더샵지제역센트럴파크1BL",
+      "area": "평택시 동삭동",
+      "oldStatus": "review_needed",
+      "thirdStatus": "still_unresolved",
+      "richgo": null,
+      "match": null,
+      "dongCatalog": "https://m.richgo.ai/realty/region/4122011900",
+      "candidates": [
+        {
+          "id": "a3DVJSm",
+          "name": "더샵지제역센트럴파크(1BL)",
+          "far": 193,
+          "units": 2124,
+          "year": 2020,
+          "distance": 838,
+          "nameSimilarity": 1,
+          "accepted": false
+        },
+        {
+          "id": "a9amlsN",
+          "name": "더샵지제역센트럴파크(2BL)",
+          "far": 196,
+          "units": 1674,
+          "year": 2020,
+          "distance": 527,
+          "nameSimilarity": 0.9230769230769231,
+          "accepted": false
+        },
+        {
+          "id": "a5yBMkJ",
+          "name": "지제더샵센트럴파크",
+          "far": 186,
+          "units": 1280,
+          "year": 2019,
+          "distance": 949,
+          "nameSimilarity": 0.46153846153846156,
+          "accepted": false
+        }
+      ]
+    },
+    {
+      "key": "럭키|안양 만안구 석수동",
+      "name": "럭키",
+      "area": "안양 만안구 석수동",
+      "oldStatus": "review_needed",
+      "thirdStatus": "still_unresolved",
+      "richgo": null,
+      "match": null,
+      "dongCatalog": "https://m.richgo.ai/realty/region/4117110200",
+      "candidates": [
+        {
+          "id": "a4imfXK",
+          "name": "럭키",
+          "far": 235,
+          "units": 735,
+          "year": 1987,
+          "distance": 49,
+          "nameSimilarity": 1,
+          "accepted": false
+        }
+      ]
+    },
+    {
+      "key": "에코타운(A블럭)|하남시 신장동",
+      "name": "에코타운(A블럭)",
+      "area": "하남시 신장동",
+      "oldStatus": "review_needed",
+      "thirdStatus": "verified_third_pass",
+      "richgo": {
+        "id": "a4uRooe",
+        "name": "에코타운1단지",
+        "far": 235,
+        "year": 2004,
+        "units": 525,
+        "lat": 37.540822,
+        "lng": 127.209981,
+        "floors": "20~23층",
+        "heating": "개별난방 · 도시가스",
+        "pyeongs": "23평",
+        "parking": "527대 (세대당 1.00대)",
+        "street": "경기도 하남시 하남대로784번길 29",
+        "url": "https://m.richgo.ai/realty/danji/a4uRooe"
+      },
+      "match": {
+        "distanceMeters": 57,
+        "yearDelta": 0,
+        "unitsRatio": 0,
+        "nameSimilarity": 0.5714285714285714,
+        "method": "official_dong_catalog"
+      },
+      "dongCatalog": "https://m.richgo.ai/realty/region/4145010600",
+      "candidates": [
+        {
+          "id": "a4uRooe",
+          "name": "에코타운1단지",
+          "far": 235,
+          "units": 525,
+          "year": 2004,
+          "distance": 57,
+          "nameSimilarity": 0.5714285714285714,
+          "accepted": true
+        },
+        {
+          "id": "a6CvZjq",
+          "name": "에코타운2단지",
+          "far": 243,
+          "units": 488,
+          "year": 2004,
+          "distance": 155,
+          "nameSimilarity": 0.5714285714285714,
+          "accepted": false
+        },
+        {
+          "id": "a3ismSp",
+          "name": "에코타운3단지",
+          "far": 254,
+          "units": 594,
+          "year": 2004,
+          "distance": 426,
+          "nameSimilarity": 0.5714285714285714,
+          "accepted": false
+        }
+      ]
+    },
+    {
+      "key": "위브호수마을1단지|의왕시 포일동",
+      "name": "위브호수마을1단지",
+      "area": "의왕시 포일동",
+      "oldStatus": "unmatched",
+      "thirdStatus": "still_unresolved",
+      "richgo": null,
+      "match": null,
+      "dongCatalog": "https://m.richgo.ai/realty/region/4143010900",
+      "candidates": []
+    },
+    {
+      "key": "다정한마을(삼성)|부천 원미구 상동",
+      "name": "다정한마을(삼성)",
+      "area": "부천 원미구 상동",
+      "oldStatus": "review_needed",
+      "thirdStatus": "still_unresolved",
+      "richgo": null,
+      "match": null,
+      "dongCatalog": "https://m.richgo.ai/realty/region/4119210900",
+      "candidates": [
+        {
+          "id": "a6VTkHI",
+          "name": "다정한쌍용",
+          "far": 208,
+          "units": 561,
+          "year": 2003,
+          "distance": 169,
+          "nameSimilarity": 0.4285714285714286,
+          "accepted": false
+        }
+      ]
+    },
+    {
+      "key": "중흥마을(신동아)|부천 원미구 중동",
+      "name": "중흥마을(신동아)",
+      "area": "부천 원미구 중동",
+      "oldStatus": "review_needed",
+      "thirdStatus": "still_unresolved",
+      "richgo": null,
+      "match": null,
+      "dongCatalog": "https://m.richgo.ai/realty/region/4119210800",
+      "candidates": [
+        {
+          "id": "a4NGAjy",
+          "name": "중흥신동아영남",
+          "far": 222,
+          "units": 640,
+          "year": 1993,
+          "distance": 29,
+          "nameSimilarity": 0.4285714285714286,
+          "accepted": false
+        },
+        {
+          "id": "a5YAjLa",
+          "name": "중흥마을주공",
+          "far": 193,
+          "units": 863,
+          "year": 1995,
+          "distance": 162,
+          "nameSimilarity": 0.5714285714285714,
+          "accepted": false
+        },
+        {
+          "id": "a3WwHXB",
+          "name": "보람마을동남",
+          "far": 217,
+          "units": 494,
+          "year": 1995,
+          "distance": 1270,
+          "nameSimilarity": 0.4285714285714286,
+          "accepted": false
+        }
+      ]
+    },
+    {
+      "key": "은하마을(대우)|부천 원미구 중동",
+      "name": "은하마을(대우)",
+      "area": "부천 원미구 중동",
+      "oldStatus": "review_needed",
+      "thirdStatus": "still_unresolved",
+      "richgo": null,
+      "match": null,
+      "dongCatalog": "https://m.richgo.ai/realty/region/4119210800",
+      "candidates": [
+        {
+          "id": "a8Xaoqi",
+          "name": "은하마을주공2단지",
+          "far": 210,
+          "units": 420,
+          "year": 1995,
+          "distance": 182,
+          "nameSimilarity": 0.5714285714285714,
+          "accepted": false
+        },
+        {
+          "id": "a6fCsde",
+          "name": "은하마을주공1단지",
+          "far": 202,
+          "units": 795,
+          "year": 1995,
+          "distance": 294,
+          "nameSimilarity": 0.5714285714285714,
+          "accepted": false
+        }
+      ]
+    },
+    {
+      "key": "진달래마을(대림)|부천 원미구 상동",
+      "name": "진달래마을(대림)",
+      "area": "부천 원미구 상동",
+      "oldStatus": "review_needed",
+      "thirdStatus": "still_unresolved",
+      "richgo": null,
+      "match": null,
+      "dongCatalog": "https://m.richgo.ai/realty/region/4119210900",
+      "candidates": [
+        {
+          "id": "a3eYOYk",
+          "name": "진달래대우",
+          "far": 208,
+          "units": 580,
+          "year": 2002,
+          "distance": 214,
+          "nameSimilarity": 0.5714285714285714,
+          "accepted": false
+        },
+        {
+          "id": "a9RCFUm",
+          "name": "진달래효성",
+          "far": 209,
+          "units": 708,
+          "year": 2002,
+          "distance": 256,
+          "nameSimilarity": 0.4285714285714286,
+          "accepted": false
+        },
+        {
+          "id": "a1CAcsQ",
+          "name": "진달래써미트빌",
+          "far": 209,
+          "units": 559,
+          "year": 2002,
+          "distance": 387,
+          "nameSimilarity": 0.4285714285714286,
+          "accepted": false
+        }
+      ]
+    },
+    {
+      "key": "라일락마을(동양)|부천 원미구 상동",
+      "name": "라일락마을(동양)",
+      "area": "부천 원미구 상동",
+      "oldStatus": "review_needed",
+      "thirdStatus": "still_unresolved",
+      "richgo": null,
+      "match": null,
+      "dongCatalog": "https://m.richgo.ai/realty/region/4119210900",
+      "candidates": [
+        {
+          "id": "a2VJvPl",
+          "name": "라일락대우",
+          "far": 209,
+          "units": 572,
+          "year": 2002,
+          "distance": 202,
+          "nameSimilarity": 0.4285714285714286,
+          "accepted": false
+        }
+      ]
+    },
+    {
+      "key": "다정한마을(금강)|부천 원미구 상동",
+      "name": "다정한마을(금강)",
+      "area": "부천 원미구 상동",
+      "oldStatus": "review_needed",
+      "thirdStatus": "still_unresolved",
+      "richgo": null,
+      "match": null,
+      "dongCatalog": "https://m.richgo.ai/realty/region/4119210900",
+      "candidates": [
+        {
+          "id": "a6VTkHI",
+          "name": "다정한쌍용",
+          "far": 208,
+          "units": 561,
+          "year": 2003,
+          "distance": 272,
+          "nameSimilarity": 0.4285714285714286,
+          "accepted": false
+        }
+      ]
+    },
+    {
+      "key": "은하마을(효성)|부천 원미구 중동",
+      "name": "은하마을(효성)",
+      "area": "부천 원미구 중동",
+      "oldStatus": "review_needed",
+      "thirdStatus": "still_unresolved",
+      "richgo": null,
+      "match": null,
+      "dongCatalog": "https://m.richgo.ai/realty/region/4119210800",
+      "candidates": [
+        {
+          "id": "a6fCsde",
+          "name": "은하마을주공1단지",
+          "far": 202,
+          "units": 795,
+          "year": 1995,
+          "distance": 169,
+          "nameSimilarity": 0.5714285714285714,
+          "accepted": false
+        },
+        {
+          "id": "a8Xaoqi",
+          "name": "은하마을주공2단지",
+          "far": 210,
+          "units": 420,
+          "year": 1995,
+          "distance": 379,
+          "nameSimilarity": 0.5714285714285714,
+          "accepted": false
+        }
+      ]
+    },
+    {
+      "key": "중흥마을(극동)|부천 원미구 중동",
+      "name": "중흥마을(극동)",
+      "area": "부천 원미구 중동",
+      "oldStatus": "review_needed",
+      "thirdStatus": "still_unresolved",
+      "richgo": null,
+      "match": null,
+      "dongCatalog": "https://m.richgo.ai/realty/region/4119210800",
+      "candidates": [
+        {
+          "id": "a5YAjLa",
+          "name": "중흥마을주공",
+          "far": 193,
+          "units": 863,
+          "year": 1995,
+          "distance": 312,
+          "nameSimilarity": 0.6666666666666667,
+          "accepted": false
+        }
+      ]
+    },
+    {
+      "key": "송도더샵하버뷰(D13)|인천 연수구 송도동",
+      "name": "송도더샵하버뷰(D13)",
+      "area": "인천 연수구 송도동",
+      "oldStatus": "review_needed",
+      "thirdStatus": "still_unresolved",
+      "richgo": null,
+      "match": null,
+      "dongCatalog": "https://m.richgo.ai/realty/region/2818510600",
+      "candidates": [
+        {
+          "id": "a4eNhsZ",
+          "name": "송도더샵13단지하버뷰",
+          "far": 243,
+          "units": 553,
+          "year": 2011,
+          "distance": 32,
+          "nameSimilarity": 0.5,
+          "accepted": false
+        },
+        {
+          "id": "a7IvJWA",
+          "name": "송도더샵하버뷰II",
+          "far": 259,
+          "units": 548,
+          "year": 2012,
+          "distance": 274,
+          "nameSimilarity": 0.7,
+          "accepted": false
+        },
+        {
+          "id": "a2yGRmj",
+          "name": "송도자이하버뷰2단지",
+          "far": 266,
+          "units": 523,
+          "year": 2011,
+          "distance": 419,
+          "nameSimilarity": 0.5,
+          "accepted": false
+        },
+        {
+          "id": "a8YFLsB",
+          "name": "송도자이하버뷰1단지",
+          "far": 298,
+          "units": 546,
+          "year": 2011,
+          "distance": 469,
+          "nameSimilarity": 0.6,
+          "accepted": false
+        }
+      ]
+    },
+    {
+      "key": "백송마을(상록LG)|부천 원미구 상동",
+      "name": "백송마을(상록LG)",
+      "area": "부천 원미구 상동",
+      "oldStatus": "review_needed",
+      "thirdStatus": "still_unresolved",
+      "richgo": null,
+      "match": null,
+      "dongCatalog": "https://m.richgo.ai/realty/region/4119210900",
+      "candidates": []
+    },
+    {
+      "key": "백송마을(엘지에스케이)|부천 원미구 상동",
+      "name": "백송마을(엘지에스케이)",
+      "area": "부천 원미구 상동",
+      "oldStatus": "unmatched",
+      "thirdStatus": "still_unresolved",
+      "richgo": null,
+      "match": null,
+      "dongCatalog": "https://m.richgo.ai/realty/region/4119210900",
+      "candidates": []
+    },
+    {
+      "key": "성원1차이화|의왕시 오전동",
+      "name": "성원1차이화",
+      "area": "의왕시 오전동",
+      "oldStatus": "unmatched",
+      "thirdStatus": "still_unresolved",
+      "richgo": null,
+      "match": null,
+      "dongCatalog": "https://m.richgo.ai/realty/region/4143010500",
+      "candidates": []
+    },
+    {
+      "key": "행복한마을(금호)|부천 원미구 상동",
+      "name": "행복한마을(금호)",
+      "area": "부천 원미구 상동",
+      "oldStatus": "review_needed",
+      "thirdStatus": "still_unresolved",
+      "richgo": null,
+      "match": null,
+      "dongCatalog": "https://m.richgo.ai/realty/region/4119210900",
+      "candidates": []
+    },
+    {
+      "key": "행복한마을(한양)|부천 원미구 상동",
+      "name": "행복한마을(한양)",
+      "area": "부천 원미구 상동",
+      "oldStatus": "review_needed",
+      "thirdStatus": "still_unresolved",
+      "richgo": null,
+      "match": null,
+      "dongCatalog": "https://m.richgo.ai/realty/region/4119210900",
+      "candidates": []
+    },
+    {
+      "key": "연화마을(대원)|부천 원미구 중동",
+      "name": "연화마을(대원)",
+      "area": "부천 원미구 중동",
+      "oldStatus": "review_needed",
+      "thirdStatus": "still_unresolved",
+      "richgo": null,
+      "match": null,
+      "dongCatalog": "https://m.richgo.ai/realty/region/4119210800",
+      "candidates": [
+        {
+          "id": "a7fUKoM",
+          "name": "연화대원",
+          "far": 218,
+          "units": 386,
+          "year": 1995,
+          "distance": 20,
+          "nameSimilarity": 0.6666666666666667,
+          "accepted": false
+        }
+      ]
+    },
+    {
+      "key": "푸른마을(한라)|부천 원미구 상동",
+      "name": "푸른마을(한라)",
+      "area": "부천 원미구 상동",
+      "oldStatus": "unmatched",
+      "thirdStatus": "still_unresolved",
+      "richgo": null,
+      "match": null,
+      "dongCatalog": "https://m.richgo.ai/realty/region/4119210900",
+      "candidates": []
+    },
+    {
+      "key": "푸른마을(창보)|부천 원미구 상동",
+      "name": "푸른마을(창보)",
+      "area": "부천 원미구 상동",
+      "oldStatus": "unmatched",
+      "thirdStatus": "still_unresolved",
+      "richgo": null,
+      "match": null,
+      "dongCatalog": "https://m.richgo.ai/realty/region/4119210900",
+      "candidates": []
+    },
+    {
+      "key": "수원아이파크시티6단지|수원 권선구 권선동",
+      "name": "수원아이파크시티6단지",
+      "area": "수원 권선구 권선동",
+      "oldStatus": "review_needed",
+      "thirdStatus": "still_unresolved",
+      "richgo": null,
+      "match": null,
+      "dongCatalog": "https://m.richgo.ai/realty/region/4111313700",
+      "candidates": [
+        {
+          "id": "a3mhAYn",
+          "name": "수원아이파크시티5",
+          "far": 177,
+          "units": 1152,
+          "year": 2015,
+          "distance": 170,
+          "nameSimilarity": 0.9,
+          "accepted": false
+        },
+        {
+          "id": "a1JrvFu",
+          "name": "수원아이파크시티4단지",
+          "far": 192,
+          "units": 889,
+          "year": 2012,
+          "distance": 405,
+          "nameSimilarity": 0.8888888888888888,
+          "accepted": false
+        },
+        {
+          "id": "a4zoycT",
+          "name": "수원아이파크시티7단지",
+          "far": 194,
+          "units": 1596,
+          "year": 2016,
+          "distance": 1083,
+          "nameSimilarity": 0.8888888888888888,
+          "accepted": false
+        },
+        {
+          "id": "a5JoOLx",
+          "name": "수원아이파크시티8단지",
+          "far": 398,
+          "units": 282,
+          "year": 2017,
+          "distance": 994,
+          "nameSimilarity": 0.8888888888888888,
+          "accepted": false
+        }
+      ]
+    },
+    {
+      "key": "구운동성원상떼빌|수원 권선구 구운동",
+      "name": "구운동성원상떼빌",
+      "area": "수원 권선구 구운동",
+      "oldStatus": "unmatched",
+      "thirdStatus": "still_unresolved",
+      "richgo": null,
+      "match": null,
+      "dongCatalog": "https://m.richgo.ai/realty/region/4111313200",
+      "candidates": []
+    },
+    {
+      "key": "꿈마을(건영)|부천 원미구 중동",
+      "name": "꿈마을(건영)",
+      "area": "부천 원미구 중동",
+      "oldStatus": "review_needed",
+      "thirdStatus": "still_unresolved",
+      "richgo": null,
+      "match": null,
+      "dongCatalog": "https://m.richgo.ai/realty/region/4119210800",
+      "candidates": []
+    },
+    {
+      "key": "꿈마을(삼환)|부천 원미구 중동",
+      "name": "꿈마을(삼환)",
+      "area": "부천 원미구 중동",
+      "oldStatus": "unmatched",
+      "thirdStatus": "still_unresolved",
+      "richgo": null,
+      "match": null,
+      "dongCatalog": "https://m.richgo.ai/realty/region/4119210800",
+      "candidates": []
+    },
+    {
+      "key": "동일하이빌|하남시 신장동",
+      "name": "동일하이빌",
+      "area": "하남시 신장동",
+      "oldStatus": "unmatched",
+      "thirdStatus": "still_unresolved",
+      "richgo": null,
+      "match": null,
+      "dongCatalog": "https://m.richgo.ai/realty/region/4145010600",
+      "candidates": []
+    },
+    {
+      "key": "미리내마을(한신)|부천 원미구 중동",
+      "name": "미리내마을(한신)",
+      "area": "부천 원미구 중동",
+      "oldStatus": "review_needed",
+      "thirdStatus": "verified_third_pass",
+      "richgo": {
+        "id": "a5WdjgX",
+        "name": "미리내금호",
+        "far": 212,
+        "year": 1994,
+        "units": 1008,
+        "lat": 37.500226,
+        "lng": 126.77358,
+        "floors": "14~25층",
+        "heating": "지역난방 · 열병합",
+        "pyeongs": "17·31평",
+        "parking": "682대 (세대당 0.67대)",
+        "street": "경기도 부천시 원미구 조마루로285번길 47",
+        "url": "https://m.richgo.ai/realty/danji/a5WdjgX"
+      },
+      "match": {
+        "distanceMeters": 41,
+        "yearDelta": 0,
+        "unitsRatio": 0,
+        "nameSimilarity": 0.5555555555555556,
+        "method": "official_dong_catalog"
+      },
+      "dongCatalog": "https://m.richgo.ai/realty/region/4119210800",
+      "candidates": [
+        {
+          "id": "a5WdjgX",
+          "name": "미리내금호",
+          "far": 212,
+          "units": 1008,
+          "year": 1994,
+          "distance": 41,
+          "nameSimilarity": 0.5555555555555556,
+          "accepted": true
+        },
+        {
+          "id": "a4pXeIv",
+          "name": "미리내롯데",
+          "far": 219,
+          "units": 756,
+          "year": 1993,
+          "distance": 162,
+          "nameSimilarity": 0.4285714285714286,
+          "accepted": false
+        },
+        {
+          "id": "a1wHMWc",
+          "name": "미리내동성",
+          "far": 222,
+          "units": 970,
+          "year": 1993,
+          "distance": 326,
+          "nameSimilarity": 0.4285714285714286,
+          "accepted": false
+        }
+      ]
+    },
+    {
+      "key": "미리내마을(한양)|부천 원미구 중동",
+      "name": "미리내마을(한양)",
+      "area": "부천 원미구 중동",
+      "oldStatus": "review_needed",
+      "thirdStatus": "verified_third_pass",
+      "richgo": {
+        "id": "a5WdjgX",
+        "name": "미리내금호",
+        "far": 212,
+        "year": 1994,
+        "units": 1008,
+        "lat": 37.500226,
+        "lng": 126.77358,
+        "floors": "14~25층",
+        "heating": "지역난방 · 열병합",
+        "pyeongs": "17·31평",
+        "parking": "682대 (세대당 0.67대)",
+        "street": "경기도 부천시 원미구 조마루로285번길 47",
+        "url": "https://m.richgo.ai/realty/danji/a5WdjgX"
+      },
+      "match": {
+        "distanceMeters": 41,
+        "yearDelta": 0,
+        "unitsRatio": 0,
+        "nameSimilarity": 0.5555555555555556,
+        "method": "official_dong_catalog"
+      },
+      "dongCatalog": "https://m.richgo.ai/realty/region/4119210800",
+      "candidates": [
+        {
+          "id": "a5WdjgX",
+          "name": "미리내금호",
+          "far": 212,
+          "units": 1008,
+          "year": 1994,
+          "distance": 41,
+          "nameSimilarity": 0.5555555555555556,
+          "accepted": true
+        },
+        {
+          "id": "a4pXeIv",
+          "name": "미리내롯데",
+          "far": 219,
+          "units": 756,
+          "year": 1993,
+          "distance": 162,
+          "nameSimilarity": 0.4285714285714286,
+          "accepted": false
+        },
+        {
+          "id": "a1wHMWc",
+          "name": "미리내동성",
+          "far": 222,
+          "units": 970,
+          "year": 1993,
+          "distance": 326,
+          "nameSimilarity": 0.4285714285714286,
+          "accepted": false
+        }
+      ]
+    },
+    {
+      "key": "수원아이파크시티5단지|수원 권선구 권선동",
+      "name": "수원아이파크시티5단지",
+      "area": "수원 권선구 권선동",
+      "oldStatus": "review_needed",
+      "thirdStatus": "still_unresolved",
+      "richgo": null,
+      "match": null,
+      "dongCatalog": "https://m.richgo.ai/realty/region/4111313700",
+      "candidates": [
+        {
+          "id": "a3mhAYn",
+          "name": "수원아이파크시티5",
+          "far": 177,
+          "units": 1152,
+          "year": 2015,
+          "distance": 80,
+          "nameSimilarity": 1,
+          "accepted": false
+        },
+        {
+          "id": "a1JrvFu",
+          "name": "수원아이파크시티4단지",
+          "far": 192,
+          "units": 889,
+          "year": 2012,
+          "distance": 413,
+          "nameSimilarity": 0.8888888888888888,
+          "accepted": false
+        },
+        {
+          "id": "a4zoycT",
+          "name": "수원아이파크시티7단지",
+          "far": 194,
+          "units": 1596,
+          "year": 2016,
+          "distance": 969,
+          "nameSimilarity": 0.8888888888888888,
+          "accepted": false
+        },
+        {
+          "id": "a5JoOLx",
+          "name": "수원아이파크시티8단지",
+          "far": 398,
+          "units": 282,
+          "year": 2017,
+          "distance": 991,
+          "nameSimilarity": 0.8888888888888888,
+          "accepted": false
+        }
+      ]
+    },
+    {
+      "key": "엘지빌리지1|수원 권선구 금곡동",
+      "name": "엘지빌리지1",
+      "area": "수원 권선구 금곡동",
+      "oldStatus": "unmatched",
+      "thirdStatus": "still_unresolved",
+      "richgo": null,
+      "match": null,
+      "dongCatalog": "https://m.richgo.ai/realty/region/4111313400",
+      "candidates": []
+    },
+    {
+      "key": "한빛마을4단지롯데캐슬Ⅱ|파주시 야당동",
+      "name": "한빛마을4단지롯데캐슬Ⅱ",
+      "area": "파주시 야당동",
+      "oldStatus": "unmatched",
+      "thirdStatus": "still_unresolved",
+      "richgo": null,
+      "match": null,
+      "dongCatalog": "https://m.richgo.ai/realty/region/4148010800",
+      "candidates": []
+    }
+  ]
+}
