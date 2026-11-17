@@ -7,6 +7,7 @@ from difflib import SequenceMatcher
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from collections import Counter, defaultdict
 import requests
+import threading
 from bs4 import BeautifulSoup
 
 BRANCH='audit/richgo-under6-300-20261118'
@@ -56,9 +57,15 @@ for t in targets:
     sd,sgg,dong=region_of(t['area'])
     hubs[(sd,sgg)].append(t)
 print('AUDIT_INIT',json.dumps({'target':len(targets),'regions':len(hubs)},ensure_ascii=False),flush=True)
+RATE_LOCK=threading.Lock()
+LAST_CALL=[0.0]
 HEADERS={'User-Agent':'Mozilla/5.0 (compatible; ApartmentMap-DataQA/1.0; personal-audit)','Accept-Language':'ko-KR,ko;q=0.9'}
 def fetch(url):
     try:
+        with RATE_LOCK:
+            gap=time.monotonic()-LAST_CALL[0]
+            if gap<0.23:time.sleep(0.23-gap)
+            LAST_CALL[0]=time.monotonic()
         r=requests.get(url,headers=HEADERS,timeout=22,allow_redirects=True)
         if r.status_code==200 and len(r.content)>500:return r.text
         return None
