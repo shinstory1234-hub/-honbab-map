@@ -1,192 +1,29 @@
 {
   "total": 72,
-  "verified": 55,
-  "ambiguous": 5,
-  "unmatched": 12,
-  "farKnown": 53,
-  "farChanged": 39,
-  "unitsChanged": 9,
+  "verified": 71,
+  "ambiguous": 1,
+  "unmatched": 0,
+  "farKnown": 69,
+  "farChanged": 49,
+  "unitsChanged": 10,
   "yearChanged": 3,
-  "geoVerified": 55,
-  "geoOver500": [
-    {
-      "rank": 302,
-      "name": "현대(고덕)",
-      "metres": 526
-    },
-    {
-      "rank": 323,
-      "name": "현대I-PARK1",
-      "metres": 2307
-    },
-    {
-      "rank": 336,
-      "name": "현대I-PARK3",
-      "metres": 2408
-    },
-    {
-      "rank": 369,
-      "name": "의왕백운 해링턴 플레이스 1단지",
-      "metres": 542
-    }
-  ],
+  "geoVerified": 71,
+  "geoOver500": [],
   "hubsAttempted": 175,
   "hubsFailed": 7,
-  "detailsFetched": 88,
+  "detailsFetched": 103,
   "detailErrors": 0,
   "pending": [
-    {
-      "rank": 302,
-      "name": "현대(고덕)",
-      "area": "서울 강동구 명일동",
-      "alternatives": [
-        {
-          "id": "a1wABKr",
-          "name": "현대",
-          "conf": 5,
-          "url": "https://m.richgo.ai/realty/danji/a1wABKr"
-        },
-        {
-          "id": "a0HjNVt",
-          "name": "현대",
-          "conf": 4,
-          "url": "https://m.richgo.ai/realty/danji/a0HjNVt"
-        }
-      ]
-    },
-    {
-      "rank": 303,
-      "name": "아름마을(효성)",
-      "area": "성남 분당구 이매동",
-      "alternatives": []
-    },
-    {
-      "rank": 304,
-      "name": "상록마을(임광)",
-      "area": "성남 분당구 정자동",
-      "alternatives": []
-    },
-    {
-      "rank": 307,
-      "name": "샛별마을(우방)",
-      "area": "성남 분당구 분당동",
-      "alternatives": []
-    },
-    {
-      "rank": 317,
-      "name": "정든마을(8단지)(한진)",
-      "area": "성남 분당구 정자동",
-      "alternatives": []
-    },
-    {
-      "rank": 323,
-      "name": "현대I-PARK1",
-      "area": "성남 분당구 정자동",
-      "alternatives": [
-        {
-          "id": "a0GPUpL",
-          "name": "현대",
-          "conf": 2,
-          "url": "https://m.richgo.ai/realty/danji/a0GPUpL"
-        }
-      ]
-    },
-    {
-      "rank": 331,
-      "name": "정든마을(5단지)(신화)",
-      "area": "성남 분당구 정자동",
-      "alternatives": []
-    },
-    {
-      "rank": 336,
-      "name": "현대I-PARK3",
-      "area": "성남 분당구 정자동",
-      "alternatives": [
-        {
-          "id": "a0GPUpL",
-          "name": "현대",
-          "conf": 2,
-          "url": "https://m.richgo.ai/realty/danji/a0GPUpL"
-        }
-      ]
-    },
-    {
-      "rank": 342,
-      "name": "아름마을(건영)",
-      "area": "성남 분당구 이매동",
-      "alternatives": []
-    },
     {
       "rank": 347,
       "name": "광화문스페이스본(101동~105동)",
       "area": "서울 종로구 사직동",
-      "alternatives": []
-    },
-    {
-      "rank": 348,
-      "name": "아카데미스위트1",
-      "area": "서울 강남구 도곡동",
-      "alternatives": []
-    },
-    {
-      "rank": 356,
-      "name": "장안타운(건영)",
-      "area": "성남 분당구 분당동",
       "alternatives": [
         {
-          "id": "a5kycZx",
-          "name": "장안타운건영2차",
-          "conf": 7,
-          "url": "https://m.richgo.ai/realty/danji/a5kycZx"
-        },
-        {
-          "id": "a1AhJwH",
-          "name": "장안타운건영3차",
-          "conf": 7,
-          "url": "https://m.richgo.ai/realty/danji/a1AhJwH"
-        }
-      ]
-    },
-    {
-      "rank": 359,
-      "name": "목련두산",
-      "area": "안양 동안구 호계동",
-      "alternatives": []
-    },
-    {
-      "rank": 363,
-      "name": "샛별마을(동성)",
-      "area": "성남 분당구 분당동",
-      "alternatives": []
-    },
-    {
-      "rank": 367,
-      "name": "더샵서초",
-      "area": "서울 서초구 서초동",
-      "alternatives": []
-    },
-    {
-      "rank": 368,
-      "name": "샛별마을(삼부)",
-      "area": "성남 분당구 분당동",
-      "alternatives": []
-    },
-    {
-      "rank": 369,
-      "name": "의왕백운 해링턴 플레이스 1단지",
-      "area": "의왕시 학의동",
-      "alternatives": [
-        {
-          "id": "a2lgAao",
-          "name": "의왕백운해링턴플레이스5단지",
-          "conf": 8,
-          "url": "https://m.richgo.ai/realty/danji/a2lgAao"
-        },
-        {
-          "id": "a1Kzzwf",
-          "name": "동백",
-          "conf": 3,
-          "url": "https://m.richgo.ai/realty/danji/a1Kzzwf"
+          "id": "a4XONIH",
+          "name": "광화문풍림스페이스본(주상복합)",
+          "conf": 9,
+          "url": "https://m.richgo.ai/realty/danji/a4XONIH"
         }
       ]
     }
