@@ -23,5 +23,7 @@ for(const r of R){ const [n,a,py,p,year,units,la,ln,tq,[ntr,last,n3],b,toheo0,gi
   if(ac!=null) g.ac=ac; if(sc!=null) g.sc=sc; if(dh!=null) g.dh=dh;
   UG[k]=g;
   if(hk) H[k]=[hk[0],hk[1],V[hk[2]],'',null];
+  // 15~20억 리치고 전수조사: 같은 통합 단지를 여러 이름으로 세는 경우 외에 세대수를 리치고 기준으로 맞춘다.
+  if(window.CAPT===20&&fd[1]==='리치고'&&window.UNITFIX&&window.UNITFIX[k]&&!['대림1','대림2','DMC파크뷰자이1단지','DMC파크뷰자이2단지','DMC파크뷰자이3단지','e편한세상신촌1단지','e편한세상신촌2단지','아름마을(두산)','아름마을(삼호)'].includes(n))window.UNITFIX[k][0]=units;
   F[k]=fd;
 }})();
