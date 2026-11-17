@@ -1,0 +1,58 @@
+name: Richgo cap10 1108 final audit and build gate
+on:
+  push:
+    branches:
+      - audit/richgo-6to10-top300-20261118
+    paths:
+      - .github/workflows/richgo-cap10-finalize.yml
+      - scripts/finalize-richgo-cap10-remaining.cjs
+  workflow_dispatch:
+permissions:
+  contents: write
+concurrency:
+  group: richgo-cap10-finalize
+  cancel-in-progress: false
+jobs:
+  merge-and-verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    env:
+      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: audit/richgo-6to10-top300-20261118
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Synchronize all three public-page audit passes
+        run: |
+          for attempt in $(seq 1 90); do
+            READY=1
+            for x in 0 1 2 3 4 5; do
+              if [ ! -f "docs/richgo-6to10-remaining-parts/part0${x}.json" ]; then READY=0; fi
+              if [ ! -f "docs/richgo-6to10-secondpass-parts/part0${x}.json" ]; then READY=0; fi
+              if [ ! -f "docs/richgo-6to10-thirdpass-parts/part0${x}.json" ]; then READY=0; fi
+            done
+            if [ "$READY" -eq 1 ]; then exit 0; fi
+            git fetch origin audit/richgo-6to10-top300-20261118
+            git checkout -f FETCH_HEAD
+            sleep 10
+          done
+          echo 'Incomplete Richgo crawl evidence'; exit 1
+      - name: Validate and publish cap10 verified records
+        run: |
+          node --check scripts/finalize-richgo-cap10-remaining.cjs
+          node scripts/finalize-richgo-cap10-remaining.cjs
+      - name: Refresh committed files and run audit guards
+        run: |
+          git fetch origin audit/richgo-6to10-top300-20261118
+          git checkout -f FETCH_HEAD
+          node scripts/test-richgo-cap10-final.cjs
+          node scripts/test-richgo-6to10-crossband.cjs
+          node scripts/test-richgo-band10-audit.cjs
+      - name: Build price-band assets
+        run: |
+          npm ci --ignore-scripts
+          npm run build
