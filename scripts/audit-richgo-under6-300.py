@@ -8,6 +8,7 @@ from concurrent.futures import ThreadPoolExecutor, as_completed
 from collections import Counter, defaultdict
 import requests
 import threading
+import html as html_mod
 from bs4 import BeautifulSoup
 
 BRANCH='audit/richgo-under6-300-20261118'
@@ -118,6 +119,43 @@ with ThreadPoolExecutor(max_workers=5) as ex:
         try:idmap.update(fut.result())
         except Exception as e:print('HUB_FAIL',tasks[fut],str(e)[:200],flush=True)
 print('HUB_MATCH',len(idmap),'of',len(targets),flush=True)
+# Previously hand-verified URLs for difficult name variants; match the same frozen cohort.
+PREVERIFIED={6:'a4Syfug',10:'a2cdJUP',21:'a0wDLkC',203:'a9CgDtA',179:'a2NkvBu',
+             38:'a2ERRGO',34:'a1TWSHN',37:'a7cSVad',22:'a5GwmTs',31:'a3cndYH',
+             35:'a6thNEd',36:'a9ypbnR',54:'a3WCdao',53:'a5hJTDI',59:'a3SERoa'}
+for t in targets:
+    if t['seq'] in PREVERIFIED and t['seq'] not in idmap:
+        idmap[t['seq']]=(PREVERIFIED[t['seq']],t['name'])
+
+# Public search index fallback for apartments outside the first 60 hub results.
+# Read only; URLs must be Richgo complex pages, with subsequent strict identity checks.
+def public_index_lookup(t):
+    terms='site:m.richgo.ai/realty/danji/ "'+t['name']+'" "'+t['area'].split()[-1]+'"'
+    engines=[
+        'https://www.bing.com/search?format=rss&q='+urllib.parse.quote(terms),
+        'https://www.google.com/search?q='+urllib.parse.quote(terms)+'&num=5',
+    ]
+    for u in engines:
+        page=fetch(u)
+        if not page:continue
+        ids=re.findall(r'(?:https?[:/]+(?:m[.]richgo[.]ai|www[.]richgo[.]ai)|m[.]richgo[.]ai)(?:/|%2F)+realty(?:/|%2F)+danji(?:/|%2F)+([a-zA-Z0-9]{7})',html_mod.unescape(page),re.I)
+        if ids:return ids[0]
+        # Some search engines URL-encode redirect links and parameters.
+        ids=re.findall(r'm[.]richgo[.]ai(?:%2F|/)+realty(?:%2F|/)+danji(?:%2F|/)+([a-zA-Z0-9]{7})',page,re.I)
+        if ids:return ids[0]
+    return None
+unmatched=[t for t in targets if t['seq'] not in idmap]
+search_hits=0
+with ThreadPoolExecutor(max_workers=5) as ex:
+    tasks={ex.submit(public_index_lookup,t):t for t in unmatched}
+    for fut in as_completed(tasks):
+        t=tasks[fut]
+        try:
+            found=fut.result()
+            if found:
+                idmap[t['seq']]=(found,t['name']);search_hits+=1
+        except Exception:pass
+print('SEARCH_INDEX_MATCH',search_hits,'TOTAL_IDS',len(idmap),flush=True)
 
 def grab_tokens(soup):
     return [x.strip() for x in soup.stripped_strings if str(x).strip()]
@@ -148,7 +186,7 @@ def parse_detail(t):
     toks=grab_tokens(soup);info=parse_section(toks)
     h1=soup.find('h1');title=h1.get_text(' ',strip=True) if h1 else ''
     yr=label_val(info,'입주');unit=label_val(info,'세대수');far=label_val(info,'용적률')
-    parking=label_val(info,'주차');pys=label_val(info,'평형')
+    parking=label_val(info,'주차');pys=label_val(info,'평형');floors=label_val(info,'층수');heating=label_val(info,'난방');builder=label_val(info,'시공사');coverage=label_val(info,'건폐율')
     yy=re.search(r'((?:19|20)\d{2})',yr or '')
     uu=re.search(r'([\d,]+)\s*세대',unit or '')
     ff=re.search(r'(\d{2,4}(?:\.\d+)?)\s*%',far or '')
@@ -184,7 +222,7 @@ def parse_detail(t):
     status='직접대조' if name_ok and rich_units is not None and rich_year is not None else '동일단지 추가확인'
     return {'status':status,'url':url,'richgo_name':hub_label,'richgo_year':rich_year,
             'richgo_units':rich_units,'richgo_far':rich_far,'richgo_pyeongs':','.join(map(str,rpy)),
-            'richgo_sale':sale,'richgo_jeonse':jeonse,'richgo_parking':parking,'title':title}
+            'richgo_sale':sale,'richgo_jeonse':jeonse,'richgo_parking':parking,'richgo_floors':floors,'richgo_heating':heating,'richgo_builder':builder,'richgo_coverage':coverage,'title':title}
 
 results={}
 with ThreadPoolExecutor(max_workers=5) as ex:
@@ -197,7 +235,7 @@ columns=['seq','snapshot_rank','name','area','map_year','richgo_year','year_matc
          'map_units','richgo_units','units_match','map_py','richgo_pyeongs','pyeong_present',
          'map_far','map_far_source','richgo_far','far_delta_pp','map_reference_price_manwon',
          'richgo_same_py_sale_manwon','richgo_same_py_jeonse_manwon','price_basis',
-         'richgo_parking','status','source_url']
+         'richgo_parking','richgo_floors','richgo_heating','richgo_builder','richgo_coverage','status','source_url']
 counts=Counter()
 with open(OUT,'w',encoding='utf-8-sig',newline='') as f:
     w=csv.DictWriter(f,fieldnames=columns);w.writeheader()
@@ -215,7 +253,7 @@ with open(OUT,'w',encoding='utf-8-sig',newline='') as f:
           map_reference_price_manwon=t['price'],richgo_same_py_sale_manwon=r.get('richgo_sale'),
           richgo_same_py_jeonse_manwon=r.get('richgo_jeonse'),
           price_basis='맵 거래중위 / 리치고 추정시세 — 수치 차이를 오류로 단정하지 않음',
-          richgo_parking=r.get('richgo_parking'),status=r['status'],source_url=r.get('url')))
+          richgo_parking=r.get('richgo_parking'),richgo_floors=r.get('richgo_floors'),richgo_heating=r.get('richgo_heating'),richgo_builder=r.get('richgo_builder'),richgo_coverage=r.get('richgo_coverage'),status=r['status'],source_url=r.get('url')))
 import io
 with open(OUT,'rb') as f:data=f.read()
 blob=base64.b64encode(gzip.compress(data,compresslevel=9)).decode()
