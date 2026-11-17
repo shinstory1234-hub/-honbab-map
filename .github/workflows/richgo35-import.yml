@@ -1,4 +1,5 @@
 name: Import verified Richgo 30plus audit
+# 2026-11-18: complete source-identity pass; 80 restored, 197 direct FARs
 on:
   push:
     branches:
