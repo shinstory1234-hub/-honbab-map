@@ -16,7 +16,7 @@ JS=r"""
 const fs=require('fs');
 const paths=['public/apt-picks.js','public/apt-auto3.js','public/apt-fard.js','public/apt-univ.js','public/apt-farfix.js'];
 const w={};
-new Function('window', paths.map(p=>fs.readFileSync(p,'utf8')).join('\\n'))(w);
+new Function('window', paths.map(p=>fs.readFileSync(p,'utf8')).join('\n'))(w);
 const snap=JSON.parse(fs.readFileSync('public/apt-snap6-2026-11-01-s14.json','utf8'));
 const seen=new Set(),out=[];
 for(const r of snap.rows){
@@ -84,7 +84,7 @@ def fetch_hub(group):
             h=tag.get('href','')
             m=re.search(r'/realty/danji/([A-Za-z0-9]{7})',h)
             if not m:continue
-            label=re.sub(r'^\\s*\\d+\\.\\s*','',tag.get_text(' ',strip=True))
+            label=re.sub(r'^\s*\d+\.\s*','',tag.get_text(' ',strip=True))
             if label: candidates.append((label,m.group(1)))
         for seq,t in list(remaining.items()):
             n=shortnorm(t['name']); matches=[]
@@ -125,8 +125,8 @@ def label_val(toks,term):
 def parse_money(s):
     if not s:return None
     s=str(s).replace(',','')
-    e=re.search(r'(\\d+)\\s*억',s)
-    m=re.search(r'(\\d+)\\s*만',s)
+    e=re.search(r'(\d+)\s*억',s)
+    m=re.search(r'(\d+)\s*만',s)
     if not e and not m:return None
     return (int(e.group(1))*10000 if e else 0)+(int(m.group(1)) if m else 0)
 
@@ -142,11 +142,11 @@ def parse_detail(t):
     h1=soup.find('h1');title=h1.get_text(' ',strip=True) if h1 else ''
     yr=label_val(info,'입주');unit=label_val(info,'세대수');far=label_val(info,'용적률')
     parking=label_val(info,'주차');pys=label_val(info,'평형')
-    yy=re.search(r'((?:19|20)\\d{2})',yr or '')
-    uu=re.search(r'([\\d,]+)\\s*세대',unit or '')
-    ff=re.search(r'(\\d{2,4}(?:\\.\\d+)?)\\s*%',far or '')
-    rr=re.search(r'\\d+(?:\\s*[·,]\\s*\\d+)*\\s*평',pys or '')
-    rpy=[int(x) for x in re.findall(r'\\d+',rr.group(0))] if rr else []
+    yy=re.search(r'((?:19|20)\d{2})',yr or '')
+    uu=re.search(r'([\d,]+)\s*세대',unit or '')
+    ff=re.search(r'(\d{2,4}(?:\.\d+)?)\s*%',far or '')
+    rr=re.search(r'\d+(?:\s*[·,]\s*\d+)*\s*평',pys or '')
+    rpy=[int(x) for x in re.findall(r'\d+',rr.group(0))] if rr else []
     sale=None;jeonse=None
     for table in soup.find_all('table'):
         head=table.get_text(' ',strip=True)
@@ -154,7 +154,7 @@ def parse_detail(t):
         for tr in table.find_all('tr'):
             cells=[c.get_text(' ',strip=True) for c in tr.find_all(['th','td'])]
             if len(cells)<3:continue
-            py_match=re.search(r'(\\d+)\\s*평',cells[0])
+            py_match=re.search(r'(\d+)\s*평',cells[0])
             if py_match and int(py_match.group(1))==t['py']:
                 sale=parse_money(cells[1]);jeonse=parse_money(cells[2]);break
         if sale is not None:break
