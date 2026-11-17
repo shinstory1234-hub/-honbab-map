@@ -77,6 +77,6 @@ const report={total:rows.length,first300:a.length,remaining814:b.length,remainin
 console.log('Richgo full-band identity audit OK',JSON.stringify(report));
 
 /* 2026-11-18 user-requested Richgo precedence across 31 merged/segmented + 2 identified cases */
-assert.equal(rows.filter(x=>x.verification==='리치고집계기준적용').length,31);
+assert.equal(rows.filter(x=>x.verification==='리치고집계기준적용').length,32);
 assert.equal(rows.filter(x=>x.verification==='리치고명칭기준적용').length,2);
-assert.equal(rows.filter(x=>!['직접확인','리치고집계기준적용','리치고명칭기준적용'].includes(x.verification)).length,6);
+assert.equal(rows.filter(x=>!['직접확인','리치고집계기준적용','리치고명칭기준적용'].includes(x.verification)).length,5);
