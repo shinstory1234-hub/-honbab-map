@@ -1,4 +1,414 @@
 {
+  "extras": [
+    {
+      "url": "https://m.richgo.ai/realty/apt-hub/%EC%84%9C%EC%9A%B8/%EB%A7%88%ED%8F%AC%EA%B5%AC?page=2",
+      "status": 200,
+      "count": 60,
+      "first": [
+        {
+          "name": "마포프레스티지자이",
+          "id": "a6KvZvL"
+        },
+        {
+          "name": "마포더클래시",
+          "id": "a8gmReL"
+        },
+        {
+          "name": "래미안공덕3차",
+          "id": "a0QzMTf"
+        },
+        {
+          "name": "e편한세상마포리버파크",
+          "id": "a0rnkel"
+        },
+        {
+          "name": "래미안공덕5차",
+          "id": "a1jMORm"
+        },
+        {
+          "name": "래미안마포리버웰",
+          "id": "a5PbpPL"
+        },
+        {
+          "name": "마포자이",
+          "id": "a9sFiii"
+        },
+        {
+          "name": "브라운스톤공덕",
+          "id": "a9kSBpq"
+        },
+        {
+          "name": "마포자이2차",
+          "id": "a6Pmzuy"
+        },
+        {
+          "name": "한강삼성",
+          "id": "a8LzFEO"
+        },
+        {
+          "name": "래미안공덕4차",
+          "id": "a4DCxeO"
+        },
+        {
+          "name": "공덕SK리더스뷰",
+          "id": "a7fYQjG"
+        }
+      ],
+      "last": [
+        {
+          "name": "마포한강아이파크",
+          "id": "a3dxICy"
+        },
+        {
+          "name": "현대홈타운",
+          "id": "a4GwZTi"
+        },
+        {
+          "name": "대우월드마크마포",
+          "id": "a5fayyE"
+        },
+        {
+          "name": "신수현대",
+          "id": "a1dCPjA"
+        },
+        {
+          "name": "창전현대홈타운",
+          "id": "a1obycJ"
+        }
+      ],
+      "len": 68300
+    },
+    {
+      "url": "https://m.richgo.ai/realty/apt-hub/%EC%84%9C%EC%9A%B8/%EB%A7%88%ED%8F%AC%EA%B5%AC?limit=200",
+      "status": 200,
+      "count": 60,
+      "first": [
+        {
+          "name": "마포프레스티지자이",
+          "id": "a6KvZvL"
+        },
+        {
+          "name": "마포더클래시",
+          "id": "a8gmReL"
+        },
+        {
+          "name": "래미안공덕3차",
+          "id": "a0QzMTf"
+        },
+        {
+          "name": "e편한세상마포리버파크",
+          "id": "a0rnkel"
+        },
+        {
+          "name": "래미안공덕5차",
+          "id": "a1jMORm"
+        },
+        {
+          "name": "래미안마포리버웰",
+          "id": "a5PbpPL"
+        },
+        {
+          "name": "마포자이",
+          "id": "a9sFiii"
+        },
+        {
+          "name": "브라운스톤공덕",
+          "id": "a9kSBpq"
+        },
+        {
+          "name": "마포자이2차",
+          "id": "a6Pmzuy"
+        },
+        {
+          "name": "한강삼성",
+          "id": "a8LzFEO"
+        },
+        {
+          "name": "래미안공덕4차",
+          "id": "a4DCxeO"
+        },
+        {
+          "name": "공덕SK리더스뷰",
+          "id": "a7fYQjG"
+        }
+      ],
+      "last": [
+        {
+          "name": "마포한강아이파크",
+          "id": "a3dxICy"
+        },
+        {
+          "name": "현대홈타운",
+          "id": "a4GwZTi"
+        },
+        {
+          "name": "대우월드마크마포",
+          "id": "a5fayyE"
+        },
+        {
+          "name": "신수현대",
+          "id": "a1dCPjA"
+        },
+        {
+          "name": "창전현대홈타운",
+          "id": "a1obycJ"
+        }
+      ],
+      "len": 68303
+    },
+    {
+      "url": "https://m.richgo.ai/realty/apt-hub/%EC%84%9C%EC%9A%B8/%EB%A7%88%ED%8F%AC%EA%B5%AC/20%EC%96%B5%EC%9D%B4%EC%83%81",
+      "status": 200,
+      "count": 43,
+      "first": [
+        {
+          "name": "마포프레스티지자이",
+          "id": "a6KvZvL"
+        },
+        {
+          "name": "마포더클래시",
+          "id": "a8gmReL"
+        },
+        {
+          "name": "래미안공덕3차",
+          "id": "a0QzMTf"
+        },
+        {
+          "name": "e편한세상마포리버파크",
+          "id": "a0rnkel"
+        },
+        {
+          "name": "래미안공덕5차",
+          "id": "a1jMORm"
+        },
+        {
+          "name": "래미안마포리버웰",
+          "id": "a5PbpPL"
+        },
+        {
+          "name": "마포자이",
+          "id": "a9sFiii"
+        },
+        {
+          "name": "마포자이2차",
+          "id": "a6Pmzuy"
+        },
+        {
+          "name": "공덕SK리더스뷰",
+          "id": "a7fYQjG"
+        },
+        {
+          "name": "마포그랑자이",
+          "id": "a3guQVj"
+        },
+        {
+          "name": "마포아이파크포레",
+          "id": "a8Uxtzi"
+        },
+        {
+          "name": "마포래미안푸르지오",
+          "id": "a4tGVUY"
+        }
+      ],
+      "last": [
+        {
+          "name": "마포대림1차",
+          "id": "a2SZCMm"
+        },
+        {
+          "name": "메세나폴리스",
+          "id": "a1mEERk"
+        },
+        {
+          "name": "신구강변연가",
+          "id": "a6HPnXG"
+        },
+        {
+          "name": "밤섬리버베르빌",
+          "id": "a5Seiel"
+        },
+        {
+          "name": "롯데캐슬프레지던트",
+          "id": "a5rSGgo"
+        }
+      ],
+      "len": 54403
+    },
+    {
+      "url": "https://m.richgo.ai/realty/apt-hub/%EC%84%9C%EC%9A%B8/%EB%A7%88%ED%8F%AC%EA%B5%AC/30%ED%8F%89%EB%8C%80",
+      "status": 200,
+      "count": 60,
+      "first": [
+        {
+          "name": "e편한세상마포리버파크",
+          "id": "a0rnkel"
+        },
+        {
+          "name": "래미안마포리버웰",
+          "id": "a5PbpPL"
+        },
+        {
+          "name": "마포자이",
+          "id": "a9sFiii"
+        },
+        {
+          "name": "마포자이2차",
+          "id": "a6Pmzuy"
+        },
+        {
+          "name": "공덕SK리더스뷰",
+          "id": "a7fYQjG"
+        },
+        {
+          "name": "마포그랑자이",
+          "id": "a3guQVj"
+        },
+        {
+          "name": "마포아이파크포레",
+          "id": "a8Uxtzi"
+        },
+        {
+          "name": "마포래미안푸르지오",
+          "id": "a4tGVUY"
+        },
+        {
+          "name": "공덕자이",
+          "id": "a6aDCjB"
+        },
+        {
+          "name": "래미안",
+          "id": "a8Yorjc"
+        },
+        {
+          "name": "공덕파크자이",
+          "id": "a7wIuHe"
+        },
+        {
+          "name": "마포자이더센트리지",
+          "id": "a5zvSrH"
+        }
+      ],
+      "last": [
+        {
+          "name": "성원",
+          "id": "a4qGAqI"
+        },
+        {
+          "name": "월드컵참누리",
+          "id": "a9XlgHr"
+        },
+        {
+          "name": "서서울삼성",
+          "id": "a4eAyGF"
+        },
+        {
+          "name": "DMC상암센트럴파크1단지",
+          "id": "a9WkzxZ"
+        },
+        {
+          "name": "마포트라팰리스2차",
+          "id": "a3wyrtR"
+        }
+      ],
+      "len": 64347
+    },
+    {
+      "url": "https://m.richgo.ai/realty/apt-hub/%EA%B2%BD%EA%B8%B0/%EC%84%B1%EB%82%A8%EC%8B%9C%20%EB%B6%84%EB%8B%B9%EA%B5%AC/%EC%9E%AC%EA%B1%B4%EC%B6%95",
+      "status": 200,
+      "count": 1,
+      "first": [
+        {
+          "name": "장안타운건영3차",
+          "id": "a1AhJwH"
+        }
+      ],
+      "last": [
+        {
+          "name": "장안타운건영3차",
+          "id": "a1AhJwH"
+        }
+      ],
+      "len": 29929
+    },
+    {
+      "url": "https://m.richgo.ai/realty/apt-hub/%EA%B2%BD%EA%B8%B0/%EC%84%B1%EB%82%A8%EC%8B%9C%20%EB%B6%84%EB%8B%B9%EA%B5%AC/%EB%8C%80%EB%8B%A8%EC%A7%80",
+      "status": 200,
+      "count": 31,
+      "first": [
+        {
+          "name": "양지5단지한양",
+          "id": "a5rFSzF"
+        },
+        {
+          "name": "이매한신",
+          "id": "a1IIZzg"
+        },
+        {
+          "name": "삼성,한신",
+          "id": "a2hzIsC"
+        },
+        {
+          "name": "한솔4단지주공",
+          "id": "a7UIkWm"
+        },
+        {
+          "name": "청솔주공9단지",
+          "id": "a8CWypy"
+        },
+        {
+          "name": "한솔6단지주공",
+          "id": "a6PqUgD"
+        },
+        {
+          "name": "한솔5단지주공",
+          "id": "a6zoMAE"
+        },
+        {
+          "name": "우성(시범단지)",
+          "id": "a5VWGTk"
+        },
+        {
+          "name": "까치롯데,선경",
+          "id": "a8TAcGb"
+        },
+        {
+          "name": "느티마을공무원4단지",
+          "id": "a1ddbTH"
+        },
+        {
+          "name": "장미1단지동부",
+          "id": "a4NAdYf"
+        },
+        {
+          "name": "상록우성",
+          "id": "a0iVqsU"
+        }
+      ],
+      "last": [
+        {
+          "name": "매화마을공무원2단지",
+          "id": "a9YoeLS"
+        },
+        {
+          "name": "장안타운건영2차",
+          "id": "a5kycZx"
+        },
+        {
+          "name": "아름4단지두산삼호",
+          "id": "a4fMvVE"
+        },
+        {
+          "name": "탑타워빌",
+          "id": "a7jIYjf"
+        },
+        {
+          "name": "아이파크분당(주상복합)",
+          "id": "a7TXBrD"
+        }
+      ],
+      "len": 48092
+    }
+  ],
   "asof": "2026-11-18",
   "groups": [
     {
@@ -39,8 +449,35 @@
       "city": "서울",
       "gu": "서대문구",
       "url": "https://m.richgo.ai/realty/apt-hub/%EC%84%9C%EC%9A%B8/%EC%84%9C%EB%8C%80%EB%AC%B8%EA%B5%AC",
-      "error": "TypeError: fetch failed",
-      "entries": []
+      "status": 200,
+      "entries": [
+        {
+          "pos": 1,
+          "name": "서대문푸르지오센트럴파크",
+          "id": "a3clsNV"
+        },
+        {
+          "pos": 2,
+          "name": "e편한세상신촌",
+          "id": "a6VGrCN"
+        },
+        {
+          "pos": 3,
+          "name": "경남1차",
+          "id": "a0JrRWM"
+        },
+        {
+          "pos": 4,
+          "name": "신촌푸르지오",
+          "id": "a9RpjTQ"
+        },
+        {
+          "pos": 5,
+          "name": "힐스테이트신촌",
+          "id": "a3plcNS"
+        }
+      ],
+      "length": 68097
     },
     {
       "city": "서울",
@@ -182,35 +619,8 @@
       "city": "서울",
       "gu": "영등포구",
       "url": "https://m.richgo.ai/realty/apt-hub/%EC%84%9C%EC%9A%B8/%EC%98%81%EB%93%B1%ED%8F%AC%EA%B5%AC",
-      "status": 200,
-      "entries": [
-        {
-          "pos": 1,
-          "name": "시범",
-          "id": "a8VJYNm"
-        },
-        {
-          "pos": 2,
-          "name": "삼부",
-          "id": "a5INBXX"
-        },
-        {
-          "pos": 3,
-          "name": "브라이튼여의도(주상복합)",
-          "id": "a0Pcxoc"
-        },
-        {
-          "pos": 4,
-          "name": "서울",
-          "id": "a4zvHwM"
-        },
-        {
-          "pos": 5,
-          "name": "진주",
-          "id": "a8ZVawB"
-        }
-      ],
-      "length": 68178
+      "error": "TypeError: fetch failed",
+      "entries": []
     },
     {
       "city": "서울",
@@ -834,9 +1244,9 @@
     ],
     [
       "서울 서대문구",
-      0,
-      null,
-      "TypeError: fetch failed"
+      60,
+      200,
+      null
     ],
     [
       "서울 강동구",
@@ -864,9 +1274,9 @@
     ],
     [
       "서울 영등포구",
-      60,
-      200,
-      null
+      0,
+      null,
+      "TypeError: fetch failed"
     ],
     [
       "서울 중구",
@@ -977,14 +1387,9 @@
       null
     ]
   ],
-  "exact": 129,
-  "approx": 177,
+  "exact": 122,
+  "approx": 171,
   "unmatched": [
-    {
-      "rank": 3,
-      "name": "e편한세상신촌1단지",
-      "area": "서울 서대문구 북아현동"
-    },
     {
       "rank": 15,
       "name": "이편한세상금호파크힐스",
@@ -996,14 +1401,24 @@
       "area": "서울 영등포구 신길동"
     },
     {
-      "rank": 17,
-      "name": "신촌푸르지오",
-      "area": "서울 서대문구 북아현동"
+      "rank": 20,
+      "name": "아크로타워스퀘어",
+      "area": "서울 영등포구 영등포동7가"
+    },
+    {
+      "rank": 21,
+      "name": "래미안에스티움",
+      "area": "서울 영등포구 신길동"
     },
     {
       "rank": 23,
       "name": "래미안힐스테이트고덕",
       "area": "서울 강동구 고덕동"
+    },
+    {
+      "rank": 26,
+      "name": "당산삼성래미안4차",
+      "area": "서울 영등포구 당산동5가"
     },
     {
       "rank": 27,
@@ -1026,6 +1441,11 @@
       "area": "서울 강남구 개포동"
     },
     {
+      "rank": 35,
+      "name": "힐스테이트클래시안",
+      "area": "서울 영등포구 신길동"
+    },
+    {
       "rank": 36,
       "name": "목동청구한신아파트",
       "area": "서울 양천구 목동"
@@ -1044,6 +1464,11 @@
       "rank": 48,
       "name": "현대I-PARK",
       "area": "서울 성동구 성수동2가"
+    },
+    {
+      "rank": 53,
+      "name": "당산센트럴아이파크",
+      "area": "서울 영등포구 당산동5가"
     },
     {
       "rank": 56,
@@ -1066,6 +1491,11 @@
       "area": "서울 강남구 일원동"
     },
     {
+      "rank": 82,
+      "name": "문래자이",
+      "area": "서울 영등포구 문래동3가"
+    },
+    {
       "rank": 83,
       "name": "옥수파크힐스117동~125동",
       "area": "서울 성동구 옥수동"
@@ -1074,11 +1504,6 @@
       "rank": 84,
       "name": "서초네이처힐3단지",
       "area": "서울 서초구 우면동"
-    },
-    {
-      "rank": 85,
-      "name": "힐스테이트신촌",
-      "area": "서울 서대문구 북아현동"
     },
     {
       "rank": 87,
@@ -1226,11 +1651,6 @@
       "area": "서울 마포구 공덕동"
     },
     {
-      "rank": 146,
-      "name": "DMC파크뷰자이1단지",
-      "area": "서울 서대문구 남가좌동"
-    },
-    {
       "rank": 148,
       "name": "래미안강남힐즈",
       "area": "서울 강남구 자곡동"
@@ -1366,6 +1786,11 @@
       "area": "서울 송파구 장지동"
     },
     {
+      "rank": 199,
+      "name": "당산푸르지오",
+      "area": "서울 영등포구 영등포동8가"
+    },
+    {
       "rank": 200,
       "name": "아름마을(풍림)",
       "area": "성남 분당구 이매동"
@@ -1389,6 +1814,11 @@
       "rank": 205,
       "name": "산운마을13단지(태영)",
       "area": "성남 분당구 운중동"
+    },
+    {
+      "rank": 206,
+      "name": "당산현대5차",
+      "area": "서울 영등포구 당산동4가"
     },
     {
       "rank": 210,
@@ -1516,6 +1946,16 @@
       "area": "성남 분당구 수내동"
     },
     {
+      "rank": 261,
+      "name": "유원제일2차",
+      "area": "서울 영등포구 당산동5가"
+    },
+    {
+      "rank": 264,
+      "name": "신길센트럴자이아파트",
+      "area": "서울 영등포구 신길동"
+    },
+    {
       "rank": 265,
       "name": "상록마을(라이프1차)",
       "area": "성남 분당구 정자동"
@@ -1524,6 +1964,11 @@
       "rank": 268,
       "name": "명일우성",
       "area": "서울 강동구 명일동"
+    },
+    {
+      "rank": 269,
+      "name": "수정",
+      "area": "서울 영등포구 여의도동"
     },
     {
       "rank": 270,
@@ -1549,11 +1994,6 @@
       "rank": 277,
       "name": "한솔마을(2단지)(LG)",
       "area": "성남 분당구 정자동"
-    },
-    {
-      "rank": 278,
-      "name": "서대문푸르지오센트럴파크",
-      "area": "서울 서대문구 홍제동"
     },
     {
       "rank": 279,
@@ -1635,7 +2075,15 @@
       "area": "서울 서대문구 북아현동",
       "units": 1910,
       "year": 2018,
-      "candidates": []
+      "candidates": [
+        {
+          "pos": 2,
+          "name": "e편한세상신촌",
+          "id": "a6VGrCN",
+          "method": "contains",
+          "score": 0.7
+        }
+      ]
     },
     {
       "rank": 4,
@@ -1835,7 +2283,15 @@
       "area": "서울 서대문구 북아현동",
       "units": 940,
       "year": 2015,
-      "candidates": []
+      "candidates": [
+        {
+          "pos": 4,
+          "name": "신촌푸르지오",
+          "id": "a9RpjTQ",
+          "method": "exact",
+          "score": 1
+        }
+      ]
     },
     {
       "rank": 18,
@@ -1875,15 +2331,7 @@
       "area": "서울 영등포구 영등포동7가",
       "units": 1221,
       "year": 2017,
-      "candidates": [
-        {
-          "pos": 27,
-          "name": "아크로타워스퀘어",
-          "id": "a6FrneW",
-          "method": "exact",
-          "score": 1
-        }
-      ]
+      "candidates": []
     },
     {
       "rank": 21,
@@ -1891,15 +2339,7 @@
       "area": "서울 영등포구 신길동",
       "units": 1722,
       "year": 2017,
-      "candidates": [
-        {
-          "pos": 38,
-          "name": "래미안에스티움",
-          "id": "a6JPMOK",
-          "method": "exact",
-          "score": 1
-        }
-      ]
+      "candidates": []
     },
     {
       "rank": 22,
@@ -1963,15 +2403,7 @@
       "area": "서울 영등포구 당산동5가",
       "units": 1391,
       "year": 2003,
-      "candidates": [
-        {
-          "pos": 33,
-          "name": "당산삼성래미안",
-          "id": "a5Xrnxm",
-          "method": "contains",
-          "score": 0.7777777777777778
-        }
-      ]
+      "candidates": []
     },
     {
       "rank": 27,
@@ -2075,15 +2507,7 @@
       "area": "서울 영등포구 신길동",
       "units": 1482,
       "year": 2020,
-      "candidates": [
-        {
-          "pos": 18,
-          "name": "힐스테이트클래시안",
-          "id": "a5uhYdr",
-          "method": "exact",
-          "score": 1
-        }
-      ]
+      "candidates": []
     },
     {
       "rank": 36,
@@ -2345,15 +2769,7 @@
       "area": "서울 영등포구 당산동5가",
       "units": 802,
       "year": 2020,
-      "candidates": [
-        {
-          "pos": 11,
-          "name": "당산센트럴아이파크",
-          "id": "a3mfpaI",
-          "method": "exact",
-          "score": 1
-        }
-      ]
+      "candidates": []
     },
     {
       "rank": 54,
@@ -2805,15 +3221,7 @@
       "area": "서울 영등포구 문래동3가",
       "units": 1302,
       "year": 2001,
-      "candidates": [
-        {
-          "pos": 45,
-          "name": "문래자이",
-          "id": "a2KYqyk",
-          "method": "exact",
-          "score": 1
-        }
-      ]
+      "candidates": []
     },
     {
       "rank": 83,
@@ -2837,7 +3245,15 @@
       "area": "서울 서대문구 북아현동",
       "units": 1252,
       "year": 2023,
-      "candidates": []
+      "candidates": [
+        {
+          "pos": 5,
+          "name": "힐스테이트신촌",
+          "id": "a3plcNS",
+          "method": "exact",
+          "score": 1
+        }
+      ]
     },
     {
       "rank": 86,
@@ -3615,7 +4031,15 @@
       "area": "서울 서대문구 남가좌동",
       "units": 4300,
       "year": 2015,
-      "candidates": []
+      "candidates": [
+        {
+          "pos": 13,
+          "name": "DMC파크뷰자이",
+          "id": "a4pTFCD",
+          "method": "contains",
+          "score": 0.7272727272727273
+        }
+      ]
     },
     {
       "rank": 147,
@@ -4281,15 +4705,7 @@
       "area": "서울 영등포구 영등포동8가",
       "units": 538,
       "year": 2004,
-      "candidates": [
-        {
-          "pos": 42,
-          "name": "당산푸르지오",
-          "id": "a7smLKs",
-          "method": "exact",
-          "score": 1
-        }
-      ]
+      "candidates": []
     },
     {
       "rank": 200,
@@ -4353,15 +4769,7 @@
       "area": "서울 영등포구 당산동4가",
       "units": 976,
       "year": 2000,
-      "candidates": [
-        {
-          "pos": 12,
-          "name": "당산현대5차",
-          "id": "a6RnhIO",
-          "method": "exact",
-          "score": 1
-        }
-      ]
+      "candidates": []
     },
     {
       "rank": 207,
@@ -5075,15 +5483,7 @@
       "area": "서울 영등포구 당산동5가",
       "units": 410,
       "year": 1984,
-      "candidates": [
-        {
-          "pos": 21,
-          "name": "유원제일2차",
-          "id": "a9CMRVL",
-          "method": "exact",
-          "score": 1
-        }
-      ]
+      "candidates": []
     },
     {
       "rank": 262,
@@ -5123,15 +5523,7 @@
       "area": "서울 영등포구 신길동",
       "units": 1008,
       "year": 2021,
-      "candidates": [
-        {
-          "pos": 19,
-          "name": "신길센트럴자이",
-          "id": "a5GHIic",
-          "method": "exact",
-          "score": 1
-        }
-      ]
+      "candidates": []
     },
     {
       "rank": 265,
@@ -5194,15 +5586,7 @@
       "area": "서울 영등포구 여의도동",
       "units": 329,
       "year": 1976,
-      "candidates": [
-        {
-          "pos": 25,
-          "name": "수정",
-          "id": "a2pFIBq",
-          "method": "exact",
-          "score": 1
-        }
-      ]
+      "candidates": []
     },
     {
       "rank": 270,
@@ -5298,7 +5682,15 @@
       "area": "서울 서대문구 홍제동",
       "units": 832,
       "year": 2023,
-      "candidates": []
+      "candidates": [
+        {
+          "pos": 1,
+          "name": "서대문푸르지오센트럴파크",
+          "id": "a3clsNV",
+          "method": "exact",
+          "score": 1
+        }
+      ]
     },
     {
       "rank": 279,
@@ -5669,7 +6061,7 @@
     },
     "a1Ucmro": {
       "status": 200,
-      "len": 313241,
+      "len": 313287,
       "snippets": {
         "용적률": " 집값&#x27;에서 볼 수 있습니다.</p></div><div class=\"DanjiFactSections__SD_Section-sc-1ff4ed82-0 ieWnL\"><h2>경희궁자이3단지<!-- --> 단지 정보</h2><dl class=\"facts\"><div><dt>세대수</dt><dd>589세대</dd></div><div><dt>입주</dt><dd>2017.02 (10년차)</dd></div><div><dt>층수</dt><dd>8~20층</dd></div><div><dt>용적률</dt><dd>241%</dd></div><div><dt>건폐율</dt><dd>33%</dd></div><div><dt>주차</dt><dd>760대 (세대당 1.29대)</dd></div><div><dt>난방</dt><dd>개별난방 · 도시가스</dd></div><div><dt>시공사</dt><dd>지에스건설(주)</dd></div><div><dt>평형</dt><dd>24·31·33·45평</dd></div></dl></div><div class=\"DanjiFactSections__SD_Section-sc-1ff4ed82-0 ieWnL\"><h2>평형별 시세</h2><table><thead><tr><th scope=\"col\">평형</th><th sc",
         "건폐율": "class=\"DanjiFactSections__SD_Section-sc-1ff4ed82-0 ieWnL\"><h2>경희궁자이3단지<!-- --> 단지 정보</h2><dl class=\"facts\"><div><dt>세대수</dt><dd>589세대</dd></div><div><dt>입주</dt><dd>2017.02 (10년차)</dd></div><div><dt>층수</dt><dd>8~20층</dd></div><div><dt>용적률</dt><dd>241%</dd></div><div><dt>건폐율</dt><dd>33%</dd></div><div><dt>주차</dt><dd>760대 (세대당 1.29대)</dd></div><div><dt>난방</dt><dd>개별난방 · 도시가스</dd></div><div><dt>시공사</dt><dd>지에스건설(주)</dd></div><div><dt>평형</dt><dd>24·31·33·45평</dd></div></dl></div><div class=\"DanjiFactSections__SD_Section-sc-1ff4ed82-0 ieWnL\"><h2>평형별 시세</h2><table><thead><tr><th scope=\"col\">평형</th><th scope=\"col\">매매 시세</th><th scope=\"col\">",
