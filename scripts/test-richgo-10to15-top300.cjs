@@ -6,15 +6,15 @@ function parse(s){let rows=[],row=[],cell='',q=false;for(let i=0;i<s.length;i++)
 const records=parse(csv),key=r=>r.name+'|'+r.area;
 assert.equal(records.length,300);
 assert.equal(new Set(records.map(key)).size,300);
-const corrected=records.filter(r=>r.action==='변경');assert.equal(corrected.length,8);
+const corrected=records.filter(r=>r.action==='변경');assert.equal(corrected.length,22);
 assert.ok(corrected.every(r=>r.richgo_far&&r.source_url&&r.map_units===r.richgo_units));
 const code=fs.readFileSync(path.join(root,'public/apt-richgo15.js'),'utf8');
 const html=fs.readFileSync(path.join(root,'public/apt-map.html'),'utf8');
 assert.match(html,/c===15\?'apt-richgo15\.js'/);
 for(const cap of [6,10,15,20,25,30]){
  const far=Object.fromEntries(corrected.map(r=>[key(r),[r.map_far?r.map_far*1:null,r.map_far_source]]));
- const w={CAPT:cap,FARD:far};const ctx={window:w};vm.createContext(ctx);vm.runInContext(code,ctx);
+ const w={CAPT:cap,FARD:far,PICKS:[{n:'힐스테이트신촌',area:'서울 서대문구 북아현동',year:2023}]};const ctx={window:w};vm.createContext(ctx);vm.runInContext(code,ctx);assert.equal(w.PICKS[0].year,cap===15?2020:2023,'cap15 only build year');
  assert.equal(Boolean(w.RICHGO15_APPLIED),cap===15,'wrong cap '+cap);
  for(const r of corrected)assert.equal(far[key(r)][0],cap===15?Number(r.richgo_far):(r.map_far?Number(r.map_far):null),'FAR '+key(r)+' cap '+cap);
 }
-console.log('Richgo 10–15 top300 audit OK: 300 distinct, 8 corrected FAR, cap15 only');
+console.log('Richgo 10–15 top300 audit OK: 300 distinct, 22 corrected FAR, cap15 only');
