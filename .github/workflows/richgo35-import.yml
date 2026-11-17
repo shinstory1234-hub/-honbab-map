@@ -37,6 +37,7 @@ jobs:
           node scripts/test-richgo35-top300.cjs
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git config user.name "github-actions[bot]"
-          git add public/apt-univ35.js public/apt-map.html public/apt-picks10.js public/apt-invest35.js public/apt-r35.js scripts/build-apt-assets.mjs scripts/test-richgo35-top300.cjs docs/richgo-over30-current-top300-20261118.csv
+          git add public/apt-univ35.js public/apt-map.html public/apt-picks10.js public/apt-invest35.js public/apt-r35.js scripts/build-apt-assets.mjs scripts/test-richgo35-top300.cjs
+          git add -f docs/richgo-over30-current-top300-20261118.csv
           git commit -m "feat(30plus): audit 300 ranked complexes, restore 74, apply 196 verified FARs" || exit 0
           git push origin HEAD:audit/richgo-30plus-top300-20261118
