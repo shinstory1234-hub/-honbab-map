@@ -1,3 +1,4 @@
+## Total source inventory 626 (554 ranked, 72 not ranked); verify unreviewed 326.
 name: Audit remaining 326 of 626 Richgo apartments
 on:
   push:
