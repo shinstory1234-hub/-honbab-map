@@ -52,6 +52,24 @@ if(present.length===6){
 }
 
 for(const x of audits)if(!targets.has(x.key))throw Error('unexpected audited identity '+x.key);
+// Apply independent municipal/dong catalog matches after first and second pass.
+const thirdFiles=Array.from({length:6},(_,i)=>'docs/richgo-6to10-thirdpass-parts/part0'+i+'.json');
+const availableThird=thirdFiles.filter(f=>fs.existsSync(p(f)));
+if(availableThird.length>0&&availableThird.length!==6)throw Error('Partial third-pass evidence: '+availableThird.length+'/6');
+let thirdPassVerified=0;
+if(availableThird.length===6){
+ const byKey=new Map();
+ for(let i=0;i<6;i++){
+  const batch=JSON.parse(read(thirdFiles[i]));if(batch.meta.shard!==i)throw Error('third-pass shard mismatch '+i);
+  for(const x of batch.rows){if(byKey.has(x.key))throw Error('third-pass duplicate '+x.key);byKey.set(x.key,x);}
+ }
+ for(const row of audits){
+  if(row.status==='verified')continue;
+  const x=byKey.get(row.key);if(x?.thirdStatus!=='verified_third_pass'||!x.richgo)continue;
+  row.status='verified';row.richgo=x.richgo;row.match=x.match;thirdPassVerified++;
+ }
+ console.log('THIRD_PASS_MERGED',JSON.stringify({rows:byKey.size,additionalVerified:thirdPassVerified}));
+}
 const duplicatePages=new Map();
 for(const row of audits)if(row.richgo?.id){let a=duplicatePages.get(row.richgo.id)||[];a.push(row.key);duplicatePages.set(row.richgo.id,a);}
 // Do not reuse the same Richgo page already assigned to a separate verified cap10 complex.
@@ -111,6 +129,7 @@ const report=[
  '',
  '- 추가 자동 보정: '+newCorrections.length+'개',
  '- 2차 재검증에서 추가 복원된 단지: '+secondPassVerified+'개',
+ '- 3차 법정동 공개목록에서 추가 복원된 단지: '+thirdPassVerified+'개',
  '- 최종 보정 파일 항목: '+fixes.length+'개',
  '- 용적률 수치 존재: '+coverage.rows.filter(x=>x.far_after_verified!=='').length+'개',
  '- 단지 매칭 불명확한 항목은 임의 수치를 넣지 않고 별도 검증 대상으로 유지',
@@ -126,7 +145,7 @@ const writes={
  'scripts/richgo-band10-corrections.json':JSON.stringify(fixes,null,2)+'\n',
  'docs/richgo-6to10-final-audit-20261118.md':report
 };
-console.log('AGGREGATED',JSON.stringify({reviewed:1108,corrections:newCorrections.length,counts:reasons,duplicatePageIds:duplicateIds.size,secondPassVerified,shards}));
+console.log('AGGREGATED',JSON.stringify({reviewed:1108,corrections:newCorrections.length,counts:reasons,duplicatePageIds:duplicateIds.size,secondPassVerified,thirdPassVerified,shards}));
 if(process.env.GITHUB_TOKEN&&process.env.GITHUB_REPOSITORY){
  const repo=process.env.GITHUB_REPOSITORY,branch=process.env.GITHUB_REF_NAME||'audit/richgo-6to10-top300-20261118';
  const headers={Authorization:'Bearer '+process.env.GITHUB_TOKEN,Accept:'application/vnd.github+json','X-GitHub-Api-Version':'2022-11-28','Content-Type':'application/json'};
