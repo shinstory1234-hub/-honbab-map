@@ -1,0 +1,162 @@
+{
+  "asOf": "2026-11-18",
+  "summary": {
+    "fixes": 6,
+    "replacementPageChecks": 4,
+    "wrongBuildingRemoved": 1,
+    "remodelYearPreserved": 1,
+    "verified": 1075,
+    "aggregate": 31,
+    "unknown": 8,
+    "far": 925,
+    "year": 48,
+    "units": 113
+  },
+  "proof": [
+    {
+      "seq": 279,
+      "name": "금천롯데캐슬골드파크1차",
+      "area": "서울 금천구 독산동",
+      "previous": {
+        "name": "금천롯데캐슬골드파크3차",
+        "id": "a9RWCOF",
+        "year": "2018",
+        "units": "1236",
+        "far": "499"
+      },
+      "verified": {
+        "id": "a6rNDte",
+        "values": {
+          "name": "롯데캐슬골드파크1차",
+          "title": "'독산동 롯데캐슬골드파크1차' 아파트 실거래가·시세·2년뒤 가격예측 분석 - 리치고",
+          "year": 2016,
+          "units": 1743,
+          "far": 297,
+          "floors": "25~35층",
+          "coverage": 18,
+          "parking": 2282,
+          "heating": "개별난방 · 도시가스",
+          "builder": "롯데건설(주)",
+          "pyeongs": "24·29·34·35·42평"
+        }
+      },
+      "changes": [
+        "far"
+      ]
+    },
+    {
+      "seq": 462,
+      "name": "백련산힐스테이트4차",
+      "area": "서울 은평구 응암동",
+      "previous": {
+        "name": "백련산힐스테이트3차",
+        "id": "a6GmWpZ",
+        "year": "2011",
+        "units": "967",
+        "far": "213"
+      },
+      "verified": {
+        "id": "a3YPzVc",
+        "values": {
+          "name": "힐스테이트백련산4차",
+          "title": "'응암동 힐스테이트백련산4차' 아파트 실거래가·시세·2년뒤 가격예측 분석 - 리치고",
+          "year": 2018,
+          "units": 963,
+          "far": 249,
+          "floors": "15~19층",
+          "coverage": 21,
+          "parking": 1180,
+          "heating": "개별난방 · 도시가스",
+          "builder": "현대건설주식회사",
+          "pyeongs": "24·33·34평"
+        }
+      },
+      "changes": [
+        "far"
+      ]
+    },
+    {
+      "seq": 927,
+      "name": "의왕백운 해링턴 플레이스 1단지",
+      "area": "의왕시 학의동",
+      "previous": {
+        "name": "의왕백운해링턴플레이스5단지",
+        "id": "a2lgAao",
+        "year": "2019",
+        "units": "586",
+        "far": "124"
+      },
+      "verified": {
+        "id": "a4FYnXO",
+        "values": {
+          "name": "백운호수해링턴플레이스1단지",
+          "title": "'학의동 백운호수해링턴플레이스1단지' 실거래가·시세·2년뒤 가격예측 분석 - 리치고",
+          "year": 2019,
+          "units": 958,
+          "far": 150,
+          "floors": "6~16층",
+          "coverage": 17,
+          "parking": 1206,
+          "heating": "지역난방 · 열병합",
+          "builder": "(주)효 성",
+          "pyeongs": "34·42·43·49·57평"
+        }
+      },
+      "changes": [
+        "far"
+      ]
+    },
+    {
+      "seq": 1110,
+      "name": "동탄역신안인스빌리베라1차",
+      "area": "화성 동탄구 청계동",
+      "previous": {
+        "name": "동탄역신안인스빌리베라2차",
+        "id": "a1cSCcg",
+        "year": "2016",
+        "units": "644",
+        "far": "181"
+      },
+      "verified": {
+        "id": "a1wiFrS",
+        "values": {
+          "name": "동탄역신안인스빌리베라",
+          "title": "'청계동 동탄역신안인스빌리베라' 실거래가·시세·2년뒤 가격예측 분석 - 리치고",
+          "year": 2015,
+          "units": 913,
+          "far": 179,
+          "floors": "20~25층",
+          "coverage": 12,
+          "parking": 1420,
+          "heating": "지역난방 · 열병합",
+          "builder": "(주)신안",
+          "pyeongs": "33·39평"
+        }
+      },
+      "changes": [
+        "far"
+      ]
+    },
+    {
+      "seq": 845,
+      "name": "광명역세권휴먼시아5단지",
+      "area": "광명시 소하동",
+      "previous": {
+        "id": "a7vvaUy",
+        "name": "광명역세권휴먼시아4단지",
+        "year": "2010",
+        "units": "730",
+        "far": "168"
+      },
+      "decision": "wrong 4th stage rejected; original preserved"
+    },
+    {
+      "seq": 642,
+      "name": "송파더플래티넘",
+      "siteOriginalYear": 1992,
+      "remodelCompletionYear": 2024,
+      "decision": "preserve 2024 modernized completion year",
+      "source": "https://www.hankyung.com/article/2024020796816"
+    }
+  ]
+}
