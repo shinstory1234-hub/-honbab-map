@@ -1,0 +1,5 @@
+import fs from 'node:fs';
+const urls=['https://m.richgo.ai/robots.txt','https://m.richgo.ai/sitemap.xml','https://m.richgo.ai/realty/danji/a6KvZvL','https://www.google.com/search?q=site%3Am.richgo.ai%2Frealty%2Fdanji+%22%EB%A7%88%ED%8F%AC%ED%94%84%EB%A0%88%EC%8A%A4%ED%8B%B0%EC%A7%80%EC%9E%90%EC%9D%B4%22','https://www.bing.com/search?q=site%3Am.richgo.ai%2Frealty%2Fdanji+%22%EB%A7%88%ED%8F%AC%ED%94%84%EB%A0%88%EC%8A%A4%ED%8B%B0%EC%A7%80%EC%9E%90%EC%9D%B4%22'];
+const res=await Promise.all(urls.map(async url=>{try{let r=await fetch(url,{signal:AbortSignal.timeout(18000),headers:{'User-Agent':'Mozilla/5.0'}});let text=await r.text();return {url,status:r.status,len:text.length,final:r.url,head:text.slice(0,2500),keyTags:['sitemap','<loc>','용적률','아파트 시세','/realty/danji/'].map(s=>[s,text.indexOf(s)])}}catch(e){return {url,error:String(e)}}}));
+fs.writeFileSync('docs/richgo-cap25-lookup-diagnostics.json',JSON.stringify(res,null,2)+'\n');
+console.log(JSON.stringify(res.map(x=>({url:x.url,status:x.status,len:x.len,error:x.error,head:x.head?.slice(0,450),tags:x.keyTags})),null,2));
