@@ -54,7 +54,14 @@ if(present.length===6){
 for(const x of audits)if(!targets.has(x.key))throw Error('unexpected audited identity '+x.key);
 const duplicatePages=new Map();
 for(const row of audits)if(row.richgo?.id){let a=duplicatePages.get(row.richgo.id)||[];a.push(row.key);duplicatePages.set(row.richgo.id,a);}
-const duplicateIds=new Set([...duplicatePages].filter(([id,ks])=>ks.length>1).map(([id])=>id));
+// Do not reuse the same Richgo page already assigned to a separate verified cap10 complex.
+const priorIds=new Map(),previous=JSON.parse(read('docs/richgo-band10-current300-verified.json'));
+const idFrom=url=>String(url||'').match(/\/realty\/danji\/(a[A-Za-z0-9]{6})/)?.[1]||null;
+for(const rec of previous.records){const id=idFrom(rec.source_url);if(!id)continue;const a=priorIds.get(id)||new Set();a.add(rec.key);priorIds.set(id,a);}
+for(const rec of parseCSV(read('docs/richgo-6to10-crossband-verified415-20261118.csv')).rows){
+ const id=idFrom(rec.source_url);if(!id)continue;const a=priorIds.get(id)||new Set();a.add(rec.name+'|'+rec.area);priorIds.set(id,a);
+}
+const duplicateIds=new Set([...duplicatePages].filter(([id,ks])=>ks.length>1||priorIds.has(id)).map(([id])=>id));
 const oldCorrections=JSON.parse(read('scripts/richgo-band10-corrections.json'));
 const fixKeys=new Set(oldCorrections.map(x=>x.name+'|'+x.area));
 if(oldCorrections.length!==556||fixKeys.size!==556)throw Error('unexpected previous correction count');
