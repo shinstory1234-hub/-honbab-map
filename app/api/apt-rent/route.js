@@ -21,7 +21,7 @@ async function load(sgg,ym){
  if(code&&code!=='00'&&code!=='000')throw new Error('UPSTREAM_CODE_'+code);
  const total=Number(xmlText(xml,'totalCount'))||0;
  if(total>1000)throw new Error('PAGINATION_REQUIRED');
- const items=[...xml.matchAll(/<item>([\\s\\S]*?)<\\/item>/g)].map(m=>{
+ const items=[...xml.matchAll(new RegExp('<item>([\\s\\S]*?)</item>','g'))].map(m=>{
   const x=m[1],get=k=>xmlText(x,k);
   return {name:get('aptNm'),dong:get('umdNm'),area:Number(get('excluUseAr')),floor:Number(get('floor')),year:Number(get('buildYear')),day:Number(get('dealDay')),deposit:Number(get('deposit').replace(/,/g,'')),monthlyRent:Number(get('monthlyRent').replace(/,/g,'')),contractType:get('contractType')};
  });

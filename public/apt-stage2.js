@@ -54,7 +54,7 @@ css.textContent+="\n.s2-select-overlay{position:fixed;inset:0;z-index:1600;backg
 css.textContent+="\n.s2-sticky-sort{position:sticky;top:108px;z-index:3;background:var(--bg);padding:10px 0 12px;border-bottom:1px solid var(--border-soft)}\n.s2-sticky-sort label{display:flex!important;align-items:center;justify-content:space-between;gap:16px;font-size:13px!important}\n.s2-sticky-sort select{width:auto!important;min-width:148px;max-width:65%;margin:0!important;padding:7px 24px 7px 10px!important;border:1px solid var(--border)!important;border-radius:5px!important;background:var(--bg)!important;font-size:14px!important;font-weight:700;color:var(--text)!important}\n";
 css.textContent+="\n.s2-tabs[hidden],.s2-back[hidden]{display:none!important}\n.s2-top{gap:10px}.s2-top h2{flex:1;font-size:19px}.s2-back{border:0;background:transparent;color:var(--text);font-size:25px;line-height:1;padding:7px 9px 7px 0;cursor:pointer}\n.s2-home-intro{font-size:13px!important;color:var(--text-secondary)!important;margin:8px 0 14px!important}\n.s2-home-list{display:flex;flex-direction:column}.s2-home-item{width:100%;display:flex;align-items:center;gap:12px;text-align:left;background:transparent;color:var(--text);border:0;border-bottom:1px solid var(--border-soft);padding:17px 3px;cursor:pointer;min-height:78px}\n.s2-home-item:first-child{border-top:1px solid var(--border-soft)}.s2-home-text{flex:1;min-width:0}.s2-home-text strong{display:block;font-size:15px;font-weight:740;letter-spacing:-.02em;margin-bottom:5px}.s2-home-text small{display:block;font-size:12px;line-height:1.55;color:var(--text-tertiary);font-weight:400}.s2-home-arrow{font-size:23px;color:var(--text-tertiary);font-weight:300}.s2-home-item:focus-visible,.s2-back:focus-visible{outline:2px solid var(--primary)}\n";
 css.textContent+='\n.s2-sort-row{position:static!important;top:auto!important;z-index:auto!important;padding:10px 0 12px;border-bottom:1px solid var(--border-soft)}.s2-sort-row label{display:flex!important;align-items:center;justify-content:space-between;gap:12px;font-size:13px!important}.s2-sort-row select{width:auto!important;min-width:145px;max-width:65%;margin:0!important;padding:9px 28px 9px 12px!important;border:1px solid var(--border)!important;border-radius:5px!important;background:var(--bg)!important;font-size:14px!important;font-weight:700;color:var(--text)!important}\n';
-document.head.appendChild(css);
+css.textContent+='\n.s2-rent-results{overflow-x:auto;max-height:48vh;overflow-y:auto}.s2-rent-results table{width:100%;min-width:470px;font-size:12px;border-collapse:collapse}.s2-rent-results th,.s2-rent-results td{padding:10px 7px;border-bottom:1px solid var(--border-soft);text-align:left;white-space:nowrap}\n';document.head.appendChild(css);
 function note(t){var o=document.getElementById('s2Toast');if(!o){o=document.createElement('div');o.id='s2Toast';o.className='s2-toast';o.setAttribute('role','status');document.body.appendChild(o);}o.textContent=t;o.hidden=false;clearTimeout(note.t);note.t=setTimeout(()=>{o.hidden=true;},2900);}
 function remember(d){var k=key(d);recent=[k,...recent.filter(x=>x!==k)].slice(0,12);try{localStorage.setItem(recKey,JSON.stringify(recent));}catch(e){}}
 function passes(d){
@@ -185,9 +185,32 @@ function bindTypeSearch(body){
  matches.querySelectorAll('[data-s2type]').forEach(b=>b.onclick=()=>{typesPick=key(D[+b.dataset.s2type]);paint();});};
  body.querySelector('#s2FloorLoad').onclick=()=>floorLoad(D.find(x=>key(x)===(typesPick||''))||recent.map(k=>D.find(x=>key(x)===k)).find(Boolean)||D[0],body.querySelector('#s2FloorOut'));
 }
+
+function rentLookupTab(){
+ const today=new Date(),month=today.getFullYear()+String(today.getMonth()+1).padStart(2,'0');
+ return '<h3>전월세 실거래 조회</h3><p>국토교통부 신고 거래를 지역 코드와 계약 월로 조회합니다. 보증금과 월세는 만원 단위입니다.</p>'
+ +'<div class="s2-cols"><label>시군구 코드 (5자리)<input id="s2RentRegion" type="text" inputmode="numeric" maxlength="5" placeholder="예: 11680"></label>'
+ +'<label>계약 월 (6자리)<input id="s2RentMonth" type="text" inputmode="numeric" maxlength="6" value="'+month+'"></label></div>'
+ +'<div class="s2-actionbar"><button class="s2-btn on" id="s2RentRun">실거래 조회</button></div>'
+ +'<div id="s2RentResult" aria-live="polite"><p>지역과 월을 입력한 뒤 조회하세요.</p></div>';
+}
+async function runRentLookup(body){
+ const code=body.querySelector('#s2RentRegion').value.trim(),month=body.querySelector('#s2RentMonth').value.trim(),out=body.querySelector('#s2RentResult');
+ if(!/^\\d{5}$/.test(code)||!/^20\\d{4}$/.test(month)||Number(month.slice(4))<1||Number(month.slice(4))>12){out.textContent='시군구 코드 5자리와 계약 월 6자리를 확인하세요.';return;}
+ out.textContent='거래 내역을 불러오는 중입니다.';
+ try{
+  const res=await fetch('/api/apt-rent?sgg='+encodeURIComponent(code)+'&month='+encodeURIComponent(month));
+  const data=await res.json();
+  if(!res.ok){out.textContent=data.error==='API_KEY_NOT_CONFIGURED'?'서버에 전월세 API 인증키를 연결해야 합니다.':'조회에 실패했습니다. 잠시 후 다시 시도하세요.';return;}
+  const items=data.items||[];
+  out.innerHTML='<p>조회 결과 '+items.length.toLocaleString()+'건</p>'
+  +(items.length?'<div class="s2-rent-results"><table><thead><tr><th>단지</th><th>전용면적</th><th>층</th><th>보증금</th><th>월세</th></tr></thead><tbody>'+items.slice(0,300).map(x=>'<tr><td>'+esc(x.name)+'</td><td>'+esc(x.area)+'㎡</td><td>'+esc(x.floor)+'</td><td>'+Number(x.deposit||0).toLocaleString()+'</td><td>'+Number(x.monthlyRent||0).toLocaleString()+'</td></tr>').join('')+'</tbody></table></div>':'<p>해당 월에 신고된 거래가 없습니다.</p>');
+ }catch(e){out.textContent='네트워크 오류로 조회하지 못했습니다.';}
+}
 function homeTab(){
  const menus=[
  ['view','지도 안의 아파트','현재 지도에 보이는 단지 중 추천 상위 10곳을 확인하고 정렬합니다.'],
+ ['rentlookup','전월세 실거래','지역별 전세 보증금과 월세 실거래를 조회합니다.'],
  ['filters','상세 필터','최근 거래 건수와 마지막 거래일 등으로 아파트를 좁혀 찾습니다.'],
  ['rivals','아파트 비교','두 단지를 선택해 분기별 실거래 가격을 비교합니다.'],
  ['saved','관심 아파트','저장하거나 최근 확인한 아파트를 다시 봅니다.'],
@@ -198,7 +221,7 @@ function homeTab(){
  ];
  return '<p class="s2-home-intro">원하는 작업을 선택하세요. 각 메뉴에서 무엇을 할 수 있는지 확인할 수 있습니다.</p><div class="s2-home-list">'+menus.map(([k,title,desc])=>'<button type="button" class="s2-home-item" data-s2menu="'+k+'"><span class="s2-home-text"><strong>'+title+'</strong><small>'+desc+'</small></span><span class="s2-home-arrow" aria-hidden="true">›</span></button>').join('')+'</div>';
 }
-var contents={home:homeTab,view:viewTab,filters:filtersTab,nav:navTab,saved:savedTab,rivals:rivalsTab,living:livingTab,types:typesTab,watch:watchTab},tabnames=[['view','현재 화면'],['filters','추가 조건'],['nav','지도'],['saved','저장함'],['rivals','라이벌'],['living','실거주'],['types','평형·층'],['watch','호가 기록']];
+var contents={home:homeTab,rentlookup:rentLookupTab,view:viewTab,filters:filtersTab,nav:navTab,saved:savedTab,rivals:rivalsTab,living:livingTab,types:typesTab,watch:watchTab},tabnames=[['view','현재 화면'],['filters','추가 조건'],['nav','지도'],['saved','저장함'],['rivals','라이벌'],['living','실거주'],['types','평형·층'],['watch','호가 기록']];
 function open(t){mapReady();tab=t||'home';if(!panel){panel=document.createElement('div');panel.className='s2-shade';panel.id='s2Shade';panel.innerHTML='<section class="s2-dialog" role="dialog" aria-modal="true" aria-label="아파트 탐색"><header class="s2-top"><button type="button" class="s2-back" id="s2Back" hidden aria-label="전체 메뉴로 돌아가기">←</button><h2>아파트 탐색</h2><button class="s2-btn" id="s2Close">닫기 ×</button></header><nav class="s2-tabs" role="tablist" hidden></nav><div class="s2-body"></div></section>';document.body.appendChild(panel);panel.addEventListener('click',e=>{if(e.target===panel)close();});document.addEventListener('keydown',escClose);}paint();}
 function escClose(e){if(e.key==='Escape')close();}
 function close(){if(panel){panel.remove();panel=null;document.removeEventListener('keydown',escClose);}}
@@ -234,11 +257,12 @@ function paint(){
  var tabs=panel.querySelector('.s2-tabs'),body=panel.querySelector('.s2-body');
  tabs.innerHTML='';tabs.hidden=true;
  const back=panel.querySelector('#s2Back'),title=panel.querySelector('.s2-top h2');
- back.hidden=tab==='home';title.textContent=tab==='home'?'아파트 탐색':({view:'지도 안의 아파트',filters:'상세 필터',nav:'지도 설정과 측정',saved:'관심 아파트',rivals:'아파트 비교',living:'생활환경 평가',types:'평형과 층별 거래',watch:'내 매물 호가 기록'}[tab]||'아파트 탐색');
+ back.hidden=tab==='home';title.textContent=tab==='home'?'아파트 탐색':({rentlookup:'전월세 실거래',view:'지도 안의 아파트',filters:'상세 필터',nav:'지도 설정과 측정',saved:'관심 아파트',rivals:'아파트 비교',living:'생활환경 평가',types:'평형과 층별 거래',watch:'내 매물 호가 기록'}[tab]||'아파트 탐색');
  body.innerHTML=(contents[tab]||homeTab)();panel.querySelector('#s2Close').onclick=close;
  back.onclick=()=>{tab='home';paint();};
  body.querySelectorAll('[data-s2menu]').forEach(b=>b.onclick=()=>{tab=b.dataset.s2menu;paint();panel.querySelector('.s2-dialog').scrollTop=0;});
  bindRows();bindS2Selects();
+ if(tab==='rentlookup')body.querySelector('#s2RentRun').onclick=()=>runRentLookup(body);
  if(tab==='view'){
   body.querySelector('#s2Rank').onchange=e=>{rankSort=e.target.value;body.querySelector('#s2RankRows').innerHTML=rows(rank(inBounds(),rankSort).slice(0,10));bindRows();};
   body.querySelectorAll('[data-s2pin]').forEach(b=>b.onclick=()=>{indicator=b.dataset.s2pin;close();applyPins();note('핀 지표: '+b.textContent);});
