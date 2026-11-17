@@ -1,33 +1,54 @@
-/* 10~15억 리치고 검증 회귀검사 — 배포 빌드는 별도 CI 단계에서 수행. */
+/* Richgo 10~15억 검증: 300개 감사목록, 출처, FAR/연식/세대수, 구간별 격리 회귀검사 */
 const assert=require('node:assert/strict'),fs=require('node:fs'),path=require('node:path'),vm=require('node:vm');
 const root=path.resolve(__dirname,'..');
-const raw=fs.readFileSync(path.join(root,'docs/richgo-10to15-top300-20261118.csv'),'utf8');
-function csv(s){let rows=[],row=[],cell='',q=false;for(let i=0;i<s.length;i++){
-const c=s[i];if(q){if(c==='"'&&s[i+1]==='"'){cell+='"';i++}else if(c==='"')q=false;else cell+=c;}
-else if(c==='"')q=true;else if(c===','){row.push(cell);cell='';}
-else if(c==='\n'){row.push(cell.replace(/\r$/,''));rows.push(row);row=[];cell='';}else cell+=c;
-}const h=rows.shift();return rows.filter(x=>x.length===h.length).map(x=>Object.fromEntries(h.map((k,j)=>[k,x[j]])));}
-const rows=csv(raw),key=r=>r.name+'|'+r.area;
-assert.equal(rows.length,300);
-assert.equal(new Set(rows.map(key)).size,300);
-const changes=rows.filter(r=>r.action==='변경'),spec=JSON.parse(fs.readFileSync(path.join(root,'docs/richgo-10to15-verified-corrections.json'),'utf8'));
-assert.equal(changes.length,22);
-assert.equal(Object.keys(spec.far).length,22);
-for(const r of changes){assert.equal(Number(spec.far[key(r)]),Number(r.richgo_far));assert.equal(r.richgo_units,r.map_units);assert.ok(r.source_url);}
-assert.equal(spec.year['힐스테이트신촌|서울 서대문구 북아현동'],2020);
+function parse(s){let rows=[],row=[],cell='',quoted=false;
+ for(let i=0;i<s.length;i++){const c=s[i];
+  if(quoted){if(c==='"'&&s[i+1]==='"'){cell+='"';i++}else if(c==='"')quoted=false;else cell+=c;}
+  else if(c==='"')quoted=true;else if(c===','){row.push(cell);cell='';}
+  else if(c==='\n'){row.push(cell.replace(/\r$/,''));rows.push(row);row=[];cell='';}
+  else cell+=c;
+ }
+ const columns=rows.shift();return rows.filter(r=>r.length===columns.length).map(r=>Object.fromEntries(columns.map((k,j)=>[k,r[j]])));
+}
+const records=parse(fs.readFileSync(path.join(root,'docs/richgo-10to15-top300-20261118.csv'),'utf8'));
+const spec=JSON.parse(fs.readFileSync(path.join(root,'docs/richgo-10to15-verified-corrections.json'),'utf8'));
+const key=r=>r.name+'|'+r.area,byKey=new Map(records.map(r=>[key(r),r]));
+assert.equal(records.length,300,'inventory must contain 300 complexes');
+assert.equal(byKey.size,300,'duplicates forbidden');
+assert.ok(records.every(r=>r.seq&&r.snapshot_rank&&r.name&&r.area),'incomplete ranking');
+for(const field of ['far','year','units']){
+ const original='map_'+field, external='richgo_'+field;
+ const changes=Object.entries(spec[field]||{});
+ for(const [k,value] of changes){
+  const r=byKey.get(k);
+  assert.ok(r,'correction not in top300: '+k);
+  assert.ok(['직접확인','기존직접대조','기존검증확인'].includes(r.verification),'unverified '+field+' '+k);
+  assert.equal(Number(r[external]),Number(value),'must equal Richgo source '+field+' '+k);
+  assert.ok(r.source_url&&r.source_url.startsWith('https://m.richgo.ai/realty/danji/'),'source URL missing '+k);
+  assert.notEqual(Number(r[original]||0),Number(value),'redundant correction '+field+' '+k);
+ }
+}
+const source=fs.readFileSync(path.join(root,'public/apt-richgo15.js'),'utf8');
+const build=fs.readFileSync(path.join(root,'scripts/build-apt-assets.mjs'),'utf8');
 const html=fs.readFileSync(path.join(root,'public/apt-map.html'),'utf8');
 assert.ok(html.includes("c===15?'apt-richgo15.js'"));
-const source=fs.readFileSync(path.join(root,'public/apt-richgo15.js'),'utf8');
-for(const cap of [6,10,15,20,25,30]){
- const far=Object.fromEntries(changes.map(r=>[key(r),[r.map_far?Number(r.map_far):null,r.map_far_source]]));
- const w={CAPT:cap,FARD:far,PICKS:[{n:'힐스테이트신촌',area:'서울 서대문구 북아현동',year:2023}]};
- const context={window:w};vm.createContext(context);vm.runInContext(source,context);
- assert.equal(w.PICKS[0].year,cap===15?2020:2023);
- for(const r of changes)assert.equal(far[key(r)][0],cap===15?Number(r.richgo_far):(r.map_far?Number(r.map_far):null));
-}
-const build=fs.readFileSync(path.join(root,'scripts/build-apt-assets.mjs'),'utf8');
 assert.ok(build.includes('applyRichgo15AtBuild(code,file,root)'));
 assert.ok(build.includes("if(cap===15&&(file==='apt-univ15.js'||file==='apt-farfix.js'))"));
 assert.ok(build.includes("file === 'apt-richgo15.js' ? []"));
 assert.ok(build.includes('packagedLoader'));
-console.log('Richgo 10-15 top300 OK: 300 records, 22 corrected FAR and 1 year; cap15 isolation');
+const keyList=new Set([...Object.keys(spec.far||{}),...Object.keys(spec.year||{}),...Object.keys(spec.units||{})]);
+for(const cap of [6,10,15,20,25,30,35]){
+ const FAR=Object.fromEntries(Object.keys(spec.far||{}).map(k=>{const r=byKey.get(k);return [k,[r.map_far?Number(r.map_far):null,r.map_far_source||'']]}));
+ const PICKS=[...keyList].map(k=>{const r=byKey.get(k);return {n:r.name,area:r.area,year:Number(r.map_year),units:Number(r.map_units)}});
+ const W={CAPT:cap,FARD:FAR,PICKS};const ctx={window:W};vm.createContext(ctx);vm.runInContext(source,ctx);
+ for(const [k,value] of Object.entries(spec.far||{})){
+  const r=byKey.get(k);
+  assert.equal(FAR[k][0],cap===15?Number(value):(r.map_far?Number(r.map_far):null),'FAR cap '+cap+' '+k);
+ }
+ for(const d of PICKS){
+  const k=d.n+'|'+d.area,r=byKey.get(k);
+  assert.equal(d.year,cap===15&&(k in spec.year)?Number(spec.year[k]):Number(r.map_year),'year cap '+cap+' '+k);
+  assert.equal(d.units,cap===15&&(k in spec.units)?Number(spec.units[k]):Number(r.map_units),'units cap '+cap+' '+k);
+ }
+}
+console.log('Richgo top300 audit ✅',JSON.stringify({rows:records.length,far:Object.keys(spec.far||{}).length,year:Object.keys(spec.year||{}).length,units:Object.keys(spec.units||{}).length,verified:records.filter(r=>['직접확인','기존직접대조','기존검증확인'].includes(r.verification)).length}));
