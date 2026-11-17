@@ -47,8 +47,8 @@ const lookups=ranks.map(d=>{const reg=region(d.area).join('|');let candidates=[.
 /* Individually discovered Richgo identifiers for apartment-map aliases not indexed by full map name.
  * Each still MUST pass separate webpage, same neighborhood and build-year validation.
  */
-const manualIds={"16":"a4zNlwE","27":"a3CqoEd","30":"a3KxKuI","36":"a2ghzUo","48":"a0nZRUj","56":"a9nssjt","68":"a9jHYxD","73":"a5lsJGI","83":"a3KxKuI","92":"a0iVqsU","103":"a3RBRXn","107":"a4CROLe","109":"a4hvXCP","119":"a9jZylw","120":"a7vARIh","121":"a2hzIsC","132":"a1uHXaN","133":"a5wAWOZ","137":"a3oKyNG","141":"a2hzIsC","142":"a8ROoNo","144":"a0QzMTf","149":"a3XWhbx","153":"a6JwGAa","165":"a7eSaZa","167":"a6FDFaH","168":"a3cyHeE","173":"a3lBAzz","177":"a0wAXPz","178":"a0HyWdm","182":"a5rFSzF","185":"a1WeUGw","189":"a5kgMtS","190":"a2uaIaS","193":"a6BlShb","200":"a0fSWss","205":"a2pHsiG","217":"a0SrMTu","227":"a5fodBX","231":"a8TAcGb","232":"a0fEnfa","238":"a2IGSDI","248":"a4fMvVE","255":"a8TAcGb","259":"a1NxsGO","265":"a4suMIg","268":"a6ttktz","279":"a4jUpCZ","280":"a8HtIMC"};
-const mergedSourceRanks=new Set([30,83]); // Richgo combines both Oksoo Park Hills blocks as one K-apt complex.
+const manualIds={"16":"a4zNlwE","27":"a3CqoEd","30":"a3KxKuI","36":"a2ghzUo","48":"a0nZRUj","56":"a9nssjt","68":"a9jHYxD","73":"a5lsJGI","83":"a3KxKuI","92":"a0iVqsU","103":"a3RBRXn","107":"a4CROLe","109":"a4hvXCP","119":"a9jZylw","120":"a7vARIh","121":"a2hzIsC","132":"a1uHXaN","133":"a5wAWOZ","137":"a3oKyNG","141":"a2hzIsC","142":"a8ROoNo","144":"a0QzMTf","149":"a3XWhbx","153":"a6JwGAa","165":"a7eSaZa","167":"a6FDFaH","168":"a3cyHeE","173":"a3lBAzz","177":"a0wAXPz","178":"a0HyWdm","182":"a5rFSzF","185":"a1WeUGw","189":"a5kgMtS","190":"a2uaIaS","193":"a6BlShb","200":"a0fSWss","205":"a2pHsiG","217":"a0SrMTu","227":"a5fodBX","231":"a8TAcGb","232":"a0fEnfa","238":"a3XaqcU","248":"a4fMvVE","255":"a8TAcGb","259":"a1NxsGO","260":"a4YlOBx","265":"a4suMIg","268":"a6ttktz","279":"a4jUpCZ","280":"a8HtIMC"};
+const mergedSourceRanks=new Set([30,83,265]); // Richgo combines both Oksoo Park Hills blocks as one K-apt complex.
 for(const d of lookups){const id=manualIds[d.rank];if(!id)continue;
  d.candidates=[{id,name:d.name,sim:1,manual:true},...d.candidates.filter(x=>x.id!==id)].slice(0,6);
 }
@@ -59,7 +59,20 @@ const factsResult=await pool(idList,5,async id=>{
  const url='https://m.richgo.ai/realty/danji/'+id;const r=await get(url);
  if(r.status!==200)return {id,url,status:r.status,error:r.error||'HTTP '+r.status};
  const tag=r.html.match(/<h2>([^<]*)(?:<!-- -->)? 단지 정보<\/h2><dl class="facts">([\s\S]*?)<\/dl>/);
- if(!tag)return {id,url,status:r.status,error:'facts section missing'};
+ if(!tag){
+  // Older Richgo detail pages use a prose SEO intro rather than the current facts <dl>.
+  // Parse only the visible SEO introduction, never infer from nearby apartment cards.
+  const title=esc(r.html.match(/<title>([^<]*)<\/title>/)?.[1]);
+  const description=esc(r.html.match(/<meta name="description" content="([^"]*)"/)?.[1]);
+  const summary=description+' '+esc(r.html.match(/<meta property="og:description" content="([^"]*)"/)?.[1]);
+  const units=Number((summary.match(/([\d,]+)세대/)?.[1]||'').replace(/,/g,''))||null;
+  const year=Number(summary.match(/(19\d{2}|20\d{2})\.\d{1,2}\s*입주/)?.[1])||null;
+  const far=Number(summary.match(/용적률\s*(\d+(?:\.\d+)?)%/)?.[1])||null;
+  const coverage=summary.match(/건폐율\s*(\d+(?:\.\d+)?)%/)?.[1]||'';
+  const name=title.match(/'?(?:[^' ]+동)\s+(.+?)'?\s*(?:아파트|실거래가)/)?.[1]||title.split(' 아파트')[0].split(' ').slice(1).join(' ');
+  if(!units||!year||!far)return {id,url,status:r.status,error:'legacy facts missing: '+summary.slice(0,500),title};
+  return {id,url,status:r.status,name:name.replace(/^'|'$/g,''),title,year,units,far,coverage:coverage?coverage+'%':'',floors:'',parking:'',heating:'',builder:'',sizes:''};
+ }
  const found={};for(const m of tag[2].matchAll(/<dt>([^<]+)<\/dt><dd>([\s\S]*?)<\/dd>/g))found[esc(m[1])]=esc(m[2]);
  const title=esc(r.html.match(/<title>([\s\S]*?)<\/title>/)?.[1]);
  return {id,url,status:r.status,name:esc(tag[1]),title,year:+(found['입주']||'').slice(0,4)||null,units:Number((found['세대수']||'').replace(/[^0-9]/g,''))||null,
