@@ -186,6 +186,70 @@ with ThreadPoolExecutor(max_workers=5) as ex:
                 idmap[t['seq']]=(found,t['name']);search_hits+=1
         except Exception:pass
 print('SEARCH_INDEX_MATCH',search_hits,'TOTAL_IDS',len(idmap),flush=True)
+# A second identification pass uses Richgo's documented read-only MCP search
+# exclusively for these *named* unresolved candidates, not nationwide discovery.
+# Observe the published 120 calls / 10 min IP limit; stop immediately on 429.
+def mcp_id_search(t):
+    dong=t['area'].split()[-1]
+    query=(dong+' '+t['name'])[:40]
+    params={'jsonrpc':'2.0','id':int(t['seq']),'method':'tools/call',
+            'params':{'name':'search_apartments','arguments':{'query':query}}}
+    try:
+        with RATE_LOCK:
+            gap=time.monotonic()-LAST_CALL[0]
+            if gap<0.8:time.sleep(0.8-gap)
+            LAST_CALL[0]=time.monotonic()
+        response=requests.post('https://m.richgo.ai/api/mcp',json=params,
+            headers={'Content-Type':'application/json','Accept':'application/json, text/event-stream'},
+            timeout=24)
+        if response.status_code==429:return 'rate',None
+        if response.status_code!=200:return 'http'+str(response.status_code),None
+        if response.text.startswith('data:'):
+            payloads=[line[5:].strip() for line in response.text.splitlines() if line.startswith('data:')]
+            obj=json.loads(payloads[-1]) if payloads else {}
+        else:obj=response.json()
+        result=obj.get('result') or {}
+        data=result.get('structuredContent') or {}
+        if not data and result.get('content'):
+            txt=next((r.get('text','') for r in result['content'] if r.get('type')=='text'),'')
+            try:data=json.loads(txt)
+            except ValueError:data={}
+        results=data.get('results') or []
+        matches=[]
+        for e in results:
+            n=shortnorm(e.get('name',''))
+            target=shortnorm(t['name'])
+            ratio=SequenceMatcher(None,target,n).ratio()
+            address=str(e.get('address') or '')
+            if dong not in address:continue
+            if target==n:score=100
+            elif len(target)>5 and (target in n or n in target) and ratio>.80:score=90
+            elif ratio>.88:score=80
+            else:continue
+            uid=e.get('danji_id')
+            if uid and re.fullmatch(r'[A-Za-z0-9]{7}',uid):matches.append((score,uid,e.get('name','')))
+        if not matches:return 'unmatched',None
+        matches.sort(reverse=True)
+        best=[z for z in matches if z[0]==matches[0][0]]
+        if len(set(z[1] for z in best))!=1:return 'ambiguous',None
+        return 'ok',(best[0][1],best[0][2])
+    except (requests.RequestException,ValueError,TypeError):return 'error',None
+
+mcp_found=0;mcp_calls=0;mcp_fail=Counter()
+for t in targets:
+    if t['seq'] in idmap:continue
+    if mcp_calls>=110:break
+    mcp_calls+=1
+    status,data=mcp_id_search(t)
+    if status=='rate':
+        mcp_fail['rate-limit']+=1
+        break
+    if data:
+        idmap[t['seq']]=data;mcp_found+=1
+    else:mcp_fail[status]+=1
+print('MCP_NAMED_MATCH',mcp_found,'calls',mcp_calls,'total_ids',len(idmap),
+      'unmatched_reasons',dict(mcp_fail),flush=True)
+
 
 def grab_tokens(soup):
     return [x.strip() for x in soup.stripped_strings if str(x).strip()]
@@ -285,7 +349,7 @@ with open(OUT,'w',encoding='utf-8-sig',newline='') as f:
           price_basis='맵 거래중위 / 리치고 추정시세 — 수치 차이를 오류로 단정하지 않음',
           richgo_parking=r.get('richgo_parking'),richgo_floors=r.get('richgo_floors'),richgo_heating=r.get('richgo_heating'),richgo_builder=r.get('richgo_builder'),richgo_coverage=r.get('richgo_coverage'),status=r['status'],source_url=r.get('url')))
 summary={'targets':len(targets),'source_kind':source_kind,'source_visible':base.get('total'),
-    'hub_match':len(idmap),'statuses':dict(counts),'direct_comparison':counts['직접대조'],
+    'hub_match':len(idmap),'mcp_named_lookup_count':mcp_calls,'mcp_named_hits':mcp_found,'statuses':dict(counts),'direct_comparison':counts['직접대조'],
     'file':OUT}
 with open('docs/richgo-25to30-direct-summary-20261118.json','w',encoding='utf-8') as f:
     json.dump(summary,f,ensure_ascii=False,indent=2)
