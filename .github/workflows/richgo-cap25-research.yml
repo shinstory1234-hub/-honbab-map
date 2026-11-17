@@ -1,0 +1,28 @@
+name: Richgo cap25 source verification
+on:
+  push:
+    branches:
+      - audit/richgo-20to25-top300-20261118
+    paths:
+      - '.github/workflows/richgo-cap25-research.yml'
+      - 'scripts/richgo-cap25-batch.mjs'
+      - 'docs/richgo-20to25-top300-20261114-snapshot.csv'
+permissions:
+  contents: write
+jobs:
+  research:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
+        with:
+          node-version: '22'
+      - name: Audit Richgo from frozen 300 ranked apartment candidates
+        run: node scripts/richgo-cap25-batch.mjs
+      - name: Save audit source evidence
+        run: |
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git config user.name "github-actions[bot]"
+          git add docs/richgo-cap25-lookup-diagnostics.json || true
+          if ! git diff --cached --quiet; then git commit -m "audit: collect Richgo lookup diagnostics"; git push; fi
