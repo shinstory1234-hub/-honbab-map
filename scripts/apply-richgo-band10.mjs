@@ -72,10 +72,25 @@ export function appendRichgoCap10FinalOverrides(code,root){
     if(!Number.isInteger(v)||v<1||v>=46656)throw new Error('Non-packable cap10 verified value: '+v);
     return v.toString(36).padStart(3,'0');
   };
-  const ids=fixes.map(x=>hash(x.name+'|'+x.area));
+  // Raw cap10 tuple patch is applied before the other scripts load.
+  // The runtime override is needed only for independently maintained PLAT records,
+  // scripts that overwrite FARD later, and updated completion year / unit counts.
+  // This avoids shipping duplicate values for 1110 unaffected apartments.
+  const platText=fs.readFileSync(path.join(root,'public/apt-plat.js'),'utf8');
+  const platMatch=platText.match(/window\\.PLAT=(\\{[^\\n]*?\\});/);
+  if(!platMatch)throw new Error('Cannot inspect PLAT source');
+  const plat=JSON.parse(platMatch[1]);
+  const farfixText=fs.readFileSync(path.join(root,'public/apt-farfix.js'),'utf8');
+  const s4Text=fs.readFileSync(path.join(root,'public/apt-s4.js'),'utf8');
+  const override=fixes.filter(x=>{
+    const k=x.name+'|'+x.area;
+    return Object.hasOwn(plat,k)||farfixText.includes(JSON.stringify(k)+':')||
+      s4Text.includes("'"+k+"':")||x.year!=null||x.units!=null;
+  });
+  const ids=override.map(x=>hash(x.name+'|'+x.area));
   if(new Set(ids).size!==ids.length)throw new Error('Cap10 source hash collision');
-  const packed=fixes.map((x,i)=>ids[i]+slot(x.far)+slot(x.year)+slot(x.units)).join('');
-  if(packed.length!==fixes.length*16)throw new Error('Cap10 packed length mismatch');
+  const packed=override.map((x,i)=>ids[i]+slot(x.far)+slot(x.year)+slot(x.units)).join('');
+  if(packed.length!==override.length*16)throw new Error('Cap10 packed length mismatch');
   const post=[
     ';(function(W){',
     'if(W.CAPT!==10)return;',
@@ -88,7 +103,7 @@ export function appendRichgoCap10FinalOverrides(code,root){
     'if(year!=null)d.year=year;',
     'if(units!=null){d.units=units;const uf=(W.UNITFIX||{})[k];if(uf)uf[0]=units;const um=(W.UNITFIX_M3||{})[k];if(um)um[0]=units;}',
     '}',
-    'W.RICHGO10_FINAL={checked:P.length/16};',
+    'W.RICHGO10_FINAL={checked:'+fixes.length+',overlaid:P.length/16};',
     '})(window);'
   ].join('\n');
   return code+'\n'+post;
