@@ -47,6 +47,7 @@ const filters=['','20억이상','10억-20억','30평대','40평대이상','대�
 const tasks=[...city.entries()].flatMap(([id,loc])=>filters.map(segment=>({id,loc,segment})));
 console.log('DISTRICTS',city.size,'HUB_REQUESTS',tasks.length);
 const hub=new Map();
+async function main(){
 await parallel(tasks,5,async x=>{
  const u='https://m.richgo.ai/realty/apt-hub/'+encodeURIComponent(x.loc.sd)+'/'+encodeURIComponent(x.loc.sgg)+(x.segment?'/'+encodeURIComponent(x.segment):'');
  const html=await get(u);if(!html)return;
@@ -136,3 +137,6 @@ function csv(v){let h=['seq','name','area','cohort','sourceFile','map_far','rich
 fs.writeFileSync(root+'/docs/richgo30-full-audit-'+date+'.csv',csv(rows));
 console.log('AUDIT_FINAL',JSON.stringify(full.metadata));
 if(counter.approved<targets.length)console.log('UNRESOLVED',JSON.stringify(rows.filter(r=>r.status!=='direct_verified').map(r=>({seq:r.seq,name:r.name,area:r.area,status:r.status}))));
+
+}
+main().catch(e=>{console.error('AUDIT_ERROR',e.stack||String(e));process.exitCode=1});
