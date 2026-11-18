@@ -364,11 +364,10 @@ aside{order:-1;width:408px;flex:none;border-right:1px solid var(--border);backgr
 })();
 (function(){
 var e=document.getElementById('aptVisitors'),v=Math.random().toString(36).slice(2,12);
-try{v=localStorage.aptVid||(localStorage.aptVid=v);var n=+localStorage.aptVC600;if(n>=600)e.textContent='방문 오늘 집계 중 · 누적 '+n}catch(x){}
+try{v=localStorage.aptVid||(localStorage.aptVid=v)}catch(x){}
 if(typeof fetch==='undefined')return;
 fetch('/api/apt-visit',{method:'POST',body:JSON.stringify({v})}).then(r=>r.json()).then(j=>{
-if(j.t==null)return;e.textContent='방문 오늘 '+j.t+' · 누적 '+j.a;
-try{localStorage.aptVC600=j.a}catch(x){}
+if(j.t!=null)e.textContent='방문 오늘 '+j.t+' · 누적 '+j.a;
 }).catch(()=>{});
 })();
 </script>
