@@ -1765,7 +1765,8 @@ function renderDetail(i){
     // 본문 자동 정리 과정에서 lede가 생략된 단지는 앵커를 재생성한 뒤 기능 카드를 붙인다.
     const ensureLede=()=>{if(!b.querySelector('.lede')){const anchor=document.createElement('div');anchor.className='lede';anchor.hidden=true;(b.querySelector('.identity')||b.querySelector('.phead'))?.after(anchor);}};
     ensureLede();window.AP1.detail(d,b);aptLayout(b);
-    loadRichgo(()=>{if(state.sel===i&&b.isConnected)window.APT_RICHGO.attach(d,b,i);});
+    // 거래 연결용 키를 만드는 스크립트가 준비된 후 상세 분석 메뉴를 노출한다.
+    loadRichgo(()=>loadDx(()=>{if(state.sel===i&&b.isConnected)window.APT_RICHGO.attach(d,b,i);}));
     // 추가 분석은 거래 단지 식별함수(window.aptLkey)가 준비된 뒤 렌더링해야 한다.
     loadExtra(()=>loadDx(()=>{if(state.sel===i&&b.isConnected){ensureLede();window.AP1X.detail(d,b);aptLayout(b);}}));
   }});
