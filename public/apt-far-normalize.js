@@ -77,3 +77,13 @@
  W.APT_FAR_RICHGO_PREFERRED_N=n;
 })(window);
 
+
+
+// 리치고 a2FPcPB · 입정동 2단지 329세대. 다른 가격대의 중복 원본이
+// 먼저 검수한 용적률을 덮어쓰므로 모든 원본 로딩 후 확정값을 반영한다.
+(function(W){
+ const k='힐스테이트세운센트럴2단지|서울 중구 입정동',f=W.FARD?.[k];
+ if(W.CAPT<=6||!f)return;
+ f[0]=938;f[1]='리치고';
+ (W.APT_CXP_MATCH||={})[k]=[938,1];
+})(window);

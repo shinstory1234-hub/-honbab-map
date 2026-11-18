@@ -15,8 +15,6 @@ css.textContent=[
 '.ru-sums h4{margin:0 0 5px;font-size:13px;color:var(--text-secondary)}',
 '.ru-sums ul{padding-left:18px;margin:0}.ru-sums li{font-size:12.5px;line-height:1.65;margin:3px 0;word-break:keep-all}',
 '.ru-tabs{display:flex;gap:6px;overflow-x:auto;scrollbar-width:thin;padding:1px 0 11px}',
-'.ru-entry{display:flex;justify-content:space-between;align-items:center;gap:12px;width:100%;padding:14px;margin-top:12px;text-align:left;border:1px solid var(--primary);background:var(--primary-soft-bg);border-radius:8px}',
-'.ru-entry strong{display:block;font-size:15px}.ru-entry small{display:block;font-size:12px;margin-top:4px;color:var(--text-secondary)}',
 '.invest-essay p{font-size:13px;line-height:1.65}.invest .dxmore{display:block;width:100%;min-height:44px;margin:14px 0 0;padding:11px 12px;border:1px solid var(--border);border-radius:6px;background:var(--bg-subtle);color:var(--primary-soft-fg);font-size:13px;font-weight:750;line-height:1.5;text-align:center;cursor:pointer}.invest .dxmore:hover{background:var(--primary-soft-bg)}',
 '.ru-tabs button{flex:none;padding:8px 12px;border:1px solid var(--border);border-radius:5px;font-size:12.5px;font-weight:700;background:var(--bg)}',
 '.ru-tabs button[aria-pressed=true]{background:var(--primary-soft-bg);border-color:var(--primary);color:var(--primary-soft-fg)}',
@@ -101,7 +99,7 @@ function ensureDx(){
   return new Promise(function(ok){
     var settled=false;
     function done(){if(settled)return;settled=true;ok(typeof window.aptLkey==='function');}
-    function fallback(){var s=document.createElement('script');s.src='/apt-dx.js?v=11';s.onload=done;s.onerror=done;document.head.appendChild(s);}
+    function fallback(){var s=document.createElement('script');s.src='/apt-dx.js?v=12';s.onload=done;s.onerror=done;document.head.appendChild(s);}
     if(typeof loadDx==='function'){try{loadDx(done);}catch(e){fallback();}}else fallback();
     setTimeout(done,10000);
   });
@@ -343,8 +341,7 @@ function rentView(d,box){
       var target=d.py*3.3058*.76,rows=(v.rows||[]).filter(function(x){return n(x.area)!=null&&Math.abs(x.area-target)<=5;});
       var lease=rows.filter(function(x){return x.kind==='전세';}),monthly=rows.filter(function(x){return x.kind==='월세';});
       var prices=lease.map(function(x){return n(x.deposit);}).filter(function(x){return x>0;});
-      var sorted=prices.slice().sort(function(a,b){return a-b;});
-      var med=sorted.length?sorted[Math.floor(sorted.length/2)]:null;
+      var med=median(prices);
       var sale=n(d.p),ratio=med>0&&sale>0?med/sale*100:null;
       out.innerHTML='<ul class="ru-list">'+chip('최근 6개월 해당 평형 전세',fmt(lease.length)+'건','전세보증금 중위가격은 거래 3건 이상일 때 표시')
         +chip('전세 실거래 중위가격',lease.length>=3?money(med):'표본 부족','보증금 단위: 만원')
@@ -376,7 +373,7 @@ function removeOldSummary(b){
 function attach(d,b,i){
   if(!b||!alive(b,d))return;
   if(b.dataset.ruDetail===key(d)+'|'+d.py&&getRoot(b)){removeOldSummary(b);return;}
-  b.querySelectorAll('.ru-summary,.ru-root').forEach(function(x){x.remove();});
+  b.querySelectorAll('.ru-summary,.ru-root,.ru-quick').forEach(function(x){x.remove();});
   removeOldSummary(b);
   b.dataset.ruDetail=key(d)+'|'+d.py;
   var summary=document.createElement('div');summary.innerHTML=prosCons(d);
@@ -387,19 +384,26 @@ function attach(d,b,i){
     +views.map(function(v){return '<button type="button" data-ru-tab="'+v[0]+'" aria-pressed="false">'+v[1]+'</button>';}).join('')
     +'</div><div class="ru-content" data-ru-content aria-live="polite" hidden></div>';
   var summaryEl=b.querySelector('.ru-summary');if(summaryEl)summaryEl.after(root);else b.appendChild(root);
-  // 상세 분석은 지연 로딩되므로 단지 상단에서 기능 진입점을 제공한다.
-  if(id){
-    var jump=document.createElement('button');jump.type='button';jump.className='ru-entry';
-    jump.innerHTML='<span><strong>상세 분석 보기</strong><small>실거래 · 전월세 · 거래 유동성 · 학군 등</small></span><span aria-hidden="true">›</span>';
-    jump.onclick=function(){root.scrollIntoView({behavior:'smooth',block:'start'});};
-    id.appendChild(jump);
-  }
   var panel=root.querySelector('[data-ru-content]'),active=null;
-  function show(v){if(active===v[0]){active=null;panel.hidden=true;panel.innerHTML='';root.querySelectorAll('[data-ru-tab]').forEach(function(x){x.setAttribute('aria-pressed','false');});return;}
+  function show(v,keepOpen){if(active===v[0]&&keepOpen)return;if(active===v[0]){active=null;panel.hidden=true;panel.innerHTML='';root.querySelectorAll('[data-ru-tab]').forEach(function(x){x.setAttribute('aria-pressed','false');});return;}
     active=v[0];panel.hidden=false;root.querySelectorAll('[data-ru-tab]').forEach(function(x){x.setAttribute('aria-pressed',String(x.dataset.ruTab===v[0]));});panel.innerHTML='';
     if(alive(b,d))v[2](d,panel);
   }
   root.querySelectorAll('[data-ru-tab]').forEach(function(btn){btn.onclick=function(){var v=views.find(function(x){return x[0]===btn.dataset.ruTab;});if(v)show(v);};});
+  if(id){
+    var quick=document.createElement('div');quick.className='ru-flex ru-quick';quick.setAttribute('role','group');quick.setAttribute('aria-label','상세 바로가기');
+    [['trend','실거래'],['rent','전월세'],['living','입지']].forEach(function([key,label]){
+      var btn=document.createElement('button');btn.type='button';btn.textContent=label;
+      btn.onclick=function(){
+        var chart=key==='trend'&&b.querySelector('.dxbox');
+        if(chart){chart.scrollIntoView({block:'start'});return;}
+        show(views.find(function(v){return v[0]===key;}),true);
+        root.scrollIntoView({block:'start'});
+      };
+      quick.appendChild(btn);
+    });
+    id.appendChild(quick);
+  }
   if(typeof aptLayout==='function')aptLayout(b);
 }
 window.APT_RICHGO={attach:attach,version:'2026-11-18'};

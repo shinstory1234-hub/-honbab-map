@@ -368,7 +368,7 @@ function bindSearch(){
   const q=input.value.trim();
   if(!q||document.activeElement!==input){pop.hidden=true;return;}
   const matches=searchIndex(q);
-  pop.innerHTML=matches.map(d=>'<button type="button" data-s2match="'+D.indexOf(d)+'" role="option"><b>'+esc(name(d))+'</b><small>'+esc(d.area)+' · 추천 '+d.rank+'위'+(d.cur?.n?' · 인근역 '+esc(d.cur.n):'')+'</small></button>').join('');
+  pop.innerHTML=matches.map(d=>'<button type="button" data-s2match="'+D.indexOf(d)+'" role="option"><b>'+esc(name(d))+'</b><small>'+esc(d.area)+(Number.isInteger(d.rank)?' · 추천 '+d.rank+'위':'')+(d.cur?.n?' · 인근역 '+esc(d.cur.n):'')+'</small></button>').join('');
   pop.hidden=!matches.length;
  };
  input.addEventListener('input',()=>{clearTimeout(timer);timer=setTimeout(paint,65);});
@@ -459,6 +459,29 @@ async function race(){
  }catch(e){if(dest.isConnected)dest.innerHTML='<p>실거래 자료를 확인하지 못했습니다.</p>';}
 }
 function reset(){filter={rentMin:0,gapMax:0,ratioMin:0,ratioMax:0,tradeMin:0,days:0};indicator='base';resetMeasure();applyPins();}
-window.APT2={install,open,passes,inUse,remember,mapReady,applyPins,reset,importShare,searchIndex};
+async function searchAll(button, query){
+ const out=button.parentElement.querySelector('#searchAllResults');
+ button.disabled=true;
+ out.textContent='다른 가격대를 확인하는 중…';
+ try{
+  const p=new URLSearchParams({q:query,cap:String(CAPT)});
+  const response=await fetch('/api/apt-first?'+p);
+  if(!response.ok)throw Error('search unavailable');
+  const {results,partial}=await response.json();
+  if(!out.isConnected)return;
+  if(!results.length)out.textContent=partial?'일부 가격대를 확인하지 못했습니다. 잠시 후 다시 검색하세요.':'다른 가격대에도 일치하는 단지가 없습니다.';
+  else{
+   const labels={6:'6억 이하',10:'6~10억',15:'10~15억',20:'15~20억',25:'20~25억',30:'25~30억',35:'30억 이상'};
+   out.innerHTML='<ul>'+results.map(([cap,name,area,py,price,key])=>{
+    const url=new URL('/',location.origin);
+    url.searchParams.set('cap',String(cap));
+    url.hash=encodeURIComponent(key+'|'+py);
+    return '<li><a href="'+esc(url.pathname+url.search+url.hash)+'">'+esc(name)+' '+py+'평 · '+esc(eok(price))+' · '+labels[cap]+'</a><br><small>'+esc(area)+'</small></li>';
+   }).join('')+'</ul>'+(partial?'<small>일부 가격대는 조회되지 않았습니다.</small>':'');
+  }
+ }catch(e){out.textContent='전체 가격대 검색을 불러오지 못했습니다. 다시 시도하세요.';}
+ finally{button.disabled=false;}
+}
+window.APT2={searchAll,install,open,passes,inUse,remember,mapReady,applyPins,reset,importShare,searchIndex};
 install();
 })();

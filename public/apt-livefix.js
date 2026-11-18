@@ -14,7 +14,9 @@
     '상계주공14|서울 노원구 상계동':'11350|상계동|상계주공14(고층)',
     '상계주공10|서울 노원구 상계동':'11350|상계동|상계주공10(고층)',
     '상계주공2|서울 노원구 상계동':'11350|상계동|상계주공2(고층)',
-    '주공8|광명시 하안동':'41210|하안동|주공8(고층)'
+    '주공8|광명시 하안동':'41210|하안동|주공8(고층)',
+    '신별내퇴계원어울림|남양주시 퇴계원읍':'41360|퇴계원읍 퇴계원리|신별내퇴계원어울림',
+    '한일베라체|화성 만세구 향남읍':'41591|향남읍 행정리|한일베라체'
   };
   window.aptSourceKey=function(d){
     var k=d.n+'|'+d.area, fd=(window.FARD||{})[k], sgg=fd&&fd[6];
@@ -49,7 +51,7 @@
        6억 이하와 25억 이상은 기존 값을 보존한다. */
     if(window.CAPT>6&&window.CAPT<30){
       types.forEach(function(t){
-        if(!(t.lastSale>t.p&&t.p>0&&t.n>=2))return;
+        if(!(t.lastSale>t.p&&t.p>60000&&t.n>=2))return;
         var millis=Date.parse(String(t.last||'')+'T00:00:00Z');
         if(!Number.isFinite(millis))return;
         var age=Math.max(0,(Date.now()-millis)/86400000);
@@ -73,7 +75,7 @@
     if(window.CAPT>6&&window.CAPT<30){
       var ordered=types.slice().sort(function(a,b){return a.py-b.py;});
       ordered.forEach(function(t){
-        if(!(t.py>=18&&t.n>=2&&t.p>0)) return;
+        if(!(t.py>=18&&t.n>=2&&t.p>60000)) return;
         var smaller=ordered.filter(function(u){
           return u.py<t.py&&t.py-u.py<=6&&u.n>=5&&u.p>0;
         });

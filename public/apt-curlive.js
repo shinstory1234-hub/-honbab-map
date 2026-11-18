@@ -31,7 +31,13 @@
     var src=Object.prototype.hasOwnProperty.call(aliases,k)?aliases[k]:(sgg?sgg+'|'+d.area.split(' ').pop()+'|'+d.n:null);
     var rows=src&&L[src];
     if(!rows||!rows.length) continue;
-    CUR[k]=rows.map(function(r){ return [r[0], r[1], r[2], r[3], dot(r[4])]; });
+    // 30평 3억의 매매 계약과 표본을 상세 원본에서 확인하지 못했다.
+    // 이 가격의 재노출만 막고 이후 새 시세와 나머지 평형은 정상 반영한다.
+    const usable=rows.filter(r=>!(src==='41150|용현동|힐스테이트탑석'&&r[0]===30&&r[1]===30000));
+    if(usable.length!==rows.length)(window.LIVE_PRICE_REVIEW=window.LIVE_PRICE_REVIEW||[]).push({
+      name:d.n,area:d.area,py:30,reason:'목록 시세와 상세 매매 기록이 달라 검증을 보류했습니다.'
+    });
+    CUR[k]=usable.map(function(r){ return [r[0], r[1], r[2], r[3], dot(r[4])]; });
     if(d.u) LU[k]=1;
     hit++;
   }

@@ -1,0 +1,7 @@
+{
+  "git": {
+    "deploymentEnabled": {
+      "fix/aptmap-audit-20261119": false
+    }
+  }
+}

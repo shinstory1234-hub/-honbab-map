@@ -12,7 +12,9 @@
     '주공8|광명시 하안동':'41210|하안동|주공8(고층)'
   };
   function lkey(d){
-    var k=d.n+'|'+d.area; if(ALIAS[k]) return ALIAS[k];
+    var k=d.n+'|'+d.area;
+    if(d.liveKey)return d.liveKey;
+    if(ALIAS[k]) return ALIAS[k];
     var f=(window.FARD||{})[k], s=f&&f[6];
     return s?s+'|'+String(d.area).split(' ').pop()+'|'+d.n:null;
   }
@@ -59,9 +61,13 @@
   function pct(x){ return (x>=0?'+':'')+(x*100).toFixed(1)+'%'; }
   var ab=function(area){ return Math.round(area/5)*5; };
 
+  function listedAb(d,j){
+    var row=(j.lc||[]).find(function(x){return x[1]===d.py;});
+    return row?row[0]:null;
+  }
   function pickAb(d,j){
-    var lc=j.lc||[], r=null;
-    lc.forEach(function(x){ if(x[1]===d.py) r=x; });
+    var lc=j.lc||[], exact=listedAb(d,j), r=null;
+    if(exact!=null)return exact;
     if(!r&&lc.length) r=lc.slice().sort(function(a,b){return Math.abs(a[1]-d.py)-Math.abs(b[1]-d.py);})[0];
     if(r) return r[0];
     var c={}; (j.t||[]).forEach(function(t){ var b=ab(t[1]); c[b]=(c[b]||0)+1; });
@@ -157,7 +163,10 @@
       var y3=nd.filter(function(t){var m=tms(t[0]);return m>=now-456*864e5&&m<now-365*864e5;}).map(function(t){return t[3];});
       var m3=med(r3), my=med(y3), cur=m3!=null?m3:last[3];
       var pill=function(txt,v){ return '<span class="dxpill '+(v>=0?'up':'dn')+'">'+txt+' <b>'+(v>=0?'▲':'▼')+' '+Math.abs(v*100).toFixed(1)+'%</b></span>'; };
-      h+='<div class="dxhero"><div class="lbl">'+(m3!=null?(r3.length>=3?'최근 3개월 실거래 중위 · '+r3.length+'건':'최근 3개월 실거래 '+r3.length+'건'+(r3.length>1?' 중위':'')):'마지막 실거래 · '+ymd(last[0]))+(floorMode!=='all'||omitDirect?' · 필터 적용':'')+'</div>'
+      var ev=typeof priceEv==='function'&&priceEv(d);
+      var rankPrice=A===listedAb(d,j)&&d.p>0&&!d.opt?'<p class="dxnote">순위용 추정 시세 <strong>'+won(d.p)+'</strong>'
+        +(ev?' · 순위 자료 최근 3개월 '+ev.n3+'건 / 12개월 '+ev.n+'건':'')+' · 추정 시세와 아래 실거래 집계 기준은 다를 수 있습니다.</p>':'';
+      h+='<div class="dxhero">'+rankPrice+'<div class="lbl">'+(m3!=null?(r3.length>=3?'최근 3개월 실거래 중위 · '+r3.length+'건':'최근 3개월 실거래 '+r3.length+'건'+(r3.length>1?' 중위':'')):'마지막 실거래 · '+ymd(last[0]))+(floorMode!=='all'||omitDirect?' · 필터 적용':'')+'</div>'
         +'<div class="big tnum">'+won(cur)+'</div><div class="pills">'
         +(cur>=peak[3]?'<span class="dxpill up"><b>최고가와 동일</b></span>':pill('최고가 대비',cur/peak[3]-1))
         +(my!=null&&m3!=null?pill('1년 전 대비',m3/my-1):'')+'</div>'

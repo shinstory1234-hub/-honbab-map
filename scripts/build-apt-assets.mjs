@@ -184,7 +184,7 @@ export function buildAptAssets(root, output = path.join(root, 'public')) {
   const consentEnd = app.indexOf('const KAKAO_JS_KEY=');
   if (consentEnd < 0) throw new Error('Consent script boundary changed');
   const consent = app.slice(0, consentEnd).replace("u.pathname.split('/').pop()+u.search", "u.pathname+u.search");
-  const main = writeAsset(minifyKeep("if(window.__aptLoadFailed) throw new Error('Apartment data failed to load');\n"+app.slice(consentEnd), 'apt-map-app'), ['apt-map.html:application']);
+  const main = writeAsset(minifyKeep("if(window.__aptLoadFailed) throw new Error('Apartment data failed to load');\n"+app.slice(consentEnd), 'apt-map-app', true), ['apt-map.html:application']);
   const isolated = /^apt-(?:invest\d+|s4q\d*)\.js$/;
   const peak6 = peakLoForCap6(sourceDir);
   for (const cap of [6, 10, 15, 20, 25, 30, 35]) {
@@ -281,8 +281,8 @@ export function buildAptAssets(root, output = path.join(root, 'public')) {
    키·해시는 apt-s4.js peakLoRatio와 같은 식 → 6억 탭 결과 동일. 6억 초과 탭은 실시간 시세로 가격대를 다시 나눠(apt-livefix) 미리 자를 수 없어 그대로 */
 // 줄 단위 주석만 제거 — 코드 줄 안의 주석·문자열은 건드리지 않는다(안전 우선).
 // 줄이 '/*'로 시작하면 '*/'로 끝나는 줄까지, 줄이 '//'로 시작하면 그 줄만 지운다. 결과는 vm.Script로 문법 검사.
-export function minifyKeep(code, file) {
-  const r = terser.minify_sync({[file]: code}, {compress: false, mangle: false, format: {comments: false, ascii_only: false}});
+export function minifyKeep(code, file, mangleLocals = false) {
+  const r = terser.minify_sync({[file]: code}, {compress: false, mangle: mangleLocals, format: {comments: false, ascii_only: false}});
   if (!r || typeof r.code !== 'string') throw new Error('minify failed: ' + file);
   new vm.Script(r.code);
   return r.code;
