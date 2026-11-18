@@ -189,17 +189,43 @@
     if(more) more.onclick=function(){ n+=20; more.textContent='실거래 '+Math.max(0,list.length-n).toLocaleString()+'건 더보기'; box.querySelector('.dxt').innerHTML=tr(n); if(n>=list.length) more.remove(); };
   }
 
+  // 같은 실거래 원본을 상세 화면과 '실거래 차트' 메뉴에서 재사용한다.
+  window.APTDXChart=function(d,j,el){
+    if(!el)return;
+    var all=Array.isArray(j&&j.t)?j.t:[], A=pickAb(d,j||{}), rows=all.filter(function(t){return ab(t[1])===A;});
+    markOdd(rows);
+    if(!rows.length){el.innerHTML='<p class="ru-warning">이 단지의 해당 평형 과거 실거래 내역이 없습니다. 자료 누락 가능성도 확인해야 합니다.</p>';return;}
+    el.innerHTML='<div class="dxseg dxp" role="group" aria-label="실거래 차트 기간"><button type="button" data-p="3" class="on" aria-pressed="true">3년</button><button type="button" data-p="5" aria-pressed="false">5년</button><button type="button" data-p="all" aria-pressed="false">전체</button></div><div class="dxc">'+chart(rows,3)+'</div>';
+    el.querySelectorAll('.dxp button').forEach(function(btn){btn.onclick=function(){
+      el.querySelectorAll('.dxp button').forEach(function(x){x.classList.remove('on');x.setAttribute('aria-pressed','false');});
+      btn.classList.add('on');btn.setAttribute('aria-pressed','true');
+      el.querySelector('.dxc').innerHTML=chart(rows,btn.dataset.p==='all'?'all':Number(btn.dataset.p));
+    };});
+  };
   window.APTDX=function(d,body){
-    var k=lkey(d); if(!k||!body) return;
-    body.querySelectorAll('.dxbox').forEach(function(x){ x.remove(); });
-    var box=document.createElement('div'); box.className='dxbox';
-    box.innerHTML='<section class="sec" data-dx="1"><h3>실거래가</h3><p class="note">실거래 불러오는 중…</p></section>';
-    var anchor=null; body.querySelectorAll('section.sec > h3').forEach(function(h){ if(!anchor&&/^(시세 흐름|사면 드는 돈)/.test(h.textContent.trim())) anchor=h.parentNode; });
-    if(anchor) anchor.parentNode.insertBefore(box,anchor); else { var id=body.querySelector('.identity'); (id&&id.nextSibling)?id.parentNode.insertBefore(box,id.nextSibling):body.appendChild(box); }
-    var done=function(j){ if(box.isConnected){ drawDx(d,j,box);window.APT_DX_INFO=window.APT_DX_INFO||{};window.APT_DX_INFO[k]=j;if(window.AP1X)window.AP1X.onDx(d,j,body); if(window.aptLayout)aptLayout(body); } };
-    if(CACHE[k]) return done(CACHE[k]);
-    fetch('/api/apt-dx?v=2&k='+encodeURIComponent(k)).then(function(r){ if(!r.ok) throw 0; return r.json(); })
-      .then(function(j){ CACHE[k]=j; done(j); }).catch(function(){ if(box.isConnected) box.innerHTML=''; });
+    if(!body)return;
+    var k=lkey(d);
+    body.querySelectorAll('.dxbox').forEach(function(x){x.remove();});
+    var box=document.createElement('div');box.className='dxbox';
+    var loading=function(){box.innerHTML='<section class="sec" data-dx="1"><h3>실거래가 <small>과거 거래 및 가격 추이</small></h3><p class="note">실거래 차트 불러오는 중…</p></section>';};
+    var error=function(msg){if(!box.isConnected)return;
+      box.innerHTML='<section class="sec" data-dx="1"><h3>실거래가 <small>가격 추이</small></h3><p class="note">'+E(msg)+'</p><button type="button" class="dx-retry" style="margin-top:10px;padding:10px 15px;min-height:42px;border:1px solid var(--border);background:var(--bg-subtle);border-radius:6px;color:var(--primary-soft-fg);font-size:13px;font-weight:750">실거래 차트 다시 불러오기</button></section>';
+      var btn=box.querySelector('.dx-retry');if(btn)btn.onclick=function(){window.APTDX(d,body);};
+      if(window.aptLayout)aptLayout(body);
+    };
+    loading();
+    var anchor=null;body.querySelectorAll('section.sec > h3').forEach(function(h){if(!anchor&&/^(시세 흐름|사면 드는 돈)/.test(h.textContent.trim()))anchor=h.parentNode;});
+    if(anchor)anchor.parentNode.insertBefore(box,anchor);else{var id=body.querySelector('.identity');(id&&id.nextSibling)?id.parentNode.insertBefore(box,id.nextSibling):body.appendChild(box);}
+    if(!k){error('단지 식별정보를 찾지 못해 실거래 차트를 표시할 수 없습니다.');return;}
+    var done=function(j){if(!box.isConnected)return;
+      if(!j||!Array.isArray(j.t)){error('실거래 응답이 올바르지 않습니다.');return;}
+      try{drawDx(d,j,box);window.APT_DX_INFO=window.APT_DX_INFO||{};window.APT_DX_INFO[k]=j;if(window.AP1X)window.AP1X.onDx(d,j,body);if(window.aptLayout)aptLayout(body);}
+      catch(e){console.error('apt-dx chart render failed',e);error('실거래 자료를 받았지만 차트를 표시하지 못했습니다.');}
+    };
+    if(CACHE[k])return done(CACHE[k]);
+    fetch('/api/apt-dx?v=3&k='+encodeURIComponent(k)).then(function(r){if(!r.ok)throw Error('HTTP '+r.status);return r.json();})
+      .then(function(j){CACHE[k]=j;done(j);})
+      .catch(function(e){console.warn('apt-dx request failed',k,e);error('실거래 정보를 불러오지 못했습니다. 데이터가 없다는 뜻은 아닙니다.');});
   };
 
   window.APTRACE=function(){
