@@ -235,11 +235,15 @@ function fillNearbySchool(row,p,level,schoolName,meters){
 }
 function schoolView(d,box){
   var g=d.g||{},hak=typeof hakH==='function'?hakH(d):null,p=coord(d);
-  var elementary=n(g.sc),middle=n(hak&&hak[4]),middleName=hak&&hak[3];
+  var school=(window.APT_INV_SCHOOL||{})[key(d)];
+  var hasPublicMiddle=school&&school[0]&&n(school[1])!=null;
+  var elementary=n(g.sc),middle=hasPublicMiddle?n(school[1]):n(hak&&hak[4]);
+  var middleName=hasPublicMiddle?school[0]:hak&&hak[3];
+  var middleSource=hasPublicMiddle?'학교 위치 공공데이터 · ':'';
   if(elementary===99999)elementary=null;
   box.innerHTML='<h4>학군과 통학 정보</h4><ul class="ru-list">'
     +chip('인근 초등학교',g.scn||'미확인',elementary!=null?'단지 대표좌표 직선 '+fmt(Math.round(elementary))+'m · 실제 배정과 별개':'학교 거리 자료 없음')
-    +chip('주변 수학·영어 학원',hak&&n(hak[0])!=null?fmt(hak[0])+'곳':'확인 불가','반경 1km 교과학원 집계')+chip('인근 중학교',middleName||'미확인',middle!=null?'직선거리 '+fmt(middle)+'m · 배정 학교 아님':'거리 자료 없음')
+    +chip('주변 수학·영어 학원',hak&&n(hak[0])!=null?fmt(hak[0])+'곳':'확인 불가','반경 1km 교과학원 집계')+chip('인근 중학교',middleName||'미확인',middle!=null?middleSource+'직선 '+fmt(middle)+'m · 실제 배정과 별개':'거리 자료 없음')
     +'</ul><button type="button" class="ru-action" data-ru-school>공식 초등 통학구역 확인</button><div data-ru-school-result aria-live="polite"></div>'
     +'<p class="ru-note">교육 성과·중학교 진학률은 검증된 공식 자료 없이 등급으로 추정하지 않습니다.</p>';
   var rows=box.querySelector('.ru-list').children;
