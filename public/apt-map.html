@@ -331,7 +331,7 @@ aside{order:-1;width:408px;flex:none;border-right:1px solid var(--border);backgr
   <a class="wordmark" id="home" href="apt-map.html" aria-label="아파트맵 처음 화면으로"><svg class="mark" viewBox="0 0 200 200" aria-hidden="true"><rect width="200" height="200" rx="46" fill="#0066FF"/><path fill="#fff" d="M44 52h112v20H44zM72 72h20v60H72zM108 72h20v60h-20zM36 132h128v20H36z"/></svg>아파트맵</a>
   <nav class="captab" aria-label="가격대"><a href="apt-map.html" id="cap6">6억 이하</a><a href="apt-map.html?cap=10" id="cap10">6~10억</a><a href="apt-map.html?cap=15" id="cap15">10~15억</a><a href="apt-map.html?cap=20" id="cap20">15~20억</a><a href="apt-map.html?cap=25" id="cap25">20~25억</a><a href="apt-map.html?cap=30" id="cap30">25~30억</a><a href="apt-map.html?cap=35" id="cap35">30억 이상</a></nav>
   <span class="caption" id="asof">서울·경기·인천</span>
-  <span class="caption" id="aptVisitors">방문 집계 중 · 누적 600</span>
+  <span class="caption" id="aptVisitors">방문 오늘 집계 중 · 누적 600</span>
   <div class="search"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg><input id="q" placeholder="단지명, 동네로 찾기" autocomplete="off" enterkeyhint="search"><button type="button" id="clearSearch" aria-label="검색어 지우기" hidden>×</button></div>
 </header>
 <main>
@@ -362,6 +362,14 @@ aside{order:-1;width:408px;flex:none;border-right:1px solid var(--border);backgr
   if(T) document.title='아파트맵 · '+CAPTXT+' 아파트';
   var t6=document.getElementById('cap'+x); if(t6){ t6.setAttribute('aria-current','page'); try{ t6.scrollIntoView({block:'nearest',inline:'center'}); }catch(e){} } var hm=document.getElementById('home'); if(hm&&T) hm.href='apt-map.html?cap='+x;
 })();
+(function(){
+var e=document.getElementById('aptVisitors'),v=Math.random().toString(36).slice(2,12);
+try{v=localStorage.aptVid||(localStorage.aptVid=v)}catch(x){}
+if(typeof fetch==='undefined')return;
+fetch('/api/apt-visit',{method:'POST',body:JSON.stringify({v})}).then(r=>r.json()).then(j=>{
+if(j.t!=null)e.textContent='방문 오늘 '+j.t+' · 누적 '+j.a;
+}).catch(()=>{});
+})();
 </script>
 <script>
 const NOTICE_KEY='apt6_notice_v1';
@@ -380,16 +388,6 @@ noticeAgree.addEventListener('click',()=>{if(!noticeCheck.checked)return;try{loc
   noticeLinks(); noticeGate.hidden=true;});
 document.getElementById('noticeDecline').addEventListener('click',()=>{noticeCheck.checked=false;noticeAgree.disabled=true;noticeError.textContent='동의해야 지도를 볼 수 있습니다.';noticeCheck.focus();});
 const KAKAO_JS_KEY='106bb734e8600621686fade2de7f8afb';document.head.insertAdjacentHTML('beforeend','<style>.rmet{display:flex;flex-wrap:wrap;gap:0 9px;font-size:13px}.rmet b{color:#e5484d}.row h3{white-space:normal;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;word-break:keep-all}.m3-flat-options{-webkit-mask-image:linear-gradient(90deg,#000 88%,transparent);mask-image:linear-gradient(90deg,#000 88%,transparent);padding-right:24px}</style>');
-/* 방문자 표시는 API 실패 시에도 유지. */
-const aptVisitors=document.getElementById('aptVisitors'),visitDay=()=>new Date(Date.now()+324e5).toISOString().slice(0,10);
-try{let a=+localStorage.aptVC600,t=(localStorage.aptVCtoday||'').split('|');if(a>=600)aptVisitors.textContent='방문 '+(t[0]===visitDay()?'오늘 '+(+t[1]).toLocaleString():'집계 중')+' · 누적 '+a.toLocaleString()}catch(e){}
-addEventListener('load',()=>setTimeout(()=>{
-let v='';try{v=localStorage.aptVid||(localStorage.aptVid=Math.random().toString(36).slice(2,12))}catch(e){}
-fetch('/api/apt-visit',{method:'POST',body:JSON.stringify({v})}).then(r=>r.json()).then(j=>{
-if(j.t==null||j.a==null)return;
-aptVisitors.textContent='방문 오늘 '+j.t.toLocaleString()+' · 누적 '+j.a.toLocaleString();
-try{localStorage.aptVC600=j.a;localStorage.aptVCtoday=visitDay()+'|'+j.t}catch(e){}
-}).catch(()=>{})},2500));
 /* 다크모드: <html class="dk"> 토글(시스템 설정 따라가다 누르면 기억). 색 변수는 :root.dk, 여기는 고정색 덮어쓰기만 */
 
 (function(){const R=document.documentElement,mt=document.querySelector('meta[name=theme-color]'),b=document.createElement('button');b.type='button';b.className='thm';
