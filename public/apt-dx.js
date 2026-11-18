@@ -1,6 +1,6 @@
 /* 아파트맵 단지 상세 — 리치고 차용 기능(2026.11.16)
    첫 화면 번들에 안 들어감: 단지를 처음 눌렀을 때만 이 파일을 받고, 단지마다 /api/apt-dx 로 실거래를 받아 그림.
-   - 실거래 차트(3년·5년·전체, 월 중위선·거래량·최고가 표시), 최근 실거래 목록(신고가 N·직거래 표시)
+   - 실거래 차트(3년·5년·전체, 최근 3개월 중위 추세·거래량·최고가 표시), 최근 실거래 목록(신고가 N·직거래 표시)
    - 최근 실거래·최고가 대비·1년 전 대비 요약, 층별 가격(최근 12개월), 동 평당 순위
    - 같은 동 전체 단지 평당 시세 순위(가격대 무관)
    - 하락 레이스: 정렬 '최고가 대비 하락순'(직전 2년 최고가 → 최근 3개월 중위, 직거래·1~2층 제외) */
@@ -76,48 +76,64 @@
       if(nb.length>=3&&t[3]<med(nb)*.8) t[5]=1; }); });
   }
   function bad(t){ return t[4]||t[5]; }
+  var TREND_WINDOW=91*864e5;
   function chart(rows,period){
-    rows=rows.filter(function(t){return !bad(t);});
     var now=Date.now(), from=period==='all'?0:now-period*365.25*864e5;
-    var R=rows.filter(function(t){return tms(t[0])>=from;});
+    var history=[], months={}, R=[];
+    rows.forEach(function(t){
+      if(bad(t)) return;
+      var ms=tms(t[0]);
+      if(ms<from-TREND_WINDOW||ms>now) return;
+      var deal=[ms,t[3]];
+      history.push(deal);
+      if(ms<from) return;
+      R.push(deal);
+      var key=String(t[0]).slice(0,6);
+      months[key]=(months[key]||0)+1;
+    });
     if(!R.length) return '<p class="note">이 기간에 표시할 실거래가 없어요.</p>';
     var W=340,H=170,PL=34,PR=8,PT=14,PB=40,VH=22;
-    var x0=period==='all'?Math.min(tms(R[0][0]),now-864e5):from, x1=now;
-    var lo=Infinity,hi=-Infinity; R.forEach(function(t){ lo=Math.min(lo,t[3]); hi=Math.max(hi,t[3]); });
-    var pad=(hi-lo)*.08||hi*.05; lo-=pad; hi+=pad;
-    var X=function(ms){return PL+(ms-x0)/(x1-x0)*(W-PL-PR);}, Y=function(v){return PT+(hi-v)/(hi-lo)*(H-PT-PB);};
-    var dots='', mon={};
-    R.forEach(function(t){ var ms=tms(t[0]);
-      dots+='<circle cx="'+X(ms).toFixed(1)+'" cy="'+Y(t[3]).toFixed(1)+'" r="2.2" fill="#94a3b8" fill-opacity=".75"/>';
-      var mk=String(t[0]).slice(0,6); (mon[mk]=mon[mk]||[]).push(t[3]); });
-    var keys=Object.keys(mon).sort(), line='', previousMonth=null, previousMedianMonth=null, hasGap=false;
-    // 월별 중위가격은 거래 3건 이상인 달끼리만 연결한다. 기록이 없는 달도 건너뛰지 않는다.
+    var x0=period==='all'?Math.min(R[0][0],now-864e5):from, x1=now;
+    var lo=Infinity,hi=-Infinity; R.forEach(function(deal){ lo=Math.min(lo,deal[1]); hi=Math.max(hi,deal[1]); });
+    var keys=Object.keys(months).sort(), trend=[], start=0, end=0, previousMonth=null, previousTrendMonth=null, hasGap=false;
+    // 거래가 있는 달의 말일(이번 달은 오늘)을 기준으로 직전 91일의 거래를 합친다.
     keys.forEach(function(k){
       var year=+k.slice(0,4), monthIndex=+k.slice(4,6)-1, month=year*12+monthIndex;
       if(previousMonth!==null&&month-previousMonth>1) hasGap=true;
       previousMonth=month;
-      if(mon[k].length<3) return;
-      var ms=Date.UTC(year,monthIndex,15);
-      line+=(previousMedianMonth===month-1?'L':'M')+X(ms).toFixed(1)+' '+Y(med(mon[k])).toFixed(1);
-      previousMedianMonth=month;
+      var nextMonth=Date.UTC(year,monthIndex+1,1), date=nextMonth>now?now:nextMonth-864e5;
+      while(end<history.length&&history[end][0]<=date) end++;
+      while(start<end&&history[start][0]<date-TREND_WINDOW) start++;
+      if(end-start<3) return;
+      var value=med(history.slice(start,end).map(function(deal){return deal[1];}));
+      trend.push([date,value,previousTrendMonth===month-1]);
+      lo=Math.min(lo,value); hi=Math.max(hi,value);
+      previousTrendMonth=month;
     });
+    var pad=(hi-lo)*.08||hi*.05; lo-=pad; hi+=pad;
+    var X=function(ms){return PL+(ms-x0)/(x1-x0)*(W-PL-PR);}, Y=function(v){return PT+(hi-v)/(hi-lo)*(H-PT-PB);};
+    var dots='', line='';
+    R.forEach(function(deal){
+      dots+='<circle cx="'+X(deal[0]).toFixed(1)+'" cy="'+Y(deal[1]).toFixed(1)+'" r="2.2" fill="#94a3b8" fill-opacity=".75"/>'; });
+    trend.forEach(function(point){
+      line+=(point[2]?'L':'M')+X(point[0]).toFixed(1)+' '+Y(point[1]).toFixed(1); });
     var showMedianLine=line.includes('L');
-    var vmax=Math.max.apply(null,keys.map(function(k){return mon[k].length;}));
+    var vmax=Math.max.apply(null,keys.map(function(k){return months[k];}));
     var bw=Math.max(1.5,(W-PL-PR)/Math.max(12,(x1-x0)/(30.4*864e5))-1), bars='';
-    keys.forEach(function(k){ var ms=Date.UTC(+k.slice(0,4),+k.slice(4,6)-1,15), h=mon[k].length/vmax*VH; bars+='<rect x="'+(X(ms)-bw/2).toFixed(1)+'" y="'+(H-PB+16+VH-h-14).toFixed(1)+'" width="'+bw.toFixed(1)+'" height="'+h.toFixed(1)+'" fill="#cbd5e1"/>'; });
-    var top=R.reduce(function(a,t){return t[3]>a[3]?t:a;},R[0]);
+    keys.forEach(function(k){ var ms=Math.min(Date.UTC(+k.slice(0,4),+k.slice(4,6)-1,15),now), h=months[k]/vmax*VH; bars+='<rect x="'+(X(ms)-bw/2).toFixed(1)+'" y="'+(H-PB+16+VH-h-14).toFixed(1)+'" width="'+bw.toFixed(1)+'" height="'+h.toFixed(1)+'" fill="#cbd5e1"/>'; });
+    var top=R.reduce(function(a,deal){return deal[1]>a[1]?deal:a;},R[0]);
     var yrs='', y0=new Date(x0).getUTCFullYear(), y1=new Date(x1).getUTCFullYear(), step=Math.max(1,Math.ceil((y1-y0)/6));
     for(var y=y0+1;y<=y1;y+=step){ var xm=X(Date.UTC(y,0,1)); yrs+='<text x="'+xm.toFixed(1)+'" y="'+(H-2)+'" font-size="9" text-anchor="middle" fill="#64748b">'+y+'</text><line x1="'+xm.toFixed(1)+'" x2="'+xm.toFixed(1)+'" y1="'+PT+'" y2="'+(H-PB)+'" stroke="#eef2f7"/>'; }
     var grid='';
     [0,.5,1].forEach(function(f){ var v=lo+(hi-lo)*(1-f)*1, yy=PT+f*(H-PT-PB); v=hi-(hi-lo)*f; grid+='<text x="2" y="'+(yy+3).toFixed(1)+'" font-size="9" fill="#64748b">'+eo(v)+'</text><line x1="'+PL+'" x2="'+(W-PR)+'" y1="'+yy.toFixed(1)+'" y2="'+yy.toFixed(1)+'" stroke="#eef2f7"/>'; });
-    var tx=X(tms(top[0])), ty=Y(top[3]);
+    var tx=X(top[0]), ty=Y(top[1]);
     return '<svg viewBox="0 0 '+W+' '+H+'" width="100%" role="img" aria-label="실거래가 차트" style="display:block">'+grid+yrs+bars+dots
       +(showMedianLine?'<path d="'+line+'" fill="none" stroke="#2563eb" stroke-width="1.8" stroke-linejoin="round"/>':'')
-      +'<circle cx="'+tx.toFixed(1)+'" cy="'+ty.toFixed(1)+'" r="3.2" fill="#e5484d"/><text x="'+Math.min(W-PR,Math.max(PL+20,tx)).toFixed(1)+'" y="'+Math.max(10,ty-6).toFixed(1)+'" font-size="9.5" font-weight="700" text-anchor="middle" fill="#e5484d">최고 '+eo(top[3])+'</text>'
+      +'<circle cx="'+tx.toFixed(1)+'" cy="'+ty.toFixed(1)+'" r="3.2" fill="#e5484d"/><text x="'+Math.min(W-PR,Math.max(PL+20,tx)).toFixed(1)+'" y="'+Math.max(10,ty-6).toFixed(1)+'" font-size="9.5" font-weight="700" text-anchor="middle" fill="#e5484d">최고 '+eo(top[1])+'</text>'
       +'<text x="'+(W-PR)+'" y="'+(H-PB+12)+'" font-size="8.5" text-anchor="end" fill="#94a3b8">거래량</text></svg>'
       +'<div class="dxlegend"><span><i></i>실거래</span>'
-      +(showMedianLine?'<span><i class="line"></i>월별 중위가격</span>':'')
-      +'<span><i class="bar"></i>거래량</span><span class="source">월 3건 이상인 달끼리 연결 · 직거래 및 이상거래 제외</span></div>'
+      +(showMedianLine?'<span><i class="line"></i>최근 3개월 실거래 중위가</span>':'')
+      +'<span><i class="bar"></i>거래량</span><span class="source">최근 3개월 3건 이상 · 직거래 및 이상거래 제외</span></div>'
       +(hasGap?'<p class="dxgap-note">거래 기록이 없는 달은 자료 누락 여부를 별도로 확인해야 합니다.</p>':'');
   }
 
@@ -137,7 +153,7 @@
     if(rows.length){
       var nd=rows.filter(function(t){return !bad(t);}); if(!nd.length) nd=rows;
       var last=nd[nd.length-1], peak=nd.reduce(function(a,t){return t[3]>a[3]?t:a;},nd[0]);
-      var r3=nd.filter(function(t){return tms(t[0])>=now-91*864e5;}).map(function(t){return t[3];});
+      var r3=nd.filter(function(t){var ms=tms(t[0]);return ms>=now-TREND_WINDOW&&ms<=now;}).map(function(t){return t[3];});
       var y3=nd.filter(function(t){var m=tms(t[0]);return m>=now-456*864e5&&m<now-365*864e5;}).map(function(t){return t[3];});
       var m3=med(r3), my=med(y3), cur=m3!=null?m3:last[3];
       var pill=function(txt,v){ return '<span class="dxpill '+(v>=0?'up':'dn')+'">'+txt+' <b>'+(v>=0?'▲':'▼')+' '+Math.abs(v*100).toFixed(1)+'%</b></span>'; };

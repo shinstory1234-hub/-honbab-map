@@ -1,4 +1,4 @@
-// Regression: the median line only connects consecutive months with enough transactions.
+// Regression: the rolling median smooths sparse months without crossing months with no transactions.
 // Execute: node scripts/test-apt-dx-chart-gaps.cjs
 const assert = require('node:assert/strict');
 const fs = require('node:fs');
@@ -17,7 +17,10 @@ const snippet = [
   extract('  function tms(n){', '  function pct(x){'),
   extract('  function bad(t){', '  function drawDx('),
 ].join('\n');
-const chart = vm.runInNewContext(snippet + '\nchart;', {Date, Math, Number, Object, Array, String, isFinite});
+class ChartDate extends Date {
+  static now() { return Date.UTC(2026, 10, 18, 12); }
+}
+const chart = vm.runInNewContext(snippet + '\nchart;', {Date: ChartDate});
 function trade(date, amount) {
   return [date, 39.5, 10, amount, 0];
 }
@@ -27,7 +30,7 @@ function month(yyyymm, amount) {
 function lineOf(rows) {
   const html = chart(rows, 'all');
   const match = html.match(/<path d="([^"]+)"/);
-  assert.ok(match, 'chart must include the monthly median line');
+  assert.ok(match, 'chart must include the rolling median line');
   return {path: match[1], html};
 }
 
@@ -51,9 +54,27 @@ const oneSparseMonth = lineOf([
   trade(20240305, 37000), trade(20240315, 38000),
   ...month(202404, 35000), ...month(202405, 35500),
 ]);
-assert.equal((oneSparseMonth.path.match(/M/g) || []).length, 2, 'a month with two trades must split the line');
-assert.equal((oneSparseMonth.path.match(/L/g) || []).length, 2);
+assert.equal((oneSparseMonth.path.match(/M/g) || []).length, 1, 'earlier trades support the median for a sparse month');
+assert.equal((oneSparseMonth.path.match(/L/g) || []).length, 4);
 assert.equal((oneSparseMonth.html.match(/fill="#94a3b8" fill-opacity/g) || []).length, 14);
+
+const irvine = [
+  [20260820, 58000], [20260907, 45000], [20260909, 45000], [20260912, 56500],
+  [20260914, 45000], [20260922, 51000], [20260928, 48500], [20261009, 61800],
+  [20261014, 63000], [20261015, 55000], [20261016, 59500], [20261017, 62000],
+  [20261020, 63000], [20261021, 47500], [20261030, 63000], [20261105, 61500],
+  [20261109, 47000], [20261109, 49000],
+].map(([date, price]) => trade(date, price));
+const irvineChart = lineOf(irvine);
+const lastPoint = irvineChart.path.match(/L(\d+\.\d) (\d+\.\d)$/);
+assert.ok(lastPoint, 'the final point must be connected to the trend');
+const low = 45000 - (63000 - 45000) * .08;
+const high = 63000 + (63000 - 45000) * .08;
+const expectedY = 14 + (high - 55750) / (high - low) * (170 - 14 - 40);
+assert.equal(lastPoint[1], '332.0', 'the latest point uses the current date');
+assert.equal(lastPoint[2], expectedY.toFixed(1), 'the latest point is the 18-trade median of 55,750만원');
+assert.equal((irvineChart.html.match(/fill="#94a3b8" fill-opacity/g) || []).length, 18);
+assert.match(irvineChart.html, /최근 3개월 실거래 중위가/);
 
 const lowVolume = chart([trade(20260923, 96000), trade(20261003, 88500)], 'all');
 assert.doesNotMatch(lowVolume, /<path d=/, 'two single trades must not look like a falling trend');
@@ -64,4 +85,4 @@ const singleTrade = chart([trade(20261003, 88500)], 'all');
 assert.match(singleTrade, /<svg/);
 assert.match(singleTrade, /fill="#94a3b8" fill-opacity/);
 assert.doesNotMatch(singleTrade, /NaN|<path d=/);
-console.log('PASS: transaction chart median thresholds and historical gaps');
+console.log('PASS: rolling transaction median, sample thresholds and historical gaps');
