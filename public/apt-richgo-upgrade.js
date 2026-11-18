@@ -371,7 +371,7 @@ function removeOldSummary(b){
 }
 function attach(d,b,i){
   if(!b||!alive(b,d))return;
-  if(b.dataset.ruDetail===key(d)+'|'+d.py){removeOldSummary(b);return;}
+  if(b.dataset.ruDetail===key(d)+'|'+d.py&&getRoot(b)){removeOldSummary(b);return;}
   b.querySelectorAll('.ru-summary,.ru-root').forEach(function(x){x.remove();});
   removeOldSummary(b);
   b.dataset.ruDetail=key(d)+'|'+d.py;
