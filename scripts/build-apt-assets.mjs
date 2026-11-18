@@ -97,7 +97,7 @@ function compactCap30Universe(code,file){
 }
 
 function getRichgo10Rows(root){
- const s=fs.readFileSync(path.join(root,'docs','richgo-6to10-full-coverage-20261118.csv'),'utf8').replace(/^\uFEFF/,'');
+ const s=fs.readFileSync(path.join(root,'scripts','richgo-6to10-verified-source-20261118.txt'),'utf8').replace(/^\uFEFF/,'');
  const out=[];let line=[],cell='',quote=false;
  for(let i=0;i<s.length;i++){const c=s[i];
   if(quote){if(c==='"'&&s[i+1]==='"'){cell+='"';i++}else if(c==='"')quote=false;else cell+=c;}
