@@ -11,11 +11,10 @@
   .invest{margin:18px 24px 0;padding:18px;border:1px solid var(--border);border-radius:8px;background:var(--bg)}
   .invest-head{display:flex;flex-direction:column;align-items:stretch;justify-content:flex-start;gap:5px;margin-bottom:12px}.invest-head h3{font-size:17px;font-weight:750;letter-spacing:-.035em;white-space:nowrap;line-height:1.45}.invest-head span{display:block;font-size:11.5px;line-height:1.45;color:var(--text-tertiary);white-space:normal}
   .invest-lead{display:block;width:100%;padding:14px 15px;border-radius:7px;background:var(--bg-subtle);font-size:15px;line-height:1.65;letter-spacing:-.025em;word-break:keep-all;overflow-wrap:anywhere}
-  .invest-essay{padding:4px 0}.invest-essay h4{margin:18px 0 5px;font-size:14px}.invest-essay p{font-size:13px;line-height:1.65;color:var(--text-secondary);white-space:pre-line;word-break:keep-all}
+  .invest-essay{padding:4px 0}.invest-essay h4{margin:18px 0 5px;font-size:14px}.invest-essay p{font-size:13.5px;line-height:1.78;color:var(--text-secondary);white-space:pre-line;word-break:keep-all}
   .invest-essay h4:not(:first-child){padding-top:16px;border-top:1px solid var(--border-soft)}
   .invest-list>div{display:grid;grid-template-columns:58px minmax(0,1fr);gap:10px;padding:12px 0;border-bottom:1px solid var(--border-soft)}.invest-list dt{font-size:12px;font-weight:700;color:var(--primary-soft-fg)}.invest-list dd{font-size:13px;line-height:1.7;color:var(--text-secondary);word-break:keep-all}
   .invest-mini{margin-top:14px;padding-top:12px;border-top:1px solid var(--border-soft)}.invest-mini h4{margin-bottom:8px;font-size:13px}.invest-mini ul{display:flex;flex-direction:column;gap:6px;list-style:none}.invest-mini li{font-size:12.5px;line-height:1.6;color:var(--text-secondary)}.invest-mini li:before{content:'•';margin-right:7px;color:var(--primary-soft-fg)}
-  .invest .dxmore{display:block;width:100%;min-height:44px;margin:14px 0 0;padding:11px 12px;border:1px solid var(--border);border-radius:6px;background:var(--bg-subtle);color:var(--primary-soft-fg);font-size:13px;font-weight:750;line-height:1.5;text-align:center;cursor:pointer}.invest .dxmore:hover{background:var(--primary-soft-bg)}
   .invest-source{margin-top:12px;font-size:11px;line-height:1.6;color:var(--text-tertiary)}.invest-source a{color:inherit;text-decoration:underline;text-underline-offset:2px}.invest-note{margin-top:11px;font-size:11.5px;line-height:1.65;color:var(--text-tertiary);word-break:keep-all}`;
   document.head.appendChild(style);
 
