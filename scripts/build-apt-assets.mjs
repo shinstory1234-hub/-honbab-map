@@ -238,7 +238,7 @@ export function buildAptAssets(root, output = path.join(root, 'public')) {
   }
   const loop = /  for\(var i=0;i<F\.length;i\+\+\) if\(F\[i\]\) document\.write\([^\n]+\);/;
   if (!loop.test(bootstrap[1])) throw new Error('Source loader changed');
-  const loader = bootstrap[1].replace(loop, `  F=${JSON.stringify(manifest)}[c];\n  window.__APT_LOAD_START=performance.now();\n  window.aptLoadError=function(src){var f=(src||'').split('?')[0].split('/').pop();if(f==='apt-live.js'||f==='apt-live6.js'||f==='apt-geo.js'){console.warn('Optional apartment data unavailable',f);return;}window.__aptLoadFailed=true;var el=document.getElementById('aptLoading');if(el)el.textContent='자료를 불러오지 못했습니다. 새로고침해 주세요.';};\n  for(var i=0;i<F.length;i++) document.write('<script defer src="'+F[i]+'" onerror="aptLoadError(this.src)"><\\/script>');`);
+  const loader = bootstrap[1].replace(loop, `  F=${JSON.stringify(manifest)}[c];\n  window.__APT_LOAD_START=performance.now();\n  window.aptLoadError=function(s){if(s&&/apt-(?:live6?|geo)\\.js/.test(s))return;window.__aptLoadFailed=1;document.getElementById('aptLoading').textContent='자료 로딩 실패 · 새로고침해 주세요.';};\n  for(var i=0;i<F.length;i++) document.write('<script defer src="'+F[i]+'" onerror="aptLoadError(this.src)"><\\/script>');`);
   // Dev-only cap15 Richgo overlay is packed into the cap15 universe at build time.
   const packagedLoader = loader.replace(",c===15?'apt-richgo15.js':''",'');
   // Show consent and loading state before network data. Keep the global app scope intact.
