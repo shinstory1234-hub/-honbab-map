@@ -15,8 +15,11 @@ css.textContent=[
 '.ru-sums h4{margin:0 0 5px;font-size:13px;color:var(--text-secondary)}',
 '.ru-sums ul{padding-left:18px;margin:0}.ru-sums li{font-size:12.5px;line-height:1.65;margin:3px 0;word-break:keep-all}',
 '.ru-tabs{display:flex;gap:6px;overflow-x:auto;scrollbar-width:thin;padding:1px 0 11px}',
+'.ru-entry{display:flex;justify-content:space-between;align-items:center;gap:12px;width:100%;padding:14px;margin-top:12px;text-align:left;border:1px solid var(--primary);background:var(--primary-soft-bg);border-radius:8px}',
+'.ru-entry strong{display:block;font-size:15px}.ru-entry small{display:block;font-size:12px;margin-top:4px;color:var(--text-secondary)}',
 '.ru-tabs button{flex:none;padding:8px 12px;border:1px solid var(--border);border-radius:5px;font-size:12.5px;font-weight:700;background:var(--bg)}',
 '.ru-tabs button[aria-pressed=true]{background:var(--primary-soft-bg);border-color:var(--primary);color:var(--primary-soft-fg)}',
+'@media(max-width:560px){.ru-tabs{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:6px}.ru-tabs button{width:100%;white-space:normal;min-height:43px}}',
 '.ru-content{padding:3px 0 0;font-size:13px;line-height:1.6}.ru-content p{margin:7px 0;color:var(--text-secondary);word-break:keep-all}',
 '.ru-list{list-style:none;padding:0;margin:9px 0}.ru-list li{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;padding:11px 0;border-bottom:1px solid var(--border-soft)}',
 '.ru-list li strong{font-weight:750}.ru-list li small{display:block;color:var(--text-tertiary);font-size:11.5px;line-height:1.55}',
@@ -83,13 +86,18 @@ function loadTrade(d){
   var req=fetch('/api/apt-dx?k='+encodeURIComponent(k),{credentials:'same-origin'}).then(function(r){
     if(!r.ok)throw Error('HTTP '+r.status);return r.json();
   }).then(function(v){return v&&Array.isArray(v.t)?v:{error:'거래 원본 없음'};})
-    .catch(function(e){return {error:'실거래 자료 조회 실패 ('+e.message+')'};});
+    .catch(function(e){tradeCache.delete(k);return {error:'실거래 자료 조회 실패 ('+e.message+')'};});
   tradeCache.set(k,req);return req;
 }
 function ensureDx(){
   if(typeof window.aptLkey==='function')return Promise.resolve(true);
-  if(typeof loadDx!=='function')return Promise.resolve(false);
-  return Promise.race([new Promise(function(ok){try{loadDx(function(){ok(typeof window.aptLkey==='function');});}catch(e){ok(false);}}),new Promise(function(ok){setTimeout(function(){ok(false);},10000);})]);
+  return new Promise(function(ok){
+    var settled=false;
+    function done(){if(settled)return;settled=true;ok(typeof window.aptLkey==='function');}
+    function fallback(){var s=document.createElement('script');s.src='/apt-dx.js?v=10';s.onload=done;s.onerror=done;document.head.appendChild(s);}
+    if(typeof loadDx==='function'){try{loadDx(done);}catch(e){fallback();}}else fallback();
+    setTimeout(done,10000);
+  });
 }
 function priceTrades(raw,d){
   var a=raw&&Array.isArray(raw.t)?raw.t:[],target=d.py*3.3058*.76;
@@ -308,6 +316,13 @@ function attach(d,b,i){
     +views.map(function(v){return '<button type="button" data-ru-tab="'+v[0]+'" aria-pressed="false">'+v[1]+'</button>';}).join('')
     +'</div><div class="ru-content" data-ru-content aria-live="polite" hidden></div>';
   var summaryEl=b.querySelector('.ru-summary');if(summaryEl)summaryEl.after(root);else b.appendChild(root);
+  // 상세 분석은 지연 로딩되므로 단지 상단에서 기능 진입점을 제공한다.
+  if(id){
+    var jump=document.createElement('button');jump.type='button';jump.className='ru-entry';
+    jump.innerHTML='<span><strong>상세 분석 보기</strong><small>실거래 · 전월세 · 거래 유동성 · 학군 등</small></span><span aria-hidden="true">›</span>';
+    jump.onclick=function(){root.scrollIntoView({behavior:'smooth',block:'start'});};
+    id.appendChild(jump);
+  }
   var panel=root.querySelector('[data-ru-content]'),active=null;
   function show(v){if(active===v[0]){active=null;panel.hidden=true;panel.innerHTML='';root.querySelectorAll('[data-ru-tab]').forEach(function(x){x.setAttribute('aria-pressed','false');});return;}
     active=v[0];panel.hidden=false;root.querySelectorAll('[data-ru-tab]').forEach(function(x){x.setAttribute('aria-pressed',String(x.dataset.ruTab===v[0]));});panel.innerHTML='';
