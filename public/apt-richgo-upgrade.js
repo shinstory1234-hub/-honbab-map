@@ -78,7 +78,13 @@ function peersOf(d){
   });
   var used=new Set();return a.filter(function(x){var k=x.cxKey;if(used.has(k))return false;used.add(k);return true;}).slice(0,3);
 }
-var tradeCache=new Map();
+var tradeCache=new Map(),rentCache=new Map();
+function loadRent(k){
+  if(rentCache.has(k))return rentCache.get(k);
+  var p=fetch('/api/apt-rent?k='+encodeURIComponent(k)).then(function(r){if(!r.ok)throw Error('HTTP '+r.status);return r.json();})
+    .catch(function(e){rentCache.delete(k);throw e;});
+  rentCache.set(k,p);return p;
+}
 function loadTrade(d){
   var k=typeof window.aptLkey==='function'?window.aptLkey(d):null;
   if(!k)return Promise.resolve({error:'실거래 조회 키 없음'});
@@ -258,6 +264,19 @@ function makeMap(d,box,mode){
   }
   setTimeout(function(){if(el.isConnected)map.relayout();},100);
 }
+function trendView(d,box){
+  box.innerHTML='<h4>실거래 가격 추이</h4><p>국토부 매매 실거래 기반 가격과 거래량입니다. 거래가 없는 달은 임의로 연결하지 않습니다.</p><div data-ru-trend role="status">가격 추이 확인 중…</div>';
+  var out=box.querySelector('[data-ru-trend]');
+  (async function(){
+    if(!(await ensureDx())){if(out.isConnected)out.innerHTML='<p class="ru-warning">실거래 차트 표시 기능을 불러오지 못했습니다.</p>';return;}
+    var raw=await loadTrade(d);
+    if(!out.isConnected)return;
+    if(raw.error){out.innerHTML='<p class="ru-warning">'+esc(raw.error)+'</p><button type="button" class="ru-action" data-trend-retry>다시 시도</button>';
+      var retry=out.querySelector('[data-trend-retry]');if(retry)retry.onclick=function(){trendView(d,box);};return;}
+    if(typeof window.APTDXChart==='function')window.APTDXChart(d,raw,out);
+    else out.innerHTML='<p class="ru-warning">차트 모듈이 준비되지 않았습니다.</p>';
+  })();
+}
 function rentView(d,box){
   box.innerHTML='<h4>전세·월세 실제 계약</h4><p>국토교통부에서 신고된 아파트 임대차 계약입니다. 선택 평형과 유사한 전용면적만 표시합니다.</p>'
     +'<div data-ru-rent-results role="status">최근 6개월 전월세 계약을 조회하고 있습니다…</div>';
@@ -267,9 +286,8 @@ function rentView(d,box){
     var k=window.aptLkey(d);
     if(!k){if(out.isConnected)out.innerHTML='<div class="ru-warning">시군구·법정동·단지명 식별키가 없어 매칭을 진행할 수 없습니다.</div>';return;}
     try{
-      var res=await fetch('/api/apt-rent?k='+encodeURIComponent(k)),v=await res.json();
+      var v=await loadRent(k);
       if(!out.isConnected)return;
-      if(!res.ok){out.innerHTML='<div class="ru-warning">'+esc(v.error||'전월세 API 호출 실패')+'</div>';return;}
       var target=d.py*3.3058*.76,rows=(v.rows||[]).filter(function(x){return n(x.area)!=null&&Math.abs(x.area-target)<=5;});
       var lease=rows.filter(function(x){return x.kind==='전세';}),monthly=rows.filter(function(x){return x.kind==='월세';});
       var prices=lease.map(function(x){return n(x.deposit);}).filter(function(x){return x>0;});
@@ -284,11 +302,12 @@ function rentView(d,box){
            +rows.slice(0,12).map(function(x){return '<tr><td>'+esc(x.date)+'<br>'+esc(x.area)+'㎡ · '+esc(x.floor||'?')+'층</td><td>'+esc(x.kind)+(x.contractType?' <small>'+esc(x.contractType)+'</small>':'')+'</td><td>'+money(x.deposit)+(x.monthlyRent?'<br>월 '+fmt(x.monthlyRent)+'만원':'')+'</td></tr>';}).join('')+'</tbody></table>':
         '<p class="ru-empty">일치하는 전세·월세 계약을 찾지 못했습니다. 단지명 변경·미신고·자료 누락 가능성이 있습니다.</p>')
         +(v.complete?'':'<div class="ru-warning">일부 계약월 조회가 실패했습니다. 아래 건수는 부분 수집 자료이며 거래가 없다는 뜻이 아닙니다.</div>')
-        +'<p class="ru-note">출처: '+esc(v.source||'국토교통부')+' · 동일 평형의 전용면적은 공급면적 환산 추정치 ±5㎡입니다. 동·호수는 공개되지 않습니다. 신고 지연과 계약갱신이 포함될 수 있습니다.</p>';
+        +'<p class="ru-note">출처: '+esc(v.source||'국토교통부')+' · 확인 계약월 '+esc((v.monthsChecked||[]).join(', ')||'미확인')+' · 동일 평형 전용면적은 공급면적 환산 추정치 ±5㎡입니다. 동·호수는 공개되지 않습니다. 신고 지연과 계약갱신이 포함될 수 있습니다.</p>';
     }catch(e){if(out.isConnected)out.innerHTML='<div class="ru-warning">임대차 조회 중 네트워크 오류가 발생했습니다.</div>';}
   })();
 }
 var views=[
+['trend','실거래 차트',trendView],
 ['rivals','라이벌 비교',rivalsView],
 ['volume','거래 유동성',volumeView],
 ['living','실거주',livingView],
