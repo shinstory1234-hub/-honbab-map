@@ -331,9 +331,46 @@ aside{order:-1;width:408px;flex:none;border-right:1px solid var(--border);backgr
   <a class="wordmark" id="home" href="apt-map.html" aria-label="아파트맵 처음 화면으로"><svg class="mark" viewBox="0 0 200 200" aria-hidden="true"><rect width="200" height="200" rx="46" fill="#0066FF"/><path fill="#fff" d="M44 52h112v20H44zM72 72h20v60H72zM108 72h20v60h-20zM36 132h128v20H36z"/></svg>아파트맵</a>
   <nav class="captab" aria-label="가격대"><a href="apt-map.html" id="cap6">6억 이하</a><a href="apt-map.html?cap=10" id="cap10">6~10억</a><a href="apt-map.html?cap=15" id="cap15">10~15억</a><a href="apt-map.html?cap=20" id="cap20">15~20억</a><a href="apt-map.html?cap=25" id="cap25">20~25억</a><a href="apt-map.html?cap=30" id="cap30">25~30억</a><a href="apt-map.html?cap=35" id="cap35">30억 이상</a></nav>
   <span class="caption" id="asof">서울·경기·인천</span>
-  <span class="caption" id="aptVisitors">방문 오늘 집계 중 · 누적 600</span>
+  <span class="caption" id="aptVisitors" aria-live="polite">방문자 집계 중</span>
   <div class="search"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg><input id="q" placeholder="단지명, 동네로 찾기" autocomplete="off" enterkeyhint="search"><button type="button" id="clearSearch" aria-label="검색어 지우기" hidden>×</button></div>
 </header>
+<script>
+/* 방문자 표시: 마지막 정상 집계부터 보여 주고, 무거운 지도 자료와 병렬로 최신 집계를 가져온다.
+   저장된 수치가 없으면 임의의 0명/600명을 표시하지 않는다. */
+(function(){
+  var e=document.getElementById('aptVisitors');
+  if(!e) return;
+  var cacheKey='aptVisitSnapshotV1';
+  var today=new Date(Date.now()+9*60*60*1000).toISOString().slice(0,10);
+  try {
+    var previous=JSON.parse(localStorage.getItem(cacheKey)||'null');
+    if(previous && Number.isSafeInteger(previous.a) && previous.a>=0) {
+      if(previous.d===today && Number.isSafeInteger(previous.t) && previous.t>=0) {
+        e.textContent='방문 오늘 '+previous.t+' · 누적 '+previous.a;
+      } else {
+        e.textContent='방문 오늘 집계 중 · 누적 '+previous.a;
+      }
+    }
+  } catch (_) {}
+  var vid=Math.random().toString(36).slice(2);
+  try { vid=localStorage.aptVid||(localStorage.aptVid=vid); } catch (_) {}
+  if(!window.fetch) return;
+  fetch('/api/apt-visit',{
+    method:'POST',headers:{'content-type':'application/json'},
+    body:JSON.stringify({v:vid}),cache:'no-store'
+  }).then(function(response){
+    if(!response.ok) throw new Error('visit request failed');
+    return response.json();
+  }).then(function(data){
+    if(!data || data.t==null || data.a==null) return;
+    var todayCount=Number(data.t),totalCount=Number(data.a);
+    if(!Number.isSafeInteger(todayCount) || todayCount<0 ||
+       !Number.isSafeInteger(totalCount) || totalCount<0) return;
+    e.textContent='방문 오늘 '+todayCount+' · 누적 '+totalCount;
+    try {localStorage.setItem(cacheKey,JSON.stringify({d:today,t:todayCount,a:totalCount}));} catch (_) {}
+  }).catch(function(){});
+})();
+</script>
 <main>
   <div class="mapwrap"><button type="button" id="apt2MapLazy" style="position:absolute;z-index:5;right:12px;top:147px;background:var(--bg);color:var(--text);border:1px solid var(--border);padding:8px 11px;border-radius:5px;font-size:13px;font-weight:740">지도 도구</button><button type="button" id="ap1xMapLazy" style="position:absolute;z-index:6;right:12px;top:104px;background:var(--bg);color:var(--text);border:1px solid var(--border);border-radius:5px;padding:8px 12px;font-size:13px;font-weight:750">호재 지도</button><div id="mapcount" class="mapcount"></div><div id="map"></div><div id="keymsg"></div></div>
   <aside id="sheet">
@@ -362,14 +399,7 @@ aside{order:-1;width:408px;flex:none;border-right:1px solid var(--border);backgr
   if(T) document.title='아파트맵 · '+CAPTXT+' 아파트';
   var t6=document.getElementById('cap'+x); if(t6){ t6.setAttribute('aria-current','page'); try{ t6.scrollIntoView({block:'nearest',inline:'center'}); }catch(e){} } var hm=document.getElementById('home'); if(hm&&T) hm.href='apt-map.html?cap='+x;
 })();
-(function(){
-var e=document.getElementById('aptVisitors'),v=Math.random().toString(36).slice(2);
-try{v=localStorage.aptVid||(localStorage.aptVid=v)}catch(x){}
-if(!window.fetch)return;
-fetch('/api/apt-visit',{method:'POST',body:JSON.stringify({v})}).then(r=>r.json()).then(j=>{
-if(j.t!=null)e.textContent='방문 오늘 '+j.t+' · 누적 '+j.a;
-}).catch(()=>{});
-})();
+
 </script>
 <script>
 const NOTICE_KEY='apt6_notice_v1';
