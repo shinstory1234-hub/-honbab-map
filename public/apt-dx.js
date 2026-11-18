@@ -80,28 +80,31 @@
     rows=rows.filter(function(t){return !bad(t);});
     var now=Date.now(), from=period==='all'?0:now-period*365.25*864e5;
     var R=rows.filter(function(t){return tms(t[0])>=from;});
-    if(R.length<2) return '<p class="note">이 기간 거래가 부족해요.</p>';
+    if(!R.length) return '<p class="note">이 기간에 표시할 실거래가 없어요.</p>';
     var W=340,H=170,PL=34,PR=8,PT=14,PB=40,VH=22;
-    var x0=period==='all'?tms(R[0][0]):from, x1=now;
+    var x0=period==='all'?Math.min(tms(R[0][0]),now-864e5):from, x1=now;
     var lo=Infinity,hi=-Infinity; R.forEach(function(t){ lo=Math.min(lo,t[3]); hi=Math.max(hi,t[3]); });
     var pad=(hi-lo)*.08||hi*.05; lo-=pad; hi+=pad;
     var X=function(ms){return PL+(ms-x0)/(x1-x0)*(W-PL-PR);}, Y=function(v){return PT+(hi-v)/(hi-lo)*(H-PT-PB);};
-    var dots='', mon={}, vol={};
+    var dots='', mon={};
     R.forEach(function(t){ var ms=tms(t[0]);
       dots+='<circle cx="'+X(ms).toFixed(1)+'" cy="'+Y(t[3]).toFixed(1)+'" r="2.2" fill="#94a3b8" fill-opacity=".75"/>';
-      var mk=String(t[0]).slice(0,6); (mon[mk]=mon[mk]||[]).push(t[3]); vol[mk]=(vol[mk]||0)+1; });
-    var keys=Object.keys(mon).sort(), line='', previousMonth=null, gapCount=0;
-    // 기록이 없는 달은 시세를 보간하지 않는다. 자료 미수집과 실제 무거래는 구분되지 않는다.
+      var mk=String(t[0]).slice(0,6); (mon[mk]=mon[mk]||[]).push(t[3]); });
+    var keys=Object.keys(mon).sort(), line='', previousMonth=null, previousMedianMonth=null, hasGap=false;
+    // 월별 중위가격은 거래 3건 이상인 달끼리만 연결한다. 기록이 없는 달도 건너뛰지 않는다.
     keys.forEach(function(k){
-      var month=+k.slice(0,4)*12+(+k.slice(4,6)-1), interval=previousMonth==null?0:month-previousMonth;
-      if(interval>1) gapCount++;
-      var ms=Date.UTC(+k.slice(0,4),+k.slice(4,6)-1,15);
-      line+=(interval===1?'L':'M')+X(ms).toFixed(1)+' '+Y(med(mon[k])).toFixed(1);
+      var year=+k.slice(0,4), monthIndex=+k.slice(4,6)-1, month=year*12+monthIndex;
+      if(previousMonth!==null&&month-previousMonth>1) hasGap=true;
       previousMonth=month;
+      if(mon[k].length<3) return;
+      var ms=Date.UTC(year,monthIndex,15);
+      line+=(previousMedianMonth===month-1?'L':'M')+X(ms).toFixed(1)+' '+Y(med(mon[k])).toFixed(1);
+      previousMedianMonth=month;
     });
-    var vmax=0; for(var k in vol) vmax=Math.max(vmax,vol[k]);
+    var showMedianLine=line.includes('L');
+    var vmax=Math.max.apply(null,keys.map(function(k){return mon[k].length;}));
     var bw=Math.max(1.5,(W-PL-PR)/Math.max(12,(x1-x0)/(30.4*864e5))-1), bars='';
-    for(k in vol){ var ms=Date.UTC(+k.slice(0,4),+k.slice(4,6)-1,15), h=vol[k]/vmax*VH; bars+='<rect x="'+(X(ms)-bw/2).toFixed(1)+'" y="'+(H-PB+16+VH-h-14).toFixed(1)+'" width="'+bw.toFixed(1)+'" height="'+h.toFixed(1)+'" fill="#cbd5e1"/>'; }
+    keys.forEach(function(k){ var ms=Date.UTC(+k.slice(0,4),+k.slice(4,6)-1,15), h=mon[k].length/vmax*VH; bars+='<rect x="'+(X(ms)-bw/2).toFixed(1)+'" y="'+(H-PB+16+VH-h-14).toFixed(1)+'" width="'+bw.toFixed(1)+'" height="'+h.toFixed(1)+'" fill="#cbd5e1"/>'; });
     var top=R.reduce(function(a,t){return t[3]>a[3]?t:a;},R[0]);
     var yrs='', y0=new Date(x0).getUTCFullYear(), y1=new Date(x1).getUTCFullYear(), step=Math.max(1,Math.ceil((y1-y0)/6));
     for(var y=y0+1;y<=y1;y+=step){ var xm=X(Date.UTC(y,0,1)); yrs+='<text x="'+xm.toFixed(1)+'" y="'+(H-2)+'" font-size="9" text-anchor="middle" fill="#64748b">'+y+'</text><line x1="'+xm.toFixed(1)+'" x2="'+xm.toFixed(1)+'" y1="'+PT+'" y2="'+(H-PB)+'" stroke="#eef2f7"/>'; }
@@ -109,11 +112,13 @@
     [0,.5,1].forEach(function(f){ var v=lo+(hi-lo)*(1-f)*1, yy=PT+f*(H-PT-PB); v=hi-(hi-lo)*f; grid+='<text x="2" y="'+(yy+3).toFixed(1)+'" font-size="9" fill="#64748b">'+eo(v)+'</text><line x1="'+PL+'" x2="'+(W-PR)+'" y1="'+yy.toFixed(1)+'" y2="'+yy.toFixed(1)+'" stroke="#eef2f7"/>'; });
     var tx=X(tms(top[0])), ty=Y(top[3]);
     return '<svg viewBox="0 0 '+W+' '+H+'" width="100%" role="img" aria-label="실거래가 차트" style="display:block">'+grid+yrs+bars+dots
-      +'<path d="'+line+'" fill="none" stroke="#2563eb" stroke-width="1.8" stroke-linejoin="round"/>'
+      +(showMedianLine?'<path d="'+line+'" fill="none" stroke="#2563eb" stroke-width="1.8" stroke-linejoin="round"/>':'')
       +'<circle cx="'+tx.toFixed(1)+'" cy="'+ty.toFixed(1)+'" r="3.2" fill="#e5484d"/><text x="'+Math.min(W-PR,Math.max(PL+20,tx)).toFixed(1)+'" y="'+Math.max(10,ty-6).toFixed(1)+'" font-size="9.5" font-weight="700" text-anchor="middle" fill="#e5484d">최고 '+eo(top[3])+'</text>'
       +'<text x="'+(W-PR)+'" y="'+(H-PB+12)+'" font-size="8.5" text-anchor="end" fill="#94a3b8">거래량</text></svg>'
-      +'<div class="dxlegend"><span><i></i>실거래</span><span><i class="line"></i>월별 중위가격</span><span><i class="bar"></i>거래량</span><span class="source">직거래 및 이상거래 제외</span></div>'
-      +(gapCount?'<p class="dxgap-note">거래 기록이 없는 달은 선을 연결하지 않습니다. 자료 누락 여부는 별도 확인이 필요합니다.</p>':'');
+      +'<div class="dxlegend"><span><i></i>실거래</span>'
+      +(showMedianLine?'<span><i class="line"></i>월별 중위가격</span>':'')
+      +'<span><i class="bar"></i>거래량</span><span class="source">월 3건 이상인 달끼리 연결 · 직거래 및 이상거래 제외</span></div>'
+      +(hasGap?'<p class="dxgap-note">거래 기록이 없는 달은 자료 누락 여부를 별도로 확인해야 합니다.</p>':'');
   }
 
   function drawDx(d,j,box,selectedArea,floorMode,omitDirect){
