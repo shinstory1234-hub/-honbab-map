@@ -238,7 +238,7 @@ export function buildAptAssets(root, output = path.join(root, 'public')) {
   }
   const loop = /  for\(var i=0;i<F\.length;i\+\+\) if\(F\[i\]\) document\.write\([^\n]+\);/;
   if (!loop.test(bootstrap[1])) throw new Error('Source loader changed');
-  const loader = bootstrap[1].replace(loop, `  F=${JSON.stringify(manifest)}[c];\n  window.__APT_LOAD_START=performance.now();\n  window.aptLoadError=function(s){if(s&&/apt-(?:live6?|geo)\\.js/.test(s))return;window.__aptLoadFailed=1;document.getElementById('aptLoading').textContent='자료 로딩 실패 · 새로고침해 주세요.';};\n  for(var i=0;i<F.length;i++) document.write('<script defer src="'+F[i]+'" onerror="aptLoadError(this.src)"><\\/script>');`);
+  const loader = bootstrap[1].replace(loop, `  F=${JSON.stringify(manifest)}[c];\n  window.__APT_LOAD_START=performance.now();\n  window.aptLoadError=function(s){if(/apt-(live6?|geo)/.test(s))return;window.__aptLoadFailed=1;document.getElementById('aptLoading').textContent='로드 실패 · 새로고침';};\n  for(var i=0;i<F.length;i++) document.write('<script defer src="'+F[i]+'" onerror="aptLoadError(this.src)"><\\/script>');`);
   // Dev-only cap15 Richgo overlay is packed into the cap15 universe at build time.
   const packagedLoader = loader.replace(",c===15?'apt-richgo15.js':''",'');
   // Show consent and loading state before network data. Keep the global app scope intact.
