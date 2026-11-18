@@ -363,15 +363,12 @@ aside{order:-1;width:408px;flex:none;border-right:1px solid var(--border);backgr
   var t6=document.getElementById('cap'+x); if(t6){ t6.setAttribute('aria-current','page'); try{ t6.scrollIntoView({block:'nearest',inline:'center'}); }catch(e){} } var hm=document.getElementById('home'); if(hm&&T) hm.href='apt-map.html?cap='+x;
 })();
 (function(){
-var e=document.getElementById('aptVisitors'),d=new Date(Date.now()+324e5).toISOString().slice(0,10),a,v='';
-try{a=JSON.parse(localStorage.aptVC600)}catch(x){}
-if(a&&a.d===d&&a.t!=null)e.textContent='방문 오늘 '+a.t+' · 누적 '+a.a;
-else if(a&&a.a>=600)e.textContent='방문 오늘 확인 중 · 누적 '+a.a;
-try{v=localStorage.aptVid||(localStorage.aptVid=Math.random().toString(36).slice(2,12))}catch(x){}
-if(typeof fetch==='function')fetch('/api/apt-visit',{method:'POST',body:JSON.stringify({v})}).then(r=>r.ok?r.json():null).then(j=>{
-if(!j||j.t==null||j.a==null)return;
-e.textContent='방문 오늘 '+j.t.toLocaleString()+' · 누적 '+j.a.toLocaleString();
-try{localStorage.aptVC600=JSON.stringify({d,t:j.t,a:j.a})}catch(x){}
+var e=document.getElementById('aptVisitors'),v='';
+try{v=localStorage.aptVid||(localStorage.aptVid=Math.random().toString(36).slice(2,12));let n=+localStorage.aptVC600;if(n>=600)e.textContent='방문 오늘 확인 중 · 누적 '+n}catch(x){}
+if(typeof fetch==='undefined')return;
+fetch('/api/apt-visit',{method:'POST',body:JSON.stringify({v})}).then(r=>r.json()).then(j=>{
+if(j.t==null)return;e.textContent='방문 오늘 '+j.t+' · 누적 '+j.a;
+try{localStorage.aptVC600=j.a}catch(x){}
 }).catch(()=>{});
 })();
 </script>
