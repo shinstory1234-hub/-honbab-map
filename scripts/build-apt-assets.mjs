@@ -242,7 +242,7 @@ export function buildAptAssets(root, output = path.join(root, 'public')) {
   // Dev-only cap15 Richgo overlay is packed into the cap15 universe at build time.
   const packagedLoader = loader.replace(",c===15?'apt-richgo15.js':''",'');
   // Show consent and loading state before network data. Keep the global app scope intact.
-  const loading = '<div id="aptLoading" role="status" class="inline-note" style="margin:24px">아파트 자료를 불러오고 있습니다…</div>';
+  const loading = '<div id="aptLoading" role="status" class="inline-note" style="margin:24px">자료 불러오는 중…</div>';
   let html = source.replace('<div class="body" id="body"></div>', `<div class="body" id="body">${loading}</div>`);
   html = html.replace(bootstrap[0], `<script>\n${consent}\n${packagedLoader}\n</script>`).replace(application[0], '');
   html = html.replaceAll('apt-map.html', '/');
