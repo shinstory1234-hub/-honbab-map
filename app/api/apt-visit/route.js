@@ -16,7 +16,11 @@ export async function POST(req) {
       body: JSON.stringify({ p_vid: vid }),
     });
     if (!r.ok) throw new Error(String(r.status));
-    return out(await r.json(), 200);
+    const j = await r.json();
+    // Display baseline: 90 historical visits + 510 = 600 at reset.
+    // Keep original Supabase visitor events and daily counts unchanged.
+    if (j && Number.isFinite(Number(j.a))) j.a = Number(j.a) + 510;
+    return out(j, 200);
   } catch (e) {
     return out({}, 502);
   }
