@@ -17,6 +17,7 @@ css.textContent=[
 '.ru-tabs{display:flex;gap:6px;overflow-x:auto;scrollbar-width:thin;padding:1px 0 11px}',
 '.ru-entry{display:flex;justify-content:space-between;align-items:center;gap:12px;width:100%;padding:14px;margin-top:12px;text-align:left;border:1px solid var(--primary);background:var(--primary-soft-bg);border-radius:8px}',
 '.ru-entry strong{display:block;font-size:15px}.ru-entry small{display:block;font-size:12px;margin-top:4px;color:var(--text-secondary)}',
+'.invest-essay p{font-size:13px;line-height:1.65}.invest .dxmore{display:block;width:100%;min-height:44px;margin:14px 0 0;padding:11px 12px;border:1px solid var(--border);border-radius:6px;background:var(--bg-subtle);color:var(--primary-soft-fg);font-size:13px;font-weight:750;line-height:1.5;text-align:center;cursor:pointer}.invest .dxmore:hover{background:var(--primary-soft-bg)}',
 '.ru-tabs button{flex:none;padding:8px 12px;border:1px solid var(--border);border-radius:5px;font-size:12.5px;font-weight:700;background:var(--bg)}',
 '.ru-tabs button[aria-pressed=true]{background:var(--primary-soft-bg);border-color:var(--primary);color:var(--primary-soft-fg)}',
 '@media(max-width:560px){.ru-tabs{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:6px}.ru-tabs button{width:100%;white-space:normal;min-height:43px}}',
