@@ -363,8 +363,8 @@ aside{order:-1;width:408px;flex:none;border-right:1px solid var(--border);backgr
   var t6=document.getElementById('cap'+x); if(t6){ t6.setAttribute('aria-current','page'); try{ t6.scrollIntoView({block:'nearest',inline:'center'}); }catch(e){} } var hm=document.getElementById('home'); if(hm&&T) hm.href='apt-map.html?cap='+x;
 })();
 (function(){
-var e=document.getElementById('aptVisitors'),v='';
-try{v=localStorage.aptVid||(localStorage.aptVid=Math.random().toString(36).slice(2,12));let n=+localStorage.aptVC600;if(n>=600)e.textContent='방문 오늘 확인 중 · 누적 '+n}catch(x){}
+var e=document.getElementById('aptVisitors'),v=Math.random().toString(36).slice(2,12);
+try{v=localStorage.aptVid||(localStorage.aptVid=v);var n=+localStorage.aptVC600;if(n>=600)e.textContent='방문 오늘 집계 중 · 누적 '+n}catch(x){}
 if(typeof fetch==='undefined')return;
 fetch('/api/apt-visit',{method:'POST',body:JSON.stringify({v})}).then(r=>r.json()).then(j=>{
 if(j.t==null)return;e.textContent='방문 오늘 '+j.t+' · 누적 '+j.a;
