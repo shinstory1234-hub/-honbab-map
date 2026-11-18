@@ -18,6 +18,6 @@ export async function GET(req) {
     return json(await cached(k), 200, 'public, max-age=60, s-maxage=300, stale-while-revalidate=600');
   } catch (e) {
     console.error('apt-dx failed', k, e);
-    return json({ error: 'unavailable' }, 502, 'public, max-age=0, s-maxage=60');
+    return json({ error: 'unavailable' }, 502, 'no-store');
   }
 }
