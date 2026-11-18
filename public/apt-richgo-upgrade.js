@@ -191,13 +191,60 @@ function livingView(d,box){
     }catch(e){if(out.isConnected)out.innerHTML='<p class="ru-warning">K-apt 서버 또는 네트워크 요청에 실패했습니다.</p>';}
   })();
 }
+var schoolRadius=3000,nearbySchoolCache=new Map();
+function nearbySchool(p,level){
+  var cacheKey=p.join('|')+'|'+level;
+  if(nearbySchoolCache.has(cacheKey))return nearbySchoolCache.get(cacheKey);
+  var result=new Promise(function(resolve,reject){
+    var services=kakao.maps.services;
+    var location=new kakao.maps.LatLng(p[0],p[1]);
+    new services.Places().keywordSearch(level,function(items,status,pagination){
+      if(status===services.Status.ZERO_RESULT){resolve(null);return;}
+      if(status!==services.Status.OK){reject(new Error('학교 지도 검색 실패'));return;}
+      for(var item of items){
+        var schoolName=String(item.place_name||'').trim();
+        if(!schoolName.endsWith(level)||n(item.y)==null||n(item.x)==null)continue;
+        var meters=distance(p[0],p[1],Number(item.y),Number(item.x));
+        if(meters<=schoolRadius){resolve({name:schoolName,meters:Math.round(meters)});return;}
+      }
+      if(pagination&&pagination.hasNextPage)pagination.nextPage();
+      else resolve(null);
+    },{category_group_code:'SC4',location:location,radius:schoolRadius,sort:services.SortBy.DISTANCE});
+  }).catch(function(error){nearbySchoolCache.delete(cacheKey);throw error;});
+  nearbySchoolCache.set(cacheKey,result);
+  return result;
+}
+function fillNearbySchool(row,p,level,schoolName,meters){
+  if((schoolName&&meters!=null)||!p||!sdk())return;
+  var value=row.querySelector('em'),detail=row.querySelector('small'),initialDetail=detail.textContent;
+  if(!schoolName)value.textContent='조회 중';
+  nearbySchool(p,level).then(function(school){
+    if(!row.isConnected)return;
+    if(school){
+      value.textContent=school.name;
+      detail.textContent='카카오 지도 · 직선 '+fmt(school.meters)+'m · 실제 배정과 별개';
+    }else if(!schoolName){
+      value.textContent='미확인';
+      detail.textContent='반경 3km 지도 검색 결과 없음';
+    }
+  }).catch(function(){
+    if(!row.isConnected||schoolName)return;
+    value.textContent='미확인';
+    detail.textContent=meters!=null?initialDetail:'지도 학교 검색에 실패했습니다.';
+  });
+}
 function schoolView(d,box){
-  var g=d.g||{},hak=typeof hakH==='function'?hakH(d):null;
+  var g=d.g||{},hak=typeof hakH==='function'?hakH(d):null,p=coord(d);
+  var elementary=n(g.sc),middle=n(hak&&hak[4]),middleName=hak&&hak[3];
+  if(elementary===99999)elementary=null;
   box.innerHTML='<h4>학군과 통학 정보</h4><ul class="ru-list">'
-    +chip('인근 초등학교',g.scn||'미확인',g.sc!=null?'단지 대표좌표 직선 '+fmt(Math.round(g.sc))+'m · 실제 배정과 별개':'학교 거리 자료 없음')
-    +chip('주변 수학·영어 학원',hak&&n(hak[0])!=null?fmt(hak[0])+'곳':'확인 불가','반경 1km 교과학원 집계')+chip('인근 중학교',hak&&hak[3]?hak[3]:'미확인',hak&&n(hak[4])!=null?'직선거리 '+fmt(hak[4])+'m · 배정 학교 아님':'거리 자료 없음')
+    +chip('인근 초등학교',g.scn||'미확인',elementary!=null?'단지 대표좌표 직선 '+fmt(Math.round(elementary))+'m · 실제 배정과 별개':'학교 거리 자료 없음')
+    +chip('주변 수학·영어 학원',hak&&n(hak[0])!=null?fmt(hak[0])+'곳':'확인 불가','반경 1km 교과학원 집계')+chip('인근 중학교',middleName||'미확인',middle!=null?'직선거리 '+fmt(middle)+'m · 배정 학교 아님':'거리 자료 없음')
     +'</ul><button type="button" class="ru-action" data-ru-school>공식 초등 통학구역 확인</button><div data-ru-school-result aria-live="polite"></div>'
     +'<p class="ru-note">교육 성과·중학교 진학률은 검증된 공식 자료 없이 등급으로 추정하지 않습니다.</p>';
+  var rows=box.querySelector('.ru-list').children;
+  fillNearbySchool(rows[0],p,'초등학교',g.scn,elementary);
+  fillNearbySchool(rows[2],p,'중학교',middleName,middle);
   box.querySelector('[data-ru-school]').onclick=async function(){
     var btn=this,out=box.querySelector('[data-ru-school-result]');btn.disabled=true;out.textContent='공식 학구도 대사 결과를 확인하고 있습니다…';
     try{var r=await fetch('/api/apt-school?k='+encodeURIComponent(key(d)));if(!r.ok)throw Error('HTTP '+r.status);var data=await r.json();
