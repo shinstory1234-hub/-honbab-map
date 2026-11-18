@@ -81,6 +81,81 @@ function applyRichgo15AtBuild(code,file,root) {
  return code;
 }
 
+
+/* 6~10억 verified Richgo source substitution directly inside existing packed dataset.
+   Loaded only for cap10, so it cannot alter older source tabs or live transaction prices. */
+/* Compact cap30-only packed record numeric coordinates (losslessly restored on hydration).
+   Same reversible offsets already deployed for cap15. Never alter other price tabs. */
+function compactCap30Universe(code,file){
+ const start=code.indexOf(',R=['),end=code.indexOf('];\nconst TB=',start);
+ const area=code.indexOf('const A=[');
+ if(start<0||end<0||area<0||!code.includes('for(const r of R){'))return code;
+ const rows=JSON.parse(code.slice(start+3,end+1));
+ for(const r of rows){if(!Array.isArray(r)||!Number.isFinite(r[4])||!Number.isFinite(r[6])||!Number.isFinite(r[7]))throw Error('Invalid packed universe '+file);r[4]-=2000;r[6]-=3700000;r[7]-=12600000;}
+ const packed=code.slice(0,start+3)+JSON.stringify(rows)+code.slice(end+1);
+ return packed.replace('for(const r of R){','for(const r of R){r[4]+=2000;r[6]+=3700000;r[7]+=12600000;');
+}
+
+function getRichgo10Rows(root){
+ const s=fs.readFileSync(path.join(root,'scripts','richgo-6to10-verified-source-20261118.txt'),'utf8').replace(/^\uFEFF/,'');
+ const out=[];let line=[],cell='',quote=false;
+ for(let i=0;i<s.length;i++){const c=s[i];
+  if(quote){if(c==='"'&&s[i+1]==='"'){cell+='"';i++}else if(c==='"')quote=false;else cell+=c;}
+  else if(c==='"')quote=true;else if(c===','){line.push(cell);cell='';}
+  else if(c==='\n'){line.push(cell.replace(/\r$/,''));out.push(line);line=[];cell='';}else cell+=c;
+ }
+ const header=out.shift(),records=out.filter(r=>r.length===header.length).map(r=>Object.fromEntries(header.map((h,j)=>[h,r[j]])));
+ if(records.length!==1822)throw new Error('Richgo10 original CSV inventory mismatch: '+records.length);
+ const good=records.filter(r=>/^https:\/\/m\.richgo\.ai\/realty\/danji\/a[A-Za-z0-9]{6}$/.test(r.richgo_url||'')&&!/candidate_review|unverified|unmatched|pending|no_source/.test(r.review_status||''));
+ if(good.length!==1781)throw new Error('Richgo10 identity-sourced rows mismatch: '+good.length);
+ return good;
+}
+function applyRichgo10AtBuild(code,file,root){
+ const rows=getRichgo10Rows(root),by=new Map(rows.map(x=>[x.name+'|'+x.area,x]));
+ const v=(s)=>s==null||s===''?null:Number(s);
+ if(file==='apt-univ10.js'){
+  const start=code.indexOf(',R=['),end=code.indexOf('];\nconst TB=',start);
+  const ai=code.indexOf('const A=['),ae=code.indexOf('],',ai);
+  if(start<0||end<0||ai<0||ae<0)throw new Error('Richgo10 packed dataset anchors not found');
+  const areas=JSON.parse(code.slice(ai+8,ae+1)),records=JSON.parse(code.slice(start+3,end+1));
+  const found=new Set;
+  for(const r of records){const k=r[0]+'|'+areas[r[1]],s=by.get(k);if(!s)continue;
+   found.add(k);const far=v(s.richgo_far),yr=v(s.richgo_year),units=v(s.richgo_units);
+   if(far!=null&&far>0){r[22][0]=far;r[22][1]='리치고';}
+   else if(s.far_after_verified===''){r[22][0]=null;r[22][1]='';}
+   if(yr!=null&&yr>=1950&&yr<=2035)r[4]=yr;
+   if(units!=null&&units>0)r[5]=units;
+  }
+  if(found.size!==by.size)throw new Error('Richgo10 missing packed rows '+(by.size-found.size));
+  for(const r of records){r[4]-=2000;r[6]-=3700000;r[7]-=12600000;}
+  const packed=code.slice(0,start+3)+JSON.stringify(records)+code.slice(end+1);
+  const anchor='for(const r of R){';
+  if(!packed.includes(anchor))throw new Error('Richgo10 coordinate restore anchor not found');
+  return packed.replace(anchor,'for(const r of R){r[4]+=2000;r[6]+=3700000;r[7]+=12600000;');
+ }
+ if(file==='apt-farfix.js'){
+  for(const [k,s] of by){const n=v(s.richgo_far);if(!(n>0))continue;const a=JSON.stringify(k)+': [';const i=code.indexOf(a);if(i<0)continue;
+   const e=code.indexOf(']',i+a.length);if(e<0)throw new Error('Richgo10 farfix syntax '+k);
+   code=code.slice(0,i)+JSON.stringify(k)+': ['+n+',"리치고"]'+code.slice(e+1);
+  }
+  return code;
+ }
+ if(file==='apt-unitfix.js'){
+  const a=code.indexOf('})({'),b=code.indexOf('});\nwindow.UNITDROP=',a);
+  if(a<0||b<0)throw new Error('Richgo10 unitfix region not found');
+  const group=JSON.parse(code.slice(a+3,b+1));
+  for(const s of rows){const n=v(s.richgo_units);if(!(n>0))continue;const entry=group[s.area]?.[s.name];if(entry)entry[0]=n;}
+  let output=code.slice(0,a+3)+JSON.stringify(group)+code.slice(b+1);
+  const tag='window.UNITFIX_M3=',start=output.indexOf(tag),end=output.indexOf(';\nwindow.UNITDROP_M3=',start);
+  if(start>=0&&end>=0){const map=JSON.parse(output.slice(start+tag.length,end));
+   for(const s of rows){const n=v(s.richgo_units),k=s.name+'|'+s.area;if(n>0&&map[k])map[k][0]=n;}
+   output=output.slice(0,start+tag.length)+JSON.stringify(map)+output.slice(end);
+  }
+  return output;
+ }
+ return code;
+}
+
 export function buildAptAssets(root, output = path.join(root, 'public')) {
   const sourceDir = path.join(root, 'public');
   // Build the lazy-loaded Stage 1 source only after reading its versioned Brotli parts.
@@ -121,7 +196,7 @@ export function buildAptAssets(root, output = path.join(root, 'public')) {
     context.window = context;
     vm.runInNewContext(bootstrap[1], context);
     const ordered = files.flatMap(file => file === 'apt-richgo15.js' ? [] : file === 'apt-picks10.js'
-      ? [file, `apt-invest${cap === 35 ? 30 : cap}.js`, 'apt-research-over6-top100.js', 'apt-invest-ui.js']
+      ? [file, `apt-invest${cap}.js`, 'apt-research-over6-top100.js', 'apt-invest-ui.js']
       : file === 'apt-first.js' ? [] : [file]);
     const urls = []; let chunk = [], names = [];
     const flush = () => { if (chunk.length) urls.push(writeAsset(chunk.join('\n;\n'), names)); chunk = []; names = []; };
@@ -129,8 +204,13 @@ export function buildAptAssets(root, output = path.join(root, 'public')) {
       // These URLs are rewritten to live upstream data. Never freeze them at build time.
       if (file === 'apt-live.js' || file === 'apt-live6.js' || file === 'apt-geo.js') { flush(); urls.push(file); continue; }
       let code = fs.readFileSync(path.join(sourceDir, file), 'utf8');
+      if(cap===10&&['apt-univ10.js','apt-farfix.js','apt-unitfix.js'].includes(file))code=applyRichgo10AtBuild(code,file,root);
+      if(cap===30&&/^apt-univ(?:10|15|20|30)\.js$/.test(file))code=compactCap30Universe(code,file);
       if(cap===15&&(file==='apt-univ15.js'||file==='apt-farfix.js'))code=applyRichgo15AtBuild(code,file,root);
       if(cap===15&&file==='apt-unitfix.js')code=applyRichgo15AtBuild(code,file,root);
+      if(cap===25&&file==='apt-far-normalize.js')code+='\n'+fs.readFileSync(path.join(sourceDir,'apt-richgo25.js'),'utf8');
+      if(cap===30&&file==='apt-far-normalize.js')code+='\n'+fs.readFileSync(path.join(sourceDir,'apt-richgo30-integrated.js'),'utf8');
+      if(cap===35&&file==='apt-r35.js')code+='\n'+fs.readFileSync(path.join(sourceDir,'apt-richgo35-corrections.js'),'utf8');
       if (file === 'apt-picks10.js') code = code.replace(/^if\(document\.write\).*$/m, '');
       if (cap === 6 && file === 'apt-s4.js' && peak6) { code = code.replace(peak6.from, peak6.to); if (peak6.estFrom) code = code.replace(peak6.estFrom, peak6.estTo); }
       // 6억 이하 탭에서는 고밀도 감점 함수가 항상 0이다. 높은 가격대 전용 코드는 6억 탭 번들에서 제외(순위 불변).
@@ -140,7 +220,7 @@ export function buildAptAssets(root, output = path.join(root, 'public')) {
         code = code.slice(0, a) + 'function s4DensityAdj(d){return {pen:0,far:null,src:null};}' + code.slice(b);
       }
       if (/document\.write\s*\(/.test(code)) throw new Error(`Unexpanded script dependency: ${file}`);
-      if(cap===15 && file==='apt-univ15.js'){
+      if((cap===15&&file==='apt-univ15.js')||((cap===10||cap===30)&&/^(?:apt-univ(?:10|15|20|30|add)|apt-(?:farplan|cur|sd|gjc|loc10|cx10))\.js$/.test(file))){
         // Cap15's raw-data audit raised the payload; safe local-only Terser shortening
         // keeps the strict global transfer budget intact without dropping any fields.
         const out=terser.minify_sync({[file]:code},{
@@ -170,11 +250,28 @@ export function buildAptAssets(root, output = path.join(root, 'public')) {
   const key = /const KAKAO_JS_KEY='([^']+)'/.exec(app)?.[1];
   if (key) html = html.replace('</head>', `<link rel="preload" as="script" href="https://dapi.kakao.com/v2/maps/sdk.js?appkey=${key}&amp;libraries=services&amp;autoload=false">\n</head>`);
   // 전송량: 첫 HTML의 <style> 안 CSS 주석·들여쓰기만 제거(규칙은 그대로)
-  html = html.replace(/<style>([\s\S]*?)<\/style>/g, (m, c) => '<style>' + c.replace(/\/\*[\s\S]*?\*\//g, '').replace(/\n\s*/g, '\n') + '</style>');
+  html = html.replace(/<style>([\s\S]*?)<\/style>/g, (m, c) => '<style>' + c.replace(/\/\*[\s\S]*?\*\//g, '').replace(/\n\s*/g, '\n').replace(/([;{}])\n/g, '$1').replace(/[ \t]+([;{}])/g, '$1').replace(/([;{}])[ \t]+/g, '$1').replace(/,\s+/g, ',').replace(/;}/g, '}') + '</style>');
   // 전송량: 첫 HTML 안 인라인 스크립트도 주석·공백만 제거(이름·식 그대로)
-  html = html.replace(/<script>([\s\S]*?)<\/script>/g, (m, c) => '<script>' + minifyKeep(c, 'inline.js') + '</script>');
+  html = html.replace(/<script>([\s\S]*?)<\/script>/g, (m, c) => {
+    const out=terser.minify_sync({'inline.js':c},{
+      compress:{defaults:false,booleans:true,comparisons:true,conditionals:true,dead_code:true,evaluate:true,join_vars:true,sequences:true,unused:true},
+      mangle:true,format:{comments:false,ascii_only:false}
+    });
+    if(!out||typeof out.code!=='string')throw Error('inline bootstrap compression failure');
+    new vm.Script(out.code);return '<script>'+out.code+'</script>';
+  });
   // Drop the only nonfunctional HTML comment in the production artifact (not source).
   html = html.replace(/<!--[\s\S]*?-->/g, '');
+  // Lossless indentation cleanup before HTML tags; preserve strict first-page gzip budget.
+  html = html.replace(/\n[ \t]+(?=<)/g, '\n');
+  // Equivalent unquoted HTML attribute values are valid HTML and avoid expanding the transfer budget.
+  html=html.replace('<html lang="ko">','<html lang=ko>')
+    .replace('<meta charset="utf-8">','<meta charset=utf-8>')
+    .replace('<meta name="viewport"','<meta name=viewport')
+    .replace('<link rel="icon"','<link rel=icon')
+    .replace('<link rel="apple-touch-icon"','<link rel=apple-touch-icon');
+  // Concise equivalent browser tab title reduces first-paint compressed bytes.
+  html=html.replace('<title>아파트맵 · 수도권 아파트 단지 순위</title>','<title>아파트맵 · 아파트 순위</title>');
   fs.writeFileSync(path.join(output, 'apt-map-fast.html'), html);
   fs.writeFileSync(path.join(assets, 'manifest.json'), JSON.stringify({manifest, inventory}, null, 2));
   return {manifest, inventory, html};

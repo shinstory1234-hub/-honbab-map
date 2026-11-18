@@ -1,0 +1,25 @@
+name: Richgo all-band integration safety gate
+on:
+  push:
+    branches: [integration/richgo-allbands-20261118]
+  workflow_dispatch:
+  pull_request:
+    branches: [master]
+permissions:
+  contents: read
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+        with:
+          persist-credentials: false
+          fetch-depth: 0
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
+        with:
+          node-version: '22'
+      - run: node scripts/test-richgo-allbands-integration.cjs
+      - run: node scripts/test-richgo-under6-full.cjs
+      - run: node scripts/test-richgo-10to15-full1114.cjs
+      - run: npm ci --ignore-scripts
+      - run: npm run build

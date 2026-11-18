@@ -1,0 +1,46 @@
+name: Richgo under6 second pass 672 public search and geography
+on:
+  push:
+    branches:
+      - audit/richgo-under6-full-20261118
+    paths:
+      - .github/workflows/richgo-under6-secondpass.yml
+      - scripts/audit-richgo-under6-secondpass.cjs
+permissions:
+  contents: write
+concurrency:
+  group: richgo-under6-second-pass
+  cancel-in-progress: false
+jobs:
+  crosscheck:
+    runs-on: ubuntu-latest
+    timeout-minutes: 55
+    strategy:
+      fail-fast: false
+      max-parallel: 2
+      matrix:
+        shard: [0, 1, 2, 3, 4, 5]
+    env:
+      SHARD: ${{ matrix.shard }}
+      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    steps:
+      - name: Checkout audit branch
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+        with:
+          persist-credentials: false
+      - name: Setup Node
+        uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
+        with:
+          node-version: '22'
+      - name: Verify syntax
+        run: node --check scripts/audit-richgo-under6-secondpass.cjs
+      - name: Recheck only the first-pass unresolved apartments
+        run: node scripts/audit-richgo-under6-secondpass.cjs
+      - name: Upload audit evidence
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: richgo-under6-secondpass-shard-${{ matrix.shard }}
+          path: /tmp/richgo-under6-secondpass${{ matrix.shard }}.json
+          retention-days: 14
+          if-no-files-found: warn

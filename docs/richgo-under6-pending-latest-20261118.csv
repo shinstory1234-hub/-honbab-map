@@ -1,0 +1,489 @@
+name,area,status,stage,map_far,richgo_far,map_units,richgo_units,map_year,richgo_year,distance_m,quality_issue,shared_richgo_page,richgo_url,latest_attempt,candidate_count,remaining_reason
+쌍문동 동익파크,서울 도봉구 쌍문동,unmatched,firstpass,227,,495,,1987,,,,no,,thirdpass_index,1,단지명·좌표·세대수·연도 식별 검증 불충족
+방학동 한화성원,서울 도봉구 방학동,review_needed,firstpass,237,,336,,1996,,,second_pass_rejected_by_quality_gate,no,,thirdpass_index,1,단지명·좌표·세대수·연도 식별 검증 불충족
+엘에이치웨스턴블루힐,인천 서해구 가정동,unmatched,firstpass,,,1243,,2015,,,,no,,thirdpass_index,0,공개 목록과 검색에서 후보 미확보
+하나2,인천 서해구 가정동,unmatched,firstpass,282,,495,,1992,,,,no,,thirdpass_index,1,단지명·좌표·세대수·연도 식별 검증 불충족
+진주1,인천 서해구 가좌동,identity_review_required,firstpass,197,,1331,686,1981,1983,42,unit_boundary_or_mismatch,no,https://m.richgo.ai/realty/danji/a8gyXGq,thirdpass_index,1,단지명·좌표·세대수·연도 식별 검증 불충족
+진주2,인천 서해구 가좌동,review_needed,firstpass,197,,1331,,1984,,,,no,,thirdpass_index,1,단지명·좌표·세대수·연도 식별 검증 불충족
+현대,인천 서해구 가좌동,unmatched,firstpass,202,,460,,1985,,,,no,,thirdpass_index,0,공개 목록과 검색에서 후보 미확보
+샛별한양4-3,안양 동안구 비산동,unmatched,firstpass,206,,638,,1993,,,,no,,thirdpass_index,1,단지명·좌표·세대수·연도 식별 검증 불충족
+샛별한양6(고층1109-4),안양 동안구 비산동,unmatched,firstpass,208,,1076,,1993,,,,no,,thirdpass_index,0,공개 목록과 검색에서 후보 미확보
+샛별한양6(고층1109-6),안양 동안구 비산동,unmatched,firstpass,208,,726,,1992,,,,no,,thirdpass_index,0,공개 목록과 검색에서 후보 미확보
+목련마을2단지대우선경,안양 동안구 호계동,unmatched,firstpass,208,,934,,1992,,,,no,,thirdpass_index,0,공개 목록과 검색에서 후보 미확보
+효성백년가약,안양 동안구 호계동,unmatched,firstpass,305,,370,,2000,,,,no,,thirdpass_index,0,공개 목록과 검색에서 후보 미확보
+우림필유,평택시 가재동,unmatched,firstpass,,,590,,2006,,,,no,,thirdpass_index,0,공개 목록과 검색에서 후보 미확보
+평택영화블렌하임,평택시 고덕면,unmatched,firstpass,,,568,,2008,,,,no,,thirdpass_index,0,공개 목록과 검색에서 후보 미확보
+동부,평택시 독곡동,unmatched,firstpass,223,,336,,1993,,,,no,,thirdpass_index,0,공개 목록과 검색에서 후보 미확보
+라이프,평택시 독곡동,unmatched,firstpass,59,,483,,1992,,,,no,,thirdpass_index,0,공개 목록과 검색에서 후보 미확보
+한일,평택시 독곡동,unmatched,firstpass,201,,450,,1993,,,,no,,thirdpass_index,0,공개 목록과 검색에서 후보 미확보
+더샵지제역센트럴파크1BL,평택시 동삭동,review_needed,firstpass,,,2124,,2020,,,,no,,thirdpass_index,2,단지명·좌표·세대수·연도 식별 검증 불충족
+동아목련,평택시 비전동,unmatched,firstpass,268,,858,,1993,,,,no,,thirdpass_index,0,공개 목록과 검색에서 후보 미확보
+뜨레휴이곡마을7단지,평택시 비전동,unmatched,firstpass,,,632,,2017,,,,no,,thirdpass_index,0,공개 목록과 검색에서 후보 미확보
+비전경남아너스빌,평택시 비전동,unmatched,firstpass,,,903,,2009,,,,no,,thirdpass_index,0,공개 목록과 검색에서 후보 미확보
+시대한우리,평택시 비전동,unmatched,firstpass,137,,550,,1995,,,,no,,thirdpass_index,0,공개 목록과 검색에서 후보 미확보
+엘지덕동,평택시 비전동,unmatched,firstpass,121,,494,,1994,,,,no,,thirdpass_index,0,공개 목록과 검색에서 후보 미확보
+이곡마을6단지,평택시 비전동,unmatched,firstpass,,,765,,2016,,,,no,,thirdpass_index,0,공개 목록과 검색에서 후보 미확보
+한빛,평택시 비전동,unmatched,firstpass,150,,936,,1997,,,,no,,thirdpass_index,1,단지명·좌표·세대수·연도 식별 검증 불충족
+현대이화,평택시 비전동,unmatched,firstpass,124,,724,,1993,,,,no,,thirdpass_index,0,공개 목록과 검색에서 후보 미확보
+금호타운,평택시 서정동,unmatched,firstpass,202,,648,,1996,,,,no,,thirdpass_index,0,공개 목록과 검색에서 후보 미확보
+세경1,평택시 서정동,unmatched,firstpass,168,,420,,1987,,,,no,,thirdpass_index,0,공개 목록과 검색에서 후보 미확보
+세경2,평택시 서정동,unmatched,firstpass,201,,420,,1988,,,,no,,thirdpass_index,0,공개 목록과 검색에서 후보 미확보
+주공3,평택시 서정동,unmatched,firstpass,165,,382,,1988,,,,no,,thirdpass_index,0,공개 목록과 검색에서 후보 미확보
+부영2,평택시 세교동,unmatched,firstpass,194,,780,,2000,,,,no,,thirdpass_index,0,공개 목록과 검색에서 후보 미확보
+청실보성,평택시 세교동,unmatched,firstpass,204,,462,,2000,,,,no,,thirdpass_index,0,공개 목록과 검색에서 후보 미확보
+현대향촌,평택시 세교동,unmatched,firstpass,203,,380,,1998,,,,no,,thirdpass_index,0,공개 목록과 검색에서 후보 미확보
+평택소사에스케이뷰,평택시 소사동,unmatched,firstpass,,,750,,2007,,,,no,,thirdpass_index,0,공개 목록과 검색에서 후보 미확보
+송탄역서희스타힐스,평택시 신장동,unmatched,firstpass,,,527,,2019,,,,no,,thirdpass_index,0,공개 목록과 검색에서 후보 미확보
+우림,평택시 안중읍,unmatched,firstpass,179,,881,,1999,,,,no,,thirdpass_index,0,공개 목록과 검색에서 후보 미확보
+송담지엔하임1차,평택시 안중읍,review_needed,firstpass,,,707,,2018,,,,no,,thirdpass_index,2,단지명·좌표·세대수·연도 식별 검증 불충족
+건영캐스빌,평택시 안중읍,unmatched,firstpass,,,744,,2005,,,,no,,thirdpass_index,0,공개 목록과 검색에서 후보 미확보
+동신사랑마을,평택시 안중읍,unmatched,firstpass,,,496,,2003,,,,no,,thirdpass_index,0,공개 목록과 검색에서 후보 미확보
+동신아름마을,평택시 안중읍,unmatched,firstpass,,,546,,2005,,,,no,,thirdpass_index,0,공개 목록과 검색에서 후보 미확보
+성원,평택시 안중읍,unmatched,firstpass,,,494,,2002,,,,no,,thirdpass_index,0,공개 목록과 검색에서 후보 미확보
+현대(3차),평택시 안중읍,unmatched,firstpass,,,418,,2004,,,,no,,thirdpass_index,0,공개 목록과 검색에서 후보 미확보
+화현마을우림필유,평택시 안중읍,unmatched,firstpass,,,734,,2005,,,,no,,thirdpass_index,0,공개 목록과 검색에서 후보 미확보
+e편한세상평택,평택시 용이동,review_needed,firstpass,,,632,,2015,,,,no,,thirdpass_index,3,단지명·좌표·세대수·연도 식별 검증 불충족
+평택용이금호어울림2단지,평택시 용이동,review_needed,firstpass,,,624,,2015,,,,no,,thirdpass_index,1,단지명·좌표·세대수·연도 식별 검증 불충족
+푸르지오1차,평택시 용이동,unmatched,firstpass,,,715,,2009,,,,no,,thirdpass_index,0,공개 목록과 검색에서 후보 미확보
+미주3(이충),평택시 이충동,unmatched,firstpass,248,,690,,1996,,,,no,,thirdpass_index,0,공개 목록과 검색에서 후보 미확보
+이충동부영3단지,평택시 이충동,unmatched,firstpass,192,,600,,1996,,,,no,,thirdpass_index,0,공개 목록과 검색에서 후보 미확보
+주공4,평택시 이충동,unmatched,firstpass,87,,490,,1990,,,,no,,thirdpass_index,0,공개 목록과 검색에서 후보 미확보
+휴먼시아추담마을,평택시 이충동,unmatched,firstpass,,,489,,2007,,,,no,,thirdpass_index,0,공개 목록과 검색에서 후보 미확보
+우미이노스빌1차,평택시 장당동,unmatched,firstpass,,,499,,2005,,,,no,,thirdpass_index,0,공개 목록과 검색에서 후보 미확보
+우미이노스빌2차,평택시 장당동,unmatched,firstpass,,,420,,2005,,,,no,,thirdpass_index,0,공개 목록과 검색에서 후보 미확보
+건영(지산),평택시 지산동,unmatched,firstpass,168,,562,,1993,,,,no,,thirdpass_index,0,공개 목록과 검색에서 후보 미확보
+미주2(지산1134),평택시 지산동,unmatched,firstpass,202,,550,,1994,,,,no,,thirdpass_index,0,공개 목록과 검색에서 후보 미확보
+케이씨씨스위첸,평택시 지산동,unmatched,firstpass,,,506,,2006,,,,no,,thirdpass_index,0,공개 목록과 검색에서 후보 미확보
+한승아파트,평택시 진위면,unmatched,firstpass,172,,606,,2000,,,,no,,thirdpass_index,0,공개 목록과 검색에서 후보 미확보
+부영사랑으로(3차),평택시 청북읍,unmatched,firstpass,,,400,,2012,,,,no,,thirdpass_index,0,공개 목록과 검색에서 후보 미확보
+브라운스톤청북,평택시 청북읍,unmatched,firstpass,,,581,,2017,,,,no,,thirdpass_index,0,공개 목록과 검색에서 후보 미확보
+유승한내들퍼스트뷰,평택시 청북읍,unmatched,firstpass,,,386,,2015,,,,no,,thirdpass_index,0,공개 목록과 검색에서 후보 미확보
+평택청북한양수자인,평택시 청북읍,unmatched,firstpass,,,718,,2016,,,,no,,thirdpass_index,1,단지명·좌표·세대수·연도 식별 검증 불충족
+우림필유,평택시 칠괴동,unmatched,firstpass,,,352,,2006,,,,no,,thirdpass_index,0,공개 목록과 검색에서 후보 미확보
+평택지제역동문굿모닝힐맘시티4단지,평택시 칠원동,identity_review_required,firstpass,,192,921,852,2019,2019,480,large_coordinate_delta;different_block_number,no,https://m.richgo.ai/realty/danji/a1xmMju,thirdpass_index,2,단지명·좌표·세대수·연도 식별 검증 불충족
+송화지구우미이노스빌,평택시 팽성읍,unmatched,firstpass,,,719,,2005,,,,no,,thirdpass_index,0,공개 목록과 검색에서 후보 미확보
+현대홈타운,평택시 팽성읍,unmatched,firstpass,,,364,,2005,,,,no,,thirdpass_index,0,공개 목록과 검색에서 후보 미확보
+주공,평택시 팽성읍,unmatched,firstpass,165,,360,,1990,,,,no,,thirdpass_index,0,공개 목록과 검색에서 후보 미확보
+명지미래힐2단지,평택시 포승읍,unmatched,firstpass,,,322,,2004,,,,no,,thirdpass_index,0,공개 목록과 검색에서 후보 미확보
+모아미래도1차,평택시 포승읍,unmatched,firstpass,,,547,,2006,,,,no,,thirdpass_index,0,공개 목록과 검색에서 후보 미확보
+모아미래도2차,평택시 포승읍,unmatched,firstpass,,,368,,2005,,,,no,,thirdpass_index,0,공개 목록과 검색에서 후보 미확보
+포승삼부르네상스1단지,평택시 포승읍,unmatched,firstpass,,,510,,2005,,,,no,,thirdpass_index,0,공개 목록과 검색에서 후보 미확보
+포승삼부르네상스2단지,평택시 포승읍,unmatched,firstpass,,,426,,2005,,,,no,,thirdpass_index,0,공개 목록과 검색에서 후보 미확보
+SR친오애,평택시 포승읍,unmatched,firstpass,,,682,,2004,,,,no,,thirdpass_index,0,공개 목록과 검색에서 후보 미확보
+주공4,평택시 합정동,identity_review_required,firstpass,165,,1165,684,1992,1992,29,unit_boundary_or_mismatch,no,https://m.richgo.ai/realty/danji/a5TsxPV,thirdpass_index,1,단지명·좌표·세대수·연도 식별 검증 불충족
+참이슬,평택시 합정동,unmatched,firstpass,211,,875,,1999,,,,no,,thirdpass_index,0,공개 목록과 검색에서 후보 미확보
+부곡대우이안,의왕시 삼동,unmatched,firstpass,,,688,,2003,,,,no,,thirdpass_index,0,공개 목록과 검색에서 후보 미확보
+동일하이빌,하남시 신장동,unmatched,firstpass,349,,438,,1999,,,,no,,thirdpass_index,0,공개 목록과 검색에서 후보 미확보
+예진마을,용인 처인구 고림동,unmatched,firstpass,,,516,,2003,,,,no,,thirdpass_index,0,공개 목록과 검색에서 후보 미확보
+예진마을인정피렌체,용인 처인구 고림동,review_needed,firstpass,177,,416,,2001,,,,no,,thirdpass_index,1,단지명·좌표·세대수·연도 식별 검증 불충족
+임원마을영화아이닉스,용인 처인구 고림동,unmatched,firstpass,,,513,,2002,,,,no,,thirdpass_index,0,공개 목록과 검색에서 후보 미확보
+불곡마을(벽산블루밍),용인 기흥구 공세동,unmatched,firstpass,,,390,,2005,,,,no,,thirdpass_index,0,공개 목록과 검색에서 후보 미확보
+동문굿모닝힐,용인 기흥구 동백동,unmatched,firstpass,,,512,,2007,,,,no,,thirdpass_index,0,공개 목록과 검색에서 후보 미확보
+백현마을한라비발디(1차),용인 기흥구 동백동,unmatched,firstpass,,,342,,2006,,,,no,,thirdpass_index,1,단지명·좌표·세대수·연도 식별 검증 불충족
+쌍용스윗닷홈1,용인 기흥구 보라동,unmatched,firstpass,,,1596,,2002,,,,no,,thirdpass_index,0,공개 목록과 검색에서 후보 미확보
+SK,용인 기흥구 서천동,unmatched,firstpass,,,826,,2002,,,,no,,thirdpass_index,1,단지명·좌표·세대수·연도 식별 검증 불충족
+녹원마을새천년그린빌(1),용인 기흥구 신갈동,identity_review_required,firstpass,,150,414,238,2006,2004,123,unit_boundary_or_mismatch,no,https://m.richgo.ai/realty/danji/a3egazz,thirdpass_index,1,단지명·좌표·세대수·연도 식별 검증 불충족
+언동마을신일해피트리,용인 기흥구 언남동,unmatched,firstpass,200,,591,,2001,,,,no,,thirdpass_index,0,공개 목록과 검색에서 후보 미확보
+하마비마을동부,용인 기흥구 언남동,review_needed,firstpass,241,,446,,1998,,,,no,,thirdpass_index,1,단지명·좌표·세대수·연도 식별 검증 불충족
+써니밸리II,용인 기흥구 지곡동,unmatched,firstpass,,,1092,,2004,,,,no,,thirdpass_index,0,공개 목록과 검색에서 후보 미확보
+청덕마을광도와이드빌,용인 기흥구 청덕동,unmatched,firstpass,,,490,,2003,,,,no,,thirdpass_index,0,공개 목록과 검색에서 후보 미확보
+휴먼시아물푸레마을3단지,용인 기흥구 청덕동,unmatched,firstpass,,,988,,2008,,,,no,,thirdpass_index,0,공개 목록과 검색에서 후보 미확보
+원천주공,수원 영통구 원천동,review_needed,firstpass,188,,1320,,1987,,,second_pass_rejected_by_quality_gate,no,,thirdpass_index,1,단지명·좌표·세대수·연도 식별 검증 불충족
+더샵서초,서울 서초구 서초동,unmatched,firstpass,,,331,,2006,,,,no,,thirdpass_index,0,공개 목록과 검색에서 후보 미확보
+스타디움센트럴시티,인천 미추홀구 숭의동,unmatched,firstpass,,,992,,2022,,,,no,,thirdpass_index,0,공개 목록과 검색에서 후보 미확보
+동아,인천 미추홀구 용현동,review_needed,firstpass,248,,492,,1989,,,,no,,thirdpass_index,2,단지명·좌표·세대수·연도 식별 검증 불충족
+유원용현,인천 미추홀구 용현동,unmatched,firstpass,248,,967,,1989,,,,no,,thirdpass_index,0,공개 목록과 검색에서 후보 미확보
+한양2차,인천 미추홀구 용현동,unmatched,firstpass,365,,352,,1992,,,,no,,thirdpass_index,0,공개 목록과 검색에서 후보 미확보
+신비마을,인천 미추홀구 주안동,unmatched,firstpass,165,,720,,1994,,,,no,,thirdpass_index,0,공개 목록과 검색에서 후보 미확보
+영남,인천 미추홀구 학익동,unmatched,firstpass,134,,444,,1989,,,,no,,thirdpass_index,0,공개 목록과 검색에서 후보 미확보
+극동,인천 계양구 계산동,unmatched,firstpass,171,,673,,1985,,,,no,,thirdpass_index,0,공개 목록과 검색에서 후보 미확보
+하나,인천 계양구 계산동,identity_review_required,firstpass,192,182,454,994,1987,1987,96,unit_boundary_or_mismatch,no,https://m.richgo.ai/realty/danji/a5LeVQO,thirdpass_index,2,단지명·좌표·세대수·연도 식별 검증 불충족
+귤현현대아이파크,인천 계양구 귤현동,unmatched,firstpass,,,394,,2004,,,,no,,thirdpass_index,0,공개 목록과 검색에서 후보 미확보
+현광,인천 계양구 작전동,unmatched,firstpass,300,,392,,1992,,,,no,,thirdpass_index,0,공개 목록과 검색에서 후보 미확보
+유승와이드빌2,인천 계양구 효성동,unmatched,firstpass,,,350,,2002,,,,no,,thirdpass_index,0,공개 목록과 검색에서 후보 미확보
+망포벽산이빌리지,수원 영통구 망포동,unmatched,firstpass,,,344,,2002,,,,no,,thirdpass_index,0,공개 목록과 검색에서 후보 미확보
+황골마을주공1,수원 영통구 영통동,unmatched,firstpass,216,,3129,,1997,,,,no,,thirdpass_index,0,공개 목록과 검색에서 후보 미확보
+황골마을한국,수원 영통구 영통동,review_needed,firstpass,220,,952,,1998,,,,no,,thirdpass_index,1,단지명·좌표·세대수·연도 식별 검증 불충족
+동문미도(327-7),부천 오정구 고강동,unmatched,firstpass,131,,300,,1989,,,,no,,thirdpass_index,0,공개 목록과 검색에서 후보 미확보
+거성수락산,남양주시 별내면,unmatched,firstpass,312,,320,,1995,,,,no,,thirdpass_index,0,공개 목록과 검색에서 후보 미확보
+동부일신,남양주시 별내면,unmatched,firstpass,320,,456,,1996,,,,no,,thirdpass_index,0,공개 목록과 검색에서 후보 미확보
+청학주공(1단지),남양주시 별내면,review_needed,firstpass,212,,364,,1999,,,,no,,thirdpass_index,3,단지명·좌표·세대수·연도 식별 검증 불충족
+극동,남양주시 오남읍,review_needed,firstpass,113,,450,,1992,,,,no,,thirdpass_index,1,단지명·좌표·세대수·연도 식별 검증 불충족
+삼신,남양주시 오남읍,unmatched,firstpass,261,,369,,1995,,,,no,,thirdpass_index,0,공개 목록과 검색에서 후보 미확보
+양지,남양주시 오남읍,unmatched,firstpass,243,,360,,2001,,,,no,,thirdpass_index,0,공개 목록과 검색에서 후보 미확보
+양지현대,남양주시 오남읍,unmatched,firstpass,283,,361,,1996,,,,no,,thirdpass_index,0,공개 목록과 검색에서 후보 미확보
+오남1청구,남양주시 오남읍,unmatched,firstpass,188,,451,,2000,,,,no,,thirdpass_index,0,공개 목록과 검색에서 후보 미확보
+오남쌍용스윗닷홈지티1단지,남양주시 오남읍,review_needed,firstpass,,,450,,2005,,,second_pass_rejected_by_quality_gate,no,,thirdpass_index,1,단지명·좌표·세대수·연도 식별 검증 불충족
+금호어울림,남양주시 오남읍,unmatched,firstpass,,,737,,2006,,,,no,,thirdpass_index,0,공개 목록과 검색에서 후보 미확보
+남양주대한,남양주시 오남읍,review_needed,firstpass,114,,465,,1998,,,,no,,thirdpass_index,1,단지명·좌표·세대수·연도 식별 검증 불충족
+남양주오남푸르지오,남양주시 오남읍,unmatched,firstpass,,,453,,2009,,,,no,,thirdpass_index,0,공개 목록과 검색에서 후보 미확보
+동부,남양주시 오남읍,unmatched,firstpass,198,,464,,1998,,,,no,,thirdpass_index,0,공개 목록과 검색에서 후보 미확보
+두산1,남양주시 오남읍,unmatched,firstpass,250,,491,,1998,,,,no,,thirdpass_index,0,공개 목록과 검색에서 후보 미확보
+두산위브,남양주시 오남읍,review_needed,firstpass,,,356,,2006,,,,no,,thirdpass_index,2,단지명·좌표·세대수·연도 식별 검증 불충족
+신우아이딜(1차),남양주시 오남읍,identity_review_required,firstpass,,188,595,593,2004,2004,173,different_block_number,no,https://m.richgo.ai/realty/danji/a0VQbOC,thirdpass_index,1,단지명·좌표·세대수·연도 식별 검증 불충족
+신일해피트리(1차),남양주시 오남읍,unmatched,firstpass,,,476,,2004,,,,no,,thirdpass_index,0,공개 목록과 검색에서 후보 미확보
+신일해피트리(2차),남양주시 오남읍,unmatched,firstpass,,,498,,2004,,,,no,,thirdpass_index,0,공개 목록과 검색에서 후보 미확보
+유호,남양주시 오남읍,unmatched,firstpass,,,509,,2003,,,,no,,thirdpass_index,0,공개 목록과 검색에서 후보 미확보
+파라다이스빌,남양주시 오남읍,unmatched,firstpass,,,497,,2004,,,,no,,thirdpass_index,0,공개 목록과 검색에서 후보 미확보
+한국1,남양주시 오남읍,unmatched,firstpass,243,,494,,1999,,,,no,,thirdpass_index,0,공개 목록과 검색에서 후보 미확보
+한신(2차),남양주시 오남읍,unmatched,firstpass,225,,416,,1998,,,,no,,thirdpass_index,0,공개 목록과 검색에서 후보 미확보
+진도,남양주시 와부읍,unmatched,firstpass,259,,608,,1998,,,,no,,thirdpass_index,0,공개 목록과 검색에서 후보 미확보
+덕소강변서희스타힐스,남양주시 와부읍,identity_review_required,firstpass,,229,423,423,2026,2023,42,completion_year_delta,no,https://m.richgo.ai/realty/danji/a9ahnod,thirdpass_index,2,단지명·좌표·세대수·연도 식별 검증 불충족
+금강,남양주시 진건읍,unmatched,firstpass,253,,414,,1999,,,,no,,thirdpass_index,0,공개 목록과 검색에서 후보 미확보
+남양주진건주공2단지,남양주시 진건읍,review_needed,firstpass,210,,499,,1998,,,,no,,thirdpass_index,1,단지명·좌표·세대수·연도 식별 검증 불충족
+세아,남양주시 진건읍,unmatched,firstpass,286,,467,,1997,,,,no,,thirdpass_index,0,공개 목록과 검색에서 후보 미확보
+현대,남양주시 진건읍,unmatched,firstpass,182,,399,,1998,,,,no,,thirdpass_index,0,공개 목록과 검색에서 후보 미확보
+해밀마을신안인스빌,남양주시 진접읍,unmatched,firstpass,,,1100,,2010,,,,no,,thirdpass_index,1,단지명·좌표·세대수·연도 식별 검증 불충족
+한신,남양주시 진접읍,unmatched,firstpass,206,,404,,1999,,,,no,,thirdpass_index,0,공개 목록과 검색에서 후보 미확보
+금강펜터리움,남양주시 진접읍,unmatched,firstpass,,,500,,2007,,,,no,,thirdpass_index,1,단지명·좌표·세대수·연도 식별 검증 불충족
+길훈,남양주시 진접읍,unmatched,firstpass,,,426,,2009,,,,no,,thirdpass_index,0,공개 목록과 검색에서 후보 미확보
+남양주진접롯데캐슬,남양주시 진접읍,unmatched,firstpass,,,484,,2009,,,,no,,thirdpass_index,0,공개 목록과 검색에서 후보 미확보
+대명,남양주시 진접읍,unmatched,firstpass,243,,460,,1995,,,,no,,thirdpass_index,0,공개 목록과 검색에서 후보 미확보
+신동아,남양주시 진접읍,unmatched,firstpass,235,,402,,1997,,,,no,,thirdpass_index,0,공개 목록과 검색에서 후보 미확보
+신우,남양주시 진접읍,unmatched,firstpass,247,,572,,1999,,,,no,,thirdpass_index,0,공개 목록과 검색에서 후보 미확보
+정광산호,남양주시 진접읍,unmatched,firstpass,300,,728,,1994,,,,no,,thirdpass_index,0,공개 목록과 검색에서 후보 미확보
+신창비바패밀리,남양주시 진접읍,unmatched,firstpass,,,775,,2006,,,,no,,thirdpass_index,0,공개 목록과 검색에서 후보 미확보
+대명,남양주시 평내동,unmatched,firstpass,252,,664,,2000,,,,no,,thirdpass_index,0,공개 목록과 검색에서 후보 미확보
+세종리젠시빌,남양주시 평내동,unmatched,firstpass,316,,318,,2000,,,,no,,thirdpass_index,0,공개 목록과 검색에서 후보 미확보
+우남퍼스트빌,남양주시 평내동,unmatched,firstpass,,,378,,2004,,,,no,,thirdpass_index,0,공개 목록과 검색에서 후보 미확보
+평내마을평내1차대주파크빌,남양주시 평내동,unmatched,firstpass,,,595,,2005,,,,no,,thirdpass_index,1,단지명·좌표·세대수·연도 식별 검증 불충족
+평내화성파크힐즈,남양주시 평내동,unmatched,firstpass,,,335,,2004,,,,no,,thirdpass_index,0,공개 목록과 검색에서 후보 미확보
+호평마을효성백년가약,남양주시 호평동,unmatched,firstpass,,,607,,2004,,,,no,,thirdpass_index,0,공개 목록과 검색에서 후보 미확보
+신마석신도브래뉴,남양주시 화도읍,review_needed,firstpass,,,302,,2008,,,,no,,thirdpass_index,1,단지명·좌표·세대수·연도 식별 검증 불충족
+남양주녹촌두산위브,남양주시 화도읍,unmatched,firstpass,,,385,,2006,,,,no,,thirdpass_index,0,공개 목록과 검색에서 후보 미확보
+삼신,남양주시 화도읍,unmatched,firstpass,201,,362,,1995,,,,no,,thirdpass_index,0,공개 목록과 검색에서 후보 미확보
+신창현두산위브,남양주시 화도읍,unmatched,firstpass,,,478,,2008,,,,no,,thirdpass_index,0,공개 목록과 검색에서 후보 미확보
+중흥S클래스,남양주시 화도읍,unmatched,firstpass,,,477,,2004,,,,no,,thirdpass_index,0,공개 목록과 검색에서 후보 미확보
+경성큰마을(1단지),남양주시 화도읍,unmatched,firstpass,128,,385,,1998,,,,no,,thirdpass_index,0,공개 목록과 검색에서 후보 미확보
+경성큰마을(2단지),남양주시 화도읍,unmatched,firstpass,206,,481,,1998,,,,no,,thirdpass_index,0,공개 목록과 검색에서 후보 미확보
+마석LIG아파트,남양주시 화도읍,unmatched,firstpass,,,444,,2005,,,,no,,thirdpass_index,0,공개 목록과 검색에서 후보 미확보
+삼신푸른솔,남양주시 화도읍,unmatched,firstpass,240,,799,,1998,,,,no,,thirdpass_index,1,단지명·좌표·세대수·연도 식별 검증 불충족
+삼익,남양주시 화도읍,unmatched,firstpass,,,436,,2003,,,,no,,thirdpass_index,0,공개 목록과 검색에서 후보 미확보
+화도효성해링턴플레이스,남양주시 화도읍,unmatched,firstpass,,,635,,2015,,,,no,,thirdpass_index,0,공개 목록과 검색에서 후보 미확보
+신창현풍림아이원1차,남양주시 화도읍,unmatched,firstpass,,,388,,2009,,,,no,,thirdpass_index,1,단지명·좌표·세대수·연도 식별 검증 불충족
+영남탑스빌,남양주시 화도읍,unmatched,firstpass,162,,422,,2000,,,,no,,thirdpass_index,0,공개 목록과 검색에서 후보 미확보
+창현두산1단지아파트,남양주시 화도읍,unmatched,firstpass,192,,350,,1997,,,,no,,thirdpass_index,0,공개 목록과 검색에서 후보 미확보
+대우푸르지오,군포시 당정동,unmatched,firstpass,,,565,,2004,,,,no,,thirdpass_index,0,공개 목록과 검색에서 후보 미확보
+가야3주공,군포시 산본동,unmatched,firstpass,211,,3698,,1993,,,,no,,thirdpass_index,0,공개 목록과 검색에서 후보 미확보
+금강2단지주상복합,군포시 산본동,unmatched,firstpass,221,,390,,1996,,,,no,,thirdpass_index,0,공개 목록과 검색에서 후보 미확보
+매화,군포시 산본동,unmatched,firstpass,149,,1847,,1995,,,,no,,thirdpass_index,0,공개 목록과 검색에서 후보 미확보
+남양우림,화성 만세구 남양읍,unmatched,firstpass,207,,942,,2001,,,,no,,thirdpass_index,1,단지명·좌표·세대수·연도 식별 검증 불충족
+하안주공3단지,광명시 하안동,review_needed,firstpass,163,,2220,,1989,,,,no,,thirdpass_index,2,단지명·좌표·세대수·연도 식별 검증 불충족
+상계동 상계대림,서울 노원구 상계동,review_needed,firstpass,219,,675,,1989,,,,no,,thirdpass_index,1,단지명·좌표·세대수·연도 식별 검증 불충족
+월계동 청백4단지,서울 노원구 월계동,unmatched,firstpass,249,,520,,1998,,,,no,,thirdpass_index,0,공개 목록과 검색에서 후보 미확보
+공릉동 우성,서울 노원구 공릉동,unmatched,firstpass,376,,363,,1995,,,,no,,thirdpass_index,2,단지명·좌표·세대수·연도 식별 검증 불충족
+세이지움태릉입구역,서울 중랑구 묵동,unmatched,firstpass,,,927,,2026,,,,no,,thirdpass_index,0,공개 목록과 검색에서 후보 미확보
+에이트플레이스,서울 중랑구 묵동,unmatched,firstpass,,,724,,2026,,,,no,,thirdpass_index,0,공개 목록과 검색에서 후보 미확보
+시영2단지(라이프)아파트,서울 노원구 공릉동,unmatched,firstpass,84,,300,,1994,,,,no,,thirdpass_index,0,공개 목록과 검색에서 후보 미확보
+상계신동아,서울 노원구 상계동,unmatched,firstpass,300,,385,,1995,,,,no,,thirdpass_index,0,공개 목록과 검색에서 후보 미확보
+현대2차,서울 노원구 상계동,review_needed,firstpass,286,,465,,1993,,,,no,,thirdpass_index,2,단지명·좌표·세대수·연도 식별 검증 불충족
+삼창타워주상프라자,서울 노원구 중계동,unmatched,firstpass,385,,367,,1997,,,,no,,thirdpass_index,1,단지명·좌표·세대수·연도 식별 검증 불충족
+경남아너스빌,서울 은평구 구산동,unmatched,firstpass,,,475,,2004,,,,no,,thirdpass_index,0,공개 목록과 검색에서 후보 미확보
+송현주공솔빛마을(154),인천 제물포구 송현동,unmatched,firstpass,,,2711,,2003,,,,no,,thirdpass_index,0,공개 목록과 검색에서 후보 미확보
+라이프비취1차,인천 제물포구 항동7가,unmatched,firstpass,113,,2008,,1980,,,,no,,thirdpass_index,1,단지명·좌표·세대수·연도 식별 검증 불충족
+라이프비취2차,인천 제물포구 항동7가,unmatched,firstpass,113,,2008,,1981,,,,no,,thirdpass_index,1,단지명·좌표·세대수·연도 식별 검증 불충족
+라이프비취3차,인천 제물포구 항동7가,unmatched,firstpass,332,,2008,,1990,,,,no,,thirdpass_index,1,단지명·좌표·세대수·연도 식별 검증 불충족
+대우,오산시 수청동,review_needed,firstpass,130,,1144,,1993,,,,no,,thirdpass_index,1,단지명·좌표·세대수·연도 식별 검증 불충족
+대동,오산시 오산동,unmatched,firstpass,235,,660,,2000,,,,no,,thirdpass_index,0,공개 목록과 검색에서 후보 미확보
+e편한세상오산세교,오산시 지곶동,unmatched,firstpass,,,2050,,2018,,,,no,,thirdpass_index,0,공개 목록과 검색에서 후보 미확보
+동원,시흥시 거모동,unmatched,firstpass,69,,416,,1991,,,,no,,thirdpass_index,0,공개 목록과 검색에서 후보 미확보
+유호,시흥시 거모동,unmatched,firstpass,474,,457,,1998,,,,no,,thirdpass_index,0,공개 목록과 검색에서 후보 미확보
+에이스,시흥시 도창동,unmatched,firstpass,291,,798,,1997,,,,no,,thirdpass_index,0,공개 목록과 검색에서 후보 미확보
+풍림아이원3차,시흥시 월곶동,review_needed,firstpass,,,560,,2005,,,,no,,thirdpass_index,2,단지명·좌표·세대수·연도 식별 검증 불충족
+대우푸르지오1차,시흥시 은행동,unmatched,firstpass,249,,418,,1996,,,,no,,thirdpass_index,0,공개 목록과 검색에서 후보 미확보
+대우푸르지오4차,시흥시 은행동,unmatched,firstpass,,,1216,,2004,,,,no,,thirdpass_index,0,공개 목록과 검색에서 후보 미확보
+신명,시흥시 은행동,unmatched,firstpass,253,,460,,1995,,,,no,,thirdpass_index,0,공개 목록과 검색에서 후보 미확보
+삼성래미안,시흥시 장곡동,unmatched,firstpass,233,,574,,1999,,,,no,,thirdpass_index,0,공개 목록과 검색에서 후보 미확보
+건영1,시흥시 정왕동,unmatched,firstpass,130,,796,,1997,,,,no,,thirdpass_index,0,공개 목록과 검색에서 후보 미확보
+계룡2,시흥시 정왕동,unmatched,firstpass,120,,641,,1998,,,,no,,thirdpass_index,0,공개 목록과 검색에서 후보 미확보
+계룡리슈빌,시흥시 정왕동,unmatched,firstpass,120,,620,,1997,,,,no,,thirdpass_index,0,공개 목록과 검색에서 후보 미확보
+고합,시흥시 정왕동,unmatched,firstpass,124,,400,,1998,,,,no,,thirdpass_index,0,공개 목록과 검색에서 후보 미확보
+금강,시흥시 정왕동,unmatched,firstpass,119,,730,,1996,,,,no,,thirdpass_index,0,공개 목록과 검색에서 후보 미확보
+대림1,시흥시 정왕동,review_needed,firstpass,119,,660,,1998,,,,no,,thirdpass_index,1,단지명·좌표·세대수·연도 식별 검증 불충족
+동남,시흥시 정왕동,unmatched,firstpass,108,,738,,1998,,,,no,,thirdpass_index,0,공개 목록과 검색에서 후보 미확보
+동보,시흥시 정왕동,unmatched,firstpass,108,,560,,1997,,,,no,,thirdpass_index,0,공개 목록과 검색에서 후보 미확보
+동원,시흥시 정왕동,unmatched,firstpass,144,,358,,1998,,,,no,,thirdpass_index,0,공개 목록과 검색에서 후보 미확보
+무진,시흥시 정왕동,unmatched,firstpass,116,,488,,1995,,,,no,,thirdpass_index,0,공개 목록과 검색에서 후보 미확보
+미주,시흥시 정왕동,unmatched,firstpass,140,,512,,1996,,,,no,,thirdpass_index,0,공개 목록과 검색에서 후보 미확보
+삼성,시흥시 정왕동,unmatched,firstpass,165,,320,,1996,,,,no,,thirdpass_index,0,공개 목록과 검색에서 후보 미확보
+삼환,시흥시 정왕동,unmatched,firstpass,120,,350,,1997,,,,no,,thirdpass_index,0,공개 목록과 검색에서 후보 미확보
+신동아,시흥시 정왕동,unmatched,firstpass,116,,310,,1996,,,,no,,thirdpass_index,0,공개 목록과 검색에서 후보 미확보
+신호새피앙,시흥시 정왕동,unmatched,firstpass,143,,330,,1997,,,,no,,thirdpass_index,0,공개 목록과 검색에서 후보 미확보
+아주,시흥시 정왕동,unmatched,firstpass,291,,534,,1994,,,,no,,thirdpass_index,0,공개 목록과 검색에서 후보 미확보
+영남1,시흥시 정왕동,unmatched,firstpass,124,,390,,1996,,,,no,,thirdpass_index,0,공개 목록과 검색에서 후보 미확보
+영남3,시흥시 정왕동,unmatched,firstpass,129,,520,,1996,,,,no,,thirdpass_index,0,공개 목록과 검색에서 후보 미확보
+영남4,시흥시 정왕동,unmatched,firstpass,130,,330,,1996,,,,no,,thirdpass_index,0,공개 목록과 검색에서 후보 미확보
+영남5,시흥시 정왕동,unmatched,firstpass,132,,330,,1996,,,,no,,thirdpass_index,0,공개 목록과 검색에서 후보 미확보
+요진,시흥시 정왕동,unmatched,firstpass,119,,580,,1997,,,,no,,thirdpass_index,0,공개 목록과 검색에서 후보 미확보
+월드,시흥시 정왕동,unmatched,firstpass,119,,594,,1995,,,,no,,thirdpass_index,0,공개 목록과 검색에서 후보 미확보
+유천,시흥시 정왕동,unmatched,firstpass,138,,580,,1996,,,,no,,thirdpass_index,0,공개 목록과 검색에서 후보 미확보
+주공1,시흥시 정왕동,unmatched,firstpass,120,,690,,1997,,,,no,,thirdpass_index,0,공개 목록과 검색에서 후보 미확보
+주공2,시흥시 정왕동,review_needed,firstpass,121,,683,,1997,,,second_pass_rejected_by_quality_gate,no,,thirdpass_index,1,단지명·좌표·세대수·연도 식별 검증 불충족
+주공3,시흥시 정왕동,unmatched,firstpass,120,,630,,1997,,,,no,,thirdpass_index,0,공개 목록과 검색에서 후보 미확보
+주공5,시흥시 정왕동,unmatched,firstpass,118,,690,,1998,,,,no,,thirdpass_index,0,공개 목록과 검색에서 후보 미확보
+진로,시흥시 정왕동,unmatched,firstpass,118,,350,,1997,,,,no,,thirdpass_index,0,공개 목록과 검색에서 후보 미확보
+청솔아파트,시흥시 정왕동,unmatched,firstpass,108,,750,,1999,,,,no,,thirdpass_index,0,공개 목록과 검색에서 후보 미확보
+한신공영,시흥시 정왕동,unmatched,firstpass,126,,406,,1996,,,,no,,thirdpass_index,0,공개 목록과 검색에서 후보 미확보
+한일,시흥시 정왕동,unmatched,firstpass,120,,580,,1996,,,,no,,thirdpass_index,0,공개 목록과 검색에서 후보 미확보
+연꽃마을금호,시흥시 하상동,unmatched,firstpass,248,,822,,1999,,,,no,,thirdpass_index,0,공개 목록과 검색에서 후보 미확보
+연꽃마을태평2,시흥시 하상동,review_needed,firstpass,,,368,,2003,,,,no,,thirdpass_index,1,단지명·좌표·세대수·연도 식별 검증 불충족
+관곡마을성원,시흥시 하중동,review_needed,firstpass,246,,498,,1999,,,second_pass_rejected_by_quality_gate,no,,thirdpass_index,1,단지명·좌표·세대수·연도 식별 검증 불충족
+참이슬마을,시흥시 하중동,unmatched,firstpass,249,,944,,1999,,,,no,,thirdpass_index,0,공개 목록과 검색에서 후보 미확보
+르파비스,화성 동탄구 목동,unmatched,firstpass,,,876,,2017,,,,no,,thirdpass_index,0,공개 목록과 검색에서 후보 미확보
+동탄2아이파크2단지,화성 동탄구 장지동,unmatched,firstpass,,,510,,2019,,,,no,,thirdpass_index,2,단지명·좌표·세대수·연도 식별 검증 불충족
+엔에이치에프엘크루,화성 동탄구 장지동,unmatched,firstpass,,,856,,2019,,,,no,,thirdpass_index,0,공개 목록과 검색에서 후보 미확보
+푸르지오,광주시 경안동,unmatched,firstpass,,,338,,2002,,,,no,,thirdpass_index,0,공개 목록과 검색에서 후보 미확보
+오포대성,광주시 매산동,unmatched,firstpass,185,,466,,2000,,,,no,,thirdpass_index,0,공개 목록과 검색에서 후보 미확보
+오포우림퓨전빌,광주시 문형동,unmatched,firstpass,,,498,,2002,,,,no,,thirdpass_index,0,공개 목록과 검색에서 후보 미확보
+송정동현대아이파크,광주시 송정동,unmatched,firstpass,,,326,,2002,,,,no,,thirdpass_index,0,공개 목록과 검색에서 후보 미확보
+쌍령현대1차모닝사이드,광주시 쌍령동,unmatched,firstpass,226,,470,,2000,,,,no,,thirdpass_index,1,단지명·좌표·세대수·연도 식별 검증 불충족
+대주(2차),광주시 양벌동,unmatched,firstpass,,,477,,2002,,,,no,,thirdpass_index,0,공개 목록과 검색에서 후보 미확보
+세양청마루,광주시 양벌동,unmatched,firstpass,,,408,,2004,,,,no,,thirdpass_index,0,공개 목록과 검색에서 후보 미확보
+양벌리2쌍용,광주시 양벌동,unmatched,firstpass,,,492,,2002,,,,no,,thirdpass_index,0,공개 목록과 검색에서 후보 미확보
+양벌리우림,광주시 양벌동,unmatched,firstpass,210,,448,,2000,,,,no,,thirdpass_index,0,공개 목록과 검색에서 후보 미확보
+신일드림빌,광주시 초월읍,unmatched,firstpass,,,360,,2002,,,,no,,thirdpass_index,0,공개 목록과 검색에서 후보 미확보
+우림푸른마을,광주시 초월읍,unmatched,firstpass,200,,486,,1999,,,,no,,thirdpass_index,0,공개 목록과 검색에서 후보 미확보
+대주피오레,광주시 초월읍,unmatched,firstpass,,,434,,2007,,,,no,,thirdpass_index,0,공개 목록과 검색에서 후보 미확보
+도평리1차우림퓨전빌,광주시 초월읍,unmatched,firstpass,,,477,,2002,,,,no,,thirdpass_index,0,공개 목록과 검색에서 후보 미확보
+신일해피트리,광주시 초월읍,unmatched,firstpass,188,,358,,2000,,,,no,,thirdpass_index,0,공개 목록과 검색에서 후보 미확보
+코아루햇빛마을,광주시 초월읍,unmatched,firstpass,243,,363,,2000,,,,no,,thirdpass_index,0,공개 목록과 검색에서 후보 미확보
+광주초월동광모닝스카이,광주시 초월읍,review_needed,firstpass,,,378,,2005,,,,no,,thirdpass_index,1,단지명·좌표·세대수·연도 식별 검증 불충족
+광주1차세광엔리치빌,광주시 초월읍,unmatched,firstpass,,,338,,2002,,,,no,,thirdpass_index,0,공개 목록과 검색에서 후보 미확보
+태전7지구C-13BL태전파크자이,광주시 태전동,review_needed,firstpass,,,328,,2019,,,,no,,thirdpass_index,1,단지명·좌표·세대수·연도 식별 검증 불충족
+검단파라곤보타닉파크,인천 검단구 원당동,review_needed,firstpass,,,887,,2022,,,,no,,thirdpass_index,1,단지명·좌표·세대수·연도 식별 검증 불충족
+검단모아미래도엘리트파크,인천 검단구 당하동,review_needed,firstpass,,,658,,2022,,,,no,,thirdpass_index,1,단지명·좌표·세대수·연도 식별 검증 불충족
+검단유승한내들에듀파크,인천 검단구 당하동,review_needed,firstpass,,,938,,2021,,,,no,,thirdpass_index,2,단지명·좌표·세대수·연도 식별 검증 불충족
+옥정디에트르프레스티지,양주시 옥정동,review_needed,firstpass,,,1859,,2022,,,,no,,thirdpass_index,1,단지명·좌표·세대수·연도 식별 검증 불충족
+옥정제일풍경채레이크시티2단지,양주시 옥정동,review_needed,firstpass,,,1228,,2023,,,,no,,thirdpass_index,2,단지명·좌표·세대수·연도 식별 검증 불충족
+검단대방디에트르리버파크,인천 검단구 원당동,review_needed,firstpass,,,722,,2022,,,,no,,thirdpass_index,1,단지명·좌표·세대수·연도 식별 검증 불충족
+옥정대방노블랜드더시그니처,양주시 옥정동,review_needed,firstpass,,,1483,,2021,,,,no,,thirdpass_index,1,단지명·좌표·세대수·연도 식별 검증 불충족
+회천디에트르센트럴시티,양주시 덕계동,review_needed,firstpass,,,860,,2022,,,,no,,thirdpass_index,2,단지명·좌표·세대수·연도 식별 검증 불충족
+검단우미린파크뷰2단지,인천 검단구 당하동,review_needed,firstpass,,,810,,2023,,,,no,,thirdpass_index,1,단지명·좌표·세대수·연도 식별 검증 불충족
+검단모아엘가그랑데,인천 검단구 원당동,review_needed,firstpass,,,510,,2023,,,,no,,thirdpass_index,1,단지명·좌표·세대수·연도 식별 검증 불충족
+세운푸르지오헤리시티,서울 중구 인현동2가,identity_review_required,firstpass,,937,614,321,2023,2023,10,unit_boundary_or_mismatch,no,https://m.richgo.ai/realty/danji/a6bGSfx,thirdpass_index,2,단지명·좌표·세대수·연도 식별 검증 불충족
+힐스테이트세운센트럴1단지,서울 중구 입정동,identity_review_required,firstpass,,910,414,206,2023,2023,36,unit_boundary_or_mismatch,no,https://m.richgo.ai/realty/danji/a2ijNfS,thirdpass_index,4,단지명·좌표·세대수·연도 식별 검증 불충족
+한양I-Class,서울 중구 황학동,unmatched,firstpass,,,320,,2013,,,,no,,thirdpass_index,0,공개 목록과 검색에서 후보 미확보
+홍은미성,서울 서대문구 홍은동,unmatched,firstpass,179,,308,,1985,,,,no,,thirdpass_index,0,공개 목록과 검색에서 후보 미확보
+국제산장,서울 관악구 신림동,unmatched,firstpass,239,,630,,1993,,,,no,,thirdpass_index,0,공개 목록과 검색에서 후보 미확보
+대림3,인천 연수구 동춘동,unmatched,firstpass,140,,408,,1993,,,,no,,thirdpass_index,0,공개 목록과 검색에서 후보 미확보
+래미안,인천 연수구 동춘동,unmatched,firstpass,200,,540,,1993,,,,no,,thirdpass_index,0,공개 목록과 검색에서 후보 미확보
+자이(xi),인천 연수구 동춘동,unmatched,firstpass,200,,540,,1993,,,,no,,thirdpass_index,0,공개 목록과 검색에서 후보 미확보
+풍림3,인천 연수구 동춘동,review_needed,firstpass,109,,440,,1993,,,second_pass_rejected_by_quality_gate,no,,thirdpass_index,1,단지명·좌표·세대수·연도 식별 검증 불충족
+"태산,대진.정광아파트",인천 연수구 선학동,unmatched,firstpass,111,,900,,1991,,,,no,,thirdpass_index,0,공개 목록과 검색에서 후보 미확보
+경남,인천 연수구 연수동,review_needed,firstpass,110,,620,,1993,,,second_pass_rejected_by_quality_gate,no,,thirdpass_index,2,단지명·좌표·세대수·연도 식별 검증 불충족
+"승기마을,연수1차시영",인천 연수구 연수동,unmatched,firstpass,123,,3643,,1992,,,,no,,thirdpass_index,0,공개 목록과 검색에서 후보 미확보
+연수주공2차,인천 연수구 연수동,unmatched,firstpass,198,,2614,,1992,,,,no,,thirdpass_index,1,단지명·좌표·세대수·연도 식별 검증 불충족
+우주,인천 연수구 연수동,unmatched,firstpass,114,,670,,1992,,,,no,,thirdpass_index,0,공개 목록과 검색에서 후보 미확보
+태경,인천 연수구 연수동,unmatched,firstpass,114,,670,,1992,,,,no,,thirdpass_index,0,공개 목록과 검색에서 후보 미확보
+럭키송도,인천 연수구 옥련동,unmatched,firstpass,326,,1304,,1993,,,,no,,thirdpass_index,0,공개 목록과 검색에서 후보 미확보
+원흥,인천 연수구 옥련동,unmatched,firstpass,285,,359,,1994,,,,no,,thirdpass_index,0,공개 목록과 검색에서 후보 미확보
+현대1,인천 연수구 옥련동,unmatched,firstpass,209,,674,,1994,,,,no,,thirdpass_index,1,단지명·좌표·세대수·연도 식별 검증 불충족
+현대5,인천 연수구 옥련동,unmatched,firstpass,250,,621,,1997,,,,no,,thirdpass_index,0,공개 목록과 검색에서 후보 미확보
+하나타운1,인천 연수구 청학동,unmatched,firstpass,158,,724,,1995,,,,no,,thirdpass_index,0,공개 목록과 검색에서 후보 미확보
+대우,인천 부평구 갈산동,unmatched,firstpass,250,,414,,2001,,,,no,,thirdpass_index,0,공개 목록과 검색에서 후보 미확보
+동남,인천 부평구 갈산동,identity_review_required,firstpass,271,271,804,278,1992,1992,84,unit_boundary_or_mismatch,no,https://m.richgo.ai/realty/danji/a1FPMKJ,thirdpass_index,2,단지명·좌표·세대수·연도 식별 검증 불충족
+정광,인천 부평구 갈산동,unmatched,firstpass,271,,311,,1990,,,,no,,thirdpass_index,0,공개 목록과 검색에서 후보 미확보
+주공1단지,인천 부평구 갈산동,unmatched,firstpass,208,,1650,,1992,,,,no,,thirdpass_index,0,공개 목록과 검색에서 후보 미확보
+하나,인천 부평구 갈산동,identity_review_required,firstpass,271,260,804,526,1992,1992,45,unit_boundary_or_mismatch,no,https://m.richgo.ai/realty/danji/a8TyrBh,thirdpass_index,1,단지명·좌표·세대수·연도 식별 검증 불충족
+"한국1,동아,팬더",인천 부평구 갈산동,unmatched,firstpass,271,,840,,1993,,,,no,,thirdpass_index,0,공개 목록과 검색에서 후보 미확보
+주공5,인천 부평구 부개동,unmatched,firstpass,245,,1317,,1998,,,,no,,thirdpass_index,0,공개 목록과 검색에서 후보 미확보
+부평LH2단지,인천 부평구 부평동,unmatched,firstpass,,,704,,2012,,,,no,,thirdpass_index,0,공개 목록과 검색에서 후보 미확보
+뉴서울(264-1),인천 부평구 산곡동,unmatched,firstpass,312,,498,,1991,,,,no,,thirdpass_index,0,공개 목록과 검색에서 후보 미확보
+뉴서울아파트,인천 부평구 산곡동,unmatched,firstpass,296,,446,,1989,,,,no,,thirdpass_index,1,단지명·좌표·세대수·연도 식별 검증 불충족
+무지개,인천 부평구 산곡동,unmatched,firstpass,296,,308,,1991,,,,no,,thirdpass_index,0,공개 목록과 검색에서 후보 미확보
+우성1차2차(294-35),인천 부평구 산곡동,review_needed,firstpass,271,,1980,,1989,,,second_pass_rejected_by_quality_gate,no,,thirdpass_index,1,단지명·좌표·세대수·연도 식별 검증 불충족
+우성3차(294-35),인천 부평구 산곡동,review_needed,firstpass,271,,1980,,1990,,,second_pass_rejected_by_quality_gate,no,,thirdpass_index,1,단지명·좌표·세대수·연도 식별 검증 불충족
+한신(137-8),인천 부평구 산곡동,unmatched,firstpass,197,,308,,1986,,,,no,,thirdpass_index,0,공개 목록과 검색에서 후보 미확보
+한양(155-1),인천 부평구 산곡동,unmatched,firstpass,329,,320,,1992,,,,no,,thirdpass_index,0,공개 목록과 검색에서 후보 미확보
+한화1단지,인천 부평구 산곡동,unmatched,firstpass,283,,2024,,1997,,,,no,,thirdpass_index,0,공개 목록과 검색에서 후보 미확보
+한화2단지,인천 부평구 산곡동,unmatched,firstpass,292,,2024,,1999,,,,no,,thirdpass_index,0,공개 목록과 검색에서 후보 미확보
+현대(124-1),인천 부평구 산곡동,unmatched,firstpass,263,,1161,,1993,,,,no,,thirdpass_index,2,단지명·좌표·세대수·연도 식별 검증 불충족
+삼보,인천 부평구 삼산동,unmatched,firstpass,239,,481,,1990,,,,no,,thirdpass_index,0,공개 목록과 검색에서 후보 미확보
+풍림아파트(101동~110동),인천 부평구 일신동,unmatched,firstpass,223,,750,,1995,,,,no,,thirdpass_index,0,공개 목록과 검색에서 후보 미확보
+광명,인천 부평구 청천동,unmatched,firstpass,282,,418,,1995,,,,no,,thirdpass_index,0,공개 목록과 검색에서 후보 미확보
+미도7,인천 부평구 청천동,unmatched,firstpass,271,,384,,1989,,,,no,,thirdpass_index,0,공개 목록과 검색에서 후보 미확보
+동신2단지,수원 장안구 정자동,review_needed,firstpass,207,,1542,,1988,,,second_pass_rejected_by_quality_gate,no,,thirdpass_index,2,단지명·좌표·세대수·연도 식별 검증 불충족
+동원,의정부시 가능동,unmatched,firstpass,249,,406,,1993,,,,no,,thirdpass_index,0,공개 목록과 검색에서 후보 미확보
+브라운스톤흥선,의정부시 가능동,unmatched,firstpass,,,673,,2008,,,,no,,thirdpass_index,0,공개 목록과 검색에서 후보 미확보
+거성,의정부시 금오동,unmatched,firstpass,307,,531,,1997,,,,no,,thirdpass_index,0,공개 목록과 검색에서 후보 미확보
+벽산블루밍,의정부시 금오동,unmatched,firstpass,,,455,,2005,,,,no,,thirdpass_index,0,공개 목록과 검색에서 후보 미확보
+파스텔,의정부시 금오동,unmatched,firstpass,259,,332,,1998,,,,no,,thirdpass_index,0,공개 목록과 검색에서 후보 미확보
+대림,의정부시 녹양동,unmatched,firstpass,209,,309,,2000,,,,no,,thirdpass_index,0,공개 목록과 검색에서 후보 미확보
+신도9,의정부시 녹양동,unmatched,firstpass,159,,305,,2000,,,,no,,thirdpass_index,1,단지명·좌표·세대수·연도 식별 검증 불충족
+청구,의정부시 녹양동,unmatched,firstpass,373,,409,,1994,,,,no,,thirdpass_index,0,공개 목록과 검색에서 후보 미확보
+현대,의정부시 녹양동,unmatched,firstpass,236,,605,,1990,,,,no,,thirdpass_index,0,공개 목록과 검색에서 후보 미확보
+민락주공2단지,의정부시 민락동,review_needed,firstpass,216,,860,,1999,,,second_pass_rejected_by_quality_gate,no,,thirdpass_index,1,단지명·좌표·세대수·연도 식별 검증 불충족
+송산센트럴아파트,의정부시 민락동,unmatched,firstpass,,,442,,2002,,,,no,,thirdpass_index,0,공개 목록과 검색에서 후보 미확보
+극동스타클래스,의정부시 신곡동,unmatched,firstpass,,,447,,2006,,,,no,,thirdpass_index,0,공개 목록과 검색에서 후보 미확보
+금오풍림,의정부시 신곡동,unmatched,firstpass,,,606,,2005,,,,no,,thirdpass_index,0,공개 목록과 검색에서 후보 미확보
+대우,의정부시 신곡동,unmatched,firstpass,296,,466,,2000,,,,no,,thirdpass_index,0,공개 목록과 검색에서 후보 미확보
+벽산,의정부시 신곡동,unmatched,firstpass,227,,324,,1993,,,,no,,thirdpass_index,0,공개 목록과 검색에서 후보 미확보
+삼익,의정부시 신곡동,unmatched,firstpass,228,,772,,1998,,,,no,,thirdpass_index,0,공개 목록과 검색에서 후보 미확보
+상록아이파크,의정부시 신곡동,unmatched,firstpass,,,662,,2003,,,,no,,thirdpass_index,0,공개 목록과 검색에서 후보 미확보
+성원,의정부시 신곡동,unmatched,firstpass,274,,527,,1993,,,,no,,thirdpass_index,0,공개 목록과 검색에서 후보 미확보
+신곡건영,의정부시 신곡동,review_needed,firstpass,350,,832,,1999,,,,no,,thirdpass_index,1,단지명·좌표·세대수·연도 식별 검증 불충족
+신곡동신,의정부시 신곡동,unmatched,firstpass,215,,462,,1993,,,,no,,thirdpass_index,0,공개 목록과 검색에서 후보 미확보
+신곡현대,의정부시 신곡동,unmatched,firstpass,245,,415,,1990,,,,no,,thirdpass_index,0,공개 목록과 검색에서 후보 미확보
+신명,의정부시 신곡동,unmatched,firstpass,295,,814,,2000,,,,no,,thirdpass_index,0,공개 목록과 검색에서 후보 미확보
+신성,의정부시 신곡동,unmatched,firstpass,227,,324,,1993,,,,no,,thirdpass_index,0,공개 목록과 검색에서 후보 미확보
+신일1,의정부시 신곡동,unmatched,firstpass,299,,452,,1997,,,,no,,thirdpass_index,0,공개 목록과 검색에서 후보 미확보
+장암동신,의정부시 신곡동,unmatched,firstpass,228,,598,,1998,,,,no,,thirdpass_index,0,공개 목록과 검색에서 후보 미확보
+추동,의정부시 신곡동,unmatched,firstpass,245,,594,,1994,,,,no,,thirdpass_index,0,공개 목록과 검색에서 후보 미확보
+한일,의정부시 신곡동,unmatched,firstpass,228,,772,,1998,,,,no,,thirdpass_index,0,공개 목록과 검색에서 후보 미확보
+한일유앤아이,의정부시 신곡동,unmatched,firstpass,,,700,,2006,,,,no,,thirdpass_index,0,공개 목록과 검색에서 후보 미확보
+신도10차파크힐타운,의정부시 용현동,unmatched,firstpass,280,,613,,2001,,,,no,,thirdpass_index,0,공개 목록과 검색에서 후보 미확보
+신도브래뉴아파트,의정부시 용현동,unmatched,firstpass,,,734,,2006,,,,no,,thirdpass_index,0,공개 목록과 검색에서 후보 미확보
+I-PARK,의정부시 호원동,unmatched,firstpass,,,700,,2003,,,,no,,thirdpass_index,1,단지명·좌표·세대수·연도 식별 검증 불충족
+뉴삼익호원2,의정부시 호원동,unmatched,firstpass,299,,624,,1997,,,,no,,thirdpass_index,0,공개 목록과 검색에서 후보 미확보
+성호,의정부시 호원동,unmatched,firstpass,350,,378,,1996,,,,no,,thirdpass_index,0,공개 목록과 검색에서 후보 미확보
+우성1,의정부시 호원동,review_needed,firstpass,268,,381,,1993,,,,no,,thirdpass_index,1,단지명·좌표·세대수·연도 식별 검증 불충족
+주공,부천 소사구 소사본동,review_needed,firstpass,182,,1222,,1995,,,second_pass_rejected_by_quality_gate,no,,thirdpass_index,2,단지명·좌표·세대수·연도 식별 검증 불충족
+뜨란채주공,부천 소사구 송내동,unmatched,firstpass,,,301,,2004,,,,no,,thirdpass_index,0,공개 목록과 검색에서 후보 미확보
+남수원두산,화성 병점구 병점동,identity_review_required,firstpass,223,222,502,694,2000,2000,40,unit_boundary_or_mismatch,no,https://m.richgo.ai/realty/danji/a4rylmz,thirdpass_index,1,단지명·좌표·세대수·연도 식별 검증 불충족
+느치미마을주공뜨란채3단지,화성 병점구 병점동,unmatched,firstpass,,,498,,2004,,,,no,,thirdpass_index,0,공개 목록과 검색에서 후보 미확보
+현진에버빌1단지,양주시 덕계동,review_needed,firstpass,,,418,,2007,,,second_pass_rejected_by_quality_gate,no,,thirdpass_index,1,단지명·좌표·세대수·연도 식별 검증 불충족
+우만주공4단지,수원 팔달구 우만동,review_needed,firstpass,189,,1152,,1992,,,,no,,thirdpass_index,1,단지명·좌표·세대수·연도 식별 검증 불충족
+우만주공1단지,수원 팔달구 우만동,review_needed,firstpass,165,,500,,1988,,,,no,,thirdpass_index,1,단지명·좌표·세대수·연도 식별 검증 불충족
+번동 번동솔그린,서울 강북구 번동,review_needed,firstpass,366,,380,,1999,,,,no,,thirdpass_index,1,단지명·좌표·세대수·연도 식별 검증 불충족
+극동,서울 구로구 구로동,unmatched,firstpass,207,,493,,1984,,,,no,,thirdpass_index,0,공개 목록과 검색에서 후보 미확보
+현대,서울 구로구 구로동,unmatched,firstpass,262,,397,,1988,,,,no,,thirdpass_index,4,단지명·좌표·세대수·연도 식별 검증 불충족
+두진,인천 남동구 간석동,unmatched,firstpass,399,,354,,1994,,,,no,,thirdpass_index,0,공개 목록과 검색에서 후보 미확보
+"태화아파트101동,102동,103동,105동",인천 남동구 간석동,unmatched,firstpass,379,,464,,1994,,,,no,,thirdpass_index,0,공개 목록과 검색에서 후보 미확보
+휴먼시아동산마을,인천 남동구 논현동,unmatched,firstpass,,,833,,2006,,,,no,,thirdpass_index,1,단지명·좌표·세대수·연도 식별 검증 불충족
+대동(5-397),인천 남동구 만수동,unmatched,firstpass,251,,432,,1989,,,,no,,thirdpass_index,1,단지명·좌표·세대수·연도 식별 검증 불충족
+대성유니드별빛마을,인천 남동구 만수동,unmatched,firstpass,,,364,,2006,,,,no,,thirdpass_index,0,공개 목록과 검색에서 후보 미확보
+만수뉴서울아파트,인천 남동구 만수동,unmatched,firstpass,251,,1234,,1992,,,,no,,thirdpass_index,0,공개 목록과 검색에서 후보 미확보
+신동아,인천 남동구 만수동,unmatched,firstpass,249,,750,,1990,,,,no,,thirdpass_index,0,공개 목록과 검색에서 후보 미확보
+주공8단지,인천 남동구 만수동,unmatched,firstpass,208,,2906,,1989,,,,no,,thirdpass_index,0,공개 목록과 검색에서 후보 미확보
+엘에이치청아안,인천 남동구 서창동,unmatched,firstpass,,,742,,2016,,,,no,,thirdpass_index,0,공개 목록과 검색에서 후보 미확보
+효성화운트빌,안양 만안구 안양동,review_needed,firstpass,,,350,,2003,,,second_pass_rejected_by_quality_gate,no,,thirdpass_index,1,단지명·좌표·세대수·연도 식별 검증 불충족
+우성,안산 상록구 본오동,unmatched,firstpass,274,,1080,,1990,,,,no,,thirdpass_index,1,단지명·좌표·세대수·연도 식별 검증 불충족
+월드메르디앙,안산 상록구 사동,unmatched,firstpass,148,,626,,1993,,,,no,,thirdpass_index,0,공개 목록과 검색에서 후보 미확보
+주공2,안산 상록구 월피동,identity_review_required,firstpass,125,185,1547,870,1994,1994,122,unit_boundary_or_mismatch,no,https://m.richgo.ai/realty/danji/a9Fuluj,thirdpass_index,1,단지명·좌표·세대수·연도 식별 검증 불충족
+주공3,안산 상록구 월피동,review_needed,firstpass,125,,1547,,1995,,,,no,,thirdpass_index,1,단지명·좌표·세대수·연도 식별 검증 불충족
+고양동우방유쉘아파트,고양 덕양구 고양동,unmatched,firstpass,,,443,,2007,,,,no,,thirdpass_index,0,공개 목록과 검색에서 후보 미확보
+푸른마을10단지,고양 덕양구 고양동,unmatched,firstpass,,,557,,2009,,,,no,,thirdpass_index,0,공개 목록과 검색에서 후보 미확보
+푸른마을1단지,고양 덕양구 고양동,unmatched,firstpass,,,464,,2008,,,,no,,thirdpass_index,0,공개 목록과 검색에서 후보 미확보
+푸른마을3단지,고양 덕양구 고양동,unmatched,firstpass,,,958,,2004,,,,no,,thirdpass_index,0,공개 목록과 검색에서 후보 미확보
+푸른마을5단지,고양 덕양구 고양동,unmatched,firstpass,,,460,,2007,,,,no,,thirdpass_index,0,공개 목록과 검색에서 후보 미확보
+푸른마을6단지,고양 덕양구 고양동,unmatched,firstpass,,,496,,2007,,,,no,,thirdpass_index,0,공개 목록과 검색에서 후보 미확보
+현대1,고양 덕양구 고양동,unmatched,firstpass,261,,680,,1997,,,,no,,thirdpass_index,0,공개 목록과 검색에서 후보 미확보
+새서울,고양 덕양구 관산동,unmatched,firstpass,143,,401,,1983,,,,no,,thirdpass_index,0,공개 목록과 검색에서 후보 미확보
+신성,고양 덕양구 관산동,unmatched,firstpass,300,,320,,1998,,,,no,,thirdpass_index,0,공개 목록과 검색에서 후보 미확보
+삼성래미안,고양 덕양구 성사동,unmatched,firstpass,,,1651,,2009,,,,no,,thirdpass_index,0,공개 목록과 검색에서 후보 미확보
+토당동금강KCC,고양 덕양구 토당동,unmatched,firstpass,,,380,,2004,,,,no,,thirdpass_index,0,공개 목록과 검색에서 후보 미확보
+무원마을(삼보),고양 덕양구 행신동,unmatched,firstpass,249,,370,,1994,,,,no,,thirdpass_index,0,공개 목록과 검색에서 후보 미확보
+햇빛주공(18-2),고양 덕양구 행신동,unmatched,firstpass,236,,696,,1998,,,,no,,thirdpass_index,0,공개 목록과 검색에서 후보 미확보
+햇빛주공22,고양 덕양구 행신동,unmatched,firstpass,215,,445,,1996,,,,no,,thirdpass_index,0,공개 목록과 검색에서 후보 미확보
+달빛(라이프)2,고양 덕양구 화정동,unmatched,firstpass,180,,2541,,1996,,,,no,,thirdpass_index,1,단지명·좌표·세대수·연도 식별 검증 불충족
+달빛마을(부영)2,고양 덕양구 화정동,unmatched,firstpass,180,,2541,,1996,,,,no,,thirdpass_index,0,공개 목록과 검색에서 후보 미확보
+별빛마을9단지,고양 덕양구 화정동,unmatched,firstpass,190,,2008,,1995,,,,no,,thirdpass_index,0,공개 목록과 검색에서 후보 미확보
+백송마을(선경),고양 일산동구 백석동,unmatched,firstpass,164,,604,,1994,,,,no,,thirdpass_index,0,공개 목록과 검색에서 후보 미확보
+백송마을(우성),고양 일산동구 백석동,review_needed,firstpass,182,,862,,1992,,,,no,,thirdpass_index,1,단지명·좌표·세대수·연도 식별 검증 불충족
+백송마을(한신),고양 일산동구 백석동,review_needed,firstpass,182,,862,,1992,,,,no,,thirdpass_index,2,단지명·좌표·세대수·연도 식별 검증 불충족
+현대그린,고양 일산동구 사리현동,unmatched,firstpass,190,,380,,1989,,,,no,,thirdpass_index,0,공개 목록과 검색에서 후보 미확보
+SKVIEW,고양 일산동구 식사동,unmatched,firstpass,,,539,,2003,,,,no,,thirdpass_index,0,공개 목록과 검색에서 후보 미확보
+호수마을(대우),고양 일산동구 장항동,unmatched,firstpass,182,,599,,1996,,,,no,,thirdpass_index,0,공개 목록과 검색에서 후보 미확보
+산들마을2(대림),고양 일산동구 중산동,unmatched,firstpass,,,692,,2002,,,,no,,thirdpass_index,0,공개 목록과 검색에서 후보 미확보
+하늘마을2단지,고양 일산동구 중산동,review_needed,firstpass,,,1000,,2007,,,,no,,thirdpass_index,1,단지명·좌표·세대수·연도 식별 검증 불충족
+숲속마을2단지,고양 일산동구 풍동,review_needed,firstpass,,,886,,2006,,,,no,,thirdpass_index,1,단지명·좌표·세대수·연도 식별 검증 불충족
+숲속마을8단지,고양 일산동구 풍동,ambiguous,firstpass,,,1034,,2006,,,second_pass_rejected_by_quality_gate,no,,thirdpass_index,2,단지명·좌표·세대수·연도 식별 검증 불충족
+삼환,김포시 감정동,unmatched,firstpass,226,,422,,1995,,,,no,,thirdpass_index,1,단지명·좌표·세대수·연도 식별 검증 불충족
+신화,김포시 감정동,unmatched,firstpass,229,,654,,1995,,,,no,,thirdpass_index,0,공개 목록과 검색에서 후보 미확보
+푸른마을(신안),김포시 감정동,unmatched,firstpass,199,,1840,,2001,,,,no,,thirdpass_index,0,공개 목록과 검색에서 후보 미확보
+한국,김포시 감정동,unmatched,firstpass,296,,620,,1995,,,,no,,thirdpass_index,0,공개 목록과 검색에서 후보 미확보
+풍년마을(서광),김포시 북변동,unmatched,firstpass,208,,624,,1999,,,,no,,thirdpass_index,0,공개 목록과 검색에서 후보 미확보
+풍년마을(신안),김포시 북변동,unmatched,firstpass,208,,624,,1999,,,,no,,thirdpass_index,0,공개 목록과 검색에서 후보 미확보
+농장마을(신안),김포시 사우동,unmatched,firstpass,245,,651,,1998,,,,no,,thirdpass_index,0,공개 목록과 검색에서 후보 미확보
+풍년마을(삼보),김포시 사우동,unmatched,firstpass,207,,308,,1998,,,,no,,thirdpass_index,0,공개 목록과 검색에서 후보 미확보
+김포한강 신원 아침도시 고다니,김포시 양촌읍,unmatched,firstpass,,,380,,2010,,,,no,,thirdpass_index,0,공개 목록과 검색에서 후보 미확보
+양곡 더숲,김포시 양촌읍,unmatched,firstpass,,,345,,2010,,,,no,,thirdpass_index,0,공개 목록과 검색에서 후보 미확보
+자연앤데시앙(금빛마을),김포시 양촌읍,unmatched,firstpass,,,743,,2010,,,,no,,thirdpass_index,0,공개 목록과 검색에서 후보 미확보
+전원마을(월드3차1단지),김포시 운양동,review_needed,firstpass,215,,1206,,1999,,,second_pass_rejected_by_quality_gate,no,,thirdpass_index,1,단지명·좌표·세대수·연도 식별 검증 불충족
+전원마을(월드4차2단지),김포시 운양동,unmatched,firstpass,224,,442,,2000,,,,no,,thirdpass_index,0,공개 목록과 검색에서 후보 미확보
+청송마을(현대3),김포시 장기동,unmatched,firstpass,203,,768,,2001,,,,no,,thirdpass_index,0,공개 목록과 검색에서 후보 미확보
+백석마을(신일해피),김포시 통진읍,unmatched,firstpass,,,446,,2004,,,,no,,thirdpass_index,0,공개 목록과 검색에서 후보 미확보
+길훈,김포시 풍무동,unmatched,firstpass,204,,496,,1993,,,,no,,thirdpass_index,0,공개 목록과 검색에서 후보 미확보
+김포풍무꿈에그린더포레듀4단지,김포시 풍무동,unmatched,firstpass,,,660,,2018,,,,no,,thirdpass_index,0,공개 목록과 검색에서 후보 미확보
+당곡마을(범양),김포시 풍무동,unmatched,firstpass,203,,562,,1998,,,,no,,thirdpass_index,0,공개 목록과 검색에서 후보 미확보
+당곡마을(현대),김포시 풍무동,unmatched,firstpass,237,,603,,2001,,,,no,,thirdpass_index,0,공개 목록과 검색에서 후보 미확보
+"권선동 보성,유원",수원 권선구 권선동,review_needed,firstpass,197,,1200,,1996,,,second_pass_rejected_by_quality_gate,no,,thirdpass_index,1,단지명·좌표·세대수·연도 식별 검증 불충족
+e편한세상영종센텀베뉴,인천 영종구 중산동,review_needed,firstpass,,,1409,,2023,,,,no,,thirdpass_index,2,단지명·좌표·세대수·연도 식별 검증 불충족
+방화그린,서울 강서구 방화동,unmatched,firstpass,226,,2607,,1993,,,,no,,thirdpass_index,0,공개 목록과 검색에서 후보 미확보
+장미,서울 강서구 방화동,unmatched,firstpass,240,,387,,1994,,,,no,,thirdpass_index,0,공개 목록과 검색에서 후보 미확보
+럭키남서울아파트,서울 금천구 시흥동,review_needed,firstpass,124,,986,,1981,,,,no,,thirdpass_index,1,단지명·좌표·세대수·연도 식별 검증 불충족
+송파해링턴타워,서울 송파구 장지동,unmatched,firstpass,,,484,,2026,,,,no,,thirdpass_index,0,공개 목록과 검색에서 후보 미확보
+운서SKVIEWskycityⅡ,인천 영종구 운남동,unmatched,firstpass,,,909,,2022,,,,no,,thirdpass_index,0,공개 목록과 검색에서 후보 미확보
+운서SKVIEWSkycity,인천 영종구 운서동,unmatched,firstpass,,,1153,,2022,,,,no,,thirdpass_index,0,공개 목록과 검색에서 후보 미확보
+수원권선한솔,수원 권선구 곡반정동,unmatched,firstpass,212,,404,,2000,,,,no,,thirdpass_index,0,공개 목록과 검색에서 후보 미확보
+구운동성원상떼빌,수원 권선구 구운동,unmatched,firstpass,250,,458,,1999,,,,no,,thirdpass_index,0,공개 목록과 검색에서 후보 미확보
+수원아이파크시티5단지,수원 권선구 권선동,review_needed,firstpass,,,704,,2015,,,second_pass_rejected_by_quality_gate,no,,thirdpass_index,6,단지명·좌표·세대수·연도 식별 검증 불충족
+수원아이파크시티6단지,수원 권선구 권선동,review_needed,firstpass,,,448,,2015,,,,no,,thirdpass_index,6,단지명·좌표·세대수·연도 식별 검증 불충족
+신미주,수원 권선구 금곡동,unmatched,firstpass,501,,646,,1994,,,,no,,thirdpass_index,0,공개 목록과 검색에서 후보 미확보
+엘지빌리지1,수원 권선구 금곡동,unmatched,firstpass,323,,320,,1998,,,,no,,thirdpass_index,0,공개 목록과 검색에서 후보 미확보
+엘지빌리지4,수원 권선구 금곡동,unmatched,firstpass,216,,998,,1998,,,,no,,thirdpass_index,0,공개 목록과 검색에서 후보 미확보
+삼정그린뷰,수원 권선구 당수동,unmatched,firstpass,441,,898,,1997,,,,no,,thirdpass_index,0,공개 목록과 검색에서 후보 미확보
+인정프린스,수원 권선구 당수동,unmatched,firstpass,246,,481,,1998,,,,no,,thirdpass_index,0,공개 목록과 검색에서 후보 미확보
+반달마을(건영),부천 원미구 상동,unmatched,firstpass,220,,2742,,1993,,,,no,,thirdpass_index,0,공개 목록과 검색에서 후보 미확보
+반달마을(동아),부천 원미구 상동,unmatched,firstpass,220,,2742,,1993,,,,no,,thirdpass_index,1,단지명·좌표·세대수·연도 식별 검증 불충족
+반달마을(선경),부천 원미구 상동,unmatched,firstpass,220,,2742,,1993,,,,no,,thirdpass_index,1,단지명·좌표·세대수·연도 식별 검증 불충족
+꿈마을(건영),부천 원미구 중동,review_needed,firstpass,219,,492,,1994,,,,no,,thirdpass_index,1,단지명·좌표·세대수·연도 식별 검증 불충족
+꿈마을(삼환),부천 원미구 중동,unmatched,firstpass,220,,698,,1994,,,,no,,thirdpass_index,0,공개 목록과 검색에서 후보 미확보
+복사골(건영),부천 원미구 중동,identity_review_required,firstpass,217,216,330,1030,1993,1992,21,unit_boundary_or_mismatch,no,https://m.richgo.ai/realty/danji/a1eHWxg,thirdpass_index,1,단지명·좌표·세대수·연도 식별 검증 불충족
+복사골아파트,부천 원미구 중동,unmatched,firstpass,217,,330,,1992,,,,no,,thirdpass_index,0,공개 목록과 검색에서 후보 미확보
+가좌마을1단지양우,고양 일산서구 가좌동,unmatched,firstpass,,,459,,2005,,,,no,,thirdpass_index,0,공개 목록과 검색에서 후보 미확보
+가좌마을2단지대우,고양 일산서구 가좌동,unmatched,firstpass,,,1178,,2005,,,,no,,thirdpass_index,0,공개 목록과 검색에서 후보 미확보
+가좌마을5단지벽산,고양 일산서구 가좌동,unmatched,firstpass,,,914,,2005,,,,no,,thirdpass_index,0,공개 목록과 검색에서 후보 미확보
+대화마을동문(3단지),고양 일산서구 대화동,unmatched,firstpass,,,706,,2002,,,,no,,thirdpass_index,0,공개 목록과 검색에서 후보 미확보
+장성마을(대명2),고양 일산서구 대화동,unmatched,firstpass,162,,591,,1995,,,,no,,thirdpass_index,0,공개 목록과 검색에서 후보 미확보
+산들마을3단지,고양 일산서구 일산동,unmatched,firstpass,,,579,,2003,,,,no,,thirdpass_index,0,공개 목록과 검색에서 후보 미확보
+산들마을5단지,고양 일산서구 일산동,unmatched,firstpass,,,926,,2004,,,,no,,thirdpass_index,0,공개 목록과 검색에서 후보 미확보
+일산2차현대홈타운,고양 일산서구 일산동,review_needed,firstpass,,,461,,2002,,,,no,,thirdpass_index,1,단지명·좌표·세대수·연도 식별 검증 불충족
+일산동문(600-32),고양 일산서구 일산동,unmatched,firstpass,319,,427,,2000,,,,no,,thirdpass_index,0,공개 목록과 검색에서 후보 미확보
+일산삼성,고양 일산서구 일산동,unmatched,firstpass,322,,378,,2000,,,,no,,thirdpass_index,0,공개 목록과 검색에서 후보 미확보
+일산쌍용,고양 일산서구 일산동,unmatched,firstpass,294,,496,,1997,,,,no,,thirdpass_index,0,공개 목록과 검색에서 후보 미확보
+일신.삼익아파트,고양 일산서구 일산동,unmatched,firstpass,257,,509,,2000,,,,no,,thirdpass_index,0,공개 목록과 검색에서 후보 미확보
+태영(954),고양 일산서구 일산동,unmatched,firstpass,,,377,,2002,,,,no,,thirdpass_index,0,공개 목록과 검색에서 후보 미확보
+후곡마을(럭키),고양 일산서구 일산동,unmatched,firstpass,183,,936,,1994,,,,no,,thirdpass_index,0,공개 목록과 검색에서 후보 미확보
+후곡마을(주공),고양 일산서구 일산동,unmatched,firstpass,164,,836,,1995,,,,no,,thirdpass_index,0,공개 목록과 검색에서 후보 미확보
+탄현마을(동성),고양 일산서구 탄현동,review_needed,firstpass,220,,652,,1994,,,second_pass_rejected_by_quality_gate,no,,thirdpass_index,1,단지명·좌표·세대수·연도 식별 검증 불충족
+원일아름,구리시 인창동,unmatched,firstpass,282,,777,,1998,,,,no,,thirdpass_index,0,공개 목록과 검색에서 후보 미확보
+주공1,구리시 인창동,unmatched,firstpass,224,,700,,1996,,,,no,,thirdpass_index,0,공개 목록과 검색에서 후보 미확보
+주공2,구리시 인창동,unmatched,firstpass,236,,1229,,1997,,,,no,,thirdpass_index,0,공개 목록과 검색에서 후보 미확보
+주공4-1,구리시 인창동,unmatched,firstpass,223,,1409,,1996,,,,no,,thirdpass_index,0,공개 목록과 검색에서 후보 미확보
+주공6,구리시 인창동,unmatched,firstpass,231,,1018,,1996,,,,no,,thirdpass_index,0,공개 목록과 검색에서 후보 미확보
+한진,구리시 인창동,unmatched,firstpass,,,953,,2002,,,,no,,thirdpass_index,0,공개 목록과 검색에서 후보 미확보
+죽전현대1차,용인 수지구 죽전동,unmatched,firstpass,244,,702,,1999,,,,no,,thirdpass_index,0,공개 목록과 검색에서 후보 미확보
+성원포레스타운(130-8),파주시 검산동,unmatched,firstpass,189,,671,,2000,,,,no,,thirdpass_index,0,공개 목록과 검색에서 후보 미확보
+유승,파주시 검산동,unmatched,firstpass,234,,550,,2001,,,,no,,thirdpass_index,0,공개 목록과 검색에서 후보 미확보
+장안6흰돌마을(199-6),파주시 금릉동,unmatched,firstpass,281,,498,,2000,,,,no,,thirdpass_index,0,공개 목록과 검색에서 후보 미확보
+금촌주공7단지(1019-0),파주시 금촌동,unmatched,firstpass,,,1133,,2005,,,,no,,thirdpass_index,0,공개 목록과 검색에서 후보 미확보
+대방노블랜드(1015-0),파주시 금촌동,unmatched,firstpass,,,488,,2006,,,,no,,thirdpass_index,0,공개 목록과 검색에서 후보 미확보
+더트루엘센트리지,파주시 금촌동,unmatched,firstpass,,,300,,2025,,,,no,,thirdpass_index,0,공개 목록과 검색에서 후보 미확보
+주공(922-0),파주시 금촌동,unmatched,firstpass,207,,769,,1997,,,,no,,thirdpass_index,0,공개 목록과 검색에서 후보 미확보
+파주금촌금호어울림,파주시 금촌동,unmatched,firstpass,,,1055,,2026,,,,no,,thirdpass_index,0,공개 목록과 검색에서 후보 미확보
+숲속길마을6단지동문굿모닝힐,파주시 동패동,unmatched,firstpass,,,586,,2005,,,,no,,thirdpass_index,0,공개 목록과 검색에서 후보 미확보
+초롱꽃마을11단지운정하우스디,파주시 동패동,unmatched,firstpass,,,728,,2022,,,,no,,thirdpass_index,0,공개 목록과 검색에서 후보 미확보
+초롱꽃마을6단지금강펜테리움,파주시 동패동,unmatched,firstpass,,,778,,2022,,,,no,,thirdpass_index,0,공개 목록과 검색에서 후보 미확보
+산내마을7단지화성파크드림,파주시 목동동,review_needed,firstpass,,,1047,,2020,,,,no,,thirdpass_index,1,단지명·좌표·세대수·연도 식별 검증 불충족
+자연앤꿈에그린6단지아파트,파주시 문산읍,unmatched,firstpass,,,320,,2010,,,,no,,thirdpass_index,1,단지명·좌표·세대수·연도 식별 검증 불충족
+파주힐스테이트2차,파주시 문산읍,unmatched,firstpass,,,454,,2010,,,,no,,thirdpass_index,1,단지명·좌표·세대수·연도 식별 검증 불충족
+신원아침도시,파주시 문산읍,unmatched,firstpass,,,638,,2006,,,,no,,thirdpass_index,0,공개 목록과 검색에서 후보 미확보
+장안8차,파주시 문산읍,unmatched,firstpass,,,368,,2003,,,,no,,thirdpass_index,0,공개 목록과 검색에서 후보 미확보
+경남아너스빌(문산선유4단지),파주시 문산읍,unmatched,firstpass,,,343,,2011,,,,no,,thirdpass_index,0,공개 목록과 검색에서 후보 미확보
+선유주공,파주시 문산읍,review_needed,firstpass,165,,300,,1991,,,,no,,thirdpass_index,1,단지명·좌표·세대수·연도 식별 검증 불충족
+신안실크밸리1차(897-0),파주시 아동동,unmatched,firstpass,,,539,,2009,,,,no,,thirdpass_index,1,단지명·좌표·세대수·연도 식별 검증 불충족
+신안실크밸리2차(900-0),파주시 아동동,unmatched,firstpass,,,438,,2010,,,,no,,thirdpass_index,0,공개 목록과 검색에서 후보 미확보
+한빛마을4단지롯데캐슬Ⅱ,파주시 야당동,unmatched,firstpass,,,1169,,2018,,,,no,,thirdpass_index,1,단지명·좌표·세대수·연도 식별 검증 불충족
+한빛마을9단지롯데캐슬1차,파주시 야당동,review_needed,firstpass,,,1076,,2017,,,,no,,thirdpass_index,2,단지명·좌표·세대수·연도 식별 검증 불충족
+대방노블랜드(587-0),파주시 야동동,unmatched,firstpass,197,,1080,,2001,,,,no,,thirdpass_index,0,공개 목록과 검색에서 후보 미확보
+가람마을3단지동문굿모닝힐,파주시 와동동,review_needed,firstpass,199,,921,,2001,,,,no,,thirdpass_index,2,단지명·좌표·세대수·연도 식별 검증 불충족
+별숲오르트가람마을12단지,파주시 와동동,unmatched,firstpass,,,434,,2023,,,,no,,thirdpass_index,0,공개 목록과 검색에서 후보 미확보
+그린시티동문(218-0),파주시 조리읍,identity_review_required,firstpass,51,217,777,1759,2000,2000,114,unit_boundary_or_mismatch,no,https://m.richgo.ai/realty/danji/a9IpRbq,thirdpass_index,1,단지명·좌표·세대수·연도 식별 검증 불충족
+한라비발디(992-1),파주시 조리읍,unmatched,firstpass,227,,1202,,2000,,,,no,,thirdpass_index,0,공개 목록과 검색에서 후보 미확보
+성원(156-1),파주시 조리읍,unmatched,firstpass,232,,369,,1997,,,,no,,thirdpass_index,0,공개 목록과 검색에서 후보 미확보
+성호2파크힐(259-2),파주시 조리읍,unmatched,firstpass,305,,367,,2001,,,,no,,thirdpass_index,0,공개 목록과 검색에서 후보 미확보
+송촌토파즈(13-15),파주시 조리읍,unmatched,firstpass,360,,586,,1998,,,,no,,thirdpass_index,0,공개 목록과 검색에서 후보 미확보
+파주푸르지오(269-0),파주시 조리읍,unmatched,firstpass,,,450,,2010,,,,no,,thirdpass_index,0,공개 목록과 검색에서 후보 미확보
+휴먼시아동화마을(6단지),화성 효행구 봉담읍,unmatched,firstpass,,,736,,2007,,,,no,,thirdpass_index,0,공개 목록과 검색에서 후보 미확보
+휴먼시아동화마을5단지,화성 효행구 봉담읍,unmatched,firstpass,,,880,,2008,,,,no,,thirdpass_index,0,공개 목록과 검색에서 후보 미확보

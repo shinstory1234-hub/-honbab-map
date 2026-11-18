@@ -1,0 +1,1566 @@
+{
+  "meta": {
+    "shard": 4,
+    "originalPending": 82,
+    "additionalVerified": 19,
+    "additionalFarKnown": 18,
+    "farBlank": 1,
+    "stillPending": 63,
+    "collisions": 0,
+    "network": {
+      "attempted": 0,
+      "fetched": 92,
+      "error": 0,
+      "blocked": 0,
+      "limited": 0,
+      "bing": 57,
+      "hub": 10,
+      "detail": 25
+    },
+    "method": "region hub + named indexed pages + coordinates + year + units"
+  },
+  "rows": [
+    {
+      "name": "우만주공4단지",
+      "area": "수원 팔달구 우만동",
+      "key": "우만주공4단지|수원 팔달구 우만동",
+      "originalStatus": "review_needed",
+      "secondStatus": "still_unresolved",
+      "richgo": null,
+      "match": null,
+      "candidates": [
+        {
+          "id": "a0wDAzC",
+          "name": "주공4단지",
+          "year": 1992,
+          "units": 1152,
+          "far": 189,
+          "distanceMeters": null,
+          "accepted": false,
+          "score": 84
+        }
+      ]
+    },
+    {
+      "name": "단대동 선경논골",
+      "area": "성남 수정구 단대동",
+      "key": "단대동 선경논골|성남 수정구 단대동",
+      "originalStatus": "review_needed",
+      "secondStatus": "verified_second_pass",
+      "richgo": {
+        "id": "a1ewTKS",
+        "name": "선경논골",
+        "units": 426,
+        "year": 1991,
+        "far": 230,
+        "floors": "12~13층",
+        "coverage": 21,
+        "parking": 70,
+        "heating": "개별난방 · 도시가스",
+        "builder": "선경건설(주)",
+        "pyeongs": "14·19평",
+        "lat": 37.461824,
+        "lng": 127.157504,
+        "street": "경기도 성남시 수정구 논골로 87",
+        "facts": true,
+        "url": "https://m.richgo.ai/realty/danji/a1ewTKS"
+      },
+      "match": {
+        "distanceMeters": null,
+        "yearDelta": 0,
+        "unitsRatio": 0,
+        "method": "previous_candidate",
+        "score": 201
+      },
+      "candidates": [
+        {
+          "id": "a1ewTKS",
+          "name": "선경논골",
+          "year": 1991,
+          "units": 426,
+          "far": 230,
+          "distanceMeters": null,
+          "accepted": true,
+          "score": 201
+        }
+      ]
+    },
+    {
+      "name": "태평동 태평선경",
+      "area": "성남 수정구 태평동",
+      "key": "태평동 태평선경|성남 수정구 태평동",
+      "originalStatus": "review_needed",
+      "secondStatus": "verified_second_pass",
+      "richgo": {
+        "id": "a1tKSMF",
+        "name": "태평선경",
+        "units": 312,
+        "year": 1991,
+        "far": 141,
+        "floors": "5~6층",
+        "coverage": null,
+        "parking": 104,
+        "heating": "개별난방 · 도시가스",
+        "builder": "선경건설(주)",
+        "pyeongs": "13·17평",
+        "lat": 37.446999,
+        "lng": 127.142131,
+        "street": "경기도 성남시 수정구 시민로 214",
+        "facts": true,
+        "url": "https://m.richgo.ai/realty/danji/a1tKSMF"
+      },
+      "match": {
+        "distanceMeters": null,
+        "yearDelta": 0,
+        "unitsRatio": 0,
+        "method": "previous_candidate",
+        "score": 201
+      },
+      "candidates": [
+        {
+          "id": "a1tKSMF",
+          "name": "태평선경",
+          "year": 1991,
+          "units": 312,
+          "far": 141,
+          "distanceMeters": null,
+          "accepted": true,
+          "score": 201
+        }
+      ]
+    },
+    {
+      "name": "인계동 삼성",
+      "area": "수원 팔달구 인계동",
+      "key": "인계동 삼성|수원 팔달구 인계동",
+      "originalStatus": "review_needed",
+      "secondStatus": "verified_second_pass",
+      "richgo": {
+        "id": "a7bPUfE",
+        "name": "삼성",
+        "units": 582,
+        "year": 1996,
+        "far": 333,
+        "floors": "11~20층",
+        "coverage": 25,
+        "parking": 539,
+        "heating": "개별난방 · 도시가스",
+        "builder": "삼성건설(주)",
+        "pyeongs": "23·33평",
+        "lat": 37.271674,
+        "lng": 127.036445,
+        "street": "경기도 수원시 팔달구 권광로276번길 8",
+        "facts": true,
+        "url": "https://m.richgo.ai/realty/danji/a7bPUfE"
+      },
+      "match": {
+        "distanceMeters": null,
+        "yearDelta": 0,
+        "unitsRatio": 0,
+        "method": "region_hub",
+        "score": 201
+      },
+      "candidates": [
+        {
+          "id": "a7bPUfE",
+          "name": "삼성",
+          "year": 1996,
+          "units": 582,
+          "far": 333,
+          "distanceMeters": null,
+          "accepted": true,
+          "score": 201
+        }
+      ]
+    },
+    {
+      "name": "인계동 선경3차",
+      "area": "수원 팔달구 인계동",
+      "key": "인계동 선경3차|수원 팔달구 인계동",
+      "originalStatus": "review_needed",
+      "secondStatus": "verified_second_pass",
+      "richgo": {
+        "id": "a9QNqhz",
+        "name": "선경3차",
+        "units": 604,
+        "year": 1996,
+        "far": 279,
+        "floors": "16~17층",
+        "coverage": 19,
+        "parking": 618,
+        "heating": "개별난방 · 도시가스",
+        "builder": "선경건설(주)",
+        "pyeongs": "24·32·49평",
+        "lat": 37.2754,
+        "lng": 127.035788,
+        "street": "경기도 수원시 팔달구 권광로317번길 15",
+        "facts": true,
+        "url": "https://m.richgo.ai/realty/danji/a9QNqhz"
+      },
+      "match": {
+        "distanceMeters": null,
+        "yearDelta": 0,
+        "unitsRatio": 0,
+        "method": "region_hub",
+        "score": 201
+      },
+      "candidates": [
+        {
+          "id": "a9QNqhz",
+          "name": "선경3차",
+          "year": 1996,
+          "units": 604,
+          "far": 279,
+          "distanceMeters": null,
+          "accepted": true,
+          "score": 201
+        }
+      ]
+    },
+    {
+      "name": "우만주공1단지",
+      "area": "수원 팔달구 우만동",
+      "key": "우만주공1단지|수원 팔달구 우만동",
+      "originalStatus": "review_needed",
+      "secondStatus": "still_unresolved",
+      "richgo": null,
+      "match": null,
+      "candidates": [
+        {
+          "id": "a9ojril",
+          "name": "주공1단지",
+          "year": 1988,
+          "units": 500,
+          "far": null,
+          "distanceMeters": null,
+          "accepted": false,
+          "score": 84
+        }
+      ]
+    },
+    {
+      "name": "화서동 영광",
+      "area": "수원 팔달구 화서동",
+      "key": "화서동 영광|수원 팔달구 화서동",
+      "originalStatus": "review_needed",
+      "secondStatus": "verified_second_pass",
+      "richgo": {
+        "id": "a7RuNok",
+        "name": "영광",
+        "units": 459,
+        "year": 1993,
+        "far": 383,
+        "floors": "14~20층",
+        "coverage": 26,
+        "parking": 203,
+        "heating": "개별난방 · 도시가스",
+        "builder": "(주)영광종합건설",
+        "pyeongs": "28·31평",
+        "lat": 37.279546,
+        "lng": 126.993731,
+        "street": "경기도 수원시 팔달구 덕영대로757번길 10",
+        "facts": true,
+        "url": "https://m.richgo.ai/realty/danji/a7RuNok"
+      },
+      "match": {
+        "distanceMeters": null,
+        "yearDelta": 0,
+        "unitsRatio": 0,
+        "method": "region_hub",
+        "score": 201
+      },
+      "candidates": [
+        {
+          "id": "a7RuNok",
+          "name": "영광",
+          "year": 1993,
+          "units": 459,
+          "far": 383,
+          "distanceMeters": null,
+          "accepted": true,
+          "score": 201
+        }
+      ]
+    },
+    {
+      "name": "우만동 선경",
+      "area": "수원 팔달구 우만동",
+      "key": "우만동 선경|수원 팔달구 우만동",
+      "originalStatus": "review_needed",
+      "secondStatus": "verified_second_pass",
+      "richgo": {
+        "id": "a0CSKzH",
+        "name": "선경",
+        "units": 372,
+        "year": 1995,
+        "far": 236,
+        "floors": "17~18층",
+        "coverage": 29,
+        "parking": 315,
+        "heating": "개별난방 · 도시가스",
+        "builder": "선경건설(주)",
+        "pyeongs": "17·24·32·49평",
+        "lat": 37.277416,
+        "lng": 127.039969,
+        "street": "경기도 수원시 팔달구 중부대로 215",
+        "facts": true,
+        "url": "https://m.richgo.ai/realty/danji/a0CSKzH"
+      },
+      "match": {
+        "distanceMeters": null,
+        "yearDelta": 0,
+        "unitsRatio": 0,
+        "method": "region_hub",
+        "score": 201
+      },
+      "candidates": [
+        {
+          "id": "a0CSKzH",
+          "name": "선경",
+          "year": 1995,
+          "units": 372,
+          "far": 236,
+          "distanceMeters": null,
+          "accepted": true,
+          "score": 201
+        }
+      ]
+    },
+    {
+      "name": "우만동 주공2단지",
+      "area": "수원 팔달구 우만동",
+      "key": "우만동 주공2단지|수원 팔달구 우만동",
+      "originalStatus": "review_needed",
+      "secondStatus": "verified_second_pass",
+      "richgo": {
+        "id": "a0OGzUG",
+        "name": "주공2단지",
+        "units": 984,
+        "year": 1989,
+        "far": null,
+        "floors": "15~15층",
+        "coverage": null,
+        "parking": null,
+        "heating": "지역난방 · 열병합",
+        "builder": "대한주택공사",
+        "pyeongs": "18·19·22·24·25·28평",
+        "lat": 37.280139,
+        "lng": 127.041276,
+        "street": "경기도 수원시 팔달구 중부대로223번길 92",
+        "facts": true,
+        "url": "https://m.richgo.ai/realty/danji/a0OGzUG"
+      },
+      "match": {
+        "distanceMeters": null,
+        "yearDelta": 0,
+        "unitsRatio": 0,
+        "method": "region_hub",
+        "score": 201
+      },
+      "candidates": [
+        {
+          "id": "a0OGzUG",
+          "name": "주공2단지",
+          "year": 1989,
+          "units": 984,
+          "far": null,
+          "distanceMeters": null,
+          "accepted": true,
+          "score": 201
+        }
+      ]
+    },
+    {
+      "name": "박달동 우성",
+      "area": "안양 만안구 박달동",
+      "key": "박달동 우성|안양 만안구 박달동",
+      "originalStatus": "review_needed",
+      "secondStatus": "verified_second_pass",
+      "richgo": {
+        "id": "a7omhCI",
+        "name": "우성",
+        "units": 1020,
+        "year": 1990,
+        "far": 238,
+        "floors": "15~15층",
+        "coverage": 18,
+        "parking": 714,
+        "heating": "개별난방 · 도시가스",
+        "builder": "우성건설",
+        "pyeongs": "26·28·30평",
+        "lat": 37.400538,
+        "lng": 126.908016,
+        "street": "경기도 안양시 만안구 박달로498번길 28",
+        "facts": true,
+        "url": "https://m.richgo.ai/realty/danji/a7omhCI"
+      },
+      "match": {
+        "distanceMeters": null,
+        "yearDelta": 0,
+        "unitsRatio": 0,
+        "method": "previous_candidate",
+        "score": 201
+      },
+      "candidates": [
+        {
+          "id": "a7omhCI",
+          "name": "우성",
+          "year": 1990,
+          "units": 1020,
+          "far": 238,
+          "distanceMeters": null,
+          "accepted": true,
+          "score": 201
+        }
+      ]
+    },
+    {
+      "name": "석수동 럭키",
+      "area": "안양 만안구 석수동",
+      "key": "석수동 럭키|안양 만안구 석수동",
+      "originalStatus": "review_needed",
+      "secondStatus": "verified_second_pass",
+      "richgo": {
+        "id": "a4imfXK",
+        "name": "럭키",
+        "units": 735,
+        "year": 1987,
+        "far": 235,
+        "floors": "15~15층",
+        "coverage": 20,
+        "parking": 670,
+        "heating": "개별난방 · 도시가스",
+        "builder": "",
+        "pyeongs": "25·28·30·40평",
+        "lat": 37.409706,
+        "lng": 126.907488,
+        "street": "경기도 안양시 만안구 석수로 40",
+        "facts": true,
+        "url": "https://m.richgo.ai/realty/danji/a4imfXK"
+      },
+      "match": {
+        "distanceMeters": null,
+        "yearDelta": 0,
+        "unitsRatio": 0,
+        "method": "region_hub",
+        "score": 201
+      },
+      "candidates": [
+        {
+          "id": "a4imfXK",
+          "name": "럭키",
+          "year": 1987,
+          "units": 735,
+          "far": 235,
+          "distanceMeters": null,
+          "accepted": true,
+          "score": 201
+        }
+      ]
+    },
+    {
+      "name": "오류동 동부골든",
+      "area": "서울 구로구 오류동",
+      "key": "오류동 동부골든|서울 구로구 오류동",
+      "originalStatus": "review_needed",
+      "secondStatus": "verified_second_pass",
+      "richgo": {
+        "id": "a8CooGt",
+        "name": "동부골든",
+        "units": 1236,
+        "year": 1998,
+        "far": 299,
+        "floors": "13~20층",
+        "coverage": 22,
+        "parking": 824,
+        "heating": "개별난방 · 도시가스",
+        "builder": "동부건설(주)",
+        "pyeongs": "24·29·31·39·42평",
+        "lat": 37.499391,
+        "lng": 126.83982,
+        "street": "서울시 구로구 고척로 49",
+        "facts": true,
+        "url": "https://m.richgo.ai/realty/danji/a8CooGt"
+      },
+      "match": {
+        "distanceMeters": null,
+        "yearDelta": 0,
+        "unitsRatio": 0,
+        "method": "previous_candidate",
+        "score": 201
+      },
+      "candidates": [
+        {
+          "id": "a8CooGt",
+          "name": "동부골든",
+          "year": 1998,
+          "units": 1236,
+          "far": 299,
+          "distanceMeters": null,
+          "accepted": true,
+          "score": 201
+        }
+      ]
+    },
+    {
+      "name": "오류동 서울가든",
+      "area": "서울 구로구 오류동",
+      "key": "오류동 서울가든|서울 구로구 오류동",
+      "originalStatus": "review_needed",
+      "secondStatus": "verified_second_pass",
+      "richgo": {
+        "id": "a1iqjNp",
+        "name": "서울가든",
+        "units": 339,
+        "year": 1987,
+        "far": 86,
+        "floors": "3~3층",
+        "coverage": 28,
+        "parking": null,
+        "heating": "개별난방 · 도시가스",
+        "builder": "삼익건설",
+        "pyeongs": "20·24평",
+        "lat": 37.492529,
+        "lng": 126.831117,
+        "street": "서울시 구로구 경인로 83",
+        "facts": true,
+        "url": "https://m.richgo.ai/realty/danji/a1iqjNp"
+      },
+      "match": {
+        "distanceMeters": null,
+        "yearDelta": 0,
+        "unitsRatio": 0,
+        "method": "previous_candidate",
+        "score": 201
+      },
+      "candidates": [
+        {
+          "id": "a1iqjNp",
+          "name": "서울가든",
+          "year": 1987,
+          "units": 339,
+          "far": 86,
+          "distanceMeters": null,
+          "accepted": true,
+          "score": 201
+        }
+      ]
+    },
+    {
+      "name": "번동 번동솔그린",
+      "area": "서울 강북구 번동",
+      "key": "번동 번동솔그린|서울 강북구 번동",
+      "originalStatus": "review_needed",
+      "secondStatus": "still_unresolved",
+      "richgo": null,
+      "match": null,
+      "candidates": [
+        {
+          "id": "a7LkEDh",
+          "name": "번동솔그린",
+          "year": 1999,
+          "units": 380,
+          "far": 365,
+          "distanceMeters": null,
+          "accepted": false,
+          "score": 84
+        }
+      ]
+    },
+    {
+      "name": "궁동 우신",
+      "area": "서울 구로구 궁동",
+      "key": "궁동 우신|서울 구로구 궁동",
+      "originalStatus": "review_needed",
+      "secondStatus": "verified_second_pass",
+      "richgo": {
+        "id": "a7PPlFF",
+        "name": "우신",
+        "units": 762,
+        "year": 1988,
+        "far": 88,
+        "floors": "3~3층",
+        "coverage": 29,
+        "parking": 300,
+        "heating": "개별난방 · 도시가스",
+        "builder": "세종건설",
+        "pyeongs": "18·20·25평",
+        "lat": 37.494739,
+        "lng": 126.829511,
+        "street": "서울시 구로구 오리로 1265",
+        "facts": true,
+        "url": "https://m.richgo.ai/realty/danji/a7PPlFF"
+      },
+      "match": {
+        "distanceMeters": null,
+        "yearDelta": 0,
+        "unitsRatio": 0,
+        "method": "previous_candidate",
+        "score": 201
+      },
+      "candidates": [
+        {
+          "id": "a7PPlFF",
+          "name": "우신",
+          "year": 1988,
+          "units": 762,
+          "far": 88,
+          "distanceMeters": null,
+          "accepted": true,
+          "score": 201
+        }
+      ]
+    },
+    {
+      "name": "우만동 풍림",
+      "area": "수원 팔달구 우만동",
+      "key": "우만동 풍림|수원 팔달구 우만동",
+      "originalStatus": "review_needed",
+      "secondStatus": "verified_second_pass",
+      "richgo": {
+        "id": "a5XRJtB",
+        "name": "풍림",
+        "units": 390,
+        "year": 1987,
+        "far": 117,
+        "floors": "5~5층",
+        "coverage": 23,
+        "parking": null,
+        "heating": "개별난방 · 도시가스",
+        "builder": "풍림산업(주)",
+        "pyeongs": "14·18평",
+        "lat": 37.287686,
+        "lng": 127.031989,
+        "street": "경기도 수원시 팔달구 세지로 439-14",
+        "facts": true,
+        "url": "https://m.richgo.ai/realty/danji/a5XRJtB"
+      },
+      "match": {
+        "distanceMeters": null,
+        "yearDelta": 0,
+        "unitsRatio": 0,
+        "method": "region_hub",
+        "score": 201
+      },
+      "candidates": [
+        {
+          "id": "a5XRJtB",
+          "name": "풍림",
+          "year": 1987,
+          "units": 390,
+          "far": 117,
+          "distanceMeters": null,
+          "accepted": true,
+          "score": 201
+        }
+      ]
+    },
+    {
+      "name": "성포동 선경",
+      "area": "안산 상록구 성포동",
+      "key": "성포동 선경|안산 상록구 성포동",
+      "originalStatus": "review_needed",
+      "secondStatus": "verified_second_pass",
+      "richgo": {
+        "id": "a4qqENF",
+        "name": "선경",
+        "units": 1768,
+        "year": 1990,
+        "far": 217,
+        "floors": "15~22층",
+        "coverage": 17,
+        "parking": 1768,
+        "heating": "지역난방 · 열병합",
+        "builder": "선경건설(주)",
+        "pyeongs": "23·27·31·46·49·55평",
+        "lat": 37.325527,
+        "lng": 126.843785,
+        "street": "경기도 안산시 상록구 예술광장1로 131",
+        "facts": true,
+        "url": "https://m.richgo.ai/realty/danji/a4qqENF"
+      },
+      "match": {
+        "distanceMeters": null,
+        "yearDelta": 0,
+        "unitsRatio": 0,
+        "method": "region_hub",
+        "score": 201
+      },
+      "candidates": [
+        {
+          "id": "a4qqENF",
+          "name": "선경",
+          "year": 1990,
+          "units": 1768,
+          "far": 217,
+          "distanceMeters": null,
+          "accepted": true,
+          "score": 201
+        }
+      ]
+    },
+    {
+      "name": "성포동 주공4단지",
+      "area": "안산 상록구 성포동",
+      "key": "성포동 주공4단지|안산 상록구 성포동",
+      "originalStatus": "review_needed",
+      "secondStatus": "verified_second_pass",
+      "richgo": {
+        "id": "a1oVAVB",
+        "name": "주공4단지",
+        "units": 780,
+        "year": 1984,
+        "far": 165,
+        "floors": "15~15층",
+        "coverage": 14,
+        "parking": 344,
+        "heating": "지역난방 · 열병합",
+        "builder": "대한주택공사",
+        "pyeongs": "30·31·34평",
+        "lat": 37.31953,
+        "lng": 126.84363,
+        "street": "경기도 안산시 상록구 화랑로 510",
+        "facts": true,
+        "url": "https://m.richgo.ai/realty/danji/a1oVAVB"
+      },
+      "match": {
+        "distanceMeters": null,
+        "yearDelta": 0,
+        "unitsRatio": 0,
+        "method": "region_hub",
+        "score": 201
+      },
+      "candidates": [
+        {
+          "id": "a1oVAVB",
+          "name": "주공4단지",
+          "year": 1984,
+          "units": 780,
+          "far": 165,
+          "distanceMeters": null,
+          "accepted": true,
+          "score": 201
+        }
+      ]
+    },
+    {
+      "name": "극동",
+      "area": "서울 구로구 구로동",
+      "key": "극동|서울 구로구 구로동",
+      "originalStatus": "unmatched",
+      "secondStatus": "still_unresolved",
+      "richgo": null,
+      "match": null,
+      "candidates": []
+    },
+    {
+      "name": "현대",
+      "area": "서울 구로구 구로동",
+      "key": "현대|서울 구로구 구로동",
+      "originalStatus": "unmatched",
+      "secondStatus": "still_unresolved",
+      "richgo": null,
+      "match": null,
+      "candidates": []
+    },
+    {
+      "name": "두진",
+      "area": "인천 남동구 간석동",
+      "key": "두진|인천 남동구 간석동",
+      "originalStatus": "unmatched",
+      "secondStatus": "still_unresolved",
+      "richgo": null,
+      "match": null,
+      "candidates": []
+    },
+    {
+      "name": "태화아파트101동,102동,103동,105동",
+      "area": "인천 남동구 간석동",
+      "key": "태화아파트101동,102동,103동,105동|인천 남동구 간석동",
+      "originalStatus": "unmatched",
+      "secondStatus": "still_unresolved",
+      "richgo": null,
+      "match": null,
+      "candidates": []
+    },
+    {
+      "name": "휴먼시아동산마을",
+      "area": "인천 남동구 논현동",
+      "key": "휴먼시아동산마을|인천 남동구 논현동",
+      "originalStatus": "unmatched",
+      "secondStatus": "still_unresolved",
+      "richgo": null,
+      "match": null,
+      "candidates": []
+    },
+    {
+      "name": "대동(5-397)",
+      "area": "인천 남동구 만수동",
+      "key": "대동(5-397)|인천 남동구 만수동",
+      "originalStatus": "unmatched",
+      "secondStatus": "still_unresolved",
+      "richgo": null,
+      "match": null,
+      "candidates": []
+    },
+    {
+      "name": "대성유니드별빛마을",
+      "area": "인천 남동구 만수동",
+      "key": "대성유니드별빛마을|인천 남동구 만수동",
+      "originalStatus": "unmatched",
+      "secondStatus": "still_unresolved",
+      "richgo": null,
+      "match": null,
+      "candidates": []
+    },
+    {
+      "name": "만수뉴서울아파트",
+      "area": "인천 남동구 만수동",
+      "key": "만수뉴서울아파트|인천 남동구 만수동",
+      "originalStatus": "unmatched",
+      "secondStatus": "still_unresolved",
+      "richgo": null,
+      "match": null,
+      "candidates": []
+    },
+    {
+      "name": "신동아",
+      "area": "인천 남동구 만수동",
+      "key": "신동아|인천 남동구 만수동",
+      "originalStatus": "unmatched",
+      "secondStatus": "still_unresolved",
+      "richgo": null,
+      "match": null,
+      "candidates": []
+    },
+    {
+      "name": "주공8단지",
+      "area": "인천 남동구 만수동",
+      "key": "주공8단지|인천 남동구 만수동",
+      "originalStatus": "unmatched",
+      "secondStatus": "still_unresolved",
+      "richgo": null,
+      "match": null,
+      "candidates": []
+    },
+    {
+      "name": "엘에이치청아안",
+      "area": "인천 남동구 서창동",
+      "key": "엘에이치청아안|인천 남동구 서창동",
+      "originalStatus": "unmatched",
+      "secondStatus": "still_unresolved",
+      "richgo": null,
+      "match": null,
+      "candidates": []
+    },
+    {
+      "name": "율목주공",
+      "area": "안양 만안구 안양동",
+      "key": "율목주공|안양 만안구 안양동",
+      "originalStatus": "review_needed",
+      "secondStatus": "verified_second_pass",
+      "richgo": {
+        "id": "a3xlxjA",
+        "name": "주공(율목주공)",
+        "units": 339,
+        "year": 2000,
+        "far": 204,
+        "floors": "18~20층",
+        "coverage": 16,
+        "parking": 328,
+        "heating": "개별난방 · 도시가스",
+        "builder": "대양건설(주)",
+        "pyeongs": "20·24·34평",
+        "lat": 37.394278,
+        "lng": 126.910219,
+        "street": "경기도 안양시 만안구 병목안로110번길 12",
+        "facts": true,
+        "url": "https://m.richgo.ai/realty/danji/a3xlxjA"
+      },
+      "match": {
+        "distanceMeters": 127,
+        "yearDelta": 0,
+        "unitsRatio": 0,
+        "method": "previous_candidate",
+        "score": 230
+      },
+      "candidates": [
+        {
+          "id": "a3xlxjA",
+          "name": "주공(율목주공)",
+          "year": 2000,
+          "units": 339,
+          "far": 204,
+          "distanceMeters": 127,
+          "accepted": true,
+          "score": 230
+        }
+      ]
+    },
+    {
+      "name": "효성화운트빌",
+      "area": "안양 만안구 안양동",
+      "key": "효성화운트빌|안양 만안구 안양동",
+      "originalStatus": "review_needed",
+      "secondStatus": "verified_second_pass",
+      "richgo": {
+        "id": "a8FSTpV",
+        "name": "효성",
+        "units": 350,
+        "year": 2003,
+        "far": 162,
+        "floors": "10~24층",
+        "coverage": 10,
+        "parking": 357,
+        "heating": "개별난방 · 도시가스",
+        "builder": "(주)효성",
+        "pyeongs": "35평",
+        "lat": 37.393008,
+        "lng": 126.903416,
+        "street": "경기도 안양시 만안구 병목안로130번길 81",
+        "facts": true,
+        "url": "https://m.richgo.ai/realty/danji/a8FSTpV"
+      },
+      "match": {
+        "distanceMeters": 141,
+        "yearDelta": 0,
+        "unitsRatio": 0,
+        "method": "previous_candidate",
+        "score": 228
+      },
+      "candidates": [
+        {
+          "id": "a8FSTpV",
+          "name": "효성",
+          "year": 2003,
+          "units": 350,
+          "far": 162,
+          "distanceMeters": 141,
+          "accepted": true,
+          "score": 228
+        }
+      ]
+    },
+    {
+      "name": "우성",
+      "area": "안산 상록구 본오동",
+      "key": "우성|안산 상록구 본오동",
+      "originalStatus": "unmatched",
+      "secondStatus": "still_unresolved",
+      "richgo": null,
+      "match": null,
+      "candidates": []
+    },
+    {
+      "name": "월드메르디앙",
+      "area": "안산 상록구 사동",
+      "key": "월드메르디앙|안산 상록구 사동",
+      "originalStatus": "unmatched",
+      "secondStatus": "still_unresolved",
+      "richgo": null,
+      "match": null,
+      "candidates": []
+    },
+    {
+      "name": "주공3",
+      "area": "안산 상록구 월피동",
+      "key": "주공3|안산 상록구 월피동",
+      "originalStatus": "review_needed",
+      "secondStatus": "still_unresolved",
+      "richgo": null,
+      "match": null,
+      "candidates": [
+        {
+          "id": "a8mjcpS",
+          "name": "주공3단지",
+          "year": 1995,
+          "units": 660,
+          "far": 89,
+          "distanceMeters": 145,
+          "accepted": false,
+          "score": 163
+        }
+      ]
+    },
+    {
+      "name": "고양동우방유쉘아파트",
+      "area": "고양 덕양구 고양동",
+      "key": "고양동우방유쉘아파트|고양 덕양구 고양동",
+      "originalStatus": "unmatched",
+      "secondStatus": "still_unresolved",
+      "richgo": null,
+      "match": null,
+      "candidates": []
+    },
+    {
+      "name": "푸른마을10단지",
+      "area": "고양 덕양구 고양동",
+      "key": "푸른마을10단지|고양 덕양구 고양동",
+      "originalStatus": "unmatched",
+      "secondStatus": "still_unresolved",
+      "richgo": null,
+      "match": null,
+      "candidates": []
+    },
+    {
+      "name": "푸른마을1단지",
+      "area": "고양 덕양구 고양동",
+      "key": "푸른마을1단지|고양 덕양구 고양동",
+      "originalStatus": "unmatched",
+      "secondStatus": "still_unresolved",
+      "richgo": null,
+      "match": null,
+      "candidates": []
+    },
+    {
+      "name": "푸른마을3단지",
+      "area": "고양 덕양구 고양동",
+      "key": "푸른마을3단지|고양 덕양구 고양동",
+      "originalStatus": "unmatched",
+      "secondStatus": "still_unresolved",
+      "richgo": null,
+      "match": null,
+      "candidates": []
+    },
+    {
+      "name": "푸른마을5단지",
+      "area": "고양 덕양구 고양동",
+      "key": "푸른마을5단지|고양 덕양구 고양동",
+      "originalStatus": "unmatched",
+      "secondStatus": "still_unresolved",
+      "richgo": null,
+      "match": null,
+      "candidates": []
+    },
+    {
+      "name": "푸른마을6단지",
+      "area": "고양 덕양구 고양동",
+      "key": "푸른마을6단지|고양 덕양구 고양동",
+      "originalStatus": "unmatched",
+      "secondStatus": "still_unresolved",
+      "richgo": null,
+      "match": null,
+      "candidates": []
+    },
+    {
+      "name": "현대1",
+      "area": "고양 덕양구 고양동",
+      "key": "현대1|고양 덕양구 고양동",
+      "originalStatus": "unmatched",
+      "secondStatus": "still_unresolved",
+      "richgo": null,
+      "match": null,
+      "candidates": []
+    },
+    {
+      "name": "새서울",
+      "area": "고양 덕양구 관산동",
+      "key": "새서울|고양 덕양구 관산동",
+      "originalStatus": "unmatched",
+      "secondStatus": "still_unresolved",
+      "richgo": null,
+      "match": null,
+      "candidates": []
+    },
+    {
+      "name": "신성",
+      "area": "고양 덕양구 관산동",
+      "key": "신성|고양 덕양구 관산동",
+      "originalStatus": "unmatched",
+      "secondStatus": "still_unresolved",
+      "richgo": null,
+      "match": null,
+      "candidates": []
+    },
+    {
+      "name": "삼성래미안",
+      "area": "고양 덕양구 성사동",
+      "key": "삼성래미안|고양 덕양구 성사동",
+      "originalStatus": "unmatched",
+      "secondStatus": "still_unresolved",
+      "richgo": null,
+      "match": null,
+      "candidates": []
+    },
+    {
+      "name": "토당동금강KCC",
+      "area": "고양 덕양구 토당동",
+      "key": "토당동금강KCC|고양 덕양구 토당동",
+      "originalStatus": "unmatched",
+      "secondStatus": "still_unresolved",
+      "richgo": null,
+      "match": null,
+      "candidates": []
+    },
+    {
+      "name": "무원마을(삼보)",
+      "area": "고양 덕양구 행신동",
+      "key": "무원마을(삼보)|고양 덕양구 행신동",
+      "originalStatus": "unmatched",
+      "secondStatus": "still_unresolved",
+      "richgo": null,
+      "match": null,
+      "candidates": []
+    },
+    {
+      "name": "햇빛주공(18-2)",
+      "area": "고양 덕양구 행신동",
+      "key": "햇빛주공(18-2)|고양 덕양구 행신동",
+      "originalStatus": "unmatched",
+      "secondStatus": "still_unresolved",
+      "richgo": null,
+      "match": null,
+      "candidates": []
+    },
+    {
+      "name": "햇빛주공22",
+      "area": "고양 덕양구 행신동",
+      "key": "햇빛주공22|고양 덕양구 행신동",
+      "originalStatus": "unmatched",
+      "secondStatus": "still_unresolved",
+      "richgo": null,
+      "match": null,
+      "candidates": []
+    },
+    {
+      "name": "달빛(라이프)2",
+      "area": "고양 덕양구 화정동",
+      "key": "달빛(라이프)2|고양 덕양구 화정동",
+      "originalStatus": "unmatched",
+      "secondStatus": "still_unresolved",
+      "richgo": null,
+      "match": null,
+      "candidates": []
+    },
+    {
+      "name": "달빛마을(부영)2",
+      "area": "고양 덕양구 화정동",
+      "key": "달빛마을(부영)2|고양 덕양구 화정동",
+      "originalStatus": "unmatched",
+      "secondStatus": "still_unresolved",
+      "richgo": null,
+      "match": null,
+      "candidates": []
+    },
+    {
+      "name": "별빛마을9단지",
+      "area": "고양 덕양구 화정동",
+      "key": "별빛마을9단지|고양 덕양구 화정동",
+      "originalStatus": "unmatched",
+      "secondStatus": "still_unresolved",
+      "richgo": null,
+      "match": null,
+      "candidates": []
+    },
+    {
+      "name": "백송마을(선경)",
+      "area": "고양 일산동구 백석동",
+      "key": "백송마을(선경)|고양 일산동구 백석동",
+      "originalStatus": "unmatched",
+      "secondStatus": "still_unresolved",
+      "richgo": null,
+      "match": null,
+      "candidates": []
+    },
+    {
+      "name": "백송마을(우성)",
+      "area": "고양 일산동구 백석동",
+      "key": "백송마을(우성)|고양 일산동구 백석동",
+      "originalStatus": "review_needed",
+      "secondStatus": "still_unresolved",
+      "richgo": null,
+      "match": null,
+      "candidates": []
+    },
+    {
+      "name": "백송마을(한신)",
+      "area": "고양 일산동구 백석동",
+      "key": "백송마을(한신)|고양 일산동구 백석동",
+      "originalStatus": "review_needed",
+      "secondStatus": "still_unresolved",
+      "richgo": null,
+      "match": null,
+      "candidates": []
+    },
+    {
+      "name": "현대그린",
+      "area": "고양 일산동구 사리현동",
+      "key": "현대그린|고양 일산동구 사리현동",
+      "originalStatus": "unmatched",
+      "secondStatus": "still_unresolved",
+      "richgo": null,
+      "match": null,
+      "candidates": []
+    },
+    {
+      "name": "SKVIEW",
+      "area": "고양 일산동구 식사동",
+      "key": "SKVIEW|고양 일산동구 식사동",
+      "originalStatus": "unmatched",
+      "secondStatus": "still_unresolved",
+      "richgo": null,
+      "match": null,
+      "candidates": []
+    },
+    {
+      "name": "호수마을(대우)",
+      "area": "고양 일산동구 장항동",
+      "key": "호수마을(대우)|고양 일산동구 장항동",
+      "originalStatus": "unmatched",
+      "secondStatus": "still_unresolved",
+      "richgo": null,
+      "match": null,
+      "candidates": []
+    },
+    {
+      "name": "산들마을2(대림)",
+      "area": "고양 일산동구 중산동",
+      "key": "산들마을2(대림)|고양 일산동구 중산동",
+      "originalStatus": "unmatched",
+      "secondStatus": "still_unresolved",
+      "richgo": null,
+      "match": null,
+      "candidates": []
+    },
+    {
+      "name": "하늘마을2단지",
+      "area": "고양 일산동구 중산동",
+      "key": "하늘마을2단지|고양 일산동구 중산동",
+      "originalStatus": "review_needed",
+      "secondStatus": "still_unresolved",
+      "richgo": null,
+      "match": null,
+      "candidates": [
+        {
+          "id": "a8oWDUy",
+          "name": "하늘마을5단지",
+          "year": 2007,
+          "units": 1150,
+          "far": 199,
+          "distanceMeters": 559,
+          "accepted": false,
+          "score": 152
+        }
+      ]
+    },
+    {
+      "name": "숲속마을2단지",
+      "area": "고양 일산동구 풍동",
+      "key": "숲속마을2단지|고양 일산동구 풍동",
+      "originalStatus": "review_needed",
+      "secondStatus": "still_unresolved",
+      "richgo": null,
+      "match": null,
+      "candidates": [
+        {
+          "id": "a9OvqFa",
+          "name": "숲속마을7단지",
+          "year": 2006,
+          "units": 982,
+          "far": 206,
+          "distanceMeters": 653,
+          "accepted": false,
+          "score": 152
+        }
+      ]
+    },
+    {
+      "name": "숲속마을8단지",
+      "area": "고양 일산동구 풍동",
+      "key": "숲속마을8단지|고양 일산동구 풍동",
+      "originalStatus": "ambiguous",
+      "secondStatus": "verified_second_pass",
+      "richgo": {
+        "id": "a3rAIXa",
+        "name": "숲속8단지주공",
+        "units": 1034,
+        "year": 2006,
+        "far": 197,
+        "floors": "19~20층",
+        "coverage": 13,
+        "parking": 854,
+        "heating": "지역난방 · 열병합",
+        "builder": "온빛건설(주)외1",
+        "pyeongs": "21·25평",
+        "lat": 37.671905,
+        "lng": 126.799732,
+        "street": "경기도 고양시 일산동구 숲속마을1로 115",
+        "facts": true,
+        "url": "https://m.richgo.ai/realty/danji/a3rAIXa"
+      },
+      "match": {
+        "distanceMeters": 68,
+        "yearDelta": 0,
+        "unitsRatio": 0,
+        "method": "previous_candidate",
+        "score": 256
+      },
+      "candidates": [
+        {
+          "id": "a3rAIXa",
+          "name": "숲속8단지주공",
+          "year": 2006,
+          "units": 1034,
+          "far": 197,
+          "distanceMeters": 68,
+          "accepted": true,
+          "score": 256
+        },
+        {
+          "id": "a9OvqFa",
+          "name": "숲속마을7단지",
+          "year": 2006,
+          "units": 982,
+          "far": 206,
+          "distanceMeters": 240,
+          "accepted": true,
+          "score": 204
+        }
+      ]
+    },
+    {
+      "name": "삼환",
+      "area": "김포시 감정동",
+      "key": "삼환|김포시 감정동",
+      "originalStatus": "unmatched",
+      "secondStatus": "still_unresolved",
+      "richgo": null,
+      "match": null,
+      "candidates": []
+    },
+    {
+      "name": "신화",
+      "area": "김포시 감정동",
+      "key": "신화|김포시 감정동",
+      "originalStatus": "unmatched",
+      "secondStatus": "still_unresolved",
+      "richgo": null,
+      "match": null,
+      "candidates": []
+    },
+    {
+      "name": "푸른마을(신안)",
+      "area": "김포시 감정동",
+      "key": "푸른마을(신안)|김포시 감정동",
+      "originalStatus": "unmatched",
+      "secondStatus": "still_unresolved",
+      "richgo": null,
+      "match": null,
+      "candidates": []
+    },
+    {
+      "name": "한국",
+      "area": "김포시 감정동",
+      "key": "한국|김포시 감정동",
+      "originalStatus": "unmatched",
+      "secondStatus": "still_unresolved",
+      "richgo": null,
+      "match": null,
+      "candidates": []
+    },
+    {
+      "name": "은여울마을경남아너스빌",
+      "area": "김포시 마산동",
+      "key": "은여울마을경남아너스빌|김포시 마산동",
+      "originalStatus": "unmatched",
+      "secondStatus": "still_unresolved",
+      "richgo": null,
+      "match": null,
+      "candidates": []
+    },
+    {
+      "name": "풍년마을(서광)",
+      "area": "김포시 북변동",
+      "key": "풍년마을(서광)|김포시 북변동",
+      "originalStatus": "unmatched",
+      "secondStatus": "still_unresolved",
+      "richgo": null,
+      "match": null,
+      "candidates": []
+    },
+    {
+      "name": "풍년마을(신안)",
+      "area": "김포시 북변동",
+      "key": "풍년마을(신안)|김포시 북변동",
+      "originalStatus": "unmatched",
+      "secondStatus": "still_unresolved",
+      "richgo": null,
+      "match": null,
+      "candidates": []
+    },
+    {
+      "name": "농장마을(신안)",
+      "area": "김포시 사우동",
+      "key": "농장마을(신안)|김포시 사우동",
+      "originalStatus": "unmatched",
+      "secondStatus": "still_unresolved",
+      "richgo": null,
+      "match": null,
+      "candidates": []
+    },
+    {
+      "name": "풍년마을(삼보)",
+      "area": "김포시 사우동",
+      "key": "풍년마을(삼보)|김포시 사우동",
+      "originalStatus": "unmatched",
+      "secondStatus": "still_unresolved",
+      "richgo": null,
+      "match": null,
+      "candidates": []
+    },
+    {
+      "name": "김포한강 신원 아침도시 고다니",
+      "area": "김포시 양촌읍",
+      "key": "김포한강 신원 아침도시 고다니|김포시 양촌읍",
+      "originalStatus": "unmatched",
+      "secondStatus": "still_unresolved",
+      "richgo": null,
+      "match": null,
+      "candidates": []
+    },
+    {
+      "name": "양곡 더숲",
+      "area": "김포시 양촌읍",
+      "key": "양곡 더숲|김포시 양촌읍",
+      "originalStatus": "unmatched",
+      "secondStatus": "still_unresolved",
+      "richgo": null,
+      "match": null,
+      "candidates": []
+    },
+    {
+      "name": "자연앤데시앙(금빛마을)",
+      "area": "김포시 양촌읍",
+      "key": "자연앤데시앙(금빛마을)|김포시 양촌읍",
+      "originalStatus": "unmatched",
+      "secondStatus": "still_unresolved",
+      "richgo": null,
+      "match": null,
+      "candidates": []
+    },
+    {
+      "name": "전원마을(월드3차1단지)",
+      "area": "김포시 운양동",
+      "key": "전원마을(월드3차1단지)|김포시 운양동",
+      "originalStatus": "review_needed",
+      "secondStatus": "verified_second_pass",
+      "richgo": {
+        "id": "a4fkqzI",
+        "name": "전원월드1단지",
+        "units": 1206,
+        "year": 1999,
+        "far": 215,
+        "floors": "9~17층",
+        "coverage": 21,
+        "parking": 1219,
+        "heating": "개별난방 · 도시가스",
+        "builder": "월드건설주식회사",
+        "pyeongs": "24·32·45·59평",
+        "lat": 37.646064,
+        "lng": 126.684818,
+        "street": "경기도 김포시 전원로 27",
+        "facts": true,
+        "url": "https://m.richgo.ai/realty/danji/a4fkqzI"
+      },
+      "match": {
+        "distanceMeters": 202,
+        "yearDelta": 0,
+        "unitsRatio": 0,
+        "method": "previous_candidate",
+        "score": 221
+      },
+      "candidates": [
+        {
+          "id": "a4fkqzI",
+          "name": "전원월드1단지",
+          "year": 1999,
+          "units": 1206,
+          "far": 215,
+          "distanceMeters": 202,
+          "accepted": true,
+          "score": 221
+        }
+      ]
+    },
+    {
+      "name": "전원마을(월드4차2단지)",
+      "area": "김포시 운양동",
+      "key": "전원마을(월드4차2단지)|김포시 운양동",
+      "originalStatus": "unmatched",
+      "secondStatus": "still_unresolved",
+      "richgo": null,
+      "match": null,
+      "candidates": []
+    },
+    {
+      "name": "청송마을(현대3)",
+      "area": "김포시 장기동",
+      "key": "청송마을(현대3)|김포시 장기동",
+      "originalStatus": "unmatched",
+      "secondStatus": "still_unresolved",
+      "richgo": null,
+      "match": null,
+      "candidates": []
+    },
+    {
+      "name": "백석마을(신일해피)",
+      "area": "김포시 통진읍",
+      "key": "백석마을(신일해피)|김포시 통진읍",
+      "originalStatus": "unmatched",
+      "secondStatus": "still_unresolved",
+      "richgo": null,
+      "match": null,
+      "candidates": []
+    },
+    {
+      "name": "길훈",
+      "area": "김포시 풍무동",
+      "key": "길훈|김포시 풍무동",
+      "originalStatus": "unmatched",
+      "secondStatus": "still_unresolved",
+      "richgo": null,
+      "match": null,
+      "candidates": []
+    },
+    {
+      "name": "김포풍무꿈에그린더포레듀4단지",
+      "area": "김포시 풍무동",
+      "key": "김포풍무꿈에그린더포레듀4단지|김포시 풍무동",
+      "originalStatus": "unmatched",
+      "secondStatus": "still_unresolved",
+      "richgo": null,
+      "match": null,
+      "candidates": []
+    },
+    {
+      "name": "당곡마을(범양)",
+      "area": "김포시 풍무동",
+      "key": "당곡마을(범양)|김포시 풍무동",
+      "originalStatus": "unmatched",
+      "secondStatus": "still_unresolved",
+      "richgo": null,
+      "match": null,
+      "candidates": []
+    },
+    {
+      "name": "당곡마을(현대)",
+      "area": "김포시 풍무동",
+      "key": "당곡마을(현대)|김포시 풍무동",
+      "originalStatus": "unmatched",
+      "secondStatus": "still_unresolved",
+      "richgo": null,
+      "match": null,
+      "candidates": []
+    },
+    {
+      "name": "대림e-편한세상",
+      "area": "김포시 풍무동",
+      "key": "대림e-편한세상|김포시 풍무동",
+      "originalStatus": "unmatched",
+      "secondStatus": "still_unresolved",
+      "richgo": null,
+      "match": null,
+      "candidates": []
+    }
+  ]
+}
