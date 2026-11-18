@@ -165,6 +165,12 @@ aside{order:-1;width:408px;flex:none;border-right:1px solid var(--border);backgr
 .source{padding:16px 24px 40px;font-size:11.5px;line-height:1.8;color:var(--text-tertiary);word-break:keep-all}
 
 
+.ap-analysis-entry{width:100%;margin-top:12px;display:flex;align-items:center;justify-content:space-between;gap:12px;text-align:left;padding:15px 16px;border:1px solid var(--primary);border-radius:8px;background:var(--primary-soft-bg);color:var(--text);cursor:pointer;min-height:70px}
+.ap-analysis-entry strong{display:block;font-size:15.5px;font-weight:800;line-height:1.4}
+.ap-analysis-entry small{display:block;margin-top:5px;color:var(--text-secondary);font-size:12px;line-height:1.5;word-break:keep-all}
+.ap-analysis-entry svg{flex:none;color:var(--primary-soft-fg)}
+.ap-analysis-entry:hover{filter:brightness(.98)}
+.ap-analysis-entry:focus-visible{outline:3px solid var(--primary);outline-offset:3px}
 .phead{display:flex;align-items:center;justify-content:space-between;min-height:50px;padding:3px 14px 3px 16px;border-bottom:1px solid var(--border-soft)}
 .phead button{display:flex;align-items:center;gap:6px;min-height:44px;padding:0 8px;border-radius:4px;font-size:13px;font-weight:600;color:var(--text-secondary)}
 .phead button:hover{background:var(--bg-muted)}
@@ -1677,7 +1683,11 @@ function renderDetail(i){
   const src=RATE_SRC[d.rate.src];
   let h=`<div class="phead"><button id="back"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M15 18 9 12l6-6"/></svg>목록</button><button id="favBtn" aria-pressed="${FAV.has(d.cxKey)}" style="margin-left:auto;color:${FAV.has(d.cxKey)?'#e5484d':'inherit'}">${FAV.has(d.cxKey)?'♥ 저장됨':'♡ 저장'}</button><button id="shareBtn" aria-label="이 단지 링크 공유">공유</button><span class="tnum">${d.rank}위 / ${d.m3?NCX:D.length}</span></div>
   <section class="identity"><div class="cat">${esc(tags)}</div><h2>${esc(publicComplexName(d))}</h2>
-    <div class="meta tnum">${d.masterComplexKey?`<span>선택 평형 · ${esc(d.n.replace(publicComplexName(d),'')||d.n)} ${d.py}평</span>`:''}<span>${esc(d.area)}</span><span>${d.year}년 입주</span><span>${unitN(d).toLocaleString()}세대${d.masterComplexKey?` <small>(통합 관리단지 · 해당 구분 블록 ${d.masterBlockUnits.toLocaleString()}세대)</small>`:d.unitsBlockVerified?` <small>(분리 단지 기준 · 통합 세대수 중복 제외)</small>`:d.unitsOwn?` <small>(임대단지 제외 매매 대상)</small>`:d.unitsN>1?` <small>(같은 마을 ${d.unitsN}개 단지 합계 ${d.unitsRaw.toLocaleString()}세대를 나눈 추정)</small>`:''}</span></div><button id="ap1DetailCompare" type="button" data-ap1="compare" data-i="${i}" class="ap1-picker" style="margin-top:10px;padding:7px 12px;border:1px solid var(--border);border-radius:5px;color:var(--primary-soft-fg);font-size:12px;font-weight:700">+ 비교에 담기</button></section>
+    <div class="meta tnum">${d.masterComplexKey?`<span>선택 평형 · ${esc(d.n.replace(publicComplexName(d),'')||d.n)} ${d.py}평</span>`:''}<span>${esc(d.area)}</span><span>${d.year}년 입주</span><span>${unitN(d).toLocaleString()}세대${d.masterComplexKey?` <small>(통합 관리단지 · 해당 구분 블록 ${d.masterBlockUnits.toLocaleString()}세대)</small>`:d.unitsBlockVerified?` <small>(분리 단지 기준 · 통합 세대수 중복 제외)</small>`:d.unitsOwn?` <small>(임대단지 제외 매매 대상)</small>`:d.unitsN>1?` <small>(같은 마을 ${d.unitsN}개 단지 합계 ${d.unitsRaw.toLocaleString()}세대를 나눈 추정)</small>`:''}</span></div><button id="ap1DetailCompare" type="button" data-ap1="compare" data-i="${i}" class="ap1-picker" style="margin-top:10px;padding:7px 12px;border:1px solid var(--border);border-radius:5px;color:var(--primary-soft-fg);font-size:12px;font-weight:700">+ 비교에 담기</button>
+    <button id="apAnalysisJump" type="button" class="ap-analysis-entry" aria-label="상세 분석으로 이동">
+      <span><strong>상세 분석 보기</strong><small>실거래 · 전월세 · 거래 유동성 · 학군 등</small></span>
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m9 18 6-6-6-6"/></svg>
+    </button></section>
   ${redevelopmentEvidencePanel(d)}${m3DensityNote(d)}${m3PriceWarning(d)}<div class="lede"><strong>${esc(d.headline)}</strong><p>${esc(d.sub)}</p>${d.s4&&(!d.simple||d.s4.peakR!=null||d.s4.peakPeer)?`<p class="why"><b>순위 근거</b> ${esc(whyLine(d))}</p>`:''}${!d.simple&&hasNew(d)?`<p class="why"><b>신설역 주의</b> 입지 점수에 개통 예정 역·노선을 넣어 순위가 올라간 단지예요${d.locParts.fut?` — ${esc(d.locParts.fut.n)}역(${esc(d.locParts.fut.line)}) 도보 약 ${Math.round(d.locParts.wf)}분`:''}${/예정/.test(d.locParts.lpl||'')?` · 노선 프리미엄 ${esc(d.locParts.lpl)} +${Math.round(d.locParts.lp*100)}%(가정)`:''}. 철도는 지연이 잦고 역 위치는 공사·계획 기준(OpenStreetMap)이에요. 개통 전까지 1년당 5%(최대 20%) 할인해서 반영했고, 예정 역을 빼면 입지 상위 ${Math.max(1,Math.round(100-d.loc0))}%예요. 지금 쓰는 역은 ${esc((d.cur&&d.cur.n)||'없음')}${d.cur&&d.cur.m<99999?` 도보 약 ${Math.round(walkMin(d.cur.m))}분`:''}.</p>`:''}</div>
   <dl class="kpis tnum">
     ${d.opt?`<div><dt>지금 필요한 돈</dt><dd>${eokH(d.opt.dep)}</dd><small>${esc(d.opt.kind)} · ${d.opt.Y}년 ${eok(d.opt.K)} 매수권 · 시세 ${eok(d.p)}</small></div>`:`<div><dt>${d.py}평 시세</dt><dd>${eokH(d.p)}</dd><small>${d.reg==='free'?'비규제':'토허·실거주 2년'}${priceEv(d)?`<br>${esc(priceEvTxt(d))}`:''}</small></div>`}
@@ -1730,6 +1740,20 @@ function renderDetail(i){
   if(CAPT>6&&window.APT_TRANSPORT)h=h.replace('<section class="sec">',APT_TRANSPORT.panel(d)+'<section class="sec">');
   const b=$('#body'); b.innerHTML=h; publicDetailSummary(b,d); b.scrollTop=0;
   $('#back').onclick=backToList;
+  $('#apAnalysisJump').onclick=()=>{
+    const jumpToAnalysis=()=>{
+      const header=[...b.querySelectorAll('h2,h3,h4')].find(x=>/^상세 분석/.test(x.textContent.trim()));
+      if(!header)return false;
+      header.scrollIntoView({behavior:'smooth',block:'start'});
+      return true;
+    };
+    if(jumpToAnalysis())return;
+    const observer=new MutationObserver(()=>{if(jumpToAnalysis())observer.disconnect();});
+    observer.observe(b,{subtree:true,childList:true});
+    setTimeout(()=>observer.disconnect(),4500);
+    // 상세 분석 UI가 아직 로드되지 않은 경우, 의존 파일부터 순서대로 로딩한다.
+    loadStage1(()=>loadExtra(()=>loadDx(()=>jumpToAnalysis())));
+  };
   $('#shareBtn').onclick=async()=>{ const url=location.origin+location.pathname+(CAPT!==6?'?cap='+CAPT:'')+hashOf(d), title=publicComplexName(d)+' '+d.py+'평 · 아파트맵', sb=$('#shareBtn');
     try{ if(navigator.share){ await navigator.share({title,url}); return; } await navigator.clipboard.writeText(url); sb.textContent='링크 복사됨'; }catch(e){ if(e&&e.name==='AbortError') return; prompt('링크를 복사하세요',url); }
     setTimeout(()=>{ if(sb.isConnected) sb.textContent='공유'; },2000); };
@@ -1742,7 +1766,8 @@ function renderDetail(i){
     const ensureLede=()=>{if(!b.querySelector('.lede')){const anchor=document.createElement('div');anchor.className='lede';anchor.hidden=true;(b.querySelector('.identity')||b.querySelector('.phead'))?.after(anchor);}};
     ensureLede();window.AP1.detail(d,b);aptLayout(b);
     loadRichgo(()=>{if(state.sel===i&&b.isConnected)window.APT_RICHGO.attach(d,b,i);});
-    loadExtra(()=>{if(state.sel===i&&b.isConnected){ensureLede();window.AP1X.detail(d,b);aptLayout(b);}});
+    // 추가 분석은 거래 단지 식별함수(window.aptLkey)가 준비된 뒤 렌더링해야 한다.
+    loadExtra(()=>loadDx(()=>{if(state.sel===i&&b.isConnected){ensureLede();window.AP1X.detail(d,b);aptLayout(b);}}));
   }});
 }
 
