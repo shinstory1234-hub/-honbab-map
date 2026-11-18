@@ -335,40 +335,11 @@ aside{order:-1;width:408px;flex:none;border-right:1px solid var(--border);backgr
   <div class="search"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg><input id="q" placeholder="단지명, 동네로 찾기" autocomplete="off" enterkeyhint="search"><button type="button" id="clearSearch" aria-label="검색어 지우기" hidden>×</button></div>
 </header>
 <script>
-/* 방문자 표시: 마지막 정상 집계부터 보여 주고, 무거운 지도 자료와 병렬로 최신 집계를 가져온다.
-   저장된 수치가 없으면 임의의 0명/600명을 표시하지 않는다. */
 (function(){
-  var e=document.getElementById('aptVisitors');
-  if(!e) return;
-  var cacheKey='aptVisitSnapshotV1';
-  var today=new Date(Date.now()+9*60*60*1000).toISOString().slice(0,10);
-  try {
-    var previous=JSON.parse(localStorage.getItem(cacheKey)||'null');
-    if(previous && Number.isSafeInteger(previous.a) && previous.a>=0) {
-      if(previous.d===today && Number.isSafeInteger(previous.t) && previous.t>=0) {
-        e.textContent='방문 오늘 '+previous.t+' · 누적 '+previous.a;
-      } else {
-        e.textContent='방문 오늘 집계 중 · 누적 '+previous.a;
-      }
-    }
-  } catch (_) {}
-  var vid=Math.random().toString(36).slice(2);
-  try { vid=localStorage.aptVid||(localStorage.aptVid=vid); } catch (_) {}
-  if(!window.fetch) return;
-  fetch('/api/apt-visit',{
-    method:'POST',headers:{'content-type':'application/json'},
-    body:JSON.stringify({v:vid}),cache:'no-store'
-  }).then(function(response){
-    if(!response.ok) throw new Error('visit request failed');
-    return response.json();
-  }).then(function(data){
-    if(!data || data.t==null || data.a==null) return;
-    var todayCount=Number(data.t),totalCount=Number(data.a);
-    if(!Number.isSafeInteger(todayCount) || todayCount<0 ||
-       !Number.isSafeInteger(totalCount) || totalCount<0) return;
-    e.textContent='방문 오늘 '+todayCount+' · 누적 '+totalCount;
-    try {localStorage.setItem(cacheKey,JSON.stringify({d:today,t:todayCount,a:totalCount}));} catch (_) {}
-  }).catch(function(){});
+var e=document.getElementById('aptVisitors'),v=Math.random().toString(36).slice(2),k='aptVisitSnap',d=Math.floor((Date.now()+32400000)/86400000),p;
+function show(t,a){e.textContent='방문 오늘 '+t+' · 누적 '+a}
+try{p=JSON.parse(localStorage.getItem(k));if(p&&p.a>=600){if(p.d===d)show(p.t,p.a);else e.textContent='방문 오늘 집계 중 · 누적 '+p.a}v=localStorage.aptVid||(localStorage.aptVid=v)}catch(x){}
+fetch('/api/apt-visit',{method:'POST',body:JSON.stringify({v})}).then(r=>r.json()).then(j=>{if(j.t>=0&&j.a>=600){show(j.t,j.a);try{localStorage.setItem(k,JSON.stringify({t:j.t,a:j.a,d}))}catch(x){}}}).catch(()=>{});
 })();
 </script>
 <main>
