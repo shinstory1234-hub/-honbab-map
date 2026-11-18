@@ -47,8 +47,8 @@
    +'.dxhrow{display:flex;justify-content:space-between;align-items:center}.dxtg{font-size:12.5px;font-weight:500;color:var(--text-tertiary,#64748b);display:inline-flex;gap:5px;align-items:center}'
    +'.dxr .dg{font-style:normal;font-size:11px;font-weight:600;color:#64748b;background:#f1f5f9;border-radius:4px;padding:1px 6px;margin-left:6px;vertical-align:2px}.dxr .l b .nw{margin-left:6px;vertical-align:2px}'
    +'.dxmore{width:100%;margin-top:8px;padding:11px 0;border:1px solid var(--border,#e2e8f0);background:var(--bg,#fff);border-radius:10px;font-size:13.5px;font-weight:650;color:var(--text,#0f172a)}';
-    st.textContent+="\n/* Preview: transaction detail, tabs instead of pill buttons */\n.dxbox .dxrow{gap:0;margin:4px 0 16px;border-bottom:1px solid var(--border-soft,#e5e7eb);overflow-x:auto}\n.dxbox .dxc1{border:0;border-bottom:2px solid transparent;border-radius:0;background:transparent!important;color:var(--text-tertiary,#71717a);padding:10px 13px 9px;min-width:65px;box-shadow:none!important}\n.dxbox .dxc1.on{color:var(--text,#171719);border-color:var(--text,#171719)}\n.dxbox .dxc1 small{font-size:11px;margin-top:3px}.dxbox .dxc1.on small{color:var(--text-secondary,#555)}\n.dxbox .dxhero{background:transparent;border:0;border-radius:0;padding:12px 0 15px;margin:2px 0 10px;border-bottom:1px solid var(--border-soft,#e5e7eb)}\n.dxbox .dxhero .big{font-size:32px;letter-spacing:-.045em;margin:4px 0 10px}\n.dxbox .dxpill{border:0;background:transparent;padding:2px 0;border-radius:0}\n.dxbox .dxhero .pills{gap:14px;margin-bottom:8px}\n.dxbox .dxseg{background:transparent;padding:0;border-radius:0;border-bottom:1px solid var(--border-soft,#e5e7eb);margin:0 0 12px}\n.dxbox .dxseg button{border-radius:0;padding:10px 0;border-bottom:2px solid transparent}\n.dxbox .dxseg button.on{background:transparent;box-shadow:none;border-color:var(--text,#171719)}\n.dxbox .dxtiles{gap:0;border-top:1px solid var(--border-soft,#e5e7eb)}\n.dxbox .dxtile{border:0;border-bottom:1px solid var(--border-soft,#e5e7eb);border-radius:0;background:transparent;padding:12px 6px}\n.dxbox .dxtile.on{box-shadow:none;border-bottom:2px solid var(--primary,#0066ff);background:transparent}\n.dxbox .dxmore{border-radius:5px}\n.dxbox .dxr.me{border-radius:4px}\n.dxbox .dxlegend{display:flex;flex-wrap:wrap;align-items:center;gap:8px 14px;font-size:11px;color:var(--text-tertiary,#71717a);margin:2px 0 8px}\n.dxbox .dxlegend span{display:inline-flex;align-items:center;gap:5px;white-space:nowrap}\n.dxbox .dxlegend i{width:8px;height:8px;border-radius:50%;background:#94a3b8}\n.dxbox .dxlegend .line{width:14px;height:2px;background:#2563eb}\n.dxbox .dxlegend .bar{width:8px;height:9px;border-radius:0;background:#cbd5e1}\n.dxbox .dxlegend .source{flex-basis:100%;font-size:10px;color:var(--text-faint,#999)}
-.dxbox .dxgap-note{margin:4px 0 12px;font-size:11px;line-height:1.5;color:var(--text-tertiary,#71717a)}\n";document.head.appendChild(st); })();
+    st.textContent+=`n.dxbox .dxrow{gap:0;margin:4px 0 16px;border-bottom:1px solid var(--border-soft,#e5e7eb);overflow-x:auto}\n.dxbox .dxc1{border:0;border-bottom:2px solid transparent;border-radius:0;background:transparent!important;color:var(--text-tertiary,#71717a);padding:10px 13px 9px;min-width:65px;box-shadow:none!important}\n.dxbox .dxc1.on{color:var(--text,#171719);border-color:var(--text,#171719)}\n.dxbox .dxc1 small{font-size:11px;margin-top:3px}.dxbox .dxc1.on small{color:var(--text-secondary,#555)}\n.dxbox .dxhero{background:transparent;border:0;border-radius:0;padding:12px 0 15px;margin:2px 0 10px;border-bottom:1px solid var(--border-soft,#e5e7eb)}\n.dxbox .dxhero .big{font-size:32px;letter-spacing:-.045em;margin:4px 0 10px}\n.dxbox .dxpill{border:0;background:transparent;padding:2px 0;border-radius:0}\n.dxbox .dxhero .pills{gap:14px;margin-bottom:8px}\n.dxbox .dxseg{background:transparent;padding:0;border-radius:0;border-bottom:1px solid var(--border-soft,#e5e7eb);margin:0 0 12px}\n.dxbox .dxseg button{border-radius:0;padding:10px 0;border-bottom:2px solid transparent}\n.dxbox .dxseg button.on{background:transparent;box-shadow:none;border-color:var(--text,#171719)}\n.dxbox .dxtiles{gap:0;border-top:1px solid var(--border-soft,#e5e7eb)}\n.dxbox .dxtile{border:0;border-bottom:1px solid var(--border-soft,#e5e7eb);border-radius:0;background:transparent;padding:12px 6px}\n.dxbox .dxtile.on{box-shadow:none;border-bottom:2px solid var(--primary,#0066ff);background:transparent}\n.dxbox .dxmore{border-radius:5px}\n.dxbox .dxr.me{border-radius:4px}\n.dxbox .dxlegend{display:flex;flex-wrap:wrap;align-items:center;gap:8px 14px;font-size:11px;color:var(--text-tertiary,#71717a);margin:2px 0 8px}\n.dxbox .dxlegend span{display:inline-flex;align-items:center;gap:5px;white-space:nowrap}\n.dxbox .dxlegend i{width:8px;height:8px;border-radius:50%;background:#94a3b8}\n.dxbox .dxlegend .line{width:14px;height:2px;background:#2563eb}\n.dxbox .dxlegend .bar{width:8px;height:9px;border-radius:0;background:#cbd5e1}\n.dxbox .dxlegend .source{flex-basis:100%;font-size:10px;color:var(--text-faint,#999)}
+.dxbox .dxgap-note{margin:4px 0 12px;font-size:11px;line-height:1.5;color:var(--text-tertiary,#71717a)}`;document.head.appendChild(st); })();
   var CACHE={};
   function E(s){ return String(s==null?'':s).replace(/[&<>"]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c];}); }
   function won(v){ if(v==null||!isFinite(v)) return '—'; v=Math.round(v); var e=Math.floor(v/10000), m=v%10000; return (e?e+'억'+(m?' ':''):'')+(m?m.toLocaleString()+(e?'':'만'):''); }
@@ -189,17 +189,43 @@
     if(more) more.onclick=function(){ n+=20; more.textContent='실거래 '+Math.max(0,list.length-n).toLocaleString()+'건 더보기'; box.querySelector('.dxt').innerHTML=tr(n); if(n>=list.length) more.remove(); };
   }
 
+  // 같은 실거래 원본을 상세 화면과 '실거래 차트' 메뉴에서 재사용한다.
+  window.APTDXChart=function(d,j,el){
+    if(!el)return;
+    var all=Array.isArray(j&&j.t)?j.t:[], A=pickAb(d,j||{}), rows=all.filter(function(t){return ab(t[1])===A;});
+    markOdd(rows);
+    if(!rows.length){el.innerHTML='<p class="ru-warning">이 단지의 해당 평형 과거 실거래 내역이 없습니다. 자료 누락 가능성도 확인해야 합니다.</p>';return;}
+    el.innerHTML='<div class="dxseg dxp" role="group" aria-label="실거래 차트 기간"><button type="button" data-p="3" class="on" aria-pressed="true">3년</button><button type="button" data-p="5" aria-pressed="false">5년</button><button type="button" data-p="all" aria-pressed="false">전체</button></div><div class="dxc">'+chart(rows,3)+'</div>';
+    el.querySelectorAll('.dxp button').forEach(function(btn){btn.onclick=function(){
+      el.querySelectorAll('.dxp button').forEach(function(x){x.classList.remove('on');x.setAttribute('aria-pressed','false');});
+      btn.classList.add('on');btn.setAttribute('aria-pressed','true');
+      el.querySelector('.dxc').innerHTML=chart(rows,btn.dataset.p==='all'?'all':Number(btn.dataset.p));
+    };});
+  };
   window.APTDX=function(d,body){
-    var k=lkey(d); if(!k||!body) return;
-    body.querySelectorAll('.dxbox').forEach(function(x){ x.remove(); });
-    var box=document.createElement('div'); box.className='dxbox';
-    box.innerHTML='<section class="sec" data-dx="1"><h3>실거래가</h3><p class="note">실거래 불러오는 중…</p></section>';
-    var anchor=null; body.querySelectorAll('section.sec > h3').forEach(function(h){ if(!anchor&&/^(시세 흐름|사면 드는 돈)/.test(h.textContent.trim())) anchor=h.parentNode; });
-    if(anchor) anchor.parentNode.insertBefore(box,anchor); else { var id=body.querySelector('.identity'); (id&&id.nextSibling)?id.parentNode.insertBefore(box,id.nextSibling):body.appendChild(box); }
-    var done=function(j){ if(box.isConnected){ drawDx(d,j,box);window.APT_DX_INFO=window.APT_DX_INFO||{};window.APT_DX_INFO[k]=j;if(window.AP1X)window.AP1X.onDx(d,j,body); if(window.aptLayout)aptLayout(body); } };
-    if(CACHE[k]) return done(CACHE[k]);
-    fetch('/api/apt-dx?v=2&k='+encodeURIComponent(k)).then(function(r){ if(!r.ok) throw 0; return r.json(); })
-      .then(function(j){ CACHE[k]=j; done(j); }).catch(function(){ if(box.isConnected) box.innerHTML=''; });
+    if(!body)return;
+    var k=lkey(d);
+    body.querySelectorAll('.dxbox').forEach(function(x){x.remove();});
+    var box=document.createElement('div');box.className='dxbox';
+    var loading=function(){box.innerHTML='<section class="sec" data-dx="1"><h3>실거래가 <small>과거 거래 및 가격 추이</small></h3><p class="note">실거래 차트 불러오는 중…</p></section>';};
+    var error=function(msg){if(!box.isConnected)return;
+      box.innerHTML='<section class="sec" data-dx="1"><h3>실거래가 <small>가격 추이</small></h3><p class="note">'+E(msg)+'</p><button type="button" class="dx-retry" style="margin-top:10px;padding:10px 15px;min-height:42px;border:1px solid var(--border);background:var(--bg-subtle);border-radius:6px;color:var(--primary-soft-fg);font-size:13px;font-weight:750">실거래 차트 다시 불러오기</button></section>';
+      var btn=box.querySelector('.dx-retry');if(btn)btn.onclick=function(){window.APTDX(d,body);};
+      if(window.aptLayout)aptLayout(body);
+    };
+    loading();
+    var anchor=null;body.querySelectorAll('section.sec > h3').forEach(function(h){if(!anchor&&/^(시세 흐름|사면 드는 돈)/.test(h.textContent.trim()))anchor=h.parentNode;});
+    if(anchor)anchor.parentNode.insertBefore(box,anchor);else{var id=body.querySelector('.identity');(id&&id.nextSibling)?id.parentNode.insertBefore(box,id.nextSibling):body.appendChild(box);}
+    if(!k){error('단지 식별정보를 찾지 못해 실거래 차트를 표시할 수 없습니다.');return;}
+    var done=function(j){if(!box.isConnected)return;
+      if(!j||!Array.isArray(j.t)){error('실거래 응답이 올바르지 않습니다.');return;}
+      try{drawDx(d,j,box);window.APT_DX_INFO=window.APT_DX_INFO||{};window.APT_DX_INFO[k]=j;if(window.AP1X)window.AP1X.onDx(d,j,body);if(window.aptLayout)aptLayout(body);}
+      catch(e){console.error('apt-dx chart render failed',e);error('실거래 자료를 받았지만 차트를 표시하지 못했습니다.');}
+    };
+    if(CACHE[k])return done(CACHE[k]);
+    fetch('/api/apt-dx?v=3&k='+encodeURIComponent(k)).then(function(r){if(!r.ok)throw Error('HTTP '+r.status);return r.json();})
+      .then(function(j){CACHE[k]=j;done(j);})
+      .catch(function(e){console.warn('apt-dx request failed',k,e);error('실거래 정보를 불러오지 못했습니다. 데이터가 없다는 뜻은 아닙니다.');});
   };
 
   window.APTRACE=function(){
