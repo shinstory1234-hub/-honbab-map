@@ -315,14 +315,14 @@ aside{order:-1;width:408px;flex:none;border-right:1px solid var(--border);backgr
 <body>
 <div class="notice-gate" id="noticeGate" hidden role="dialog" aria-modal="true" aria-labelledby="noticeTitle">
   <section class="notice-card">
-    <h2 id="noticeTitle">⚠️ 지도 이용 전 확인해주세요</h2>
+    <h2 id="noticeTitle">⚠️ 지도 이용 안내</h2>
     <div class="notice-list">
-      <div class="notice-item"><h3>1. 주관적인 평가</h3><p>최대한 객관적으로 평가했지만 제작자의 주관이 반영되어 있습니다. 높은 점수가 미래 수익률을 보장하지 않습니다.</p></div>
-      <div class="notice-item"><h3>2. 데이터 오류 가능성</h3><p>현재 1차 배포 버전으로, 일부 데이터가 부정확하거나 누락되었을 수 있습니다.</p></div>
-      <div class="notice-item"><h3>3. 재건축 단지 고평가 가능성</h3><p>일부 노후 단지의 대지지분은 등기 대신 용적률로 추정했습니다. 실제 사업성이나 분담금과 차이가 날 수 있으니 재건축 단지 순위는 신중히 참고하세요.</p></div>
-      <div class="notice-item"><h3>4. 실거래가와 호가 차이</h3><p>최근 아파트 가격이 빠르게 상승하면서 실거래가와 현재 호가 사이에 차이가 발생하고 있습니다. 특히 <strong>실거래가는 낮지만 현재 호가가 크게 오른 단지는 모델이 실제보다 높은 점수를 부여했을 가능성이 있습니다.</strong></p></div>
+      <div class="notice-item"><h3>1. 주관적인 평가</h3><p>제작자의 주관이 반영될 수 있으며, 높은 점수는 수익률을 보장하지 않습니다.</p></div>
+      <div class="notice-item"><h3>2. 데이터 오류 가능성</h3><p>일부 데이터는 부정확하거나 누락될 수 있습니다.</p></div>
+      <div class="notice-item"><h3>3. 재건축 단지 고평가 가능성</h3><p>일부 노후 단지 대지지분은 용적률로 추정했습니다. 실제 사업성·분담금과 다를 수 있으니 재건축 순위에 유의하세요.</p></div>
+      <div class="notice-item"><h3>4. 실거래가와 호가 차이</h3><p>실거래가와 호가는 다를 수 있습니다. 특히 <strong>호가가 급등한 단지는 실제보다 높은 점수를 받았을 수 있습니다.</strong></p></div>
     </div>
-    <label class="notice-check"><input type="checkbox" id="noticeCheck"><span>위 유의사항을 모두 확인했으며, 본 지도의 평가 결과가 참고용임을 이해하고 동의합니다.</span></label>
+    <label class="notice-check"><input type="checkbox" id="noticeCheck"><span>위 유의사항을 확인했고, 평가 결과가 참고용임에 동의합니다.</span></label>
     <p class="notice-error" id="noticeError" aria-live="polite"></p>
     <div class="notice-actions"><button type="button" class="decline" id="noticeDecline">동의하지 않음</button><button type="button" class="agree" id="noticeAgree" disabled>동의하고 지도 보기</button></div>
   </section>
@@ -331,6 +331,7 @@ aside{order:-1;width:408px;flex:none;border-right:1px solid var(--border);backgr
   <a class="wordmark" id="home" href="apt-map.html" aria-label="아파트맵 처음 화면으로"><svg class="mark" viewBox="0 0 200 200" aria-hidden="true"><rect width="200" height="200" rx="46" fill="#0066FF"/><path fill="#fff" d="M44 52h112v20H44zM72 72h20v60H72zM108 72h20v60h-20zM36 132h128v20H36z"/></svg>아파트맵</a>
   <nav class="captab" aria-label="가격대"><a href="apt-map.html" id="cap6">6억 이하</a><a href="apt-map.html?cap=10" id="cap10">6~10억</a><a href="apt-map.html?cap=15" id="cap15">10~15억</a><a href="apt-map.html?cap=20" id="cap20">15~20억</a><a href="apt-map.html?cap=25" id="cap25">20~25억</a><a href="apt-map.html?cap=30" id="cap30">25~30억</a><a href="apt-map.html?cap=35" id="cap35">30억 이상</a></nav>
   <span class="caption" id="asof">서울·경기·인천</span>
+  <span class="caption" id="aptVisitors">방문 오늘 0 · 누적 600</span>
   <div class="search"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg><input id="q" placeholder="단지명, 동네로 찾기" autocomplete="off" enterkeyhint="search"><button type="button" id="clearSearch" aria-label="검색어 지우기" hidden>×</button></div>
 </header>
 <main>
@@ -379,9 +380,16 @@ noticeAgree.addEventListener('click',()=>{if(!noticeCheck.checked)return;try{loc
   noticeLinks(); noticeGate.hidden=true;});
 document.getElementById('noticeDecline').addEventListener('click',()=>{noticeCheck.checked=false;noticeAgree.disabled=true;noticeError.textContent='동의해야 지도를 볼 수 있습니다.';noticeCheck.focus();});
 const KAKAO_JS_KEY='106bb734e8600621686fade2de7f8afb';document.head.insertAdjacentHTML('beforeend','<style>.rmet{display:flex;flex-wrap:wrap;gap:0 9px;font-size:13px}.rmet b{color:#e5484d}.row h3{white-space:normal;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;word-break:keep-all}.m3-flat-options{-webkit-mask-image:linear-gradient(90deg,#000 88%,transparent);mask-image:linear-gradient(90deg,#000 88%,transparent);padding-right:24px}</style>');
-/* 방문자 수: 화면이 다 뜬 뒤 1번 요청. 실패하면 안 보임 */
-addEventListener('load',()=>setTimeout(()=>{let v='';try{v=localStorage.aptVid||(localStorage.aptVid=Math.random().toString(36).slice(2,12))}catch(e){}
-fetch('/api/apt-visit',{method:'POST',body:JSON.stringify({v})}).then(r=>r.json()).then(j=>{if(j.t==null)return;const b=document.querySelector('.thm'),e=document.createElement('span');e.textContent='방문 오늘 '+j.t.toLocaleString()+' · 누적 '+j.a.toLocaleString();const m=innerWidth<768;e.style.cssText='flex:none;font-size:12px;color:var(--text-tertiary);white-space:nowrap;order:'+(m?0:5)+(m?';margin-left:auto':'');if(b){if(m)b.style.marginLeft='10px';b.before(e)}else asof.after(e)}).catch(()=>{})},2500));
+/* 방문자 표시는 API 실패 시에도 유지. */
+const aptVisitors=document.getElementById('aptVisitors');
+try{let a=+localStorage.aptVC600;if(a>=600)aptVisitors.textContent='방문 오늘 0 · 누적 '+a.toLocaleString()}catch(e){}
+addEventListener('load',()=>setTimeout(()=>{
+let v='';try{v=localStorage.aptVid||(localStorage.aptVid=Math.random().toString(36).slice(2,12))}catch(e){}
+fetch('/api/apt-visit',{method:'POST',body:JSON.stringify({v})}).then(r=>r.json()).then(j=>{
+if(j.t==null||j.a==null)return;
+aptVisitors.textContent='방문 오늘 '+j.t.toLocaleString()+' · 누적 '+j.a.toLocaleString();
+try{localStorage.aptVC600=j.a}catch(e){}
+}).catch(()=>{})},2500));
 /* 다크모드: <html class="dk"> 토글(시스템 설정 따라가다 누르면 기억). 색 변수는 :root.dk, 여기는 고정색 덮어쓰기만 */
 
 (function(){const R=document.documentElement,mt=document.querySelector('meta[name=theme-color]'),b=document.createElement('button');b.type='button';b.className='thm';
@@ -1677,11 +1685,7 @@ function renderDetail(i){
   const src=RATE_SRC[d.rate.src];
   let h=`<div class="phead"><button id="back"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M15 18 9 12l6-6"/></svg>목록</button><button id="favBtn" aria-pressed="${FAV.has(d.cxKey)}" style="margin-left:auto;color:${FAV.has(d.cxKey)?'#e5484d':'inherit'}">${FAV.has(d.cxKey)?'♥ 저장됨':'♡ 저장'}</button><button id="shareBtn" aria-label="이 단지 링크 공유">공유</button><span class="tnum">${d.rank}위 / ${d.m3?NCX:D.length}</span></div>
   <section class="identity"><div class="cat">${esc(tags)}</div><h2>${esc(publicComplexName(d))}</h2>
-    <div class="meta tnum">${d.masterComplexKey?`<span>선택 평형 · ${esc(d.n.replace(publicComplexName(d),'')||d.n)} ${d.py}평</span>`:''}<span>${esc(d.area)}</span><span>${d.year}년 입주</span><span>${unitN(d).toLocaleString()}세대${d.masterComplexKey?` <small>(통합 관리단지 · 해당 구분 블록 ${d.masterBlockUnits.toLocaleString()}세대)</small>`:d.unitsBlockVerified?` <small>(분리 단지 기준 · 통합 세대수 중복 제외)</small>`:d.unitsOwn?` <small>(임대단지 제외 매매 대상)</small>`:d.unitsN>1?` <small>(같은 마을 ${d.unitsN}개 단지 합계 ${d.unitsRaw.toLocaleString()}세대를 나눈 추정)</small>`:''}</span></div><button id="ap1DetailCompare" type="button" data-ap1="compare" data-i="${i}" class="ap1-picker" style="margin-top:10px;padding:7px 12px;border:1px solid var(--border);border-radius:5px;color:var(--primary-soft-fg);font-size:12px;font-weight:700">+ 비교에 담기</button>
-    <button id="apAnalysisJump" type="button" aria-label="상세 분석으로 이동" style="width:100%;margin-top:12px;padding:14px;display:flex;align-items:center;justify-content:space-between;text-align:left;gap:12px;border:1px solid var(--primary);border-radius:8px;background:var(--primary-soft-bg)">
-      <span><strong style="display:block;font-size:15px">상세 분석 보기</strong><small style="display:block;margin-top:4px;font-size:12px;color:var(--text-secondary)">실거래 · 전월세 · 거래 유동성 · 학군 등</small></span>
-      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m9 18 6-6-6-6"/></svg>
-    </button></section>
+    <div class="meta tnum">${d.masterComplexKey?`<span>선택 평형 · ${esc(d.n.replace(publicComplexName(d),'')||d.n)} ${d.py}평</span>`:''}<span>${esc(d.area)}</span><span>${d.year}년 입주</span><span>${unitN(d).toLocaleString()}세대${d.masterComplexKey?` <small>(통합 관리단지 · 해당 구분 블록 ${d.masterBlockUnits.toLocaleString()}세대)</small>`:d.unitsBlockVerified?` <small>(분리 단지 기준 · 통합 세대수 중복 제외)</small>`:d.unitsOwn?` <small>(임대단지 제외 매매 대상)</small>`:d.unitsN>1?` <small>(같은 마을 ${d.unitsN}개 단지 합계 ${d.unitsRaw.toLocaleString()}세대를 나눈 추정)</small>`:''}</span></div><button id="ap1DetailCompare" type="button" data-ap1="compare" data-i="${i}" class="ap1-picker" style="margin-top:10px;padding:7px 12px;border:1px solid var(--border);border-radius:5px;color:var(--primary-soft-fg);font-size:12px;font-weight:700">+ 비교에 담기</button></section>
   ${redevelopmentEvidencePanel(d)}${m3DensityNote(d)}${m3PriceWarning(d)}<div class="lede"><strong>${esc(d.headline)}</strong><p>${esc(d.sub)}</p>${d.s4&&(!d.simple||d.s4.peakR!=null||d.s4.peakPeer)?`<p class="why"><b>순위 근거</b> ${esc(whyLine(d))}</p>`:''}${!d.simple&&hasNew(d)?`<p class="why"><b>신설역 주의</b> 입지 점수에 개통 예정 역·노선을 넣어 순위가 올라간 단지예요${d.locParts.fut?` — ${esc(d.locParts.fut.n)}역(${esc(d.locParts.fut.line)}) 도보 약 ${Math.round(d.locParts.wf)}분`:''}${/예정/.test(d.locParts.lpl||'')?` · 노선 프리미엄 ${esc(d.locParts.lpl)} +${Math.round(d.locParts.lp*100)}%(가정)`:''}. 철도는 지연이 잦고 역 위치는 공사·계획 기준(OpenStreetMap)이에요. 개통 전까지 1년당 5%(최대 20%) 할인해서 반영했고, 예정 역을 빼면 입지 상위 ${Math.max(1,Math.round(100-d.loc0))}%예요. 지금 쓰는 역은 ${esc((d.cur&&d.cur.n)||'없음')}${d.cur&&d.cur.m<99999?` 도보 약 ${Math.round(walkMin(d.cur.m))}분`:''}.</p>`:''}</div>
   <dl class="kpis tnum">
     ${d.opt?`<div><dt>지금 필요한 돈</dt><dd>${eokH(d.opt.dep)}</dd><small>${esc(d.opt.kind)} · ${d.opt.Y}년 ${eok(d.opt.K)} 매수권 · 시세 ${eok(d.p)}</small></div>`:`<div><dt>${d.py}평 시세</dt><dd>${eokH(d.p)}</dd><small>${d.reg==='free'?'비규제':'토허·실거주 2년'}${priceEv(d)?`<br>${esc(priceEvTxt(d))}`:''}</small></div>`}
@@ -1734,13 +1738,6 @@ function renderDetail(i){
   if(CAPT>6&&window.APT_TRANSPORT)h=h.replace('<section class="sec">',APT_TRANSPORT.panel(d)+'<section class="sec">');
   const b=$('#body'); b.innerHTML=h; publicDetailSummary(b,d); b.scrollTop=0;
   $('#back').onclick=backToList;
-  $('#apAnalysisJump').onclick=()=>{
-    const jump=()=>{const el=b.querySelector('.ru-root');if(el){el.scrollIntoView({behavior:'smooth',block:'start'});return true;}return false;};
-    if(jump())return;
-    const mo=new MutationObserver(()=>{if(jump())mo.disconnect();});
-    mo.observe(b,{subtree:true,childList:true});
-    setTimeout(()=>mo.disconnect(),3500);
-  };
   $('#shareBtn').onclick=async()=>{ const url=location.origin+location.pathname+(CAPT!==6?'?cap='+CAPT:'')+hashOf(d), title=publicComplexName(d)+' '+d.py+'평 · 아파트맵', sb=$('#shareBtn');
     try{ if(navigator.share){ await navigator.share({title,url}); return; } await navigator.clipboard.writeText(url); sb.textContent='링크 복사됨'; }catch(e){ if(e&&e.name==='AbortError') return; prompt('링크를 복사하세요',url); }
     setTimeout(()=>{ if(sb.isConnected) sb.textContent='공유'; },2000); };
@@ -1752,10 +1749,8 @@ function renderDetail(i){
     // 본문 자동 정리 과정에서 lede가 생략된 단지는 앵커를 재생성한 뒤 기능 카드를 붙인다.
     const ensureLede=()=>{if(!b.querySelector('.lede')){const anchor=document.createElement('div');anchor.className='lede';anchor.hidden=true;(b.querySelector('.identity')||b.querySelector('.phead'))?.after(anchor);}};
     ensureLede();window.AP1.detail(d,b);aptLayout(b);
-    // 거래 연결용 키를 만드는 스크립트가 준비된 후 상세 분석 메뉴를 노출한다.
-    loadRichgo(()=>loadDx(()=>{if(state.sel===i&&b.isConnected)window.APT_RICHGO.attach(d,b,i);}));
-    // 추가 분석은 거래 단지 식별함수(window.aptLkey)가 준비된 뒤 렌더링해야 한다.
-    loadExtra(()=>loadDx(()=>{if(state.sel===i&&b.isConnected){ensureLede();window.AP1X.detail(d,b);aptLayout(b);}}));
+    loadRichgo(()=>{if(state.sel===i&&b.isConnected)window.APT_RICHGO.attach(d,b,i);});
+    loadExtra(()=>{if(state.sel===i&&b.isConnected){ensureLede();window.AP1X.detail(d,b);aptLayout(b);}});
   }});
 }
 
