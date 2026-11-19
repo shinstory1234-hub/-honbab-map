@@ -50,7 +50,14 @@
    +'.dxr .dg{font-style:normal;font-size:11px;font-weight:600;color:#64748b;background:#f1f5f9;border-radius:4px;padding:1px 6px;margin-left:6px;vertical-align:2px}.dxr .l b .nw{margin-left:6px;vertical-align:2px}'
    +'.dxmore{width:100%;margin-top:8px;padding:11px 0;border:1px solid var(--border,#e2e8f0);background:var(--bg,#fff);border-radius:10px;font-size:13.5px;font-weight:650;color:var(--text,#0f172a)}';
     st.textContent+=`n.dxbox .dxrow{gap:0;margin:4px 0 16px;border-bottom:1px solid var(--border-soft,#e5e7eb);overflow-x:auto}\n.dxbox .dxc1{border:0;border-bottom:2px solid transparent;border-radius:0;background:transparent!important;color:var(--text-tertiary,#71717a);padding:10px 13px 9px;min-width:65px;box-shadow:none!important}\n.dxbox .dxc1.on{color:var(--text,#171719);border-color:var(--text,#171719)}\n.dxbox .dxc1 small{font-size:11px;margin-top:3px}.dxbox .dxc1.on small{color:var(--text-secondary,#555)}\n.dxbox .dxhero{background:transparent;border:0;border-radius:0;padding:12px 0 15px;margin:2px 0 10px;border-bottom:1px solid var(--border-soft,#e5e7eb)}\n.dxbox .dxhero .big{font-size:32px;letter-spacing:-.045em;margin:4px 0 10px}\n.dxbox .dxpill{border:0;background:transparent;padding:2px 0;border-radius:0}\n.dxbox .dxhero .pills{gap:14px;margin-bottom:8px}\n.dxbox .dxseg{background:transparent;padding:0;border-radius:0;border-bottom:1px solid var(--border-soft,#e5e7eb);margin:0 0 12px}\n.dxbox .dxseg button{border-radius:0;padding:10px 0;border-bottom:2px solid transparent}\n.dxbox .dxseg button.on{background:transparent;box-shadow:none;border-color:var(--text,#171719)}\n.dxbox .dxtiles{gap:0;border-top:1px solid var(--border-soft,#e5e7eb)}\n.dxbox .dxtile{border:0;border-bottom:1px solid var(--border-soft,#e5e7eb);border-radius:0;background:transparent;padding:12px 6px}\n.dxbox .dxtile.on{box-shadow:none;border-bottom:2px solid var(--primary,#0066ff);background:transparent}\n.dxbox .dxmore{border-radius:5px}\n.dxbox .dxr.me{border-radius:4px}\n.dxbox .dxlegend{display:flex;flex-wrap:wrap;align-items:center;gap:8px 14px;font-size:11px;color:var(--text-tertiary,#71717a);margin:2px 0 8px}\n.dxbox .dxlegend span{display:inline-flex;align-items:center;gap:5px;white-space:nowrap}\n.dxbox .dxlegend i{width:8px;height:8px;border-radius:50%;background:#94a3b8}\n.dxbox .dxlegend .line{width:14px;height:2px;background:#2563eb}\n.dxbox .dxlegend .bar{width:8px;height:9px;border-radius:0;background:#cbd5e1}\n.dxbox .dxlegend .source{flex-basis:100%;font-size:10px;color:var(--text-faint,#999)}
-.dxbox .dxgap-note{margin:4px 0 12px;font-size:11px;line-height:1.5;color:var(--text-tertiary,#71717a)}`;document.head.appendChild(st); })();
+.dxbox .dxgap-note{margin:4px 0 12px;font-size:11px;line-height:1.5;color:var(--text-tertiary,#71717a)}
+.dxbox .dxrow{display:flex;align-items:stretch;gap:7px;margin:10px 0 12px;padding:0 0 2px;border:0;overflow-x:auto;overscroll-behavior-x:contain;-webkit-overflow-scrolling:touch}
+.dxbox .dxc1{flex:1 0 calc((100% - 21px)/4);min-width:0;min-height:59px;padding:9px 4px 8px;border:1px solid var(--border,#d1d5db);border-radius:9px;background:var(--bg-subtle,#f8fafc)!important;color:var(--text-secondary,#3f3f46);font-size:14px;line-height:1.3;text-align:center;white-space:nowrap}
+.dxbox .dxc1 small{display:block;font-size:10.5px;line-height:1.4;margin-top:4px;color:var(--text-tertiary,#71717a)}
+.dxbox .dxc1.on{background:var(--primary-soft-bg,#eaf2fe)!important;border:2px solid var(--primary,#0066ff);color:var(--primary-soft-fg,#0055d1);padding:8px 3px 7px;font-weight:800}
+.dxbox .dxc1.on small{color:var(--primary-soft-fg,#0055d1)}
+.dxbox .dxhero{padding-top:8px;margin-top:0}
+`;document.head.appendChild(st); })();
   var CACHE={};
   function E(s){ return String(s==null?'':s).replace(/[&<>"]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c];}); }
   function won(v){ if(v==null||!isFinite(v)) return '—'; v=Math.round(v); var e=Math.floor(v/10000), m=v%10000; return (e?e+'억'+(m?' ':''):'')+(m?m.toLocaleString()+(e?'':'만'):''); }
@@ -163,10 +170,7 @@
       var y3=nd.filter(function(t){var m=tms(t[0]);return m>=now-456*864e5&&m<now-365*864e5;}).map(function(t){return t[3];});
       var m3=med(r3), my=med(y3), cur=m3!=null?m3:last[3];
       var pill=function(txt,v){ return '<span class="dxpill '+(v>=0?'up':'dn')+'">'+txt+' <b>'+(v>=0?'▲':'▼')+' '+Math.abs(v*100).toFixed(1)+'%</b></span>'; };
-      var ev=typeof priceEv==='function'&&priceEv(d);
-      var rankPrice=A===listedAb(d,j)&&d.p>0&&!d.opt?'<p class="dxnote">순위용 추정 시세 <strong>'+won(d.p)+'</strong>'
-        +(ev?' · 순위 자료 최근 3개월 '+ev.n3+'건 / 12개월 '+ev.n+'건':'')+' · 추정 시세와 아래 실거래 집계 기준은 다를 수 있습니다.</p>':'';
-      h+='<div class="dxhero">'+rankPrice+'<div class="lbl">'+(m3!=null?(r3.length>=3?'최근 3개월 실거래 중위 · '+r3.length+'건':'최근 3개월 실거래 '+r3.length+'건'+(r3.length>1?' 중위':'')):'마지막 실거래 · '+ymd(last[0]))+(floorMode!=='all'||omitDirect?' · 필터 적용':'')+'</div>'
+      h+='<div class="dxhero"><div class="lbl">'+(m3!=null?(r3.length>=3?'최근 3개월 실거래 중위 · '+r3.length+'건':'최근 3개월 실거래 '+r3.length+'건'+(r3.length>1?' 중위':'')):'마지막 실거래 · '+ymd(last[0]))+(floorMode!=='all'||omitDirect?' · 필터 적용':'')+'</div>'
         +'<div class="big tnum">'+won(cur)+'</div><div class="pills">'
         +(cur>=peak[3]?'<span class="dxpill up"><b>최고가와 동일</b></span>':pill('최고가 대비',cur/peak[3]-1))
         +(my!=null&&m3!=null?pill('1년 전 대비',m3/my-1):'')+'</div>'
