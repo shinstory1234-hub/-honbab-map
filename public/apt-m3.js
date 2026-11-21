@@ -44,8 +44,9 @@
  // 검증 전 정책값: 준공 3년 이내는 거래량 부족만으로 감점하지 않는다.
  function priceConfidence(d,now=new Date()){
   const t=(d.types||[]).find(x=>Number(x.py)===Number(d.py));
-  if(!t || !Number.isFinite(Number(t.n))) return {known:false,penalty:0,warn:false,level:'unknown'};
-  const n12=Math.max(0,Number(t.n));
+  if(t?.n==null||!Number.isFinite(Number(t.n)))return {known:false,penalty:0,warn:true,level:'unknown'};
+  const n12=Math.max(0,Number(t.evidenceCount??t.n));
+  const repeated=t.evidenceCount!=null;
   const n3=Math.max(0,Number(t.n3)||0);
   const date=String(t.last||'').replace(/\./g,'-').slice(0,10);
   const parsed=/^20\d\d-\d\d-\d\d$/.test(date)?Date.parse(date+'T00:00:00Z'):NaN;
@@ -62,24 +63,26 @@
   // 마지막 계약가가 중위 추정치를 초과하면 시세 후행 위험을 별도 표시한다.
   // 25억 이상 보호 구간 또는 극단적 시세 괴리가 있는 경우 가격을 임의 변경하지 않고
   // 주거 품질이 아닌 예산 내 구매 가능성에 대한 위험 감점을 적용한다.
-  // 같은 단지 교차검증(2026.11.14): 거래 1~4건 평형이라도 같은 단지에서 거래 많고 최근 거래가 있는 평형(12개월 5건+, 120일 안)과
-  // 평당가가 맞으면(아래 need 참고) 가격이 현재 시세와 맞는다고 보고 거래 부족·경과 감점을 70%/50% 줄임.
-  // 옆 단지 역전 전수점검: 래미안에스티움 20평·힐스테이트신촌 16평·당산센트럴아이파크 18평 등 좋은 신축이 거래 1건 평형 하나 때문에
-  // 18~19점 감점돼 같은 구역 구축보다 100~400계단 아래로 밀림. 싸게 찍힌 오래된 단일 거래는 평당가 검증에서 걸러져 감점 유지.
+  // 가까운 면적대의 최근 표본이 같은 가격 수준을 지지할 때만 감점을 완화한다.
   let corroborated=null;
-  if(n12<5){
-    const recent=x=>{const s=String(x.last||'').replace(/\./g,'-').slice(0,10),q=Date.parse(s+'T00:00:00Z');return Number.isFinite(q)&&(now.getTime()-q)/86400000<=120;};
-    const liquid=(d.types||[]).filter(x=>Number(x.py)!==Number(t.py)&&Number(x.n)>=5&&Number(x.p)>0&&Number(x.py)>0&&recent(x))
-      .sort((a,b)=>Math.abs(a.py-t.py)-Math.abs(b.py-t.py))[0];
-    // 작은 평형은 평당가가 원래 더 비쌈 → 평형 차 1평당 +1%p(최대 +10%) 이상이어야 '현재 시세와 맞음', 큰 평형은 1평당 −1%p(최저 85%)
-    if(liquid){ const r=(t.p/t.py)/(liquid.p/liquid.py), gap=Math.abs(t.py-liquid.py), need=Number(t.py)<Number(liquid.py)?1+Math.min(.10,.01*gap):Math.max(.85,1-.01*gap);
-      if(r>=need) corroborated={py:liquid.py,ratio:r}; }
+  if(n12<5&&!inversion&&t.py>0&&t.p>0){
+    let closest=Infinity;
+    for(const x of d.types){
+      const gap=Math.abs(x.py-t.py);
+      if(!gap||gap>8||gap>=closest||!(x.n>=5)||!(x.p>0))continue;
+      const elapsed=(now.getTime()-Date.parse(String(x.last||'').replace(/\./g,'-')))/86400000;
+      if(!(elapsed>=0&&elapsed<=120))continue;
+      const ratio=(t.p/t.py)/(x.p/x.py);
+      const typical=1+Math.sign(x.py-t.py)*.01*gap;
+      if(Math.abs(ratio-typical)>.18)continue;
+      closest=gap;corroborated={py:x.py,ratio};
+    }
   }
   const volEff=corroborated?volume*.3:volume, staleEff=corroborated?stale*.5:stale;
   const penalty=clamp(volEff+(newbornEff?Math.min(3,staleEff):staleEff)+(inversion?3:0)+(latestRaised?2:0)+(latestBeyondBand?12:0),0,20);
-  const warn=inversion||latestRaised||latestBeyondBand||penalty>=4||(n12<5&&!newborn)||(n3===0&&ageDays!=null&&ageDays>90)||(ageDays!=null&&ageDays>180);
+  const warn=repeated||inversion||latestRaised||latestBeyondBand||penalty>=4||(n12<5&&!newborn)||(n3===0&&ageDays!=null&&ageDays>90)||(ageDays!=null&&ageDays>180);
   const level=penalty>=8?'high':warn?'medium':'ok';
-  return {known:true,n12,n3,last:date,ageDays,newborn,volume,stale,penalty,warn,level,corroborated,
+  return {known:true,repeated,n12,n3,last:date,ageDays,newborn,volume,stale,penalty,warn,level,corroborated,
     inversion,rawPrice:inversion?t.pBeforeGuard:null,referencePy:t.priceGuardFrom||null,
     latestRaised,lastSale:latestRaised?t.lastSale:null,rawWeightedPrice:latestRaised?t.pBeforeLatest:null,
     latestBeyondBand,latestBeyondSale:latestBeyondBand?t.lastSale:null};
@@ -153,8 +156,7 @@
   const mixed=typeof isJubok==='function'&&isJubok(d);
   const jubok=mixed?6:0;
   const price=priceConfidence(d);
-  // 고가 아파트는 회전율이 낮아 거래량 부족을 품질 점수에 반영하지 않는다.
-  // 거래 부족에 대한 사실·신뢰도 경고 자체는 유지한다.
+  // 고가 구간은 거래 희소성을 감안하되, 오래된 한 건에만 의존하는 가격은 제한적으로 감점한다.
   // 실거래 표본이 충분한 평형이 거래공백만으로 단지 경쟁력 평가에서
   // 과도하게 밀리지 않도록 하되, 오래된 시세는 더 보수적으로 취급한다.
   // 12개월 5건 미만, 평형 간 가격 역전/하한 보정, 최근 실거래와 큰 괴리 등
@@ -170,7 +172,9 @@
     && !nearUnverifiedCeiling;
   const maxPricePenalty=(price.ageDays!=null && price.ageDays>270)?7:
     (price.ageDays!=null && price.ageDays>180)?5:3;
-  const pricePenalty=cap>=30?0:
+  const staleSingle=price.known&&price.n12<=1&&price.n3===0
+    &&(price.ageDays==null||price.ageDays>180)&&!price.corroborated;
+  const pricePenalty=cap>=30?(staleSingle?6:0):
     reliableVolume?Math.min(price.penalty,maxPricePenalty):price.penalty;
   // 실제 고시 또는 공람 공고로 소속 단지와 단계가 확인된 정비사업만 인정한다.
   // 공람은 정비구역 지정이나 사업시행인가가 아니며, 계획 신축 세대수를 현재 세대수로 대체하지 않는다.

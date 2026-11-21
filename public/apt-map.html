@@ -1553,8 +1553,9 @@ function m3PriceWarning(d,compact=false){
     if(CAPT!==6||d.opt||!d.types?.some(t=>Math.abs(t.py-d.py)<=8&&((t.py>d.py&&t.p<=d.p*.88)||(t.py<d.py&&d.p<=t.p*.88))))return '';
     return '<div role="note" class="m3-price-warning">같은 단지의 인접 평형과 가격 차이가 큽니다.</div>';
   }
+  if(!r.known)return '<div class="m3-price-warning">참고 시세 · 실거래 표본 미확인</div>';
   const age=r.ageDays==null?'마지막 거래일 미확인':r.ageDays>=30?'마지막 거래 '+Math.floor(r.ageDays/30)+'개월 전':'마지막 거래 '+r.ageDays+'일 전';
-  const why=r.n12<5?`최근 12개월 거래 ${r.n12}건`:r.n3===0?'최근 3개월 거래 없음':`최근 3개월 ${r.n3}건`;
+  const why=r.repeated?'중복 의심 · 평가 표본 1건':r.n12<5?`최근 12개월 거래 ${r.n12}건`:r.n3===0?'최근 3개월 거래 없음':`최근 3개월 ${r.n3}건`;
   const extra=[r.inversion?'같은 단지 다른 평형과 시세 차이 큼':'',r.latestRaised&&r.lastSale?`최근 실거래 ${short(r.lastSale)}`:'',r.latestBeyondBand?'최근 실거래와 추정 시세 차이 큼':''].filter(Boolean);
   return `<div role="note" class="m3-price-warning${r.level==='high'?' severe':''}${compact?' compact':''}" title="표시 시세는 과거 실거래 환산 또는 최근 정상 계약가 기준 참고가격 — 현재 호가·실매수가 아님"><strong class="m3-alert-title">⚠ 참고 시세 · ${esc(why)} · ${esc(age)}</strong>${extra.length?`<div class="m3-alert-meta">${esc(extra.join(' · '))}</div>`:''}</div>`;
 }

@@ -10,6 +10,7 @@
     '상계주공10|서울 노원구 상계동':'11350|상계동|상계주공10(고층)',
     '상계주공2|서울 노원구 상계동':'11350|상계동|상계주공2(고층)',
     '주공8|광명시 하안동':'41210|하안동|주공8(고층)',
+    '비산동 은하수한양|안양 동안구 비산동': '41173|비산동|은하수마을한양',
     '송내동 우성|부천 소사구 송내동':'41194|송내동|우성',
     '신별내퇴계원어울림|남양주시 퇴계원읍':'41360|퇴계원읍 퇴계원리|신별내퇴계원어울림',
     '한일베라체|화성 만세구 향남읍':'41591|향남읍 행정리|한일베라체'
@@ -44,7 +45,7 @@
     hit++; drop+=checked.held.size;
     var types=checked.rows.map(function(r){return {
       py:r[0],p:r[1],n:r[2],n3:r[3],last:r[4],
-      priceConflict:checked.conflicts.has(r[0]),
+      priceConflict:checked.conflicts.has(r[0]),evidenceCount:evidence.sample(sourceKey,r),
       lastSale:Number(r[5])>0?Number(r[5]):null
     };});
     types.forEach(function(t){
