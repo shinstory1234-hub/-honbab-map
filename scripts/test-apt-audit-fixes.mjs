@@ -30,6 +30,7 @@ const high = makeContext(10, d, '11140|입정동|테스트단지', [
   [20, 60100, 8, 6, new Date().toISOString().slice(0, 10), null],
   [24, 57000, 7, 1, new Date().toISOString().slice(0, 10), 61000],
 ]);
+vm.runInNewContext(read('apt-price-quality.js'), high);
 vm.runInNewContext(read('apt-livefix.js'), high);
 assert.equal(d.types.find(type => type.py === 24).p, 57000);
 

@@ -56,7 +56,7 @@
   const thinOld=n12<=1&&(ageDays==null||ageDays>180), newbornEff=newborn&&!thinOld;
   const volume=newbornEff?0:n12===0?14:n12===1?11:n12===2?9:n12<=4?6:n12<=9?2:0;
   const stale=ageDays==null?3:ageDays>270?8:ageDays>180?7:ageDays>90?3:0;
-  const inversion=Number.isFinite(Number(t.pBeforeGuard))&&t.pBeforeGuard>0;
+  const inversion=!!t.priceConflict||Number.isFinite(Number(t.pBeforeGuard))&&t.pBeforeGuard>0;
   const latestRaised=!!(t.latestPriceFloor&&t.lastSale>0&&t.pBeforeLatest>0);
   const latestBeyondBand=!!(t.latestAbove25||t.latestFarAboveEstimate);
   // 마지막 계약가가 중위 추정치를 초과하면 시세 후행 위험을 별도 표시한다.
