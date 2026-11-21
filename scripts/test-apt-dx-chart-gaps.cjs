@@ -25,7 +25,7 @@ function trade(date, amount) {
   return [date, 39.5, 10, amount, 0];
 }
 function month(yyyymm, amount) {
-  return [5, 12, 19].map(day => trade(yyyymm * 100 + day, amount + (day - 12) * 50));
+  return [3, 7, 12, 19, 25].map(day => trade(yyyymm * 100 + day, amount + (day - 12) * 50));
 }
 function lineOf(rows) {
   const html = chart(rows, 'all');
@@ -56,7 +56,7 @@ const oneSparseMonth = lineOf([
 ]);
 assert.equal((oneSparseMonth.path.match(/M/g) || []).length, 1, 'earlier trades support the median for a sparse month');
 assert.equal((oneSparseMonth.path.match(/L/g) || []).length, 4);
-assert.equal((oneSparseMonth.html.match(/fill="#94a3b8" fill-opacity/g) || []).length, 14);
+assert.equal((oneSparseMonth.html.match(/fill="#94a3b8" fill-opacity/g) || []).length, 22);
 
 const irvine = [
   [20260820, 58000], [20260907, 45000], [20260909, 45000], [20260912, 56500],
@@ -80,6 +80,21 @@ const lowVolume = chart([trade(20260923, 96000), trade(20261003, 88500)], 'all')
 assert.doesNotMatch(lowVolume, /<path d=/, 'two single trades must not look like a falling trend');
 assert.equal((lowVolume.match(/fill="#94a3b8" fill-opacity/g) || []).length, 2);
 assert.equal((lowVolume.match(/<rect /g) || []).length, 2);
+
+const repeatedSamples = [
+  trade(20260722, 135000),
+  trade(20260804, 136000), trade(20260804, 136500),
+  trade(20260909, 140000), trade(20261024, 148000),
+];
+const repeatedSamplesChart = chart(repeatedSamples, 'all');
+assert.doesNotMatch(repeatedSamplesChart, /<path d=|실거래 중위가/);
+assert.equal((repeatedSamplesChart.match(/fill="#94a3b8" fill-opacity/g) || []).length, 5);
+
+const sparseMonth = lineOf([
+  ...month(202401, 34000), ...month(202402, 34500), trade(20240310, 40000),
+  ...month(202404, 35000), ...month(202405, 35500),
+]);
+assert.equal((sparseMonth.path.match(/M/g) || []).length, 2, 'a month with only one transaction date breaks the line');
 
 const singleTrade = chart([trade(20261003, 88500)], 'all');
 assert.match(singleTrade, /<svg/);

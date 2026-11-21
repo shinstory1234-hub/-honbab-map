@@ -96,7 +96,7 @@ aside{order:-1;width:408px;flex:none;border-right:1px solid var(--border);backgr
 .method dt small{display:block;font-weight:500;color:var(--text-tertiary);font-size:11.5px}
 .method dd{color:var(--text-secondary);word-break:keep-all}
 
-.filters{display:flex;gap:6px;overflow-x:auto;padding:0 24px 14px;scrollbar-width:none;border-bottom:1px solid var(--text)}
+.filters{display:flex;gap:6px;overflow-x:auto;padding:10px 24px;scrollbar-width:none;border-bottom:1px solid var(--border-soft)}
 .filters::-webkit-scrollbar{display:none}
 .filters button{flex:none;min-height:36px;padding:6px 12px;font-size:12.5px;border:1px solid var(--border);border-radius:3px;color:var(--text-secondary);background:var(--bg);white-space:nowrap}
 .filters.pb{border-bottom:0;padding-bottom:8px}
@@ -182,7 +182,7 @@ aside{order:-1;width:408px;flex:none;border-right:1px solid var(--border);backgr
 .kpis{display:grid;grid-template-columns:1fr 1fr;margin:20px 24px 0;border-top:2px solid var(--text);border-bottom:1px solid var(--border)}
 .kpis>div{padding:13px 0 13px;min-width:0}
 .kpis>div:nth-child(2n){padding-left:16px;border-left:1px solid var(--border-soft)}
-.kpis>div:nth-child(n+3){border-top:1px solid var(--border-soft)}
+.kpis>div:nth-child(3){grid-column:1/-1;border-top:1px solid var(--border-soft)}
 .kpis dt{font-size:12px;color:var(--text-tertiary)}
 .kpis dd{font-size:23px;font-weight:800;letter-spacing:-.04em;line-height:1.3;margin-top:3px;white-space:nowrap}
 .kpis dd i{font-style:normal;font-size:13px;font-weight:600;color:var(--text-tertiary);margin-left:2px;letter-spacing:0}
@@ -296,7 +296,7 @@ aside{order:-1;width:408px;flex:none;border-right:1px solid var(--border);backgr
   .grab span{width:30px;height:3px;border-radius:3px;background:var(--border)}
   .intro{padding:10px 20px 14px}
   .intro h1{font-size:22px;margin-top:8px}
-  .filters{padding:0 20px 12px}
+  .filters{padding:8px 20px 10px}
   .count{padding:10px 20px}
   .row{padding:16px 20px}
   .excluded,.source{padding-left:20px;padding-right:20px}
@@ -1201,14 +1201,14 @@ const FAV=(()=>{ try{ return new Set(JSON.parse(localStorage.getItem('aptFav')||
 const favSave=()=>{ try{ localStorage.setItem('aptFav',JSON.stringify([...FAV])); }catch(e){} };
 const SORTS=[['rank','추천순',null],['price','가격 낮은순',(a,b)=>a.p-b.p],['new','신축순',(a,b)=>b.year-a.year],['units','세대수 많은순',(a,b)=>unitN(b)-unitN(a)],['station','역 가까운순',(a,b)=>((a.cur&&a.cur.m)??1e9)-((b.cur&&b.cur.m)??1e9)],['ppp','평당가 낮은순',(a,b)=>a.p/a.py-b.p/b.py],['deal','거래 많은순',(a,b)=>dealN(b)-dealN(a)],['cash','필요 현금 낮은순',(a,b)=>money(a).cash-money(b).cash],['commute','통근 예상 짧은순',(a,b)=>(jobMin(a)??1e9)-(jobMin(b)??1e9)],['latest','최근 거래순',(a,b)=>String(priceEv(b)?.last||'').replace(/\D/g,'').localeCompare(String(priceEv(a)?.last||'').replace(/\D/g,''))],['peak','전고점 회복 높은순',(a,b)=>(pkR(b)??-1)-(pkR(a)??-1)],['race','최고가 대비 하락률순',(a,b)=>(a.rc??9)-(b.rc??9)],['raceAmt','최고가 대비 하락액순',(a,b)=>(a.rcAmt??1e9)-(b.rcAmt??1e9)]];
 /* 2026.11.16 리치고 차용 상세(실거래 차트 등)·하락 레이스: apt-dx.js를 처음 필요할 때만 받음(첫 화면 번들 밖) */
-const loadDx=cb=>{ if(window.APTDX) return cb(); const q=window._dxq=window._dxq||[]; q.push(cb); if(q.length>1) return; const s=document.createElement('script'); s.src='/apt-dx.js?v=12'; s.onload=()=>{ q.splice(0).forEach(f=>{ try{f();}catch(e){} }); }; document.head.appendChild(s); };
+const loadDx=cb=>{ if(window.APTDX) return cb(); const q=window._dxq=window._dxq||[]; q.push(cb); if(q.length>1) return; const s=document.createElement('script'); s.src='/apt-dx.js?v=13'; s.onload=()=>{ q.splice(0).forEach(f=>{ try{f();}catch(e){} }); }; document.head.appendChild(s); };
 const loadExtra=cb=>{if(window.AP1X)return cb();const q=window._ap1xq=window._ap1xq||[];q.push(cb);if(q.length>1)return;const s=document.createElement('script');s.src='/apt-stage1-extra.js?v=8';s.onload=()=>q.splice(0).forEach(f=>{try{f();}catch(e){console.error('extra',e);}});s.onerror=()=>{q.length=0;console.error('extra load failed');};document.head.appendChild(s);};
 const mapStage1Loader=document.getElementById('ap1xMapLazy');if(mapStage1Loader)mapStage1Loader.onclick=()=>loadExtra(()=>{mapStage1Loader.remove();window.AP1X.installLayer();document.getElementById('ap1xMapBtn')?.click();});
-const loadStage2=cb=>{if(window.APT2)return cb();const q=window._ap2q=window._ap2q||[];q.push(cb);if(q.length>1)return;const s=document.createElement('script');s.src='/apt-stage2.js?v=2';s.onload=()=>q.splice(0).forEach(fn=>{try{fn();}catch(e){console.error('stage2 callback',e);}});s.onerror=()=>{q.length=0;console.error('stage2 load failed');};document.head.appendChild(s);};
+const loadStage2=cb=>{if(window.APT2)return cb();const q=window._ap2q=window._ap2q||[];q.push(cb);if(q.length>1)return;const s=document.createElement('script');s.src='/apt-stage2.js?v=3';s.onload=()=>q.splice(0).forEach(fn=>{try{fn();}catch(e){console.error('stage2 callback',e);}});s.onerror=()=>{q.length=0;console.error('stage2 load failed');};document.head.appendChild(s);};
 const stage2MapLazy=document.getElementById('apt2MapLazy');if(stage2MapLazy)stage2MapLazy.onclick=()=>loadStage2(()=>window.APT2.open('view'));
 document.getElementById('q')?.addEventListener('input',()=>{if(!window.APT2)loadStage2(()=>{});});
 if(new URLSearchParams(location.search).has('s2'))loadStage2(()=>window.APT2.importShare());
-const loadRichgo=cb=>{if(window.APT_RICHGO)return cb();const q=window._ruQ=window._ruQ||[];q.push(cb);if(q.length>1)return;const script=document.createElement('script');script.src='/apt-richgo-upgrade.js?v=5';script.onload=()=>q.splice(0).forEach(fn=>{try{fn();}catch(e){console.error('richgo',e);}});script.onerror=()=>{q.length=0;console.error('richgo upgrade load failed');};document.head.appendChild(script);};
+const loadRichgo=cb=>{if(window.APT_RICHGO)return cb();const q=window._ruQ=window._ruQ||[];q.push(cb);if(q.length>1)return;const script=document.createElement('script');script.src='/apt-richgo-upgrade.js?v=6';script.onload=()=>q.splice(0).forEach(fn=>{try{fn();}catch(e){console.error('richgo',e);}});script.onerror=()=>{q.length=0;console.error('richgo upgrade load failed');};document.head.appendChild(script);};
 const loadStage1=cb=>{ if(window.AP1)return cb();const q=window._ap1q=window._ap1q||[];q.push(cb);if(q.length>1)return;const s=document.createElement('script');s.src='/apt-stage1.js?v=2';s.onload=()=>q.splice(0).forEach(f=>{try{f();}catch(e){console.error('stage1 callback',e);}});s.onerror=()=>{q.length=0;console.error('stage1 load failed');};document.head.appendChild(s); };
 window.aptRerenderList=()=>{ if(state.sel==null) renderList(); };
 const dealN=d=>(priceEv(d)||{n:0}).n||0, pkR=d=>d.s4&&d.s4.peakR!=null?d.s4.peakR:typeof peakLoRatio==='function'&&Number.isFinite(peakLoRatio(d))?peakLoRatio(d)/100:null;
@@ -1392,14 +1392,14 @@ function renderList(){
   const list=singleComplex?listRepresentatives(matches,state.sort,filteredSize):matches;
   if((state.sort==='race'||state.sort==='raceAmt')&&!window.RACE) loadDx(()=>APTRACE());
   const sortF=(SORTS.find(x=>x[0]===state.sort)||SORTS[0])[2]; if(sortF) list.sort((a,b)=>sortF(a,b)||a.rank-b.rank);
-  let h=`<section class="intro">
+  let h=`<div class="filters" role="group" aria-label="조건">${['pb','size','age','f'].map(k=>{ const v=state[k]||'all', L=PICKMENU[k], o=L[1]().find(x=>x[0]===v); return `<button type="button" class="sortsel fsel${o&&v!=='all'?' on':''}" data-k="${k}" aria-haspopup="dialog" aria-label="${L[0]}">${(o||L[1]()[0])[1]}</button>`; }).join('')}<button data-f="fav" aria-pressed="${state.f==='fav'}">♥ 저장</button><button type="button" data-ap1="filter">상세 조건</button><button type="button" data-ap2="filters">추가 조건</button><button type="button" data-ap2="saved">저장함</button><button type="button" data-ap1="open">비교표 0/3</button></div>
+  <section class="intro">
     <h1>예산 안에서 좋은 아파트 찾기</h1>
     <p>서울·경기·인천 아파트를 교통, 학군, 단지 경쟁력과 가격대로 비교해 추천합니다.</p>
     <p style="margin-top:6px;font-size:12px;color:var(--text-tertiary,#8a8f98)">실거래와 공공데이터 기반 참고 지표이며 투자 권유가 아닙니다.</p>
     ${pend?`<div class="inline-note tnum" style="margin-top:12px">역·초등학교·경사를 지도 데이터로 계산하는 중 · ${D.length-pend}/${D.length}<br><small>처음 한 번만 걸리고, 끝나면 순위가 확정됩니다.</small></div>`:''}
     <details class="method"><summary>평가 기준 안내 ${CHEV}</summary><div style="padding:14px 16px;font-size:13px;line-height:1.8;color:var(--text-secondary)">교통, 학군, 단지 규모, 주거 상품성 및 가격 신뢰도를 비교합니다. 세부 가중치와 모델은 비공개이며 추천순위는 실제 수익이나 거래가격을 보장하지 않습니다.</div></details>
   </section>
-  <div class="filters" role="group" aria-label="조건"><button data-f="fav" aria-pressed="${state.f==='fav'}">♥ 저장</button><button type="button" data-ap1="filter">상세 조건</button><button type="button" data-ap2="filters">추가 조건</button><button type="button" data-ap2="saved">저장함</button><button type="button" data-ap1="open">비교표 0/3</button>${['pb','size','age','f'].map(k=>{ const v=state[k]||'all', L=PICKMENU[k], o=L[1]().find(x=>x[0]===v); return `<button type="button" class="sortsel fsel${o&&v!=='all'?' on':''}" data-k="${k}" aria-haspopup="dialog" aria-label="${L[0]}">${(o||L[1]()[0])[1]}</button>`; }).join('')}</div>
   ${state.q&&!viewport?`<div class="region-mode">‘${esc(state.q)}’ 검색 결과 <button type="button" id="searchReset">전체 순위 보기</button></div>`:''}${viewport?'<div class="region-mode">현재 지도 범위의 단지 <button type="button" id="browseReset">전체 순위 보기</button></div>':''}
   <div class="count"><span>${singleComplex?list.length.toLocaleString()+'개 단지 · 전체 평형 표시':list.length.toLocaleString()+'개 평형'+(CAPT!==6?' ('+new Set(list.map(d=>complexRankKey(d))).size.toLocaleString()+'개 단지)':'')}</span><button type="button" class="sortsel fsel" data-k="sort" aria-haspopup="dialog" aria-label="정렬">${singleComplex&&filteredSize&&state.sort==='rank'?'선택 평형 추천순':(SORTS.find(x=>x[0]===state.sort)||SORTS[0])[1]}</button></div>`;
   list.slice(0,state.lim).forEach((d,li)=>{
@@ -1589,12 +1589,8 @@ function publicDetailSummary(b,d){
   if(kpis){
     const k=kpis.querySelectorAll(':scope > div');
     // 6억 초과 매물은 개인별 규제·소득 조건을 무시한 가상 대출 가능액을 표시하지 않는다.
-    // 원래 세 번째 칸을 잡아둔 다음 대출 및 참고 수익률 칸을 삭제한다.
     const scoreTile=k[2];
-    if(d.p>=60000){
-      if(k[1])k[1].remove();
-      if(k[3])k[3].remove();
-    }
+    if(d.p>=60000&&k[1])k[1].remove();
     if(scoreTile){
       const title=scoreTile.querySelector('dt'),value=scoreTile.querySelector('dd'),note=scoreTile.querySelector('small');
       if(title)title.textContent='종합 평가 점수';
@@ -1604,10 +1600,7 @@ function publicDetailSummary(b,d){
         note.textContent=(d.m3?'단지 ':'평형 ')+displayRank(d)+(d.m3?' · '+base.py+'평 기준':'');
       }
     }
-    if(d.p<60000 && k[3]){
-      const note=k[3].querySelector('small');
-      if(note)note.textContent='유사 단지와 실거래 기반으로 산출한 참고 평가 결과이며 실제 거래 가능가격과 다를 수 있습니다.';
-    }
+
   }
   // 원본 위치가치 회귀, 평형 보정, 재건축 수익환원 및 상세 가중치 패널 제외.
   const keep=/^(재건축 단계|일정|자금|이 단지 |시세 흐름|이런 사람에게|사기 전에 확인|가격 비교|[0-9]+억.*평형)/;
@@ -1622,8 +1615,6 @@ function publicDetailSummary(b,d){
       });
     }
   });
-  // 단지별 평형은 시세와 총점을 보여주되 적정가 산식의 파생 수치는 제외.
-  b.querySelectorAll('[data-sib] .n').forEach(x=>{x.textContent=x.textContent.replace(/\s*·\s*적정가 대비\s*[+−-]?\d+%/g,'');});
   const density=b.querySelector('.m3-density-note');
   if(density){
     const far=d.m3?.far;
@@ -1702,7 +1693,6 @@ function renderDetail(i){
     ${d.opt?`<div><dt>지금 필요한 돈</dt><dd>${eokH(d.opt.dep)}</dd><small>${esc(d.opt.kind)} · ${d.opt.Y}년 ${eok(d.opt.K)} 매수권 · 시세 ${eok(d.p)}</small></div>`:`<div><dt>${d.py}평 순위용 추정 시세</dt><dd>${eokH(d.p)}</dd><small>${d.reg==='free'?'비규제':'토허·실거주 2년'}${priceEv(d)?`<br>${esc(priceEvTxt(d))}`:''}</small></div>`}
     <div><dt>${esc(nd.l)}</dt><dd class="hl">${eokH(nd.v)}</dd><small>${esc(nd.x)}</small></div>
     <div><dt>입지 점수</dt><dd class="hl">${d.loc.toFixed(1)}<i>/100</i></dd><small>${d.simple?CAPTXT+' 후보 단지끼리 비교한 점수':('종합 '+s4RankTxt(d)+(d.band?'<br>'+s10BandTxt(d):'')+(d.s4?'<br>'+esc(s4ScoreDetail(d))+' (각각 수도권 '+CAPTXT+' '+((window.S4CFG||{}).types||0).toLocaleString()+'개 평형 중 백분위)':''))}</small></div>
-    <div><dt>${d.simple?'주변 대비 가격 차이':'적정가 대비'}</dt><dd class="hl">${d.up>=0?'+':''}${Math.round(d.up*100)}<i>%</i></dd><small>${d.simple?'주변 시세를 이용한 통계상 참고값 · 수익률 보장 아님':d.upSrc==='rb'?(d.m.rm?'리모델링':'재건축')+' 기대가치 기준':d.upSrc==='opt'?'확정가 매수권 기준':'같은 동네·연식 시세 기준'}</small></div>
   </dl>
   ${d.simple?terrainPanel(d)+trnPanel(d):''}${d.simple?`<section class="sec"><h3>단지 장점 한눈에 보기</h3><div class="score tnum">
     <div><span class="l">학군<small>${d.Al?esc(d.Al):d.g.ac!=null?`반경 1km 학원 ${d.g.ac.toLocaleString()}곳`:'계산 중'}</small></span><span class="v">${d.A!=null?d.A.toFixed(1):'–'}<i> / 10</i></span>${bar(d.A||0,10)}</div>
@@ -1739,13 +1729,13 @@ function renderDetail(i){
     <div class="em" style="grid-column:1/-1"><dt>⚠️ 대출 금액은 참고용</dt><dd style="font-size:13px;font-weight:600;line-height:1.55;white-space:normal;text-align:left">실제 대출 한도는 소득(DSR)·신용·보유 주택 수·지역 규제·금리에 따라 크게 달라집니다. 이 계산만 믿고 자금을 준비하지 마시고, 반드시 은행 상담으로 실제 한도를 확인하세요.</dd></div>
     <div><dt>규제</dt><dd>${d.reg==='free'?'비규제 · 전세 끼고 매수 가능':'토지거래허가 · 실거주 2년'}</dd></div></dl></section>`;
   const S=sibs(d);
-  if(S.length>1) h+=`<section class="sec"><h3>이 단지 ${CAPTXT} 평형 <small>${d.m3?"단지 순위 공유 · 평형별 점수 비교":"평형마다 따로 채점한 순위"}</small></h3><div class="cmp tnum">${S.map(x=>`<div${x===d?' class="me"':''} data-sib="${D.indexOf(x)}" style="cursor:pointer"><span class="n">${x.py}평 · ${d.m3?'단지 '+x.rank.toLocaleString()+'위 · ':x.rank.toLocaleString()+'위 · '}${x.score.toFixed(1)}점${NOUP()?'':` · 적정가 대비 ${x.up>=0?'+':''}${Math.round(x.up*100)}%`}</span><span class="v">${eok(x.p)}</span>${bar(x.p,CAPHI)}</div>`).join('')}</div>${d.alt&&d.sub?`<p class="note">위 단지 소개 원고는 ${d.basePy}평 기준입니다.</p>`:''}</section>`;
+  if(S.length>1) h+=`<section class="sec"><h3>이 단지 ${CAPTXT} 평형 <small>${d.m3?"단지 순위 공유 · 평형별 점수 비교":"평형마다 따로 채점한 순위"}</small></h3><div class="cmp tnum">${S.map(x=>`<div${x===d?' class="me"':''} data-sib="${D.indexOf(x)}" style="cursor:pointer"><span class="n">${x.py}평 · ${d.m3?'단지 '+x.rank.toLocaleString()+'위 · ':x.rank.toLocaleString()+'위 · '}${x.score.toFixed(1)}점</span><span class="v">${eok(x.p)}</span>${bar(x.p,CAPHI)}</div>`).join('')}</div>${d.alt&&d.sub?`<p class="note">위 단지 소개 원고는 ${d.basePy}평 기준입니다.</p>`:''}</section>`;
   h+=costPanel(d);
   if(d.fit&&d.fit.length) h+=`<section class="sec"><h3>이런 사람에게</h3><div class="fit">${d.fit.map(f=>`<span>${esc(f)}</span>`).join('')}</div></section>`;
   if(d.check&&d.check.length) h+=`<section class="sec"><h3>사기 전에 확인</h3><ul class="checks">${d.check.map(f=>`<li>${esc(String(f).replace(/^자동 수집 단지 · /,''))}</li>`).join('')}</ul></section>`;
   h+=`<p class="fine">${d.u||d.p0?'시세는 국토부 실거래 기준 최근 시세(3개월 중위 또는 시세지수 환산)로 매물 호가와 다를 수 있습니다.':'시세는 리치고 추정치로 매물 호가와 다를 수 있습니다.'} 상승률 출처: ${esc(src)}.</p>
   <div class="pfoot"><a class="btn" target="_blank" rel="noopener" href="https://map.kakao.com/link/search/${encodeURIComponent(d.q)}">카카오맵에서 보기 ${ARROW}</a><a class="btn ghost" target="_blank" rel="noopener" href="https://m.land.naver.com/search/result/${encodeURIComponent(d.q)}">매물</a></div>`;
-   if(NOUP()) h=h.replace(/<div><dt>(?:주변 대비 가격 차이|적정가 대비)<\/dt>[\s\S]*?<\/small><\/div>/,'').replace(/<section class="sec"><h3>적정가 대비 [\s\S]*?<\/section>/,rbRiskPanel(d)+sdPanel(d));
+   if(NOUP()) h=h.replace(/<section class="sec"><h3>적정가 대비 [\s\S]*?<\/section>/,rbRiskPanel(d)+sdPanel(d));
   if(CAPT>6&&window.APT_TRANSPORT)h=h.replace('<section class="sec">',APT_TRANSPORT.panel(d)+'<section class="sec">');
   const b=$('#body'); b.innerHTML=h; publicDetailSummary(b,d); b.scrollTop=0;
   $('#back').onclick=backToList;

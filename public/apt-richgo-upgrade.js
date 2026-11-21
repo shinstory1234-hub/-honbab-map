@@ -99,7 +99,7 @@ function ensureDx(){
   return new Promise(function(ok){
     var settled=false;
     function done(){if(settled)return;settled=true;ok(typeof window.aptLkey==='function');}
-    function fallback(){var s=document.createElement('script');s.src='/apt-dx.js?v=12';s.onload=done;s.onerror=done;document.head.appendChild(s);}
+    function fallback(){var s=document.createElement('script');s.src='/apt-dx.js?v=13';s.onload=done;s.onerror=done;document.head.appendChild(s);}
     if(typeof loadDx==='function'){try{loadDx(done);}catch(e){fallback();}}else fallback();
     setTimeout(done,10000);
   });

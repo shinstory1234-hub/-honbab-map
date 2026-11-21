@@ -49,7 +49,7 @@
    +'.dxhrow{display:flex;justify-content:space-between;align-items:center}.dxtg{font-size:12.5px;font-weight:500;color:var(--text-tertiary,#64748b);display:inline-flex;gap:5px;align-items:center}'
    +'.dxr .dg{font-style:normal;font-size:11px;font-weight:600;color:#64748b;background:#f1f5f9;border-radius:4px;padding:1px 6px;margin-left:6px;vertical-align:2px}.dxr .l b .nw{margin-left:6px;vertical-align:2px}'
    +'.dxmore{width:100%;margin-top:8px;padding:11px 0;border:1px solid var(--border,#e2e8f0);background:var(--bg,#fff);border-radius:10px;font-size:13.5px;font-weight:650;color:var(--text,#0f172a)}';
-    st.textContent+=`n.dxbox .dxrow{gap:0;margin:4px 0 16px;border-bottom:1px solid var(--border-soft,#e5e7eb);overflow-x:auto}\n.dxbox .dxc1{border:0;border-bottom:2px solid transparent;border-radius:0;background:transparent!important;color:var(--text-tertiary,#71717a);padding:10px 13px 9px;min-width:65px;box-shadow:none!important}\n.dxbox .dxc1.on{color:var(--text,#171719);border-color:var(--text,#171719)}\n.dxbox .dxc1 small{font-size:11px;margin-top:3px}.dxbox .dxc1.on small{color:var(--text-secondary,#555)}\n.dxbox .dxhero{background:transparent;border:0;border-radius:0;padding:12px 0 15px;margin:2px 0 10px;border-bottom:1px solid var(--border-soft,#e5e7eb)}\n.dxbox .dxhero .big{font-size:32px;letter-spacing:-.045em;margin:4px 0 10px}\n.dxbox .dxpill{border:0;background:transparent;padding:2px 0;border-radius:0}\n.dxbox .dxhero .pills{gap:14px;margin-bottom:8px}\n.dxbox .dxseg{background:transparent;padding:0;border-radius:0;border-bottom:1px solid var(--border-soft,#e5e7eb);margin:0 0 12px}\n.dxbox .dxseg button{border-radius:0;padding:10px 0;border-bottom:2px solid transparent}\n.dxbox .dxseg button.on{background:transparent;box-shadow:none;border-color:var(--text,#171719)}\n.dxbox .dxtiles{gap:0;border-top:1px solid var(--border-soft,#e5e7eb)}\n.dxbox .dxtile{border:0;border-bottom:1px solid var(--border-soft,#e5e7eb);border-radius:0;background:transparent;padding:12px 6px}\n.dxbox .dxtile.on{box-shadow:none;border-bottom:2px solid var(--primary,#0066ff);background:transparent}\n.dxbox .dxmore{border-radius:5px}\n.dxbox .dxr.me{border-radius:4px}\n.dxbox .dxlegend{display:flex;flex-wrap:wrap;align-items:center;gap:8px 14px;font-size:11px;color:var(--text-tertiary,#71717a);margin:2px 0 8px}\n.dxbox .dxlegend span{display:inline-flex;align-items:center;gap:5px;white-space:nowrap}\n.dxbox .dxlegend i{width:8px;height:8px;border-radius:50%;background:#94a3b8}\n.dxbox .dxlegend .line{width:14px;height:2px;background:#2563eb}\n.dxbox .dxlegend .bar{width:8px;height:9px;border-radius:0;background:#cbd5e1}\n.dxbox .dxlegend .source{flex-basis:100%;font-size:10px;color:var(--text-faint,#999)}
+    st.textContent+=`n.dxbox .dxrow{gap:0;margin:4px 0 16px;border-bottom:1px solid var(--border-soft,#e5e7eb);overflow-x:auto}\n.dxbox .dxc1{border:0;border-bottom:2px solid transparent;border-radius:0;background:transparent!important;color:var(--text-tertiary,#71717a);padding:10px 13px 9px;min-width:65px;box-shadow:none!important}\n.dxbox .dxc1.on{color:var(--text,#171719);border-color:var(--text,#171719)}\n.dxbox .dxc1 small{font-size:11px;margin-top:3px}.dxbox .dxc1.on small{color:var(--text-secondary,#555)}\n.dxbox .dxhero{background:transparent;border:0;border-radius:0;padding:12px 0 15px;margin:2px 0 10px;border-bottom:1px solid var(--border-soft,#e5e7eb)}\n.dxbox .dxhero .big{font-size:32px;letter-spacing:-.045em;margin:4px 0 10px}\n.dxbox .dxpill{border:0;background:transparent;padding:2px 0;border-radius:0}\n.dxbox .dxhero .pills{gap:14px;margin-bottom:8px}\n.dxbox .dxseg{background:transparent;padding:0;border-radius:0;border-bottom:1px solid var(--border-soft,#e5e7eb);margin:0 0 12px}\n.dxbox .dxseg button{border-radius:0;padding:10px 0;border-bottom:2px solid transparent}\n.dxbox .dxseg button.on{background:transparent;box-shadow:none;border-color:var(--text,#171719)}\n.dxbox .dxtiles{gap:0;border-top:1px solid var(--border-soft,#e5e7eb)}\n.dxbox .dxtile{border:0;border-bottom:1px solid var(--border-soft,#e5e7eb);border-radius:0;background:transparent;padding:12px 6px}\n.dxbox .dxtile.on{box-shadow:none;border-bottom:2px solid var(--primary,#0066ff);background:transparent}\n.dxbox .dxmore{border-radius:5px}\n.dxbox .dxr.me{border-radius:4px}\n.dxbox .dxlegend{display:flex;flex-wrap:wrap;align-items:center;gap:8px 14px;font-size:11px;color:var(--text-tertiary,#71717a);margin:2px 0 8px}\n.dxbox .dxlegend span{display:inline-flex;align-items:center;gap:5px;white-space:nowrap}\n.dxbox .dxlegend i{width:8px;height:8px;border-radius:50%;background:#94a3b8}\n.dxbox .dxlegend .line{width:14px;height:2px;background:#2563eb}\n.dxbox .dxlegend .bar{width:8px;height:9px;border-radius:0;background:#cbd5e1}\n.dxbox .dxlegend .dxsource{flex-basis:100%;font-size:10px;color:var(--text-faint,#999)}
 .dxbox .dxgap-note{margin:4px 0 12px;font-size:11px;line-height:1.5;color:var(--text-tertiary,#71717a)}
 .dxbox .dxrow{display:flex;align-items:stretch;gap:7px;margin:10px 0 12px;padding:0 0 2px;border:0;overflow-x:auto;overscroll-behavior-x:contain;-webkit-overflow-scrolling:touch}
 .dxbox .dxc1{flex:1 0 calc((100% - 21px)/4);min-width:0;min-height:59px;padding:9px 4px 8px;border:1px solid var(--border,#d1d5db);border-radius:9px;background:var(--bg-subtle,#f8fafc)!important;color:var(--text-secondary,#3f3f46);font-size:14px;line-height:1.3;text-align:center;white-space:nowrap}
@@ -89,10 +89,10 @@
       if(nb.length>=3&&t[3]<med(nb)*.8) t[5]=1; }); });
   }
   function bad(t){ return t[4]||t[5]; }
-  var TREND_WINDOW=91*864e5;
+  var TREND_WINDOW=91*864e5, MIN_MEDIAN_TRADES=5, INITIAL_TRADES=3;
   function chart(rows,period){
     var now=Date.now(), from=period==='all'?0:now-period*365.25*864e5;
-    var history=[], months={}, R=[];
+    var history=[], months={}, monthDays={}, R=[];
     rows.forEach(function(t){
       if(bad(t)) return;
       var ms=tms(t[0]);
@@ -103,13 +103,14 @@
       R.push(deal);
       var key=String(t[0]).slice(0,6);
       months[key]=(months[key]||0)+1;
+      (monthDays[key]||=new Set()).add(ms);
     });
     if(!R.length) return '<p class="note">이 기간에 표시할 실거래가 없어요.</p>';
     var W=340,H=170,PL=34,PR=8,PT=14,PB=40,VH=22;
     var x0=period==='all'?Math.min(R[0][0],now-864e5):from, x1=now;
     var lo=Infinity,hi=-Infinity; R.forEach(function(deal){ lo=Math.min(lo,deal[1]); hi=Math.max(hi,deal[1]); });
     var keys=Object.keys(months).sort(), trend=[], start=0, end=0, previousMonth=null, previousTrendMonth=null, hasGap=false;
-    // 거래가 있는 달의 말일(이번 달은 오늘)을 기준으로 직전 91일의 거래를 합친다.
+    // 월말(이번 달은 오늘) 기준 91일 표본과 해당 월의 거래일을 함께 확인한다.
     keys.forEach(function(k){
       var year=+k.slice(0,4), monthIndex=+k.slice(4,6)-1, month=year*12+monthIndex;
       if(previousMonth!==null&&month-previousMonth>1) hasGap=true;
@@ -117,7 +118,7 @@
       var nextMonth=Date.UTC(year,monthIndex+1,1), date=nextMonth>now?now:nextMonth-864e5;
       while(end<history.length&&history[end][0]<=date) end++;
       while(start<end&&history[start][0]<date-TREND_WINDOW) start++;
-      if(end-start<3) return;
+      if(end-start<MIN_MEDIAN_TRADES||monthDays[k].size<2) return;
       var value=med(history.slice(start,end).map(function(deal){return deal[1];}));
       trend.push([date,value,previousTrendMonth===month-1]);
       lo=Math.min(lo,value); hi=Math.max(hi,value);
@@ -146,11 +147,13 @@
       +'<text x="'+(W-PR)+'" y="'+(H-PB+12)+'" font-size="8.5" text-anchor="end" fill="#94a3b8">거래량</text></svg>'
       +'<div class="dxlegend"><span><i></i>실거래</span>'
       +(showMedianLine?'<span><i class="line"></i>최근 3개월 실거래 중위가</span>':'')
-      +'<span><i class="bar"></i>거래량</span><span class="source">최근 3개월 3건 이상 · 직거래 및 이상거래 제외</span></div>'
+      +'<span><i class="bar"></i>거래량</span>'
+      +(showMedianLine?'<span class="dxsource">최근 3개월 '+MIN_MEDIAN_TRADES+'건 이상 · 해당 월에 거래일 2일 이상</span>':'')
+      +'<span class="dxsource">직거래·이상거래 제외</span></div>'
       +(hasGap?'<p class="dxgap-note">거래 기록이 없는 달은 자료 누락 여부를 별도로 확인해야 합니다.</p>':'');
   }
 
-  function drawDx(d,j,box,selectedArea,floorMode,omitDirect){
+  function drawDx(d,j,box,selectedArea,floorMode,omitDirect,view={limit:INITIAL_TRADES,period:"3"}){
     var all=j.t||[];markOdd(all);var A=selectedArea==null?pickAb(d,j):+selectedArea;
     floorMode=floorMode||'all';omitDirect=!!omitDirect;
     var areaRows=all.filter(function(t){return ab(t[1])===A;});
@@ -168,31 +171,31 @@
       var last=nd[nd.length-1], peak=nd.reduce(function(a,t){return t[3]>a[3]?t:a;},nd[0]);
       var r3=nd.filter(function(t){var ms=tms(t[0]);return ms>=now-TREND_WINDOW&&ms<=now;}).map(function(t){return t[3];});
       var y3=nd.filter(function(t){var m=tms(t[0]);return m>=now-456*864e5&&m<now-365*864e5;}).map(function(t){return t[3];});
-      var m3=med(r3), my=med(y3), cur=m3!=null?m3:last[3];
+      var m3=!bad(last)&&r3.length>=MIN_MEDIAN_TRADES?med(r3):null, my=y3.length>=MIN_MEDIAN_TRADES?med(y3):null, cur=m3!=null?m3:last[3];
       var pill=function(txt,v){ return '<span class="dxpill '+(v>=0?'up':'dn')+'">'+txt+' <b>'+(v>=0?'▲':'▼')+' '+Math.abs(v*100).toFixed(1)+'%</b></span>'; };
-      h+='<div class="dxhero"><div class="lbl">'+(m3!=null?(r3.length>=3?'최근 3개월 실거래 중위 · '+r3.length+'건':'최근 3개월 실거래 '+r3.length+'건'+(r3.length>1?' 중위':'')):'마지막 실거래 · '+ymd(last[0]))+(floorMode!=='all'||omitDirect?' · 필터 적용':'')+'</div>'
+      h+='<div class="dxhero"><div class="lbl">'+(m3!=null?'최근 3개월 실거래 중위 · '+r3.length+'건':'마지막 실거래 · '+ymd(last[0])+(last[4]?' · 직거래':last[5]?' · 이상 거래 의심':''))+(floorMode!=='all'||omitDirect?' · 필터 적용':'')+'</div>'
         +'<div class="big tnum">'+won(cur)+'</div><div class="pills">'
         +(cur>=peak[3]?'<span class="dxpill up"><b>최고가와 동일</b></span>':pill('최고가 대비',cur/peak[3]-1))
         +(my!=null&&m3!=null?pill('1년 전 대비',m3/my-1):'')+'</div>'
         +'<div class="mini tnum">최고 <b>'+won(peak[3])+'</b> '+ymd(peak[0])+' · '+peak[2]+'층</div></div>'
-        +'<div class="dxseg dxp" role="group" aria-label="기간">'+['3','5','all'].map(function(p,i){return '<button type="button" data-p="'+p+'" aria-pressed="'+(i===0)+'"'+(i===0?' class="on"':'')+'>'+(p==='all'?'전체':p+'년')+'</button>';}).join('')+'</div>'
-        +'<div class="dxc">'+chart(rows,3)+'</div>';
-      // 층별: 누르면 그 층만(다시 누르면 전체)
-      var aNd=areaRows.filter(function(t){return !bad(t)&&tms(t[0])>=now-365*864e5;});
-      if(maxFloor>=3&&aNd.length>=3){
-        var G=[['low','저층','1~'+floor1+'층'],['mid','중층',(floor1+1)+'~'+floor2+'층'],['high','고층',(floor2+1)+'층~']];
-        h+='<h4 class="dxh">층별 가격 <small>최근 12개월 중위 · 누르면 그 층만</small></h4><div class="dxtiles tnum">'
-          +G.map(function(g){ var v=aNd.filter(function(t){return g[0]==='low'?t[2]<=floor1:g[0]==='mid'?t[2]>floor1&&t[2]<=floor2:t[2]>floor2;}).map(function(t){return t[3];});
-            return '<button type="button" class="dxtile dxf'+(floorMode===g[0]?' on':'')+'" data-v="'+g[0]+'"><span>'+g[1]+' <small>'+g[2]+'</small></span><b>'+(v.length?won(med(v)):'—')+'</b><small>'+v.length+'건</small></button>'; }).join('')+'</div>';
-      }
-      // 최근 실거래 3건 + 더보기
-      var mx=0, flag=rows.map(function(t){ var n=t[3]>mx&&!bad(t); if(!bad(t)) mx=Math.max(mx,t[3]); return n; });
-      var list=rows.map(function(t,i){return [t,flag[i]];}).reverse();
-      var tr=function(n){ return list.slice(0,n).map(function(x){ var t=x[0]; return '<div class="dxr"><div class="l"><b>'+won(t[3])+(x[1]?'<i class="nw">신고가</i>':'')+(t[4]?'<i class="dg">직거래</i>':t[5]?'<i class="dg">이상 거래 의심</i>':'')+'</b><span>'+ymd(t[0])+' · '+t[2]+'층 · 전용 '+t[1]+'㎡</span></div></div>'; }).join(''); };
-      h+='<div class="dxh dxhrow"><span>최근 실거래 <small>'+rows.length.toLocaleString()+'건</small></span><label class="dxtg"><input class="dxndirect" type="checkbox" '+(omitDirect?'checked':'')+'>직거래·이상거래 빼기</label></div>'
-        +'<div class="dxl dxt tnum">'+tr(3)+'</div>'
-        +(list.length>3?'<button type="button" class="dxmore dxm">실거래 '+(list.length-3).toLocaleString()+'건 더보기</button>':'');
+        +'<div class="dxseg dxp" role="group" aria-label="기간">'+['3','5','all'].map(function(p){return '<button type="button" data-p="'+p+'" aria-pressed="'+(p===view.period)+'"'+(p===view.period?' class="on"':'')+'>'+(p==='all'?'전체':p+'년')+'</button>';}).join('')+'</div>'
+        +'<div class="dxc">'+chart(rows,view.period==='all'?'all':+view.period)+'</div>';
     }
+    // 층별: 누르면 그 층만(다시 누르면 전체)
+    var aNd=areaRows.filter(function(t){return !bad(t)&&tms(t[0])>=now-365*864e5;});
+    if(maxFloor>=3&&aNd.length>=3){
+      var G=[['low','저층','1~'+floor1+'층'],['mid','중층',(floor1+1)+'~'+floor2+'층'],['high','고층',(floor2+1)+'층~']];
+      h+='<h4 class="dxh">층별 가격 <small>최근 12개월 중위 · 누르면 그 층만</small></h4><div class="dxtiles tnum">'
+        +G.map(function(g){ var v=aNd.filter(function(t){return g[0]==='low'?t[2]<=floor1:g[0]==='mid'?t[2]>floor1&&t[2]<=floor2:t[2]>floor2;}).map(function(t){return t[3];});
+          return '<button type="button" class="dxtile dxf'+(floorMode===g[0]?' on':'')+'" data-v="'+g[0]+'"><span>'+g[1]+' <small>'+g[2]+'</small></span><b>'+(v.length?won(med(v)):'—')+'</b><small>'+v.length+'건</small></button>'; }).join('')+'</div>';
+    }
+    // 최근 실거래 3건 + 더보기
+    var mx=0, flag=rows.map(function(t){ var n=t[3]>mx&&!bad(t); if(!bad(t)) mx=Math.max(mx,t[3]); return n; });
+    var list=rows.map(function(t,i){return [t,flag[i]];}).reverse();
+    var tr=function(n){ return list.slice(0,n).map(function(x){ var t=x[0]; return '<div class="dxr"><div class="l"><b>'+won(t[3])+(x[1]?'<i class="nw">신고가</i>':'')+(t[4]?'<i class="dg">직거래</i>':t[5]?'<i class="dg">이상 거래 의심</i>':'')+'</b><span>'+ymd(t[0])+' · '+t[2]+'층 · 전용 '+t[1]+'㎡</span></div></div>'; }).join(''); };
+    h+='<div class="dxh dxhrow"><span>최근 실거래 <small>'+rows.length.toLocaleString()+'건</small></span><label class="dxtg"><input class="dxndirect" type="checkbox" '+(omitDirect?'checked':'')+'>직거래·이상거래 빼기</label></div>'
+      +'<div class="dxl dxt tnum">'+tr(view.limit)+'</div>'
+      +(list.length>view.limit?'<button type="button" class="dxmore dxm">실거래 '+(list.length-view.limit).toLocaleString()+'건 더보기</button>':'');
     h+='</section>';
     // 평형별 시세·단지 정보는 상세의 '전체 평형별 시세'·'단지 기본정보'와 겹쳐서 뺌
     // 같은 동 전체 평당 시세 순위
@@ -207,20 +210,34 @@
         +(at>=0?'<p class="dxk"><b>'+nb.length+'곳 중 '+(at+1)+'위</b></p>':'')
         +'<div class="dxl dxnb tnum">'+show.map(NBROW).join('')        +'</div>'+(nb.length>show.length?'<button type="button" class="dxmore dxnbm">'+E(dong)+' '+nb.length+'곳 전체 보기</button>':'')+'<p class="note">단지마다 거래가 가장 많은 평형의 실거래 환산 시세 ÷ 평. 작은 평형 위주 단지는 평당가가 높게 나와요.</p></section>';
     }
-    if(!h){ box.innerHTML=''; return; }
     box.innerHTML=h;
-    var redraw=function(area,fm,od){ drawDx(d,j,box,area,fm,od); };
-    box.querySelectorAll('.dxa').forEach(function(b){ b.onclick=function(){ redraw(+b.dataset.v,'all',omitDirect); }; });
-    box.querySelectorAll('.dxf').forEach(function(b){ b.onclick=function(){ redraw(A,floorMode===b.dataset.v?'all':b.dataset.v,omitDirect); }; });
-    var nd0=box.querySelector('.dxndirect'); if(nd0) nd0.onchange=function(){ redraw(A,floorMode,nd0.checked); };
+    var redraw=function(area,fm){ drawDx(d,j,box,area,fm,omitDirect,{limit:INITIAL_TRADES,period:view.period}); };
+    box.querySelectorAll('.dxa').forEach(function(b){ b.onclick=function(){ if(+b.dataset.v!==A) redraw(+b.dataset.v,'all'); }; });
+    box.querySelectorAll('.dxf').forEach(function(b){ b.onclick=function(){ redraw(A,floorMode===b.dataset.v?'all':b.dataset.v); }; });
+    var nd0=box.querySelector('.dxndirect');
+    nd0.onchange=function(){
+      var panel=box.closest('#body'), top=nd0.getBoundingClientRect().top;
+      var areaStrip=box.querySelector('.dxrow'), areaScroll=areaStrip?.scrollLeft||0;
+      drawDx(d,j,box,A,floorMode,nd0.checked,view);
+      var checkbox=box.querySelector('.dxndirect'), newStrip=box.querySelector('.dxrow');
+      if(newStrip)newStrip.scrollLeft=areaScroll;
+      if(panel)panel.scrollTop+=checkbox.getBoundingClientRect().top-top;
+      checkbox.focus({preventScroll:true});
+    };
     box.querySelectorAll('[data-dx-unit]').forEach(function(b){var go=function(){drawDx(d,j,box,+b.dataset.dxUnit,'all',false);};b.onclick=go;b.onkeydown=function(e){if(e.key==='Enter'||e.key===' '){e.preventDefault();go();}};});
     box.querySelectorAll('.dxp button').forEach(function(b){ b.onclick=function(){
       box.querySelectorAll('.dxp button').forEach(function(o){ o.setAttribute('aria-pressed','false'); o.classList.remove('on'); });
       b.setAttribute('aria-pressed','true'); b.classList.add('on');
-      box.querySelector('.dxc').innerHTML=chart(rows,b.dataset.p==='all'?'all':+b.dataset.p); }; });
+      view.period=b.dataset.p;
+      box.querySelector('.dxc').innerHTML=chart(rows,view.period==='all'?'all':+view.period); }; });
     var nbm=box.querySelector('.dxnbm'); if(nbm) nbm.onclick=function(){ box.querySelector('.dxnb').innerHTML=nb.map(NBROW).join(''); nbm.remove(); };
-    var more=box.querySelector('.dxm'), n=3;
-    if(more) more.onclick=function(){ n+=20; more.textContent='실거래 '+Math.max(0,list.length-n).toLocaleString()+'건 더보기'; box.querySelector('.dxt').innerHTML=tr(n); if(n>=list.length) more.remove(); };
+    var more=box.querySelector('.dxm');
+    if(more) more.onclick=function(){
+      view.limit+=20;
+      box.querySelector('.dxt').innerHTML=tr(view.limit);
+      if(view.limit>=list.length) more.remove();
+      else more.textContent='실거래 '+(list.length-view.limit).toLocaleString()+'건 더보기';
+    };
   }
 
   // 같은 실거래 원본을 상세 화면과 '실거래 차트' 메뉴에서 재사용한다.
