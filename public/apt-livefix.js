@@ -32,10 +32,15 @@
     (d.types||[]).forEach(function(t){ if(!o.types.some(function(u){return u.py===t.py;})) o.types.push(t); }); }
   P.length=0; Array.prototype.push.apply(P,out);
   window.LIVE_ON=!!L; if(!L) return;
-  var hit=0;
+  var hit=0, withdrawn={};
   P.forEach(function(d){
     var sourceKey=window.aptSourceKey(d), rows=sourceKey&&L[sourceKey];
-    if(!rows||!rows.length) return;
+    if(!rows) return;
+    if(!rows.length){
+      // 집계에서 철회한 평형이 정적 추천으로 재노출되지 않게 단지 후보에서 제거.
+      withdrawn[d.n+'|'+d.area]=1;
+      return;
+    }
     hit++;
     var types=rows.map(function(r){return {
       py:r[0],p:r[1],n:r[2],n3:r[3],last:r[4],
@@ -126,6 +131,9 @@
     var big=types.filter(function(t){return t.py>d.py;}).sort(function(a,b){return b.py-a.py;})[0];
     if(big) d.bench={ppp:Math.round(big.p/big.py),name:'같은 단지 '+big.py+'평 '+eok(big.p)+' · 현재 시세'};
   });
+  for(var wi=P.length-1;wi>=0;wi--){
+    if(withdrawn[P[wi].n+'|'+P[wi].area]) P.splice(wi,1);
+  }
   /* 이상 거래 평형 제외: 기존 단지에서 최근 12개월 거래 2건 이하이고 같은 단지 다른 평형과 가격이 비정상적으로 역전되면 제외한다.
      입주 3년 이내 신축은 등기·입주 진행으로 거래량이 적은 것이 정상일 수 있어 이 거래량 규칙을 적용하지 않는다. */
   var drop=0, odd=function(t,ts,d){ if((2026-(d.year||0))<=3||t.n>2) return false;
