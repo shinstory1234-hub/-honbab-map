@@ -31,6 +31,7 @@
     var fd=FD[k], sgg=fd&&fd[6];
     var src=Object.prototype.hasOwnProperty.call(aliases,k)?aliases[k]:(sgg?sgg+'|'+d.area.split(' ').pop()+'|'+d.n:null);
     var rows=src&&L[src];
+    window.APT_PRICE_EVIDENCE.note(d,src,rows);
     if(!rows) continue;
     if(!rows.length){
       // 상위 집계에서 철회한 평형: 이전 정적 시세로 되돌아가지 않도록 명시적 제외.

@@ -31,11 +31,12 @@
     (d.types||[]).forEach(function(t){ if(!o.types.some(function(u){return u.py===t.py;})) o.types.push(t); }); }
   P.length=0; Array.prototype.push.apply(P,out);
   window.LIVE_ON=!!L; if(!L) return;
-  var hit=0, drop=0, withdrawn={}, asOf=Date.parse(window.LIVEP_AT);
+  var hit=0, drop=0, withdrawn={}, asOf=Date.parse(window.LIVEP_AT), evidence=window.APT_PRICE_EVIDENCE;
   P.forEach(function(d){
     var sourceKey=window.aptSourceKey(d), rows=sourceKey&&L[sourceKey];
+    evidence.note(d,sourceKey,rows);
     if(!rows) return;
-    var checked=quality.review(rows);
+    var checked=quality.review(evidence.eligible(sourceKey,rows));
     if(!checked.rows.length){
       withdrawn[d.n+'|'+d.area]=1;
       return;
@@ -63,7 +64,7 @@
     // 같은 단지 큰 평형 비교값(bench)도 현재 시세로
     var big=types.filter(function(t){return t.py>d.py;}).sort(function(a,b){return b.py-a.py;})[0];
     if(big) d.bench={ppp:Math.round(big.p/big.py),name:'같은 단지 '+big.py+'평 '+eok(big.p)+' · 현재 시세'};
-    else if(checked.held.size&&/^같은 단지 /.test(d.bench?.name||''))d.bench=null;
+    else if(checked.rows.length!==rows.length&&/^같은 단지 /.test(d.bench?.name||''))d.bench=null;
   });
   for(var wi=P.length-1;wi>=0;wi--){
     if(withdrawn[P[wi].n+'|'+P[wi].area]) P.splice(wi,1);

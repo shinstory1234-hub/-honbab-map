@@ -20,7 +20,7 @@ assert.equal(band(35)(300000), true);
 
 const makeContext = (cap, d, sourceKey, rows) => {
   const k = d.n + '|' + d.area;
-  const context = { CAPT: cap, PICKS: [d], FARD: { [k]: [200, 'L', 0, 0, 0, 0, sourceKey.split('|')[0]] },
+  const context = { CAPT: cap, PICKS: [d], inBand: () => true, FARD: { [k]: [200, 'L', 0, 0, 0, 0, sourceKey.split('|')[0]] },
     LIVEP: { [sourceKey]: rows } };
   context.window = context;
   return context;
@@ -31,11 +31,13 @@ const high = makeContext(10, d, '11140|입정동|테스트단지', [
   [24, 57000, 7, 1, new Date().toISOString().slice(0, 10), 61000],
 ]);
 vm.runInNewContext(read('apt-price-quality.js'), high);
+vm.runInNewContext(read('apt-price-evidence.js'), high);
 vm.runInNewContext(read('apt-livefix.js'), high);
 assert.equal(d.types.find(type => type.py === 24).p, 57000);
 
 const low = makeContext(6, { n: '힐스테이트탑석', area: '의정부시 용현동' },
   '41150|용현동|힐스테이트탑석', [[24, 45588, 4, 3, '2026-10-22'], [30, 30000, 13, 1, '2026-10-19']]);
+vm.runInNewContext(read('apt-price-evidence.js'), low);
 vm.runInNewContext(read('apt-curlive.js'), low);
 assert.equal(low.CUR['힐스테이트탑석|의정부시 용현동'].length, 1);
 assert.equal(low.LIVE_PRICE_REVIEW[0].py, 30);

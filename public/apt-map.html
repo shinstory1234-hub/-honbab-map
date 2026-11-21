@@ -358,7 +358,7 @@ aside{order:-1;width:408px;flex:none;border-right:1px solid var(--border);backgr
   try{ var ps=document.createElement('script'); ps.async=true; ps.src='/api/apt-first?cap='+x; document.head.appendChild(ps); }catch(e){}
   /* 주변 시세 커널(apt-loc10·cx10)은 가격과 무관한 전체 단지 자료라 6~10억·10~15억 탭이 같이 씀 */
   var F=[T?'':'apt-first.js','apt-unitfix.js',T?'apt-stsfix.js':'','apt-sd.js','apt-picks.js', T?'apt-picks10.js':'apt-auto3.js','apt-gj.js', T?'apt-loc10.js':'apt-loc.js', T?'apt-cx10.js':'apt-cx.js','apt-fard.js','apt-hak.js', T&&c!==35?'apt-univ10.js':T?'':'apt-univ.js', T&&c!==35?'apt-univ15.js':'', T&&c!==35?'apt-univ20.js':'', T&&c!==35?'apt-univ30.js':'', T&&c!==35?'apt-univadd.js':'', T?'apt-live.js':'apt-live6.js', c===35?'apt-univ35.js':'',
-    'apt-farplan.js','apt-mixhi.js','apt-cur.js',T?'apt-price-quality.js':'',T?'apt-livefix.js':'apt-curlive.js','apt-trn.js','apt-small.js', T?'apt-s4q'+dataCap+'.js':'apt-s4q.js','apt-peak.js','apt-gjl.js', T?'apt-gjc.js':'',T?'apt-transport.js':'','apt-s4.js','apt-redevelopment-evidence.js',T?'apt-m3.js':'','apt-band.js','apt-plat.js','apt-farfix.js',T?'apt-far-normalize.js':'',c===15?'apt-richgo15.js':'',c===35?'apt-r35.js':'','apt-dem.js', T?'apt-dem10.js':'', T?'apt-dem15.js':'', T?'apt-dem20.js':'', T?'apt-dem30.js':'', T?'apt-demadd.js':'','apt-walk.js','apt-geo.js', T?'':'apt-deep6-100.js', T?'':'apt-deep6-200.js', T?'':'apt-research6-600.js', T?'':'apt-invest-ui.js'];
+    'apt-farplan.js','apt-mixhi.js','apt-cur.js','apt-price-evidence.js',T?'apt-price-quality.js':'',T?'apt-livefix.js':'apt-curlive.js','apt-trn.js','apt-small.js', T?'apt-s4q'+dataCap+'.js':'apt-s4q.js','apt-peak.js','apt-gjl.js', T?'apt-gjc.js':'',T?'apt-transport.js':'','apt-s4.js','apt-redevelopment-evidence.js',T?'apt-m3.js':'','apt-band.js','apt-plat.js','apt-farfix.js',T?'apt-far-normalize.js':'',c===15?'apt-richgo15.js':'',c===35?'apt-r35.js':'','apt-dem.js', T?'apt-dem10.js':'', T?'apt-dem15.js':'', T?'apt-dem20.js':'', T?'apt-dem30.js':'', T?'apt-demadd.js':'','apt-walk.js','apt-geo.js', T?'':'apt-deep6-100.js', T?'':'apt-deep6-200.js', T?'':'apt-research6-600.js', T?'':'apt-invest-ui.js'];
   for(var i=0;i<F.length;i++) if(F[i]) document.write('<script src="'+F[i]+'"><\/script>');
   if(T) document.title='아파트맵 · '+CAPTXT+' 아파트';
   var t6=document.getElementById('cap'+x); if(t6){ t6.setAttribute('aria-current','page'); try{ t6.scrollIntoView({block:'nearest',inline:'center'}); }catch(e){} } var hm=document.getElementById('home'); if(hm&&T) hm.href='apt-map.html?cap='+x;
@@ -647,7 +647,7 @@ const D=mergeSite(fixUnits(PICKS.map(d=>({...d,opt:(CAPT===6?(window.OPT||{})[d.
   const t=big.reduce((a,b)=>b.n>a.n?b:a); d.py=t.py; d.p=t.p; d.me=null;
   d.headline=`${t.py}평 ${eok(t.p)} · 최근 시세 (초소형 평형은 순위에서 제외)`; d.deal=`${curSrc(t)} ${eok(t.p)}`;
   return true; }))).flatMap(typeRows).filter(d=>{ if(d.opt||inBand(d.p)) return true; BANDOUT.push([d.n,d.area,d.py,d.p]); return false; })
-  .filter(d=>{ if(d.opt||!d.unitsK||d.units>=300) return true; SMALLOUT.push([d.n,d.area]); return false; })
+  .filter(d=>{ if(!d.opt&&window.APT_PRICE_EVIDENCE.staticHeld(d)) return false; if(d.opt||!d.unitsK||d.units>=300) return true; SMALLOUT.push([d.n,d.area]); return false; })
   .filter(d=>{ if(CAPT!==6||d.opt||d.py>30||!(window.MIXHI&&MIXHI.has(d.area.split(' ').pop()+'|'+d.n))) return true; SMALLOUT.push([d.n,d.area]); return false; });   // 6억 이하 기존 결과는 유지. 6억 초과는 초고밀 주상복합 평형을 제외하지 않고 apt-s4.js의 용적률 감점으로 비교한다.
 const complexRankKey=d=>d.masterComplexKey||d.cxKey;
 const publicComplexName=d=>d.masterComplexKey?d.masterComplexKey.split('|')[0]:d.n;
@@ -1549,7 +1549,10 @@ function priceEv(d){ const t=(d.types||[]).find(x=>x.py===d.py)||null; return t&
 const priceEvTxt=d=>{ const e=priceEv(d); return e?`이 평형 실거래 최근 12개월 ${e.n}건 · 3개월 ${e.n3}건${e.last?` · 마지막 ${e.last}`:''}${e.n<PRICE_THIN?' — 가격 근거가 적어 시세 자체가 틀릴 수 있음':''}`:''; };
 function m3PriceWarning(d,compact=false){
   const r=d.m3?.price;
-  if(!r?.warn) return '';
+  if(!r?.warn){
+    if(CAPT!==6||d.opt||!d.types?.some(t=>Math.abs(t.py-d.py)<=8&&((t.py>d.py&&t.p<=d.p*.88)||(t.py<d.py&&d.p<=t.p*.88))))return '';
+    return '<div role="note" class="m3-price-warning">같은 단지의 인접 평형과 가격 차이가 큽니다.</div>';
+  }
   const age=r.ageDays==null?'마지막 거래일 미확인':r.ageDays>=30?'마지막 거래 '+Math.floor(r.ageDays/30)+'개월 전':'마지막 거래 '+r.ageDays+'일 전';
   const why=r.n12<5?`최근 12개월 거래 ${r.n12}건`:r.n3===0?'최근 3개월 거래 없음':`최근 3개월 ${r.n3}건`;
   const extra=[r.inversion?'같은 단지 다른 평형과 시세 차이 큼':'',r.latestRaised&&r.lastSale?`최근 실거래 ${short(r.lastSale)}`:'',r.latestBeyondBand?'최근 실거래와 추정 시세 차이 큼':''].filter(Boolean);

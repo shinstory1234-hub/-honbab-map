@@ -32,6 +32,7 @@ for(const cap of [10,15,20,25,30,35]){
   ctx.window=ctx;
   vm.createContext(ctx);
   vm.runInContext(read('apt-price-quality.js'),ctx);
+  vm.runInContext(read('apt-price-evidence.js'),ctx);
   vm.runInContext(read('apt-livefix.js'),ctx);
   assert.equal(d.p,58681,'가격대별로 동일 원자료 시세 적용');
   assert.equal(d.liveKey,standard);
@@ -52,3 +53,23 @@ assert.equal(ranked.PICKS.length,2,'급지 계산용 단지 통합도 별도 실
 assert.equal(merger([one,two]).length,2,'별도 단지 거래를 공유 좌표 때문에 합치지 않음');
 assert.equal(one.types.length,1);
 console.log('PASS: 단일 시세, 취약한 역전 보류, 근거 있는 가격차 보존, 단지 식별');
+
+const policyContext={CAPT:20,inBand:p=>p>150000&&p<=200000};
+policyContext.window=policyContext;
+vm.createContext(policyContext);
+vm.runInContext(read('apt-price-evidence.js'),policyContext);
+const policy=policyContext.APT_PRICE_EVIDENCE;
+const cheongdam='11680|청담동|청담현대3차아파트';
+const directRows=[[24,238417,2,0,'2026-06-20'],[34,188747,1,0,'2026-05-19']];
+assert.deepEqual(Array.from(policy.eligible(cheongdam,directRows),r=>r[0]),[24]);
+assert.equal(directRows.length,2,'원본 내역은 상세 확인용으로 보존');
+assert.equal(policy.eligible(cheongdam,[[34,210000,3,1,'2026-11-20']]).length,1,'새 집계는 복귀 가능');
+assert.equal(policy.eligible('11111|청담동|청담현대3차아파트',directRows).length,2);
+const estate={n:'청담현대3차아파트',area:'서울 강남구 청담동',py:34,p:188747};
+policyContext.FARD={[estate.n+'|'+estate.area]:[0,0,0,0,0,0,'11680']};
+assert.equal(policy.staticHeld(estate),true,'데이터 장애 시 과거 문제 시세 재노출 방지');
+policy.note(estate,cheongdam,directRows);
+assert.equal(policyContext.LIVE_PRICE_REVIEW[0].py,34);
+assert.equal(policy.eligible('28237|산곡동|부평캐슬&더샵퍼스트',[[16,17832,21,0,'2026-11-21']]).length,0);
+assert.equal(policy.eligible('28177|학익동|엑슬루타워',[[44,44900,2,0,'2026-10-13']]).length,1);
+console.log('PASS: 확인된 거래의 순위 보류, 이후 시세 복귀, 정적 자료 재노출 방지');
