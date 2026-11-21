@@ -30,7 +30,14 @@
     var fd=FD[k], sgg=fd&&fd[6];
     var src=Object.prototype.hasOwnProperty.call(aliases,k)?aliases[k]:(sgg?sgg+'|'+d.area.split(' ').pop()+'|'+d.n:null);
     var rows=src&&L[src];
-    if(!rows||!rows.length) continue;
+    if(!rows) continue;
+    if(!rows.length){
+      // 상위 집계에서 철회한 평형: 이전 정적 시세로 되돌아가지 않도록 명시적 제외.
+      CUR[k]=[[0,Number.MAX_SAFE_INTEGER,0,0,null]];
+      if(d.u) LU[k]=1;
+      hit++;
+      continue;
+    }
     // 30평 3억의 매매 계약과 표본을 상세 원본에서 확인하지 못했다.
     // 이 가격의 재노출만 막고 이후 새 시세와 나머지 평형은 정상 반영한다.
     const usable=rows.filter(r=>!(src==='41150|용현동|힐스테이트탑석'&&r[0]===30&&r[1]===30000));
