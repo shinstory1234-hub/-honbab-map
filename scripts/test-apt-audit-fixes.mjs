@@ -56,4 +56,12 @@ assert.equal(context.listRepresentatives(rows, 'price', false)[0].p, 64050);
 assert.equal(context.listRepresentatives(rows, 'rank', true)[0].p, 92108);
 assert.equal(context.listRepresentatives(rows.slice(1), 'rank', true)[0].key, 'b');
 assert.match(previewScript('<div class="row"></div>'), /\.rk\{visibility:hidden\}/);
+const heldLow = makeContext(6,{n:'테스트단지',area:'서울 중구 입정동'},
+  '11140|입정동|테스트단지',[[-24,0,1]]);
+vm.runInNewContext(read('apt-price-evidence.js'), heldLow);
+vm.runInNewContext(read('apt-curlive.js'), heldLow);
+assert.equal(heldLow.CUR['테스트단지|서울 중구 입정동'].length,0);
+assert.equal(heldLow.LIVE_PRICE_REVIEW[0].py,24);
+assert.equal(heldLow.CUR_LIVE_HELD['테스트단지|서울 중구 입정동'],'11140|입정동|테스트단지');
+assert.match(heldLow.LIVE_PRICE_REVIEW[0].reason,/단일 거래/);
 console.log('PASS: 6/30억 경계, 시세 검증 보류, 평형 정렬, 초기 순위 표시');

@@ -48,11 +48,15 @@
       (root.LIVE_PRICE_REVIEW??=[]).push({name:d.n,area:d.area,py:rule[0],reason:rule[3]});
     }
   }
+  function reviewNote(d,py,stale){
+    (root.LIVE_PRICE_REVIEW??=[]).push({name:d.n,area:d.area,py,
+      reason:stale?'180일 넘은 단일 거래로 시세 확인이 필요합니다.':undefined});
+  }
   function staticHeld(d){
     if(d.live||!names.has(d.n))return false;
     const key=d.n+'|'+d.area, fd=root.FARD?.[key];
     const checks=rules[fd?.[6]+'|'+d.area.split(' ').pop()+'|'+d.n];
     return checks?.some(rule=>matches(rule,d.py,d.p,d.types?.find(t=>t.py===d.py)?.last));
   }
-  root.APT_PRICE_EVIDENCE={eligible,note,staticHeld,sample};
+  root.APT_PRICE_EVIDENCE={eligible,note,reviewNote,staticHeld,sample};
 })(typeof window==='undefined'?globalThis:window);

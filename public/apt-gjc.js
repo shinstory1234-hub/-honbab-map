@@ -10,7 +10,7 @@
     function f(x){ while(par[x]!==x) x=par[x]=par[par[x]]; return x; }
     /* 시세 묶음을 단지명 기준으로 바꾼 뒤(2026.11.3)엔 1·2단지 시세가 따로 계산돼 값이 안 겹침 → 단지명에서 끝 번호(1단지·2차·(3))만 다른 경우도 같은 단지로 봄 */
     var bn=a.map(function(i){ return P[i].n.replace(/\s/g,'').replace(/\(\d+\)$/,'').replace(/\d+(단지|차)?$/,''); });
-    var distinct=a.map(function(i){var d=P[i];return d.liveKey&&/[0-9]+단지$/.test(d.n)?d.liveKey:'';});
+    var distinct=a.map(function(i){var d=P[i];return d.liveKey&&(d.priceHeld||/[0-9]+단지$/.test(d.n))?d.liveKey:'';});
     for(var x=0;x<a.length;x++) for(var y=x+1;y<a.length;y++){
       if(distinct[x]!==distinct[y]&&(distinct[x]||distinct[y]))continue;
       if((bn[x]&&bn[x]===bn[y])||sig[x].some(function(z){return sig[y].indexOf(z)>=0;}))par[f(x)]=f(y);

@@ -19,6 +19,16 @@ assert.deepEqual([...verified.conflicts], [24, 28], '남은 가격 차이에 참
 assert.deepEqual(review([row(24, 55000, 1), row(28, 59000, 2)]).rows.map(r=>r[1]), [55000, 59000]);
 assert.deepEqual(review([row(24, 75000, 1, 1), row(28, 58000, 1, 1)]).rows.map(r=>r[1]), [75000, 58000]);
 
+const stale = row(40, 85000, 1);
+const freshPeer = [44, 95000, 6, 1, '2026-12-19'];
+const snapshot = '2027-03-02';
+assert.equal(review([stale], snapshot).rows.length, 0, '반년 넘은 단일 표본은 순위 보류');
+assert.deepEqual(review([stale, freshPeer], snapshot).rows, [stale, freshPeer], '최근 인접 평형의 뒷받침이 있으면 유지');
+assert.equal(review([row(40, 85000, 2)], snapshot).rows.length, 1, '서로 다른 두 거래는 단일 표본 규칙으로 제거하지 않음');
+assert.equal(review([row(40, 85000, 2)], snapshot, () => 1).rows.length, 0, '중복 의심으로 확인된 두 행은 1개 표본으로 평가');
+assert.deepEqual(review([row(40, 85000, 8, 2), row(48, 150000, 1)]).rows.map(r=>r[0]),[40]);
+assert.deepEqual(review([row(40, 85000, 8, 2), row(48, 150000, 6)]).rows.map(r=>r[0]),[40,48]);
+
 const standard = '41591|향남읍 행정리|테스트';
 const key = '41591|향남읍|테스트';
 assert.equal(matchLive({[standard]: []}, [key]).out[key].length, 0, '원본 철회 보존');
@@ -41,7 +51,7 @@ for(const cap of [10,15,20,25,30,35]){
 const html=read('apt-map.html');
 const start=html.indexOf('function mergeSite('), end=html.indexOf('function fixUnits(',start);
 const merger=vm.runInNewContext(html.slice(start,end)+'; mergeSite',{
-  GEO:{},gkey:d=>d.n,DUPOUT:[],
+  GEO:{},gkey:d=>d.n,DUPOUT:[],window:{},
 });
 const site={area:'서울 송파구 방이동',units:5540,year:1988,lat:37.51,lng:127.13};
 const one={...site,n:'올림픽선수기자촌1단지',liveKey:'11710|방이동|올림픽선수기자촌1단지',types:[{py:34,p:277541,n:15}]};
@@ -52,6 +62,9 @@ vm.runInNewContext(read('apt-gjc.js').split('window.S4GJC=')[0],ranked);
 assert.equal(ranked.PICKS.length,2,'급지 계산용 단지 통합도 별도 실거래 식별자를 보존');
 assert.equal(merger([one,two]).length,2,'별도 단지 거래를 공유 좌표 때문에 합치지 않음');
 assert.equal(one.types.length,1);
+const checkedEstate={...one,n:'견본단지',priceHeld:true,auto:1};
+const neighborEstate={...two,n:'견본단지(다른 구획)',auto:1};
+assert.equal(merger([checkedEstate,neighborEstate]).length,2,'검증 보류 평형에 다른 단지 시세가 들어갈 수 없음');
 console.log('PASS: 단일 시세, 취약한 역전 보류, 근거 있는 가격차 보존, 단지 식별');
 
 const policyContext={CAPT:20,inBand:p=>p>150000&&p<=200000};

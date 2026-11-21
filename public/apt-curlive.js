@@ -23,7 +23,7 @@
     '송내동 우성|부천 소사구 송내동':'41194|송내동|우성'
   };
   var dot=function(s){ return String(s||'').replace(/-/g,'.'); };
-  var hit=0, seen={}, LU=window.CUR_LIVE_U={};
+  var hit=0, seen={}, LU=window.CUR_LIVE_U={}, held=window.CUR_LIVE_HELD={};
   for(var i=0;i<P.length;i++){
     var d=P[i], k=d.n+'|'+d.area;
     /* 2026.11.14 버그 수정: 예전엔 자동 수집 단지(d.u, 6억 탭 2,755곳 중 2,421곳)를 건너뛰어 실제로 매일 시세가 바뀐 단지가
@@ -43,9 +43,13 @@
     }
     // 30평 3억의 매매 계약과 표본을 상세 원본에서 확인하지 못했다.
     // 이 가격의 재노출만 막고 이후 새 시세와 나머지 평형은 정상 반영한다.
-    const usable=rows.filter(r=>!(src==='41150|용현동|힐스테이트탑석'&&r[0]===30&&r[1]===30000));
-    if(usable.length!==rows.length)(window.LIVE_PRICE_REVIEW=window.LIVE_PRICE_REVIEW||[]).push({
-      name:d.n,area:d.area,py:30,reason:'목록 시세와 상세 매매 기록이 달라 검증을 보류했습니다.'
+    const usable=rows.filter(r=>{
+      if(r[0]<0){held[k]=src;window.APT_PRICE_EVIDENCE.reviewNote(d,-r[0],r[2]===1);return false;}
+      if(src==='41150|용현동|힐스테이트탑석'&&r[0]===30&&r[1]===30000){
+        (window.LIVE_PRICE_REVIEW??=[]).push({name:d.n,area:d.area,py:30,reason:'상세 매매 기록과 시세가 달라 확인이 필요합니다.'});
+        return false;
+      }
+      return true;
     });
     CUR[k]=usable.map(function(r){ return [r[0], r[1], r[2], r[3], dot(r[4])]; });
     if(d.u) LU[k]=1;

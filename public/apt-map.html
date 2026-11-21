@@ -591,7 +591,8 @@ for(const key of SPLIT_UNIT_COUNT.keys()){
 function mergeSite(A){
   const tn=d=>(d.types||[]).reduce((a,t)=>a+(t.n||0),0), grp=new Map();
   A.forEach(d=>{ if(d.opt||!(d.units>=300)||!d.year) return; const g=GEO[gkey(d)]||{}, la=d.lat??g.lat, ln=d.lng??g.lng; if(!Number.isFinite(la)||!Number.isFinite(ln)) return;
-    const block=d.liveKey&&/[0-9]+단지$/.test(d.n)?'|'+d.liveKey:'';
+    const source=d.liveKey&&(d.priceHeld||/[0-9]+단지$/.test(d.n))?d.liveKey:window.CUR_LIVE_HELD?.[gkey(d)];
+    const block=source?'|'+source:'';
     const k=la.toFixed(4)+'|'+ln.toFixed(4)+'|'+d.units+'|'+d.year+block; (grp.get(k)||grp.set(k,[]).get(k)).push(d); });
   const drop=new Set();
   // 별칭의 거래 건수가 많아도 대표 단지 평형을 다른 예산대로 옮기지 않는다.
