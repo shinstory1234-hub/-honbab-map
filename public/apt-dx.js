@@ -170,8 +170,9 @@
     var now=Date.now(), lcPy={}; (j.lc||[]).forEach(function(x){ lcPy[x[0]]=x[1]; });
     var chip=function(cls,val,on,label,sub){ return '<button type="button" class="dxc1 '+cls+(on?' on':'')+'" data-v="'+val+'" aria-pressed="'+on+'">'+label+(sub?'<small>'+sub+'</small>':'')+'</button>'; };
     var h='<section class="sec" data-dx="1"><h3>실거래가 <small>국토부 신고 · 해제 제외</small></h3>';
-    if(areaOptions.length>1) h+='<div class="dxrow" role="group" aria-label="평형">'+areaOptions.map(function(v){ return chip('dxa',v,v===A,lcPy[v]?lcPy[v]+'평':window.aptDxAreaText(all,v),lcPy[v]?'전용 '+window.aptDxAreaText(all,v):''); }).join('')+'</div>';
-    if(!rows.length) h+='<p class="note">선택 조건에 맞는 실거래가 없습니다.</p>';
+    if(areaOptions.length>1||areaOptions[0]!==A) h+='<div class="dxrow" role="group" aria-label="평형">'+areaOptions.map(function(v){ return chip('dxa',v,v===A,lcPy[v]?lcPy[v]+'평':window.aptDxAreaText(all,v),lcPy[v]?'전용 '+window.aptDxAreaText(all,v):''); }).join('')+'</div>';
+    if(!areaRows.length) h+='<p class="note">선택한 평형의 실거래 원본을 확인하지 못했습니다. 조회 가능한 다른 평형을 선택할 수 있습니다.</p>';
+    else if(!rows.length) h+='<p class="note">선택 조건에 맞는 실거래가 없습니다.</p>';
     if(rows.length){
       var nd=rows.filter(function(t){return !bad(t);}); if(!nd.length) nd=rows;
       var last=nd[nd.length-1], peak=nd.reduce(function(a,t){return t[3]>a[3]?t:a;},nd[0]);
@@ -199,13 +200,13 @@
     var mx=0, flag=rows.map(function(t){ var n=t[3]>mx&&!bad(t); if(!bad(t)) mx=Math.max(mx,t[3]); return n; });
     var list=rows.map(function(t,i){return [t,flag[i]];}).reverse();
     var tr=function(n){ return list.slice(0,n).map(function(x){ var t=x[0]; return '<div class="dxr"><div class="l"><b>'+won(t[3])+(x[1]?'<i class="nw">신고가</i>':'')+(t[4]?'<i class="dg">직거래</i>':t[5]?'<i class="dg">이상 거래 의심</i>':'')+'</b><span>'+ymd(t[0])+' · '+t[2]+'층 · 전용 '+t[1]+'㎡</span></div></div>'; }).join(''); };
-    h+='<div class="dxh dxhrow"><span>최근 실거래 <small>'+rows.length.toLocaleString()+'건</small></span><label class="dxtg"><input class="dxndirect" type="checkbox" '+(omitDirect?'checked':'')+'>직거래·이상거래 빼기</label></div>'
+    if(areaRows.length) h+='<div class="dxh dxhrow"><span>최근 실거래 <small>'+rows.length.toLocaleString()+'건</small></span><label class="dxtg"><input class="dxndirect" type="checkbox" '+(omitDirect?'checked':'')+'>직거래·이상거래 빼기</label></div>'
       +'<div class="dxl dxt tnum">'+tr(view.limit)+'</div>'
       +(list.length>view.limit?'<button type="button" class="dxmore dxm">실거래 '+(list.length-view.limit).toLocaleString()+'건 더보기</button>':'');
     h+='</section>';
     // 평형별 시세·단지 정보는 상세의 '전체 평형별 시세'·'단지 기본정보'와 겹쳐서 뺌
     // 같은 동 전체 평당 시세 순위
-    var me=(lkey(d)||'').split('|').slice(2).join('|');
+    var me=(j.sourceKey||lkey(d)||'').split('|').slice(2).join('|');
     var nb=(j.nb||[]).filter(function(x){return x[4]==null||x[4]>=100||x[0]===me;});
     if(nb.length>1){
       var at=-1; nb.forEach(function(x,i){ if(x[0]===me) at=i; });
@@ -221,7 +222,7 @@
     box.querySelectorAll('.dxa').forEach(function(b){ b.onclick=function(){ if(+b.dataset.v!==A) redraw(+b.dataset.v,'all'); }; });
     box.querySelectorAll('.dxf').forEach(function(b){ b.onclick=function(){ redraw(A,floorMode===b.dataset.v?'all':b.dataset.v); }; });
     var nd0=box.querySelector('.dxndirect');
-    nd0.onchange=function(){
+    if(nd0) nd0.onchange=function(){
       var panel=box.closest('#body'), top=nd0.getBoundingClientRect().top;
       var areaStrip=box.querySelector('.dxrow'), areaScroll=areaStrip?.scrollLeft||0;
       drawDx(d,j,box,A,floorMode,nd0.checked,view);
@@ -251,7 +252,7 @@
     if(!el)return;
     var all=Array.isArray(j&&j.t)?j.t:[], A=pickAb(d,j||{}), rows=all.filter(function(t){return ab(t[1])===A;});
     markOdd(rows);
-    if(!rows.length){el.innerHTML='<p class="ru-warning">이 단지의 해당 평형 과거 실거래 내역이 없습니다. 자료 누락 가능성도 확인해야 합니다.</p>';return;}
+    if(!rows.length){el.innerHTML='<p class="ru-warning">해당 평형의 실거래 원본을 확인하지 못했습니다.</p>';return;}
     el.innerHTML='<div class="dxseg dxp" role="group" aria-label="실거래 차트 기간"><button type="button" data-p="3" class="on" aria-pressed="true">3년</button><button type="button" data-p="5" aria-pressed="false">5년</button><button type="button" data-p="all" aria-pressed="false">전체</button></div><div class="dxc">'+chart(rows,3)+'</div>';
     el.querySelectorAll('.dxp button').forEach(function(btn){btn.onclick=function(){
       el.querySelectorAll('.dxp button').forEach(function(x){x.classList.remove('on');x.setAttribute('aria-pressed','false');});
@@ -276,12 +277,13 @@
     if(!k){error('단지 식별정보를 찾지 못해 실거래 차트를 표시할 수 없습니다.');return;}
     var done=function(j){if(!box.isConnected)return;
       if(!j||!Array.isArray(j.t)){error('실거래 응답이 올바르지 않습니다.');return;}
+      if(!j.t.length){error('이 단지의 실거래 원본을 확인하지 못했습니다.');return;}
       try{drawDx(d,j,box);window.APT_DX_INFO=window.APT_DX_INFO||{};window.APT_DX_INFO[k]=j;if(window.AP1X)window.AP1X.onDx(d,j,body);if(window.aptLayout)aptLayout(body);}
       catch(e){console.error('apt-dx chart render failed',e);error('실거래 자료를 받았지만 차트를 표시하지 못했습니다.');}
     };
     if(CACHE[k])return done(CACHE[k]);
-    fetch('/api/apt-dx?v=3&k='+encodeURIComponent(k)).then(function(r){if(!r.ok)throw Error('HTTP '+r.status);return r.json();})
-      .then(function(j){CACHE[k]=j;done(j);})
+    fetch('/api/apt-dx?v=4&k='+encodeURIComponent(k)).then(function(r){if(!r.ok)throw Error('HTTP '+r.status);return r.json();})
+      .then(function(j){if(Array.isArray(j?.t)&&j.t.length)CACHE[k]=j;done(j);})
       .catch(function(e){console.warn('apt-dx request failed',k,e);error('실거래 정보를 불러오지 못했습니다. 데이터가 없다는 뜻은 아닙니다.');});
   };
 
