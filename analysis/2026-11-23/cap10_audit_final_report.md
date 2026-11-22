@@ -75,9 +75,15 @@
 - 상계주공6·7단지: 세대수 리치고 비교 차이가 있으므로 각 블록·통합단지 관리 범위부터 확인. 외부값으로 즉시 덮어쓰는 것은 부적절.
 - 0점 관리단지 30개: 0점 후미 순위 번호는 투자성 비교에 별 의미가 없으므로 동률군/확인 보류 별도 UX가 타당.
 
+## 현재 배포 코드 확인
+
+- Vercel의 `honbab-map` 프로젝트에서 가장 최근 production 배포 상태는 `READY`; GitHub `master` 배포 커밋 `f26a4c8f7ef3a6dd4149ce52e5dff30d62617329`와 일치함. [배포 기록](https://vercel.com/shinstory1234-hubs-projects/honbab-map/GvknV4gHF4c4su9Muy3PBmdp8ELP).
+- **배포 코드 일치만 확인되었을 뿐 원본 2026-11-20 시세/순위가 11월 23일에도 같다고 확인하지 않았으므로 이 감사 결과를 실시간 운영 순위로 주장하지 않는다.**
+
 ## 자료 및 완료 범위
 
 - [1~1,650위 통합 단지 전체 감사](https://github.com/shinstory1234-hub/-honbab-map/blob/analysis/20261123-cap10-3316-rank-audit/analysis/2026-11-23/cap10_actual_1650_rank_review.csv)
+- 전체표를 500개씩 나눈 편의 파일: [1~500위](https://github.com/shinstory1234-hub/-honbab-map/blob/analysis/20261123-cap10-3316-rank-audit/analysis/2026-11-23/cap10_ranks_0001_0500.csv), [501~1,000위](https://github.com/shinstory1234-hub/-honbab-map/blob/analysis/20261123-cap10-3316-rank-audit/analysis/2026-11-23/cap10_ranks_0501_1000.csv), [1,001~1,500위](https://github.com/shinstory1234-hub/-honbab-map/blob/analysis/20261123-cap10-3316-rank-audit/analysis/2026-11-23/cap10_ranks_1001_1500.csv), [1,501~1,650위](https://github.com/shinstory1234-hub/-honbab-map/blob/analysis/20261123-cap10-3316-rank-audit/analysis/2026-11-23/cap10_ranks_1501_1650.csv)
 - [원본 이름 기준 1,651행 세부 비교 (옛 파일, 통합단지 구분 정정 전)](https://github.com/shinstory1234-hub/-honbab-map/blob/analysis/20261123-cap10-3316-rank-audit/analysis/2026-11-23/cap10_complex_rank_full_audit_1651.csv)
 - 평형 3,316개 전수: [1~1,000행](https://github.com/shinstory1234-hub/-honbab-map/blob/analysis/20261123-cap10-3316-rank-audit/analysis/2026-11-23/cap10_flat_audit_0001_1000.csv), [1,001~2,000행](https://github.com/shinstory1234-hub/-honbab-map/blob/analysis/20261123-cap10-3316-rank-audit/analysis/2026-11-23/cap10_flat_audit_1001_2000.csv), [2,001~3,000행](https://github.com/shinstory1234-hub/-honbab-map/blob/analysis/20261123-cap10-3316-rank-audit/analysis/2026-11-23/cap10_flat_audit_2001_3000.csv), [3,001~3,316행](https://github.com/shinstory1234-hub/-honbab-map/blob/analysis/20261123-cap10-3316-rank-audit/analysis/2026-11-23/cap10_flat_audit_3001_3316.csv)
 - [2026-11-20 배포순위 추출 원본](https://github.com/shinstory1234-hub/-honbab-map/blob/analysis/20261120-full-ranking-csv/analysis/2026-11-20/ranking_cap10.csv)
