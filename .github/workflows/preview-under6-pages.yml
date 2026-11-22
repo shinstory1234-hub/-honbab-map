@@ -1,0 +1,47 @@
+name: Publish under-6 investment ranking preview
+on:
+  push:
+    branches:
+      - preview/under6-investment-rerank-20261123
+  workflow_dispatch:
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+concurrency:
+  group: pages-under6-investment-preview
+  cancel-in-progress: true
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Checkout analysis preview
+        uses: actions/checkout@v4
+      - name: Configure GitHub Pages
+        uses: actions/configure-pages@v5
+        with:
+          enablement: true
+      - name: Assemble standalone mobile preview
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p _site/preview-under6
+          cp public/rank-preview.html _site/index.html
+          cp public/rank-preview.js _site/rank-preview.js
+          cp public/preview-under6/ranks-*.json _site/preview-under6/
+          sed -i 's|src="/rank-preview.js"|src="./rank-preview.js"|g' _site/index.html
+          sed -i "s|fetch('/preview-under6/|fetch('./preview-under6/|g" _site/rank-preview.js
+          touch _site/.nojekyll
+          test "$(find _site/preview-under6 -name 'ranks-*.json' | wc -l)" -eq 6
+          test -s _site/index.html
+          test -s _site/rank-preview.js
+      - name: Upload static site
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: _site
+      - name: Deploy to Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
