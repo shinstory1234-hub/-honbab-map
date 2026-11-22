@@ -245,7 +245,7 @@ export function buildAptAssets(root, output = path.join(root, 'public')) {
     }
     flush(); manifest[cap] = urls;
   }
-  const main = writeAsset(minifyKeep("window.APT_DETAIL_ASSET="+JSON.stringify(detailAssets)+"[CAPT];\n"+"if(window.__aptLoadFailed) throw new Error('Apartment data failed to load');\n"+app.slice(consentEnd), 'apt-map-app', true), ['apt-map.html:application']);
+  const main = writeAsset(minifyKeep("window.APT_DETAIL_ASSET="+JSON.stringify(detailAssets)+"[CAPT];\n"+"if(window.__aptLoadFailed) throw new Error('Apartment data failed to load');\n"+app.slice(consentEnd), 'apt-map-app', true, {defaults:false,booleans:true,comparisons:true,conditionals:true,dead_code:true,evaluate:true,join_vars:true,sequences:true,unused:true}), ['apt-map.html:application']);
   for (const urls of Object.values(manifest)) urls.push(main);
   const loop = /  for\(var i=0;i<F\.length;i\+\+\) if\(F\[i\]\) document\.write\([^\n]+\);/;
   if (!loop.test(bootstrap[1])) throw new Error('Source loader changed');
@@ -292,8 +292,8 @@ export function buildAptAssets(root, output = path.join(root, 'public')) {
    키·해시는 apt-s4.js peakLoRatio와 같은 식 → 6억 탭 결과 동일. 6억 초과 탭은 실시간 시세로 가격대를 다시 나눠(apt-livefix) 미리 자를 수 없어 그대로 */
 // 줄 단위 주석만 제거 — 코드 줄 안의 주석·문자열은 건드리지 않는다(안전 우선).
 // 줄이 '/*'로 시작하면 '*/'로 끝나는 줄까지, 줄이 '//'로 시작하면 그 줄만 지운다. 결과는 vm.Script로 문법 검사.
-export function minifyKeep(code, file, mangleLocals = false) {
-  const r = terser.minify_sync({[file]: code}, {compress: false, mangle: mangleLocals, format: {comments: false, ascii_only: false}});
+export function minifyKeep(code, file, mangleLocals = false, compress = false) {
+  const r = terser.minify_sync({[file]: code}, {compress, mangle: mangleLocals, format: {comments: false, ascii_only: false}});
   if (!r || typeof r.code !== 'string') throw new Error('minify failed: ' + file);
   new vm.Script(r.code);
   return r.code;

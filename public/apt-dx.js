@@ -95,11 +95,33 @@
   }
 
   // 직거래 표시가 없는 옛 거래(2026.8 이전) 중 같은 면적대 ±6개월 중위의 80% 미만 = 특수관계·이상 거래 의심(t[5]=1)
-  function markOdd(all){ if(all._odd) return; all._odd=1; var by={};
-    all.forEach(function(t){ if(!t[4]) (by[ab(t[1])]=by[ab(t[1])]||[]).push(t); });
-    Object.keys(by).forEach(function(k){ var a=by[k]; a.forEach(function(t){ var ms=tms(t[0]), nb=[];
-      a.forEach(function(u){ if(u!==t&&Math.abs(tms(u[0])-ms)<=183*864e5) nb.push(u[3]); });
-      if(nb.length>=3&&t[3]<med(nb)*.8) t[5]=1; }); });
+  function markOdd(all){
+    if(all._odd)return;
+    all._odd=1;
+    const groups=new Map(), windowMs=183*864e5;
+    for(const trade of all){
+      if(trade[4])continue;
+      const date=tms(trade[0]);
+      if(!Number.isFinite(date))continue;
+      const area=ab(trade[1]);
+      if(!groups.has(area))groups.set(area,[]);
+      groups.get(area).push({trade,date});
+    }
+    for(const group of groups.values()){
+      group.sort((a,b)=>a.date-b.date);
+      let from=0,to=0;
+      for(const {trade,date} of group){
+        while(group[from].date<date-windowMs)from++;
+        while(to<group.length&&group[to].date<=date+windowMs)to++;
+        if(to-from<4)continue;
+        const prices=[];
+        for(let i=from;i<to;i++){
+          const peer=group[i].trade;
+          if(peer!==trade)prices.push(peer[3]);
+        }
+        if(prices.length>=3&&trade[3]<med(prices)*.8)trade[5]=1;
+      }
+    }
   }
   function bad(t){ return t[4]||t[5]; }
   var TREND_WINDOW=91*864e5, MIN_MEDIAN_TRADES=5, INITIAL_TRADES=3;

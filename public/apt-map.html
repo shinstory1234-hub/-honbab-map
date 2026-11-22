@@ -478,7 +478,8 @@ function brS(d){ const t=d.n+' '+(d.q||''), rm=typeof isRemodel==='function'&&is
   return [(1-w)*b+w*2, w>0?l+` · 재건축 경로 ${Math.round(w*100)}%`:l];
 }
 const jobS=t=>Math.max(0,Math.min(15,(65-t)/40*15));
-const stS=m=>m==null?null:lerp([[400,25],[700,22],[1000,19],[1500,15],[2000,9],[3000,4],[4000,0]],m);
+const stationCurve=[[400,25],[700,22],[1000,19],[1500,15],[2000,9],[3000,4],[4000,0]];
+const stS=m=>m==null?null:lerp(stationCurve,m);
 const stL=m=>m<=700?'도보권':m<=1500?'마을버스·버스 1~2정거장':m<=3000?'버스 이동':'역 없음';
 const scS=m=>m==null?null:lerp([[300,15],[450,12],[600,8],[900,4],[1200,0]],m);
 const flS=h=>h==null?null:lerp([[5,15],[12,12],[20,8],[30,4],[40,0]],Math.abs(h));
@@ -693,7 +694,9 @@ function score(d){
     if(FC.has(fk)) d.fut=FC.get(fk)&&{...FC.get(fk)};
     else { const FP=score.fp||(score.fp=FUT.map(F=>{ const ls=F[1].replace(/\(.*?\)/g,'').replace(/역|신설/g,'').split(/[·\s]+/).filter(x=>/선|GTX/.test(x));
         return {gv:Math.max(...ls.map(l=>lineG(l).v),.7),x:Math.min(.16,.08*(ls.length-1)),disc:Math.max(.8,1-.05*(F[2]-2026))}; }));
-      FUTPOS.forEach((f,k)=>{ if(!f) return; const m=futureDistances(la,ln)[k], F=FUT[k], {gv,x,disc}=FP[k];
+      const distances=futureDistances(la,ln);
+      FUTPOS.forEach((f,k)=>{ if(!f) return; const m=distances[k]; if(d.fut&&m>=4000)return;
+        const F=FUT[k], {gv,x,disc}=FP[k];
         const v=23*stS(m)/25*Math.min(1,gv*(1+x))*disc; if(!d.fut||v>d.fut.v) d.fut={v,n:F[0].split(' ')[0],line:F[1],year:F[2],m,gv,disc}; });
       FC.set(fk,d.fut&&{...d.fut}); } }
   d.T=d.cur||d.fut?Math.max(d.cur?d.cur.v:0,d.fut?d.fut.v:0):null; d.Tsrc=d.fut&&(!d.cur||d.fut.v>d.cur.v)?'fut':'cur';
@@ -1203,7 +1206,7 @@ const FAV=(()=>{ try{ return new Set(JSON.parse(localStorage.getItem('aptFav')||
 const favSave=()=>{ try{ localStorage.setItem('aptFav',JSON.stringify([...FAV])); }catch(e){} };
 const SORTS=[['rank','추천순',null],['price','가격 낮은순',(a,b)=>a.p-b.p],['new','신축순',(a,b)=>b.year-a.year],['units','세대수 많은순',(a,b)=>unitN(b)-unitN(a)],['station','역 가까운순',(a,b)=>((a.cur&&a.cur.m)??1e9)-((b.cur&&b.cur.m)??1e9)],['ppp','평당가 낮은순',(a,b)=>a.p/a.py-b.p/b.py],['deal','거래 많은순',(a,b)=>dealN(b)-dealN(a)],['cash','필요 현금 낮은순',(a,b)=>money(a).cash-money(b).cash],['commute','통근 예상 짧은순',(a,b)=>(jobMin(a)??1e9)-(jobMin(b)??1e9)],['latest','최근 거래순',(a,b)=>String(priceEv(b)?.last||'').replace(/\D/g,'').localeCompare(String(priceEv(a)?.last||'').replace(/\D/g,''))],['peak','전고점 회복 높은순',(a,b)=>(pkR(b)??-1)-(pkR(a)??-1)],['race','최고가 대비 하락률순',(a,b)=>(a.rc??9)-(b.rc??9)],['raceAmt','최고가 대비 하락액순',(a,b)=>(a.rcAmt??1e9)-(b.rcAmt??1e9)]];
 /* 2026.11.16 리치고 차용 상세(실거래 차트 등)·하락 레이스: apt-dx.js를 처음 필요할 때만 받음(첫 화면 번들 밖) */
-const loadDx=cb=>{ if(window.APTDX) return cb(); const q=window._dxq=window._dxq||[]; q.push(cb); if(q.length>1) return; const s=document.createElement('script'); s.src='/apt-dx.js?v=17'; s.onload=()=>{ q.splice(0).forEach(f=>{ try{f();}catch(e){} }); }; document.head.appendChild(s); };
+const loadDx=cb=>{ if(window.APTDX) return cb(); const q=window._dxq=window._dxq||[]; q.push(cb); if(q.length>1) return; const s=document.createElement('script'); s.src='/apt-dx.js?v=18'; s.onload=()=>{ q.splice(0).forEach(f=>{ try{f();}catch(e){} }); }; document.head.appendChild(s); };
 const loadExtra=cb=>{if(window.AP1X)return cb();const q=window._ap1xq=window._ap1xq||[];q.push(cb);if(q.length>1)return;const s=document.createElement('script');s.src='/apt-stage1-extra.js?v=9';s.onload=()=>q.splice(0).forEach(f=>{try{f();}catch(e){console.error('extra',e);}});s.onerror=()=>{q.length=0;console.error('extra load failed');};document.head.appendChild(s);};
 const mapStage1Loader=document.getElementById('ap1xMapLazy');if(mapStage1Loader)mapStage1Loader.onclick=()=>loadExtra(()=>{mapStage1Loader.remove();window.AP1X.installLayer();document.getElementById('ap1xMapBtn')?.click();});
 const loadStage2=cb=>{if(window.APT2)return cb();const q=window._ap2q=window._ap2q||[];q.push(cb);if(q.length>1)return;const s=document.createElement('script');s.src='/apt-stage2.js?v=4';s.onload=()=>q.splice(0).forEach(fn=>{try{fn();}catch(e){console.error('stage2 callback',e);}});s.onerror=()=>{q.length=0;console.error('stage2 load failed');};document.head.appendChild(s);};

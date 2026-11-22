@@ -101,3 +101,21 @@ assert.match(singleTrade, /<svg/);
 assert.match(singleTrade, /fill="#94a3b8" fill-opacity/);
 assert.doesNotMatch(singleTrade, /NaN|<path d=/);
 console.log('PASS: rolling transaction median, sample thresholds and historical gaps');
+
+const classify = vm.runInNewContext([
+  extract('  function tms(n){', '  function pct(x){'),
+  extract('  var ab=', '  window.aptDxAreaText'),
+  extract('  function markOdd(', '  function bad('),
+  'markOdd;',
+].join('\n'));
+const lowTrade = [20260703, 39.5, 10, 24000, 0];
+const beforeBoundary = trade(20251231, 40000);
+const atBoundary = trade(20260101, 40000);
+const sameDay = trade(20260703, 41000);
+const next = trade(20260704, 42000);
+const direct = [20260702, 39.5, 10, 1000, 1];
+const mixedOrder = [lowTrade, next, beforeBoundary, sameDay, direct, atBoundary];
+classify(mixedOrder);
+assert.equal(lowTrade[5], 1, 'include an independent comparable exactly 183 days earlier');
+assert.equal(direct[5], undefined, 'direct deals are excluded from comparison');
+assert.deepEqual(mixedOrder.slice(), [lowTrade, next, beforeBoundary, sameDay, direct, atBoundary]);

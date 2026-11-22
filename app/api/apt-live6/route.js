@@ -14,7 +14,7 @@ export async function GET() {
     'content-type': 'application/javascript; charset=utf-8', 'cache-control': cache,
   } });
   try {
-    return js(await cachedLive6(), 'public, max-age=0, s-maxage=3600, stale-while-revalidate=86400');
+    return js(await cachedLive6(), 'public, max-age=60, s-maxage=3600, stale-while-revalidate=86400');
   } catch (e) {
     console.error('apt-live6 failed', e);
     // 실패하면 고정 시세로 그대로 뜬다(apt-curlive.js가 LIVEP 없으면 아무것도 안 함)

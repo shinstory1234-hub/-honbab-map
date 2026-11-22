@@ -22,12 +22,22 @@ Object.assign(window.FARD=window.FARD||{}, {
 });
 function s4Pct(Q,x){ if(x==null||isNaN(x)) return 50; const n=Q.length-1;
   if(x<Q[0]) return 0; if(x>Q[n]) return 100;
-  let lo=0; while(lo<n&&Q[lo]<x) lo++; let hi=lo; while(hi<n&&Q[hi+1]<=x) hi++;
-  if(Q[lo]===x) return (lo+hi)/2/n*100;
+  let lo=0,hi=n;
+  while(lo<hi){ const mid=(lo+hi)>>1; if(Q[mid]<x) lo=mid+1; else hi=mid; }
+  if(Q[lo]===x){ while(hi<n&&Q[hi+1]<=x) hi++; return (lo+hi)/2/n*100; }
   const a=lo-1, f=(x-Q[a])/(Q[lo]-Q[a]); return (a+f)/n*100; }
 const S4CBD=[[37.4979,127.0276],[37.5663,126.9779],[37.5219,126.9245],[37.3948,127.1112]];
-function s4J(d){ const g=d.g||{}; if(!g.lat) return null; const km=Math.min(...S4CBD.map(([a,b])=>hav(g.lat,g.lng,a,b)))/1000;
-  return jobS(15+1.3*km)*9/15; }
+const S4JOB=new WeakMap();
+function s4J(d){
+  const g=d.g;
+  if(!g?.lat)return null;
+  const cached=S4JOB.get(g);
+  if(cached&&cached.lat===g.lat&&cached.lng===g.lng)return cached.score;
+  const km=Math.min(...S4CBD.map(([a,b])=>hav(g.lat,g.lng,a,b)))/1000;
+  const score=jobS(15+1.3*km)*9/15;
+  S4JOB.set(g,{lat:g.lat,lng:g.lng,score});
+  return score;
+}
 /* 경사(회귀, 2026.10.25 재추정): 기본 R = 반경 500m 안 가장 낮은 곳보다 이 단지가 얼마나 높은가(m, apt-dem.js 지형 자료 — 모든 단지).
    같은 동 안끼리 '상품 차이를 뺀 평당가 ÷ 주변 시세'를 회귀: 25년차 이하 1,351곳 R 1m당 −0.25%(t −7.7, 상한 30/50/80m 모두 비슷).
    보행 경로를 계산한 의심 단지는 apt-walk.js의 부담 z(낮은 도로→단지 대표점, 여러 방향 중 가장 쉬운 경로)를 0~80m 상당으로 환산한다.
