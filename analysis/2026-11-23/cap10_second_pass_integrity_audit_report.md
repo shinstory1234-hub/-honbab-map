@@ -37,3 +37,21 @@
 ## 운영 영향
 
 분석 브랜치 `analysis/20261123-cap10-relative-value-1650`에 분석 산출물만 추가. `master` 및 운영 소스/배포는 변경하지 않음.
+
+
+## 추가 교차 검증: 메타데이터 불일치 5건 판정(이번 조사 계속)
+
+아래는 앞에서 추출한 98개 단지정보 수치 불일치 항목(중복 가능) 가운데 실제로 추가 원자료를 찾아 판정한 사례다. **기존 리치고 대조값이 자동으로 정답인 것은 아님**.
+
+| 단지 | 기존 모델 | 기존 대조자료 | 추가 근거 | 조치 |
+|---|---|---|---|---|
+| 중계무지개 | 2,433세대 | 1,563세대 | [서울시 공동주택 공식 정보](https://openapt.seoul.go.kr/openApt/index.do?aptCode=A13986504) 2,433세대; [건축물대장 일부 필지 집계](https://statnorth.kr/apt/%EC%84%9C%EC%9A%B8/%EB%85%B8%EC%9B%90%EA%B5%AC/%EC%A4%91%EA%B3%84%EB%8F%99-%EC%A4%91%EA%B3%84%EB%AC%B4%EC%A7%80%EA%B0%9C-dc1e6439bde4) 1,563세대 | 모델 2,433세대 유지. 대조자료 범위 오류 의심 |
+| 방화그린 | 용적률 383% | 226% | [건축물대장 요약](https://app.jestools.com/budongsan/complex/1771/) 약 204.56%; [별도 단지 조회](https://www.fitlook.org/r/11500/%EB%B0%A9%ED%99%94%EB%8F%99-839/) 약 205% | **모델 용적률 383% 정정 우선**, 총괄표제부 재확인 필요 |
+| 대림동 우성1 | 용적률 159% | 257% | [KB부동산](https://kbland.kr/se/c/2247) 159%; [리치고 단지 공개자료](https://m.richgo.ai/realty/danji/a8ETyJd?priceType=meme&pyeongType=21) 159% | 모델 159% 유지, 대조 자료 수정 |
+| DMCSK뷰아이파크포레 | 2023년 | 2025년 | [단지 입주 표기](https://chungyakalji.com/complex/A10023076) 2023년 및 건축물대장 사용승인 2025년 표기가 공존 | 입주연도와 사용승인연도 분리, 아직 원천 정의 확인 필요 |
+| DMC롯데캐슬더퍼스트 | 2020년 | 2021년 | [롯데건설 사업개요](https://www.lottecastle.co.kr/APT/AT00170/1319/summary/view.do) 2020년 6월 | 2021년 건축물대장 승인과 다른 기준인지 확인 전까지 보류 |
+
+**다섯 건 교차검증으로 전체 mismatch 건수를 일괄적으로 5개 줄인 것은 아님**. 일부는 실제 모델 수치가 틀렸지만, 일부는 대조 자료가 잘못되었거나 준공·입주·사용승인 연도 정의가 다른 사례이므로 원인 판정과 수치 변환은 분리해야 한다.
+
+- [단지정보 불일치 추가 판정 5건 CSV](https://github.com/shinstory1234-hub/-honbab-map/blob/analysis/20261123-cap10-relative-value-1650/analysis/2026-11-23/cap10_second_pass_metadata_adjudications_05.csv)
+
