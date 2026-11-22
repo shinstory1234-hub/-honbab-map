@@ -240,7 +240,7 @@ export function buildAptAssets(root, output = path.join(root, 'public')) {
         new vm.Script(out.code);code=out.code;
       }else code=minifyKeep(code, file, /^apt-(?:m3|deep6-100|deep6-200|research6-600)\.js$/.test(file));
       if (isolated.test(file)) flush();
-      chunk.push(`/* ${file} */\n${code}`); names.push(file);
+      chunk.push(code); names.push(file);
       if (isolated.test(file)) flush();
     }
     flush(); manifest[cap] = urls;

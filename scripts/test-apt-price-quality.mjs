@@ -86,3 +86,17 @@ assert.equal(policyContext.LIVE_PRICE_REVIEW[0].py,34);
 assert.equal(policy.eligible('28237|산곡동|부평캐슬&더샵퍼스트',[[16,17832,21,0,'2026-11-21']]).length,0);
 assert.equal(policy.eligible('28177|학익동|엑슬루타워',[[44,44900,2,0,'2026-10-13']]).length,1);
 console.log('PASS: 확인된 거래의 순위 보류, 이후 시세 복귀, 정적 자료 재노출 방지');
+
+const yeongjong = '28155|운남동|영종자이';
+const duplicatePair = [46, 43671, 4, 0, '2026-02-07'];
+assert.equal(policy.sample(yeongjong, duplicatePair), 2);
+assert.equal(policy.sample(yeongjong, [46, 43671, 5, 0, '2026-02-07']), undefined, '거래 집계가 달라지면 기존 확인 결과를 재사용하지 않음');
+const sufficient = [52, 37537, 10, 3, '2026-10-16'];
+assert.deepEqual(review([duplicatePair, sufficient], '2026-11-19', r=>policy.sample(yeongjong,r)??r[2]).rows, [sufficient]);
+
+const detail = '11440|용강동|이편한세상마포리버파크';
+assert.equal(policy.eligible(detail, [[34,210624,2,0,'2026-04-10']]).length, 0);
+assert.equal(policy.eligible(detail, [[34,290000,3,1,'2026-11-20']]).length, 1);
+
+assert.equal(policy.keyFor({n:'송내동 우성',area:'부천 소사구 송내동'}),'41194|송내동|우성');
+console.log('PASS: 실거래 표본 보정, 검증 보류 자동 해제, 원천 단지 연결');
