@@ -166,7 +166,7 @@ function typesTab(){
 async function floorLoad(d,out){
  out.textContent='최근 실거래 조회 중…';
  try{
-  if(!window.aptLkey)await new Promise((ok,fail)=>{const x=document.createElement('script');x.src='/apt-dx.js?v=13';x.onload=ok;x.onerror=fail;document.head.appendChild(x);});
+  if(!window.aptLkey)await new Promise((ok,fail)=>{const x=document.createElement('script');x.src='/apt-dx.js?v=14';x.onload=ok;x.onerror=fail;document.head.appendChild(x);});
   const k=window.aptLkey(d);if(!k)throw Error('key');
   const res=await fetch('/api/apt-dx?k='+encodeURIComponent(k));if(!res.ok)throw Error('fetch');
   const data=await res.json(),tx=data.t||[],target=d.py*3.3058*.76;
@@ -189,8 +189,8 @@ function homeTab(){
  const menus=[
  ['view','지도 안의 아파트','현재 지도에 보이는 단지 중 추천 상위 10곳을 확인하고 정렬합니다.'],
  ['filters','상세 필터','최근 거래 건수와 마지막 거래일 등으로 아파트를 좁혀 찾습니다.'],
- ['rivals','아파트 비교','두 단지를 선택해 분기별 실거래 가격을 비교합니다.'],
- ['saved','관심 아파트','저장하거나 최근 확인한 아파트를 다시 봅니다.'],
+ ['rivals','실거래 비교','두 단지를 선택해 분기별 실거래 가격을 비교합니다.'],
+ ['saved','관심·최근 본 단지','저장하거나 최근 확인한 아파트를 다시 봅니다.'],
  ['nav','지도 설정과 측정','지역 이동, 지도 종류 변경, 거리와 면적 측정을 이용합니다.'],
  ['living','생활환경 평가','교통, 통근, 학교, 단지 규모 등 평가 항목을 확인합니다.'],
  ['types','평형과 층별 거래','평형 구성과 층별 실거래 가격을 확인합니다.'],
@@ -234,7 +234,7 @@ function paint(){
  var tabs=panel.querySelector('.s2-tabs'),body=panel.querySelector('.s2-body');
  tabs.innerHTML='';tabs.hidden=true;
  const back=panel.querySelector('#s2Back'),title=panel.querySelector('.s2-top h2');
- back.hidden=tab==='home';title.textContent=tab==='home'?'아파트 탐색':({view:'지도 안의 아파트',filters:'상세 필터',nav:'지도 설정과 측정',saved:'관심 아파트',rivals:'아파트 비교',living:'생활환경 평가',types:'평형과 층별 거래',watch:'내 매물 호가 기록'}[tab]||'아파트 탐색');
+ back.hidden=tab==='home';title.textContent=tab==='home'?'아파트 탐색':({view:'지도 안의 아파트',filters:'상세 필터',nav:'지도 설정과 측정',saved:'관심·최근 본 단지',rivals:'실거래 비교',living:'생활환경 평가',types:'평형과 층별 거래',watch:'내 매물 호가 기록'}[tab]||'아파트 탐색');
  body.innerHTML=(contents[tab]||homeTab)();panel.querySelector('#s2Close').onclick=close;
  back.onclick=()=>{tab='home';paint();};
  body.querySelectorAll('[data-s2menu]').forEach(b=>b.onclick=()=>{tab=b.dataset.s2menu;paint();panel.querySelector('.s2-dialog').scrollTop=0;});
@@ -245,7 +245,7 @@ function paint(){
  }
  if(tab==='filters'){
   body.querySelector('#s2Apply').onclick=()=>{var next={};for(var k of ['rentMin','gapMax','ratioMin','ratioMax','tradeMin','days']){var field=body.querySelector('[name='+k+']'),v=field?+field.value:0;if(v<0||!Number.isFinite(v)){note('입력값을 확인하세요');return;}next[k]=k==='rentMin'||k==='gapMax'?Math.round(v*10000):v;}if(next.ratioMin&&next.ratioMax&&next.ratioMin>next.ratioMax){note('전세가율 최소가 최대보다 높습니다.');return;}filter=next;state.sel=null;state.lim=50;close();render();note('추가 조건을 적용했습니다.');};
-  body.querySelector('#s2Clear').onclick=()=>{filter={rentMin:0,gapMax:0,ratioMin:0,ratioMax:0,tradeMin:0,days:0};state.sel=null;close();render();note('추가 조건을 초기화했습니다.');};
+  body.querySelector('#s2Clear').onclick=()=>{clearFilters();state.sel=null;close();render();note('추가 조건을 초기화했습니다.');};
  }
  if(tab==='nav')bindNav(body);
  if(tab==='saved'){
@@ -411,7 +411,7 @@ function importShare(){
 function install(){
  document.getElementById('apt2MapLazy')?.remove();
  if(!document.getElementById('apt2Launcher')){var wrap=document.querySelector('.mapwrap');if(wrap){var btn=document.createElement('button');btn.id='apt2Launcher';btn.textContent='지도 도구';btn.type='button';btn.onclick=()=>open();wrap.appendChild(btn);}}
- document.querySelectorAll('[data-ap2]').forEach(b=>b.onclick=()=>open());
+ document.querySelectorAll('[data-ap2]').forEach(b=>b.onclick=()=>open(b.dataset.ap2));
  mapReady();bindSearch();applyPins();
 }
 function median(a){if(!a.length)return null;a=a.slice().sort((x,y)=>x-y);return a.length%2?a[(a.length-1)/2]:(a[a.length/2-1]+a[a.length/2])/2;}
@@ -422,7 +422,7 @@ async function race(){
  if(Math.abs(pair[0].py-pair[1].py)>Math.max(2,pair[0].py*.12)){dest.innerHTML='<p>평형 차이가 큽니다. ±12% 이내의 유사 평형을 선택하세요.</p>';return;}
  dest.textContent='공통 전용면적대의 실거래를 조회하고 있습니다…';
  try{
-  if(!window.aptLkey){await new Promise((yes,no)=>{var s=document.createElement('script');s.src='/apt-dx.js?v=13';s.onload=yes;s.onerror=no;document.head.appendChild(s);});}
+  if(!window.aptLkey){await new Promise((yes,no)=>{var s=document.createElement('script');s.src='/apt-dx.js?v=14';s.onload=yes;s.onerror=no;document.head.appendChild(s);});}
   const api=await Promise.all(pair.map(async d=>{
    const k=window.aptLkey(d);if(!k)return null;
    const res=await fetch('/api/apt-dx?k='+encodeURIComponent(k));if(!res.ok)return null;
@@ -458,7 +458,8 @@ async function race(){
     +'<p>공통 5㎡ 면적대의 분기별 중위값입니다. 동·층·향 차이는 보정하지 않았습니다.</p>';
  }catch(e){if(dest.isConnected)dest.innerHTML='<p>실거래 자료를 확인하지 못했습니다.</p>';}
 }
-function reset(){filter={rentMin:0,gapMax:0,ratioMin:0,ratioMax:0,tradeMin:0,days:0};indicator='base';resetMeasure();applyPins();}
+function clearFilters(){filter={rentMin:0,gapMax:0,ratioMin:0,ratioMax:0,tradeMin:0,days:0};}
+function reset(){clearFilters();indicator='base';resetMeasure();applyPins();}
 async function searchAll(button, query){
  const out=button.parentElement.querySelector('#searchAllResults');
  button.disabled=true;
@@ -482,6 +483,6 @@ async function searchAll(button, query){
  }catch(e){out.textContent='전체 가격대 검색을 불러오지 못했습니다. 다시 시도하세요.';}
  finally{button.disabled=false;}
 }
-window.APT2={searchAll,install,open,passes,inUse,remember,mapReady,applyPins,reset,importShare,searchIndex};
+window.APT2={searchAll,install,open,passes,inUse,clearFilters,remember,mapReady,applyPins,reset,importShare,searchIndex};
 install();
 })();

@@ -445,10 +445,7 @@
     return null;
   }
   function panel(d){const rank=rankOf(d);if(!rank)return '';const deep=selectedDeep(d);return deep?deepPanel(d,rank,deep):summary(d,rank);}
-  function install(){
-    if(window.__aptInvestInstalled||typeof window.renderDetail!=='function')return;window.__aptInvestInstalled=true;const original=window.renderDetail;
-    window.renderDetail=function(i){
-      original(i);
+  window.aptRenderInvest=function(i){
       const body=document.getElementById('body'),d=D[i],lede=body&&body.querySelector('.lede'),html=panel(d),rank=rankOf(d);
       const deep=selectedDeep(d);
       if(deep){
@@ -459,8 +456,5 @@
         if(deep||CAPT===6)lede.outerHTML=html;
         else lede.insertAdjacentHTML('afterend',html);
       }
-    };
-    if(typeof state!=='undefined'&&state.sel!=null)window.renderDetail(state.sel);
-  }
-  setTimeout(install,0);document.addEventListener('DOMContentLoaded',install,{once:true});
+  };
 })();

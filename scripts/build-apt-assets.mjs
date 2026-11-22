@@ -161,7 +161,8 @@ export function buildAptAssets(root, output = path.join(root, 'public')) {
   // Build the lazy-loaded Stage 1 source only after reading its versioned Brotli parts.
   // It is never included in the first-page cap bundles or initial gzip budget.
   const stageParts = [0, 1].map(i => fs.readFileSync(path.join(root, 'lib', 'apt-stage1-extra.br.part' + i)));
-  const stageJs = zlib.brotliDecompressSync(Buffer.concat(stageParts));
+  const stageJs = zlib.brotliDecompressSync(Buffer.concat(stageParts)).toString('utf8')
+    .replace("'<small>전용 '+t[0]+'㎡ · 평당 '", "'<small>전용 '+window.aptDxAreaText(j.t||[],t[0])+' · 평당 '");
   fs.writeFileSync(path.join(output, 'apt-stage1-extra.js'), stageJs);
   const source = fs.readFileSync(path.join(sourceDir, 'apt-map.html'), 'utf8');
   const scripts = [...source.matchAll(/<script>([\s\S]*?)<\/script>/g)];
@@ -170,7 +171,7 @@ export function buildAptAssets(root, output = path.join(root, 'public')) {
   if (!bootstrap || !application) throw new Error('Apartment source script boundaries changed');
   const assets = path.join(output, 'apt-assets');
   fs.mkdirSync(assets, {recursive: true});
-  const manifest = {}, inventory = {};
+  const manifest = {}, detailAssets = {}, inventory = {};
   function writeAsset(code, files) {
     // Compile as one classic script too: catches duplicate lexical declarations.
     new vm.Script(code);
@@ -184,7 +185,6 @@ export function buildAptAssets(root, output = path.join(root, 'public')) {
   const consentEnd = app.indexOf('const KAKAO_JS_KEY=');
   if (consentEnd < 0) throw new Error('Consent script boundary changed');
   const consent = app.slice(0, consentEnd).replace("u.pathname.split('/').pop()+u.search", "u.pathname+u.search");
-  const main = writeAsset(minifyKeep("if(window.__aptLoadFailed) throw new Error('Apartment data failed to load');\n"+app.slice(consentEnd), 'apt-map-app', true), ['apt-map.html:application']);
   const isolated = /^apt-(?:invest\d+|s4q\d*)\.js$/;
   const peak6 = peakLoForCap6(sourceDir);
   for (const cap of [6, 10, 15, 20, 25, 30, 35]) {
@@ -195,9 +195,13 @@ export function buildAptAssets(root, output = path.join(root, 'public')) {
     }};
     context.window = context;
     vm.runInNewContext(bootstrap[1], context);
-    const ordered = files.flatMap(file => file === 'apt-richgo15.js' ? [] : file === 'apt-picks10.js'
-      ? [file, `apt-invest${cap}.js`, 'apt-research-over6-top100.js', 'apt-invest-ui.js']
-      : file === 'apt-first.js' ? [] : [file]);
+    const analysisFiles = cap === 6
+      ? ['apt-deep6-100.js', 'apt-deep6-200.js', 'apt-research6-600.js']
+      : [`apt-invest${cap}.js`, 'apt-research-over6-top100.js'];
+    analysisFiles.push('apt-invest-ui.js');
+    detailAssets[cap] = writeAsset(analysisFiles.map(file =>
+      minifyKeep(fs.readFileSync(path.join(sourceDir, file), 'utf8'), file, true)).join('\n;\n'), analysisFiles);
+    const ordered = files.filter(file => file !== 'apt-richgo15.js' && file !== 'apt-first.js');
     const urls = []; let chunk = [], names = [];
     const flush = () => { if (chunk.length) urls.push(writeAsset(chunk.join('\n;\n'), names)); chunk = []; names = []; };
     for (const file of ordered) {
@@ -234,8 +238,10 @@ export function buildAptAssets(root, output = path.join(root, 'public')) {
       chunk.push(`/* ${file} */\n${code}`); names.push(file);
       if (isolated.test(file)) flush();
     }
-    flush(); manifest[cap] = [...urls, main];
+    flush(); manifest[cap] = urls;
   }
+  const main = writeAsset(minifyKeep("window.APT_DETAIL_ASSET="+JSON.stringify(detailAssets)+"[CAPT];\n"+"if(window.__aptLoadFailed) throw new Error('Apartment data failed to load');\n"+app.slice(consentEnd), 'apt-map-app', true), ['apt-map.html:application']);
+  for (const urls of Object.values(manifest)) urls.push(main);
   const loop = /  for\(var i=0;i<F\.length;i\+\+\) if\(F\[i\]\) document\.write\([^\n]+\);/;
   if (!loop.test(bootstrap[1])) throw new Error('Source loader changed');
   const loader = bootstrap[1].replace(loop, `  F=${JSON.stringify(manifest)}[c];\n  window.__APT_LOAD_START=performance.now();\n  window.aptLoadError=function(s){if(/apt-(live6?|geo)/.test(s))return;window.__aptLoadFailed=1;document.getElementById('aptLoading').textContent='로드 실패 · 새로고침';};\n  for(var i=0;i<F.length;i++) document.write('<script defer src="'+F[i]+'" onerror="aptLoadError(this.src)"><\\/script>');`);
@@ -273,8 +279,8 @@ export function buildAptAssets(root, output = path.join(root, 'public')) {
   // Concise equivalent browser tab title reduces first-paint compressed bytes.
   html=html.replace('<title>아파트맵 · 수도권 아파트 단지 순위</title>','<title>아파트맵 · 아파트 순위</title>');
   fs.writeFileSync(path.join(output, 'apt-map-fast.html'), html);
-  fs.writeFileSync(path.join(assets, 'manifest.json'), JSON.stringify({manifest, inventory}, null, 2));
-  return {manifest, inventory, html};
+  fs.writeFileSync(path.join(assets, 'manifest.json'), JSON.stringify({manifest, detailAssets, inventory}, null, 2));
+  return {manifest, detailAssets, inventory, html};
 }
 
 /* 1원칙(2026.11.15): 전고점 미회복 표(PEAKLO_PACK, 전 탭 합집합 2,500여 단지·gzip 약 15KB)를 6억 탭에는 그 탭 단지(apt-picks·auto3·univ, 6억 탭 로더 순서)분만 남겨 보냄.

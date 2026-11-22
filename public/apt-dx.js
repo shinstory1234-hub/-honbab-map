@@ -68,6 +68,12 @@
   function pct(x){ return (x>=0?'+':'')+(x*100).toFixed(1)+'%'; }
   var ab=function(area){ return Math.round(area/5)*5; };
 
+  window.aptDxAreaText=function(rows,bucket){
+    var min=Infinity,max=-Infinity;
+    rows.forEach(function(t){if(ab(t[1])===bucket){min=Math.min(min,t[1]);max=Math.max(max,t[1]);}});
+    return min===Infinity?bucket+'㎡대':(min===max?min:min+'~'+max)+'㎡';
+  };
+
   function listedAb(d,j){
     var row=(j.lc||[]).find(function(x){return x[1]===d.py;});
     return row?row[0]:null;
@@ -140,10 +146,10 @@
     for(var y=y0+1;y<=y1;y+=step){ var xm=X(Date.UTC(y,0,1)); yrs+='<text x="'+xm.toFixed(1)+'" y="'+(H-2)+'" font-size="9" text-anchor="middle" fill="#64748b">'+y+'</text><line x1="'+xm.toFixed(1)+'" x2="'+xm.toFixed(1)+'" y1="'+PT+'" y2="'+(H-PB)+'" stroke="#eef2f7"/>'; }
     var grid='';
     [0,.5,1].forEach(function(f){ var v=lo+(hi-lo)*(1-f)*1, yy=PT+f*(H-PT-PB); v=hi-(hi-lo)*f; grid+='<text x="2" y="'+(yy+3).toFixed(1)+'" font-size="9" fill="#64748b">'+eo(v)+'</text><line x1="'+PL+'" x2="'+(W-PR)+'" y1="'+yy.toFixed(1)+'" y2="'+yy.toFixed(1)+'" stroke="#eef2f7"/>'; });
-    var tx=X(top[0]), ty=Y(top[1]);
+    var tx=X(top[0]), ty=Y(top[1]), peakLeft=tx>W-72;
     return '<svg viewBox="0 0 '+W+' '+H+'" width="100%" role="img" aria-label="실거래가 차트" style="display:block">'+grid+yrs+bars+dots
       +(showMedianLine?'<path d="'+line+'" fill="none" stroke="#2563eb" stroke-width="1.8" stroke-linejoin="round"/>':'')
-      +'<circle cx="'+tx.toFixed(1)+'" cy="'+ty.toFixed(1)+'" r="3.2" fill="#e5484d"/><text x="'+Math.min(W-PR,Math.max(PL+20,tx)).toFixed(1)+'" y="'+Math.max(10,ty-6).toFixed(1)+'" font-size="9.5" font-weight="700" text-anchor="middle" fill="#e5484d">최고 '+eo(top[1])+'</text>'
+      +'<circle cx="'+tx.toFixed(1)+'" cy="'+ty.toFixed(1)+'" r="3.2" fill="#e5484d"/><text x="'+(tx+(peakLeft?-6:6)).toFixed(1)+'" y="'+Math.max(10,ty-6).toFixed(1)+'" font-size="9.5" font-weight="700" text-anchor="'+(peakLeft?'end':'start')+'" fill="#e5484d">최고 '+eo(top[1])+'</text>'
       +'<text x="'+(W-PR)+'" y="'+(H-PB+12)+'" font-size="8.5" text-anchor="end" fill="#94a3b8">거래량</text></svg>'
       +'<div class="dxlegend"><span><i></i>실거래</span>'
       +(showMedianLine?'<span><i class="line"></i>최근 3개월 실거래 중위가</span>':'')
@@ -164,7 +170,7 @@
     var now=Date.now(), lcPy={}; (j.lc||[]).forEach(function(x){ lcPy[x[0]]=x[1]; });
     var chip=function(cls,val,on,label,sub){ return '<button type="button" class="dxc1 '+cls+(on?' on':'')+'" data-v="'+val+'" aria-pressed="'+on+'">'+label+(sub?'<small>'+sub+'</small>':'')+'</button>'; };
     var h='<section class="sec" data-dx="1"><h3>실거래가 <small>국토부 신고 · 해제 제외</small></h3>';
-    if(areaOptions.length>1) h+='<div class="dxrow" role="group" aria-label="평형">'+areaOptions.map(function(v){ return chip('dxa',v,v===A,lcPy[v]?lcPy[v]+'평':v+'㎡대',lcPy[v]?'전용 '+v+'㎡':''); }).join('')+'</div>';
+    if(areaOptions.length>1) h+='<div class="dxrow" role="group" aria-label="평형">'+areaOptions.map(function(v){ return chip('dxa',v,v===A,lcPy[v]?lcPy[v]+'평':window.aptDxAreaText(all,v),lcPy[v]?'전용 '+window.aptDxAreaText(all,v):''); }).join('')+'</div>';
     if(!rows.length) h+='<p class="note">선택 조건에 맞는 실거래가 없습니다.</p>';
     if(rows.length){
       var nd=rows.filter(function(t){return !bad(t);}); if(!nd.length) nd=rows;
