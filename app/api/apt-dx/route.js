@@ -7,7 +7,7 @@ export const preferredRegion = 'icn1';
 export const maxDuration = 30;
 
 const catalog = unstable_cache(loadDetailCatalog, ['apt-dx-live-catalog'], { revalidate: 3600 });
-const cached = unstable_cache(k => buildDx(k, catalog), ['apt-dx-source-key-v1'], { revalidate: 900 });
+const cached = unstable_cache(k => buildDx(k, catalog), ['apt-dx-source-key-v2'], { revalidate: 900 });
 
 export async function GET(req) {
   const k = new URL(req.url).searchParams.get('k') || '';

@@ -169,7 +169,7 @@
     var areaOptions=Array.from(new Set(all.map(function(t){return ab(t[1]);}))).sort(function(a,b){return a-b;});
     var now=Date.now(), lcPy={}; (j.lc||[]).forEach(function(x){ lcPy[x[0]]=x[1]; });
     var chip=function(cls,val,on,label,sub){ return '<button type="button" class="dxc1 '+cls+(on?' on':'')+'" data-v="'+val+'" aria-pressed="'+on+'">'+label+(sub?'<small>'+sub+'</small>':'')+'</button>'; };
-    var h='<section class="sec" data-dx="1"><h3>실거래가 <small>국토부 신고 · 해제 제외</small></h3>';
+    var h='<section class="sec" data-dx="1"><h3>실거래가 <small>'+(j.tradeKind?E(j.tradeKind)+' 신고':'국토부 신고')+' · 해제 제외</small></h3>';
     if(areaOptions.length>1||areaOptions[0]!==A) h+='<div class="dxrow" role="group" aria-label="평형">'+areaOptions.map(function(v){ return chip('dxa',v,v===A,lcPy[v]?lcPy[v]+'평':window.aptDxAreaText(all,v),lcPy[v]?'전용 '+window.aptDxAreaText(all,v):''); }).join('')+'</div>';
     if(!areaRows.length) h+='<p class="note">선택한 평형의 실거래 원본을 확인하지 못했습니다. 조회 가능한 다른 평형을 선택할 수 있습니다.</p>';
     else if(!rows.length) h+='<p class="note">선택 조건에 맞는 실거래가 없습니다.</p>';
@@ -282,7 +282,7 @@
       catch(e){console.error('apt-dx chart render failed',e);error('실거래 자료를 받았지만 차트를 표시하지 못했습니다.');}
     };
     if(CACHE[k])return done(CACHE[k]);
-    fetch('/api/apt-dx?v=4&k='+encodeURIComponent(k)).then(function(r){if(!r.ok)throw Error('HTTP '+r.status);return r.json();})
+    fetch('/api/apt-dx?v=5&k='+encodeURIComponent(k)).then(function(r){if(!r.ok)throw Error('HTTP '+r.status);return r.json();})
       .then(function(j){if(Array.isArray(j?.t)&&j.t.length)CACHE[k]=j;done(j);})
       .catch(function(e){console.warn('apt-dx request failed',k,e);error('실거래 정보를 불러오지 못했습니다. 데이터가 없다는 뜻은 아닙니다.');});
   };
