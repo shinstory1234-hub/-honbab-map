@@ -197,11 +197,16 @@ export function buildAptAssets(root, output = path.join(root, 'public')) {
     vm.runInNewContext(bootstrap[1], context);
     const analysisFiles = cap === 6
       ? ['apt-deep6-100.js', 'apt-deep6-200.js', 'apt-research6-600.js']
-      : [`apt-invest${cap}.js`, 'apt-research-over6-top100.js'];
+      : ['apt-research-over6-top100.js'];
+    if (cap > 6 && cap !== 35) analysisFiles.unshift(`apt-invest${cap}.js`);
     analysisFiles.push('apt-invest-ui.js');
     detailAssets[cap] = writeAsset(analysisFiles.map(file =>
       minifyKeep(fs.readFileSync(path.join(sourceDir, file), 'utf8'), file, true)).join('\n;\n'), analysisFiles);
-    const ordered = files.filter(file => file !== 'apt-richgo15.js' && file !== 'apt-first.js');
+    // The 30억 이상 data also restores candidates consumed by apt-univ35.js.
+    const ordered = files.flatMap(file => {
+      if (file === 'apt-richgo15.js' || file === 'apt-first.js') return [];
+      return cap === 35 && file === 'apt-picks10.js' ? [file, 'apt-invest35.js'] : [file];
+    });
     const urls = []; let chunk = [], names = [];
     const flush = () => { if (chunk.length) urls.push(writeAsset(chunk.join('\n;\n'), names)); chunk = []; names = []; };
     for (const file of ordered) {
