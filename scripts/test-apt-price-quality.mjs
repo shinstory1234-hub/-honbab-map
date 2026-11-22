@@ -17,7 +17,8 @@ const verified = review([verifiedSmall, verifiedBig]);
 assert.deepEqual(verified.rows, [verifiedSmall, verifiedBig], '충분한 거래는 시세 보존');
 assert.deepEqual([...verified.conflicts], [24, 28], '남은 가격 차이에 참고 표시');
 assert.deepEqual(review([row(24, 55000, 1), row(28, 59000, 2)]).rows.map(r=>r[1]), [55000, 59000]);
-assert.deepEqual(review([row(24, 75000, 1, 1), row(28, 58000, 1, 1)]).rows.map(r=>r[1]), [75000, 58000]);
+assert.deepEqual(review([row(24, 75000, 1, 1), row(28, 58000, 1, 1)]).rows, [], '최근 계약이어도 양쪽 단일 표본의 역전은 순위 보류');
+assert.deepEqual(review([row(24, 75000, 2, 1), row(28, 58000, 1, 1)]).rows.map(r=>r[1]), [75000,58000], '독립 계약이 추가되면 기존 규칙으로 평가');
 
 const stale = row(40, 85000, 1);
 const freshPeer = [44, 95000, 6, 1, '2026-12-19'];
@@ -100,3 +101,16 @@ assert.equal(policy.eligible(detail, [[34,290000,3,1,'2026-11-20']]).length, 1);
 
 assert.equal(policy.keyFor({n:'송내동 우성',area:'부천 소사구 송내동'}),'41194|송내동|우성');
 console.log('PASS: 실거래 표본 보정, 검증 보류 자동 해제, 원천 단지 연결');
+
+const master={...one,n:'공동 관리단지1',auto:1,types:[{py:34,p:277541,n:15}]};
+const donor={...master,n:'공동 관리단지2',liveKey:'11710|방이동|공동 관리단지2',types:[{py:46,p:360000,n:5}]};
+const combined={CAPT:25,PICKS:[master,donor]};
+combined.window=combined;
+vm.runInNewContext(read('apt-gjc.js').split('window.S4GJC=')[0],combined);
+assert.equal(combined.PICKS.length,1,'같은 관리단지의 추천 목록은 통합');
+const target=combined.PICKS[0].types.find(t=>t.py===46);
+assert.equal(target.tradeKey,donor.liveKey,'합쳐진 평형의 원천 신고 단지를 보존');
+const dx={document:{createElement:()=>({}),head:{appendChild(){}}}};
+dx.window=dx;
+vm.runInNewContext(read('apt-dx.js'),dx);
+assert.equal(dx.aptLkey({...master,py:46}),donor.liveKey,'상세 실거래는 선택한 평형의 원천으로 조회');

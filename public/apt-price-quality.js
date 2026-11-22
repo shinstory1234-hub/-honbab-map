@@ -14,6 +14,8 @@
         const jump=big[1]*small[0]>=small[1]*big[0]*1.35;
         if(inverse||jump)pairs.push([small,big]);
         if(inverse){
+          // 양쪽이 단일 계약이면 계약은 보존하고 두 평형의 확정 순위만 보류한다.
+          if(verifiedCount(small)===1&&verifiedCount(big)===1){held.add(small);held.add(big);}
           if(thin(big)&&(verifiedCount(small)>=3||thin(small)))held.add(big);
           if(thin(small)&&(verifiedCount(big)>=3||thin(big)))held.add(small);
         }

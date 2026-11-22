@@ -166,7 +166,7 @@ function typesTab(){
 async function floorLoad(d,out){
  out.textContent='최근 실거래 조회 중…';
  try{
-  if(!window.aptLkey)await new Promise((ok,fail)=>{const x=document.createElement('script');x.src='/apt-dx.js?v=16';x.onload=ok;x.onerror=fail;document.head.appendChild(x);});
+  if(!window.aptLkey)await new Promise((ok,fail)=>{const x=document.createElement('script');x.src='/apt-dx.js?v=17';x.onload=ok;x.onerror=fail;document.head.appendChild(x);});
   const k=window.aptLkey(d);if(!k)throw Error('key');
   const res=await fetch('/api/apt-dx?k='+encodeURIComponent(k));if(!res.ok)throw Error('fetch');
   const data=await res.json(),tx=data.t||[],target=d.py*3.3058*.76;
@@ -422,7 +422,7 @@ async function race(){
  if(Math.abs(pair[0].py-pair[1].py)>Math.max(2,pair[0].py*.12)){dest.innerHTML='<p>평형 차이가 큽니다. ±12% 이내의 유사 평형을 선택하세요.</p>';return;}
  dest.textContent='공통 전용면적대의 실거래를 조회하고 있습니다…';
  try{
-  if(!window.aptLkey){await new Promise((yes,no)=>{var s=document.createElement('script');s.src='/apt-dx.js?v=16';s.onload=yes;s.onerror=no;document.head.appendChild(s);});}
+  if(!window.aptLkey){await new Promise((yes,no)=>{var s=document.createElement('script');s.src='/apt-dx.js?v=17';s.onload=yes;s.onerror=no;document.head.appendChild(s);});}
   const api=await Promise.all(pair.map(async d=>{
    const k=window.aptLkey(d);if(!k)return null;
    const res=await fetch('/api/apt-dx?k='+encodeURIComponent(k));if(!res.ok)return null;

@@ -17,7 +17,7 @@
     }
     var cl={}; a.forEach(function(i,x){ (cl[f(x)]=cl[f(x)]||[]).push(i); });
     Object.keys(cl).forEach(function(r){ var m=cl[r]; if(m.length<2) return; m.sort(function(u,v){return tn(P[v])-tn(P[u]);}); var keep=P[m[0]];
-      m.slice(1).forEach(function(i){ (P[i].types||[]).forEach(function(t){ if(!(keep.types||[]).some(function(u){return u.py===t.py;})) (keep.types=keep.types||[]).push(t); }); del[i]=1; drop++; }); }); });
+      m.slice(1).forEach(function(i){ var donor=P[i]; (donor.types||[]).forEach(function(t){ if(!(keep.types||[]).some(function(u){return u.py===t.py;})) (keep.types=keep.types||[]).push(donor.liveKey?{...t,tradeKey:t.tradeKey||donor.liveKey}:t); }); del[i]=1; drop++; }); }); });
   if(drop){ var out=P.filter(function(_,i){return !del[i];}); P.length=0; Array.prototype.push.apply(P,out); }
   window.DUP_DROP=drop; })();
 /* 단지 단위 장기 급지(2026.11.3) — 동(洞) 단위 급지(apt-gjl.js)를 대체. 동 안에서도 위치가 크게 다른 곳(예: 신정동 = 목동 신시가지 + 신정3동 외곽)을

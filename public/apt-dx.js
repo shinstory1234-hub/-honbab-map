@@ -13,6 +13,8 @@
   };
   function lkey(d){
     var k=d.n+'|'+d.area;
+    var type=(d.types||[]).find(function(t){return t.py===d.py;});
+    if(type?.tradeKey)return type.tradeKey;
     if(d.liveKey)return d.liveKey;
     if(ALIAS[k]) return ALIAS[k];
     var f=(window.FARD||{})[k], s=f&&f[6];
@@ -80,6 +82,11 @@
   }
   function pickAb(d,j){
     var lc=j.lc||[], exact=listedAb(d,j), r=null;
+    // 추천의 17평은 같은 단지 전용 39.8㎡의 공급면적 표시명이다.
+    if(exact==null&&d.py===17&&d.n==='수원센트럴아이파크자이'&&d.area==='수원 팔달구 인계동'){
+      var rentalFlat=lc.find(function(t){return t[0]===40&&t[1]===16;});
+      if(rentalFlat)return rentalFlat[0];
+    }
     if(exact!=null)return exact;
     if(!r&&lc.length) r=lc.slice().sort(function(a,b){return Math.abs(a[1]-d.py)-Math.abs(b[1]-d.py);})[0];
     if(r) return r[0];
