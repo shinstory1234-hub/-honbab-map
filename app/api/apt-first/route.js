@@ -22,13 +22,13 @@ async function text(url) {
 /* 속도(2026.11.15): 미리보기 계산(서버에서 3~6초)을 Vercel 데이터 캐시에 보관 — 전 지역·배포 간 공유, 5분이 지나면 이전 값을 바로 주고 뒤에서 다시 계산.
    예전엔 배포 직후나 지역 CDN 캐시가 비면 첫 화면 목록이 4~6초 늦게 떴음(실측 6억 4.2초·6~10억 5.9초). 6억 탭 시세는 자기 API를 HTTP로 다시 부르지 않고 직접 계산 */
 async function buildPreview(cap) {
-  const [geo, live] = await Promise.all([text(`${UP}/aptgeo?export=js`), cap > 6 ? text(`${UP}/aptlive`) : buildLive6()]);
+  const [geo, live] = await Promise.all([text(`${UP}/aptgeo?export=js`), cap > 6 ? text(`${UP}/aptlive?priceRule=median90`) : buildLive6()]);
   const { html, pins, key, searchRows } = previewHTML(path.join(process.cwd(), 'public'), cap, { geo, live, withPins: true });
   return { script: previewScript(html, pins, key), searchRows };
 }
 // 캐시 키에 자산 버전(apt-assets/manifest.json = 코드·자료 내용 해시)을 넣음 — 코드·자료가 바뀐 배포 뒤 예전 순위 미리보기가 잠깐 뜨던 문제(2026.11.15 30억 탭 1위가 신반포르엘→원베일리로 바뀌어 보임) 방지
 const VER = (() => { try { return createHash('sha1').update(fs.readFileSync(path.join(process.cwd(), 'public', 'apt-assets', 'manifest.json'))).digest('hex').slice(0, 12); } catch { return 'dev'; } })();
-const cachedPreview = unstable_cache(buildPreview, ['apt-first-v3', VER], { revalidate: 300 });
+const cachedPreview = unstable_cache(buildPreview, ['apt-first-v4', VER], { revalidate: 300 });
 
 async function searchBands(query, cap) {
   const term = query.replace(/\s+/g, '').toLocaleLowerCase();
