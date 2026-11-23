@@ -124,7 +124,7 @@
     }
   }
   function bad(t){ return t[4]||t[5]; }
-  var TREND_WINDOW=91*864e5, MIN_MEDIAN_TRADES=5, INITIAL_TRADES=3;
+  var TREND_WINDOW=90*864e5, MIN_MEDIAN_TRADES=5, INITIAL_TRADES=3;
   function chart(rows,period){
     var now=Date.now(), from=period==='all'?0:now-period*365.25*864e5;
     var history=[], months={}, monthDays={}, R=[];
@@ -145,7 +145,7 @@
     var x0=period==='all'?Math.min(R[0][0],now-864e5):from, x1=now;
     var lo=Infinity,hi=-Infinity; R.forEach(function(deal){ lo=Math.min(lo,deal[1]); hi=Math.max(hi,deal[1]); });
     var keys=Object.keys(months).sort(), trend=[], start=0, end=0, previousMonth=null, previousTrendMonth=null, hasGap=false;
-    // 월말(이번 달은 오늘) 기준 91일 표본과 해당 월의 거래일을 함께 확인한다.
+    // 월말(이번 달은 오늘) 기준 90일 표본과 해당 월의 거래일을 함께 확인한다.
     keys.forEach(function(k){
       var year=+k.slice(0,4), monthIndex=+k.slice(4,6)-1, month=year*12+monthIndex;
       if(previousMonth!==null&&month-previousMonth>1) hasGap=true;
@@ -208,12 +208,31 @@
       var r3=nd.filter(function(t){var ms=tms(t[0]);return ms>=now-TREND_WINDOW&&ms<=now;}).map(function(t){return t[3];});
       var y3=nd.filter(function(t){var m=tms(t[0]);return m>=now-456*864e5&&m<now-365*864e5;}).map(function(t){return t[3];});
       var m3=!bad(last)&&r3.length>=MIN_MEDIAN_TRADES?med(r3):null, my=y3.length>=MIN_MEDIAN_TRADES?med(y3):null, cur=m3!=null?m3:last[3];
+      // 목록·지도·상세의 대표 가격은 모두 순위 계산에 쓴 동일 평형의 d.p를 사용한다.
+      // 특정 층/직거래 제외 필터를 직접 누른 경우에만 원자료의 별도 통계를 보여준다.
+      var canonical=null, canonicalType=null;
+      if(floorMode==='all'&&!omitDirect){
+        var firstArea=pickAb(d,j), areaType=(j.lc||[]).find(function(x){return Number(x[0])===A;});
+        var selectedPy=A===firstArea?d.py:areaType?Number(areaType[1]):null;
+        var type=(d.types||[]).find(function(t){return Number(t.py)===selectedPy;});
+        if(selectedPy===d.py&&Number(d.p)>0){ canonical=Number(d.p); canonicalType=type||d; }
+        else if(type&&Number(type.p)>0){ canonical=Number(type.p); canonicalType=type; }
+      }
+      var shown=canonical!=null?canonical:cur;
+      var method=canonical==null
+        ?m3!=null?'최근 90일 정상거래 중위 · '+r3.length+'건':'마지막 정상 실거래 · '+ymd(last[0])
+        :window.LIVE_ON&&(canonicalType.n3||0)>=MIN_MEDIAN_TRADES
+          ?'최근 90일 정상 중개거래 '+canonicalType.n3+'건 중위 · 순위·상세 동일 시세'
+          :window.LIVE_ON?'최근 12개월 보정 시세 · 순위·상세 동일 시세':'고정 기준 시세 · 순위·상세 동일 시세';
+      var priceDate=canonical!=null&&window.LIVEP_AT?' · 기준일 '+window.LIVEP_AT:'';
+      var drift=canonical!=null&&m3!=null&&Math.abs(canonical-m3)>=100
+        ?'<div class="mini tnum" style="margin-bottom:8px">상세 조회 원자료의 최근 90일 중위 '+won(m3)+' · 순위 데이터와 집계시점 또는 제외 기준이 달라 참고값으로만 표시</div>':'';
       var pill=function(txt,v){ return '<span class="dxpill '+(v>=0?'up':'dn')+'">'+txt+' <b>'+(v>=0?'▲':'▼')+' '+Math.abs(v*100).toFixed(1)+'%</b></span>'; };
-      h+='<div class="dxhero"><div class="lbl">'+(m3!=null?'최근 3개월 실거래 중위 · '+r3.length+'건':'마지막 실거래 · '+ymd(last[0])+(last[4]?' · 직거래':last[5]?' · 이상 거래 의심':''))+(floorMode!=='all'||omitDirect?' · 필터 적용':'')+'</div>'
-        +'<div class="big tnum">'+won(cur)+'</div><div class="pills">'
-        +(cur>=peak[3]?'<span class="dxpill up"><b>최고가와 동일</b></span>':pill('최고가 대비',cur/peak[3]-1))
+      h+='<div class="dxhero"><div class="lbl">'+method+priceDate+(floorMode!=='all'||omitDirect?' · 필터 적용':'')+'</div>'
+        +'<div class="big tnum">'+won(shown)+'</div><div class="pills">'
+        +(shown>=peak[3]?'<span class="dxpill up"><b>최고가와 동일</b></span>':pill('최고가 대비',shown/peak[3]-1))
         +(my!=null&&m3!=null?pill('1년 전 대비',m3/my-1):'')+'</div>'
-        +'<div class="mini tnum">최고 <b>'+won(peak[3])+'</b> '+ymd(peak[0])+' · '+peak[2]+'층</div></div>'
+        +drift+'<div class="mini tnum">최고 <b>'+won(peak[3])+'</b> '+ymd(peak[0])+' · '+peak[2]+'층</div></div>'
         +'<div class="dxseg dxp" role="group" aria-label="기간">'+['3','5','all'].map(function(p){return '<button type="button" data-p="'+p+'" aria-pressed="'+(p===view.period)+'"'+(p===view.period?' class="on"':'')+'>'+(p==='all'?'전체':p+'년')+'</button>';}).join('')+'</div>'
         +'<div class="dxc">'+chart(rows,view.period==='all'?'all':+view.period)+'</div>';
     }
