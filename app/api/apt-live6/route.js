@@ -7,7 +7,7 @@ import { buildLive6, live6Version } from '../../../lib/live6.mjs';
 export const maxDuration = 60;
 export const preferredRegion = 'icn1';
 
-const cachedLive6 = unstable_cache(buildLive6, ['apt-live6-v2', live6Version()], { revalidate: 600 });   // 키에 단지 목록 파일 버전
+const cachedLive6 = unstable_cache(buildLive6, ['apt-live6-v3', live6Version()], { revalidate: 600 });   // 키에 단지 목록 파일 버전
 
 export async function GET() {
   const js = (body, cache) => new Response(body, { headers: {
