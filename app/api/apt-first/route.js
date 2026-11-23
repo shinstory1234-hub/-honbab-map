@@ -28,7 +28,7 @@ async function buildPreview(cap) {
 }
 // 캐시 키에 자산 버전(apt-assets/manifest.json = 코드·자료 내용 해시)을 넣음 — 코드·자료가 바뀐 배포 뒤 예전 순위 미리보기가 잠깐 뜨던 문제(2026.11.15 30억 탭 1위가 신반포르엘→원베일리로 바뀌어 보임) 방지
 const VER = (() => { try { return createHash('sha1').update(fs.readFileSync(path.join(process.cwd(), 'public', 'apt-assets', 'manifest.json'))).digest('hex').slice(0, 12); } catch { return 'dev'; } })();
-const cachedPreview = unstable_cache(buildPreview, ['apt-first-v4', VER], { revalidate: 300 });
+const cachedPreview = unstable_cache(buildPreview, ['apt-first-v5', VER], { revalidate: 300 });
 
 async function searchBands(query, cap) {
   const term = query.replace(/\s+/g, '').toLocaleLowerCase();
