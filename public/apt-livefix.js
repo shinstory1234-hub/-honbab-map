@@ -43,7 +43,7 @@
     var me=types.find(function(t){return t.py===d.py;})
       ||types.slice().sort(function(a,b){return Math.abs(a.py-d.py)-Math.abs(b.py-d.py);})[0];
     d.types=types; d.py=me.py; d.p=me.p; d.live=1; d.liveKey=sourceKey;
-    var src=me.n3>=5?'최근 90일 정상 중개거래 '+me.n3+'건 중위값':'최근 90일 정상거래 '+(me.n3||0)+'건으로 표본 부족 · 최근 12개월 실거래 '+me.n+'건을 시세지수·거래시점으로 보정한 시세';
+    var src=me.n3>=5?'최근 90일 정상거래 '+me.n3+'건 중위값':'최근 12개월 정상거래 '+me.n+'건 보정 시세';
     d.headline=d.py+'평 '+eok(d.p)+' · 현재 시세';
     d.deal=src+' '+eok(d.p)+(me.last?' (마지막 거래 '+me.last+')':'');
     d.sub=d.units.toLocaleString()+'세대, '+d.year+'년 입주. 이 평형 '+src+' '+eok(d.p)+'.';
