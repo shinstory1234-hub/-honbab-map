@@ -12,7 +12,7 @@ const nextConfig = {
         // 고정 입지 데이터: 같은 출처로 프록시(CSP script-src 'self' 유지)
         { source: '/apt-geo.js', destination: 'https://realestate-media.vercel.app/api/backtest/aptgeo?export=js' },
         // 현재 시세(매일 크론이 다시 계산, 2026.11.3)
-        { source: '/apt-live.js', destination: 'https://realestate-media.vercel.app/api/backtest/aptlive' },
+        { source: '/apt-live.js', destination: 'https://realestate-media.vercel.app/api/backtest/aptlive?priceRule=median90' },
         // 6억 이하 탭 현재 시세(2026.11.14): 6억 탭 단지만 골라 보내는 자체 API(속도: 1.5MB → 탭 단지분만)
         { source: '/apt-live6.js', destination: '/api/apt-live6' },
         // 실제 최근 수집·가격 재계산 기준일: 정기 갱신 지연을 숨기지 않고 이용자에게 표시
