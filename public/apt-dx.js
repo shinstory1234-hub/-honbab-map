@@ -54,8 +54,8 @@
     st.textContent+=`n.dxbox .dxrow{gap:0;margin:4px 0 16px;border-bottom:1px solid var(--border-soft,#e5e7eb);overflow-x:auto}\n.dxbox .dxc1{border:0;border-bottom:2px solid transparent;border-radius:0;background:transparent!important;color:var(--text-tertiary,#71717a);padding:10px 13px 9px;min-width:65px;box-shadow:none!important}\n.dxbox .dxc1.on{color:var(--text,#171719);border-color:var(--text,#171719)}\n.dxbox .dxc1 small{font-size:11px;margin-top:3px}.dxbox .dxc1.on small{color:var(--text-secondary,#555)}\n.dxbox .dxhero{background:transparent;border:0;border-radius:0;padding:12px 0 15px;margin:2px 0 10px;border-bottom:1px solid var(--border-soft,#e5e7eb)}\n.dxbox .dxhero .big{font-size:32px;letter-spacing:-.045em;margin:4px 0 10px}\n.dxbox .dxpill{border:0;background:transparent;padding:2px 0;border-radius:0}\n.dxbox .dxhero .pills{gap:14px;margin-bottom:8px}\n.dxbox .dxseg{background:transparent;padding:0;border-radius:0;border-bottom:1px solid var(--border-soft,#e5e7eb);margin:0 0 12px}\n.dxbox .dxseg button{border-radius:0;padding:10px 0;border-bottom:2px solid transparent}\n.dxbox .dxseg button.on{background:transparent;box-shadow:none;border-color:var(--text,#171719)}\n.dxbox .dxtiles{gap:0;border-top:1px solid var(--border-soft,#e5e7eb)}\n.dxbox .dxtile{border:0;border-bottom:1px solid var(--border-soft,#e5e7eb);border-radius:0;background:transparent;padding:12px 6px}\n.dxbox .dxtile.on{box-shadow:none;border-bottom:2px solid var(--primary,#0066ff);background:transparent}\n.dxbox .dxmore{border-radius:5px}\n.dxbox .dxr.me{border-radius:4px}\n.dxbox .dxlegend{display:flex;flex-wrap:wrap;align-items:center;gap:8px 14px;font-size:11px;color:var(--text-tertiary,#71717a);margin:2px 0 8px}\n.dxbox .dxlegend span{display:inline-flex;align-items:center;gap:5px;white-space:nowrap}\n.dxbox .dxlegend i{width:8px;height:8px;border-radius:50%;background:#94a3b8}\n.dxbox .dxlegend .line{width:14px;height:2px;background:#2563eb}\n.dxbox .dxlegend .bar{width:8px;height:9px;border-radius:0;background:#cbd5e1}\n.dxbox .dxlegend .dxsource{flex-basis:100%;font-size:10px;color:var(--text-faint,#999)}
 .dxbox .dxgap-note{margin:4px 0 12px;font-size:11px;line-height:1.5;color:var(--text-tertiary,#71717a)}
 .dxbox .dxrow{display:flex;align-items:stretch;gap:7px;margin:10px 0 12px;padding:0 0 2px;border:0;overflow-x:auto;overscroll-behavior-x:contain;-webkit-overflow-scrolling:touch}
-.dxbox .dxc1{flex:1 0 calc((100% - 21px)/4);min-width:0;min-height:59px;padding:9px 4px 8px;border:1px solid var(--border,#d1d5db);border-radius:9px;background:var(--bg-subtle,#f8fafc)!important;color:var(--text-secondary,#3f3f46);font-size:14px;line-height:1.3;text-align:center;white-space:nowrap}
-.dxbox .dxc1 small{display:block;font-size:10.5px;line-height:1.4;margin-top:4px;color:var(--text-tertiary,#71717a)}
+.dxbox .dxc1{flex:1 0 calc((100% - 21px)/4);min-width:78px;min-height:59px;padding:9px 4px 8px;border:1px solid var(--border,#d1d5db);border-radius:9px;background:var(--bg-subtle,#f8fafc)!important;color:var(--text-secondary,#3f3f46);font-size:14px;line-height:1.3;text-align:center;white-space:normal;overflow-wrap:anywhere}
+.dxbox .dxc1 small{display:block;font-size:10.5px;line-height:1.4;margin-top:4px;color:var(--text-tertiary,#71717a);white-space:normal;overflow-wrap:anywhere}
 .dxbox .dxc1.on{background:var(--primary-soft-bg,#eaf2fe)!important;border:2px solid var(--primary,#0066ff);color:var(--primary-soft-fg,#0055d1);padding:8px 3px 7px;font-weight:800}
 .dxbox .dxc1.on small{color:var(--primary-soft-fg,#0055d1)}
 .dxbox .dxhero{padding-top:8px;margin-top:0}
@@ -69,6 +69,13 @@
   function med(a){ if(!a.length) return null; a=a.slice().sort(function(x,y){return x-y;}); var h=a.length>>1; return a.length%2?a[h]:(a[h-1]+a[h])/2; }
   function pct(x){ return (x>=0?'+':'')+(x*100).toFixed(1)+'%'; }
   var ab=function(area){ return Math.round(area/5)*5; };
+  // 시세 원천 bt_livecur의 기존 면적대 환산식과 동일. 실제 공급면적이 확인되지 않았으므로 반드시 '약' 표시.
+  function areaChipLabel(bucket,lcPy,tradeKind){
+    var py=Number(lcPy[bucket]);
+    if(Number.isFinite(py)&&py>0)return py+'평';
+    if(tradeKind||!Number.isFinite(bucket)||bucket<=0)return '평수 미확인';
+    return '약 '+Math.round(bucket/2.512)+'평';
+  }
 
   window.aptDxAreaText=function(rows,bucket){
     var min=Infinity,max=-Infinity;
@@ -199,7 +206,7 @@
     var now=Date.now(), lcPy={}; (j.lc||[]).forEach(function(x){ lcPy[x[0]]=x[1]; });
     var chip=function(cls,val,on,label,sub){ return '<button type="button" class="dxc1 '+cls+(on?' on':'')+'" data-v="'+val+'" aria-pressed="'+on+'">'+label+(sub?'<small>'+sub+'</small>':'')+'</button>'; };
     var h='<section class="sec" data-dx="1"><h3>실거래가 <small>'+(j.tradeKind?E(j.tradeKind)+' 신고':'국토부 신고')+' · 해제 제외</small></h3>';
-    if(areaOptions.length>1||areaOptions[0]!==A) h+='<div class="dxrow" role="group" aria-label="평형">'+areaOptions.map(function(v){ return chip('dxa',v,v===A,lcPy[v]?lcPy[v]+'평':window.aptDxAreaText(all,v),lcPy[v]?'전용 '+window.aptDxAreaText(all,v):''); }).join('')+'</div>';
+    if(areaOptions.length>1||areaOptions[0]!==A) h+='<div class="dxrow" role="group" aria-label="평형">'+areaOptions.map(function(v){ return chip('dxa',v,v===A,areaChipLabel(v,lcPy,j.tradeKind),'전용 '+window.aptDxAreaText(all,v)); }).join('')+'</div>';
     if(!areaRows.length) h+='<p class="note">선택한 평형의 실거래 원본을 확인하지 못했습니다. 조회 가능한 다른 평형을 선택할 수 있습니다.</p>';
     else if(!rows.length) h+='<p class="note">선택 조건에 맞는 실거래가 없습니다.</p>';
     if(rows.length){
